@@ -41,7 +41,7 @@ public class TileIronNote extends TileEntityBase implements SimpleComponent {
     			playNote(0, args.checkInteger(0));
     		}
     	}
-    	return new Object[]{};
+    	return null;
     }
     
     // OpenPeripheral

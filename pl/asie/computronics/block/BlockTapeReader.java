@@ -5,17 +5,18 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.tile.TileIronNote;
+import pl.asie.computronics.tile.TileTapeReader;
 import pl.asie.lib.block.BlockBase;
 
-public class BlockIronNote extends BlockBase {
-	public BlockIronNote(int id) {
+public class BlockTapeReader extends BlockBase {
+	public BlockTapeReader(int id) {
 		super(id, Material.iron, Computronics.instance);
-		this.setIconName("computronics:noteblock");
-		this.setUnlocalizedName("computronics.ironNoteBlock");
+		this.setUnlocalizedName("computronics.tapeReader");
+		this.setGuiID(0);
 	}
 	
 	@Override
 	public TileEntity createNewTileEntity(World world) {
-		return new TileIronNote();
+		return new TileTapeReader();
 	}
 }
