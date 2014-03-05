@@ -16,6 +16,7 @@ import pl.asie.lib.gui.GuiHandler;
 import pl.asie.lib.util.ModIntegrationHandler;
 import pl.asie.lib.util.ModIntegrationHandler.Stage;
 import net.minecraftforge.common.Configuration;
+import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
@@ -26,6 +27,8 @@ import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -82,6 +85,8 @@ public class Computronics {
 		gui = new GuiHandler();
 		NetworkRegistry.instance().registerGuiHandler(Computronics.instance, gui);
 		
+		MinecraftForge.EVENT_BUS.register(new ComputronicsEventHandler());
+		
 		gui.registerGui(ContainerTapeReader.class, GuiOneSlot.class);
 		
 		config.save();
@@ -90,5 +95,10 @@ public class Computronics {
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
 		//integration.init(Stage.POST_INIT);
+	}
+	
+	@EventHandler
+	public void serverStart(FMLServerAboutToStartEvent event) {
+		Computronics.storage = new StorageManager();
 	}
 }

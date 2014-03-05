@@ -98,6 +98,16 @@ public class Storage {
 	public void readFile() throws IOException {
 		FileInputStream fileStream = new FileInputStream(file);
 		GZIPInputStream stream = new GZIPInputStream(fileStream);
+		
+		int version = stream.read();
+		if(version >= 1) {
+			// Read position
+			int b1 = stream.read() & 0xFF;
+			int b2 = stream.read() & 0xFF;
+			int b3 = stream.read() & 0xFF;
+			int b4 = stream.read() & 0xFF;
+			this.position = b1 | (b2<<8) | (b3<<16) | (b4<<24);
+		}
 		this.data = new byte[size];
 		
 		int position = 0;
@@ -113,6 +123,11 @@ public class Storage {
 		FileOutputStream fileStream = new FileOutputStream(file);
 		GZIPOutputStream stream = new GZIPOutputStream(fileStream);
 		
+		stream.write(1);
+		stream.write(this.position & 0xFF);
+		stream.write((this.position >>> 8) & 0xFF);
+		stream.write((this.position >>> 16) & 0xFF);
+		stream.write((this.position >>> 24) & 0xFF);
 		stream.write(data);
 		stream.finish();
 		stream.flush();

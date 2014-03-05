@@ -17,7 +17,7 @@ public class StorageManager {
 	
 	public StorageManager() {
 		this.saveDir = new File(DimensionManager.getCurrentSaveRootDirectory(), "computronics");
-		if(!this.saveDir.mkdir()) {
+		if(!this.saveDir.exists() && !this.saveDir.mkdir()) {
 			Computronics.log.severe("COULD NOT CREATE SAVE DIRECTORY: " + this.saveDir.getAbsolutePath());
 		}
 	}
