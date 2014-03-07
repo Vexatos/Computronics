@@ -60,21 +60,30 @@ public class Storage {
 	public int seek(int dir) {
 		int seek = trySeek(dir);
 		position += seek;
+		modified = true;
 		return seek;
 	}
 	
 	public int read() {
+		modified = true;
 		return (int)data[position++] & 0xFF;
 	}
-	public int read(byte[] v) {
+	public int read(byte[] v, int offset, boolean simulate) {
 		int len = v.length;
-		if(position + len >= size)
-			len = (size-1) - position;
+		if(position + offset + len >= size)
+			len = (size-1) - (position+offset);
 		
-		System.arraycopy(data, position, v, 0, len);
-		position += len;
+		System.arraycopy(data, position + offset, v, 0, len);
+		if(!simulate) {
+			position += len;
+			modified = true;
+		}
 		
 		return len;
+	}
+	
+	public int read(byte[] v, boolean simulate) {
+		return read(v, 0, simulate);
 	}
 	
 	public void write(byte v) {

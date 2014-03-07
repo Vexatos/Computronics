@@ -5,18 +5,26 @@ import java.util.logging.Logger;
 
 import openperipheral.api.OpenPeripheralAPI;
 import pl.asie.computronics.block.BlockIronNote;
-import pl.asie.computronics.block.BlockTapeReader;
+import pl.asie.computronics.block.BlockTapeDrive;
 import pl.asie.computronics.gui.GuiOneSlot;
 import pl.asie.computronics.item.ItemTape;
 import pl.asie.computronics.storage.StorageManager;
 import pl.asie.computronics.tile.ContainerTapeReader;
 import pl.asie.computronics.tile.TileIronNote;
-import pl.asie.computronics.tile.TileTapeReader;
+import pl.asie.computronics.tile.TileTapeDrive;
+import pl.asie.lib.audio.DFPWMPlaybackManager;
 import pl.asie.lib.gui.GuiHandler;
+import pl.asie.lib.item.ItemParts;
+import pl.asie.lib.network.PacketFactory;
 import pl.asie.lib.util.ModIntegrationHandler;
 import pl.asie.lib.util.ModIntegrationHandler.Stage;
+import pl.asie.lib.util.color.RecipeColorizer;
+import net.minecraft.block.Block;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.oredict.ShapedOreRecipe;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
@@ -45,13 +53,16 @@ public class Computronics {
 	public static ModIntegrationHandler integration;
 	public static StorageManager storage;
 	public static GuiHandler gui;
+	public static PacketFactory packet;
+	public DFPWMPlaybackManager audio;
 	
 	@SidedProxy(clientSide="pl.asie.computronics.ClientProxy", serverSide="pl.asie.computronics.CommonProxy")	
 	public static CommonProxy proxy;
 	
 	public BlockIronNote ironNote;
-	public BlockTapeReader tapeReader;
+	public BlockTapeDrive tapeReader;
 	public ItemTape itemTape;
+	public ItemParts itemParts;
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
@@ -62,6 +73,8 @@ public class Computronics {
 		config.load();
 		
 		integration = new ModIntegrationHandler(log);
+		audio = new DFPWMPlaybackManager(proxy.isClient());
+		packet = new PacketFactory("computronics");
 		
 		//integration.init(Stage.PRE_INIT);
 		
@@ -70,13 +83,17 @@ public class Computronics {
 		GameRegistry.registerTileEntity(TileIronNote.class, "computronics.ironNoteBlock");
 		OpenPeripheralAPI.createAdapter(TileIronNote.class);
 		
-		tapeReader = new BlockTapeReader(config.getBlock("tapeReader", 2711).getInt());
+		tapeReader = new BlockTapeDrive(config.getBlock("tapeReader", 2711).getInt());
 		GameRegistry.registerBlock(tapeReader, "computronics.tapeReader");
-		GameRegistry.registerTileEntity(TileTapeReader.class, "computronics.tapeReader");
-		OpenPeripheralAPI.createAdapter(TileTapeReader.class);
+		GameRegistry.registerTileEntity(TileTapeDrive.class, "computronics.tapeReader");
+		OpenPeripheralAPI.createAdapter(TileTapeDrive.class);
 		
 		itemTape = new ItemTape(config.getItem("tape", 27850).getInt());
 		GameRegistry.registerItem(itemTape, "computronics.tape");
+		
+		itemParts = new ItemParts(config.getItem("parts", 27851).getInt(), "computronics",
+				new String[]{"tape_track"});
+		GameRegistry.registerItem(itemParts, "computronics.parts");
 	}
 	
 	@EventHandler
@@ -87,7 +104,22 @@ public class Computronics {
 		
 		MinecraftForge.EVENT_BUS.register(new ComputronicsEventHandler());
 		
-		gui.registerGui(ContainerTapeReader.class, GuiOneSlot.class);
+		proxy.registerGuis(gui);
+		
+		GameRegistry.addShapedRecipe(new ItemStack(ironNote, 1, 0), "iii", "ini", "iii", 'i', Item.ingotIron, 'n', Block.music);
+		GameRegistry.addShapedRecipe(new ItemStack(tapeReader, 1, 0), "iii", "iri", "iai", 'i', Item.ingotIron, 'r', Item.redstone, 'a', ironNote);
+		// Tape recipes
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 0),
+				" i ", "iii", " T ", 'T', new ItemStack(itemParts, 1, 0), 'i', Item.ingotIron));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 1),
+				" i ", "ngn", " T ", 'T', new ItemStack(itemParts, 1, 0), 'i', Item.ingotIron, 'n', Item.goldNugget, 'g', Item.ingotGold));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 2),
+				" i ", "ggg", "nTn", 'T', new ItemStack(itemParts, 1, 0), 'i', Item.ingotIron, 'n', Item.goldNugget, 'g', Item.ingotGold));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 3),
+				" i ", "ddd", " T ", 'T', new ItemStack(itemParts, 1, 0), 'i', Item.ingotIron, 'd', Item.diamond));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 1, 0),
+				" i ", "rrr", "iii", 'r', Item.redstone, 'i', Item.ingotIron));
+		GameRegistry.addRecipe(new RecipeColorizer(itemTape));
 		
 		config.save();
 	}

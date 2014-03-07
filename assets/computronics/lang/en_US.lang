@@ -1,4 +1,5 @@
 tile.computronics.ironNoteBlock.name=Iron Note Block
-tile.computronics.tapeReader.name=Tape Reader
+tile.computronics.tapeDrive.name=Tape Drive
 
+item.computronics.part_tape_track.name=Tape Track
 item.computronics.tape.name=Cassette Tape

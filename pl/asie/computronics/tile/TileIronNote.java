@@ -29,6 +29,9 @@ public class TileIronNote extends TileEntityBase implements SimpleComponent {
 	public String getComponentName() {
 		return "iron_noteblock";
 	}
+
+	@Override
+	public boolean canUpdate() { return false; }
 	
 	// OpenComputers
 	

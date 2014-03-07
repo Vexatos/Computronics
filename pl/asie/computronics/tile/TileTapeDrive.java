@@ -1,5 +1,7 @@
 package pl.asie.computronics.tile;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import li.cil.oc.api.network.Arguments;
 import li.cil.oc.api.network.Callback;
 import li.cil.oc.api.network.Context;
@@ -11,13 +13,85 @@ import dan200.computer.api.IComputerAccess;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import pl.asie.computronics.Computronics;
+import pl.asie.computronics.Packets;
 import pl.asie.computronics.api.IItemStorage;
 import pl.asie.computronics.storage.Storage;
+import pl.asie.lib.audio.DFPWM;
 import pl.asie.lib.block.TileEntityInventory;
+import pl.asie.lib.network.PacketInput;
+import pl.asie.lib.network.PacketOutput;
 
-public class TileTapeReader extends TileEntityInventory implements SimpleComponent {
+public class TileTapeDrive extends TileEntityInventory implements SimpleComponent {
 	private Storage storage;
 	private String storageName = "";
+	private DFPWM codec;
+	private int codecId, codecTick, packetId;
+	
+	// Audio handling
+	
+	private void playAudio(int id) {
+		if(worldObj.isRemote || storage == null) return;
+		if(codec != null) stopAudio();
+		
+		codecId = id;
+		codec = Computronics.instance.audio.getPlayer(codecId);
+		codecTick = 0;
+		packetId = 0;
+		bytesSent = 0;
+		bytesSeeked = 0;
+	}
+	
+	private void playAudio() {
+		if(worldObj.isRemote) return;
+		playAudio(Computronics.instance.audio.newPlayer());
+	}
+	
+	private void stopAudio() {
+		this.codec = null;
+		Computronics.instance.audio.removePlayer(codecId);
+		try {
+			PacketInput pkt = Computronics.packet.create(Packets.PACKET_AUDIO_STOP)
+				.writeInt(codecId);
+			Computronics.packet.sendToAllPlayers(pkt);
+		} catch(Exception e) { e.printStackTrace(); }
+	}
+	
+	private final int MUSIC_PACKET_SIZE = 1024;
+	private int bytesSent, bytesSeeked;
+	
+	private void sendMusicPacket() {
+		byte[] packet = new byte[MUSIC_PACKET_SIZE];
+		int offset = bytesSent - bytesSeeked; // Bytes already read minus bytes we should have read
+		int amount = storage.read(packet, offset, true); // read data into packet array
+		bytesSent += 1024;
+		try {
+			PacketInput pkt = Computronics.packet.create(Packets.PACKET_AUDIO_DATA)
+				.writeTileLocation(this)
+				.writeInt(packetId++)
+				.writeInt(codecId)
+				.writeByteArrayData(packet);
+			Computronics.packet.sendToAllNear(pkt, this, 64.0D);
+		} catch(Exception e) { e.printStackTrace(); }
+		if(amount < MUSIC_PACKET_SIZE) stopAudio();
+	}
+	
+	@Override
+	public boolean canUpdate() { return true; }
+	
+	@Override
+	public void updateEntity() {
+		super.updateEntity();
+		if(!worldObj.isRemote && codec != null && storage != null) {
+			if(codecTick % 4 == 0) sendMusicPacket(); // Intentionally too fast
+			if(codecTick % 5 == 0) { // Do a proper seek in place of ^
+				storage.seek(MUSIC_PACKET_SIZE);
+				bytesSeeked += 1024;
+			}
+			codecTick++;
+		}
+	}
+	// Storage handling
 	
 	private void loadStorage() {
 		if(worldObj != null && worldObj.isRemote) return;
@@ -55,6 +129,8 @@ public class TileTapeReader extends TileEntityInventory implements SimpleCompone
 	
 	private void unloadStorage() {
 		if(worldObj.isRemote || storage == null) return;
+		
+		stopAudio();
 		try {
 			storage.writeFileIfModified();
 		} catch(Exception e) { e.printStackTrace(); }
@@ -69,7 +145,13 @@ public class TileTapeReader extends TileEntityInventory implements SimpleCompone
 	
 	@Override
 	public void onChunkUnload() {
-		super.onChunkUnload();
+		super.onWorldUnload();
+		unloadStorage();
+	}
+	
+	@Override
+	public void onWorldUnload() {
+		super.onWorldUnload();
 		unloadStorage();
 	}
 
@@ -116,7 +198,7 @@ public class TileTapeReader extends TileEntityInventory implements SimpleCompone
     	if(storage != null) {
     		if(args.count() >= 1 && args.isInteger(0) && (args.checkInteger(0) >= 0)) {
     			byte[] data = new byte[args.checkInteger(0)];
-    			storage.read(data);
+    			storage.read(data, false);
     			return new Object[]{data};
     		} else return new Object[]{(int)storage.read() & 0xFF};
     	} else return null;
@@ -132,10 +214,22 @@ public class TileTapeReader extends TileEntityInventory implements SimpleCompone
     	}
     	return null;
     }
+    
+    @Callback
+    public Object[] play(Context context, Arguments args) {
+    	playAudio();
+    	return null;
+    }
 
+    @Callback
+    public Object[] stop(Context context, Arguments args) {
+    	stopAudio();
+    	return null;
+    }
+    
 	@Override
 	public String getComponentName() {
-		return "tape_reader";
+		return "tape_drive";
 	}
     
     // OpenPeripheral
@@ -185,5 +279,15 @@ public class TileTapeReader extends TileEntityInventory implements SimpleCompone
 		@Arg(name = "value", type = LuaType.NUMBER, description = "The value (0-255)") int value
 	) {
     	if(storage != null) storage.write((byte)value);
+    }
+    
+    @LuaCallable(description = "Starts playing music.")
+	public void play(IComputerAccess computer) {
+    	playAudio();
+    }
+    
+    @LuaCallable(description = "Stops playing music.")
+	public void stop(IComputerAccess computer) {
+    	stopAudio();
     }
 }
