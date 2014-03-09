@@ -26,7 +26,7 @@ public class NetworkHandler extends NetworkHandlerBase implements IPacketHandler
 	private static final AudioFormat DFPWM_DECODED_FORMAT = new AudioFormat(32768, 8, 1, false, false);
 	
 	@Override
-	public void handlePacket(PacketOutput packet, int command, Player player,
+	public void handlePacket(INetworkManager manager, PacketOutput packet, int command, Player player,
 			boolean isClient) throws IOException {
 		switch(command) {
 			case Packets.PACKET_AUDIO_DATA: {
@@ -38,7 +38,7 @@ public class NetworkHandler extends NetworkHandlerBase implements IPacketHandler
 				int packetId = packet.readInt();
 				int codecId = packet.readInt();
 				byte[] data = packet.readByteArrayData(1024);
-
+				//System.out.println("Received audio packet! Stream #" + codecId + ", packet #" + packetId);
 				//SoundSystem sound = Minecraft.getMinecraft().sndManager.sndSystem;
 				byte[] audio = new byte[8192];
 				String sourceName = "dfpwm_"+codecId;

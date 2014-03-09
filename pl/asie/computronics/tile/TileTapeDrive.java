@@ -1,18 +1,15 @@
 package pl.asie.computronics.tile;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import li.cil.oc.api.network.Arguments;
 import li.cil.oc.api.network.Callback;
 import li.cil.oc.api.network.Context;
 import li.cil.oc.api.network.SimpleComponent;
-import openperipheral.api.Arg;
-import openperipheral.api.LuaCallable;
-import openperipheral.api.LuaType;
-import dan200.computer.api.IComputerAccess;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import openperipheral.api.Arg;
+import openperipheral.api.LuaCallable;
+import openperipheral.api.LuaType;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.Packets;
 import pl.asie.computronics.api.IItemStorage;
@@ -20,7 +17,7 @@ import pl.asie.computronics.storage.Storage;
 import pl.asie.lib.audio.DFPWM;
 import pl.asie.lib.block.TileEntityInventory;
 import pl.asie.lib.network.PacketInput;
-import pl.asie.lib.network.PacketOutput;
+import dan200.computer.api.IComputerAccess;
 
 public class TileTapeDrive extends TileEntityInventory implements SimpleComponent {
 	private Storage storage;
@@ -91,6 +88,13 @@ public class TileTapeDrive extends TileEntityInventory implements SimpleComponen
 			codecTick++;
 		}
 	}
+	
+	@Override
+	public void onBlockDestroy() {
+		super.onBlockDestroy();
+		unloadStorage();
+	}
+	
 	// Storage handling
 	
 	private void loadStorage() {
