@@ -35,7 +35,7 @@ public class TileIronNote extends TileEntityBase implements SimpleComponent {
 	
 	// OpenComputers
 	
-    @Callback
+    @Callback(direct = true)
     public Object[] playNote(Context context, Arguments args) {
     	if(args.count() >= 1 && args.isInteger(0)) {
     		if(args.count() >= 2 && args.isInteger(1)) {

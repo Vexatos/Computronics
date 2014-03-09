@@ -1,5 +1,6 @@
 tile.computronics.ironNoteBlock.name=Iron Note Block
 tile.computronics.tapeDrive.name=Tape Drive
+tile.computronics.camera.name=Camera
 
 item.computronics.part_tape_track.name=Tape Track
 item.computronics.tape.name=Cassette Tape

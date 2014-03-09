@@ -12,24 +12,24 @@ import pl.asie.computronics.tile.TileIronNote;
 import pl.asie.computronics.tile.TileTapeDrive;
 import pl.asie.lib.block.BlockBase;
 
-public class BlockTapeDrive extends BlockMachineSidedIcon {
+public class BlockTapeReader extends BlockMachineSidedIcon {
 	private Icon mFront;
 	
-	public BlockTapeDrive(int id) {
+	public BlockTapeReader(int id) {
 		super(id);
 		this.setUnlocalizedName("computronics.tapeDrive");
 		this.setGuiID(0);
 	}
 	
 	@Override
-	public TileEntity createNewTileEntity(World world) {
+	public TileEntity createNewTileEntity(World world, int metadata) {
 		return new TileTapeDrive();
 	}
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public Icon getAbsoluteSideIcon(int sideNumber) {
-		return sideNumber == 2 ? mFront : super.getAbsoluteSideIcon(sideNumber);
+	public Icon getAbsoluteSideIcon(int sideNumber, int metadata) {
+		return sideNumber == 2 ? mFront : super.getAbsoluteSideIcon(sideNumber, metadata);
 	}
 	
 	@Override

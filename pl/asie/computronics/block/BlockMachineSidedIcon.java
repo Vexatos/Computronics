@@ -6,6 +6,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import pl.asie.computronics.Computronics;
 import pl.asie.lib.block.BlockBase;
@@ -21,16 +22,27 @@ public abstract class BlockMachineSidedIcon extends BlockBase {
 	
 	@Override
 	@SideOnly(Side.CLIENT)
+	public Icon getBlockTexture(IBlockAccess w, int x, int y, int z, int side) {
+		return getIconInternal(side, w.getBlockMetadata(x, y, z));
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
 	public Icon getIcon(int side, int metadata) {
+		return getIconInternal(side, 2);
+	}
+	
+	@SideOnly(Side.CLIENT)
+	private Icon getIconInternal(int side, int metadata) {
 		switch(side) {
 			case 0: return mBottom;
 			case 1: return mTop;
-			default: return getAbsoluteSideIcon(MiscUtils.getAbsoluteSide(side, metadata));
+			default: return getAbsoluteSideIcon(MiscUtils.getAbsoluteSide(side, ((metadata & 3) + 2)), metadata);
 		}
 	}
 	
 	@SideOnly(Side.CLIENT)
-	public Icon getAbsoluteSideIcon(int sideNumber) {
+	public Icon getAbsoluteSideIcon(int sideNumber, int metadata) {
 		return mSide;
 	}
 	

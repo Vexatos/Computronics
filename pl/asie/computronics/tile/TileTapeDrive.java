@@ -143,8 +143,9 @@ public class TileTapeDrive extends TileEntityInventory implements SimpleComponen
 	
 	@Override
 	public void onInventoryUpdate(int slot) {
-		if(this.getStackInSlot(0) == null) unloadStorage();
-		else loadStorage();
+		if(this.getStackInSlot(0) == null) {
+			unloadStorage();
+		} else loadStorage();
 	}
 	
 	@Override
@@ -170,22 +171,34 @@ public class TileTapeDrive extends TileEntityInventory implements SimpleComponen
 		loadStorage();
 	}
 	
+	public static final int END_SIZE = 1024;
+	
 	// OpenComputers
-    @Callback
+	@Callback(direct = true)
+	public Object[] isEnd(Context context, Arguments args) {
+	    return new Object[]{storage.getPosition() + END_SIZE <= storage.getSize()};
+	}
+	
+    @Callback(direct = true)
     public Object[] isReady(Context context, Arguments args) {
     	return new Object[]{storage != null};
     }
     
-    @Callback
-    public Object[] size(Context context, Arguments args) {
+    @Callback(direct = true)
+    public Object[] getSize(Context context, Arguments args) {
     	return new Object[]{(storage != null ? storage.getSize() : 0)};
     }
     
     @Callback
-    public Object[] label(Context context, Arguments args) {
+    public Object[] setLabel(Context context, Arguments args) {
     	if(args.count() == 1) {
     		if(args.isString(0)) setLabel(args.checkString(0));
     	}
+    	return new Object[]{(storage != null ? storageName : "")};
+    }
+    
+    @Callback
+    public Object[] getLabel(Context context, Arguments args) {
     	return new Object[]{(storage != null ? storageName : "")};
     }
 
@@ -237,7 +250,7 @@ public class TileTapeDrive extends TileEntityInventory implements SimpleComponen
 	}
     
     // OpenPeripheral
-    @LuaCallable(description = "Checks if any tape is inserted.", returnTypes = {LuaType.BOOLEAN})
+    @LuaCallable(description = "Check if any tape is inserted.", returnTypes = {LuaType.BOOLEAN})
 	public boolean isReady(IComputerAccess computer) {
     	return storage != null;
     }
@@ -247,6 +260,11 @@ public class TileTapeDrive extends TileEntityInventory implements SimpleComponen
     	if(storage != null) return storage.getSize();
     	else return 0;
     }
+    
+    @LuaCallable(description = "Check if the tape is near its end.", returnTypes = {LuaType.BOOLEAN})
+	public boolean isEnd(IComputerAccess computer) {
+	    return storage.getPosition() + END_SIZE <= storage.getSize();
+	}
     
     @LuaCallable(description = "Get the label of the inserted tape.", returnTypes = {LuaType.STRING})
 	public String getLabel(IComputerAccess computer) {

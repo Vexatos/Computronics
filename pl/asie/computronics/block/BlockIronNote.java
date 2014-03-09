@@ -15,7 +15,7 @@ public class BlockIronNote extends BlockBase {
 	}
 	
 	@Override
-	public TileEntity createNewTileEntity(World world) {
+	public TileEntity createNewTileEntity(World world, int metadata) {
 		return new TileIronNote();
 	}
 }

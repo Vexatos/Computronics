@@ -4,12 +4,14 @@ import java.util.Random;
 import java.util.logging.Logger;
 
 import openperipheral.api.OpenPeripheralAPI;
+import pl.asie.computronics.block.BlockCamera;
 import pl.asie.computronics.block.BlockIronNote;
-import pl.asie.computronics.block.BlockTapeDrive;
+import pl.asie.computronics.block.BlockTapeReader;
 import pl.asie.computronics.gui.GuiOneSlot;
 import pl.asie.computronics.item.ItemTape;
 import pl.asie.computronics.storage.StorageManager;
 import pl.asie.computronics.tile.ContainerTapeReader;
+import pl.asie.computronics.tile.TileCamera;
 import pl.asie.computronics.tile.TileIronNote;
 import pl.asie.computronics.tile.TileTapeDrive;
 import pl.asie.lib.audio.DFPWMPlaybackManager;
@@ -41,7 +43,7 @@ import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-@Mod(modid="computronics", name="Computronics", version="0.1.0", dependencies="required-after:asielib;after:OpenPeripheralCore;after:ComputerCraft;after:OpenComputers")
+@Mod(modid="computronics", name="Computronics", version="0.1.1", dependencies="required-after:asielib;after:OpenPeripheralCore;after:ComputerCraft;after:OpenComputers;after:OpenComputers|Core")
 @NetworkMod(channels={"computronics"}, clientSideRequired=true, packetHandler=NetworkHandler.class)
 public class Computronics {
 	public Configuration config;
@@ -60,7 +62,8 @@ public class Computronics {
 	public static CommonProxy proxy;
 	
 	public BlockIronNote ironNote;
-	public BlockTapeDrive tapeReader;
+	public BlockTapeReader tapeReader;
+	public BlockCamera camera;
 	public ItemTape itemTape;
 	public ItemParts itemParts;
 	
@@ -83,10 +86,15 @@ public class Computronics {
 		GameRegistry.registerTileEntity(TileIronNote.class, "computronics.ironNoteBlock");
 		OpenPeripheralAPI.createAdapter(TileIronNote.class);
 		
-		tapeReader = new BlockTapeDrive(config.getBlock("tapeReader", 2711).getInt());
+		tapeReader= new BlockTapeReader(config.getBlock("tapeReader", 2711).getInt());
 		GameRegistry.registerBlock(tapeReader, "computronics.tapeReader");
 		GameRegistry.registerTileEntity(TileTapeDrive.class, "computronics.tapeReader");
 		OpenPeripheralAPI.createAdapter(TileTapeDrive.class);
+		
+		camera = new BlockCamera(config.getBlock("camera", 2712).getInt());
+		GameRegistry.registerBlock(camera, "computronics.camera");
+		GameRegistry.registerTileEntity(TileCamera.class, "computronics.camera");
+		OpenPeripheralAPI.createAdapter(TileCamera.class);
 		
 		itemTape = new ItemTape(config.getItem("tape", 27850).getInt());
 		GameRegistry.registerItem(itemTape, "computronics.tape");
@@ -106,6 +114,7 @@ public class Computronics {
 		
 		proxy.registerGuis(gui);
 		
+		GameRegistry.addShapedRecipe(new ItemStack(camera, 1, 0), "sss", "geg", "iii", 's', Block.stoneBrick, 'i', Item.ingotIron, 'e', Item.enderPearl, 'g', Block.glass);
 		GameRegistry.addShapedRecipe(new ItemStack(ironNote, 1, 0), "iii", "ini", "iii", 'i', Item.ingotIron, 'n', Block.music);
 		GameRegistry.addShapedRecipe(new ItemStack(tapeReader, 1, 0), "iii", "iri", "iai", 'i', Item.ingotIron, 'r', Item.redstone, 'a', ironNote);
 		// Tape recipes
