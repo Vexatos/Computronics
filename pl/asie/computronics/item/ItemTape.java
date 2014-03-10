@@ -25,7 +25,7 @@ public class ItemTape extends Item implements IItemStorage {
 		super(id);
 		this.setUnlocalizedName("computronics.tape");
 		this.setTextureName("computronics:tape");
-		this.setCreativeTab(CreativeTabs.tabMisc);
+		this.setCreativeTab(Computronics.tab);
 		this.setHasSubtypes(true);
 		this.setMaxDamage(0);
 		this.setMaxStackSize(1);

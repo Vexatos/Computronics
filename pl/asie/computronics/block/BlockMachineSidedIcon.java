@@ -17,6 +17,7 @@ public abstract class BlockMachineSidedIcon extends BlockBase {
 	
 	public BlockMachineSidedIcon(int id) {
 		super(id, Material.iron, Computronics.instance);
+		this.setCreativeTab(Computronics.tab);
 		this.setRotateFrontSide(true);
 	}
 	

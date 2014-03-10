@@ -10,6 +10,7 @@ import pl.asie.lib.block.BlockBase;
 public class BlockIronNote extends BlockBase {
 	public BlockIronNote(int id) {
 		super(id, Material.iron, Computronics.instance);
+		this.setCreativeTab(Computronics.tab);
 		this.setIconName("computronics:noteblock");
 		this.setUnlocalizedName("computronics.ironNoteBlock");
 	}

@@ -11,6 +11,7 @@ import pl.asie.lib.block.BlockBase;
 public class BlockChatBox extends BlockBase {
 	public BlockChatBox(int id) {
 		super(id, Material.iron, Computronics.instance);
+		this.setCreativeTab(Computronics.tab);
 		this.setIconName("computronics:chatbox");
 		this.setUnlocalizedName("computronics.chatBox");
 	}

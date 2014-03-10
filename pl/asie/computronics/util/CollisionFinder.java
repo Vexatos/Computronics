@@ -18,10 +18,12 @@ public class CollisionFinder {
 	private double ox, oy, oz;
 	private final float xDir, yDir, zDir;
 	
-	public CollisionFinder(World world, int x, int y, int z, float xDir, float yDir, float zDir) {
-		this.world = world; this.cx = x; this.cy = y; this.cz = z;
-		this.ox = x; this.oy = y; this.oz = z;
+	public CollisionFinder(World world, float x, float y, float z, float xDir, float yDir, float zDir) {
+		this.world = world; this.cx = x+0.5; this.cy = y+0.5; this.cz = z+0.5;
 		this.xDir = xDir; this.yDir = yDir; this.zDir = zDir;
+		
+		// Store original coords
+		this.ox = cx; this.oy = cy; this.oz = cz;
 	}
 	
 	public World world() { return world; }
@@ -63,10 +65,10 @@ public class CollisionFinder {
 	}
 	
 	public Object nextCollision(int steps) {
-		for(int i = 0; i < steps * 8; i++) {
-			cx += xDir/8;
-			cy += yDir/8;
-			cz += zDir/8;
+		for(int i = 0; i < steps; i++) {
+			cx += xDir;
+			cy += yDir;
+			cz += zDir;
 			int x = (int)Math.round(cx);
 			int y = (int)Math.round(cy);
 			int z = (int)Math.round(cz);
@@ -74,10 +76,9 @@ public class CollisionFinder {
 			
 			if(!world.isAirBlock(x, y, z)) {
 				Block found = Block.blocksList[world.getBlockId(x, y, z)];
+				System.out.println("Found block " + found.blockID);
 				if(found.isOpaqueCube()) {
-					// Check brightness
-					if(world.getBlockLightValue(x, y, z) > 0)
-						return found;
+					return found;
 				}
 			}
 		}

@@ -38,8 +38,6 @@ public class NetworkHandler extends NetworkHandlerBase implements IPacketHandler
 				int packetId = packet.readInt();
 				int codecId = packet.readInt();
 				byte[] data = packet.readByteArrayData(1024);
-				//System.out.println("Received audio packet! Stream #" + codecId + ", packet #" + packetId);
-				//SoundSystem sound = Minecraft.getMinecraft().sndManager.sndSystem;
 				byte[] audio = new byte[8192];
 				String sourceName = "dfpwm_"+codecId;
 				DFPWMCodec codec = Computronics.instance.audio.getPlayer(codecId);
@@ -55,29 +53,13 @@ public class NetworkHandler extends NetworkHandlerBase implements IPacketHandler
 				if((codec.lastPacketId + 1) != packetId) {
 					codec.reset();
 				}
-				// Feed data and work around paulscode bug
-				/*if(!sound.playing(sourceName)) {
-					sound.feedRawAudioData(sourceName, new byte[16]);
-					sound.setPosition(sourceName, (float)x, (float)y, (float)z);
-					sound.setLooping(sourceName, false);
-	                sound.setVolume(sourceName, 0.5F * Minecraft.getMinecraft().gameSettings.soundVolume);
-	                sound.pause(sourceName);
-				}*/
-				/*sound.feedRawAudioData(sourceName, audio);
-				if(!sound.playing(sourceName) && packetId > 0 && ((codec.lastPacketId + 1) == packetId)) {
-					// Won't play at first if it's the first packet in a series
-					sound.play(sourceName);
-				}*/
 				codec.playPacket(audio, x, y, z);
 				codec.lastPacketId = packetId;
 			} break;
 			case Packets.PACKET_AUDIO_STOP: {
 				if(!isClient) return;
-				//SoundSystem sound = Minecraft.getMinecraft().sndManager.sndSystem;
 				int codecId = packet.readInt();
 				Computronics.instance.audio.removePlayer(codecId);
-				//sound.stop("dfpwm_"+codecId);
-				//sound.removeSource("dfpwm_"+codecId);
 			} break;
 		}
 	}
