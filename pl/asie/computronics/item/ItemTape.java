@@ -18,7 +18,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.Icon;
 
 public class ItemTape extends Item implements IItemStorage {
-	private int[] sizes = { 4096*60*4, 4096*60*8, 4096*60*16, 4096*60*32 };
+	private static int[] sizes = { 4096*60*4, 4096*60*8, 4096*60*16, 4096*60*32 };
 	private Icon tape_i, tape_g, tape_d, tape_c;
 	
 	public ItemTape(int id) {

@@ -95,6 +95,12 @@ public class TileTapeDrive extends TileEntityInventory implements SimpleComponen
 		unloadStorage();
 	}
 	
+	@Override
+	public void invalidate() {
+		super.invalidate();
+		unloadStorage();
+	}
+	
 	// Storage handling
 	
 	private void loadStorage() {

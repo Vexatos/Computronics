@@ -15,8 +15,12 @@ import pl.asie.computronics.util.CollisionFinder;
 import pl.asie.lib.block.TileEntityBase;
 
 public class TileCamera extends TileEntityBase implements SimpleComponent {
-	public float getDistance(float x, float y) {
-		if(x < -1.0F || x > 1.0F || y < -1.0F || y > 1.0F) return -1.0F;
+	private static final int CALL_LIMIT = 20;
+	private CollisionFinder cf;
+	private Object hit;
+	
+	public boolean setRayDirection(float x, float y) {
+		if(x < -1.0F || x > 1.0F || y < -1.0F || y > 1.0F) return false;
 		ForgeDirection dir = Computronics.instance.camera.getFacingDirection(worldObj, xCoord, yCoord, zCoord);
 		if(dir != null) {
 			float xInc = 0.0F;
@@ -29,23 +33,59 @@ public class TileCamera extends TileEntityBase implements SimpleComponent {
 				case WEST: { xInc = -1.0F; zInc = x; } break;
 				case DOWN: { yInc = -1.0F; xInc = x; zInc = y; } break;
 				case UP: { yInc = 1.0F; xInc = x; zInc = y; } break;
-				case UNKNOWN: return -1;
-				default: return -1;
+				case UNKNOWN: return false;
+				default: return false;
 			}
-			CollisionFinder cf = new CollisionFinder(this.worldObj, xCoord, yCoord, zCoord, xInc, yInc, zInc);
-			Object o = cf.nextCollision(32);
-			if(o != null) {
-				return cf.distance();
+			synchronized(cf) {
+				if(cf != null && cf.xDirection() == xInc && cf.yDirection() == yInc && cf.zDirection() == zInc)
+					return true;
+				
+				cf = new CollisionFinder(this.worldObj, xCoord, yCoord, zCoord, xInc, yInc, zInc);
+				hit = cf.nextCollision(32);
 			}
+			return true;
 		}
-		return -1.0F; // Error!
+		return false;
+	}
+	
+	@Override
+	public boolean canUpdate() { return true; }
+	
+	@Override
+	public void updateEntity() {
+		super.updateEntity();
+		synchronized(cf) {
+			cf = null; // Reset ray every tick to make sure new blocks get hit.
+		}
 	}
 	
 	// OpenComputers
-    @Callback(direct = true, limit = 20)
-    public Object[] distance(Context context, Arguments args) {
+    @Callback(direct = true, limit = CALL_LIMIT)
+    public Object[] setRayDirection(Context context, Arguments args) {
     	if(args.count() == 2) {
-    		return new Object[]{(double)getDistance((float)args.checkDouble(0), (float)args.checkDouble(1))};
+    		return new Object[]{setRayDirection((float)args.checkDouble(0), (float)args.checkDouble(1))};
+    	}
+    	return null;
+    }
+    
+    @Callback(direct = true, limit = CALL_LIMIT)
+    public Object[] distance(Context context, Arguments args) {
+    	setRayDirection(context, args);
+    	synchronized(cf) {
+    		if(cf != null) {
+    			if(hit != null) return new Object[]{(double)cf.distance()};
+    		}
+    	}
+    	return new Object[]{(double)-1.0F};
+    }
+    
+    @Callback(direct = true, limit = CALL_LIMIT / 2)
+    public Object[] block(Context context, Arguments args) {
+    	setRayDirection(context, args);
+    	synchronized(cf) {
+    		if(cf != null) {
+    			if(hit != null) return new Object[]{cf.blockData()};
+    		}
     	}
     	return null;
     }
@@ -63,6 +103,10 @@ public class TileCamera extends TileEntityBase implements SimpleComponent {
 		@Arg(name = "x", type = LuaType.NUMBER, description = "The X direction (-1.0 to 1.0)") Float x,
 		@Arg(name = "y", type = LuaType.NUMBER, description = "The Y direction (-1.0 to 1.0)") Float y
 	) {
-    	return getDistance(x, y);
+    	setRayDirection(x, y);
+    	synchronized(cf) {
+    		if(cf != null && hit != null) return cf.distance();
+    		else return -1.0F;
+    	}
     }
 }
