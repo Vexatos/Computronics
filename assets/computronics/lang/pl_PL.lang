@@ -1,0 +1,10 @@
+tile.computronics.ironNoteBlock.name=Żelazny blok dźwiękowy 
+tile.computronics.tapeDrive.name=Magnetofon
+tile.computronics.camera.name=Kamera
+tile.computronics.chatBox.name=Blok Czatu
+
+item.computronics.robot_upgrade_camera.name=Rozszerzenie: Kamera
+item.computronics.part_tape_track.name=Obudowa kasety
+item.computronics.tape.name=Kaseta magnetofonowa
+
+itemGroup.tabComputronics=Computronics

@@ -27,9 +27,9 @@ public class CollisionFinder {
 	}
 	
 	public World world() { return world; }
-	public int x() { return (int)Math.round(cx); }
-	public int y() { return (int)Math.round(cy); }
-	public int z() { return (int)Math.round(cz); }
+	public int x() { return (int)Math.floor(cx); }
+	public int y() { return (int)Math.floor(cy); }
+	public int z() { return (int)Math.floor(cz); }
 	public float xDirection() { return xDir; }
 	public float yDirection() { return yDir; }
 	public float zDirection() { return zDir; }
@@ -69,14 +69,13 @@ public class CollisionFinder {
 			cx += xDir;
 			cy += yDir;
 			cz += zDir;
-			int x = (int)Math.round(cx);
-			int y = (int)Math.round(cy);
-			int z = (int)Math.round(cz);
+			int x = (int)Math.floor(cx);
+			int y = (int)Math.floor(cy);
+			int z = (int)Math.floor(cz);
 			if(y < 0 || y >= 256) return null;
 			
 			if(!world.isAirBlock(x, y, z)) {
 				Block found = Block.blocksList[world.getBlockId(x, y, z)];
-				System.out.println("Found block " + found.blockID);
 				if(found.isOpaqueCube()) {
 					return found;
 				}
