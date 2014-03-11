@@ -80,8 +80,8 @@ public class TileTapeDrive extends TileEntityInventory implements SimpleComponen
 	public void updateEntity() {
 		super.updateEntity();
 		if(!worldObj.isRemote && codec != null && storage != null) {
-			if(codecTick % 4 == 0) sendMusicPacket(); // Intentionally too fast
-			if(codecTick % 5 == 0) { // Do a proper seek in place of ^
+			if(codecTick % 5 == 0) sendMusicPacket();
+			if(codecTick % 5 == 0) {
 				storage.seek(MUSIC_PACKET_SIZE);
 				bytesSeeked += 1024;
 			}

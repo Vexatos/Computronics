@@ -4,6 +4,7 @@ import java.util.Random;
 import java.util.logging.Logger;
 
 import li.cil.oc.api.Driver;
+import li.cil.oc.api.Items;
 import openperipheral.api.OpenPeripheralAPI;
 import pl.asie.computronics.block.BlockCamera;
 import pl.asie.computronics.block.BlockChatBox;
@@ -48,7 +49,7 @@ import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-@Mod(modid="computronics", name="Computronics", version="0.1.2-DEV", dependencies="required-after:asielib;after:OpenPeripheralCore;after:ComputerCraft;after:OpenComputers;after:OpenComputers|Core")
+@Mod(modid="computronics", name="Computronics", version="0.1.2", dependencies="required-after:asielib;after:OpenPeripheralCore;after:ComputerCraft;after:OpenComputers;after:OpenComputers|Core")
 @NetworkMod(channels={"computronics"}, clientSideRequired=true, packetHandler=NetworkHandler.class)
 public class Computronics {
 	public Configuration config;
@@ -64,6 +65,7 @@ public class Computronics {
 	public DFPWMPlaybackManager audio;
 	
 	public static int CHATBOX_DISTANCE = 40;
+	public static int CAMERA_DISTANCE = 32;
 	
 	@SidedProxy(clientSide="pl.asie.computronics.ClientProxy", serverSide="pl.asie.computronics.CommonProxy")	
 	public static CommonProxy proxy;
@@ -96,6 +98,7 @@ public class Computronics {
 		
 		// Configs
 		CHATBOX_DISTANCE = config.get("options", "chatboxDistance", 40).getInt();
+		CAMERA_DISTANCE = config.get("options", "cameraDistance", 32).getInt();
 		
 		//integration.init(Stage.PRE_INIT);
 		
@@ -147,6 +150,7 @@ public class Computronics {
 		proxy.registerGuis(gui);
 		
 		GameRegistry.addShapedRecipe(new ItemStack(camera, 1, 0), "sss", "geg", "iii", 's', Block.stoneBrick, 'i', Item.ingotIron, 'e', Item.enderPearl, 'g', Block.glass);
+		GameRegistry.addShapedRecipe(new ItemStack(chatBox, 1, 0), "sss", "ses", "iri", 's', Block.stoneBrick, 'i', Item.ingotIron, 'e', Item.enderPearl, 'r', Item.redstone);
 		GameRegistry.addShapedRecipe(new ItemStack(ironNote, 1, 0), "iii", "ini", "iii", 'i', Item.ingotIron, 'n', Block.music);
 		GameRegistry.addShapedRecipe(new ItemStack(tapeReader, 1, 0), "iii", "iri", "iai", 'i', Item.ingotIron, 'r', Item.redstone, 'a', ironNote);
 		// Tape recipes
@@ -162,6 +166,10 @@ public class Computronics {
 				" i ", "rrr", "iii", 'r', Item.redstone, 'i', Item.ingotIron));
 		GameRegistry.addRecipe(new RecipeColorizer(itemTape));
 		
+		if(Loader.isModLoaded("OpenComputers")) {
+			GameRegistry.addShapedRecipe(new ItemStack(itemRobotUpgrade, 1, 0), "mcm", 'c', new ItemStack(camera, 1, 0), 'm', Items.MicroChipTier2);
+			GameRegistry.addShapedRecipe(new ItemStack(itemRobotUpgrade, 1, 0), "m", "c", "m", 'c', new ItemStack(camera, 1, 0), 'm', Items.MicroChipTier2);
+		}
 		config.save();
 	}
 	

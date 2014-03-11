@@ -1,6 +1,7 @@
 package pl.asie.computronics.robot;
 
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Direction;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.ForgeDirection;
 import pl.asie.computronics.util.Camera;
@@ -28,7 +29,8 @@ public class RobotUpgradeCamera extends ManagedEnvironment {
     public Object[] setRayDirection(Context context, Arguments args) {
     	if(args.count() == 2) {
         	int l = MathHelper.floor_double((double)(robot.player().rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-    		return new Object[]{
+        	l = Direction.directionToFacing[l];
+        	return new Object[]{
     			camera.setRayDirection(entity.worldObj, entity.xCoord, entity.yCoord, entity.zCoord,
     					ForgeDirection.getOrientation(l),
     					(float)args.checkDouble(0), (float)args.checkDouble(1))

@@ -36,7 +36,10 @@ public class ItemRobotUpgrade extends ItemMultiple implements li.cil.oc.api.driv
 
 	@Override
 	public int tier(ItemStack stack) {
-		return 0;
+		switch(stack.getItemDamage()) {
+			case 0: return 1; // Tier 2
+			default: return 0; // Tier 1 default
+		}
 	}
 
 	@Override

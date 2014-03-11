@@ -30,7 +30,7 @@ public class Camera {
 				return true;
 			if(cf != null) reset();
 			cf = new CollisionFinder(worldObj, xCoord, yCoord, zCoord, xInc, yInc, zInc);
-			hit = cf.nextCollision(32);
+			hit = cf.nextCollision(Computronics.CAMERA_DISTANCE);
 			return true;
 		}
 		return false;
