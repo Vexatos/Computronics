@@ -1,0 +1,10 @@
+tile.computronics.ironNoteBlock.name=Eiserner Notenblock
+tile.computronics.tapeDrive.name=Bandlaufwerk
+tile.computronics.camera.name=Kamera
+tile.computronics.chatBox.name=Chat-Box
+
+item.computronics.robot_upgrade_camera.name=Kamera-Upgrade
+item.computronics.part_tape_track.name=Bandspur
+item.computronics.tape.name=Kasettenband
+
+itemGroup.tabComputronics=Computronics
