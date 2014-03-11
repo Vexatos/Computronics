@@ -4,6 +4,7 @@ import openperipheral.api.Arg;
 import openperipheral.api.LuaCallable;
 import openperipheral.api.LuaType;
 import dan200.computer.api.IComputerAccess;
+import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.ForgeDirection;
 import li.cil.oc.api.network.Arguments;
 import li.cil.oc.api.network.Callback;
@@ -18,14 +19,30 @@ import pl.asie.lib.block.TileEntityBase;
 public class TileCamera extends TileEntityBase implements SimpleComponent {
 	private static final int CALL_LIMIT = 20;
 	private final Camera camera = new Camera();
-	
+	private final Camera cameraRedstone = new Camera();
+	private int tick;
+
 	@Override
 	public boolean canUpdate() { return true; }
+	
+	@Override
+	public int requestCurrentRedstoneValue(int side) {
+		ForgeDirection dir = Computronics.instance.camera.getFacingDirection(worldObj, xCoord, yCoord, zCoord);
+		cameraRedstone.reset();
+		cameraRedstone.setRayDirection(worldObj, xCoord, yCoord, zCoord, dir, 0.0f, 0.0f);
+		double distance = cameraRedstone.getDistance();
+		if(distance > 0.0) return 15 - (int)Math.min(15, Math.round(distance / 2));
+		else return 0;
+	}
 	
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
 		camera.reset();
+		if(tick % 20 == 0 && Computronics.CAMERA_REDSTONE_REFRESH) {
+			this.worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, this.worldObj.getBlockId(xCoord, yCoord, zCoord));
+		}
+		tick++;
 	}
 	
 	// OpenComputers

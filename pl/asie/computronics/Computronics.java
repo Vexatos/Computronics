@@ -49,7 +49,7 @@ import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-@Mod(modid="computronics", name="Computronics", version="0.1.2", dependencies="required-after:asielib;after:OpenPeripheralCore;after:ComputerCraft;after:OpenComputers;after:OpenComputers|Core")
+@Mod(modid="computronics", name="Computronics", version="0.1.3", dependencies="required-after:asielib;after:OpenPeripheralCore;after:ComputerCraft;after:OpenComputers;after:OpenComputers|Core")
 @NetworkMod(channels={"computronics"}, clientSideRequired=true, packetHandler=NetworkHandler.class)
 public class Computronics {
 	public Configuration config;
@@ -66,6 +66,7 @@ public class Computronics {
 	
 	public static int CHATBOX_DISTANCE = 40;
 	public static int CAMERA_DISTANCE = 32;
+	public static boolean CAMERA_REDSTONE_REFRESH = true;
 	
 	@SidedProxy(clientSide="pl.asie.computronics.ClientProxy", serverSide="pl.asie.computronics.CommonProxy")	
 	public static CommonProxy proxy;
@@ -99,6 +100,7 @@ public class Computronics {
 		// Configs
 		CHATBOX_DISTANCE = config.get("options", "chatboxDistance", 40).getInt();
 		CAMERA_DISTANCE = config.get("options", "cameraDistance", 32).getInt();
+		CAMERA_REDSTONE_REFRESH = config.get("options", "cameraRedstoneRefresh", true).getBoolean(true);
 		
 		//integration.init(Stage.PRE_INIT);
 		
