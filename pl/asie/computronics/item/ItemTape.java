@@ -86,16 +86,14 @@ public class ItemTape extends Item implements IItemStorage {
 			// Exists, read NBT data if everything is alright
 			NBTTagCompound nbt = stack.getTagCompound();
 			String storageName = nbt.getString("storage");
-			int position = nbt.hasKey("position") ? nbt.getInteger("position") : 0;
 			if(Computronics.storage.exists(storageName))
-				return Computronics.storage.get(storageName, size, position);
+				return Computronics.storage.get(storageName, size, 0);
 		}
 		
 		// Doesn't exist, create new storage and write NBT data
 		Storage storage = Computronics.storage.newStorage(size);
 		if(stack.getTagCompound() == null) stack.setTagCompound(new NBTTagCompound());
 		stack.getTagCompound().setString("storage", storage.getName());
-		stack.getTagCompound().setInteger("position", 0);
 		return storage;
 	}
 	
