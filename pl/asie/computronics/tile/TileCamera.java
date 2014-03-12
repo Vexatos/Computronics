@@ -77,6 +77,18 @@ public class TileCamera extends TileEntityBase implements SimpleComponent {
 	
 	// OpenPeripheral
 	
+    @LuaCallable(description = "Gets the block hash for a specified direction.", returnTypes = {LuaType.STRING})
+	public String block(
+		IComputerAccess computer,
+		@Arg(name = "x", type = LuaType.NUMBER, description = "The X direction (-1.0 to 1.0)") Float x,
+		@Arg(name = "y", type = LuaType.NUMBER, description = "The Y direction (-1.0 to 1.0)") Float y
+	) {
+    	camera.setRayDirection(worldObj, xCoord, yCoord, zCoord,
+    			Computronics.instance.camera.getFacingDirection(worldObj, xCoord, yCoord, zCoord),
+    			x, y);
+    	return camera.getBlockHash();
+    }
+    
     @LuaCallable(description = "Gets the distance for a specified direction.", returnTypes = {LuaType.NUMBER})
 	public Float distance(
 		IComputerAccess computer,

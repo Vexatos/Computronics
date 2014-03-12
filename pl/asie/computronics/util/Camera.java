@@ -17,12 +17,12 @@ public class Camera {
 			float yInc = y;
 			float zInc = 0.0F;
 			switch(dir) {
-				case EAST: { xInc = 1.0F; zInc = x; xCoord += 0.5F; } break;
-				case NORTH: { zInc = -1.0F; xInc = x; zCoord -= 0.5F; } break;
-				case SOUTH: { zInc = 1.0F; xInc = x; zCoord += 0.5F; } break;
-				case WEST: { xInc = -1.0F; zInc = x; xCoord -= 0.5F; } break;
-				case DOWN: { yInc = -1.0F; xInc = x; zInc = y; yCoord -= 0.5F; } break;
-				case UP: { yInc = 1.0F; xInc = x; zInc = y; yCoord += 0.5F; } break;
+				case EAST: { xInc = 1.0F; zInc = x; xCoord += 0.6F; } break;
+				case NORTH: { zInc = -1.0F; xInc = x; zCoord -= 0.6F; } break;
+				case SOUTH: { zInc = 1.0F; xInc = x; zCoord += 0.6F; } break;
+				case WEST: { xInc = -1.0F; zInc = x; xCoord -= 0.6F; } break;
+				case DOWN: { yInc = -1.0F; xInc = x; zInc = y; yCoord -= 0.6F; } break;
+				case UP: { yInc = 1.0F; xInc = x; zInc = y; yCoord += 0.6F; } break;
 				case UNKNOWN: return false;
 				default: return false;
 			}
@@ -45,6 +45,11 @@ public class Camera {
 				cf = null;
 			}
 		}
+	}
+	
+	public String getBlockHash() {
+		if(cf != null && hit != null) synchronized(cf) { return cf.blockHash(); }
+		else return null;
 	}
 	
 	public double getDistance() {

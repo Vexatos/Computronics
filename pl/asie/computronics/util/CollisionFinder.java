@@ -10,6 +10,8 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
 public class CollisionFinder {
@@ -41,7 +43,7 @@ public class CollisionFinder {
 		return (float)Math.sqrt(x*x + y*y + z*z);
 	}
 	
-	private String generateHash(ItemStack stack) {
+	public String blockHash(ItemStack stack) {
 		String temp = stack.itemID + ";" + stack.getItemDamage() + ";" + stack.getUnlocalizedName();
 		try {
 			byte[] data = MessageDigest.getInstance("MD5").digest(temp.getBytes());
@@ -51,36 +53,44 @@ public class CollisionFinder {
 		}
 	}
 	
-	public Map<String, Object> blockData() {
+	public String blockHash() {
 		Block block = WorldUtils.getBlock(world(), x(), y(), z());
 		if(block == null) return null;
 		
 		int meta = world().getBlockMetadata(x(), y(), z());
+
+		return blockHash(new ItemStack(block, 1, meta));
+	}
+	
+	public Map<String, Object> blockData() {
+		Block block = WorldUtils.getBlock(world(), x(), y(), z());
+		if(block == null) return null;
 		
 		HashMap<String, Object> data = new HashMap<String, Object>();
-		data.put("id", generateHash(new ItemStack(block, 1, meta)));
+		data.put("id", blockHash());
 		data.put("distance", (double)distance());
 		data.put("brightness", world().getBlockLightValue(x(), y(), z()));
 		return data;
 	}
 	
 	public Object nextCollision(int steps) {
-		for(int i = 0; i < steps; i++) {
-			cx += xDir;
-			cy += yDir;
-			cz += zDir;
-			int x = (int)Math.floor(cx);
-			int y = (int)Math.floor(cy);
-			int z = (int)Math.floor(cz);
-			if(y < 0 || y >= 256) return null;
-			
-			if(!world.isAirBlock(x, y, z)) {
-				Block found = Block.blocksList[world.getBlockId(x, y, z)];
-				if(found.isOpaqueCube()) {
-					return found;
+		Vec3 origin = world.getWorldVec3Pool().getVecFromPool(cx, cy, cz);
+		Vec3 target = world.getWorldVec3Pool().getVecFromPool(cx + (xDir * steps), cy + (yDir * steps), cz + (zDir * steps));
+		MovingObjectPosition mop = world.clip(origin, target, true);
+		
+		if(mop == null) return null;
+		cx = mop.hitVec.xCoord;
+		cy = mop.hitVec.yCoord;
+		cz = mop.hitVec.zCoord;
+		switch(mop.typeOfHit) {
+			case ENTITY: {
+					return mop.entityHit;
 				}
-			}
+			case TILE: {
+					return WorldUtils.getBlock(world, mop.blockX, mop.blockY, mop.blockZ);
+				}
+			default:
+				return null;
 		}
-		return null;
 	}
 }

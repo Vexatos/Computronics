@@ -49,7 +49,7 @@ import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-@Mod(modid="computronics", name="Computronics", version="0.1.3", dependencies="required-after:asielib;after:OpenPeripheralCore;after:ComputerCraft;after:OpenComputers;after:OpenComputers|Core")
+@Mod(modid="computronics", name="Computronics", version="0.2.0", dependencies="required-after:asielib;after:OpenPeripheralCore;after:ComputerCraft;after:OpenComputers;after:OpenComputers|Core")
 @NetworkMod(channels={"computronics"}, clientSideRequired=true, packetHandler=NetworkHandler.class)
 public class Computronics {
 	public Configuration config;
@@ -102,6 +102,8 @@ public class Computronics {
 		CAMERA_DISTANCE = config.get("options", "cameraDistance", 32).getInt();
 		CAMERA_REDSTONE_REFRESH = config.get("options", "cameraRedstoneRefresh", true).getBoolean(true);
 		
+		config.get("options", "cameraRedstoneRefresh", true).comment = "Setting this to false might help Camera tick lag issues, at the cost of making them useless with redstone circuitry.";
+				
 		//integration.init(Stage.PRE_INIT);
 		
 		ironNote = new BlockIronNote(config.getBlock("ironNote", 2710).getInt());
