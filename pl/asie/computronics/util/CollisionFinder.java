@@ -77,7 +77,7 @@ public class CollisionFinder {
 		Vec3 origin = world.getWorldVec3Pool().getVecFromPool(cx, cy, cz);
 		Vec3 target = world.getWorldVec3Pool().getVecFromPool(cx + (xDir * steps), cy + (yDir * steps), cz + (zDir * steps));
 		MovingObjectPosition mop = world.clip(origin, target, true);
-		
+
 		if(mop == null) return null;
 		cx = mop.hitVec.xCoord;
 		cy = mop.hitVec.yCoord;

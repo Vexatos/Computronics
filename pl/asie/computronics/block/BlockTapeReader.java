@@ -6,6 +6,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.tile.TileIronNote;
@@ -37,5 +38,10 @@ public class BlockTapeReader extends BlockMachineSidedIcon {
 	public void registerIcons(IconRegister r) {
 		super.registerIcons(r);
 		mFront = r.registerIcon("computronics:tape_drive_front");
+	}
+	
+	@Override
+	public boolean receivesRedstone(IBlockAccess world, int x, int y, int z, int side) {
+		return true;
 	}
 }

@@ -3,6 +3,7 @@ package pl.asie.computronics;
 import pl.asie.computronics.storage.StorageManager;
 import pl.asie.computronics.tile.TileChatBox;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.client.event.sound.SoundLoadEvent;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.world.WorldEvent;
@@ -18,5 +19,10 @@ public class ComputronicsEventHandler {
 				}
 			}
 		}
+	}
+	@ForgeSubscribe
+	public void onSound(SoundLoadEvent event) {
+		event.manager.addSound("computronics:tape_eject.ogg");
+		event.manager.addSound("computronics:tape_rewind.ogg");
 	}
 }

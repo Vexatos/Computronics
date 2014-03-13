@@ -20,48 +20,45 @@ import pl.asie.lib.network.PacketInput;
 import dan200.computer.api.IComputerAccess;
 
 public class TileTapeDrive extends TileEntityInventory implements SimpleComponent {
+	public enum State {
+		STOPPED,
+		PLAYING,
+		REWINDING,
+		FORWARDING
+	}
+	
+	private State state = State.STOPPED;
 	private Storage storage;
 	private String storageName = "";
-	private DFPWM codec;
 	private int codecId, codecTick, packetId;
 	
 	// Audio handling
 	
-	private void playAudio(int id) {
-		if(worldObj.isRemote || storage == null) return;
-		if(codec != null) stopAudio();
-		
-		codecId = id;
-		codec = Computronics.instance.audio.getPlayer(codecId);
-		codecTick = 0;
-		packetId = 0;
-		bytesSent = 0;
-		bytesSeeked = 0;
-	}
-	
-	private void playAudio() {
-		if(worldObj.isRemote) return;
-		playAudio(Computronics.instance.audio.newPlayer());
-	}
-	
-	private void stopAudio() {
-		this.codec = null;
-		Computronics.instance.audio.removePlayer(codecId);
-		try {
-			PacketInput pkt = Computronics.packet.create(Packets.PACKET_AUDIO_STOP)
-				.writeInt(codecId);
-			Computronics.packet.sendToAllPlayers(pkt);
-		} catch(Exception e) { e.printStackTrace(); }
+	private void switchState(State newState) {
+		if(!worldObj.isRemote) { // Server-side happening
+			if(state == State.PLAYING) { // State is playing - stop playback
+				Computronics.instance.audio.removePlayer(codecId);
+				try {
+					PacketInput pkt = Computronics.packet.create(Packets.PACKET_AUDIO_STOP)
+						.writeInt(codecId);
+					Computronics.packet.sendToAllPlayers(pkt);
+				} catch(Exception e) { e.printStackTrace(); }
+			}
+			if(newState == State.PLAYING) { // Time to play again!
+				codecId = Computronics.instance.audio.newPlayer();
+				Computronics.instance.audio.getPlayer(codecId);
+				codecTick = 0;
+				packetId = 0;
+			}
+		}
+		state = newState;
 	}
 	
 	private final int MUSIC_PACKET_SIZE = 1024;
-	private int bytesSent, bytesSeeked;
 	
 	private void sendMusicPacket() {
 		byte[] packet = new byte[MUSIC_PACKET_SIZE];
-		int offset = bytesSent - bytesSeeked; // Bytes already read minus bytes we should have read
-		int amount = storage.read(packet, offset, true); // read data into packet array
-		bytesSent += 1024;
+		int amount = storage.read(packet, 0, false); // read data into packet array
 		try {
 			PacketInput pkt = Computronics.packet.create(Packets.PACKET_AUDIO_DATA)
 				.writeTileLocation(this)
@@ -70,7 +67,7 @@ public class TileTapeDrive extends TileEntityInventory implements SimpleComponen
 				.writeByteArrayData(packet);
 			Computronics.packet.sendToAllNear(pkt, this, 64.0D);
 		} catch(Exception e) { e.printStackTrace(); }
-		if(amount < MUSIC_PACKET_SIZE) stopAudio();
+		if(amount < MUSIC_PACKET_SIZE) switchState(State.STOPPED);
 	}
 	
 	@Override
@@ -79,12 +76,8 @@ public class TileTapeDrive extends TileEntityInventory implements SimpleComponen
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
-		if(!worldObj.isRemote && codec != null && storage != null) {
+		if(!worldObj.isRemote && state == State.PLAYING) {
 			if(codecTick % 5 == 0) sendMusicPacket();
-			if(codecTick % 5 == 0) {
-				storage.seek(MUSIC_PACKET_SIZE);
-				bytesSeeked += 1024;
-			}
 			codecTick++;
 		}
 	}
@@ -140,7 +133,7 @@ public class TileTapeDrive extends TileEntityInventory implements SimpleComponen
 	private void unloadStorage() {
 		if(worldObj.isRemote || storage == null) return;
 		
-		stopAudio();
+		switchState(State.STOPPED);
 		try {
 			storage.writeFileIfModified();
 		} catch(Exception e) { e.printStackTrace(); }
@@ -151,6 +144,10 @@ public class TileTapeDrive extends TileEntityInventory implements SimpleComponen
 	public void onInventoryUpdate(int slot) {
 		if(this.getStackInSlot(0) == null) {
 			unloadStorage();
+			if(slot == 0) {
+				// Play eject sound
+				worldObj.playSoundEffect(xCoord, yCoord, zCoord, "computronics:tape_eject", 1, 0);
+			}
 		} else loadStorage();
 	}
 	
@@ -240,13 +237,13 @@ public class TileTapeDrive extends TileEntityInventory implements SimpleComponen
     
     @Callback
     public Object[] play(Context context, Arguments args) {
-    	playAudio();
+    	switchState(State.PLAYING);
     	return null;
     }
 
     @Callback
     public Object[] stop(Context context, Arguments args) {
-    	stopAudio();
+    	switchState(State.STOPPED);
     	return null;
     }
     
@@ -311,11 +308,11 @@ public class TileTapeDrive extends TileEntityInventory implements SimpleComponen
     
     @LuaCallable(description = "Starts playing music.")
 	public void play(IComputerAccess computer) {
-    	playAudio();
+    	switchState(State.PLAYING);
     }
     
     @LuaCallable(description = "Stops playing music.")
 	public void stop(IComputerAccess computer) {
-    	stopAudio();
+    	switchState(State.STOPPED);
     }
 }

@@ -2,6 +2,7 @@ package pl.asie.computronics.tile;
 
 import java.util.HashSet;
 
+import cpw.mods.fml.common.Loader;
 import dan200.computer.api.IComputerAccess;
 import dan200.computer.api.ILuaContext;
 import dan200.computer.api.IPeripheral;
@@ -23,7 +24,8 @@ import net.minecraftforge.event.ServerChatEvent;
 
 public class TileChatBox extends TileEntityBase implements Environment, IPeripheral {
 	public TileChatBox() {
-		node = Network.newNode(this, Visibility.Network).withComponent("chat_box", Visibility.Neighbors).create();
+		if(Loader.isModLoaded("OpenComputers"))
+			node = Network.newNode(this, Visibility.Network).withComponent("chat_box", Visibility.Neighbors).create();
 	}
 	
 	public void sendChatMessage(String string) {
