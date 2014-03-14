@@ -4,6 +4,9 @@ import li.cil.oc.api.network.Arguments;
 import li.cil.oc.api.network.Callback;
 import li.cil.oc.api.network.Context;
 import li.cil.oc.api.network.SimpleComponent;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.SoundManager;
+import net.minecraft.client.audio.SoundPoolEntry;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -13,6 +16,7 @@ import openperipheral.api.LuaType;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.Packets;
 import pl.asie.computronics.api.IItemStorage;
+import pl.asie.computronics.item.ItemTape;
 import pl.asie.computronics.storage.Storage;
 import pl.asie.lib.audio.DFPWM;
 import pl.asie.lib.block.TileEntityInventory;
@@ -34,8 +38,41 @@ public class TileTapeDrive extends TileEntityInventory implements SimpleComponen
 	
 	// Audio handling
 	
-	private void switchState(State newState) {
+	private void sendState() {
+		if(worldObj.isRemote) return;
+		try {
+			PacketInput packet = Computronics.packet.create(Packets.PACKET_TAPE_GUI_STATE)
+					.writeTileLocation(this)
+					.writeByte((byte)state.ordinal());
+			Computronics.packet.sendToAllNear(packet, this, 64.0D);
+		} catch(Exception e) { e.printStackTrace(); }
+	}
+	
+	private String rewindSound = "";
+	
+	private void stopRewindSound() {
+		if(worldObj.isRemote) {
+			SoundManager sound = Minecraft.getMinecraft().sndManager;
+			sound.sndSystem.stop(rewindSound);
+			rewindSound = "";
+		}
+	}
+	public void switchState(State newState) {
+		if(worldObj.isRemote) { // Client-side happening
+			SoundManager sound = Minecraft.getMinecraft().sndManager;
+			if(newState == state) return; // No repeats below here
+			if(newState == State.REWINDING || newState == State.FORWARDING) {
+				rewindSound = "computronics_"+xCoord+"_"+yCoord+"_"+zCoord+"_"+Math.floor(Math.random()*10000);
+				// Initialize rewind sound
+				SoundPoolEntry spe = sound.soundPoolSounds.getRandomSoundFromSoundPool("computronics:tape_rewind");
+				sound.sndSystem.newSource(false, rewindSound, spe.getSoundUrl(), spe.getSoundName(), false, xCoord, yCoord, zCoord, 2, 16.0F);
+				sound.sndSystem.setLooping(rewindSound, true);
+				sound.sndSystem.setVolume(rewindSound, Minecraft.getMinecraft().gameSettings.soundVolume);
+				sound.sndSystem.play(rewindSound);
+			} else stopRewindSound();
+		}
 		if(!worldObj.isRemote) { // Server-side happening
+			if(this.storage == null) newState = State.STOPPED;
 			if(state == State.PLAYING) { // State is playing - stop playback
 				Computronics.instance.audio.removePlayer(codecId);
 				try {
@@ -52,6 +89,17 @@ public class TileTapeDrive extends TileEntityInventory implements SimpleComponen
 			}
 		}
 		state = newState;
+		sendState();
+	}
+	
+	@Override
+	public void openChest() {
+		super.openChest();
+		sendState();
+	}
+	
+	public State getState() {
+		return state;
 	}
 	
 	private final int MUSIC_PACKET_SIZE = 1024;
@@ -76,22 +124,44 @@ public class TileTapeDrive extends TileEntityInventory implements SimpleComponen
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
-		if(!worldObj.isRemote && state == State.PLAYING) {
-			if(codecTick % 5 == 0) sendMusicPacket();
-			codecTick++;
+		if(!worldObj.isRemote) {
+			switch(state) {
+				case PLAYING: {
+					if(codecTick % 5 == 0) sendMusicPacket();
+					codecTick++;
+				} break;
+				case REWINDING: {
+					int seeked = storage.seek(-2048);
+					if(seeked > -2048) switchState(State.STOPPED);
+				} break;
+				case FORWARDING: {
+					int seeked = storage.seek(2048);
+					if(seeked < 2048) switchState(State.STOPPED);
+				} break;	
+				case STOPPED: {
+				} break;
+			}
 		}
 	}
 	
 	@Override
 	public void onBlockDestroy() {
 		super.onBlockDestroy();
+		stopRewindSound();
 		unloadStorage();
 	}
 	
 	@Override
 	public void invalidate() {
 		super.invalidate();
+		stopRewindSound();
 		unloadStorage();
+	}
+	
+	@Override
+	public void onRedstoneSignal(int side, int signal) {
+		System.out.println("Signal is " + signal);
+		this.switchState(signal > 0 ? State.PLAYING : State.STOPPED);
 	}
 	
 	// Storage handling
@@ -148,18 +218,26 @@ public class TileTapeDrive extends TileEntityInventory implements SimpleComponen
 				// Play eject sound
 				worldObj.playSoundEffect(xCoord, yCoord, zCoord, "computronics:tape_eject", 1, 0);
 			}
-		} else loadStorage();
+		} else {
+			loadStorage();
+			if(slot == 0 && this.getStackInSlot(0).getItem() instanceof ItemTape) {
+				// Play insert sound
+				worldObj.playSoundEffect(xCoord, yCoord, zCoord, "computronics:tape_insert", 1, 0);
+			}
+		}
 	}
 	
 	@Override
 	public void onChunkUnload() {
 		super.onWorldUnload();
+		stopRewindSound();
 		unloadStorage();
 	}
 	
 	@Override
 	public void onWorldUnload() {
 		super.onWorldUnload();
+		stopRewindSound();
 		unloadStorage();
 	}
 
@@ -171,7 +249,14 @@ public class TileTapeDrive extends TileEntityInventory implements SimpleComponen
 	@Override
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
+		if(tag.hasKey("state")) this.state = State.values()[tag.getByte("state")];
 		loadStorage();
+	}
+	
+	@Override
+	public void writeToNBT(NBTTagCompound tag) {
+		super.writeToNBT(tag);
+		tag.setByte("state", (byte)this.state.ordinal());
 	}
 	
 	public static final int END_SIZE = 1024;

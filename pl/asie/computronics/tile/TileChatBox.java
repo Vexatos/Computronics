@@ -16,6 +16,7 @@ import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.Visibility;
 import pl.asie.computronics.Computronics;
 import pl.asie.lib.block.TileEntityBase;
+import pl.asie.lib.util.ChatUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatMessageComponent;
@@ -33,7 +34,7 @@ public class TileChatBox extends TileEntityBase implements Environment, IPeriphe
 		chat.setColor(EnumChatFormatting.GRAY);
 		chat.setItalic(true);
 		chat.addText(EnumChatFormatting.ITALIC + "[ChatBox] ");
-		chat.addText(EnumChatFormatting.RESET + "" + EnumChatFormatting.GRAY + string);
+		chat.addText(EnumChatFormatting.RESET + "" + EnumChatFormatting.GRAY + ChatUtils.color(string));
 		for(Object o: this.worldObj.playerEntities) {
 			if(!(o instanceof EntityPlayer)) continue;
 			EntityPlayer player = (EntityPlayer)o;

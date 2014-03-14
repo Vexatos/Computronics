@@ -24,5 +24,7 @@ public class ComputronicsEventHandler {
 	public void onSound(SoundLoadEvent event) {
 		event.manager.addSound("computronics:tape_eject.ogg");
 		event.manager.addSound("computronics:tape_rewind.ogg");
+		event.manager.addSound("computronics:tape_insert.ogg");
+		event.manager.addSound("computronics:tape_button.ogg");
 	}
 }

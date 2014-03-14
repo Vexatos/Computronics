@@ -7,11 +7,14 @@ import javax.sound.sampled.AudioFormat.Encoding;
 
 import paulscode.sound.SoundBuffer;
 import paulscode.sound.SoundSystem;
+import pl.asie.computronics.gui.GuiTapePlayer;
 import pl.asie.computronics.tile.TileTapeDrive;
+import pl.asie.computronics.tile.TileTapeDrive.State;
 import pl.asie.lib.audio.DFPWM;
 import pl.asie.lib.audio.DFPWMCodec;
 import pl.asie.lib.network.NetworkHandlerBase;
 import pl.asie.lib.network.PacketOutput;
+import pl.asie.lib.util.GuiUtils;
 import pl.asie.lib.util.WorldUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.INetworkManager;
@@ -29,6 +32,14 @@ public class NetworkHandler extends NetworkHandlerBase implements IPacketHandler
 	public void handlePacket(INetworkManager manager, PacketOutput packet, int command, Player player,
 			boolean isClient) throws IOException {
 		switch(command) {
+			case Packets.PACKET_TAPE_GUI_STATE: {
+				TileEntity entity = isClient ? packet.readTileEntity() : packet.readTileEntityServer();
+				State state = State.values()[packet.readUnsignedByte()];
+				if(entity instanceof TileTapeDrive) {
+					TileTapeDrive tile = (TileTapeDrive)entity;
+					tile.switchState(state);
+				}
+			} break;
 			case Packets.PACKET_AUDIO_DATA: {
 				if(!isClient) return;
 				int dimId = packet.readInt();
