@@ -55,7 +55,7 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 
-@Mod(modid="computronics", name="Computronics", version="0.3.0", dependencies="required-after:asielib;after:OpenPeripheralCore;after:ComputerCraft;after:OpenComputers;after:OpenComputers|Core;after:BuildCraft|Core")
+@Mod(modid="computronics", name="Computronics", version="0.2.4", dependencies="required-after:asielib;after:OpenPeripheralCore;after:ComputerCraft;after:OpenComputers;after:OpenComputers|Core;after:BuildCraft|Core")
 public class Computronics {
 	public Configuration config;
 	public static Random rand = new Random();
@@ -125,15 +125,15 @@ public class Computronics {
 		GameRegistry.registerBlock(chatBox, "computronics.chatBox");
 		GameRegistry.registerTileEntity(TileChatBox.class, "computronics.chatBox");
 
-		sorter = new BlockSorter();
-		GameRegistry.registerBlock(sorter, "computronics.sorter");
-		GameRegistry.registerTileEntity(TileSorter.class, "computronics.sorter");
+		//sorter = new BlockSorter();
+		//GameRegistry.registerBlock(sorter, "computronics.sorter");
+		//GameRegistry.registerTileEntity(TileSorter.class, "computronics.sorter");
 
 		if(Loader.isModLoaded("OpenPeripheralCore")) {
 			OpenPeripheralAPI.createAdapter(TileTapeDrive.class);
 			OpenPeripheralAPI.createAdapter(TileIronNote.class);
 			OpenPeripheralAPI.createAdapter(TileCamera.class);
-			OpenPeripheralAPI.createAdapter(TileSorter.class);
+			//OpenPeripheralAPI.createAdapter(TileSorter.class);
 		}			
 		
 		itemTape = new ItemTape();
