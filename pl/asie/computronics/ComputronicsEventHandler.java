@@ -1,5 +1,7 @@
 package pl.asie.computronics;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import pl.asie.computronics.storage.StorageManager;
 import pl.asie.computronics.tile.TileChatBox;
 import net.minecraft.tileentity.TileEntity;
@@ -20,7 +22,9 @@ public class ComputronicsEventHandler {
 			}
 		}
 	}
+	
 	@ForgeSubscribe
+	@SideOnly(Side.CLIENT)
 	public void onSound(SoundLoadEvent event) {
 		event.manager.addSound("computronics:tape_eject.ogg");
 		event.manager.addSound("computronics:tape_rewind.ogg");

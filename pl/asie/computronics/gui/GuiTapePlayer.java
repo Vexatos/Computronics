@@ -104,7 +104,7 @@ public class GuiTapePlayer extends GuiBase {
 		ItemStack stack = (ItemStack)this.container.getInventory().get(0);
 		if(stack != null && stack.getItem() instanceof ItemTape) {
 			String label = "Unnamed Tape";
-			if(stack.getTagCompound().hasKey("label")) label = stack.getTagCompound().getString("label");
+			if(stack.getTagCompound() != null && stack.getTagCompound().hasKey("label")) label = stack.getTagCompound().getString("label");
 			return label;
 		} else return null;
 	}

@@ -13,7 +13,7 @@ import pl.asie.lib.block.BlockBase;
 import pl.asie.lib.util.MiscUtils;
 
 public abstract class BlockMachineSidedIcon extends BlockBase {
-	private Icon mSide, mTop, mBottom;
+	protected Icon mSide, mTop, mBottom;
 	
 	public BlockMachineSidedIcon(int id) {
 		super(id, Material.iron, Computronics.instance);

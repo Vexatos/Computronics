@@ -10,8 +10,9 @@ import paulscode.sound.SoundSystem;
 import pl.asie.computronics.gui.GuiTapePlayer;
 import pl.asie.computronics.tile.TileTapeDrive;
 import pl.asie.computronics.tile.TileTapeDrive.State;
+import pl.asie.lib.AsieLibMod;
 import pl.asie.lib.audio.DFPWM;
-import pl.asie.lib.audio.DFPWMCodec;
+import pl.asie.lib.audio.StreamingAudioPlayer;
 import pl.asie.lib.network.NetworkHandlerBase;
 import pl.asie.lib.network.PacketOutput;
 import pl.asie.lib.util.GuiUtils;
@@ -51,7 +52,7 @@ public class NetworkHandler extends NetworkHandlerBase implements IPacketHandler
 				byte[] data = packet.readByteArrayData(1024);
 				byte[] audio = new byte[8192];
 				String sourceName = "dfpwm_"+codecId;
-				DFPWMCodec codec = Computronics.instance.audio.getPlayer(codecId);
+				StreamingAudioPlayer codec = Computronics.instance.audio.getPlayer(codecId);
 
 				if(dimId != WorldUtils.getCurrentClientDimension()) return;
 				

@@ -1,4 +1,4 @@
-package pl.asie.computronics.robot;
+package pl.asie.computronics.oc;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;

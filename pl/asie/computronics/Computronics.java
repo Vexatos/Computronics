@@ -6,12 +6,14 @@ import java.util.logging.Logger;
 import li.cil.oc.api.Driver;
 import li.cil.oc.api.Items;
 import openperipheral.api.OpenPeripheralAPI;
+import pl.asie.computronics.audio.DFPWMPlaybackManager;
 import pl.asie.computronics.block.BlockCamera;
 import pl.asie.computronics.block.BlockChatBox;
 import pl.asie.computronics.block.BlockIronNote;
+import pl.asie.computronics.block.BlockSorter;
 import pl.asie.computronics.block.BlockTapeReader;
 import pl.asie.computronics.gui.GuiOneSlot;
-import pl.asie.computronics.item.ItemRobotUpgrade;
+import pl.asie.computronics.item.ItemOpenComputers;
 import pl.asie.computronics.item.ItemTape;
 import pl.asie.computronics.storage.StorageManager;
 import pl.asie.computronics.tile.ContainerTapeReader;
@@ -19,7 +21,7 @@ import pl.asie.computronics.tile.TileCamera;
 import pl.asie.computronics.tile.TileChatBox;
 import pl.asie.computronics.tile.TileIronNote;
 import pl.asie.computronics.tile.TileTapeDrive;
-import pl.asie.lib.audio.DFPWMPlaybackManager;
+import pl.asie.computronics.tile.sorter.TileSorter;
 import pl.asie.lib.gui.GuiHandler;
 import pl.asie.lib.item.ItemMultiple;
 import pl.asie.lib.network.PacketFactory;
@@ -41,6 +43,7 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
@@ -49,7 +52,7 @@ import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-@Mod(modid="computronics", name="Computronics", version="0.2.0", dependencies="required-after:asielib;after:OpenPeripheralCore;after:ComputerCraft;after:OpenComputers;after:OpenComputers|Core")
+@Mod(modid="computronics", name="Computronics", version="0.2.4", dependencies="required-after:asielib;after:OpenPeripheralCore;after:ComputerCraft;after:OpenComputers;after:OpenComputers|Core")
 @NetworkMod(channels={"computronics"}, clientSideRequired=true, packetHandler=NetworkHandler.class)
 public class Computronics {
 	public Configuration config;
@@ -66,6 +69,7 @@ public class Computronics {
 	
 	public static int CHATBOX_DISTANCE = 40;
 	public static int CAMERA_DISTANCE = 32;
+	public static int BUFFER_MS = 750;
 	public static boolean CAMERA_REDSTONE_REFRESH = true;
 	
 	@SidedProxy(clientSide="pl.asie.computronics.ClientProxy", serverSide="pl.asie.computronics.CommonProxy")	
@@ -75,9 +79,10 @@ public class Computronics {
 	public static BlockTapeReader tapeReader;
 	public static BlockCamera camera;
 	public static BlockChatBox chatBox;
+	public static BlockSorter sorter;
 	public static ItemTape itemTape;
 	public static ItemMultiple itemParts;
-	public static ItemRobotUpgrade itemRobotUpgrade;
+	public static ItemOpenComputers itemRobotUpgrade;
 	
 	public static CreativeTabs tab = new CreativeTabs("tabComputronics") {
         public ItemStack getIconItemStack() {
@@ -101,6 +106,7 @@ public class Computronics {
 		CHATBOX_DISTANCE = config.get("options", "chatboxDistance", 40).getInt();
 		CAMERA_DISTANCE = config.get("options", "cameraDistance", 32).getInt();
 		CAMERA_REDSTONE_REFRESH = config.get("options", "cameraRedstoneRefresh", true).getBoolean(true);
+		BUFFER_MS = config.get("options", "audioBufferMilisec", 750).getInt();
 		
 		config.get("options", "cameraRedstoneRefresh", true).comment = "Setting this to false might help Camera tick lag issues, at the cost of making them useless with redstone circuitry.";
 				
@@ -122,7 +128,12 @@ public class Computronics {
 		GameRegistry.registerBlock(chatBox, "computronics.chatBox");
 		GameRegistry.registerTileEntity(TileChatBox.class, "computronics.chatBox");
 
+		sorter = new BlockSorter(config.getBlock("sorter", 2714).getInt());
+		GameRegistry.registerBlock(sorter, "computronics.sorter");
+		GameRegistry.registerTileEntity(TileSorter.class, "computronics.sorter");
+
 		if(Loader.isModLoaded("OpenPeripheralCore")) {
+			OpenPeripheralAPI.createAdapter(TileSorter.class);
 			OpenPeripheralAPI.createAdapter(TileTapeDrive.class);
 			OpenPeripheralAPI.createAdapter(TileIronNote.class);
 			OpenPeripheralAPI.createAdapter(TileCamera.class);
@@ -137,7 +148,7 @@ public class Computronics {
 		GameRegistry.registerItem(itemParts, "computronics.parts");
 		
 		if(Loader.isModLoaded("OpenComputers")) {
-			itemRobotUpgrade = new ItemRobotUpgrade(config.getItem("robotUpgrades", 27852).getInt());
+			itemRobotUpgrade = new ItemOpenComputers(config.getItem("robotUpgrades", 27852).getInt());
 			GameRegistry.registerItem(itemRobotUpgrade, "computronics.robotUpgrade");
 			Driver.add(itemRobotUpgrade);
 		}
@@ -152,6 +163,8 @@ public class Computronics {
 		MinecraftForge.EVENT_BUS.register(new ComputronicsEventHandler());
 		
 		proxy.registerGuis(gui);
+		
+		FMLInterModComms.sendMessage("Waila", "register", "pl.asie.computronics.integration.waila.IntegrationWaila.register");
 		
 		GameRegistry.addShapedRecipe(new ItemStack(camera, 1, 0), "sss", "geg", "iii", 's', Block.stoneBrick, 'i', Item.ingotIron, 'e', Item.enderPearl, 'g', Block.glass);
 		GameRegistry.addShapedRecipe(new ItemStack(chatBox, 1, 0), "sss", "ses", "iri", 's', Block.stoneBrick, 'i', Item.ingotIron, 'e', Item.enderPearl, 'r', Item.redstone);

@@ -17,9 +17,9 @@ public class Camera {
 			float yInc = y;
 			float zInc = 0.0F;
 			switch(dir) {
-				case EAST: { xInc = 1.0F; zInc = x; xCoord += 0.6F; } break;
+				case EAST: { xInc = 1.0F; zInc = -x; xCoord += 0.6F; } break;
 				case NORTH: { zInc = -1.0F; xInc = x; zCoord -= 0.6F; } break;
-				case SOUTH: { zInc = 1.0F; xInc = x; zCoord += 0.6F; } break;
+				case SOUTH: { zInc = 1.0F; xInc = -x; zCoord += 0.6F; } break;
 				case WEST: { xInc = -1.0F; zInc = x; xCoord -= 0.6F; } break;
 				case DOWN: { yInc = -1.0F; xInc = x; zInc = y; yCoord -= 0.6F; } break;
 				case UP: { yInc = 1.0F; xInc = x; zInc = y; yCoord += 0.6F; } break;

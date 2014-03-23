@@ -46,7 +46,8 @@ public class TileChatBox extends TileEntityBase implements Environment, IPeriphe
 	
 	public void receiveChatMessage(ServerChatEvent event) {
 		// Send OC event
-		node.sendToReachable("computer.signal", "chat_message", event.username, event.message);
+		if(node != null)
+			node.sendToReachable("computer.signal", "chat_message", event.username, event.message);
 		
 		// Send CC event
 		for(IComputerAccess computer: ccComputers) {

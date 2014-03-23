@@ -36,7 +36,7 @@ public class TileTapeDrive extends TileEntityInventory implements SimpleComponen
 	private String storageName = "";
 	private int codecId, codecTick, packetId;
 	
-	// Audio handling
+	// GUI/State
 	
 	private void sendState() {
 		if(worldObj.isRemote) return;
@@ -57,19 +57,10 @@ public class TileTapeDrive extends TileEntityInventory implements SimpleComponen
 			rewindSound = "";
 		}
 	}
+	
 	public void switchState(State newState) {
 		if(worldObj.isRemote) { // Client-side happening
-			SoundManager sound = Minecraft.getMinecraft().sndManager;
-			if(newState == state) return; // No repeats below here
-			if(newState == State.REWINDING || newState == State.FORWARDING) {
-				rewindSound = "computronics_"+xCoord+"_"+yCoord+"_"+zCoord+"_"+Math.floor(Math.random()*10000);
-				// Initialize rewind sound
-				SoundPoolEntry spe = sound.soundPoolSounds.getRandomSoundFromSoundPool("computronics:tape_rewind");
-				sound.sndSystem.newSource(false, rewindSound, spe.getSoundUrl(), spe.getSoundName(), false, xCoord, yCoord, zCoord, 2, 16.0F);
-				sound.sndSystem.setLooping(rewindSound, true);
-				sound.sndSystem.setVolume(rewindSound, Minecraft.getMinecraft().gameSettings.soundVolume);
-				sound.sndSystem.play(rewindSound);
-			} else stopRewindSound();
+			if(newState == state) return;
 		}
 		if(!worldObj.isRemote) { // Server-side happening
 			if(this.storage == null) newState = State.STOPPED;
@@ -90,17 +81,27 @@ public class TileTapeDrive extends TileEntityInventory implements SimpleComponen
 		}
 		state = newState;
 		sendState();
-	}
-	
-	@Override
-	public void openChest() {
-		super.openChest();
-		sendState();
+		if(worldObj.isRemote) {
+			SoundManager sound = Minecraft.getMinecraft().sndManager;
+			if((newState == State.REWINDING || newState == State.FORWARDING)
+					&& (state == State.REWINDING || state == State.FORWARDING)) return;
+			if(newState == State.REWINDING || newState == State.FORWARDING) {
+				rewindSound = "computronics_"+xCoord+"_"+yCoord+"_"+zCoord+"_"+Math.floor(Math.random()*10000);
+				// Initialize rewind sound
+				SoundPoolEntry spe = sound.soundPoolSounds.getRandomSoundFromSoundPool("computronics:tape_rewind");
+				sound.sndSystem.newSource(false, rewindSound, spe.getSoundUrl(), spe.getSoundName(), false, xCoord, yCoord, zCoord, 2, 16.0F);
+				sound.sndSystem.setLooping(rewindSound, true);
+				sound.sndSystem.setVolume(rewindSound, Minecraft.getMinecraft().gameSettings.soundVolume);
+				sound.sndSystem.play(rewindSound);
+			} else stopRewindSound();
+		}
 	}
 	
 	public State getState() {
 		return state;
 	}
+
+	// Packet handling
 	
 	private final int MUSIC_PACKET_SIZE = 1024;
 	
@@ -118,8 +119,7 @@ public class TileTapeDrive extends TileEntityInventory implements SimpleComponen
 		if(amount < MUSIC_PACKET_SIZE) switchState(State.STOPPED);
 	}
 	
-	@Override
-	public boolean canUpdate() { return true; }
+	// Logic
 	
 	@Override
 	public void updateEntity() {
@@ -144,6 +144,31 @@ public class TileTapeDrive extends TileEntityInventory implements SimpleComponen
 		}
 	}
 	
+	// Minecraft boilerplate
+	
+    private void setLabel(String label) {
+		if(storage != null) {
+			ItemStack stack = this.getStackInSlot(0);
+			if(stack != null && stack.getTagCompound() != null) {
+				if(label.length() == 0 && stack.getTagCompound().hasKey("label")) {
+					stack.getTagCompound().removeTag("label");
+				} else if(label.length() > 0) {
+					stack.getTagCompound().setString("label", label);
+				}
+				storageName = label;
+			}
+		}
+	}
+	
+	@Override
+	public boolean canUpdate() { return true; }
+	
+	@Override
+	public void openChest() {
+		super.openChest();
+		sendState();
+	}
+	
 	@Override
 	public void onBlockDestroy() {
 		super.onBlockDestroy();
@@ -160,7 +185,6 @@ public class TileTapeDrive extends TileEntityInventory implements SimpleComponen
 	
 	@Override
 	public void onRedstoneSignal(int side, int signal) {
-		System.out.println("Signal is " + signal);
 		this.switchState(signal > 0 ? State.PLAYING : State.STOPPED);
 	}
 	
@@ -186,20 +210,6 @@ public class TileTapeDrive extends TileEntityInventory implements SimpleComponen
 		}
 	}
     
-    private void setLabel(String label) {
-		if(storage != null) {
-			ItemStack stack = this.getStackInSlot(0);
-			if(stack != null && stack.getTagCompound() != null) {
-				if(label.length() == 0 && stack.getTagCompound().hasKey("label")) {
-					stack.getTagCompound().removeTag("label");
-				} else if(label.length() > 0) {
-					stack.getTagCompound().setString("label", label);
-				}
-				storageName = label;
-			}
-		}
-	}
-	
 	private void unloadStorage() {
 		if(worldObj.isRemote || storage == null) return;
 		
@@ -213,14 +223,14 @@ public class TileTapeDrive extends TileEntityInventory implements SimpleComponen
 	@Override
 	public void onInventoryUpdate(int slot) {
 		if(this.getStackInSlot(0) == null) {
-			unloadStorage();
-			if(slot == 0) {
+			if(slot == 0 && storage != null) { // Tape was inserted
 				// Play eject sound
 				worldObj.playSoundEffect(xCoord, yCoord, zCoord, "computronics:tape_eject", 1, 0);
 			}
+			unloadStorage();
 		} else {
 			loadStorage();
-			if(slot == 0 && this.getStackInSlot(0).getItem() instanceof ItemTape) {
+			if(slot == 0 && this.getStackInSlot(0).getItem() instanceof IItemStorage) {
 				// Play insert sound
 				worldObj.playSoundEffect(xCoord, yCoord, zCoord, "computronics:tape_insert", 1, 0);
 			}
@@ -332,6 +342,12 @@ public class TileTapeDrive extends TileEntityInventory implements SimpleComponen
     	return null;
     }
     
+    @Callback
+    public Object[] getState(Context context, Arguments args) {
+    	return new Object[]{state.toString()};
+    }
+    
+    
 	@Override
 	public String getComponentName() {
 		return "tape_drive";
@@ -395,6 +411,11 @@ public class TileTapeDrive extends TileEntityInventory implements SimpleComponen
 	public void play(IComputerAccess computer) {
     	switchState(State.PLAYING);
     }
+    
+    @LuaCallable(description = "Get the current state of the player.", returnTypes = {LuaType.STRING})
+ 	public String getState(IComputerAccess computer) {
+     	return state.toString();
+     }
     
     @LuaCallable(description = "Stops playing music.")
 	public void stop(IComputerAccess computer) {
