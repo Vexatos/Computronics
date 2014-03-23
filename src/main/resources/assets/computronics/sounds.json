@@ -1,0 +1,6 @@
+{
+	"tape_rewind": {"category": "neutral", "sounds": [{"name": "tape_rewind", "stream": false}]},
+	"tape_eject": {"category": "neutral", "sounds": [{"name": "tape_eject", "stream": false}]},
+	"tape_insert": {"category": "neutral", "sounds": [{"name": "tape_insert", "stream": false}]},
+	"tape_button": {"category": "neutral", "sounds": [{"name": "tape_button", "stream": false}]}
+}
