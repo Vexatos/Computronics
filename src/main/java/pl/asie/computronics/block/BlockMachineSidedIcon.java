@@ -21,24 +21,12 @@ public abstract class BlockMachineSidedIcon extends BlockBase {
 		this.setRotateFrontSide(true);
 	}
 	
-	@Override
 	@SideOnly(Side.CLIENT)
-	public IIcon getIcon(IBlockAccess w, int x, int y, int z, int side) {
-		return getIconInternal(side, w.getBlockMetadata(x, y, z));
-	}
-	
-	@Override
-	@SideOnly(Side.CLIENT)
-	public IIcon getIcon(int side, int metadata) {
-		return getIconInternal(side, 2);
-	}
-	
-	@SideOnly(Side.CLIENT)
-	private IIcon getIconInternal(int side, int metadata) {
+	public IIcon getAbsoluteIcon(int side, int metadata) {
 		switch(side) {
 			case 0: return mBottom;
 			case 1: return mTop;
-			default: return getAbsoluteSideIcon(MiscUtils.getAbsoluteSide(side, ((metadata & 3) + 2)), metadata);
+			default: return getAbsoluteSideIcon(side, metadata);
 		}
 	}
 	
