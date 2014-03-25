@@ -17,7 +17,7 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "0.2.4"
+version = "0.3.0"
 group= "pl.asie.computronics" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "Computronics"
 
@@ -34,7 +34,7 @@ repositories {
 
 dependencies {
     compile "li.cil.oc:OpenComputers:MC1.7.2-1.2.3.92"
-    compile 'pl.asie.lib:AsieLib:0.1.10:deobf'
+    compile 'pl.asie.lib:AsieLib:0.2.0:deobf'
 }
 
 minecraft {
@@ -55,4 +55,9 @@ processResources
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
     }
+}
+
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+    classifier = 'deobf'
 }
