@@ -7,12 +7,11 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.oc.RobotUpgradeCamera;
-import pl.asie.computronics.oc.SoundCardChiptune;
 import pl.asie.lib.item.ItemMultiple;
 
 public class ItemOpenComputers extends ItemMultiple implements li.cil.oc.api.driver.Item {
 	public ItemOpenComputers() {
-		super("computronics", new String[]{"robot_upgrade_camera", "card_sound_chiptune"});
+		super("computronics", new String[]{"robot_upgrade_camera" /*, "card_sound_chiptune" */});
 		this.setCreativeTab(Computronics.tab);
 	}
 
@@ -26,7 +25,6 @@ public class ItemOpenComputers extends ItemMultiple implements li.cil.oc.api.dri
 			TileEntity container) {
 		switch(stack.getItemDamage()) {
 			case 0: return new RobotUpgradeCamera(container);
-			case 1: return new SoundCardChiptune(container);
 			default: return null;
 		}
 	}

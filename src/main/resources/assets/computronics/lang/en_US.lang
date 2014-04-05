@@ -2,6 +2,8 @@ tile.computronics.ironNoteBlock.name=Iron Note Block
 tile.computronics.tapeDrive.name=Tape Drive
 tile.computronics.camera.name=Camera
 tile.computronics.chatBox.name=Chat Box
+tile.computronics.sorter.name=Sorter
+tile.computronics.cipher.name=Cipher Block
 
 item.computronics.robot_upgrade_camera.name=Camera Upgrade
 item.computronics.part_tape_track.name=Tape Track

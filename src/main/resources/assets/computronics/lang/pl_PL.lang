@@ -2,6 +2,8 @@ tile.computronics.ironNoteBlock.name=Żelazny blok dźwiękowy
 tile.computronics.tapeDrive.name=Magnetofon
 tile.computronics.camera.name=Kamera
 tile.computronics.chatBox.name=Blok Czatu
+tile.computronics.sorter.name=Sortownik
+tile.computronics.cipher.name=Blok Szyfru
 
 item.computronics.robot_upgrade_camera.name=Rozszerzenie: Kamera
 item.computronics.part_tape_track.name=Obudowa kasety

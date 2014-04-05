@@ -16,7 +16,7 @@ public class ComputronicsEventHandler {
 		for(Object o: event.player.worldObj.loadedTileEntityList) {
 			if(o instanceof TileChatBox) {
 				TileChatBox te = (TileChatBox)o;
-				if(event.player.getDistance(te.xCoord, te.yCoord, te.zCoord) < Computronics.CHATBOX_DISTANCE) {
+				if(event.player.getDistance(te.xCoord, te.yCoord, te.zCoord) < te.getDistance()) {
 					te.receiveChatMessage(event);
 				}
 			}

@@ -10,6 +10,7 @@ import openperipheral.api.OpenPeripheralAPI;
 import pl.asie.computronics.audio.DFPWMPlaybackManager;
 import pl.asie.computronics.block.BlockCamera;
 import pl.asie.computronics.block.BlockChatBox;
+import pl.asie.computronics.block.BlockCipher;
 import pl.asie.computronics.block.BlockIronNote;
 import pl.asie.computronics.block.BlockSorter;
 import pl.asie.computronics.block.BlockTapeReader;
@@ -20,6 +21,7 @@ import pl.asie.computronics.storage.StorageManager;
 import pl.asie.computronics.tile.ContainerTapeReader;
 import pl.asie.computronics.tile.TileCamera;
 import pl.asie.computronics.tile.TileChatBox;
+import pl.asie.computronics.tile.TileCipherBlock;
 import pl.asie.computronics.tile.TileIronNote;
 import pl.asie.computronics.tile.TileTapeDrive;
 import pl.asie.computronics.tile.sorter.TileSorter;
@@ -81,6 +83,8 @@ public class Computronics {
 	public static BlockCamera camera;
 	public static BlockChatBox chatBox;
 	public static BlockSorter sorter;
+	public static BlockCipher cipher;
+	
 	public static ItemTape itemTape;
 	public static ItemMultiple itemParts;
 	public static ItemOpenComputers itemRobotUpgrade;
@@ -125,15 +129,20 @@ public class Computronics {
 		GameRegistry.registerBlock(chatBox, "computronics.chatBox");
 		GameRegistry.registerTileEntity(TileChatBox.class, "computronics.chatBox");
 
-		sorter = new BlockSorter();
-		GameRegistry.registerBlock(sorter, "computronics.sorter");
-		GameRegistry.registerTileEntity(TileSorter.class, "computronics.sorter");
+		//sorter = new BlockSorter();
+		//GameRegistry.registerBlock(sorter, "computronics.sorter");
+		//GameRegistry.registerTileEntity(TileSorter.class, "computronics.sorter");
+
+		cipher = new BlockCipher();
+		GameRegistry.registerBlock(cipher, "computronics.cipher");
+		GameRegistry.registerTileEntity(TileCipherBlock.class, "computronics.cipher");
 
 		if(Loader.isModLoaded("OpenPeripheralCore")) {
 			OpenPeripheralAPI.createAdapter(TileTapeDrive.class);
 			OpenPeripheralAPI.createAdapter(TileIronNote.class);
 			OpenPeripheralAPI.createAdapter(TileCamera.class);
-			OpenPeripheralAPI.createAdapter(TileSorter.class);
+			//OpenPeripheralAPI.createAdapter(TileSorter.class);
+			OpenPeripheralAPI.createAdapter(TileCipherBlock.class);
 		}			
 		
 		itemTape = new ItemTape();

@@ -29,7 +29,10 @@ import net.minecraftforge.event.ServerChatEvent;
 	@Optional.Interface(iface = "dan200.computer.api.IPeripheral", modid = "ComputerCraft")
 })
 public class TileChatBox extends TileEntityBase implements Environment, IPeripheral {
+	private int distance;
+	
 	public TileChatBox() {
+		distance = Computronics.CHATBOX_DISTANCE;
 		if(Loader.isModLoaded("OpenComputers")) {
 			initOC();
 		}
@@ -40,13 +43,22 @@ public class TileChatBox extends TileEntityBase implements Environment, IPeriphe
 		node = Network.newNode(this, Visibility.Network).withComponent("chat_box", Visibility.Neighbors).create();
 	}
 	
+	public int getDistance() { return distance; }
+	
+	public void setDistance(int dist) {
+		if(dist > 32767) dist = 32767;
+		
+		this.distance = Math.min(Computronics.CHATBOX_DISTANCE, dist);
+		if(this.distance < 0) this.distance = Computronics.CHATBOX_DISTANCE;
+	}
+	
 	public void sendChatMessage(String string) {
 		String text = EnumChatFormatting.GRAY + "" + EnumChatFormatting.ITALIC + "[ChatBox] ";
 		text += EnumChatFormatting.RESET + "" + EnumChatFormatting.GRAY + ChatUtils.color(string);
 		for(Object o: this.worldObj.playerEntities) {
 			if(!(o instanceof EntityPlayer)) continue;
 			EntityPlayer player = (EntityPlayer)o;
-			if(player.getDistance(this.xCoord, this.yCoord, this.zCoord) < Computronics.CHATBOX_DISTANCE) {
+			if(player.getDistance(this.xCoord, this.yCoord, this.zCoord) < distance) {
 				player.addChatMessage(new ChatComponentText(text));
 			}
 		}
@@ -79,6 +91,21 @@ public class TileChatBox extends TileEntityBase implements Environment, IPeriphe
 		return null;
 	}
 	
+	@Callback(direct = true)
+	@Optional.Method(modid="OpenComputers")
+	public Object[] getDistance(Context context, Arguments args) {
+		return new Object[]{distance};
+	}
+	
+	@Callback(direct = true)
+	@Optional.Method(modid="OpenComputers")
+	public Object[] setDistance(Context context, Arguments args) {
+		if(args.count() >= 1) {
+			if(args.isInteger(0)) setDistance(args.checkInteger(0));
+		}
+		return null;
+	}
+	
 	// ComputerCraft API
 
 	@Override
@@ -90,7 +117,7 @@ public class TileChatBox extends TileEntityBase implements Environment, IPeriphe
 	@Override
 	@Optional.Method(modid="ComputerCraft")
 	public String[] getMethodNames() {
-		return new String[]{"say"};
+		return new String[]{"say", "getDistance", "setDistance"};
 	}
 
 	@Override
@@ -100,6 +127,12 @@ public class TileChatBox extends TileEntityBase implements Environment, IPeriphe
 		if(method == 0) {
 			if(arguments.length >= 1 && arguments[0] instanceof String) {
 				this.sendChatMessage((String)arguments[0]);
+			}
+		} else if(method == 1) {
+			return new Object[]{distance};
+		} else if(method == 2) {
+			if(arguments.length >= 1 && arguments[0] instanceof Integer) {
+				this.setDistance(((Integer)arguments[0]).intValue());
 			}
 		}
 		return null;
@@ -182,6 +215,7 @@ public class TileChatBox extends TileEntityBase implements Environment, IPeriphe
 	@Optional.Method(modid="OpenComputers")
     public void readFromNBT(final NBTTagCompound nbt) {
         super.readFromNBT(nbt);
+        if(nbt.hasKey("d")) this.distance = nbt.getShort("d");
         if (node != null && node.host() == this) {
             node.load(nbt.getCompoundTag("oc:node"));
         }
@@ -191,6 +225,7 @@ public class TileChatBox extends TileEntityBase implements Environment, IPeriphe
 	@Optional.Method(modid="OpenComputers")
     public void writeToNBT(final NBTTagCompound nbt) {
         super.writeToNBT(nbt);
+        nbt.setShort("d", (short)this.distance);
         if (node != null && node.host() == this) {
             final NBTTagCompound nodeNbt = new NBTTagCompound();
             node.save(nodeNbt);

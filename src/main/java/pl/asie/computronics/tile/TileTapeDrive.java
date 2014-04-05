@@ -85,7 +85,7 @@ public class TileTapeDrive extends TileEntityInventory implements SimpleComponen
 		state = newState;
 		sendState();
 		/*if(worldObj.isRemote) {
-			SoundManager sound = Minecraft.getMinecraft().sndManager;
+			SoundSystem sound = (SoundManager)Computronics.proxy.getSoundSystem();
 			if((newState == State.REWINDING || newState == State.FORWARDING)
 					&& (state == State.REWINDING || state == State.FORWARDING)) return;
 			if(newState == State.REWINDING || newState == State.FORWARDING) {
