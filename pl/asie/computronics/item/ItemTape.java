@@ -2,6 +2,7 @@ package pl.asie.computronics.item;
 
 import java.util.List;
 
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import pl.asie.computronics.Computronics;
@@ -9,6 +10,7 @@ import pl.asie.computronics.api.IItemStorage;
 import pl.asie.computronics.storage.Storage;
 import pl.asie.lib.util.color.ItemColorizer;
 import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -18,8 +20,11 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.Icon;
 
 public class ItemTape extends Item implements IItemStorage {
-	private static int[] sizes = { 4096*60*4, 4096*60*8, 4096*60*16, 4096*60*32 };
-	private Icon tape_i, tape_g, tape_d, tape_c;
+	public static final int L_SECOND = 4096;
+	public static final int L_MINUTE = 4096*60;
+	
+	private static int[] sizes = { L_MINUTE*4, L_MINUTE*8, L_MINUTE*16, L_MINUTE*32, L_MINUTE*64, L_MINUTE*2, L_MINUTE*6, L_MINUTE*16 };
+	private Icon tape_i, tape_g, tape_d, tape_n, tape_c, tape_co, tape_st, tape_greg;
 	
 	public ItemTape(int id) {
 		super(id);
@@ -37,7 +42,11 @@ public class ItemTape extends Item implements IItemStorage {
 		tape_i = r.registerIcon("computronics:tape");
 		tape_g = r.registerIcon("computronics:tape_gold");
 		tape_d = r.registerIcon("computronics:tape_diamond");
+		tape_n = r.registerIcon("computronics:tape_nether_star");
 		tape_c = r.registerIcon("computronics:tape_cover");
+		tape_co = r.registerIcon("computronics:tape_copper");
+		tape_st = r.registerIcon("computronics:tape_steel");
+		tape_greg = r.registerIcon("computronics:tape_greg");
 	}
 	
 	@Override
@@ -47,7 +56,11 @@ public class ItemTape extends Item implements IItemStorage {
 			case 1: return tape_g;
 			case 2: return tape_g;
 			case 3: return tape_d;
-				
+			case 4: return tape_n;
+			case 5: return tape_co;
+			case 6: return tape_st;
+			case 7: return tape_greg;
+			
 			default: return tape_i;
 		}
 		else return tape_c;
@@ -55,19 +68,22 @@ public class ItemTape extends Item implements IItemStorage {
 	
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List text, boolean par4) {
+		if(stack.getItemDamage() == 7) text.add(EnumChatFormatting.GREEN + I18n.getString("tooltip.computronics.tape.balanced"));
+			
 		int size = getSize(stack);
-		int len = (int)Math.floor(size / (4096.0 * 60.0));
+		int len = (int)Math.floor(size / L_MINUTE);
 		if(stack.getTagCompound() != null) {
 			String label = stack.getTagCompound().hasKey("label") ? stack.getTagCompound().getString("label") : "";
 			if(label.length() > 0) text.add(EnumChatFormatting.WHITE + "" + EnumChatFormatting.ITALIC + label);
 		}
-		text.add(EnumChatFormatting.GRAY + "Length: " + len + " minutes");
+		text.add(EnumChatFormatting.GRAY + I18n.getStringParams("tooltip.computronics.tape.length", ""+len));
 	}
 	
 	@Override
 	@SideOnly(Side.CLIENT)
     public void getSubItems(int id, CreativeTabs tabs, List list) {
 		for(int i = 0; i < sizes.length; i++) {
+			if(i == 7 && !Loader.isModLoaded("gregtech_addon")) return;
 			list.add(new ItemStack(id, 1, i));
 		}
      }

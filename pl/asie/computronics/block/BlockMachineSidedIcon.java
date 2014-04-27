@@ -18,27 +18,15 @@ public abstract class BlockMachineSidedIcon extends BlockBase {
 	public BlockMachineSidedIcon(int id) {
 		super(id, Material.iron, Computronics.instance);
 		this.setCreativeTab(Computronics.tab);
-		this.setRotateFrontSide(true);
-	}
-	
-	@Override
-	@SideOnly(Side.CLIENT)
-	public Icon getBlockTexture(IBlockAccess w, int x, int y, int z, int side) {
-		return getIconInternal(side, w.getBlockMetadata(x, y, z));
-	}
-	
-	@Override
-	@SideOnly(Side.CLIENT)
-	public Icon getIcon(int side, int metadata) {
-		return getIconInternal(side, 2);
+		this.setRotation(Rotation.FOUR);
 	}
 	
 	@SideOnly(Side.CLIENT)
-	private Icon getIconInternal(int side, int metadata) {
+	public Icon getAbsoluteIcon(int side, int metadata) {
 		switch(side) {
 			case 0: return mBottom;
 			case 1: return mTop;
-			default: return getAbsoluteSideIcon(MiscUtils.getAbsoluteSide(side, ((metadata & 3) + 2)), metadata);
+			default: return getAbsoluteSideIcon(side, metadata);
 		}
 	}
 	
@@ -53,5 +41,15 @@ public abstract class BlockMachineSidedIcon extends BlockBase {
 		mSide = r.registerIcon("computronics:machine_side");
 		mTop = r.registerIcon("computronics:machine_top");
 		mBottom = r.registerIcon("computronics:machine_bottom");
+	}
+	
+	@Override
+	public boolean isOpaqueCube() {
+		return true;
+	}
+	
+	@Override
+	public boolean isBlockNormalCube(World world, int x, int y, int z) {
+		return true;
 	}
 }

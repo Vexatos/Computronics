@@ -11,6 +11,7 @@ public class Camera {
 	private Object hit;
 	
 	public boolean setRayDirection(World worldObj, float xCoord, float yCoord, float zCoord, ForgeDirection dir, float x, float y) {
+		System.out.println("srd " + xCoord + " " + yCoord + " " + zCoord + " " + dir.toString() + " " + x + " " + y);
 		if(x < -1.0F || x > 1.0F || y < -1.0F || y > 1.0F) return false;
 		if(dir != null) {
 			float xInc = 0.0F;

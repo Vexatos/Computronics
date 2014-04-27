@@ -1,4 +1,4 @@
-package pl.asie.computronics.integration.waila;
+package pl.asie.computronics.integration;
 
 import java.util.List;
 

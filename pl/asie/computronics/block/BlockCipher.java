@@ -9,21 +9,23 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import pl.asie.computronics.Computronics;
-import pl.asie.computronics.tile.TileCamera;
+import pl.asie.computronics.tile.TileCipherBlock;
+import pl.asie.computronics.tile.TileIronNote;
+import pl.asie.computronics.tile.TileTapeDrive;
 import pl.asie.lib.block.BlockBase;
 
-public class BlockCamera extends BlockMachineSidedIcon {
+public class BlockCipher extends BlockMachineSidedIcon {
 	private Icon mFront;
 	
-	public BlockCamera(int id) {
+	public BlockCipher(int id) {
 		super(id);
-		this.setUnlocalizedName("computronics.camera");
-		this.setRotation(Rotation.SIX);
+		this.setUnlocalizedName("computronics.cipher");
+		this.setGuiID(1);
 	}
 	
 	@Override
 	public TileEntity createNewTileEntity(World world, int metadata) {
-		return new TileCamera();
+		return new TileCipherBlock();
 	}
 	
 	@Override
@@ -36,11 +38,6 @@ public class BlockCamera extends BlockMachineSidedIcon {
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister r) {
 		super.registerIcons(r);
-		mFront = r.registerIcon("computronics:camera_front");
-	}
-	
-	@Override
-	public boolean emitsRedstone(IBlockAccess world, int x, int y, int z) {
-		return Computronics.CAMERA_REDSTONE_REFRESH;
+		mFront = r.registerIcon("computronics:cipher_front");
 	}
 }

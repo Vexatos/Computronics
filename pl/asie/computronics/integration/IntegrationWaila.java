@@ -1,4 +1,4 @@
-package pl.asie.computronics.integration.waila;
+package pl.asie.computronics.integration;
 
 import pl.asie.computronics.tile.TileTapeDrive;
 import mcp.mobius.waila.api.IWailaRegistrar;

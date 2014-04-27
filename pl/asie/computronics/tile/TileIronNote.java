@@ -2,6 +2,7 @@ package pl.asie.computronics.tile;
 
 import dan200.computer.api.IComputerAccess;
 import openperipheral.api.Arg;
+import openperipheral.api.Freeform;
 import openperipheral.api.LuaCallable;
 import openperipheral.api.LuaType;
 import li.cil.oc.api.network.Arguments;
@@ -10,6 +11,7 @@ import li.cil.oc.api.network.Context;
 import li.cil.oc.api.network.SimpleComponent;
 import pl.asie.lib.block.TileEntityBase;
 
+@Freeform
 public class TileIronNote extends TileEntityBase implements SimpleComponent {
 	public void playNote(String instrument, int note) {
 		note %= 25;
@@ -60,9 +62,8 @@ public class TileIronNote extends TileEntityBase implements SimpleComponent {
     }
     
     // OpenPeripheral
-    @LuaCallable(description = "Plays a note.")
-	public void playNote(
-		IComputerAccess computer,
+    @LuaCallable(name = "playNote", description = "Plays a note.")
+	public void playNoteOP(
 		@Arg(name = "instrument", type = LuaType.NUMBER, description = "The instrument to play, 0-4") int instrument,
 		@Arg(name = "note", type = LuaType.NUMBER, description = "The note to play, 0-24") int note
 	) {

@@ -41,7 +41,7 @@ public class BlockTapeReader extends BlockMachineSidedIcon {
 	}
 	
 	@Override
-	public boolean receivesRedstone(IBlockAccess world, int x, int y, int z, int side) {
+	public boolean receivesRedstone(IBlockAccess world, int x, int y, int z) {
 		return true;
 	}
 }

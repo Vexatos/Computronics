@@ -11,6 +11,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import openperipheral.api.Arg;
+import openperipheral.api.Freeform;
 import openperipheral.api.LuaCallable;
 import openperipheral.api.LuaType;
 import pl.asie.computronics.Computronics;
@@ -23,6 +24,7 @@ import pl.asie.lib.block.TileEntityInventory;
 import pl.asie.lib.network.PacketInput;
 import dan200.computer.api.IComputerAccess;
 
+@Freeform
 public class TileTapeDrive extends TileEntityInventory implements SimpleComponent {
 	public enum State {
 		STOPPED,
@@ -35,7 +37,20 @@ public class TileTapeDrive extends TileEntityInventory implements SimpleComponen
 	private Storage storage;
 	private String storageName = "";
 	private int codecId, codecTick, packetId;
+	private int packetSize = 1024;
+	private int soundVolume = 127;
 	
+	private boolean setSpeed(float speed) {
+		if(speed < 0.25F || speed > 2.0F) return false;
+		this.packetSize = Math.round(1024*speed);
+		return true;
+	}
+	
+	private void setVolume(float volume) {
+		if(volume < 0.0F) volume = 0.0F;
+		if(volume > 1.0F) volume = 1.0F;
+		this.soundVolume = (int)Math.floor(volume*127);
+	}
 	// GUI/State
 	
 	private void sendState() {
@@ -43,7 +58,8 @@ public class TileTapeDrive extends TileEntityInventory implements SimpleComponen
 		try {
 			PacketInput packet = Computronics.packet.create(Packets.PACKET_TAPE_GUI_STATE)
 					.writeTileLocation(this)
-					.writeByte((byte)state.ordinal());
+					.writeByte((byte)state.ordinal())
+					.writeByte((byte)soundVolume);
 			Computronics.packet.sendToAllNear(packet, this, 64.0D);
 		} catch(Exception e) { e.printStackTrace(); }
 	}
@@ -103,20 +119,20 @@ public class TileTapeDrive extends TileEntityInventory implements SimpleComponen
 
 	// Packet handling
 	
-	private final int MUSIC_PACKET_SIZE = 1024;
-	
 	private void sendMusicPacket() {
-		byte[] packet = new byte[MUSIC_PACKET_SIZE];
+		byte[] packet = new byte[packetSize];
 		int amount = storage.read(packet, 0, false); // read data into packet array
 		try {
 			PacketInput pkt = Computronics.packet.create(Packets.PACKET_AUDIO_DATA)
 				.writeTileLocation(this)
 				.writeInt(packetId++)
 				.writeInt(codecId)
+				.writeShort((short)packetSize)
+				.writeByte((byte)soundVolume)
 				.writeByteArrayData(packet);
 			Computronics.packet.sendToAllNear(pkt, this, 64.0D);
 		} catch(Exception e) { e.printStackTrace(); }
-		if(amount < MUSIC_PACKET_SIZE) switchState(State.STOPPED);
+		if(amount < packetSize) switchState(State.STOPPED);
 	}
 	
 	// Logic
@@ -184,7 +200,7 @@ public class TileTapeDrive extends TileEntityInventory implements SimpleComponen
 	}
 	
 	@Override
-	public void onRedstoneSignal(int side, int signal) {
+	public void onRedstoneSignal(int signal) {
 		this.switchState(signal > 0 ? State.PLAYING : State.STOPPED);
 	}
 	
@@ -260,21 +276,23 @@ public class TileTapeDrive extends TileEntityInventory implements SimpleComponen
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
 		if(tag.hasKey("state")) this.state = State.values()[tag.getByte("state")];
+		if(tag.hasKey("sp")) this.packetSize = tag.getShort("sp");
+		if(tag.hasKey("vo")) this.soundVolume = tag.getByte("vo"); else this.soundVolume = 127;
 		loadStorage();
 	}
 	
 	@Override
 	public void writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
+		tag.setShort("sp", (short)this.packetSize);
 		tag.setByte("state", (byte)this.state.ordinal());
+		if(this.soundVolume != 127) tag.setByte("vo", (byte)this.soundVolume);
 	}
-	
-	public static final int END_SIZE = 1024;
 	
 	// OpenComputers
 	@Callback(direct = true)
 	public Object[] isEnd(Context context, Arguments args) {
-	    return new Object[]{storage.getPosition() + END_SIZE <= storage.getSize()};
+	    return new Object[]{storage.getPosition() + packetSize <= storage.getSize()};
 	}
 	
     @Callback(direct = true)
@@ -343,6 +361,18 @@ public class TileTapeDrive extends TileEntityInventory implements SimpleComponen
     }
     
     @Callback
+    public Object[] setSpeed(Context context, Arguments args) {
+    	if(args.count() > 0 && args.isDouble(0)) return new Object[]{this.setSpeed((float)args.checkDouble(0))};
+    	else return null;
+    }
+    
+    @Callback
+    public Object[] setVolume(Context context, Arguments args) {
+    	if(args.count() > 0 && args.isDouble(0)) this.setVolume((float)args.checkDouble(0));
+    	return null;
+    }
+    
+    @Callback
     public Object[] getState(Context context, Arguments args) {
     	return new Object[]{state.toString()};
     }
@@ -355,30 +385,29 @@ public class TileTapeDrive extends TileEntityInventory implements SimpleComponen
     
     // OpenPeripheral
     @LuaCallable(description = "Check if any tape is inserted.", returnTypes = {LuaType.BOOLEAN})
-	public boolean isReady(IComputerAccess computer) {
+	public boolean isReady() {
     	return storage != null;
     }
     
     @LuaCallable(description = "Get the size of the inserted tape.", returnTypes = {LuaType.NUMBER})
-	public int getSize(IComputerAccess computer) {
+	public int getSize() {
     	if(storage != null) return storage.getSize();
     	else return 0;
     }
     
     @LuaCallable(description = "Check if the tape is near its end.", returnTypes = {LuaType.BOOLEAN})
-	public boolean isEnd(IComputerAccess computer) {
-	    return storage.getPosition() + END_SIZE <= storage.getSize();
+	public boolean isEnd() {
+	    return storage.getPosition() + packetSize <= storage.getSize();
 	}
     
     @LuaCallable(description = "Get the label of the inserted tape.", returnTypes = {LuaType.STRING})
-	public String getLabel(IComputerAccess computer) {
+	public String getLabel() {
     	if(storage != null) return storageName;
     	else return null;
     }
     
-    @LuaCallable(description = "Set the label of the inserted tape.")
-	public void setLabel(
-		IComputerAccess computer,
+    @LuaCallable(name = "setLabel", description = "Set the label of the inserted tape.")
+	public void setLabelOP(
 		@Arg(name = "label", type = LuaType.STRING, description = "The new label.") String label
 	) {
     	if(storage != null) setLabel(label);
@@ -386,7 +415,6 @@ public class TileTapeDrive extends TileEntityInventory implements SimpleComponen
     
     @LuaCallable(description = "Seeks on the tape, returns number of bytes actually seeked.", returnTypes = {LuaType.NUMBER})
 	public int seek(
-		IComputerAccess computer,
 		@Arg(name = "amount", type = LuaType.NUMBER, description = "The amount, negative values go backwards") int amount
 	) {
     	if(storage != null) return storage.seek(amount);
@@ -394,31 +422,44 @@ public class TileTapeDrive extends TileEntityInventory implements SimpleComponen
     }
     
     @LuaCallable(description = "Reads a value (0-255) from the tape and advances the counter.", returnTypes = {LuaType.NUMBER})
-	public int read(IComputerAccess computer) {
+	public int read() {
     	if(storage != null) return (int)storage.read() & 0xFF;
     	else return 0;
     }
     
     @LuaCallable(description = "Writes a value on the tape and advanced the counter.")
 	public void write(
-		IComputerAccess computer,
 		@Arg(name = "value", type = LuaType.NUMBER, description = "The value (0-255)") int value
 	) {
     	if(storage != null) storage.write((byte)value);
     }
     
+    @LuaCallable(description = "Sets the speed of tape playback - between 0.25 and 2.0.", returnTypes = {LuaType.BOOLEAN})
+	public boolean setSpeed(
+		@Arg(name = "speed", type = LuaType.NUMBER, description = "The speed.")double speed
+	) {
+    	return this.setSpeed((float)speed);
+    }
+    
+    @LuaCallable(description = "Sets the tape volume - between 0.0 and 1.0.")
+	public void setVolume(
+		@Arg(name = "volume", type = LuaType.NUMBER, description = "The volume.")double volume
+	) {
+    	this.setVolume((float)volume);
+    }
+    
     @LuaCallable(description = "Starts playing music.")
-	public void play(IComputerAccess computer) {
+	public void play() {
     	switchState(State.PLAYING);
     }
     
-    @LuaCallable(description = "Get the current state of the player.", returnTypes = {LuaType.STRING})
- 	public String getState(IComputerAccess computer) {
+    @LuaCallable(name = "getState", description = "Get the current state of the player.", returnTypes = {LuaType.STRING})
+ 	public String getStateOP() {
      	return state.toString();
      }
     
     @LuaCallable(description = "Stops playing music.")
-	public void stop(IComputerAccess computer) {
+	public void stop() {
     	switchState(State.STOPPED);
     }
 }

@@ -1,7 +1,9 @@
 package pl.asie.computronics.tile;
 
 import openperipheral.api.Arg;
+import openperipheral.api.Freeform;
 import openperipheral.api.LuaCallable;
+import openperipheral.api.LuaMethod;
 import openperipheral.api.LuaType;
 import dan200.computer.api.IComputerAccess;
 import net.minecraft.world.IBlockAccess;
@@ -16,6 +18,7 @@ import pl.asie.computronics.util.Camera;
 import pl.asie.computronics.util.CollisionFinder;
 import pl.asie.lib.block.TileEntityBase;
 
+@Freeform
 public class TileCamera extends TileEntityBase implements SimpleComponent {
 	private static final int CALL_LIMIT = 20;
 	private final Camera camera = new Camera();
@@ -79,7 +82,6 @@ public class TileCamera extends TileEntityBase implements SimpleComponent {
 	
     @LuaCallable(description = "Gets the block hash for a specified direction.", returnTypes = {LuaType.STRING})
 	public String block(
-		IComputerAccess computer,
 		@Arg(name = "x", type = LuaType.NUMBER, description = "The X direction (-1.0 to 1.0)") Float x,
 		@Arg(name = "y", type = LuaType.NUMBER, description = "The Y direction (-1.0 to 1.0)") Float y
 	) {
@@ -91,7 +93,6 @@ public class TileCamera extends TileEntityBase implements SimpleComponent {
     
     @LuaCallable(description = "Gets the distance for a specified direction.", returnTypes = {LuaType.NUMBER})
 	public Float distance(
-		IComputerAccess computer,
 		@Arg(name = "x", type = LuaType.NUMBER, description = "The X direction (-1.0 to 1.0)") Float x,
 		@Arg(name = "y", type = LuaType.NUMBER, description = "The Y direction (-1.0 to 1.0)") Float y
 	) {

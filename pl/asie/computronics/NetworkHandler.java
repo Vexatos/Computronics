@@ -36,6 +36,7 @@ public class NetworkHandler extends NetworkHandlerBase implements IPacketHandler
 			case Packets.PACKET_TAPE_GUI_STATE: {
 				TileEntity entity = isClient ? packet.readTileEntity() : packet.readTileEntityServer();
 				State state = State.values()[packet.readUnsignedByte()];
+				int volume = packet.readByte() & 127;
 				if(entity instanceof TileTapeDrive) {
 					TileTapeDrive tile = (TileTapeDrive)entity;
 					tile.switchState(state);
@@ -49,15 +50,17 @@ public class NetworkHandler extends NetworkHandlerBase implements IPacketHandler
 				int z = packet.readInt();
 				int packetId = packet.readInt();
 				int codecId = packet.readInt();
-				byte[] data = packet.readByteArrayData(1024);
-				byte[] audio = new byte[8192];
+				short packetSize = packet.readShort();
+				short volume = packet.readByte();
+				byte[] data = packet.readByteArrayData(packetSize);
+				byte[] audio = new byte[packetSize * 8];
 				String sourceName = "dfpwm_"+codecId;
 				StreamingAudioPlayer codec = Computronics.instance.audio.getPlayer(codecId);
 
 				if(dimId != WorldUtils.getCurrentClientDimension()) return;
 				
-				codec.decompress(audio, data, 0, 0, 1024);
-				for(int i = 0; i < 8192; i++) {
+				codec.decompress(audio, data, 0, 0, packetSize);
+				for(int i = 0; i < (packetSize * 8); i++) {
 					// Convert signed to unsigned data
 					audio[i] = (byte)(((int)audio[i] & 0xFF) ^ 0x80);
 				}
@@ -65,6 +68,9 @@ public class NetworkHandler extends NetworkHandlerBase implements IPacketHandler
 				if((codec.lastPacketId + 1) != packetId) {
 					codec.reset();
 				}
+				codec.setSampleRate(packetSize * 32);
+				codec.setDistance((float)Computronics.TAPEDRIVE_DISTANCE);
+				codec.setVolume(volume/127.0F);
 				codec.playPacket(audio, x, y, z);
 				codec.lastPacketId = packetId;
 			} break;
