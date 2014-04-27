@@ -36,7 +36,9 @@ public class NetworkHandler extends NetworkHandlerBase implements IPacketHandler
 			case Packets.PACKET_TAPE_GUI_STATE: {
 				TileEntity entity = isClient ? packet.readTileEntity() : packet.readTileEntityServer();
 				State state = State.values()[packet.readUnsignedByte()];
-				int volume = packet.readByte() & 127;
+				if(isClient) {
+					int volume = packet.readByte() & 127;
+				}
 				if(entity instanceof TileTapeDrive) {
 					TileTapeDrive tile = (TileTapeDrive)entity;
 					tile.switchState(state);
