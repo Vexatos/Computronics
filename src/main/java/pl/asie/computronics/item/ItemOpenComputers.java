@@ -33,7 +33,7 @@ public class ItemOpenComputers extends ItemMultiple implements li.cil.oc.api.dri
 	public Slot slot(ItemStack stack) {
 		switch(stack.getItemDamage()) {
 			case 0: return Slot.Upgrade;
-			case 1: return Slot.Card;
+			//case 1: return Slot.Card;
 			default: return Slot.None;
 		}
 	}
@@ -42,7 +42,7 @@ public class ItemOpenComputers extends ItemMultiple implements li.cil.oc.api.dri
 	public int tier(ItemStack stack) {
 		switch(stack.getItemDamage()) {
 			case 0: return 1; // Tier 2
-			case 1: return 1; // Tier 2
+			//case 1: return 1; // Tier 2
 			default: return 0; // Tier 1 default
 		}
 	}

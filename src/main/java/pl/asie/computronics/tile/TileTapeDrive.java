@@ -38,6 +38,20 @@ public class TileTapeDrive extends TileEntityInventory implements SimpleComponen
 	private Storage storage;
 	private String storageName = "";
 	private int codecId, codecTick, packetId;
+	private int packetSize = 1024;
+	private int soundVolume = 127;
+	
+	private boolean setSpeed(float speed) {
+		if(speed < 0.25F || speed > 2.0F) return false;
+		this.packetSize = Math.round(1024*speed);
+		return true;
+	}
+	
+	private void setVolume(float volume) {
+		if(volume < 0.0F) volume = 0.0F;
+		if(volume > 1.0F) volume = 1.0F;
+		this.soundVolume = (int)Math.floor(volume*127);
+	}
 	
 	// GUI/State
 	
@@ -46,7 +60,8 @@ public class TileTapeDrive extends TileEntityInventory implements SimpleComponen
 		try {
 			Packet packet = Computronics.packet.create(Packets.PACKET_TAPE_GUI_STATE)
 					.writeTileLocation(this)
-					.writeByte((byte)state.ordinal());
+					.writeByte((byte)state.ordinal())
+					.writeByte((byte)soundVolume);
 			Computronics.packet.sendToAllAround(packet, this, 64.0D);
 		} catch(Exception e) { e.printStackTrace(); }
 	}
@@ -106,10 +121,8 @@ public class TileTapeDrive extends TileEntityInventory implements SimpleComponen
 
 	// Packet handling
 	
-	private final int MUSIC_PACKET_SIZE = 1024;
-	
 	private void sendMusicPacket() {
-		byte[] packet = new byte[MUSIC_PACKET_SIZE];
+		byte[] packet = new byte[packetSize];
 		int amount = storage.read(packet, 0, false); // read data into packet array
 		try {
 			Packet pkt = Computronics.packet.create(Packets.PACKET_AUDIO_DATA)
@@ -119,7 +132,7 @@ public class TileTapeDrive extends TileEntityInventory implements SimpleComponen
 				.writeByteArrayData(packet);
 			Computronics.packet.sendToAllAround(pkt, this, 64.0D);
 		} catch(Exception e) { e.printStackTrace(); }
-		if(amount < MUSIC_PACKET_SIZE) switchState(State.STOPPED);
+		if(amount < packetSize) switchState(State.STOPPED);
 	}
 	
 	// Logic
@@ -263,22 +276,24 @@ public class TileTapeDrive extends TileEntityInventory implements SimpleComponen
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
 		if(tag.hasKey("state")) this.state = State.values()[tag.getByte("state")];
+		if(tag.hasKey("sp")) this.packetSize = tag.getShort("sp");
+		if(tag.hasKey("vo")) this.soundVolume = tag.getByte("vo"); else this.soundVolume = 127;
 		loadStorage();
 	}
 	
 	@Override
 	public void writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
+		tag.setShort("sp", (short)this.packetSize);
 		tag.setByte("state", (byte)this.state.ordinal());
+		if(this.soundVolume != 127) tag.setByte("vo", (byte)this.soundVolume);
 	}
-	
-	public static final int END_SIZE = 1024;
 	
 	// OpenComputers
 	@Callback(direct = true)
     @Optional.Method(modid="OpenComputers")
 	public Object[] isEnd(Context context, Arguments args) {
-	    return new Object[]{storage.getPosition() + END_SIZE <= storage.getSize()};
+	    return new Object[]{storage.getPosition() + packetSize <= storage.getSize()};
 	}
 	
     @Callback(direct = true)
@@ -356,6 +371,18 @@ public class TileTapeDrive extends TileEntityInventory implements SimpleComponen
     }
     
     @Callback
+    public Object[] setSpeed(Context context, Arguments args) {
+    	if(args.count() > 0 && args.isDouble(0)) return new Object[]{this.setSpeed((float)args.checkDouble(0))};
+    	else return null;
+    }
+    
+    @Callback
+    public Object[] setVolume(Context context, Arguments args) {
+    	if(args.count() > 0 && args.isDouble(0)) this.setVolume((float)args.checkDouble(0));
+    	return null;
+    }
+    
+    @Callback
     @Optional.Method(modid="OpenComputers")
     public Object[] getState(Context context, Arguments args) {
     	return new Object[]{state.toString()};
@@ -384,7 +411,7 @@ public class TileTapeDrive extends TileEntityInventory implements SimpleComponen
     @LuaCallable(description = "Check if the tape is near its end.", returnTypes = {LuaType.BOOLEAN})
     @Optional.Method(modid="OpenPeripheralCore")
 	public boolean isEnd(IComputerAccess computer) {
-	    return storage.getPosition() + END_SIZE <= storage.getSize();
+	    return storage.getPosition() + packetSize <= storage.getSize();
 	}
     
     @LuaCallable(description = "Get the label of the inserted tape.", returnTypes = {LuaType.STRING})

@@ -11,13 +11,13 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:1.1-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
     }
 }
 
 apply plugin: 'forge'
 
-version = "0.3.0"
+version = "0.4.1"
 group= "pl.asie.computronics" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "Computronics"
 
@@ -33,12 +33,12 @@ repositories {
 }
 
 dependencies {
-    compile "li.cil.oc:OpenComputers:MC1.7.2-1.2.3.92"
-    compile 'pl.asie.lib:AsieLib:0.2.0:deobf'
+    compile "li.cil.oc:OpenComputers:MC1.7.2-1.2.11.143"
+    compile files("lib/AsieLib-0.2.3-deobf.jar")
 }
 
 minecraft {
-    version = "1.7.2-10.12.0.1047"
+    version = "1.7.2-10.12.1.1060"
     assetDir = "eclipse/assets"
 }
 processResources

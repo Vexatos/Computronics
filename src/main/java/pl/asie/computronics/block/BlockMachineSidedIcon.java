@@ -42,4 +42,13 @@ public abstract class BlockMachineSidedIcon extends BlockBase {
 		mTop = r.registerIcon("computronics:machine_top");
 		mBottom = r.registerIcon("computronics:machine_bottom");
 	}
+	
+	@Override
+	public boolean isOpaqueCube() {
+		return true;
+	}
+	
+	public boolean isBlockNormalCube(World world, int x, int y, int z) {
+		return true;
+	}
 }

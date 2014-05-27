@@ -43,6 +43,11 @@ public class TileChatBox extends TileEntityBase implements Environment, IPeriphe
 		node = Network.newNode(this, Visibility.Network).withComponent("chat_box", Visibility.Neighbors).create();
 	}
 	
+	public boolean isCreative() {
+		if(!Computronics.CHATBOX_CREATIVE || worldObj == null) return false;
+		else return worldObj.getBlockMetadata(xCoord, yCoord, zCoord) >= 8;
+	}
+	
 	public int getDistance() { return distance; }
 	
 	public void setDistance(int dist) {

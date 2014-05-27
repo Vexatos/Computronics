@@ -37,6 +37,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.oredict.ShapedOreRecipe;
@@ -44,6 +45,7 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.ModMetadata;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -57,7 +59,7 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 
-@Mod(modid="computronics", name="Computronics", version="0.3.0", dependencies="required-after:asielib;after:OpenPeripheralCore;after:ComputerCraft;after:OpenComputers;after:OpenComputers|Core;after:BuildCraft|Core")
+@Mod(modid="computronics", name="Computronics", version="0.4.1", dependencies="required-after:asielib;after:OpenPeripheralCore;after:ComputerCraft;after:OpenComputers;after:OpenComputers|Core;after:BuildCraft|Core")
 public class Computronics {
 	public Configuration config;
 	public static Random rand = new Random();
@@ -72,8 +74,10 @@ public class Computronics {
 	
 	public static int CHATBOX_DISTANCE = 40;
 	public static int CAMERA_DISTANCE = 32;
+	public static int TAPEDRIVE_DISTANCE = 24;
 	public static int BUFFER_MS = 750;
-	public static boolean CAMERA_REDSTONE_REFRESH = true;
+	public static String CHATBOX_PREFIX = "[ChatBox]";
+	public static boolean CAMERA_REDSTONE_REFRESH, CHATBOX_ME_DETECT, CHATBOX_CREATIVE;
 	
 	@SidedProxy(clientSide="pl.asie.computronics.ClientProxy", serverSide="pl.asie.computronics.CommonProxy")	
 	public static CommonProxy proxy;
@@ -88,6 +92,8 @@ public class Computronics {
 	public static ItemTape itemTape;
 	public static ItemMultiple itemParts;
 	public static ItemOpenComputers itemRobotUpgrade;
+	
+	//public static Class<? extends TileEntity> CHAT_BOX_CLASS;
 	
 	public static CreativeTabs tab = new CreativeTabs("tabComputronics") {
         public Item getTabIconItem() {
@@ -106,12 +112,16 @@ public class Computronics {
 		packet = new PacketHandler("computronics", new NetworkHandlerClient(), new NetworkHandlerServer());
 		
 		// Configs
-		CHATBOX_DISTANCE = config.get("options", "chatboxDistance", 40).getInt();
-		CAMERA_DISTANCE = config.get("options", "cameraDistance", 32).getInt();
-		CAMERA_REDSTONE_REFRESH = config.get("options", "cameraRedstoneRefresh", true).getBoolean(true);
-		BUFFER_MS = config.get("options", "audioBufferMilisec", 750).getInt();
+		CHATBOX_DISTANCE = config.get("chatbox", "maxDistance", 40).getInt();
+		CAMERA_DISTANCE = config.get("camera", "maxDistance", 32).getInt();
+		CAMERA_REDSTONE_REFRESH = config.get("camera", "sendRedstoneSignal", true).getBoolean(true);
+		BUFFER_MS = config.get("tapedrive", "audioPreloadMs", 750).getInt();
+		CHATBOX_PREFIX = config.get("chatbox", "prefix", "[ChatBox]").getString();
+		CHATBOX_ME_DETECT = config.get("chatbox", "readCommandMe", false).getBoolean(false);
+		CHATBOX_CREATIVE = config.get("chatbox", "enableCreative", true).getBoolean(true);
+		TAPEDRIVE_DISTANCE = config.get("tapedrive", "hearingDistance", 24).getInt();
 		
-		config.get("options", "cameraRedstoneRefresh", true).comment = "Setting this to false might help Camera tick lag issues, at the cost of making them useless with redstone circuitry.";
+		config.get("camera", "sendRedstoneSignal", true).comment = "Setting this to false might help Camera tick lag issues, at the cost of making them useless with redstone circuitry.";
 		
 		ironNote = new BlockIronNote();
 		GameRegistry.registerBlock(ironNote, "computronics.ironNoteBlock");
@@ -174,6 +184,7 @@ public class Computronics {
 		GameRegistry.addShapedRecipe(new ItemStack(chatBox, 1, 0), "sss", "ses", "iri", 's', Blocks.stonebrick, 'i', Items.iron_ingot, 'e', Items.ender_pearl, 'r', Items.redstone);
 		GameRegistry.addShapedRecipe(new ItemStack(ironNote, 1, 0), "iii", "ini", "iii", 'i', Items.iron_ingot, 'n', Blocks.noteblock);
 		GameRegistry.addShapedRecipe(new ItemStack(tapeReader, 1, 0), "iii", "iri", "iai", 'i', Items.iron_ingot, 'r', Items.redstone, 'a', ironNote);
+		GameRegistry.addShapedRecipe(new ItemStack(cipher, 1, 0), "sss", "srs", "eie", 'i', Items.iron_ingot, 'r', Items.redstone, 'e', Items.ender_pearl, 's', Blocks.stonebrick);
 		// Tape recipes
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 0),
 				" i ", "iii", " T ", 'T', new ItemStack(itemParts, 1, 0), 'i', Items.iron_ingot));
@@ -183,6 +194,19 @@ public class Computronics {
 				" i ", "ggg", "nTn", 'T', new ItemStack(itemParts, 1, 0), 'i', Items.iron_ingot, 'n', Items.gold_nugget, 'g', Items.gold_ingot));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 3),
 				" i ", "ddd", " T ", 'T', new ItemStack(itemParts, 1, 0), 'i', Items.iron_ingot, 'd', Items.diamond));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 4),
+				" d ", "dnd", " T ", 'T', new ItemStack(itemParts, 1, 0), 'n', Items.nether_star, 'd', Items.diamond));
+		
+		// Mod compat - copper/steel
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 5),
+				" i ", " c ", " T ", 'T', new ItemStack(itemParts, 1, 0), 'i', Items.iron_ingot, 'c', "ingotCopper"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 6),
+				" i ", "isi", " T ", 'T', new ItemStack(itemParts, 1, 0), 'i', Items.iron_ingot, 's', "ingotSteel"));
+		
+		// Mod compat - GregTech
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 7),
+				" i ", "isi", " T ", 'T', new ItemStack(itemParts, 1, 0), 'i', "plateIridium", 's', "plateTungstenSteel"));
+				
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 1, 0),
 				" i ", "rrr", "iii", 'r', Items.redstone, 'i', Items.iron_ingot));
 		GameRegistry.addRecipe(new RecipeColorizer(itemTape));

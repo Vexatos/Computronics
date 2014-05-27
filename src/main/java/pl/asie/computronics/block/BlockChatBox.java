@@ -1,5 +1,7 @@
 package pl.asie.computronics.block;
 
+import java.util.logging.Level;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.material.Material;
@@ -20,6 +22,12 @@ public class BlockChatBox extends BlockMachineSidedIcon {
 		this.setCreativeTab(Computronics.tab);
 		this.setIconName("computronics:chatbox");
 		this.setBlockName("computronics.chatBox");
+	}
+	
+	// I'm such a cheater.
+	@Override
+	public int getRenderColor(int meta) {
+		return meta >= 8 ? 0xFF60FF : 0xFFFFFF;
 	}
 	
 	@Override

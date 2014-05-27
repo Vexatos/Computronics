@@ -1,5 +1,6 @@
 package pl.asie.computronics.gui;
 
+import net.minecraft.client.resources.I18n;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -105,7 +106,7 @@ public class GuiTapePlayer extends GuiBase {
 	private String getLabel() {
 		ItemStack stack = (ItemStack)this.container.getInventory().get(0);
 		if(stack != null && stack.getItem() instanceof ItemTape) {
-			String label = "Unnamed Tape";
+			String label = I18n.format("tooltip.computronics.tape.unnamed");
 			if(stack.getTagCompound() != null && stack.getTagCompound().hasKey("label")) label = stack.getTagCompound().getString("label");
 			return label;
 		} else return null;
@@ -131,7 +132,7 @@ public class GuiTapePlayer extends GuiBase {
 		
 		int labelColor = 0xFFFFFF;
 		if(label == null) {
-			label = "No Tape";
+			label = I18n.format("tooltip.computronics.tape.none");
 			labelColor = 0xFF3333;
 		}
 		if(label.length() > 24) label = label.substring(0, 22) + "...";

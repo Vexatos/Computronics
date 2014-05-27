@@ -27,6 +27,9 @@ public class RobotUpgradeCamera extends ManagedEnvironment {
 	
     @Callback(direct = true, limit = CALL_LIMIT)
     public Object[] setRayDirection(Context context, Arguments args) {
+    	camera.reset();
+    	float x = args.count() == 2 ? (float)args.checkDouble(0) : 0.0F;
+    	float y = args.count() == 2 ? (float)args.checkDouble(1) : 0.0F;
     	if(args.count() == 2) {
         	int l = MathHelper.floor_double((double)(robot.player().rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
         	l = Direction.directionToFacing[l];
@@ -42,6 +45,36 @@ public class RobotUpgradeCamera extends ManagedEnvironment {
     @Callback(direct = true, limit = CALL_LIMIT)
     public Object[] distance(Context context, Arguments args) {
     	setRayDirection(context, args);
+    	return new Object[]{camera.getDistance()};
+    }
+    
+    @Callback(direct = true, limit = CALL_LIMIT)
+    public Object[] distanceUp(Context context, Arguments args) {
+    	camera.reset();
+    	if(args.count() == 2) {
+    		camera.setRayDirection(entity.getWorldObj(), entity.xCoord, entity.yCoord, entity.zCoord,
+    				ForgeDirection.UP,
+    				(float)args.checkDouble(0), (float)args.checkDouble(1));
+    	} else {
+    		camera.setRayDirection(entity.getWorldObj(), entity.xCoord, entity.yCoord, entity.zCoord,
+    				ForgeDirection.UP,
+    				0.0F, 0.0F);
+    	}
+    	return new Object[]{camera.getDistance()};
+    }
+    
+    @Callback(direct = true, limit = CALL_LIMIT)
+    public Object[] distanceDown(Context context, Arguments args) {
+    	camera.reset();
+    	if(args.count() == 2) {
+    		camera.setRayDirection(entity.getWorldObj(), entity.xCoord, entity.yCoord, entity.zCoord,
+    				ForgeDirection.DOWN,
+    				(float)args.checkDouble(0), (float)args.checkDouble(1));
+    	} else {
+    		camera.setRayDirection(entity.getWorldObj(), entity.xCoord, entity.yCoord, entity.zCoord,
+    				ForgeDirection.DOWN,
+    				0.0F, 0.0F);
+    	}
     	return new Object[]{camera.getDistance()};
     }
     
