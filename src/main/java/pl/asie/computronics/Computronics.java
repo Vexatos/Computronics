@@ -59,7 +59,7 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 
-@Mod(modid="computronics", name="Computronics", version="0.4.1", dependencies="required-after:asielib;after:OpenPeripheralCore;after:ComputerCraft;after:OpenComputers;after:OpenComputers|Core;after:BuildCraft|Core")
+@Mod(modid="computronics", name="Computronics", version="0.4.2", dependencies="required-after:asielib;after:OpenPeripheralCore;after:ComputerCraft;after:OpenComputers;after:OpenComputers|Core;after:BuildCraft|Core")
 public class Computronics {
 	public Configuration config;
 	public static Random rand = new Random();
@@ -196,15 +196,17 @@ public class Computronics {
 				" i ", "ddd", " T ", 'T', new ItemStack(itemParts, 1, 0), 'i', Items.iron_ingot, 'd', Items.diamond));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 4),
 				" d ", "dnd", " T ", 'T', new ItemStack(itemParts, 1, 0), 'n', Items.nether_star, 'd', Items.diamond));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 5),
+				" n ", "nnn", " T ", 'T', new ItemStack(itemParts, 1, 0), 'n', Items.nether_star));
 		
 		// Mod compat - copper/steel
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 5),
-				" i ", " c ", " T ", 'T', new ItemStack(itemParts, 1, 0), 'i', Items.iron_ingot, 'c', "ingotCopper"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 6),
+				" i ", " c ", " T ", 'T', new ItemStack(itemParts, 1, 0), 'i', Items.iron_ingot, 'c', "ingotCopper"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 7),
 				" i ", "isi", " T ", 'T', new ItemStack(itemParts, 1, 0), 'i', Items.iron_ingot, 's', "ingotSteel"));
 		
 		// Mod compat - GregTech
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 7),
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 8),
 				" i ", "isi", " T ", 'T', new ItemStack(itemParts, 1, 0), 'i', "plateIridium", 's', "plateTungstenSteel"));
 				
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 1, 0),
