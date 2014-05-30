@@ -129,6 +129,8 @@ public class TileTapeDrive extends TileEntityInventory implements SimpleComponen
 				.writeTileLocation(this)
 				.writeInt(packetId++)
 				.writeInt(codecId)
+				.writeShort((short)packetSize)
+				.writeByte((byte)soundVolume)
 				.writeByteArrayData(packet);
 			Computronics.packet.sendToAllAround(pkt, this, 64.0D);
 		} catch(Exception e) { e.printStackTrace(); }
@@ -277,7 +279,7 @@ public class TileTapeDrive extends TileEntityInventory implements SimpleComponen
 		super.readFromNBT(tag);
 		if(tag.hasKey("state")) this.state = State.values()[tag.getByte("state")];
 		if(tag.hasKey("sp")) this.packetSize = tag.getShort("sp");
-		//if(tag.hasKey("vo")) this.soundVolume = tag.getByte("vo"); else this.soundVolume = 127;
+		if(tag.hasKey("vo")) this.soundVolume = tag.getByte("vo"); else this.soundVolume = 127;
 		loadStorage();
 	}
 	
@@ -286,7 +288,7 @@ public class TileTapeDrive extends TileEntityInventory implements SimpleComponen
 		super.writeToNBT(tag);
 		tag.setShort("sp", (short)this.packetSize);
 		tag.setByte("state", (byte)this.state.ordinal());
-		//if(this.soundVolume != 127) tag.setByte("vo", (byte)this.soundVolume);
+		if(this.soundVolume != 127) tag.setByte("vo", (byte)this.soundVolume);
 	}
 	
 	// OpenComputers

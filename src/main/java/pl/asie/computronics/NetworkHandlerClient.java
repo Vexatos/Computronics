@@ -36,7 +36,6 @@ public class NetworkHandlerClient extends MessageHandlerBase {
 				TileEntity entity = packet.readTileEntity();
 				State state = State.values()[packet.readUnsignedByte()];
 				//int volume = packet.readByte() & 127;
-				int volume = 127;
 				if(entity instanceof TileTapeDrive) {
 					TileTapeDrive tile = (TileTapeDrive)entity;
 					tile.switchState(state);
@@ -49,9 +48,8 @@ public class NetworkHandlerClient extends MessageHandlerBase {
 				int z = packet.readInt();
 				int packetId = packet.readInt();
 				int codecId = packet.readInt();
-				//short packetSize = packet.readShort();
-				short packetSize = 1024;
-				//short volume = packet.readByte();
+				short packetSize = packet.readShort();
+				short volume = packet.readByte();
 				byte[] data = packet.readByteArrayData(packetSize);
 				byte[] audio = new byte[packetSize * 8];
 				String sourceName = "dfpwm_"+codecId;
@@ -70,8 +68,7 @@ public class NetworkHandlerClient extends MessageHandlerBase {
 				}
 				codec.setSampleRate(packetSize * 32);
 				codec.setDistance((float)Computronics.TAPEDRIVE_DISTANCE);
-				//codec.setVolume(volume/127.0F);
-				codec.setVolume(127.0F);
+				codec.setVolume(volume/127.0F);
 				codec.playPacket(audio, x, y, z);
 				codec.lastPacketId = packetId;
 			} break;
