@@ -23,7 +23,7 @@ public class ItemTape extends Item implements IItemStorage {
 	public static final int L_SECOND = 4096;
 	public static final int L_MINUTE = 4096*60;
 	
-	private static int[] sizes = { L_MINUTE*4, L_MINUTE*8, L_MINUTE*16, L_MINUTE*32, L_MINUTE*64, L_MINUTE*128, L_MINUTE*2, L_MINUTE*6, L_MINUTE*16 };
+	private static int[] sizes = { L_MINUTE*4, L_MINUTE*8, L_MINUTE*16, L_MINUTE*32, L_MINUTE*64, L_MINUTE*2, L_MINUTE*6, L_MINUTE*16, L_MINUTE*128 };
 	private IIcon tape_i, tape_g, tape_d, tape_n, tape_c, tape_co, tape_st, tape_greg;
 	
 	public ItemTape() {
