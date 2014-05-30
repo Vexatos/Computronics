@@ -57,11 +57,11 @@ public class ItemTape extends Item implements IItemStorage {
 			case 2: return tape_g;
 			case 3: return tape_d;
 			case 4: return tape_n;
-			case 5: return tape_n;
-			case 6: return tape_co;
-			case 7: return tape_st;
-			case 8: return tape_greg;
-				
+			case 5: return tape_co;
+			case 6: return tape_st;
+			case 7: return tape_greg;
+			case 8: return tape_n;
+
 			default: return tape_i;
 		}
 		else return tape_c;
@@ -82,7 +82,7 @@ public class ItemTape extends Item implements IItemStorage {
 	@SideOnly(Side.CLIENT)
     public void getSubItems(Item item, CreativeTabs tabs, List list) {
 		for(int i = 0; i < sizes.length; i++) {
-			if(i == 8 && !Loader.isModLoaded("gregtech_addon")) return;
+			if(i == 7 && !Loader.isModLoaded("gregtech_addon")) return;
 			list.add(new ItemStack(item, 1, i));
 		}
      }
