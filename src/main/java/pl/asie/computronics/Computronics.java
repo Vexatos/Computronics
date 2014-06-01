@@ -214,8 +214,8 @@ public class Computronics {
 		GameRegistry.addRecipe(new RecipeColorizer(itemTape));
 		
 		if(Loader.isModLoaded("OpenComputers")) {
-			GameRegistry.addShapedRecipe(new ItemStack(itemRobotUpgrade, 1, 0), "mcm", 'c', new ItemStack(camera, 1, 0), 'm', li.cil.oc.api.Items.MicroChipTier2);
-			GameRegistry.addShapedRecipe(new ItemStack(itemRobotUpgrade, 1, 0), "m", "c", "m", 'c', new ItemStack(camera, 1, 0), 'm', li.cil.oc.api.Items.MicroChipTier2);
+			GameRegistry.addShapedRecipe(new ItemStack(itemRobotUpgrade, 1, 0), "mcm", 'c', new ItemStack(camera, 1, 0), 'm', li.cil.oc.api.Items.get("chip2").createItemStack(1));
+			GameRegistry.addShapedRecipe(new ItemStack(itemRobotUpgrade, 1, 0), "m", "c", "m", 'c', new ItemStack(camera, 1, 0), 'm', li.cil.oc.api.Items.get("chip2").createItemStack(1));
 		}
 		config.save();
 	}

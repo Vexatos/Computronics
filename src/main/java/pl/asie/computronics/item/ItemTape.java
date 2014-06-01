@@ -82,8 +82,10 @@ public class ItemTape extends Item implements IItemStorage {
 	@SideOnly(Side.CLIENT)
     public void getSubItems(Item item, CreativeTabs tabs, List list) {
 		for(int i = 0; i < sizes.length; i++) {
-			if(i == 7 && !Loader.isModLoaded("gregtech_addon")) return;
-			list.add(new ItemStack(item, 1, i));
+			if(i == 7 && !Loader.isModLoaded("gregtech_addon")) {
+				//Do nothing. If we return here, we lose all new tapes.
+			}
+			else list.add(new ItemStack(item, 1, i));
 		}
      }
 	

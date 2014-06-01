@@ -12,11 +12,12 @@ import li.cil.oc.api.network.Callback;
 import li.cil.oc.api.network.Context;
 import li.cil.oc.api.network.Visibility;
 import li.cil.oc.api.prefab.ManagedEnvironment;
+import li.cil.oc.api.driver.Container;
 
 public class RobotUpgradeCamera extends ManagedEnvironment {
-	private final TileEntity entity;
+	private final Container entity;
 	private final Robot robot;
-	public RobotUpgradeCamera(TileEntity entity) {
+	public RobotUpgradeCamera(Container entity) {
 		this.entity = entity;
 		this.robot = (Robot)entity;
 		this.node = Network.newNode(this, Visibility.Network).withConnector().withComponent("camera", Visibility.Neighbors).create();
@@ -34,7 +35,7 @@ public class RobotUpgradeCamera extends ManagedEnvironment {
         	int l = MathHelper.floor_double((double)(robot.player().rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
         	l = Direction.directionToFacing[l];
         	return new Object[]{
-    			camera.setRayDirection(entity.getWorldObj(), entity.xCoord, entity.yCoord, entity.zCoord,
+    			camera.setRayDirection(((TileEntity)entity).getWorldObj(), (float)entity.xPosition(), (float)entity.yPosition(), (float)entity.zPosition(),
     					ForgeDirection.getOrientation(l),
     					(float)args.checkDouble(0), (float)args.checkDouble(1))
     		};
@@ -52,11 +53,11 @@ public class RobotUpgradeCamera extends ManagedEnvironment {
     public Object[] distanceUp(Context context, Arguments args) {
     	camera.reset();
     	if(args.count() == 2) {
-    		camera.setRayDirection(entity.getWorldObj(), entity.xCoord, entity.yCoord, entity.zCoord,
+    		camera.setRayDirection(((TileEntity)entity).getWorldObj(), (float)entity.xPosition(), (float)entity.yPosition(), (float)entity.zPosition(),
     				ForgeDirection.UP,
     				(float)args.checkDouble(0), (float)args.checkDouble(1));
     	} else {
-    		camera.setRayDirection(entity.getWorldObj(), entity.xCoord, entity.yCoord, entity.zCoord,
+    		camera.setRayDirection(((TileEntity)entity).getWorldObj(), (float)entity.xPosition(), (float)entity.yPosition(), (float)entity.zPosition(),
     				ForgeDirection.UP,
     				0.0F, 0.0F);
     	}
@@ -67,11 +68,11 @@ public class RobotUpgradeCamera extends ManagedEnvironment {
     public Object[] distanceDown(Context context, Arguments args) {
     	camera.reset();
     	if(args.count() == 2) {
-    		camera.setRayDirection(entity.getWorldObj(), entity.xCoord, entity.yCoord, entity.zCoord,
+    		camera.setRayDirection(((TileEntity)entity).getWorldObj(), (float)entity.xPosition(), (float)entity.yPosition(), (float)entity.zPosition(),
     				ForgeDirection.DOWN,
     				(float)args.checkDouble(0), (float)args.checkDouble(1));
     	} else {
-    		camera.setRayDirection(entity.getWorldObj(), entity.xCoord, entity.yCoord, entity.zCoord,
+    		camera.setRayDirection(((TileEntity)entity).getWorldObj(), (float)entity.xPosition(), (float)entity.yPosition(), (float)entity.zPosition(),
     				ForgeDirection.DOWN,
     				0.0F, 0.0F);
     	}

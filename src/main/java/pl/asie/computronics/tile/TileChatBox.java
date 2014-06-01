@@ -4,9 +4,9 @@ import java.util.HashSet;
 
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
-import dan200.computer.api.IComputerAccess;
-import dan200.computer.api.ILuaContext;
-import dan200.computer.api.IPeripheral;
+//import dan200.computer.api.IComputerAccess;
+//import dan200.computer.api.ILuaContext;
+//import dan200.computer.api.IPeripheral;
 import li.cil.oc.api.Network;
 import li.cil.oc.api.network.Arguments;
 import li.cil.oc.api.network.Callback;
@@ -26,9 +26,9 @@ import net.minecraftforge.event.ServerChatEvent;
 
 @Optional.InterfaceList({
 	@Optional.Interface(iface = "li.cil.li.oc.network.SimpleComponent", modid = "OpenComputers"),
-	@Optional.Interface(iface = "dan200.computer.api.IPeripheral", modid = "ComputerCraft")
+	//@Optional.Interface(iface = "dan200.computer.api.IPeripheral", modid = "ComputerCraft")
 })
-public class TileChatBox extends TileEntityBase implements Environment, IPeripheral {
+public class TileChatBox extends TileEntityBase implements Environment /*, IPeripheral*/ {
 	private int distance;
 	
 	public TileChatBox() {
@@ -71,7 +71,7 @@ public class TileChatBox extends TileEntityBase implements Environment, IPeriphe
 	
 	public void receiveChatMessage(ServerChatEvent event) {
 		if(Loader.isModLoaded("OpenComputers")) eventOC(event);
-		if(Loader.isModLoaded("ComputerCraft")) eventCC(event);
+		//if(Loader.isModLoaded("ComputerCraft")) eventCC(event);
 	}
 	
 	@Optional.Method(modid="OpenComputers")
@@ -79,12 +79,12 @@ public class TileChatBox extends TileEntityBase implements Environment, IPeriphe
 		node.sendToReachable("computer.signal", "chat_message", event.username, event.message);
 	}
 	
-	@Optional.Method(modid="ComputerCraft")
+	/*@Optional.Method(modid="ComputerCraft")
 	public void eventCC(ServerChatEvent event) {
 		for(IComputerAccess computer: ccComputers) {
 			computer.queueEvent("chat_message", new Object[]{event.username, event.message});
 		}
-	}
+	}*/
 	// OpenComputers API
 	
 	@Callback(direct = true, limit = 3)
@@ -110,7 +110,7 @@ public class TileChatBox extends TileEntityBase implements Environment, IPeriphe
 		}
 		return null;
 	}
-	
+	/*
 	// ComputerCraft API
 
 	@Override
@@ -164,6 +164,7 @@ public class TileChatBox extends TileEntityBase implements Environment, IPeriphe
 		if(ccComputers == null) ccComputers = new HashSet<IComputerAccess>();
 		ccComputers.remove(computer);
 	}
+	*/
 
 	// OpenComputers Environment boilerplate
 	// From TileEntityEnvironment
