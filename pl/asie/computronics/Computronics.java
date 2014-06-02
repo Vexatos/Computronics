@@ -59,7 +59,7 @@ import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-@Mod(modid="computronics", name="Computronics", version="0.4.1", dependencies="required-after:asielib;after:OpenPeripheralCore;after:ComputerCraft;after:OpenComputers;after:OpenComputers|Core")
+@Mod(modid="computronics", name="Computronics", version="0.4.2", dependencies="required-after:asielib;after:OpenPeripheralCore;after:ComputerCraft;after:OpenComputers;after:OpenComputers|Core")
 @NetworkMod(channels={"computronics"}, clientSideRequired=true, packetHandler=NetworkHandler.class)
 public class Computronics {
 	public Configuration config;
@@ -211,6 +211,8 @@ public class Computronics {
 				" i ", "ddd", " T ", 'T', new ItemStack(itemParts, 1, 0), 'i', Item.ingotIron, 'd', Item.diamond));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 4),
 				" d ", "dnd", " T ", 'T', new ItemStack(itemParts, 1, 0), 'n', Item.netherStar, 'd', Item.diamond));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 8),
+				" n ", "nnn", " T ", 'T', new ItemStack(itemParts, 1, 0), 'n', Item.netherStar));
 		
 		// Mod compat - copper/steel
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 5),
@@ -227,8 +229,8 @@ public class Computronics {
 		GameRegistry.addRecipe(new RecipeColorizer(itemTape));
 		
 		if(Loader.isModLoaded("OpenComputers")) {
-			GameRegistry.addShapedRecipe(new ItemStack(itemRobotUpgrade, 1, 0), "mcm", 'c', new ItemStack(camera, 1, 0), 'm', Items.MicroChipTier2);
-			GameRegistry.addShapedRecipe(new ItemStack(itemRobotUpgrade, 1, 0), "m", "c", "m", 'c', new ItemStack(camera, 1, 0), 'm', Items.MicroChipTier2);
+			GameRegistry.addShapedRecipe(new ItemStack(itemRobotUpgrade, 1, 0), "mcm", 'c', new ItemStack(camera, 1, 0), 'm', li.cil.oc.api.Items.get("chip2").createItemStack(1));
+			GameRegistry.addShapedRecipe(new ItemStack(itemRobotUpgrade, 1, 0), "m", "c", "m", 'c', new ItemStack(camera, 1, 0), 'm', li.cil.oc.api.Items.get("chip2").createItemStack(1));
 		}
 		config.save();
 	}
