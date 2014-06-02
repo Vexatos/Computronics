@@ -1,7 +1,6 @@
 package pl.asie.computronics.item;
 
 import li.cil.oc.api.driver.Slot;
-import li.cil.oc.api.driver.Container;
 import li.cil.oc.api.network.ManagedEnvironment;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -23,7 +22,7 @@ public class ItemOpenComputers extends ItemMultiple implements li.cil.oc.api.dri
 
 	@Override
 	public ManagedEnvironment createEnvironment(ItemStack stack,
-			Container container) {
+			TileEntity container) {
 		switch(stack.getItemDamage()) {
 			case 0: return new RobotUpgradeCamera(container);
 			default: return null;
