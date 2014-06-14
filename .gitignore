@@ -6,3 +6,6 @@ build/**
 *.war
 *.ear
 lib/**
+*.ipr
+*.iml
+*.iws
