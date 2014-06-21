@@ -14,6 +14,7 @@ import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.event.ServerChatEvent;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.util.ChatBoxUtils;
 import pl.asie.lib.block.TileEntityBase;
 import pl.asie.lib.util.ChatUtils;
 import cpw.mods.fml.common.Loader;
@@ -42,22 +43,6 @@ public abstract class TileChatBoxBase extends TileEntityBase implements Environm
 		}
 	}
 
-	public void sendChatMessage(String string) {
-		ChatMessageComponent chat = new ChatMessageComponent();
-		chat.setColor(EnumChatFormatting.GRAY);
-		chat.setItalic(true);
-		chat.addText(EnumChatFormatting.ITALIC + Computronics.CHATBOX_PREFIX + " ");
-		chat.addText(EnumChatFormatting.RESET + "" + EnumChatFormatting.GRAY + ChatUtils.color(string));
-		
-		for(Object o: this.worldObj.playerEntities) {
-			if(!(o instanceof EntityPlayer)) continue;
-			EntityPlayer player = (EntityPlayer)o;
-			if(player.getDistance(this.xCoord, this.yCoord, this.zCoord) < Computronics.CHATBOX_DISTANCE) {
-				player.sendChatToPlayer(chat);
-			}
-		}
-	}
-
 	public abstract void receiveChatMessageCC(ServerChatEvent event);
 
 	public void receiveChatMessage(ServerChatEvent event) {
@@ -73,7 +58,7 @@ public abstract class TileChatBoxBase extends TileEntityBase implements Environm
 	@Callback(direct = true, limit = 3)
 	public Object[] say(Context context, Arguments args) {
 		if(args.count() >= 1) {
-			if(args.isString(0)) sendChatMessage(args.checkString(0));
+			if(args.isString(0)) ChatBoxUtils.sendChatMessage(this, args.checkString(0));
 		}
 		return null;
 	}

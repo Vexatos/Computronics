@@ -2,6 +2,7 @@ package pl.asie.computronics.tile;
 
 import java.util.HashSet;
 
+import pl.asie.computronics.util.ChatBoxUtils;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.event.ServerChatEvent;
 import dan200.computercraft.api.lua.ILuaContext;
@@ -26,7 +27,7 @@ public class TileChatBoxCC16 extends TileChatBoxBase implements IPeripheral {
 			int method, Object[] arguments) throws Exception {
 		if(method == 0) {
 			if(arguments.length >= 1 && arguments[0] instanceof String) {
-				this.sendChatMessage((String)arguments[0]);
+				ChatBoxUtils.sendChatMessage(this, (String)arguments[0]);
 			}
 		} else if(method == 1) {
 			return new Object[]{distance};

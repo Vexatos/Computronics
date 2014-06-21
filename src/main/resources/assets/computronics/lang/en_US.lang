@@ -13,6 +13,7 @@ tooltip.computronics.tape.unnamed=Unnamed Tape
 tooltip.computronics.tape.none=No Tape
 
 item.computronics.robot_upgrade_camera.name=Camera Upgrade
+item.computronics.robot_upgrade_chatbox.name=Chat Upgrade
 item.computronics.part_tape_track.name=Tape Track
 item.computronics.tape.name=Cassette Tape
 
