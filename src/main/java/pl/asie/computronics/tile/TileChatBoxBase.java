@@ -1,5 +1,7 @@
 package pl.asie.computronics.tile;
 
+import com.sun.imageio.plugins.common.I18N;
+
 import li.cil.oc.api.Network;
 import li.cil.oc.api.network.Arguments;
 import li.cil.oc.api.network.Callback;
@@ -60,7 +62,7 @@ public abstract class TileChatBoxBase extends TileEntityBase implements Environm
 	@Callback(direct = true, limit = 3)
 	public Object[] say(Context context, Arguments args) {
 		if(args.count() >= 1) {
-			if(args.isString(0)) ChatBoxUtils.sendChatMessage(this, distance, args.checkString(0));
+			if(args.isString(0)) ChatBoxUtils.sendChatMessage(this, distance, I18N.getString("computronics.chatBox.prefix"), args.checkString(0));
 		}
 		return null;
 	}

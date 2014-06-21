@@ -11,6 +11,7 @@ tooltip.computronics.tape.length=Length: %s minutes
 tooltip.computronics.tape.balanced=Balanced!
 tooltip.computronics.tape.unnamed=Unnamed Tape
 tooltip.computronics.tape.none=No Tape
+computronics.chatBox.prefix=Chat Box
 
 item.computronics.robot_upgrade_camera.name=Camera Upgrade
 item.computronics.robot_upgrade_chatbox.name=Chat Upgrade
