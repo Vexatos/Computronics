@@ -58,7 +58,7 @@ public abstract class TileChatBoxBase extends TileEntityBase implements Environm
 	@Callback(direct = true, limit = 3)
 	public Object[] say(Context context, Arguments args) {
 		if(args.count() >= 1) {
-			if(args.isString(0)) ChatBoxUtils.sendChatMessage(this, args.checkString(0));
+			if(args.isString(0)) ChatBoxUtils.sendChatMessage(this, distance, args.checkString(0));
 		}
 		return null;
 	}

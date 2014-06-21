@@ -1,5 +1,6 @@
 package pl.asie.computronics.oc;
 
+import pl.asie.computronics.Computronics;
 import pl.asie.computronics.util.ChatBoxUtils;
 import net.minecraftforge.event.ServerChatEvent;
 import li.cil.oc.api.Network;
@@ -25,7 +26,7 @@ public class RobotUpgradeChatBox extends ManagedEnvironment {
 	@Callback(direct = true, limit = 3)
 	public Object[] say(Context context, Arguments args) {
 		if(args.count() >= 1) {
-			if(args.isString(0)) ChatBoxUtils.sendChatMessage(this.container, args.checkString(0));
+			if(args.isString(0)) ChatBoxUtils.sendChatMessage(this.container, Computronics.CHATBOX_DISTANCE, args.checkString(0));
 		}
 		return null;
 	}
