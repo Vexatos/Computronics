@@ -75,6 +75,10 @@ public class ItemTape extends Item implements IItemStorage {
 		else return tape_c;
 	}
 	
+	public String getLabel(ItemStack stack) {
+		return stack.getTagCompound().hasKey("label") ? stack.getTagCompound().getString("label") : "";
+	}
+	
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List text, boolean par4) {
 		if(stack.getItemDamage() == 7) text.add(EnumChatFormatting.GREEN + I18n.getString("tooltip.computronics.tape.balanced"));
@@ -82,7 +86,7 @@ public class ItemTape extends Item implements IItemStorage {
 		int size = getSize(stack);
 		int len = (int)Math.floor(size / L_MINUTE);
 		if(stack.getTagCompound() != null) {
-			String label = stack.getTagCompound().hasKey("label") ? stack.getTagCompound().getString("label") : "";
+			String label = getLabel(stack);
 			if(label.length() > 0) text.add(EnumChatFormatting.WHITE + "" + EnumChatFormatting.ITALIC + label);
 		}
 		text.add(EnumChatFormatting.GRAY + I18n.getStringParams("tooltip.computronics.tape.length", ""+len));
