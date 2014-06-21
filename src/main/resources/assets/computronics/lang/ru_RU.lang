@@ -1,0 +1,19 @@
+tile.computronics.ironNoteBlock.name=Железный нотный блок
+tile.computronics.tapeDrive.name=Стример
+tile.computronics.camera.name=Камера
+tile.computronics.chatBox.name=Чатблок
+tile.computronics.chatBox.creative.name=Креативный чатблок
+tile.computronics.sorter.name=Сортировщик
+tile.computronics.cipher.name=Блок-шифровщик
+
+tooltip.computronics.chatBox.creative=АНБ в миниатюре!
+tooltip.computronics.tape.length=Length: %s минут
+tooltip.computronics.tape.balanced=Сбалансированно!
+tooltip.computronics.tape.unnamed=Безымянная касета
+tooltip.computronics.tape.none=Вставте кассету
+
+item.computronics.robot_upgrade_camera.name=Апгрейд камеры
+item.computronics.part_tape_track.name=Направляющая
+item.computronics.tape.name=Кассета
+
+itemGroup.tabComputronics=Computronics

@@ -10,8 +10,10 @@ tooltip.computronics.chatBox.creative=NSA w pudełku!
 tooltip.computronics.tape.length=Długość: %s minut
 tooltip.computronics.tape.unnamed=Kaseta bez nazwy
 tooltip.computronics.tape.none=Brak kasety
+tooltip.computronics.tape.balanced=Zbalansowane!
 
 item.computronics.robot_upgrade_camera.name=Rozszerzenie: Kamera
+item.computronics.robot_upgrade_chatbox.name=Rozszerzenie: Czat
 item.computronics.part_tape_track.name=Obudowa kasety
 item.computronics.tape.name=Kaseta magnetofonowa
 
