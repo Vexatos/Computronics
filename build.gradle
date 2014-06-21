@@ -17,7 +17,7 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "0.4.3"
+version = "0.5.0"
 group= "pl.asie.computronics" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "Computronics"
 
@@ -38,7 +38,7 @@ dependencies {
 }
 
 minecraft {
-    version = "1.7.2-10.12.1.1060"
+    version = "1.7.2-10.12.2.1121"
     assetDir = "eclipse/assets"
 }
 processResources
