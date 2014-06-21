@@ -21,7 +21,9 @@ import cpw.mods.fml.common.Loader;
 
 public abstract class TileChatBoxBase extends TileEntityBase implements Environment {
 	protected int distance;
-
+	protected Node node;
+	protected boolean addedToNetwork = false;
+	
 	public TileChatBoxBase() {
 		if(Loader.isModLoaded("OpenComputers"))
 			node = Network.newNode(this, Visibility.Network).withComponent("chat_box", Visibility.Neighbors).create();
@@ -78,9 +80,6 @@ public abstract class TileChatBoxBase extends TileEntityBase implements Environm
 
 	// OpenComputers Environment boilerplate
 	// From TileEntityEnvironment
-
-	protected Node node;
-	protected boolean addedToNetwork = false;
 
 	@Override
 	public Node node() {

@@ -1,9 +1,17 @@
 package pl.asie.computronics.tile;
 
+import cpw.mods.fml.common.Loader;
+import li.cil.oc.api.FileSystem;
+import li.cil.oc.api.Network;
 import li.cil.oc.api.network.Arguments;
 import li.cil.oc.api.network.Callback;
 import li.cil.oc.api.network.Context;
+import li.cil.oc.api.network.Environment;
+import li.cil.oc.api.network.ManagedEnvironment;
+import li.cil.oc.api.network.Message;
+import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.SimpleComponent;
+import li.cil.oc.api.network.Visibility;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundManager;
 import net.minecraft.client.audio.SoundPoolEntry;
@@ -22,7 +30,7 @@ import pl.asie.lib.block.TileEntityInventory;
 import pl.asie.lib.network.PacketInput;
 
 @Freeform
-public class TileTapeDrive extends TileEntityInventory implements SimpleComponent {
+public class TileTapeDrive extends TileEntityInventory implements Environment {
 	public enum State {
 		STOPPED,
 		PLAYING,
@@ -36,6 +44,17 @@ public class TileTapeDrive extends TileEntityInventory implements SimpleComponen
 	private int codecId, codecTick, packetId;
 	private int packetSize = 1024;
 	private int soundVolume = 127;
+	protected Node node;
+	protected ManagedEnvironment tapeROM;
+	protected boolean addedToNetwork = false;
+	
+	public TileTapeDrive() {
+		super();
+		if(Loader.isModLoaded("OpenComputers")) {
+			node = Network.newNode(this, Visibility.Network).withComponent("tape_drive", Visibility.Neighbors).create();
+			tapeROM = FileSystem.asManagedEnvironment(FileSystem.fromClass(Computronics.class, "computronics", "filesystem/tape"), "tape_drive");
+		}
+	}
 	
 	private boolean setSpeed(float speed) {
 		if(speed < 0.25F || speed > 2.0F) return false;
@@ -155,6 +174,13 @@ public class TileTapeDrive extends TileEntityInventory implements SimpleComponen
 				} break;
 			}
 		}
+		
+		if(Loader.isModLoaded("OpenComputers")) {
+			if (!addedToNetwork) {
+				addedToNetwork = true;
+				Network.joinOrCreateNetwork(this);
+			}
+		}
 	}
 	
 	// Minecraft boilerplate
@@ -194,6 +220,8 @@ public class TileTapeDrive extends TileEntityInventory implements SimpleComponen
 		super.invalidate();
 		stopRewindSound();
 		unloadStorage();
+		
+		if (node != null) node.remove();
 	}
 	
 	@Override
@@ -255,6 +283,8 @@ public class TileTapeDrive extends TileEntityInventory implements SimpleComponen
 		super.onWorldUnload();
 		stopRewindSound();
 		unloadStorage();
+
+		if (node != null) node.remove();
 	}
 	
 	@Override
@@ -276,6 +306,11 @@ public class TileTapeDrive extends TileEntityInventory implements SimpleComponen
 		if(tag.hasKey("sp")) this.packetSize = tag.getShort("sp");
 		if(tag.hasKey("vo")) this.soundVolume = tag.getByte("vo"); else this.soundVolume = 127;
 		loadStorage();
+
+		if (node != null && node.host() == this) {
+			node.load(tag.getCompoundTag("oc:node"));
+			tapeROM.load(tag.getCompoundTag("oc:tapeROM"));
+		}
 	}
 	
 	@Override
@@ -284,6 +319,16 @@ public class TileTapeDrive extends TileEntityInventory implements SimpleComponen
 		tag.setShort("sp", (short)this.packetSize);
 		tag.setByte("state", (byte)this.state.ordinal());
 		if(this.soundVolume != 127) tag.setByte("vo", (byte)this.soundVolume);
+		
+		if (node != null && node.host() == this) {
+			final NBTTagCompound nodeNbt = new NBTTagCompound();
+			node.save(nodeNbt);
+			tag.setCompoundTag("oc:node", nodeNbt);
+			
+			final NBTTagCompound tapeNbt = new NBTTagCompound();
+			node.save(tapeNbt);
+			tag.setCompoundTag("oc:tapeROM", tapeNbt);
+		}
 	}
 	
 	// OpenComputers
@@ -374,12 +419,6 @@ public class TileTapeDrive extends TileEntityInventory implements SimpleComponen
     	return new Object[]{state.toString()};
     }
     
-    
-	@Override
-	public String getComponentName() {
-		return "tape_drive";
-	}
-    
     // OpenPeripheral
     @LuaCallable(description = "Check if any tape is inserted.", returnTypes = {LuaType.BOOLEAN})
 	public boolean isReady() {
@@ -459,4 +498,26 @@ public class TileTapeDrive extends TileEntityInventory implements SimpleComponen
 	public void stop() {
     	switchState(State.STOPPED);
     }
+    
+	// OpenComputers Environment boilerplate
+	// From TileEntityEnvironment
+
+	@Override
+	public Node node() {
+		return node;
+	}
+
+	@Override
+	public void onConnect(final Node node) {
+		node.connect(tapeROM.node());
+	}
+
+	@Override
+	public void onDisconnect(final Node node) {
+		node.disconnect(tapeROM.node());
+	}
+
+	@Override
+	public void onMessage(final Message message) {
+	}
 }
