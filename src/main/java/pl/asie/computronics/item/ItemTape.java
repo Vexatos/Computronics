@@ -23,10 +23,10 @@ public class ItemTape extends Item implements IItemStorage {
 	public static final int L_SECOND = 4096;
 	public static final int L_MINUTE = 4096*60;
 	
-	private static int[] sizes = { L_MINUTE*4, L_MINUTE*8, L_MINUTE*16, L_MINUTE*32, L_MINUTE*64, L_MINUTE*2, L_MINUTE*6, L_MINUTE*16, L_MINUTE*128 };
+	private int[] sizes;
 	private IIcon tape_i, tape_g, tape_d, tape_n, tape_c, tape_co, tape_st, tape_greg;
 	
-	public ItemTape() {
+	public ItemTape(String lengths) {
 		super();
 		this.setUnlocalizedName("computronics.tape");
 		this.setTextureName("computronics:tape");
@@ -34,6 +34,14 @@ public class ItemTape extends Item implements IItemStorage {
 		this.setHasSubtypes(true);
 		this.setMaxDamage(0);
 		this.setMaxStackSize(1);
+		
+		// parse lengths
+		String[] l = lengths.split(",");
+		sizes = new int[l.length];
+		for(int i = 0; i < l.length; i++) {
+			sizes[i] = new Integer(l[i]).intValue() * L_MINUTE;
+			if(sizes[i] <= 0) sizes[i] = 4;
+		}
 	}
 	
 	@Override

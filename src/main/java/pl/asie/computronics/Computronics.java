@@ -77,6 +77,7 @@ public class Computronics {
 	public static int TAPEDRIVE_DISTANCE = 24;
 	public static int BUFFER_MS = 750;
 	public static String CHATBOX_PREFIX = "[ChatBox]";
+	public static String TAPE_LENGTHS;
 	public static boolean CAMERA_REDSTONE_REFRESH, CHATBOX_ME_DETECT, CHATBOX_CREATIVE;
 	
 	@SidedProxy(clientSide="pl.asie.computronics.ClientProxy", serverSide="pl.asie.computronics.CommonProxy")	
@@ -120,7 +121,8 @@ public class Computronics {
 		CHATBOX_ME_DETECT = config.get("chatbox", "readCommandMe", false).getBoolean(false);
 		CHATBOX_CREATIVE = config.get("chatbox", "enableCreative", true).getBoolean(true);
 		TAPEDRIVE_DISTANCE = config.get("tapedrive", "hearingDistance", 24).getInt();
-		
+		TAPE_LENGTHS = config.get("tapedrive", "tapeLengths", "4,8,16,32,64,2,6,16,128").getString();
+
 		config.get("camera", "sendRedstoneSignal", true).comment = "Setting this to false might help Camera tick lag issues, at the cost of making them useless with redstone circuitry.";
 		
 		ironNote = new BlockIronNote();
@@ -155,7 +157,7 @@ public class Computronics {
 			OpenPeripheralAPI.createAdapter(TileCipherBlock.class);
 		}			
 		
-		itemTape = new ItemTape();
+		itemTape = new ItemTape(TAPE_LENGTHS);
 		GameRegistry.registerItem(itemTape, "computronics.tape");
 		
 		itemParts = new ItemMultiple("computronics", new String[]{"part_tape_track"});
