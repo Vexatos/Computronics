@@ -2,6 +2,7 @@ package pl.asie.computronics.integration.waila;
 
 import java.util.List;
 
+import pl.asie.computronics.Computronics;
 import pl.asie.computronics.tile.TileTapeDrive;
 import net.minecraft.item.ItemStack;
 import mcp.mobius.waila.api.IWailaConfigHandler;
@@ -28,6 +29,12 @@ public class WailaTapeDrive implements IWailaDataProvider {
 			List<String> currenttip, IWailaDataAccessor accessor,
 			IWailaConfigHandler config) {
 		TileTapeDrive drive = (TileTapeDrive)accessor.getTileEntity();
+		ItemStack is = drive.getStackInSlot(0);
+		if(is.getItem().equals(Computronics.itemTape)) {
+			String label = Computronics.itemTape.getLabel(is);
+			if(label.length() > 0) currenttip.add("Tape \"" + label +"\" inserted");
+			else currenttip.add("Tape inserted");
+		} else currenttip.add("No tape inserted");
 		return currenttip;
 	}
 

@@ -1,10 +1,13 @@
 package pl.asie.computronics;
 
+import li.cil.oc.api.machine.Robot;
+import li.cil.oc.api.network.Environment;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import pl.asie.computronics.storage.StorageManager;
 import pl.asie.computronics.tile.TileChatBox;
+import pl.asie.computronics.oc.RobotUpgradeChatBox;
 import net.minecraft.entity.player.EntityPlayerMP;
 //import net.minecraft.network.packet.NetHandler;
 //import net.minecraft.network.packet.Packet3Chat;
@@ -22,6 +25,17 @@ public class ComputronicsEventHandler {
 				TileChatBox te = (TileChatBox)o;
 				if(te.isCreative() || event.player.getDistance(te.xCoord, te.yCoord, te.zCoord) < te.getDistance()) {
 					te.receiveChatMessage(event);
+				}
+			} else if(o instanceof Robot && o instanceof TileEntity) {
+				Robot r = (Robot)o;
+				TileEntity te = (TileEntity)o;
+				if(event.player.getDistance(te.xCoord, te.yCoord, te.zCoord) < Computronics.CHATBOX_DISTANCE) {
+					for(int i = 0; i < r.getSizeInventory(); i++) {
+						Environment e = r.getComponentInSlot(i);
+						if(e instanceof RobotUpgradeChatBox) {
+							((RobotUpgradeChatBox)e).receiveChatMessage(event);
+						}
+					}
 				}
 			}
 		}

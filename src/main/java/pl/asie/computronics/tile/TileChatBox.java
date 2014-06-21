@@ -16,6 +16,7 @@ import li.cil.oc.api.network.Message;
 import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.Visibility;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.util.ChatBoxUtils;
 import pl.asie.lib.block.TileEntityBase;
 import pl.asie.lib.util.ChatUtils;
 import net.minecraft.entity.player.EntityPlayer;
@@ -57,18 +58,6 @@ public class TileChatBox extends TileEntityBase implements Environment /*, IPeri
 		if(this.distance < 0) this.distance = Computronics.CHATBOX_DISTANCE;
 	}
 	
-	public void sendChatMessage(String string) {
-		String text = EnumChatFormatting.GRAY + "" + EnumChatFormatting.ITALIC + "[ChatBox] ";
-		text += EnumChatFormatting.RESET + "" + EnumChatFormatting.GRAY + ChatUtils.color(string);
-		for(Object o: this.worldObj.playerEntities) {
-			if(!(o instanceof EntityPlayer)) continue;
-			EntityPlayer player = (EntityPlayer)o;
-			if(player.getDistance(this.xCoord, this.yCoord, this.zCoord) < distance) {
-				player.addChatMessage(new ChatComponentText(text));
-			}
-		}
-	}
-	
 	public void receiveChatMessage(ServerChatEvent event) {
 		if(Loader.isModLoaded("OpenComputers")) eventOC(event);
 		//if(Loader.isModLoaded("ComputerCraft")) eventCC(event);
@@ -91,7 +80,7 @@ public class TileChatBox extends TileEntityBase implements Environment /*, IPeri
 	@Optional.Method(modid="OpenComputers")
 	public Object[] say(Context context, Arguments args) {
 		if(args.count() >= 1) {
-			if(args.isString(0)) sendChatMessage(args.checkString(0));
+			if(args.isString(0)) ChatBoxUtils.sendChatMessage(this, distance, args.checkString(0));
 		}
 		return null;
 	}
