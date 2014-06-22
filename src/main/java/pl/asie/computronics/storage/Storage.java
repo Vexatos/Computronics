@@ -65,14 +65,14 @@ public class Storage {
 	}
 	
 	public int read() {
+		if(position >= size) return 0;
+		
 		modified = true;
 		return (int)data[position++] & 0xFF;
 	}
+	
 	public int read(byte[] v, int offset, boolean simulate) {
-		int len = v.length;
-		if(position + offset + len >= size)
-			len = (size-1) - (position+offset);
-		
+		int len = Math.min(size - (position + offset) - 1, v.length);
 		System.arraycopy(data, position + offset, v, 0, len);
 		if(!simulate) {
 			position += len;
@@ -87,13 +87,15 @@ public class Storage {
 	}
 	
 	public void write(byte v) {
+		if(position >= size) return;
+		
 		data[position++] = v;
 		
 		modified = true;
 	}
+	
 	public int write(byte[] v) {
-		int len = v.length;
-		if(position+len >= size) len = (size-1) - position;
+		int len = Math.min(size - (position) - 1, v.length);
 		if(len == 0) return 0;
 		
 		System.arraycopy(v, 0, data, position, len);
