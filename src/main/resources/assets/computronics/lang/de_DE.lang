@@ -11,6 +11,7 @@ tooltip.computronics.tape.length=Länge: %s Minuten
 tooltip.computronics.tape.balanced=Ausgewogener Preis!
 tooltip.computronics.tape.unnamed=Unbenanntes Band
 tooltip.computronics.tape.none=Kein Band
+computronics.chatBox.prefix=Chat-Box
 
 item.computronics.robot_upgrade_camera.name=Kamera-Upgrade
 item.computronics.robot_upgrade_chatbox.name=Chat-Upgrade
