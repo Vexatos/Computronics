@@ -9,21 +9,20 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemBlockWithMetadata;
 import net.minecraft.item.ItemStack;
 import net.minecraft.block.Block;
 import net.minecraft.util.EnumChatFormatting;
 import pl.asie.computronics.Computronics;
 
-public class ItemBlockChatBox extends ItemBlock {
+public class ItemBlockChatBox extends ItemBlockWithMetadata {
 	public ItemBlockChatBox(Block block) {
-		super(block);
+		super(block, block);
 		this.setHasSubtypes(true);
 	}
 	
-	//@Override
-	@SideOnly(Side.CLIENT)
-	public void getSubItems(int id, CreativeTabs tab, List list) {
+	@Override
+	public void getSubItems(Item id, CreativeTabs tab, List list) {
 		list.add(new ItemStack(this, 1, 0));
 		if(Computronics.CHATBOX_CREATIVE) list.add(new ItemStack(this, 1, 8));
 	}
