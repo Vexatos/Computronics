@@ -36,4 +36,14 @@ public class ItemBlockChatBox extends ItemBlock {
 	public String getUnlocalizedName(ItemStack stack) {
 		return (stack.getItemDamage() >= 8 ? "tile.computronics.chatBox.creative" : "tile.computronics.chatBox");
 	}
+	
+	@Override
+	public int getMetadata(int meta) {
+		return meta;
+	}
+	
+	public int damageDropped(int meta) {
+        return meta;
+    }
+
 }
