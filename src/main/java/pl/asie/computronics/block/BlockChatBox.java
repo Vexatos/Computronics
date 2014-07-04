@@ -34,6 +34,11 @@ public class BlockChatBox extends BlockMachineSidedIcon {
 	public int getRenderColor(int meta) {
 		return meta >= 8 ? 0xFF60FF : 0xFFFFFF;
 	}
+
+	@Override
+	public int colorMultiplier (IBlockAccess blockAccess, int x, int y, int z) {
+	    return getRenderColor(blockAccess.getBlockMetadata(x, y, z));
+	}
 	
 	@Override
 	public TileEntity createNewTileEntity(World world, int metadata) {
