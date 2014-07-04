@@ -1,10 +1,15 @@
 package pl.asie.computronics.block;
 
 import java.util.logging.Level;
+import java.util.List;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.Block;
+import net.minecraft.item.Item;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.ItemStack;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
@@ -33,6 +38,12 @@ public class BlockChatBox extends BlockMachineSidedIcon {
 	@Override
 	public TileEntity createNewTileEntity(World world, int metadata) {
 		return new TileChatBox();
+	}
+	
+	@Override
+    public void getSubBlocks (Item item, CreativeTabs creativeTabs, List blockList) {
+		blockList.add(new ItemStack(item, 1, 0));
+		if(Computronics.CHATBOX_CREATIVE) blockList.add(new ItemStack(item, 1, 8));
 	}
 	
 	@Override

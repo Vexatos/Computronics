@@ -21,11 +21,13 @@ public class ItemBlockChatBox extends ItemBlock {
 		this.setHasSubtypes(true);
 	}
 	
+	/*
 	@Override
 	public void getSubItems(Item id, CreativeTabs tab, List list) {
 		list.add(new ItemStack(this, 1, 0));
 		if(Computronics.CHATBOX_CREATIVE) list.add(new ItemStack(this, 1, 8));
 	}
+	*/
 	
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean wat) {
