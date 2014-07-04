@@ -207,7 +207,9 @@ local function writeTape(path)
     tape.write(bytes)
   end
   file:close()
-
+  tape.stop()
+  tape.seek(-tape.getSize())
+  tape.stop() --Just making sure
   print("\nDone.")
 end
 
