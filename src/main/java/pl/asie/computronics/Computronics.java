@@ -15,6 +15,7 @@ import pl.asie.computronics.block.BlockIronNote;
 import pl.asie.computronics.block.BlockSorter;
 import pl.asie.computronics.block.BlockTapeReader;
 import pl.asie.computronics.gui.GuiOneSlot;
+import pl.asie.computronics.item.ItemBlockChatBox;
 import pl.asie.computronics.item.ItemOpenComputers;
 import pl.asie.computronics.item.ItemTape;
 import pl.asie.computronics.storage.StorageManager;
@@ -138,7 +139,7 @@ public class Computronics {
 		GameRegistry.registerTileEntity(TileCamera.class, "computronics.camera");
 
 		chatBox = new BlockChatBox();
-		GameRegistry.registerBlock(chatBox, "computronics.chatBox");
+		GameRegistry.registerBlock(chatBox, ItemBlockChatBox.class, "computronics.chatBox");
 		GameRegistry.registerTileEntity(TileChatBox.class, "computronics.chatBox");
 
 		//sorter = new BlockSorter();

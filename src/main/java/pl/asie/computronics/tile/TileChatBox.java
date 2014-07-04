@@ -41,7 +41,7 @@ public class TileChatBox extends TileEntityBase implements Environment /*, IPeri
 	
 	@Optional.Method(modid="OpenComputers")
 	public void initOC() {
-		node = Network.newNode(this, Visibility.Network).withComponent("chat_box", Visibility.Neighbors).create();
+		node = Network.newNode(this, Visibility.Network).withComponent("chat_box", Visibility.Network).create();
 	}
 	
 	public boolean isCreative() {
