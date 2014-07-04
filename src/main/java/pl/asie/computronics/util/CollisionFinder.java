@@ -74,8 +74,8 @@ public class CollisionFinder {
 	}
 	
 	public Object nextCollision(int steps) {
-		Vec3 origin = world.getWorldVec3Pool().getVecFromPool(cx, cy, cz);
-		Vec3 target = world.getWorldVec3Pool().getVecFromPool(cx + (xDir * steps), cy + (yDir * steps), cz + (zDir * steps));
+		Vec3 origin = Vec3.createVectorHelper(cx, cy, cz);
+		Vec3 target = Vec3.createVectorHelper(cx + (xDir * steps), cy + (yDir * steps), cz + (zDir * steps));
 		MovingObjectPosition mop = world.rayTraceBlocks(origin, target, true);
 
 		if(mop == null) return null;
