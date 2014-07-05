@@ -17,8 +17,6 @@ import java.util.Map;
 public class TileRadar extends TileEntityBase implements SimpleComponent {
     public static final double RadarRange = Computronics.RADAR_RANGE;
 
-    protected boolean isEnabled = true;
-
     @Override
     public String getComponentName() {
         return "radar";
