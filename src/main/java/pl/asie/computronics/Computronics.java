@@ -12,6 +12,7 @@ import pl.asie.computronics.block.BlockCamera;
 import pl.asie.computronics.block.BlockChatBox;
 import pl.asie.computronics.block.BlockCipher;
 import pl.asie.computronics.block.BlockIronNote;
+import pl.asie.computronics.block.BlockRadar;
 import pl.asie.computronics.block.BlockSorter;
 import pl.asie.computronics.block.BlockTapeReader;
 import pl.asie.computronics.gui.GuiOneSlot;
@@ -24,6 +25,7 @@ import pl.asie.computronics.tile.TileCamera;
 import pl.asie.computronics.tile.TileChatBox;
 import pl.asie.computronics.tile.TileCipherBlock;
 import pl.asie.computronics.tile.TileIronNote;
+import pl.asie.computronics.tile.TileRadar;
 import pl.asie.computronics.tile.TileTapeDrive;
 import pl.asie.computronics.tile.sorter.TileSorter;
 import pl.asie.lib.gui.GuiHandler;
@@ -60,7 +62,7 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 
-@Mod(modid="computronics", name="Computronics", version="0.4.2", dependencies="required-after:asielib;after:OpenPeripheralCore;after:ComputerCraft;after:OpenComputers;after:OpenComputers|Core;after:BuildCraft|Core")
+@Mod(modid="computronics", name="Computronics", version="0.5.0", dependencies="required-after:asielib;after:OpenPeripheralCore;after:ComputerCraft;after:OpenComputers;after:OpenComputers|Core;after:BuildCraft|Core")
 public class Computronics {
 	public Configuration config;
 	public static Random rand = new Random();
@@ -77,6 +79,7 @@ public class Computronics {
 	public static int CAMERA_DISTANCE = 32;
 	public static int TAPEDRIVE_DISTANCE = 24;
 	public static int BUFFER_MS = 750;
+	public static int RADAR_RANGE = 32;
 	public static String CHATBOX_PREFIX = "[ChatBox]";
 	public static String TAPE_LENGTHS;
 	public static boolean CAMERA_REDSTONE_REFRESH, CHATBOX_ME_DETECT, CHATBOX_CREATIVE;
@@ -90,6 +93,7 @@ public class Computronics {
 	public static BlockChatBox chatBox;
 	public static BlockSorter sorter;
 	public static BlockCipher cipher;
+    public static BlockRadar radar;
 	
 	public static ItemTape itemTape;
 	public static ItemMultiple itemParts;
@@ -123,6 +127,7 @@ public class Computronics {
 		CHATBOX_CREATIVE = config.get("chatbox", "enableCreative", true).getBoolean(true);
 		TAPEDRIVE_DISTANCE = config.get("tapedrive", "hearingDistance", 24).getInt();
 		TAPE_LENGTHS = config.get("tapedrive", "tapeLengths", "4,8,16,32,64,2,6,16,128").getString();
+		RADAR_RANGE = config.get("radar", "maxRange", 32).getInt();
 
 		config.get("camera", "sendRedstoneSignal", true).comment = "Setting this to false might help Camera tick lag issues, at the cost of making them useless with redstone circuitry.";
 		
@@ -149,6 +154,10 @@ public class Computronics {
 		cipher = new BlockCipher();
 		GameRegistry.registerBlock(cipher, "computronics.cipher");
 		GameRegistry.registerTileEntity(TileCipherBlock.class, "computronics.cipher");
+		
+		radar = new BlockRadar();
+		GameRegistry.registerBlock(radar, "computronics.radar");
+		GameRegistry.registerTileEntity(TileRadar.class, "computronics.radar");
 
 		if(Loader.isModLoaded("OpenPeripheralCore")) {
 			OpenPeripheralAPI.createAdapter(TileTapeDrive.class);
@@ -156,6 +165,7 @@ public class Computronics {
 			OpenPeripheralAPI.createAdapter(TileCamera.class);
 			//OpenPeripheralAPI.createAdapter(TileSorter.class);
 			OpenPeripheralAPI.createAdapter(TileCipherBlock.class);
+			OpenPeripheralAPI.createAdapter(TileRadar.class);
 		}			
 		
 		itemTape = new ItemTape(TAPE_LENGTHS);
@@ -188,6 +198,7 @@ public class Computronics {
 		GameRegistry.addShapedRecipe(new ItemStack(ironNote, 1, 0), "iii", "ini", "iii", 'i', Items.iron_ingot, 'n', Blocks.noteblock);
 		GameRegistry.addShapedRecipe(new ItemStack(tapeReader, 1, 0), "iii", "iri", "iai", 'i', Items.iron_ingot, 'r', Items.redstone, 'a', ironNote);
 		GameRegistry.addShapedRecipe(new ItemStack(cipher, 1, 0), "sss", "srs", "eie", 'i', Items.iron_ingot, 'r', Items.redstone, 'e', Items.ender_pearl, 's', Blocks.stonebrick);
+        GameRegistry.addShapedRecipe(new ItemStack(radar, 1, 0), "sts", "rbr", "scs", 'i', Items.iron_ingot, 'r', Items.redstone, 't', Blocks.redstone_torch, 's', Blocks.stonebrick, 'b', Items.bowl, 'c', Items.comparator);
 		// Tape recipes
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 0),
 				" i ", "iii", " T ", 'T', new ItemStack(itemParts, 1, 0), 'i', Items.iron_ingot));

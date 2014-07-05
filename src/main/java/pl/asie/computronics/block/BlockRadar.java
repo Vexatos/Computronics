@@ -15,41 +15,23 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import pl.asie.computronics.Computronics;
-import pl.asie.computronics.tile.TileChatBox;
+import pl.asie.computronics.tile.TileRadar;
 import pl.asie.computronics.tile.TileIronNote;
 import pl.asie.lib.block.BlockBase;
-import net.minecraft.world.IBlockAccess;
 
-public class BlockChatBox extends BlockMachineSidedIcon {
+public class BlockRadar extends BlockMachineSidedIcon {
 	private IIcon mSide;
 	
-	public BlockChatBox() {
+	public BlockRadar() {
 		super();
 		this.setCreativeTab(Computronics.tab);
-		this.setIconName("computronics:chatbox");
-		this.setBlockName("computronics.chatBox");
-	}
-	
-	// I'm such a cheater.
-	@Override
-	public int getRenderColor(int meta) {
-		return meta >= 8 ? 0xFF60FF : 0xFFFFFF;
-	}
-
-	@Override
-	public int colorMultiplier (IBlockAccess blockAccess, int x, int y, int z) {
-	    return getRenderColor(blockAccess.getBlockMetadata(x, y, z));
+		this.setIconName("computronics:radar");
+		this.setBlockName("computronics.radar");
 	}
 	
 	@Override
 	public TileEntity createNewTileEntity(World world, int metadata) {
-		return new TileChatBox();
-	}
-	
-	@Override
-    public void getSubBlocks (Item item, CreativeTabs creativeTabs, List blockList) {
-		blockList.add(new ItemStack(item, 1, 0));
-		if(Computronics.CHATBOX_CREATIVE) blockList.add(new ItemStack(item, 1, 8));
+		return new TileRadar();
 	}
 	
 	@Override
@@ -62,6 +44,6 @@ public class BlockChatBox extends BlockMachineSidedIcon {
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister r) {
 		super.registerBlockIcons(r);
-		mSide = r.registerIcon("computronics:chatbox_side");
+		mSide = r.registerIcon("computronics:radar_side");
 	}
 }
