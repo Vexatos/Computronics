@@ -25,34 +25,32 @@ public class TileRadar extends TileEntityBase implements SimpleComponent {
     @Callback
     public Object[] getEntities(Context context, Arguments args) {
         List<Map> entities = new ArrayList<Map>();
-        if (isEnabled) {
-            // Get a initial list of entities near the tile entity.
-            AxisAlignedBB bounds = AxisAlignedBB.
-                    getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 1, zCoord + 1).
-                    expand(RadarRange, RadarRange, RadarRange);
-            for (Object obj : getWorldObj().getEntitiesWithinAABB(EntityLiving.class, bounds)) {
-                EntityLiving entity = (EntityLiving) obj;
-                double dx = entity.posX - (xCoord + 0.5);
-				double dy = entity.posY - (yCoord + 0.5);
-                double dz = entity.posZ - (zCoord + 0.5);
-                // Check if the entity is actually in range.
-                if (Math.sqrt(dx * dx + dz * dz) < RadarRange) {
-                    // Maps are converted to tables on the Lua side.
-                    Map<String, Object> entry = new HashMap<String, Object>();
-                    if (entity.hasCustomNameTag()) {
-                        entry.put("name", entity.getCustomNameTag());
-                    }
-                    else {
-                        entry.put("name", entity.getCommandSenderName());
-                    }
-                    entry.put("x", (int) dx);
-					entry.put("y", (int) dy);
-                    entry.put("z", (int) dz);
-                    entities.add(entry);
+        // Get a initial list of entities near the tile entity.
+        AxisAlignedBB bounds = AxisAlignedBB.
+                getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 1, zCoord + 1).
+                expand(RadarRange, RadarRange, RadarRange);
+        for (Object obj : getWorldObj().getEntitiesWithinAABB(EntityLiving.class, bounds)) {
+            EntityLiving entity = (EntityLiving) obj;
+            double dx = entity.posX - (xCoord + 0.5);
+			double dy = entity.posY - (yCoord + 0.5);
+            double dz = entity.posZ - (zCoord + 0.5);
+            // Check if the entity is actually in range.
+            if (Math.sqrt(dx * dx + dz * dz) < RadarRange) {
+                // Maps are converted to tables on the Lua side.
+                Map<String, Object> entry = new HashMap<String, Object>();
+                if (entity.hasCustomNameTag()) {
+                    entry.put("name", entity.getCustomNameTag());
                 }
+                else {
+                    entry.put("name", entity.getCommandSenderName());
+                }
+                entry.put("x", (int) dx);
+				entry.put("y", (int) dy);
+                entry.put("z", (int) dz);
+                entities.add(entry);
             }
-            context.pause(0.5);
         }
+        context.pause(0.5);
 
         // The returned array is treated as a tuple, meaning if we return the
         // entities as an array directly, we'd end up with each entity as an
