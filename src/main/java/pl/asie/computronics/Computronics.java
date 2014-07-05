@@ -60,7 +60,7 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 
-@Mod(modid="computronics", name="Computronics", version="0.4.2", dependencies="required-after:asielib;after:OpenPeripheralCore;after:ComputerCraft;after:OpenComputers;after:OpenComputers|Core;after:BuildCraft|Core")
+@Mod(modid="computronics", name="Computronics", version="0.5.0", dependencies="required-after:asielib;after:OpenPeripheralCore;after:ComputerCraft;after:OpenComputers;after:OpenComputers|Core;after:BuildCraft|Core")
 public class Computronics {
 	public Configuration config;
 	public static Random rand = new Random();
@@ -77,7 +77,7 @@ public class Computronics {
 	public static int CAMERA_DISTANCE = 32;
 	public static int TAPEDRIVE_DISTANCE = 24;
 	public static int BUFFER_MS = 750;
-	public static String CHATBOX_PREFIX = "[ChatBox]";
+	public static String CHATBOX_PREFIX = "ChatBox";
 	public static String TAPE_LENGTHS;
 	public static boolean CAMERA_REDSTONE_REFRESH, CHATBOX_ME_DETECT, CHATBOX_CREATIVE;
 	
@@ -118,7 +118,7 @@ public class Computronics {
 		CAMERA_DISTANCE = config.get("camera", "maxDistance", 32).getInt();
 		CAMERA_REDSTONE_REFRESH = config.get("camera", "sendRedstoneSignal", true).getBoolean(true);
 		BUFFER_MS = config.get("tapedrive", "audioPreloadMs", 750).getInt();
-		CHATBOX_PREFIX = config.get("chatbox", "prefix", "[ChatBox]").getString();
+		CHATBOX_PREFIX = config.get("chatbox", "prefix", "ChatBox").getString();
 		CHATBOX_ME_DETECT = config.get("chatbox", "readCommandMe", false).getBoolean(false);
 		CHATBOX_CREATIVE = config.get("chatbox", "enableCreative", true).getBoolean(true);
 		TAPEDRIVE_DISTANCE = config.get("tapedrive", "hearingDistance", 24).getInt();
