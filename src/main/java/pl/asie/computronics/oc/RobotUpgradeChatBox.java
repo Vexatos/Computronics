@@ -26,7 +26,9 @@ public class RobotUpgradeChatBox extends ManagedEnvironment {
 	@Callback(direct = true, limit = 3)
 	public Object[] say(Context context, Arguments args) {
 		if(args.count() >= 1) {
-			if(args.isString(0)) ChatBoxUtils.sendChatMessage(this.container, Computronics.CHATBOX_DISTANCE, args.checkString(0));
+			String prefix = robot.player().getDisplayName();
+			if(prefix == null) prefix = Computronics.CHATBOX_PREFIX;
+			if(args.isString(0)) ChatBoxUtils.sendChatMessage(this.container, Computronics.CHATBOX_DISTANCE, "ChatBox", args.checkString(0));
 		}
 		return null;
 	}

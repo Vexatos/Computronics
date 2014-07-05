@@ -80,7 +80,7 @@ public class TileChatBox extends TileEntityBase implements Environment /*, IPeri
 	@Optional.Method(modid="OpenComputers")
 	public Object[] say(Context context, Arguments args) {
 		if(args.count() >= 1) {
-			if(args.isString(0)) ChatBoxUtils.sendChatMessage(this, distance, args.checkString(0));
+			if(args.isString(0)) ChatBoxUtils.sendChatMessage(this, distance, Computronics.CHATBOX_PREFIX, args.checkString(0));
 		}
 		return null;
 	}
