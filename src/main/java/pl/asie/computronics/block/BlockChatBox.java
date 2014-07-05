@@ -13,6 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.tile.TileChatBox;
@@ -35,6 +36,7 @@ public class BlockChatBox extends BlockMachineSidedIcon {
 		return meta >= 8 ? 0xFF60FF : 0xFFFFFF;
 	}
 
+	// Cheaters never win! ~ jaquadro
 	@Override
 	public int colorMultiplier (IBlockAccess blockAccess, int x, int y, int z) {
 	    return getRenderColor(blockAccess.getBlockMetadata(x, y, z));
