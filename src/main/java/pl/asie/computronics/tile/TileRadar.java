@@ -34,8 +34,8 @@ public class TileRadar extends TileEntityBase implements SimpleComponent {
             double dx = entity.posX - (xCoord + 0.5);
 			double dy = entity.posY - (yCoord + 0.5);
             double dz = entity.posZ - (zCoord + 0.5);
-            // Check if the entity is actually in range.
-            if (Math.sqrt(dx * dx + dz * dz) < RadarRange) {
+            // Check if the entity is actually in range. I forget, is there a cubed root function?
+            if (Math.sqrt(dx * dx + dz * dz) < RadarRange && Math.sqrt(dx * dx + dy * dy) < RadarRange && Math.sqrt(dy * dy + dz * dz) < RadarRange) {
                 // Maps are converted to tables on the Lua side.
                 Map<String, Object> entry = new HashMap<String, Object>();
                 if (entity.hasCustomNameTag()) {
