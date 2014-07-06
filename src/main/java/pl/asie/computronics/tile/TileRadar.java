@@ -45,7 +45,6 @@ public class TileRadar extends TileEntityPeripheralBase {
         List<Map> entities = new ArrayList<Map>();
         AxisAlignedBB bounds = getBounds(args);
         entities.addAll(RadarUtils.getEntities(getWorldObj(), xCoord, yCoord, zCoord, bounds, EntityPlayer.class));
-        entities.addAll(RadarUtils.getEntities(getWorldObj(), xCoord, yCoord, zCoord, bounds, Robot.class));
         entities.addAll(RadarUtils.getEntities(getWorldObj(), xCoord, yCoord, zCoord, bounds, EntityLiving.class));
         context.pause(0.5);
 
@@ -66,17 +65,6 @@ public class TileRadar extends TileEntityPeripheralBase {
         entities.addAll(RadarUtils.getEntities(getWorldObj(), xCoord, yCoord, zCoord, bounds, EntityPlayer.class));
         context.pause(0.5);
         
-        return new Object[]{entities.toArray()};
-    }
-	
-	@Callback
-    @Optional.Method(modid="OpenComputers")
-    public Object[] getRobots(Context context, Arguments args) {
-        List<Map> entities = new ArrayList<Map>();
-        AxisAlignedBB bounds = getBounds(args);
-        entities.addAll(RadarUtils.getEntities(getWorldObj(), xCoord, yCoord, zCoord, bounds, Robot.class));
-        context.pause(0.5);
-
         return new Object[]{entities.toArray()};
     }
 	
