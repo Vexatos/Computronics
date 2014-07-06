@@ -1,4 +1,4 @@
-package pl.asie.computronics.handler;
+package pl.asie.computronics.cc;
 
 import pl.asie.computronics.tile.TileEntityPeripheralBase;
 import pl.asie.computronics.tile.TileEntityPeripheralInventory;

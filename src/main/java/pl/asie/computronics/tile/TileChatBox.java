@@ -69,11 +69,16 @@ public class TileChatBox extends TileEntityPeripheralBase {
 	
 	// OpenComputers API
 	
-	@Callback(direct = true, limit = 3)
+	@Callback
 	@Optional.Method(modid="OpenComputers")
 	public Object[] say(Context context, Arguments args) {
+		int d = distance;
 		if(args.count() >= 1) {
-			if(args.isString(0)) ChatBoxUtils.sendChatMessage(this, distance, Computronics.CHATBOX_PREFIX, args.checkString(0));
+			if(args.isInteger(1)) {
+				d = Math.min(Computronics.CHATBOX_DISTANCE, args.checkInteger(1));
+				if(d <= 0) d = distance;
+			}
+			if(args.isString(0)) ChatBoxUtils.sendChatMessage(this, d, Computronics.CHATBOX_PREFIX, args.checkString(0));
 		}
 		return null;
 	}
@@ -118,8 +123,13 @@ public class TileChatBox extends TileEntityPeripheralBase {
 			InterruptedException {
 		switch(method) {
 		case 0: { // say
-			if(arguments.length == 1 && arguments[0] instanceof String) {
-				ChatBoxUtils.sendChatMessage(this, distance, Computronics.CHATBOX_PREFIX, ((String)arguments[0]));
+			if(arguments.length >= 1 && arguments[0] instanceof String) {
+				int d = distance;
+				if(arguments.length >= 2 && arguments[1] instanceof Integer) {
+					d = Math.min(Computronics.CHATBOX_DISTANCE, ((Integer)arguments[1]).intValue());
+					if(d <= 0) d = distance;
+				}
+				ChatBoxUtils.sendChatMessage(this, d, Computronics.CHATBOX_PREFIX, ((String)arguments[0]));
 			}
 		}
 		case 1: { // getDistance

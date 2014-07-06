@@ -13,9 +13,9 @@ import pl.asie.computronics.block.BlockCipher;
 import pl.asie.computronics.block.BlockIronNote;
 import pl.asie.computronics.block.BlockRadar;
 import pl.asie.computronics.block.BlockTapeReader;
+import pl.asie.computronics.cc.CCPeripheralProvider;
+import pl.asie.computronics.cc.SpeakingTurtleUpgrade;
 import pl.asie.computronics.gui.GuiOneSlot;
-import pl.asie.computronics.handler.CCPeripheralProvider;
-import pl.asie.computronics.handler.ChatBoxHandler;
 import pl.asie.computronics.item.ItemBlockChatBox;
 import pl.asie.computronics.item.ItemOpenComputers;
 import pl.asie.computronics.item.ItemTape;
@@ -173,6 +173,8 @@ public class Computronics {
 	private void preInitCC() {
 		ComputerCraftAPI.registerPeripheralProvider(new CCPeripheralProvider());
 		ComputerCraftAPI.registerMediaProvider(itemTape);
+		
+		new SpeakingTurtleUpgrade(config.get("turtleUpgradeIDs", "speaking", 190).getInt());
 	}
 	
 	@Optional.Method(modid="OpenComputers")

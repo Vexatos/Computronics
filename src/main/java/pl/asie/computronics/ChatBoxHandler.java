@@ -1,11 +1,10 @@
-package pl.asie.computronics.handler;
+package pl.asie.computronics;
 
 import li.cil.oc.api.machine.Robot;
 import li.cil.oc.api.network.Environment;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import pl.asie.computronics.Computronics;
 import pl.asie.computronics.tape.StorageManager;
 import pl.asie.computronics.tile.TileChatBox;
 import pl.asie.computronics.oc.RobotUpgradeChatBox;
