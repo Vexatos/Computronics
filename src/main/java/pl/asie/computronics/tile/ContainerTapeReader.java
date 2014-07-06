@@ -1,4 +1,4 @@
-package pl.asie.computronics.tile.inventory;
+package pl.asie.computronics.tile;
 
 import net.minecraft.entity.player.InventoryPlayer;
 import pl.asie.computronics.Computronics;

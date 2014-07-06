@@ -47,8 +47,9 @@ public class TileRadar extends TileEntityPeripheralBase implements Environment {
                 getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 1, zCoord + 1).
                 expand(distance, distance, distance);
     }
-	
+
     @Callback
+    @Optional.Method(modid="OpenComputers")
     public Object[] getEntities(Context context, Arguments args) {
 		List<Map> entities = new ArrayList<Map>();
 		if(hasEnergy) {
@@ -70,6 +71,7 @@ public class TileRadar extends TileEntityPeripheralBase implements Environment {
     }
 	
 	@Callback
+    @Optional.Method(modid="OpenComputers")
     public Object[] getPlayers(Context context, Arguments args) {
         List<Map> entities = new ArrayList<Map>();
 		if(hasEnergy) {
@@ -83,6 +85,7 @@ public class TileRadar extends TileEntityPeripheralBase implements Environment {
     }
 	
 	@Callback
+    @Optional.Method(modid="OpenComputers")
     public Object[] getMobs(Context context, Arguments args) {
         List<Map> entities = new ArrayList<Map>();
 		if(hasEnergy) {

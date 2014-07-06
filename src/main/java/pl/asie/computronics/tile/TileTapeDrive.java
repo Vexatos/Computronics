@@ -1,4 +1,4 @@
-package pl.asie.computronics.tile.inventory;
+package pl.asie.computronics.tile;
 
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
@@ -25,8 +25,7 @@ import pl.asie.lib.block.TileEntityInventory;
 import pl.asie.lib.network.Packet;
 import dan200.computer.api.IComputerAccess;
 
-@Optional.Interface(iface = "li.cil.li.oc.network.Environment", modid = "OpenComputers")
-public class TileTapeDrive extends TileEntityInventory implements SimpleComponent {
+public class TileTapeDrive extends TileEntityPeripheralInventory {
 	public enum State {
 		STOPPED,
 		PLAYING,
@@ -40,6 +39,10 @@ public class TileTapeDrive extends TileEntityInventory implements SimpleComponen
 	private int codecId, codecTick, packetId;
 	private int packetSize = 1024;
 	private int soundVolume = 127;
+	
+	public TileTapeDrive() {
+		super("tape_drive");
+	}
 	
 	private boolean setSpeed(float speed) {
 		if(speed < 0.25F || speed > 2.0F) return false;
@@ -388,91 +391,5 @@ public class TileTapeDrive extends TileEntityInventory implements SimpleComponen
     @Optional.Method(modid="OpenComputers")
     public Object[] getState(Context context, Arguments args) {
     	return new Object[]{state.toString()};
-    }
-    
-	@Override
-    @Optional.Method(modid="OpenComputers")
-	public String getComponentName() {
-		return "tape_drive";
-	}
-    
-    // OpenPeripheral
-    @LuaCallable(description = "Check if any tape is inserted.", returnTypes = {LuaType.BOOLEAN})
-    @Optional.Method(modid="OpenPeripheralCore")
-	public boolean isReady(IComputerAccess computer) {
-    	return storage != null;
-    }
-    
-    @LuaCallable(description = "Get the size of the inserted tape.", returnTypes = {LuaType.NUMBER})
-    @Optional.Method(modid="OpenPeripheralCore")
-	public int getSize(IComputerAccess computer) {
-    	if(storage != null) return storage.getSize();
-    	else return 0;
-    }
-    
-    @LuaCallable(description = "Check if the tape is near its end.", returnTypes = {LuaType.BOOLEAN})
-    @Optional.Method(modid="OpenPeripheralCore")
-	public boolean isEnd(IComputerAccess computer) {
-	    return storage.getPosition() + packetSize <= storage.getSize();
-	}
-    
-    @LuaCallable(description = "Get the label of the inserted tape.", returnTypes = {LuaType.STRING})
-    @Optional.Method(modid="OpenPeripheralCore")
-	public String getLabel(IComputerAccess computer) {
-    	if(storage != null) return storageName;
-    	else return null;
-    }
-    
-    @LuaCallable(description = "Set the label of the inserted tape.")
-    @Optional.Method(modid="OpenPeripheralCore")
-	public void setLabel(
-		IComputerAccess computer,
-		@Arg(name = "label", type = LuaType.STRING, description = "The new label.") String label
-	) {
-    	if(storage != null) setLabel(label);
-    }
-    
-    @LuaCallable(description = "Seeks on the tape, returns number of bytes actually seeked.", returnTypes = {LuaType.NUMBER})
-    @Optional.Method(modid="OpenPeripheralCore")
-	public int seek(
-		IComputerAccess computer,
-		@Arg(name = "amount", type = LuaType.NUMBER, description = "The amount, negative values go backwards") int amount
-	) {
-    	if(storage != null) return storage.seek(amount);
-    	else return 0;
-    }
-    
-    @LuaCallable(description = "Reads a value (0-255) from the tape and advances the counter.", returnTypes = {LuaType.NUMBER})
-    @Optional.Method(modid="OpenPeripheralCore")
-	public int read(IComputerAccess computer) {
-    	if(storage != null) return (int)storage.read() & 0xFF;
-    	else return 0;
-    }
-    
-    @LuaCallable(description = "Writes a value on the tape and advanced the counter.")
-    @Optional.Method(modid="OpenPeripheralCore")
-	public void write(
-		IComputerAccess computer,
-		@Arg(name = "value", type = LuaType.NUMBER, description = "The value (0-255)") int value
-	) {
-    	if(storage != null) storage.write((byte)value);
-    }
-    
-    @LuaCallable(description = "Starts playing music.")
-    @Optional.Method(modid="OpenPeripheralCore")
-	public void play(IComputerAccess computer) {
-    	switchState(State.PLAYING);
-    }
-    
-    @LuaCallable(description = "Get the current state of the player.", returnTypes = {LuaType.STRING})
-    @Optional.Method(modid="OpenPeripheralCore")
- 	public String getState(IComputerAccess computer) {
-     	return state.toString();
-     }
-    
-    @LuaCallable(description = "Stops playing music.")
-    @Optional.Method(modid="OpenPeripheralCore")
-	public void stop(IComputerAccess computer) {
-    	switchState(State.STOPPED);
     }
 }

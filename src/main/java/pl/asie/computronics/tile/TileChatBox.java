@@ -25,11 +25,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.event.ServerChatEvent;
 
-@Optional.InterfaceList({
-	@Optional.Interface(iface = "li.cil.li.oc.network.Environment", modid = "OpenComputers"),
-	//@Optional.Interface(iface = "dan200.computer.api.IPeripheral", modid = "ComputerCraft")
-})
-public class TileChatBox extends TileEntityPeripheralBase implements Environment /*, IPeripheral*/ {
+public class TileChatBox extends TileEntityPeripheralBase {
 	private int distance;
 	
 	public TileChatBox() {

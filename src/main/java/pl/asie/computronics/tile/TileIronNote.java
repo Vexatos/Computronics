@@ -12,8 +12,7 @@ import li.cil.oc.api.network.Environment;
 import li.cil.oc.api.network.SimpleComponent;
 import pl.asie.lib.block.TileEntityBase;
 
-@Optional.Interface(iface = "li.cil.li.oc.network.Environment", modid = "OpenComputers")
-public class TileIronNote extends TileEntityPeripheralBase implements Environment {
+public class TileIronNote extends TileEntityPeripheralBase {
 	public TileIronNote() {
 		super("iron_noteblock");
 	}
@@ -60,16 +59,5 @@ public class TileIronNote extends TileEntityPeripheralBase implements Environmen
     		}
     	}
     	return null;
-    }
-    
-    // OpenPeripheral
-    @LuaCallable(description = "Plays a note.")
-    @Optional.Method(modid="OpenPeripheralCore")
-	public void playNote(
-		IComputerAccess computer,
-		@Arg(name = "instrument", type = LuaType.NUMBER, description = "The instrument to play, 0-4") int instrument,
-		@Arg(name = "note", type = LuaType.NUMBER, description = "The note to play, 0-24") int note
-	) {
-    	playNote(instrument, note);
     }
 }
