@@ -17,10 +17,7 @@ public class RadarUtils {
 	public static Set<Map> getEntities(World world, int xCoord, int yCoord ,int zCoord, AxisAlignedBB bounds, Class eClass) {
 		Set<Map> entities = new HashSet<Map>();
 		for (Object obj : world.getEntitiesWithinAABB(eClass, bounds)) {
-            EntityLivingBase entity;
-            if(eClass.equals(Robot.class)) {
-            	entity = ((Robot)obj).player();
-            } else entity = (EntityLivingBase)obj;
+            EntityLivingBase entity = (EntityLivingBase)obj;
             double dx = entity.posX - (xCoord + 0.5);
 			double dy = entity.posY - (yCoord + 0.5);
             double dz = entity.posZ - (zCoord + 0.5);
