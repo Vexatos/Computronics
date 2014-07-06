@@ -29,7 +29,6 @@ import dan200.computercraft.api.peripheral.IComputerAccess;
 @Optional.Interface(iface = "li.cil.li.oc.network.Environment", modid = "OpenComputers")
 public class TileRadar extends TileEntityPeripheralBase implements Environment {
 
-	public static final double EnergyCostPerOperation = Computronics.RADAR_ENERGY_COST;
 	protected boolean hasEnergy;
 	protected boolean isEnabled = true;
 	
@@ -37,10 +36,10 @@ public class TileRadar extends TileEntityPeripheralBase implements Environment {
 		super("radar");
 	}
    
-    private AxisAlignedBB getBounds(Arguments args) {
+    private int getDistance(Arguments args) {
     	if(args.isInteger(0)) {
-    		return getBounds(args.checkInteger(0));
-    	} else return getBounds(Computronics.RADAR_RANGE);
+    		return args.checkInteger(0);
+    	} else return Computronics.RADAR_RANGE;
     }
     
     private AxisAlignedBB getBounds(int d) {
@@ -56,13 +55,14 @@ public class TileRadar extends TileEntityPeripheralBase implements Environment {
     public Object[] getEntities(Context context, Arguments args) {
 		List<Map> entities = new ArrayList<Map>();
 		if(hasEnergy) {
-			AxisAlignedBB bounds = getBounds(args);
+			int distance = getDistance(args);
+			AxisAlignedBB bounds = getBounds(distance);
 			entities.addAll(RadarUtils.getEntities(getWorldObj(), xCoord, yCoord, zCoord, bounds, EntityPlayer.class));
 			entities.addAll(RadarUtils.getEntities(getWorldObj(), xCoord, yCoord, zCoord, bounds, EntityLiving.class));
 			context.pause(0.5);
 			
 			// Suck some power
-			hasEnergy = ((Connector) node).tryChangeBuffer(-EnergyCostPerOperation * 2);
+			hasEnergy = ((Connector) node).tryChangeBuffer(0 - (Computronics.RADAR_ENERGY_COST * distance * 2));
 		}
 		// The returned array is treated as a tuple, meaning if we return the
 		// entities as an array directly, we'd end up with each entity as an
@@ -78,11 +78,12 @@ public class TileRadar extends TileEntityPeripheralBase implements Environment {
     public Object[] getPlayers(Context context, Arguments args) {
         List<Map> entities = new ArrayList<Map>();
 		if(hasEnergy) {
-			AxisAlignedBB bounds = getBounds(args);
+			int distance = getDistance(args);
+			AxisAlignedBB bounds = getBounds(distance);
 			entities.addAll(RadarUtils.getEntities(getWorldObj(), xCoord, yCoord, zCoord, bounds, EntityPlayer.class));
 			context.pause(0.5);
 			// Suck some power
-			hasEnergy = ((Connector) node).tryChangeBuffer(-EnergyCostPerOperation);
+			hasEnergy = ((Connector) node).tryChangeBuffer(0 - (Computronics.RADAR_ENERGY_COST * distance));
 		}
         return new Object[]{entities.toArray()};
     }
@@ -92,11 +93,12 @@ public class TileRadar extends TileEntityPeripheralBase implements Environment {
     public Object[] getMobs(Context context, Arguments args) {
         List<Map> entities = new ArrayList<Map>();
 		if(hasEnergy) {
-			AxisAlignedBB bounds = getBounds(args);
+			int distance = getDistance(args);
+			AxisAlignedBB bounds = getBounds(distance);
 			entities.addAll(RadarUtils.getEntities(getWorldObj(), xCoord, yCoord, zCoord, bounds, EntityLiving.class));
 			context.pause(0.5);
 			// Suck some power
-			hasEnergy = ((Connector) node).tryChangeBuffer(-EnergyCostPerOperation);
+			hasEnergy = ((Connector) node).tryChangeBuffer(0 - (Computronics.RADAR_ENERGY_COST * distance));
 		}
         return new Object[]{entities.toArray()};
     }

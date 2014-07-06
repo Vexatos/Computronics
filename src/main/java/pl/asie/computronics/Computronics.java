@@ -135,7 +135,7 @@ public class Computronics {
 		TAPE_LENGTHS = config.get("tapedrive", "tapeLengths", "4,8,16,32,64,2,6,16,128").getString();
 		RADAR_RANGE = config.get("radar", "maxRange", 8).getInt();
 		RADAR_ONLY_DISTANCE = config.get("radar", "onlyOutputDistance", false).getBoolean(false);
-		RADAR_ENERGY_COST = config.get("energy", "radarCost", 5.0).getDouble();
+		RADAR_ENERGY_COST = config.get("energy", "radarCostPerDistanceUnit", 50.0).getDouble(50.0);
 
 		config.get("camera", "sendRedstoneSignal", true).comment = "Setting this to false might help Camera tick lag issues, at the cost of making them useless with redstone circuitry.";
 		
