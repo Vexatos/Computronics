@@ -6,7 +6,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import pl.asie.computronics.Computronics;
-import pl.asie.computronics.storage.StorageManager;
+import pl.asie.computronics.tape.StorageManager;
 import pl.asie.computronics.tile.TileChatBox;
 import pl.asie.computronics.oc.RobotUpgradeChatBox;
 import net.minecraft.entity.player.EntityPlayerMP;

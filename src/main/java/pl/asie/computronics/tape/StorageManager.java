@@ -1,4 +1,4 @@
-package pl.asie.computronics.storage;
+package pl.asie.computronics.tape;
 
 import java.io.File;
 import java.util.HashMap;

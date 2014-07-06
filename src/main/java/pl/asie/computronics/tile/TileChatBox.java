@@ -133,4 +133,16 @@ public class TileChatBox extends TileEntityPeripheralBase {
 		}
 		return null;
 	}
+
+	@Override
+	public short busRead(int addr) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void busWrite(int addr, short data) {
+		// TODO Auto-generated method stub
+		
+	}
 }

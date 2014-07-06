@@ -7,7 +7,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.api.IItemStorage;
-import pl.asie.computronics.storage.Storage;
+import pl.asie.computronics.tape.Storage;
 import pl.asie.lib.util.color.ItemColorizer;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.client.resources.I18n;

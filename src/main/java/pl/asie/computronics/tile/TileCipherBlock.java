@@ -140,4 +140,13 @@ public class TileCipherBlock extends TileEntityPeripheralInventory {
 		}
 		return null;
 	}
+
+	@Override
+	public short busRead(int addr) {
+		return 0;
+	}
+
+	@Override
+	public void busWrite(int addr, short data) {
+	}
 }

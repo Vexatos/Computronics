@@ -2,6 +2,7 @@ package pl.asie.computronics.tile;
 
 import java.util.ArrayList;
 
+import nedocomputers.INedoPeripheral;
 import net.minecraft.nbt.NBTTagCompound;
 import li.cil.oc.api.Network;
 import li.cil.oc.api.network.Environment;
@@ -24,9 +25,10 @@ import pl.asie.lib.block.TileEntityBase;
 
 @Optional.InterfaceList({
 	@Optional.Interface(iface = "li.cil.li.oc.network.Environment", modid = "OpenComputers"),
-	@Optional.Interface(iface = "dan200.computercraft.api.peripheral.IPeripheral", modid = "ComputerCraft")
+	@Optional.Interface(iface = "dan200.computercraft.api.peripheral.IPeripheral", modid = "ComputerCraft"),
+	@Optional.Interface(iface = "nedocomputers.INedoPeripheral", modid = "nedocomputers")
 })
-public abstract class TileEntityPeripheralBase extends TileEntityBase implements Environment, IPeripheral {
+public abstract class TileEntityPeripheralBase extends TileEntityBase implements Environment, IPeripheral, INedoPeripheral {
 	protected String peripheralName;
 	
 	public TileEntityPeripheralBase(String name) {
@@ -107,18 +109,16 @@ public abstract class TileEntityPeripheralBase extends TileEntityBase implements
         if (node != null) node.remove();
     }
 
-    @Override
-	@Optional.Method(modid="OpenComputers")
-    public void readFromNBT(final NBTTagCompound nbt) {
+    @Optional.Method(modid="OpenComputers")
+    public void readFromNBT_OC(final NBTTagCompound nbt) {
         super.readFromNBT(nbt);
         if (node != null && node.host() == this) {
             node.load(nbt.getCompoundTag("oc:node"));
         }
     }
 
-    @Override
 	@Optional.Method(modid="OpenComputers")
-    public void writeToNBT(final NBTTagCompound nbt) {
+    public void writeToNBT_OC(final NBTTagCompound nbt) {
         super.writeToNBT(nbt);
         if (node != null && node.host() == this) {
             final NBTTagCompound nodeNbt = new NBTTagCompound();
@@ -150,5 +150,49 @@ public abstract class TileEntityPeripheralBase extends TileEntityBase implements
 	@Optional.Method(modid="ComputerCraft")
 	public boolean equals(IPeripheral other) {
 		return ((other != null) && other.equals(this));
+	}
+
+	@Override
+	@Optional.Method(modid="nedocomputers")
+	public boolean Connectable(int side) {
+		return true;
+	}
+
+	protected int nedoBusID = 0;
+	
+	@Override
+	@Optional.Method(modid="nedocomputers")
+	public int getBusId() {
+		return nedoBusID;
+	}
+
+	@Override
+	@Optional.Method(modid="nedocomputers")
+	public void setBusId(int id) {
+		nedoBusID = id;
+	}
+	
+	@Optional.Method(modid="nedocomputers")
+	public void readFromNBT_NC(final NBTTagCompound nbt) {
+		if(nbt.hasKey("nc:bus")) nedoBusID = nbt.getShort("nc:bus");
+	}
+	
+	@Optional.Method(modid="nedocomputers")
+	public void writeToNBT_NC(final NBTTagCompound nbt) {
+		if(nedoBusID != 0) nbt.setShort("nc:bus", (short)nedoBusID);
+	}
+	
+	@Override
+    public void readFromNBT(final NBTTagCompound nbt) {
+		super.readFromNBT(nbt);
+		if(Loader.isModLoaded("OpenComputers")) readFromNBT_OC(nbt);
+		if(Loader.isModLoaded("nedocomputers")) readFromNBT_NC(nbt);
+	}
+	
+	@Override
+    public void writeToNBT(final NBTTagCompound nbt) {
+		super.writeToNBT(nbt);
+		if(Loader.isModLoaded("OpenComputers")) writeToNBT_OC(nbt);
+		if(Loader.isModLoaded("nedocomputers")) writeToNBT_NC(nbt);
 	}
 }

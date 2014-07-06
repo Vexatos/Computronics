@@ -104,4 +104,16 @@ public class TileCamera extends TileEntityPeripheralBase {
 		}
 		return null;
 	}
+
+	@Override
+	public short busRead(int addr) {
+		switch((addr & 0xFFFE)) {
+		case 4: return ((short)(camera.getDistance() * 64));
+		}
+		return 0;
+	}
+
+	@Override
+	public void busWrite(int addr, short data) {
+	}
 }

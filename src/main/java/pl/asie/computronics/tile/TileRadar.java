@@ -117,4 +117,13 @@ public class TileRadar extends TileEntityPeripheralBase implements Environment {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public short busRead(int addr) {
+		return 0;
+	}
+
+	@Override
+	public void busWrite(int addr, short data) {
+	}
 }

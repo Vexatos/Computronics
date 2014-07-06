@@ -82,4 +82,14 @@ public class TileIronNote extends TileEntityPeripheralBase {
 		}
 		return null;
 	}
+
+	@Override
+	public short busRead(int addr) {
+		return 0;
+	}
+
+	@Override
+	public void busWrite(int addr, short data) {
+		playNote((data >> 5), (data & 31));
+	}
 }

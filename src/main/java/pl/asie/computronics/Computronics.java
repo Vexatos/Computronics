@@ -20,14 +20,14 @@ import pl.asie.computronics.handler.ChatBoxHandler;
 import pl.asie.computronics.item.ItemBlockChatBox;
 import pl.asie.computronics.item.ItemOpenComputers;
 import pl.asie.computronics.item.ItemTape;
-import pl.asie.computronics.storage.StorageManager;
+import pl.asie.computronics.tape.StorageManager;
+import pl.asie.computronics.tape.TileTapeDrive;
 import pl.asie.computronics.tile.ContainerTapeReader;
 import pl.asie.computronics.tile.TileCamera;
 import pl.asie.computronics.tile.TileChatBox;
 import pl.asie.computronics.tile.TileCipherBlock;
 import pl.asie.computronics.tile.TileIronNote;
 import pl.asie.computronics.tile.TileRadar;
-import pl.asie.computronics.tile.TileTapeDrive;
 import pl.asie.computronics.tile.sorter.TileSorter;
 import pl.asie.lib.gui.GuiHandler;
 import pl.asie.lib.item.ItemMultiple;
@@ -65,7 +65,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import dan200.computercraft.api.ComputerCraftAPI;
 
-@Mod(modid="computronics", name="Computronics", version="0.5.0", dependencies="required-after:asielib;after:OpenPeripheralCore;after:ComputerCraft;after:OpenComputers;after:OpenComputers|Core;after:BuildCraft|Core")
+@Mod(modid="computronics", name="Computronics", version="0.5.0", dependencies="required-after:asielib;after:ComputerCraft;after:OpenComputers;after:OpenComputers|Core;after:BuildCraft|Core")
 public class Computronics {
 	public Configuration config;
 	public static Random rand = new Random();

@@ -1,4 +1,4 @@
-package pl.asie.computronics.tile;
+package pl.asie.computronics.tape;
 
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
@@ -19,7 +19,7 @@ import pl.asie.computronics.Computronics;
 import pl.asie.computronics.Packets;
 import pl.asie.computronics.api.IItemStorage;
 import pl.asie.computronics.item.ItemTape;
-import pl.asie.computronics.storage.Storage;
+import pl.asie.computronics.tile.TileEntityPeripheralInventory;
 import pl.asie.lib.audio.DFPWM;
 import pl.asie.lib.block.TileEntityInventory;
 import pl.asie.lib.network.Packet;
@@ -378,5 +378,17 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
 			InterruptedException {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public short busRead(int addr) {
+		switch(addr & 0xFFFE) {
+		case 0: return (short)state.ordinal();
+		}
+		return 0;
+	}
+
+	@Override
+	public void busWrite(int addr, short data) {
 	}
 }
