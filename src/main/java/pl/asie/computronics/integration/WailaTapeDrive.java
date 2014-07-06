@@ -2,7 +2,7 @@ package pl.asie.computronics.integration;
 
 import java.util.List;
 
-import pl.asie.computronics.tile.TileTapeDrive;
+import pl.asie.computronics.tile.inventory.TileTapeDrive;
 import net.minecraft.item.ItemStack;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;

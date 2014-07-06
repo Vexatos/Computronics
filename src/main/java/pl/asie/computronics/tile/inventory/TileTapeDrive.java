@@ -1,4 +1,4 @@
-package pl.asie.computronics.tile;
+package pl.asie.computronics.tile.inventory;
 
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
@@ -25,7 +25,7 @@ import pl.asie.lib.block.TileEntityInventory;
 import pl.asie.lib.network.Packet;
 import dan200.computer.api.IComputerAccess;
 
-@Optional.Interface(iface = "li.cil.li.oc.network.SimpleComponent", modid = "OpenComputers")
+@Optional.Interface(iface = "li.cil.li.oc.network.Environment", modid = "OpenComputers")
 public class TileTapeDrive extends TileEntityInventory implements SimpleComponent {
 	public enum State {
 		STOPPED,

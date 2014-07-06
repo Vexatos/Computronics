@@ -1,6 +1,6 @@
 package pl.asie.computronics.integration;
 
-import pl.asie.computronics.tile.TileTapeDrive;
+import pl.asie.computronics.tile.inventory.TileTapeDrive;
 import mcp.mobius.waila.api.IWailaRegistrar;
 
 public class IntegrationWaila {

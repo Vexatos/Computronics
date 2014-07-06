@@ -3,6 +3,7 @@ package pl.asie.computronics.tile;
 import li.cil.oc.api.network.Arguments;
 import li.cil.oc.api.network.Callback;
 import li.cil.oc.api.network.Context;
+import li.cil.oc.api.network.Environment;
 import li.cil.oc.api.network.SimpleComponent;
 import li.cil.oc.api.machine.Robot;
 import net.minecraft.entity.EntityLiving;
@@ -17,12 +18,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TileRadar extends TileEntityBase implements SimpleComponent {
+import cpw.mods.fml.common.Optional;
 
-    @Override
-    public String getComponentName() {
-        return "radar";
-    }
+@Optional.Interface(iface = "li.cil.li.oc.network.Environment", modid = "OpenComputers")
+public class TileRadar extends TileEntityPeripheralBase implements Environment {
+	public TileRadar() {
+		super("radar");
+	}
    
     private AxisAlignedBB getBounds(Arguments args) {
     	if(args.isInteger(0)) {

@@ -8,11 +8,16 @@ import openperipheral.api.LuaType;
 import li.cil.oc.api.network.Arguments;
 import li.cil.oc.api.network.Callback;
 import li.cil.oc.api.network.Context;
+import li.cil.oc.api.network.Environment;
 import li.cil.oc.api.network.SimpleComponent;
 import pl.asie.lib.block.TileEntityBase;
 
-@Optional.Interface(iface = "li.cil.li.oc.network.SimpleComponent", modid = "OpenComputers")
-public class TileIronNote extends TileEntityBase implements SimpleComponent {
+@Optional.Interface(iface = "li.cil.li.oc.network.Environment", modid = "OpenComputers")
+public class TileIronNote extends TileEntityPeripheralBase implements Environment {
+	public TileIronNote() {
+		super("iron_noteblock");
+	}
+	
 	public void playNote(String instrument, int note) {
 		note %= 25;
 		
@@ -33,11 +38,6 @@ public class TileIronNote extends TileEntityBase implements SimpleComponent {
         else if(instrument == 6) s = "bass";
         
         playNote(s, note);
-	}
-
-	@Override
-	public String getComponentName() {
-		return "iron_noteblock";
 	}
 
 	@Override

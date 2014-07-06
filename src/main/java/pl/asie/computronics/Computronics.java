@@ -20,13 +20,13 @@ import pl.asie.computronics.item.ItemBlockChatBox;
 import pl.asie.computronics.item.ItemOpenComputers;
 import pl.asie.computronics.item.ItemTape;
 import pl.asie.computronics.storage.StorageManager;
-import pl.asie.computronics.tile.ContainerTapeReader;
 import pl.asie.computronics.tile.TileCamera;
 import pl.asie.computronics.tile.TileChatBox;
-import pl.asie.computronics.tile.TileCipherBlock;
 import pl.asie.computronics.tile.TileIronNote;
 import pl.asie.computronics.tile.TileRadar;
-import pl.asie.computronics.tile.TileTapeDrive;
+import pl.asie.computronics.tile.inventory.ContainerTapeReader;
+import pl.asie.computronics.tile.inventory.TileCipherBlock;
+import pl.asie.computronics.tile.inventory.TileTapeDrive;
 import pl.asie.computronics.tile.sorter.TileSorter;
 import pl.asie.lib.gui.GuiHandler;
 import pl.asie.lib.item.ItemMultiple;
@@ -80,6 +80,7 @@ public class Computronics {
 	public static int TAPEDRIVE_DISTANCE = 24;
 	public static int BUFFER_MS = 750;
 	public static int RADAR_RANGE = 8;
+	public static boolean RADAR_ONLY_DISTANCE = false;
 	public static String CHATBOX_PREFIX = "ChatBox";
 
 	public static String TAPE_LENGTHS;
@@ -129,6 +130,7 @@ public class Computronics {
 		TAPEDRIVE_DISTANCE = config.get("tapedrive", "hearingDistance", 24).getInt();
 		TAPE_LENGTHS = config.get("tapedrive", "tapeLengths", "4,8,16,32,64,2,6,16,128").getString();
 		RADAR_RANGE = config.get("radar", "maxRange", 8).getInt();
+		RADAR_ONLY_DISTANCE = config.get("radar", "onlyOutputDistance", false).getBoolean(false);
 
 		config.get("camera", "sendRedstoneSignal", true).comment = "Setting this to false might help Camera tick lag issues, at the cost of making them useless with redstone circuitry.";
 		

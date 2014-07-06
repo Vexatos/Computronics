@@ -10,6 +10,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import li.cil.oc.api.network.Arguments;
 import li.cil.oc.api.network.Callback;
 import li.cil.oc.api.network.Context;
+import li.cil.oc.api.network.Environment;
 import li.cil.oc.api.network.SimpleComponent;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.block.BlockCamera;
@@ -17,13 +18,17 @@ import pl.asie.computronics.util.Camera;
 import pl.asie.computronics.util.CollisionFinder;
 import pl.asie.lib.block.TileEntityBase;
 
-@Optional.Interface(iface = "li.cil.li.oc.network.SimpleComponent", modid = "OpenComputers")
-public class TileCamera extends TileEntityBase implements SimpleComponent {
+@Optional.Interface(iface = "li.cil.li.oc.network.Environment", modid = "OpenComputers")
+public class TileCamera extends TileEntityPeripheralBase implements Environment {
 	private static final int CALL_LIMIT = 20;
 	private final Camera camera = new Camera();
 	private final Camera cameraRedstone = new Camera();
 	private int tick;
 
+	public TileCamera() {
+		super("camera");
+	}
+	
 	@Override
 	public boolean canUpdate() { return true; }
 	
@@ -74,12 +79,7 @@ public class TileCamera extends TileEntityBase implements SimpleComponent {
     	setRayDirection(context, args);
     	return new Object[]{camera.getBlockData()};
     }
- 
-	@Override
-    @Optional.Method(modid="OpenComputers")
-	public String getComponentName() {
-		return "camera";
-	}
+
 	
 	// OpenPeripheral
 	

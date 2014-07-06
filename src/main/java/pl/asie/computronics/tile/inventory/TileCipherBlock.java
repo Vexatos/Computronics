@@ -1,4 +1,4 @@
-package pl.asie.computronics.tile;
+package pl.asie.computronics.tile.inventory;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
