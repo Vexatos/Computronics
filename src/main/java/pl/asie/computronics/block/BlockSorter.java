@@ -11,7 +11,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.tile.TileIronNote;
-import pl.asie.computronics.tile.inventory.TileTapeDrive;
+import pl.asie.computronics.tile.TileTapeDrive;
 import pl.asie.computronics.tile.sorter.TileSorter;
 import pl.asie.lib.block.BlockBase;
 

@@ -1,8 +1,8 @@
 package pl.asie.computronics;
 
 import pl.asie.computronics.gui.GuiCipherBlock;
-import pl.asie.computronics.tile.inventory.ContainerCipherBlock;
-import pl.asie.computronics.tile.inventory.ContainerTapeReader;
+import pl.asie.computronics.tile.ContainerCipherBlock;
+import pl.asie.computronics.tile.ContainerTapeReader;
 import pl.asie.lib.gui.GuiHandler;
 
 public class CommonProxy {

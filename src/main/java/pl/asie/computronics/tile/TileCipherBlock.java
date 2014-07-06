@@ -1,4 +1,4 @@
-package pl.asie.computronics.tile.inventory;
+package pl.asie.computronics.tile;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
@@ -15,15 +15,14 @@ import pl.asie.lib.AsieLibMod;
 import pl.asie.lib.block.TileEntityInventory;
 import pl.asie.lib.util.Base64;
 
-@Optional.Interface(iface = "li.cil.li.oc.network.SimpleComponent", modid = "OpenComputers")
-public class TileCipherBlock extends TileEntityInventory implements
-		SimpleComponent {
+public class TileCipherBlock extends TileEntityPeripheralInventory {
 	private byte[] key = new byte[32];
 	private byte[] iv = new byte[16];
 	private SecretKeySpec skey;
 	private Cipher cipher;
 	
 	public TileCipherBlock() {
+		super("cipher");
 		try {
 			cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
 		} catch(Exception e) {
@@ -84,11 +83,6 @@ public class TileCipherBlock extends TileEntityInventory implements
 	}
 	
 	@Override
-	public String getComponentName() {
-		return "cipher";
-	}
-
-	@Override
 	public int getSizeInventory() {
 		return 6;
 	}
@@ -99,6 +93,7 @@ public class TileCipherBlock extends TileEntityInventory implements
 	}
 	
 	@Callback(direct = true)
+    @Optional.Method(modid="OpenComputers")
 	public Object[] encrypt(Context context, Arguments args) throws Exception {
 		if(args.count() >= 1) {
 			if(args.isByteArray(0))
@@ -110,6 +105,7 @@ public class TileCipherBlock extends TileEntityInventory implements
 	}
 	
 	@Callback(direct = true)
+    @Optional.Method(modid="OpenComputers")
 	public Object[] decrypt(Context context, Arguments args) throws Exception {
 		if(args.count() >= 1 && args.isString(0)) {
 			return new Object[]{decrypt(args.checkString(0))};

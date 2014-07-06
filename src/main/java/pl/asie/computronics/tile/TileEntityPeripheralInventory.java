@@ -9,27 +9,22 @@ import li.cil.oc.api.network.Visibility;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
 import pl.asie.lib.block.TileEntityBase;
-
-// #######################################################
-//
-// REMEMBER TO SYNC ME WITH TILEENTITYPERIPHERALINVENTORY!
-//
-// #######################################################
+import pl.asie.lib.block.TileEntityInventory;
 
 @Optional.InterfaceList({
 	@Optional.Interface(iface = "li.cil.li.oc.network.Environment", modid = "OpenComputers")
 })
-public abstract class TileEntityPeripheralBase extends TileEntityBase implements Environment {
+public abstract class TileEntityPeripheralInventory extends TileEntityInventory implements Environment {
 	protected String peripheralName;
 	
-	public TileEntityPeripheralBase(String name) {
+	public TileEntityPeripheralInventory(String name) {
 		this.peripheralName = name;
 		if(Loader.isModLoaded("OpenComputers")) {
 			initOC();
 		}
 	}
 	
-	public TileEntityPeripheralBase(String name, double bufferSize) {
+	public TileEntityPeripheralInventory(String name, double bufferSize) {
 		this.peripheralName = name;
 		if(Loader.isModLoaded("OpenComputers")) {
 			initOC(bufferSize);

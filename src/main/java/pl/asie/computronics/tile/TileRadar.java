@@ -20,8 +20,7 @@ import java.util.Map;
 
 import cpw.mods.fml.common.Optional;
 
-@Optional.Interface(iface = "li.cil.li.oc.network.Environment", modid = "OpenComputers")
-public class TileRadar extends TileEntityPeripheralBase implements Environment {
+public class TileRadar extends TileEntityPeripheralBase {
 	public TileRadar() {
 		super("radar");
 	}
@@ -39,7 +38,9 @@ public class TileRadar extends TileEntityPeripheralBase implements Environment {
                 getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 1, zCoord + 1).
                 expand(distance, distance, distance);
     }
+    
     @Callback
+    @Optional.Method(modid="OpenComputers")
     public Object[] getEntities(Context context, Arguments args) {
         List<Map> entities = new ArrayList<Map>();
         AxisAlignedBB bounds = getBounds(args);
@@ -58,6 +59,7 @@ public class TileRadar extends TileEntityPeripheralBase implements Environment {
     }
 	
 	@Callback
+    @Optional.Method(modid="OpenComputers")
     public Object[] getPlayers(Context context, Arguments args) {
         List<Map> entities = new ArrayList<Map>();
         AxisAlignedBB bounds = getBounds(args);
@@ -68,6 +70,7 @@ public class TileRadar extends TileEntityPeripheralBase implements Environment {
     }
 	
 	@Callback
+    @Optional.Method(modid="OpenComputers")
     public Object[] getRobots(Context context, Arguments args) {
         List<Map> entities = new ArrayList<Map>();
         AxisAlignedBB bounds = getBounds(args);
@@ -78,6 +81,7 @@ public class TileRadar extends TileEntityPeripheralBase implements Environment {
     }
 	
 	@Callback
+    @Optional.Method(modid="OpenComputers")
     public Object[] getMobs(Context context, Arguments args) {
         List<Map> entities = new ArrayList<Map>();
         AxisAlignedBB bounds = getBounds(args);
