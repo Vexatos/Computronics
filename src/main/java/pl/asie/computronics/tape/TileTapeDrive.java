@@ -384,11 +384,20 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
 	public short busRead(int addr) {
 		switch(addr & 0xFFFE) {
 		case 0: return (short)state.ordinal();
+		case 2: return 0; // speed?
+		case 4: return (short)soundVolume;
+		case 6: return (storage != null ? (short)(storage.getSize() / ItemTape.L_MINUTE) : 0);
 		}
 		return 0;
 	}
 
 	@Override
 	public void busWrite(int addr, short data) {
+		switch(addr & 0xFFFE) {
+		case 0: state = State.values()[data % State.values().length]; break;
+		case 2: break; // speed?
+		case 4: soundVolume = Math.max(0, Math.min(data, 127)); break;
+		case 6: break; // tape size is read-only!
+		}
 	}
 }

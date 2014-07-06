@@ -12,7 +12,6 @@ import pl.asie.computronics.block.BlockChatBox;
 import pl.asie.computronics.block.BlockCipher;
 import pl.asie.computronics.block.BlockIronNote;
 import pl.asie.computronics.block.BlockRadar;
-import pl.asie.computronics.block.BlockSorter;
 import pl.asie.computronics.block.BlockTapeReader;
 import pl.asie.computronics.gui.GuiOneSlot;
 import pl.asie.computronics.handler.CCPeripheralProvider;
@@ -28,7 +27,6 @@ import pl.asie.computronics.tile.TileChatBox;
 import pl.asie.computronics.tile.TileCipherBlock;
 import pl.asie.computronics.tile.TileIronNote;
 import pl.asie.computronics.tile.TileRadar;
-import pl.asie.computronics.tile.sorter.TileSorter;
 import pl.asie.lib.gui.GuiHandler;
 import pl.asie.lib.item.ItemMultiple;
 import pl.asie.lib.network.PacketHandler;
@@ -97,15 +95,12 @@ public class Computronics {
 	public static BlockTapeReader tapeReader;
 	public static BlockCamera camera;
 	public static BlockChatBox chatBox;
-	public static BlockSorter sorter;
 	public static BlockCipher cipher;
     public static BlockRadar radar;
 	
 	public static ItemTape itemTape;
 	public static ItemMultiple itemParts;
 	public static ItemOpenComputers itemRobotUpgrade;
-	
-	//public static Class<? extends TileEntity> CHAT_BOX_CLASS;
 	
 	public static CreativeTabs tab = new CreativeTabs("tabComputronics") {
         public Item getTabIconItem() {
@@ -154,10 +149,6 @@ public class Computronics {
 		chatBox = new BlockChatBox();
 		GameRegistry.registerBlock(chatBox, ItemBlockChatBox.class, "computronics.chatBox");
 		GameRegistry.registerTileEntity(TileChatBox.class, "computronics.chatBox");
-
-		//sorter = new BlockSorter();
-		//GameRegistry.registerBlock(sorter, "computronics.sorter");
-		//GameRegistry.registerTileEntity(TileSorter.class, "computronics.sorter");
 
 		cipher = new BlockCipher();
 		GameRegistry.registerBlock(cipher, "computronics.cipher");

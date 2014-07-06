@@ -136,13 +136,16 @@ public class TileChatBox extends TileEntityPeripheralBase {
 
 	@Override
 	public short busRead(int addr) {
-		// TODO Auto-generated method stub
+		switch((addr & 0xFFFE)) {
+		case 0: return (short)distance;
+		}
 		return 0;
 	}
 
 	@Override
 	public void busWrite(int addr, short data) {
-		// TODO Auto-generated method stub
-		
+		switch((addr & 0xFFFE)) {
+		case 0: if(data > 0) distance = data; break;
+		}
 	}
 }
