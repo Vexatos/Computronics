@@ -5,6 +5,7 @@ tile.computronics.chatBox.name=Chat Box
 tile.computronics.chatBox.creative.name=Creative Chat Box
 tile.computronics.sorter.name=Sorter
 tile.computronics.cipher.name=Cipher Block
+tile.computronics.radar.name=Radar Block
 
 tooltip.computronics.chatBox.creative=NSA in a box!
 tooltip.computronics.tape.length=Length: %s minutes
@@ -14,6 +15,7 @@ tooltip.computronics.tape.none=No Tape
 
 item.computronics.robot_upgrade_camera.name=Camera Upgrade
 item.computronics.robot_upgrade_chatbox.name=Chat Upgrade
+item.computronics.robot_upgrade_radar.name=Radar Upgrade
 item.computronics.part_tape_track.name=Tape Track
 item.computronics.tape.name=Cassette Tape
 
