@@ -1,5 +1,7 @@
 package pl.asie.computronics.tile;
 
+import java.util.ArrayList;
+
 import net.minecraft.nbt.NBTTagCompound;
 import li.cil.oc.api.Network;
 import li.cil.oc.api.network.Environment;
@@ -8,6 +10,10 @@ import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.Visibility;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
+import dan200.computercraft.api.lua.ILuaContext;
+import dan200.computercraft.api.lua.LuaException;
+import dan200.computercraft.api.peripheral.IComputerAccess;
+import dan200.computercraft.api.peripheral.IPeripheral;
 import pl.asie.lib.block.TileEntityBase;
 
 // #######################################################
@@ -17,12 +23,14 @@ import pl.asie.lib.block.TileEntityBase;
 // #######################################################
 
 @Optional.InterfaceList({
-	@Optional.Interface(iface = "li.cil.li.oc.network.Environment", modid = "OpenComputers")
+	@Optional.Interface(iface = "li.cil.li.oc.network.Environment", modid = "OpenComputers"),
+	@Optional.Interface(iface = "dan200.computercraft.api.peripheral.IPeripheral", modid = "ComputerCraft")
 })
-public abstract class TileEntityPeripheralBase extends TileEntityBase implements Environment {
+public abstract class TileEntityPeripheralBase extends TileEntityBase implements Environment, IPeripheral {
 	protected String peripheralName;
 	
 	public TileEntityPeripheralBase(String name) {
+		super();
 		this.peripheralName = name;
 		if(Loader.isModLoaded("OpenComputers")) {
 			initOC();
@@ -30,6 +38,7 @@ public abstract class TileEntityPeripheralBase extends TileEntityBase implements
 	}
 	
 	public TileEntityPeripheralBase(String name, double bufferSize) {
+		super();
 		this.peripheralName = name;
 		if(Loader.isModLoaded("OpenComputers")) {
 			initOC(bufferSize);
@@ -50,6 +59,7 @@ public abstract class TileEntityPeripheralBase extends TileEntityBase implements
 	// From TileEntityEnvironment
 	
     protected Node node;
+    protected ArrayList<IComputerAccess> attachedComputersCC;
     protected boolean addedToNetwork = false;
     
     @Override
@@ -116,59 +126,29 @@ public abstract class TileEntityPeripheralBase extends TileEntityBase implements
             nbt.setTag("oc:node", nodeNbt);
         }
     }
-	/*
-	// ComputerCraft API
 
 	@Override
 	@Optional.Method(modid="ComputerCraft")
 	public String getType() {
-		return "chat_box";
+		return peripheralName;
 	}
-
-	@Override
-	@Optional.Method(modid="ComputerCraft")
-	public String[] getMethodNames() {
-		return new String[]{"say", "getDistance", "setDistance"};
-	}
-
-	@Override
-	@Optional.Method(modid="ComputerCraft")
-	public Object[] callMethod(IComputerAccess computer, ILuaContext context,
-			int method, Object[] arguments) throws Exception {
-		if(method == 0) {
-			if(arguments.length >= 1 && arguments[0] instanceof String) {
-				this.sendChatMessage((String)arguments[0]);
-			}
-		} else if(method == 1) {
-			return new Object[]{distance};
-		} else if(method == 2) {
-			if(arguments.length >= 1 && arguments[0] instanceof Integer) {
-				this.setDistance(((Integer)arguments[0]).intValue());
-			}
-		}
-		return null;
-	}
-
-	@Override
-	@Optional.Method(modid="ComputerCraft")
-	public boolean canAttachToSide(int side) {
-		return true;
-	}
-	
-	private HashSet<IComputerAccess> ccComputers;
 
 	@Override
 	@Optional.Method(modid="ComputerCraft")
 	public void attach(IComputerAccess computer) {
-		if(ccComputers == null) ccComputers = new HashSet<IComputerAccess>();
-		ccComputers.add(computer);
+		if(attachedComputersCC == null) attachedComputersCC = new ArrayList<IComputerAccess>(2);
+		attachedComputersCC.add(computer);
 	}
 
 	@Override
 	@Optional.Method(modid="ComputerCraft")
 	public void detach(IComputerAccess computer) {
-		if(ccComputers == null) ccComputers = new HashSet<IComputerAccess>();
-		ccComputers.remove(computer);
+		if(attachedComputersCC != null) attachedComputersCC.remove(computer);
 	}
-	*/
+
+	@Override
+	@Optional.Method(modid="ComputerCraft")
+	public boolean equals(IPeripheral other) {
+		return ((other != null) && other.equals(this));
+	}
 }

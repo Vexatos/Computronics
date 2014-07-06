@@ -6,7 +6,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import li.cil.oc.api.Driver;
-import openperipheral.api.OpenPeripheralAPI;
 import pl.asie.computronics.audio.DFPWMPlaybackManager;
 import pl.asie.computronics.block.BlockCamera;
 import pl.asie.computronics.block.BlockChatBox;
@@ -16,6 +15,8 @@ import pl.asie.computronics.block.BlockRadar;
 import pl.asie.computronics.block.BlockSorter;
 import pl.asie.computronics.block.BlockTapeReader;
 import pl.asie.computronics.gui.GuiOneSlot;
+import pl.asie.computronics.handler.CCPeripheralProvider;
+import pl.asie.computronics.handler.ChatBoxHandler;
 import pl.asie.computronics.item.ItemBlockChatBox;
 import pl.asie.computronics.item.ItemOpenComputers;
 import pl.asie.computronics.item.ItemTape;
@@ -49,6 +50,7 @@ import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.ModMetadata;
+import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -61,6 +63,7 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
+import dan200.computercraft.api.ComputerCraftAPI;
 
 @Mod(modid="computronics", name="Computronics", version="0.5.0", dependencies="required-after:asielib;after:OpenPeripheralCore;after:ComputerCraft;after:OpenComputers;after:OpenComputers|Core;after:BuildCraft|Core")
 public class Computronics {
@@ -161,15 +164,6 @@ public class Computronics {
 		radar = new BlockRadar();
 		GameRegistry.registerBlock(radar, "computronics.radar");
 		GameRegistry.registerTileEntity(TileRadar.class, "computronics.radar");
-
-		if(Loader.isModLoaded("OpenPeripheralCore")) {
-			OpenPeripheralAPI.createAdapter(TileTapeDrive.class);
-			OpenPeripheralAPI.createAdapter(TileIronNote.class);
-			OpenPeripheralAPI.createAdapter(TileCamera.class);
-			//OpenPeripheralAPI.createAdapter(TileSorter.class);
-			OpenPeripheralAPI.createAdapter(TileCipherBlock.class);
-			OpenPeripheralAPI.createAdapter(TileRadar.class);
-		}			
 		
 		itemTape = new ItemTape(TAPE_LENGTHS);
 		GameRegistry.registerItem(itemTape, "computronics.tape");
@@ -178,11 +172,20 @@ public class Computronics {
 		itemParts.setCreativeTab(tab);
 		GameRegistry.registerItem(itemParts, "computronics.parts");
 		
-		if(Loader.isModLoaded("OpenComputers")) {
-			itemRobotUpgrade = new ItemOpenComputers();
-			GameRegistry.registerItem(itemRobotUpgrade, "computronics.robotUpgrade");
-			Driver.add(itemRobotUpgrade);
-		}
+		if(Loader.isModLoaded("OpenComputers")) preInitOC();
+		if(Loader.isModLoaded("ComputerCraft")) preInitCC();
+	}
+
+	@Optional.Method(modid="ComputerCraft")
+	private void preInitCC() {
+		ComputerCraftAPI.registerPeripheralProvider(new CCPeripheralProvider());
+	}
+	
+	@Optional.Method(modid="OpenComputers")
+	private void preInitOC() {
+		itemRobotUpgrade = new ItemOpenComputers();
+		GameRegistry.registerItem(itemRobotUpgrade, "computronics.robotUpgrade");
+		Driver.add(itemRobotUpgrade);
 	}
 	
 	@EventHandler
@@ -190,7 +193,7 @@ public class Computronics {
 		gui = new GuiHandler();
 		NetworkRegistry.INSTANCE.registerGuiHandler(Computronics.instance, gui);
 		
-		MinecraftForge.EVENT_BUS.register(new ComputronicsEventHandler());
+		MinecraftForge.EVENT_BUS.register(new ChatBoxHandler());
 		
 		proxy.registerGuis(gui);
 		
@@ -230,15 +233,19 @@ public class Computronics {
 				" i ", "rrr", "iii", 'r', Items.redstone, 'i', Items.iron_ingot));
 		GameRegistry.addRecipe(new RecipeColorizer(itemTape));
 		
-		if(Loader.isModLoaded("OpenComputers")) {
-			Block[] b = {camera, chatBox};
-			for(int i = 0; i < b.length; i++) {
-				Block t = b[i];
-				GameRegistry.addShapedRecipe(new ItemStack(itemRobotUpgrade, 1, i), "mcm", 'c', new ItemStack(t, 1, 0), 'm', li.cil.oc.api.Items.get("chip2").createItemStack(1));
-				GameRegistry.addShapedRecipe(new ItemStack(itemRobotUpgrade, 1, i), "m", "c", "m", 'c', new ItemStack(t, 1, 0), 'm', li.cil.oc.api.Items.get("chip2").createItemStack(1));
-			}
-		}
+		if(Loader.isModLoaded("OpenComputers")) initOC();
+
 		config.save();
+	}
+	
+	@Optional.Method(modid="OpenComputers")
+	private void initOC() {
+		Block[] b = {camera, chatBox};
+		for(int i = 0; i < b.length; i++) {
+			Block t = b[i];
+			GameRegistry.addShapedRecipe(new ItemStack(itemRobotUpgrade, 1, i), "mcm", 'c', new ItemStack(t, 1, 0), 'm', li.cil.oc.api.Items.get("chip2").createItemStack(1));
+			GameRegistry.addShapedRecipe(new ItemStack(itemRobotUpgrade, 1, i), "m", "c", "m", 'c', new ItemStack(t, 1, 0), 'm', li.cil.oc.api.Items.get("chip2").createItemStack(1));
+		}
 	}
 	
 	@EventHandler

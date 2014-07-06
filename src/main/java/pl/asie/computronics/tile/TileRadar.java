@@ -19,6 +19,9 @@ import java.util.List;
 import java.util.Map;
 
 import cpw.mods.fml.common.Optional;
+import dan200.computercraft.api.lua.ILuaContext;
+import dan200.computercraft.api.lua.LuaException;
+import dan200.computercraft.api.peripheral.IComputerAccess;
 
 public class TileRadar extends TileEntityPeripheralBase {
 	public TileRadar() {
@@ -78,4 +81,19 @@ public class TileRadar extends TileEntityPeripheralBase {
         
         return new Object[]{entities.toArray()};
     }
+
+	@Override
+    @Optional.Method(modid="ComputerCraft")
+	public String[] getMethodNames() {
+		// TODO Auto-generated method stub
+		return new String[]{};
+	}
+
+	@Override
+	public Object[] callMethod(IComputerAccess computer, ILuaContext context,
+			int method, Object[] arguments) throws LuaException,
+			InterruptedException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

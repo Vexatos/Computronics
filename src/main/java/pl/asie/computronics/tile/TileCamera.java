@@ -1,10 +1,9 @@
 package pl.asie.computronics.tile;
 
 import cpw.mods.fml.common.Optional;
-import openperipheral.api.Arg;
-import openperipheral.api.LuaCallable;
-import openperipheral.api.LuaType;
-import dan200.computer.api.IComputerAccess;
+import dan200.computercraft.api.lua.ILuaContext;
+import dan200.computercraft.api.lua.LuaException;
+import dan200.computercraft.api.peripheral.IComputerAccess;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
 import li.cil.oc.api.network.Arguments;
@@ -78,4 +77,31 @@ public class TileCamera extends TileEntityPeripheralBase {
     	setRayDirection(context, args);
     	return new Object[]{camera.getBlockData()};
     }
+
+	@Override
+    @Optional.Method(modid="ComputerCraft")
+	public String[] getMethodNames() {
+		return new String[]{"setRayDirection", "distance"};
+	}
+
+	@Override
+    @Optional.Method(modid="ComputerCraft")
+	public Object[] callMethod(IComputerAccess computer, ILuaContext context,
+			int method, Object[] arguments) throws LuaException,
+			InterruptedException {
+    	if(arguments.length == 2 && arguments[0] instanceof Float && arguments[1] instanceof Float) {
+    		return new Object[]{
+    			camera.setRayDirection(worldObj, xCoord, yCoord, zCoord,
+    					Computronics.instance.camera.getFacingDirection(worldObj, xCoord, yCoord, zCoord),
+    					((Float)arguments[0]).floatValue(), ((Float)arguments[1]).floatValue())
+    		};
+    	}
+		switch(method) {
+			case 0: break; // setRayDirection
+			case 1: { // distance
+				return new Object[]{camera.getDistance()};
+			}
+		}
+		return null;
+	}
 }

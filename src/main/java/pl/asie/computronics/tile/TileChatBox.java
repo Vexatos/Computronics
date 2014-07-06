@@ -4,6 +4,9 @@ import java.util.HashSet;
 
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
+import dan200.computercraft.api.lua.ILuaContext;
+import dan200.computercraft.api.lua.LuaException;
+import dan200.computercraft.api.peripheral.IComputerAccess;
 //import dan200.computer.api.IComputerAccess;
 //import dan200.computer.api.ILuaContext;
 //import dan200.computer.api.IPeripheral;
@@ -49,7 +52,7 @@ public class TileChatBox extends TileEntityPeripheralBase {
 	
 	public void receiveChatMessage(ServerChatEvent event) {
 		if(Loader.isModLoaded("OpenComputers")) eventOC(event);
-		//if(Loader.isModLoaded("ComputerCraft")) eventCC(event);
+		if(Loader.isModLoaded("ComputerCraft")) eventCC(event);
 	}
 	
 	@Optional.Method(modid="OpenComputers")
@@ -57,12 +60,13 @@ public class TileChatBox extends TileEntityPeripheralBase {
 		node.sendToReachable("computer.signal", "chat_message", event.username, event.message);
 	}
 	
-	/*@Optional.Method(modid="ComputerCraft")
+	@Optional.Method(modid="ComputerCraft")
 	public void eventCC(ServerChatEvent event) {
-		for(IComputerAccess computer: ccComputers) {
+		for(IComputerAccess computer: attachedComputersCC) {
 			computer.queueEvent("chat_message", new Object[]{event.username, event.message});
 		}
-	}*/
+	}
+	
 	// OpenComputers API
 	
 	@Callback(direct = true, limit = 3)
@@ -100,4 +104,33 @@ public class TileChatBox extends TileEntityPeripheralBase {
         super.writeToNBT(nbt);
         nbt.setShort("d", (short)this.distance);
     }
+
+	@Override
+    @Optional.Method(modid="ComputerCraft")
+	public String[] getMethodNames() {
+		return new String[]{"say", "getDistance", "setDistance"};
+	}
+
+	@Override
+    @Optional.Method(modid="ComputerCraft")
+	public Object[] callMethod(IComputerAccess computer, ILuaContext context,
+			int method, Object[] arguments) throws LuaException,
+			InterruptedException {
+		switch(method) {
+		case 0: { // say
+			if(arguments.length == 1 && arguments[0] instanceof String) {
+				ChatBoxUtils.sendChatMessage(this, distance, Computronics.CHATBOX_PREFIX, ((String)arguments[0]));
+			}
+		}
+		case 1: { // getDistance
+			return new Object[]{distance};
+		}
+		case 2: { // setDistance
+			if(arguments.length == 1 && arguments[0] instanceof Integer) {
+				setDistance(((Integer)arguments[0]).intValue());
+			}
+		}
+		}
+		return null;
+	}
 }

@@ -2,6 +2,9 @@ package pl.asie.computronics.tile;
 
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
+import dan200.computercraft.api.lua.ILuaContext;
+import dan200.computercraft.api.lua.LuaException;
+import dan200.computercraft.api.peripheral.IComputerAccess;
 import li.cil.oc.api.network.Arguments;
 import li.cil.oc.api.network.Callback;
 import li.cil.oc.api.network.Context;
@@ -12,9 +15,6 @@ import net.minecraft.client.audio.SoundPoolEntry;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import openperipheral.api.Arg;
-import openperipheral.api.LuaCallable;
-import openperipheral.api.LuaType;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.Packets;
 import pl.asie.computronics.api.IItemStorage;
@@ -23,7 +23,6 @@ import pl.asie.computronics.storage.Storage;
 import pl.asie.lib.audio.DFPWM;
 import pl.asie.lib.block.TileEntityInventory;
 import pl.asie.lib.network.Packet;
-import dan200.computer.api.IComputerAccess;
 
 public class TileTapeDrive extends TileEntityPeripheralInventory {
 	public enum State {
@@ -69,16 +68,6 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
 		} catch(Exception e) { e.printStackTrace(); }
 	}
 	
-	private String rewindSound = "";
-	
-	private void stopRewindSound() {
-		/*if(worldObj.isRemote) {
-			SoundManager sound = Minecraft.getMinecraft().sndManager;
-			sound.sndSystem.stop(rewindSound);
-			rewindSound = "";
-		}*/
-	}
-	
 	public void switchState(State newState) {
 		if(worldObj.isRemote) { // Client-side happening
 			if(newState == state) return;
@@ -102,20 +91,6 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
 		}
 		state = newState;
 		sendState();
-		/*if(worldObj.isRemote) {
-			SoundSystem sound = (SoundManager)Computronics.proxy.getSoundSystem();
-			if((newState == State.REWINDING || newState == State.FORWARDING)
-					&& (state == State.REWINDING || state == State.FORWARDING)) return;
-			if(newState == State.REWINDING || newState == State.FORWARDING) {
-				rewindSound = "computronics_"+xCoord+"_"+yCoord+"_"+zCoord+"_"+Math.floor(Math.random()*10000);
-				// Initialize rewind sound
-				SoundPoolEntry spe = sound.soundPoolSounds.getRandomSoundFromSoundPool("computronics:tape_rewind");
-				sound.sndSystem.newSource(false, rewindSound, spe.getSoundUrl(), spe.getSoundName(), false, xCoord, yCoord, zCoord, 2, 16.0F);
-				sound.sndSystem.setLooping(rewindSound, true);
-				sound.sndSystem.setVolume(rewindSound, Minecraft.getMinecraft().gameSettings.soundVolume);
-				sound.sndSystem.play(rewindSound);
-			} else stopRewindSound();
-		}*/
 	}
 	
 	public State getState() {
@@ -193,14 +168,12 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
 	@Override
 	public void onBlockDestroy() {
 		super.onBlockDestroy();
-		stopRewindSound();
 		unloadStorage();
 	}
 	
 	@Override
 	public void invalidate() {
 		super.invalidate();
-		stopRewindSound();
 		unloadStorage();
 	}
 	
@@ -261,14 +234,12 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
 	@Override
 	public void onChunkUnload() {
 		super.onWorldUnload();
-		stopRewindSound();
 		unloadStorage();
 	}
 	
 	@Override
 	public void onWorldUnload() {
 		super.onWorldUnload();
-		stopRewindSound();
 		unloadStorage();
 	}
 
@@ -392,4 +363,20 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
     public Object[] getState(Context context, Arguments args) {
     	return new Object[]{state.toString()};
     }
+    
+	@Override
+    @Optional.Method(modid="ComputerCraft")
+	public String[] getMethodNames() {
+		// TODO Auto-generated method stub
+		return new String[]{};
+	}
+
+	@Override
+    @Optional.Method(modid="ComputerCraft")
+	public Object[] callMethod(IComputerAccess computer, ILuaContext context,
+			int method, Object[] arguments) throws LuaException,
+			InterruptedException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

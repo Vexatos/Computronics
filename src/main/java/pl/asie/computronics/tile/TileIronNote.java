@@ -1,10 +1,9 @@
 package pl.asie.computronics.tile;
 
 import cpw.mods.fml.common.Optional;
-import dan200.computer.api.IComputerAccess;
-import openperipheral.api.Arg;
-import openperipheral.api.LuaCallable;
-import openperipheral.api.LuaType;
+import dan200.computercraft.api.lua.ILuaContext;
+import dan200.computercraft.api.lua.LuaException;
+import dan200.computercraft.api.peripheral.IComputerAccess;
 import li.cil.oc.api.network.Arguments;
 import li.cil.oc.api.network.Callback;
 import li.cil.oc.api.network.Context;
@@ -60,4 +59,27 @@ public class TileIronNote extends TileEntityPeripheralBase {
     	}
     	return null;
     }
+
+	@Override
+    @Optional.Method(modid="ComputerCraft")
+	public String[] getMethodNames() {
+		return new String[]{"playNote"};
+	}
+
+	@Override
+    @Optional.Method(modid="ComputerCraft")
+	public Object[] callMethod(IComputerAccess computer, ILuaContext context,
+			int method, Object[] arguments) throws LuaException,
+			InterruptedException {
+		if(arguments.length == 1 && (arguments[0] instanceof Integer)) {
+			playNote(0, ((Integer)arguments[0]).intValue());
+		} else if(arguments.length == 2 && (arguments[1] instanceof Integer)) {
+			if(arguments[0] instanceof Integer) {
+				playNote(((Integer)arguments[0]).intValue(), ((Integer)arguments[1]).intValue());
+			} else if(arguments[0] instanceof String) {
+				playNote((String)arguments[0], ((Integer)arguments[1]).intValue());
+			}
+		}
+		return null;
+	}
 }

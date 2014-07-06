@@ -7,6 +7,9 @@ import javax.crypto.spec.SecretKeySpec;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import cpw.mods.fml.common.Optional;
+import dan200.computercraft.api.lua.ILuaContext;
+import dan200.computercraft.api.lua.LuaException;
+import dan200.computercraft.api.peripheral.IComputerAccess;
 import li.cil.oc.api.network.Arguments;
 import li.cil.oc.api.network.Callback;
 import li.cil.oc.api.network.Context;
@@ -109,6 +112,31 @@ public class TileCipherBlock extends TileEntityPeripheralInventory {
 	public Object[] decrypt(Context context, Arguments args) throws Exception {
 		if(args.count() >= 1 && args.isString(0)) {
 			return new Object[]{decrypt(args.checkString(0))};
+		}
+		return null;
+	}
+
+	@Override
+    @Optional.Method(modid="ComputerCraft")
+	public String[] getMethodNames() {
+		return new String[]{"encrypt", "decrypt"};
+	}
+
+	@Override
+    @Optional.Method(modid="ComputerCraft")
+	public Object[] callMethod(IComputerAccess computer, ILuaContext context,
+			int method, Object[] arguments) throws LuaException,
+			InterruptedException {
+		try {
+			if(arguments.length == 1 && (arguments[0] instanceof String)) {
+				String message = ((String)arguments[0]);
+				switch(method) {
+				case 0: return new Object[]{encrypt(message)};
+				case 1: return new Object[]{decrypt(message)};
+				}
+			}
+		} catch(Exception e) {
+			throw new LuaException(e.getMessage());
 		}
 		return null;
 	}
