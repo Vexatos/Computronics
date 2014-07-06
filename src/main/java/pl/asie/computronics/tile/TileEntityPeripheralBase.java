@@ -23,6 +23,18 @@ public abstract class TileEntityPeripheralBase extends TileEntityBase implements
 		}
 	}
 	
+	public TileEntityPeripheralBase(String name, double bufferSize) {
+		this.peripheralName = name;
+		if(Loader.isModLoaded("OpenComputers")) {
+			initOC(bufferSize);
+		}
+	}
+	
+	@Optional.Method(modid="OpenComputers")
+	private void initOC(double s) {
+		node = Network.newNode(this, Visibility.Network).withComponent(this.peripheralName, Visibility.Network).withConnector(s).create();
+	}
+	
 	@Optional.Method(modid="OpenComputers")
 	private void initOC() {
 		node = Network.newNode(this, Visibility.Network).withComponent(this.peripheralName, Visibility.Network).create();
