@@ -35,9 +35,12 @@ public class RadarUtils {
                 } else {
                     entry.put("name", entity.getCommandSenderName());
                 }
-                entry.put("x", (int) dx);
-				entry.put("y", (int) dy);
-                entry.put("z", (int) dz);
+                if(!Computronics.RADAR_ONLY_DISTANCE) {
+                	entry.put("x", (int) dx);
+                	entry.put("y", (int) dy);
+                	entry.put("z", (int) dz);
+                }
+                entry.put("distance", Math.sqrt(dx*dx + dy*dy + dz*dz));
                 entities.add(entry);
             }
         }
