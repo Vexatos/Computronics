@@ -9,11 +9,12 @@ import net.minecraft.tileentity.TileEntity;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.oc.RobotUpgradeCamera;
 import pl.asie.computronics.oc.RobotUpgradeChatBox;
+import pl.asie.computronics.oc.RobotUpgradeRadar;
 import pl.asie.lib.item.ItemMultiple;
 
 public class ItemOpenComputers extends ItemMultiple implements li.cil.oc.api.driver.Item {
 	public ItemOpenComputers() {
-		super("computronics", new String[]{"robot_upgrade_camera", "robot_upgrade_chatbox"});
+		super("computronics", new String[]{"robot_upgrade_camera", "robot_upgrade_chatbox", "robot_upgrade_radar"});
 		this.setCreativeTab(Computronics.tab);
 	}
 
@@ -28,6 +29,7 @@ public class ItemOpenComputers extends ItemMultiple implements li.cil.oc.api.dri
 		switch(stack.getItemDamage()) {
 			case 0: return new RobotUpgradeCamera(container);
 			case 1: return new RobotUpgradeChatBox(container);
+			case 2: return new RobotUpgradeRadar(container);
 			default: return null;
 		}
 	}
@@ -37,6 +39,7 @@ public class ItemOpenComputers extends ItemMultiple implements li.cil.oc.api.dri
 		switch(stack.getItemDamage()) {
 			case 0: return Slot.Upgrade;
 			case 1: return Slot.Upgrade;
+			case 2: return Slot.Upgrade;
 			default: return Slot.None;
 		}
 	}
@@ -46,6 +49,7 @@ public class ItemOpenComputers extends ItemMultiple implements li.cil.oc.api.dri
 		switch(stack.getItemDamage()) {
 			case 0: return 1; // Tier 2
 			case 1: return 1; // Tier 2
+			case 2: return 2; // Tier 3
 			default: return 0; // Tier 1 default
 		}
 	}

@@ -30,7 +30,6 @@ import dan200.computercraft.api.peripheral.IComputerAccess;
 public class TileRadar extends TileEntityPeripheralBase implements Environment {
 
 	protected boolean hasEnergy;
-	protected boolean isEnabled = true;
 	
 	public TileRadar() {
 		super("radar");
