@@ -233,7 +233,7 @@ public class Computronics {
 	
 	@Optional.Method(modid="OpenComputers")
 	private void initOC() {
-		Block[] b = {camera, chatBox};
+		Block[] b = {camera, chatBox, radar};
 		for(int i = 0; i < b.length; i++) {
 			Block t = b[i];
 			GameRegistry.addShapedRecipe(new ItemStack(itemRobotUpgrade, 1, i), "mcm", 'c', new ItemStack(t, 1, 0), 'm', li.cil.oc.api.Items.get("chip2").createItemStack(1));
