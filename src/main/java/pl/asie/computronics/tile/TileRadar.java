@@ -23,16 +23,24 @@ public class TileRadar extends TileEntityBase implements SimpleComponent {
     public String getComponentName() {
         return "radar";
     }
-
-    private AxisAlignedBB getBounds() {
+   
+    private AxisAlignedBB getBounds(Arguments args) {
+    	if(args.isInteger(0)) {
+    		return getBounds(args.checkInteger(0));
+    	} else return getBounds(Computronics.RADAR_RANGE);
+    }
+    
+    private AxisAlignedBB getBounds(int d) {
+    	int distance = Math.min(d, Computronics.RADAR_RANGE);
+    	if(distance < 1) distance = 1;
     	return AxisAlignedBB.
                 getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 1, zCoord + 1).
-                expand(Computronics.RADAR_RANGE, Computronics.RADAR_RANGE, Computronics.RADAR_RANGE);
+                expand(distance, distance, distance);
     }
     @Callback
     public Object[] getEntities(Context context, Arguments args) {
         List<Map> entities = new ArrayList<Map>();
-        AxisAlignedBB bounds = getBounds();
+        AxisAlignedBB bounds = getBounds(args);
         entities.addAll(RadarUtils.getEntities(getWorldObj(), xCoord, yCoord, zCoord, bounds, EntityPlayer.class));
         entities.addAll(RadarUtils.getEntities(getWorldObj(), xCoord, yCoord, zCoord, bounds, Robot.class));
         entities.addAll(RadarUtils.getEntities(getWorldObj(), xCoord, yCoord, zCoord, bounds, EntityLiving.class));
@@ -50,7 +58,7 @@ public class TileRadar extends TileEntityBase implements SimpleComponent {
 	@Callback
     public Object[] getPlayers(Context context, Arguments args) {
         List<Map> entities = new ArrayList<Map>();
-        AxisAlignedBB bounds = getBounds();
+        AxisAlignedBB bounds = getBounds(args);
         entities.addAll(RadarUtils.getEntities(getWorldObj(), xCoord, yCoord, zCoord, bounds, EntityPlayer.class));
         context.pause(0.5);
         
@@ -60,7 +68,7 @@ public class TileRadar extends TileEntityBase implements SimpleComponent {
 	@Callback
     public Object[] getRobots(Context context, Arguments args) {
         List<Map> entities = new ArrayList<Map>();
-        AxisAlignedBB bounds = getBounds();
+        AxisAlignedBB bounds = getBounds(args);
         entities.addAll(RadarUtils.getEntities(getWorldObj(), xCoord, yCoord, zCoord, bounds, Robot.class));
         context.pause(0.5);
 
@@ -70,7 +78,7 @@ public class TileRadar extends TileEntityBase implements SimpleComponent {
 	@Callback
     public Object[] getMobs(Context context, Arguments args) {
         List<Map> entities = new ArrayList<Map>();
-        AxisAlignedBB bounds = getBounds();
+        AxisAlignedBB bounds = getBounds(args);
         entities.addAll(RadarUtils.getEntities(getWorldObj(), xCoord, yCoord, zCoord, bounds, EntityLiving.class));
         context.pause(0.5);
         

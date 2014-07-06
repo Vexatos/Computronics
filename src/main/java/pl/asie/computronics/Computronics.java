@@ -79,7 +79,7 @@ public class Computronics {
 	public static int CAMERA_DISTANCE = 32;
 	public static int TAPEDRIVE_DISTANCE = 24;
 	public static int BUFFER_MS = 750;
-	public static int RADAR_RANGE = 32;
+	public static int RADAR_RANGE = 8;
 	public static String CHATBOX_PREFIX = "ChatBox";
 
 	public static String TAPE_LENGTHS;
@@ -128,7 +128,7 @@ public class Computronics {
 		CHATBOX_CREATIVE = config.get("chatbox", "enableCreative", true).getBoolean(true);
 		TAPEDRIVE_DISTANCE = config.get("tapedrive", "hearingDistance", 24).getInt();
 		TAPE_LENGTHS = config.get("tapedrive", "tapeLengths", "4,8,16,32,64,2,6,16,128").getString();
-		RADAR_RANGE = config.get("radar", "maxRange", 32).getInt();
+		RADAR_RANGE = config.get("radar", "maxRange", 8).getInt();
 
 		config.get("camera", "sendRedstoneSignal", true).comment = "Setting this to false might help Camera tick lag issues, at the cost of making them useless with redstone circuitry.";
 		
