@@ -172,6 +172,7 @@ public class Computronics {
 	@Optional.Method(modid="ComputerCraft")
 	private void preInitCC() {
 		ComputerCraftAPI.registerPeripheralProvider(new CCPeripheralProvider());
+		ComputerCraftAPI.registerMediaProvider(itemTape);
 	}
 	
 	@Optional.Method(modid="OpenComputers")

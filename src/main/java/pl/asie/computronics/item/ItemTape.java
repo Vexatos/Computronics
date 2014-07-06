@@ -5,6 +5,9 @@ import java.util.List;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dan200.computercraft.api.filesystem.IMount;
+import dan200.computercraft.api.media.IMedia;
+import dan200.computercraft.api.media.IMediaProvider;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.api.IItemStorage;
 import pl.asie.computronics.tape.Storage;
@@ -18,8 +21,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
+import net.minecraft.world.World;
 
-public class ItemTape extends Item implements IItemStorage {
+public class ItemTape extends Item implements IItemStorage, IMedia, IMediaProvider {
 	public static final int L_SECOND = 4096;
 	public static final int L_MINUTE = 4096*60;
 	
@@ -77,6 +81,12 @@ public class ItemTape extends Item implements IItemStorage {
 	
 	public String getLabel(ItemStack stack) {
 		return stack.getTagCompound().hasKey("label") ? stack.getTagCompound().getString("label") : "";
+	}
+
+	public boolean setLabel(ItemStack stack, String label) {
+		if(stack == null) return false;
+		stack.getTagCompound().setString("label", label);
+		return true;
 	}
 	
 	@Override
@@ -138,4 +148,17 @@ public class ItemTape extends Item implements IItemStorage {
     {
         return pass == 0 ? 16777215 : (ItemColorizer.hasColor(stack) ? ItemColorizer.getColor(stack) : 16777215);
     }
+
+	@Override
+	public IMedia getMedia(ItemStack stack) {
+		if(stack != null && stack.stackSize > 0 && stack.getItem() != null && stack.getItem() instanceof ItemTape) return ((IMedia)stack.getItem());
+		return null;
+	}
+
+	@Override
+	public String getAudioTitle(ItemStack stack) { return null; }
+	@Override
+	public String getAudioRecordName(ItemStack stack) { return null; }
+	@Override
+	public IMount createDataMount(ItemStack stack, World world) { return null; }
 }
