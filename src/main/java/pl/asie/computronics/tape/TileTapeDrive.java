@@ -445,7 +445,8 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
 		case 2: return 0; // speed?
 		case 4: return (short)soundVolume;
 		case 6: return (storage != null ? (short)(storage.getSize() / ItemTape.L_MINUTE) : 0);
-		case 8: return (storage != null ? (short)storage.read() : 0);
+		case 8: return 0; // seek!
+		case 10: return (storage != null ? (short)storage.read() : 0);
 		}
 		return 0;
 	}
@@ -458,7 +459,8 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
 		case 2: break; // speed?
 		case 4: soundVolume = Math.max(0, Math.min(data, 127)); break;
 		case 6: break; // tape size is read-only!
-		case 8: if(storage != null) storage.write((byte)(data & 0xFF)); break;
+		case 8: storage.seek(data); break;
+		case 10: if(storage != null) storage.write((byte)(data & 0xFF)); break;
 		}
 	}
 }
