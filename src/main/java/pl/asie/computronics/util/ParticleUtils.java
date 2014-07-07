@@ -9,9 +9,10 @@ import cpw.mods.fml.common.network.internal.FMLProxyPacket;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import net.minecraft.client.Minecraft;
+import pl.asie.computronics.Computronics;
 
 public class ParticleUtils {
-	public static FMLEventChannel channel;
+	public static FMLEventChannel channel = Computronics.channel;
 	
 	public static void sendParticlePacket(String name, int dimension, double x, double y, double z, double vx, double vy, double vz) {
         ByteBuf data = Unpooled.buffer();

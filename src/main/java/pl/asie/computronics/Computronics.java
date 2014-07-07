@@ -60,6 +60,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.network.FMLEventChannel;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import dan200.computercraft.api.ComputerCraftAPI;
@@ -69,6 +70,8 @@ public class Computronics {
 	public Configuration config;
 	public static Random rand = new Random();
 	public static Logger log;
+	
+	public static FMLEventChannel channel;
 	
 	@Instance(value="computronics")
 	public static Computronics instance;
@@ -198,6 +201,9 @@ public class Computronics {
 		gui = new GuiHandler();
 		NetworkRegistry.INSTANCE.registerGuiHandler(Computronics.instance, gui);
 		
+		channel = NetworkRegistry.INSTANCE.newEventDrivenChannel("Computronics");
+		channel.register(this);
+		
 		MinecraftForge.EVENT_BUS.register(new ChatBoxHandler());
 		
 		proxy.registerGuis(gui);
@@ -251,6 +257,7 @@ public class Computronics {
 			GameRegistry.addShapedRecipe(new ItemStack(itemRobotUpgrade, 1, i), "mcm", 'c', new ItemStack(t, 1, 0), 'm', li.cil.oc.api.Items.get("chip2").createItemStack(1));
 			GameRegistry.addShapedRecipe(new ItemStack(itemRobotUpgrade, 1, i), "m", "c", "m", 'c', new ItemStack(t, 1, 0), 'm', li.cil.oc.api.Items.get("chip2").createItemStack(1));
 		}
+		GameRegistry.addShapedRecipe(new ItemStack(itemRobotUpgrade, 1, 3), "mf", " b", 'm', li.cil.oc.api.Items.get("chip2").createItemStack(1), 'f', Items.firework_charge, 'b', li.cil.oc.api.Items.get("card").createItemStack(1));
 	}
 	
 	@EventHandler
@@ -261,4 +268,6 @@ public class Computronics {
 	public void serverStart(FMLServerAboutToStartEvent event) {
 		Computronics.storage = new StorageManager();
 	}
+	
+	
 }
