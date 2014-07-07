@@ -14,6 +14,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.AxisAlignedBB;
 import pl.asie.lib.block.TileEntityBase;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.cc.CCRadarProxy;
 import pl.asie.computronics.util.RadarUtils;
 
 import java.util.ArrayList;
@@ -105,67 +106,6 @@ public class TileRadar extends TileEntityPeripheralBase implements Environment {
     }
 
 	@Override
-    @Optional.Method(modid="ComputerCraft")
-	public String[] getMethodNames() {
-		return new String[]{"getEntities", "getPlayers", "getMobs"};
-	}
-
-	private class RadarEnqueuerCC implements Runnable {
-		private IComputerAccess computer;
-		private int distance, i;
-		private Map[] entities;
-		
-		public RadarEnqueuerCC(int distance, Set<Map> entities, IComputerAccess computer) {
-			this.computer = computer;
-			this.distance = distance;
-			this.entities = entities.toArray(new Map[entities.size()]);
-			this.i = 0;
-		}
-		
-		@Override
-		public void run() {
-			try {
-				while(i < distance) {
-					Thread.sleep((long)(Computronics.RADAR_CC_TIME * 1000));
-					i++;
-					for(Map m: entities) {
-						int entityD = ((Integer)m.get("distance")).intValue();
-						if(entityD >= (i - 1) && entityD < i) {
-							if(Computronics.RADAR_ONLY_DISTANCE) {
-								computer.queueEvent("entity", new Object[]{m.get("name"), entityD});
-							} else {
-								computer.queueEvent("entity", new Object[]{m.get("name"), entityD, m.get("x"), m.get("y"), m.get("z")});
-							}
-						}
-					}
-				}
-			} catch(Exception e) {
-				e.printStackTrace();
-			}
-		}
-		
-	}
-	
-	@Override
-    @Optional.Method(modid="ComputerCraft")
-	public Object[] callMethod(IComputerAccess computer, ILuaContext context,
-			int method, Object[] arguments) throws LuaException,
-			InterruptedException {
-		int distance = Computronics.RADAR_RANGE;
-		if(arguments.length >= 1 && (arguments[0] instanceof Integer)) {
-			distance = ((Integer)arguments[0]).intValue();
-			if(distance <= 0 || distance > Computronics.RADAR_RANGE) distance = Computronics.RADAR_RANGE;
-		}
-		AxisAlignedBB bounds = getBounds(distance);
-    	Set<Map> entities = new HashSet<Map>();
-    	if(method == 0 || method == 1) entities.addAll(RadarUtils.getEntities(getWorldObj(), xCoord, yCoord, zCoord, bounds, EntityPlayer.class));
-    	if(method == 0 || method == 2) entities.addAll(RadarUtils.getEntities(getWorldObj(), xCoord, yCoord, zCoord, bounds, EntityLiving.class));
-    	RadarEnqueuerCC enqueuer = new RadarEnqueuerCC(distance, entities, computer);
-    	new Thread(enqueuer).run();
-		return null;
-	}
-
-	@Override
     @Optional.Method(modid="nedocomputers")
 	public short busRead(int addr) {
 		return 0;
@@ -174,5 +114,17 @@ public class TileRadar extends TileEntityPeripheralBase implements Environment {
 	@Override
     @Optional.Method(modid="nedocomputers")
 	public void busWrite(int addr, short data) {
+	}
+
+	@Override
+	public String[] getMethodNames() {
+		return CCRadarProxy.getMethodNames();
+	}
+
+	@Override
+	public Object[] callMethod(IComputerAccess computer, ILuaContext context,
+			int method, Object[] arguments) throws LuaException,
+			InterruptedException {
+		return CCRadarProxy.callMethod(worldObj, xCoord, yCoord, zCoord, computer, context, method, arguments);
 	}
 }

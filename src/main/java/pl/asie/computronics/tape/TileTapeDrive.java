@@ -356,6 +356,8 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
 		// catch all other methods
 		return null;
 	}
+	
+	private int _nedo_lastSeek = 0;
 
 	@Override
     @Optional.Method(modid="nedocomputers")
@@ -365,7 +367,7 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
 		case 2: return 0; // speed?
 		case 4: return (short)state.soundVolume;
 		case 6: return (state.getStorage() != null ? (short)(state.getStorage().getSize() / ItemTape.L_MINUTE) : 0);
-		case 8: return 0; // seek!
+		case 8: return (short)_nedo_lastSeek;
 		case 10: return (state.getStorage() != null ? (short)state.getStorage().read() : 0);
 		}
 		return 0;
@@ -379,7 +381,7 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
 		case 2: break; // speed?
 		case 4:state. soundVolume = Math.max(0, Math.min(data, 127)); break;
 		case 6: break; // tape size is read-only!
-		case 8: state.getStorage().seek(data); break;
+		case 8: _nedo_lastSeek = state.getStorage().seek(data); break;
 		case 10: if(state.getStorage() != null) state.getStorage().write((byte)(data & 0xFF)); break;
 		}
 	}
