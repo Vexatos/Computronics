@@ -269,7 +269,8 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
 	@Callback(direct = true)
     @Optional.Method(modid="OpenComputers")
 	public Object[] isEnd(Context context, Arguments args) {
-	    return new Object[]{storage.getPosition() + packetSize <= storage.getSize()};
+		if(storage != null) return new Object[]{storage.getPosition() + packetSize <= storage.getSize()};
+		else return new Object[]{true};
 	}
 	
     @Callback(direct = true)
@@ -336,14 +337,14 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
     @Optional.Method(modid="OpenComputers")
     public Object[] play(Context context, Arguments args) {
     	switchState(State.PLAYING);
-    	return null;
+    	return new Object[]{storage != null};
     }
 
     @Callback
     @Optional.Method(modid="OpenComputers")
     public Object[] stop(Context context, Arguments args) {
     	switchState(State.STOPPED);
-    	return null;
+    	return new Object[]{storage != null};
     }
     
     @Callback
@@ -368,7 +369,7 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
     @Optional.Method(modid="ComputerCraft")
 	public String[] getMethodNames() {
 		// TODO Auto-generated method stub
-		return new String[]{};
+		return new String[]{"isEnd", "isReady", "getSize", "getLabel", "getState", "setLabel", "setSpeed", "setVolume", "seek", "read", "write", "play", "stop"};
 	}
 
 	@Override
@@ -376,7 +377,63 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
 	public Object[] callMethod(IComputerAccess computer, ILuaContext context,
 			int method, Object[] arguments) throws LuaException,
 			InterruptedException {
-		// TODO Auto-generated method stub
+		// methods which take strings and do something
+		if(arguments.length == 1 && (arguments[0] instanceof String)) {
+			switch(method) {
+			case 5: setLabel((String)arguments[0]); break;
+			case 10: if(storage != null) return new Object[]{storage.write(((String)arguments[0]).getBytes())}; break;
+			}
+		}
+		
+		// methods which take floats and do something
+		if(arguments.length == 1 && (arguments[0] instanceof Float)) {
+			float f = ((Float)arguments[0]).floatValue();
+			switch(method) {
+			case 6: return new Object[]{this.setSpeed(f)};
+			case 7: this.setVolume(f); return null;
+			}
+		}
+
+		// methods which take integers and do something
+		if(arguments.length == 1 && (arguments[0] instanceof Integer)) {
+			int i = ((Integer)arguments[0]).intValue();
+			switch(method) {
+			case 8: if(storage != null) return new Object[]{storage.seek(i)};
+			case 10: if(storage != null) storage.write((byte)i);
+			case 9: if(storage != null) {
+				if(i >= 256) i = 256;
+				byte[] data = new byte[i];
+				storage.read(data, false);
+				return new Object[]{new String(data)};
+			}
+			}
+		}
+
+		// methods which don't take any arguments and do something
+		switch(method) {
+		case 11: switchState(State.PLAYING);
+		case 12: switchState(State.STOPPED);
+		}
+		
+		// returns for the methods which didn't return something before
+		switch(method) {
+		case 0: if(storage != null) return new Object[]{storage.getPosition() + packetSize <= storage.getSize()};
+		
+		case 1:  // isReady, play, stop
+		case 11:
+		case 12: return new Object[]{storage != null};
+		
+		case 2: return new Object[]{(storage != null ? storage.getSize() : 0)};
+		
+		case 3: // getLabel, setLabel
+		case 5: return new Object[]{(storage != null ? storageName : "")};
+		
+		case 4: return new Object[]{state.toString()};
+		
+		case 9: if(storage != null) return new Object[]{(int)storage.read() & 0xFF};
+		}
+		
+		// catch all other methods
 		return null;
 	}
 
