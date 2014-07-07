@@ -11,7 +11,8 @@ import li.cil.oc.api.network.Environment;
 import li.cil.oc.api.network.SimpleComponent;
 import pl.asie.lib.block.TileEntityBase;
 
-public class TileIronNote extends TileEntityPeripheralBase {
+@Optional.Interface(iface = "li.cil.li.oc.network.Environment", modid = "OpenComputers")
+public class TileIronNote extends TileEntityPeripheralBase implements Environment {
 	public TileIronNote() {
 		super("iron_noteblock");
 	}
