@@ -30,9 +30,13 @@ public class TileCamera extends TileEntityPeripheralBase {
 	@Override
 	public boolean canUpdate() { return true; }
 	
+	private ForgeDirection getFacingDirection() {
+		return Computronics.instance.camera.getFacingDirection(worldObj, xCoord, yCoord, zCoord);
+	}
+	
 	@Override
 	public int requestCurrentRedstoneValue(int side) {
-		ForgeDirection dir = Computronics.instance.camera.getFacingDirection(worldObj, xCoord, yCoord, zCoord);
+		ForgeDirection dir = getFacingDirection();
 		cameraRedstone.reset();
 		cameraRedstone.setRayDirection(worldObj, xCoord, yCoord, zCoord, dir, 0.0f, 0.0f);
 		double distance = cameraRedstone.getDistance();
@@ -56,8 +60,7 @@ public class TileCamera extends TileEntityPeripheralBase {
     public Object[] setRayDirection(Context context, Arguments args) {
     	if(args.count() == 2) {
     		return new Object[]{
-    			camera.setRayDirection(worldObj, xCoord, yCoord, zCoord,
-    					Computronics.instance.camera.getFacingDirection(worldObj, xCoord, yCoord, zCoord),
+    			camera.setRayDirection(worldObj, xCoord, yCoord, zCoord, getFacingDirection(),
     					(float)args.checkDouble(0), (float)args.checkDouble(1))
     		};
     	}
@@ -91,8 +94,7 @@ public class TileCamera extends TileEntityPeripheralBase {
 			InterruptedException {
     	if(arguments.length == 2 && arguments[0] instanceof Float && arguments[1] instanceof Float) {
     		return new Object[]{
-    			camera.setRayDirection(worldObj, xCoord, yCoord, zCoord,
-    					Computronics.instance.camera.getFacingDirection(worldObj, xCoord, yCoord, zCoord),
+    			camera.setRayDirection(worldObj, xCoord, yCoord, zCoord, getFacingDirection(),
     					((Float)arguments[0]).floatValue(), ((Float)arguments[1]).floatValue())
     		};
     	}
@@ -104,8 +106,11 @@ public class TileCamera extends TileEntityPeripheralBase {
 		}
 		return null;
 	}
+	
+	private float _nedo_xDir, _nedo_yDir;
 
 	@Override
+    @Optional.Method(modid="nedocomputers")
 	public short busRead(int addr) {
 		switch((addr & 0xFFFE)) {
 		case 4: return ((short)(camera.getDistance() * 64));
@@ -114,6 +119,14 @@ public class TileCamera extends TileEntityPeripheralBase {
 	}
 
 	@Override
+    @Optional.Method(modid="nedocomputers")
 	public void busWrite(int addr, short data) {
+		float dataAsDir = (data / 32768.0F);
+		switch((addr & 0xFFFE)) {
+		case 0: _nedo_xDir = dataAsDir; break;
+		case 2: _nedo_yDir = dataAsDir; break;
+		}
+		if(addr < 4)
+			camera.setRayDirection(worldObj, xCoord, yCoord, zCoord, getFacingDirection(), _nedo_xDir, _nedo_yDir);
 	}
 }

@@ -58,7 +58,7 @@ public class RobotUpgradeRadar extends ManagedEnvironment {
 		context.pause(0.5);
 			
 		// Suck some power
-		((Connector) this.node).tryChangeBuffer(0 - (Computronics.RADAR_ENERGY_COST * distance * 2));
+		((Connector) this.node).tryChangeBuffer(0 - (Computronics.RADAR_OC_ENERGY_COST * distance * 2));
 		
 		// The returned array is treated as a tuple, meaning if we return the
 		// entities as an array directly, we'd end up with each entity as an
@@ -77,7 +77,7 @@ public class RobotUpgradeRadar extends ManagedEnvironment {
 		entities.addAll(RadarUtils.getEntities(((TileEntity)container).getWorldObj(), (int)container.xPosition(), (int)container.yPosition(), (int)container.zPosition(), bounds, EntityPlayer.class));
 		context.pause(0.5);
 		// Suck some power
-		((Connector) this.node).tryChangeBuffer(0 - (Computronics.RADAR_ENERGY_COST * distance));
+		((Connector) this.node).tryChangeBuffer(0 - (Computronics.RADAR_OC_ENERGY_COST * distance));
 		
         return new Object[]{entities.toArray()};
     }
@@ -90,7 +90,7 @@ public class RobotUpgradeRadar extends ManagedEnvironment {
 		entities.addAll(RadarUtils.getEntities(((TileEntity)container).getWorldObj(), (int)container.xPosition(), (int)container.yPosition(), (int)container.zPosition(), bounds, EntityLiving.class));
 		context.pause(0.5);
 		// Suck some power
-		((Connector) this.node).tryChangeBuffer(0 - (Computronics.RADAR_ENERGY_COST * distance));
+		((Connector) this.node).tryChangeBuffer(0 - (Computronics.RADAR_OC_ENERGY_COST * distance));
 		
         return new Object[]{entities.toArray()};
     }

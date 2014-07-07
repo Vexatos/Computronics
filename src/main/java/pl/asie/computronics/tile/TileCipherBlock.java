@@ -142,11 +142,13 @@ public class TileCipherBlock extends TileEntityPeripheralInventory {
 	}
 
 	@Override
+    @Optional.Method(modid="nedocomputers")
 	public short busRead(int addr) {
 		return 0;
 	}
 
 	@Override
+    @Optional.Method(modid="nedocomputers")
 	public void busWrite(int addr, short data) {
 	}
 }

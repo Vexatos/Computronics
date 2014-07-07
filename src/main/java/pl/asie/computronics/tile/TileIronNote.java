@@ -84,11 +84,13 @@ public class TileIronNote extends TileEntityPeripheralBase {
 	}
 
 	@Override
+    @Optional.Method(modid="nedocomputers")
 	public short busRead(int addr) {
 		return 0;
 	}
 
 	@Override
+    @Optional.Method(modid="nedocomputers")
 	public void busWrite(int addr, short data) {
 		playNote((data >> 5), (data & 31));
 	}
