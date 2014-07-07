@@ -3,6 +3,7 @@ package pl.asie.computronics.item;
 import java.util.List;
 
 import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dan200.computercraft.api.filesystem.IMount;
@@ -23,6 +24,10 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 
+@Optional.InterfaceList({
+	@Optional.Interface(iface = "dan200.computercraft.api.media.IMediaProvider", modid = "ComputerCraft"),
+	@Optional.Interface(iface = "dan200.computercraft.api.media.IMedia", modid = "ComputerCraft")
+})
 public class ItemTape extends Item implements IItemStorage, IMedia, IMediaProvider {
 	public static final int L_SECOND = 4096;
 	public static final int L_MINUTE = 4096*60;
