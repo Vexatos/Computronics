@@ -19,140 +19,60 @@ import pl.asie.computronics.Computronics;
 import pl.asie.computronics.Packets;
 import pl.asie.computronics.api.IItemStorage;
 import pl.asie.computronics.item.ItemTape;
+import pl.asie.computronics.tape.TapeDriveState.State;
 import pl.asie.computronics.tile.TileEntityPeripheralInventory;
 import pl.asie.lib.audio.DFPWM;
 import pl.asie.lib.block.TileEntityInventory;
 import pl.asie.lib.network.Packet;
 
 public class TileTapeDrive extends TileEntityPeripheralInventory {
-	public enum State {
-		STOPPED,
-		PLAYING,
-		REWINDING,
-		FORWARDING
-	}
-	
-	private State state = State.STOPPED;
-	private Storage storage;
 	private String storageName = "";
-	private int codecId, codecTick, packetId;
-	private int packetSize = 1024;
-	private int soundVolume = 127;
+	private TapeDriveState state;
 	
 	public TileTapeDrive() {
 		super("tape_drive");
-	}
-	
-	private boolean setSpeed(float speed) {
-		if(speed < 0.25F || speed > 2.0F) return false;
-		this.packetSize = Math.round(1024*speed);
-		return true;
-	}
-	
-	private void setVolume(float volume) {
-		if(volume < 0.0F) volume = 0.0F;
-		if(volume > 1.0F) volume = 1.0F;
-		this.soundVolume = (int)Math.floor(volume*127);
+		this.state = new TapeDriveState();
 	}
 	
 	// GUI/State
-	
+
 	private void sendState() {
 		if(worldObj.isRemote) return;
 		try {
 			Packet packet = Computronics.packet.create(Packets.PACKET_TAPE_GUI_STATE)
 					.writeTileLocation(this)
-					.writeByte((byte)state.ordinal());
+					.writeByte((byte)state.getState().ordinal());
 					//.writeByte((byte)soundVolume);
 			Computronics.packet.sendToAllAround(packet, this, 64.0D);
 		} catch(Exception e) { e.printStackTrace(); }
 	}
 	
-	public void switchState(State newState) {
-		if(worldObj.isRemote) { // Client-side happening
-			if(newState == state) return;
-		}
-		if(!worldObj.isRemote) { // Server-side happening
-			if(this.storage == null) newState = State.STOPPED;
-			if(state == State.PLAYING) { // State is playing - stop playback
-				Computronics.instance.audio.removePlayer(codecId);
-				try {
-					Packet pkt = Computronics.packet.create(Packets.PACKET_AUDIO_STOP)
-						.writeInt(codecId);
-					Computronics.packet.sendToAll(pkt);
-				} catch(Exception e) { e.printStackTrace(); }
-			}
-			if(newState == State.PLAYING) { // Time to play again!
-				codecId = Computronics.instance.audio.newPlayer();
-				Computronics.instance.audio.getPlayer(codecId);
-				codecTick = 0;
-				packetId = 0;
-			}
-		}
-		state = newState;
-		sendState();
-	}
-	
-	public State getState() {
-		return state;
-	}
-
-	// Packet handling
-	
-	private void sendMusicPacket() {
-		byte[] packet = new byte[packetSize];
-		int amount = storage.read(packet, 0, false); // read data into packet array
-		try {
-			Packet pkt = Computronics.packet.create(Packets.PACKET_AUDIO_DATA)
-				.writeTileLocation(this)
-				.writeInt(packetId++)
-				.writeInt(codecId)
-				.writeShort((short)packetSize)
-				.writeByte((byte)soundVolume)
-				.writeByteArrayData(packet);
-			Computronics.packet.sendToAllAround(pkt, this, 64.0D);
-		} catch(Exception e) { e.printStackTrace(); }
-		if(amount < packetSize) switchState(State.STOPPED);
-	}
-	
 	// Logic
+	public State getEnumState() { return this.state.getState(); }
 	
+	public void switchState(State s) {
+		this.state.switchState(worldObj, xCoord, yCoord, zCoord, s);
+	}
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
-		if(!worldObj.isRemote) {
-			switch(state) {
-				case PLAYING: {
-					if(codecTick % 5 == 0) sendMusicPacket();
-					codecTick++;
-				} break;
-				case REWINDING: {
-					int seeked = storage.seek(-2048);
-					if(seeked > -2048) switchState(State.STOPPED);
-				} break;
-				case FORWARDING: {
-					int seeked = storage.seek(2048);
-					if(seeked < 2048) switchState(State.STOPPED);
-				} break;	
-				case STOPPED: {
-				} break;
-			}
+		Packet pkt = state.update(worldObj, xCoord, yCoord, zCoord);
+		if(pkt != null) {
+			Computronics.packet.sendToAllAround(pkt, this, Computronics.TAPEDRIVE_DISTANCE * 2);
 		}
 	}
 	
 	// Minecraft boilerplate
 	
     private void setLabel(String label) {
-		if(storage != null) {
-			ItemStack stack = this.getStackInSlot(0);
-			if(stack != null && stack.getTagCompound() != null) {
-				if(label.length() == 0 && stack.getTagCompound().hasKey("label")) {
-					stack.getTagCompound().removeTag("label");
-				} else if(label.length() > 0) {
-					stack.getTagCompound().setString("label", label);
-				}
-				storageName = label;
+		ItemStack stack = this.getStackInSlot(0);
+		if(stack != null && stack.getTagCompound() != null) {
+			if(label.length() == 0 && stack.getTagCompound().hasKey("label")) {
+				stack.getTagCompound().removeTag("label");
+			} else if(label.length() > 0) {
+				stack.getTagCompound().setString("label", label);
 			}
+			storageName = label;
 		}
 	}
 	
@@ -187,13 +107,13 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
 	private void loadStorage() {
 		if(worldObj != null && worldObj.isRemote) return;
 		
-		if(storage != null) unloadStorage();
+		if(state.getStorage() != null) unloadStorage();
 		ItemStack stack = this.getStackInSlot(0);
 		if(stack != null) {
 			// Get Storage.
 			Item item = stack.getItem();
 			if(item instanceof IItemStorage) {
-				storage = ((IItemStorage)item).getStorage(stack);
+				state.setStorage(((IItemStorage)item).getStorage(stack));
 			}
 			
 			// Get possible label.
@@ -205,19 +125,19 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
 	}
     
 	private void unloadStorage() {
-		if(worldObj.isRemote || storage == null) return;
+		if(worldObj.isRemote || state.getStorage() == null) return;
 		
 		switchState(State.STOPPED);
 		try {
-			storage.writeFileIfModified();
+			state.getStorage().writeFileIfModified();
 		} catch(Exception e) { e.printStackTrace(); }
-		storage = null;
+		state.setStorage(null);
 	}
 	
 	@Override
 	public void onInventoryUpdate(int slot) {
 		if(this.getStackInSlot(0) == null) {
-			if(slot == 0 && storage != null) { // Tape was inserted
+			if(slot == 0 && state.getStorage() != null) { // Tape was inserted
 				// Play eject sound
 				worldObj.playSoundEffect(xCoord, yCoord, zCoord, "computronics:tape_eject", 1, 0);
 			}
@@ -251,38 +171,38 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
 	@Override
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
-		if(tag.hasKey("state")) this.state = State.values()[tag.getByte("state")];
-		if(tag.hasKey("sp")) this.packetSize = tag.getShort("sp");
-		if(tag.hasKey("vo")) this.soundVolume = tag.getByte("vo"); else this.soundVolume = 127;
+		if(tag.hasKey("state")) this.state.setState(State.values()[tag.getByte("state")]);
+		if(tag.hasKey("sp")) this.state.packetSize = tag.getShort("sp");
+		if(tag.hasKey("vo")) this.state.soundVolume = tag.getByte("vo"); else this.state.soundVolume = 127;
 		loadStorage();
 	}
 	
 	@Override
 	public void writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
-		tag.setShort("sp", (short)this.packetSize);
-		tag.setByte("state", (byte)this.state.ordinal());
-		if(this.soundVolume != 127) tag.setByte("vo", (byte)this.soundVolume);
+		tag.setShort("sp", (short)this.state.packetSize);
+		tag.setByte("state", (byte)this.state.getState().ordinal());
+		if(this.state.soundVolume != 127) tag.setByte("vo", (byte)this.state.soundVolume);
 	}
 	
 	// OpenComputers
 	@Callback(direct = true)
     @Optional.Method(modid="OpenComputers")
 	public Object[] isEnd(Context context, Arguments args) {
-		if(storage != null) return new Object[]{storage.getPosition() + packetSize <= storage.getSize()};
+		if(state.getStorage() != null) return new Object[]{state.getStorage().getPosition() + state.packetSize <= state.getStorage().getSize()};
 		else return new Object[]{true};
 	}
 	
     @Callback(direct = true)
     @Optional.Method(modid="OpenComputers")
     public Object[] isReady(Context context, Arguments args) {
-    	return new Object[]{storage != null};
+    	return new Object[]{state.getStorage() != null};
     }
     
     @Callback(direct = true)
     @Optional.Method(modid="OpenComputers")
     public Object[] getSize(Context context, Arguments args) {
-    	return new Object[]{(storage != null ? storage.getSize() : 0)};
+    	return new Object[]{(state.getStorage() != null ? state.getStorage().getSize() : 0)};
     }
     
     @Callback
@@ -291,20 +211,20 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
     	if(args.count() == 1) {
     		if(args.isString(0)) setLabel(args.checkString(0));
     	}
-    	return new Object[]{(storage != null ? storageName : "")};
+    	return new Object[]{(state.getStorage() != null ? storageName : "")};
     }
     
     @Callback
     @Optional.Method(modid="OpenComputers")
     public Object[] getLabel(Context context, Arguments args) {
-    	return new Object[]{(storage != null ? storageName : "")};
+    	return new Object[]{(state.getStorage() != null ? storageName : "")};
     }
 
 	@Callback
     @Optional.Method(modid="OpenComputers")
     public Object[] seek(Context context, Arguments args) {
-    	if(storage != null && args.count() >= 1 && args.isInteger(0)) {
-    		return new Object[]{storage.seek(args.checkInteger(0))};
+    	if(state.getStorage() != null && args.count() >= 1 && args.isInteger(0)) {
+    		return new Object[]{state.getStorage().seek(args.checkInteger(0))};
     	}
     	return null;
     }
@@ -312,23 +232,23 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
     @Callback
     @Optional.Method(modid="OpenComputers")
     public Object[] read(Context context, Arguments args) {
-    	if(storage != null) {
+    	if(state.getStorage() != null) {
     		if(args.count() >= 1 && args.isInteger(0) && (args.checkInteger(0) >= 0)) {
     			byte[] data = new byte[args.checkInteger(0)];
-    			storage.read(data, false);
+    			state.getStorage().read(data, false);
     			return new Object[]{data};
-    		} else return new Object[]{(int)storage.read() & 0xFF};
+    		} else return new Object[]{(int)state.getStorage().read() & 0xFF};
     	} else return null;
     }
     
     @Callback
     @Optional.Method(modid="OpenComputers")
     public Object[] write(Context context, Arguments args) {
-    	if(storage != null && args.count() >= 1) {
+    	if(state.getStorage() != null && args.count() >= 1) {
     		if(args.isInteger(0))
-    			storage.write((byte)args.checkInteger(0));
+    			state.getStorage().write((byte)args.checkInteger(0));
     		else if(args.isByteArray(0))
-    			storage.write(args.checkByteArray(0));
+    			state.getStorage().write(args.checkByteArray(0));
     	}
     	return null;
     }
@@ -337,25 +257,25 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
     @Optional.Method(modid="OpenComputers")
     public Object[] play(Context context, Arguments args) {
     	switchState(State.PLAYING);
-    	return new Object[]{storage != null};
+    	return new Object[]{state.getStorage() != null};
     }
 
     @Callback
     @Optional.Method(modid="OpenComputers")
     public Object[] stop(Context context, Arguments args) {
     	switchState(State.STOPPED);
-    	return new Object[]{storage != null};
+    	return new Object[]{state.getStorage() != null};
     }
     
     @Callback
     public Object[] setSpeed(Context context, Arguments args) {
-    	if(args.count() > 0 && args.isDouble(0)) return new Object[]{this.setSpeed((float)args.checkDouble(0))};
+    	if(args.count() > 0 && args.isDouble(0)) return new Object[]{this.state.setSpeed((float)args.checkDouble(0))};
     	else return null;
     }
     
     @Callback
     public Object[] setVolume(Context context, Arguments args) {
-    	if(args.count() > 0 && args.isDouble(0)) this.setVolume((float)args.checkDouble(0));
+    	if(args.count() > 0 && args.isDouble(0)) this.state.setVolume((float)args.checkDouble(0));
     	return null;
     }
     
@@ -381,7 +301,7 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
 		if(arguments.length == 1 && (arguments[0] instanceof String)) {
 			switch(method) {
 			case 5: setLabel((String)arguments[0]); break;
-			case 10: if(storage != null) return new Object[]{storage.write(((String)arguments[0]).getBytes())}; break;
+			case 10: if(state.getStorage() != null) return new Object[]{state.getStorage().write(((String)arguments[0]).getBytes())}; break;
 			}
 		}
 		
@@ -389,8 +309,8 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
 		if(arguments.length == 1 && (arguments[0] instanceof Float)) {
 			float f = ((Float)arguments[0]).floatValue();
 			switch(method) {
-			case 6: return new Object[]{this.setSpeed(f)};
-			case 7: this.setVolume(f); return null;
+			case 6: return new Object[]{this.state.setSpeed(f)};
+			case 7: this.state.setVolume(f); return null;
 			}
 		}
 
@@ -398,12 +318,12 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
 		if(arguments.length == 1 && (arguments[0] instanceof Integer)) {
 			int i = ((Integer)arguments[0]).intValue();
 			switch(method) {
-			case 8: if(storage != null) return new Object[]{storage.seek(i)};
-			case 10: if(storage != null) storage.write((byte)i);
-			case 9: if(storage != null) {
+			case 8: if(state.getStorage() != null) return new Object[]{state.getStorage().seek(i)};
+			case 10: if(state.getStorage() != null) state.getStorage().write((byte)i);
+			case 9: if(state.getStorage() != null) {
 				if(i >= 256) i = 256;
 				byte[] data = new byte[i];
-				storage.read(data, false);
+				state.getStorage().read(data, false);
 				return new Object[]{new String(data)};
 			}
 			}
@@ -417,20 +337,20 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
 		
 		// returns for the methods which didn't return something before
 		switch(method) {
-		case 0: if(storage != null) return new Object[]{storage.getPosition() + packetSize <= storage.getSize()};
+		case 0: if(state.getStorage() != null) return new Object[]{state.getStorage().getPosition() + state.packetSize <= state.getStorage().getSize()};
 		
 		case 1:  // isReady, play, stop
 		case 11:
-		case 12: return new Object[]{storage != null};
+		case 12: return new Object[]{state.getStorage() != null};
 		
-		case 2: return new Object[]{(storage != null ? storage.getSize() : 0)};
+		case 2: return new Object[]{(state.getStorage() != null ? state.getStorage().getSize() : 0)};
 		
 		case 3: // getLabel, setLabel
-		case 5: return new Object[]{(storage != null ? storageName : "")};
+		case 5: return new Object[]{(state.getStorage() != null ? storageName : "")};
 		
 		case 4: return new Object[]{state.toString()};
 		
-		case 9: if(storage != null) return new Object[]{(int)storage.read() & 0xFF};
+		case 9: if(state.getStorage() != null) return new Object[]{(int)state.getStorage().read() & 0xFF};
 		}
 		
 		// catch all other methods
@@ -441,12 +361,12 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
     @Optional.Method(modid="nedocomputers")
 	public short busRead(int addr) {
 		switch(addr & 0xFFFE) {
-		case 0: return (short)state.ordinal();
+		case 0: return (short)state.getState().ordinal();
 		case 2: return 0; // speed?
-		case 4: return (short)soundVolume;
-		case 6: return (storage != null ? (short)(storage.getSize() / ItemTape.L_MINUTE) : 0);
+		case 4: return (short)state.soundVolume;
+		case 6: return (state.getStorage() != null ? (short)(state.getStorage().getSize() / ItemTape.L_MINUTE) : 0);
 		case 8: return 0; // seek!
-		case 10: return (storage != null ? (short)storage.read() : 0);
+		case 10: return (state.getStorage() != null ? (short)state.getStorage().read() : 0);
 		}
 		return 0;
 	}
@@ -455,12 +375,12 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
     @Optional.Method(modid="nedocomputers")
 	public void busWrite(int addr, short data) {
 		switch(addr & 0xFFFE) {
-		case 0: state = State.values()[data % State.values().length]; break;
+		case 0: state.setState(State.values()[data % State.values().length]); break;
 		case 2: break; // speed?
-		case 4: soundVolume = Math.max(0, Math.min(data, 127)); break;
+		case 4:state. soundVolume = Math.max(0, Math.min(data, 127)); break;
 		case 6: break; // tape size is read-only!
-		case 8: storage.seek(data); break;
-		case 10: if(storage != null) storage.write((byte)(data & 0xFF)); break;
+		case 8: state.getStorage().seek(data); break;
+		case 10: if(state.getStorage() != null) state.getStorage().write((byte)(data & 0xFF)); break;
 		}
 	}
 }

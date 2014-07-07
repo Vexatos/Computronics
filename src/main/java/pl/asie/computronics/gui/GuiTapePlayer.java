@@ -12,7 +12,7 @@ import pl.asie.computronics.Computronics;
 import pl.asie.computronics.Packets;
 import pl.asie.computronics.item.ItemTape;
 import pl.asie.computronics.tape.TileTapeDrive;
-import pl.asie.computronics.tape.TileTapeDrive.State;
+import pl.asie.computronics.tape.TapeDriveState.State;
 import pl.asie.lib.block.ContainerBase;
 import pl.asie.lib.gui.GuiBase;
 import pl.asie.lib.network.Packet;
@@ -115,7 +115,7 @@ public class GuiTapePlayer extends GuiBase {
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
 		// Update state from TileEntity
-		this.state = ((TileTapeDrive)this.container.getEntity()).getState();
+		this.state = ((TileTapeDrive)this.container.getEntity()).getEnumState();
 		
 		super.drawGuiContainerBackgroundLayer(f, i, j);
 

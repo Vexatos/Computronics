@@ -9,7 +9,7 @@ import paulscode.sound.SoundBuffer;
 import paulscode.sound.SoundSystem;
 import pl.asie.computronics.gui.GuiTapePlayer;
 import pl.asie.computronics.tape.TileTapeDrive;
-import pl.asie.computronics.tape.TileTapeDrive.State;
+import pl.asie.computronics.tape.TapeDriveState.State;
 import pl.asie.lib.AsieLibMod;
 import pl.asie.lib.audio.DFPWM;
 import pl.asie.lib.audio.StreamingAudioPlayer;

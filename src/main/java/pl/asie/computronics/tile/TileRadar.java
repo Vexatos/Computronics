@@ -126,6 +126,7 @@ public class TileRadar extends TileEntityPeripheralBase implements Environment {
 		public void run() {
 			try {
 				while(i < distance) {
+					Thread.sleep((long)(Computronics.RADAR_CC_TIME * 1000));
 					i++;
 					for(Map m: entities) {
 						int entityD = ((Integer)m.get("distance")).intValue();
@@ -137,7 +138,6 @@ public class TileRadar extends TileEntityPeripheralBase implements Environment {
 							}
 						}
 					}
-					Thread.sleep((long)(Computronics.RADAR_CC_TIME * 1000));
 				}
 			} catch(Exception e) {
 				e.printStackTrace();
