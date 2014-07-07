@@ -94,6 +94,7 @@ public class Computronics {
 	public static boolean RADAR_ONLY_DISTANCE = false;
 	public static double RADAR_OC_ENERGY_COST = 5.0;
 	public static double RADAR_CC_TIME = 0.5;
+	public static double FX_ENERGY_COST = 0.5;
 	public static String CHATBOX_PREFIX = "ChatBox";
 
 	public static String TAPE_LENGTHS;
@@ -147,6 +148,7 @@ public class Computronics {
 		}
 		if(Loader.isModLoaded("OpenComputers")) {
 			RADAR_OC_ENERGY_COST = config.get("opencomputers", "radarEnergyPerDistanceUnit", 50.0).getDouble(50.0);
+			FX_ENERGY_COST = config.get("opencomputers", "particleEnergyCost", 0.5).getDouble(0.5);
 		}
 		
 		config.get("camera", "sendRedstoneSignal", true).comment = "Setting this to false might help Camera tick lag issues, at the cost of making them useless with redstone circuitry.";
