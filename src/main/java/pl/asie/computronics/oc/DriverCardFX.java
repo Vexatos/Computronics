@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import li.cil.oc.api.driver.Container;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.util.ParticleUtils;
 
 import java.util.Random;
 
@@ -40,7 +41,7 @@ public class DriverCardFX extends ManagedEnvironment {
         double y = container.yCoord + 0.5 + args.checkDouble(2);
         double z = container.zCoord + 0.5 + args.checkDouble(3);
         double velocity = args.count() > 4 ? args.checkDouble(4) : (container.getWorldObj().rand.nextDouble() * 0.1);
-        Computronics.sendParticlePacket(name, container.getWorldObj().provider.dimensionId, x, y, z, velocity * rng.nextGaussian(), velocity * rng.nextGaussian(), velocity * rng.nextGaussian());
+        ParticleUtils.sendParticlePacket(name, container.getWorldObj(), x, y, z, velocity * rng.nextGaussian(), velocity * rng.nextGaussian(), velocity * rng.nextGaussian());
 		((Connector) this.node).tryChangeBuffer(0 - Computronics.FX_ENERGY_COST);
         return new Object[]{true};
     }

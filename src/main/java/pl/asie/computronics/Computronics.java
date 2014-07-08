@@ -216,9 +216,6 @@ public class Computronics {
 		gui = new GuiHandler();
 		NetworkRegistry.INSTANCE.registerGuiHandler(Computronics.instance, gui);
 		
-		channel = NetworkRegistry.INSTANCE.newEventDrivenChannel("Computronics");
-		channel.register(this);
-		
 		MinecraftForge.EVENT_BUS.register(new ChatBoxHandler());
 		
 		proxy.registerGuis(gui);
@@ -283,33 +280,4 @@ public class Computronics {
 	public void serverStart(FMLServerAboutToStartEvent event) {
 		Computronics.storage = new StorageManager();
 	}
-	
-	public static void sendParticlePacket(String name, int dimension, double x, double y, double z, double vx, double vy, double vz) {
-        ByteBuf data = Unpooled.buffer();
-        byte[] nameBytes = name.getBytes();
-        data.writeShort(nameBytes.length);
-        data.writeBytes(nameBytes);
-        data.writeFloat((float) x);
-        data.writeFloat((float) y);
-        data.writeFloat((float) z);
-        data.writeFloat((float) vx);
-        data.writeFloat((float) vy);
-        data.writeFloat((float) vz);
-        channel.sendToAllAround(new FMLProxyPacket(data, "Computronics"), new NetworkRegistry.TargetPoint(dimension, x, y, z, 64));
-    }
-
-    @SubscribeEvent
-    public void onPacket(FMLNetworkEvent.ClientCustomPacketEvent event) {
-        ByteBuf data = event.packet.payload();
-        int nameLength = data.readShort();
-        String name = new String(data.readBytes(nameLength).array());
-        double x = data.readFloat();
-        double y = data.readFloat();
-        double z = data.readFloat();
-        double vx = data.readFloat();
-        double vy = data.readFloat();
-        double vz = data.readFloat();
-        Minecraft.getMinecraft().thePlayer.getEntityWorld().spawnParticle(name, x, y, z, vx, vy, vz);
-    }
-	
 }

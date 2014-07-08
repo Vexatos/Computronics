@@ -1,5 +1,7 @@
 package pl.asie.computronics;
 
+import io.netty.buffer.ByteBuf;
+
 import java.io.IOException;
 
 import javax.sound.sampled.AudioFormat;
@@ -75,6 +77,16 @@ public class NetworkHandlerClient extends MessageHandlerBase {
 			case Packets.PACKET_AUDIO_STOP: {
 				int codecId = packet.readInt();
 				Computronics.instance.audio.removePlayer(codecId);
+			} break;
+			case Packets.PACKET_PARTICLE_SPAWN: {
+		        double x = packet.readFloat();
+		        double y = packet.readFloat();
+		        double z = packet.readFloat();
+		        double vx = packet.readFloat();
+		        double vy = packet.readFloat();
+		        double vz = packet.readFloat();
+		        String name = packet.readString();
+		        Minecraft.getMinecraft().thePlayer.getEntityWorld().spawnParticle(name, x, y, z, vx, vy, vz);
 			} break;
 		}
 	}
