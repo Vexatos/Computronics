@@ -5,14 +5,18 @@ tile.computronics.chatBox.name=Chat-Box
 tile.computronics.chatBox.creative.name=Kreative Chat-Box
 tile.computronics.sorter.name=Sortierer
 tile.computronics.cipher.name=Chiffrierblock
+tile.computronics.radar.name=Radarblock
 
-tooltip.computronics.chatBox.creative=NSA f��r zu Hause!
-tooltip.computronics.tape.length=L��nge: %s Minuten
+tooltip.computronics.chatBox.creative=NSA für zu Hause!
+tooltip.computronics.tape.length=Länge: %s Minuten
 tooltip.computronics.tape.balanced=Ausgewogener Preis!
 tooltip.computronics.tape.unnamed=Unbenanntes Band
 tooltip.computronics.tape.none=Kein Band
 
 item.computronics.robot_upgrade_camera.name=Kamera-Upgrade
+item.computronics.robot_upgrade_chatbox.name=Chat-Upgrade
+item.computronics.robot_upgrade_radar.name=Radar-Upgrade
+item.computronics.card_fx.name=Partikeleffektkarte
 item.computronics.part_tape_track.name=Bandspur
 item.computronics.tape.name=Kasettenband
 
