@@ -307,7 +307,7 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
 	@Optional.Method(modid="OpenComputers")
     public void onConnect(final Node node) {
     	super.onConnect(node);
-    	node.connect(oc_fs.node());
+    	if (node != oc_fs.node()) node.connect(oc_fs.node());
     }
 
     @Override
