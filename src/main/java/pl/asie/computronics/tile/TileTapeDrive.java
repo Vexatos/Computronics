@@ -10,10 +10,12 @@ import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import li.cil.oc.api.network.Arguments;
 import li.cil.oc.api.network.Callback;
+import li.cil.oc.api.network.Component;
 import li.cil.oc.api.network.Context;
 import li.cil.oc.api.network.ManagedEnvironment;
 import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.SimpleComponent;
+import li.cil.oc.api.network.Visibility;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundManager;
 import net.minecraft.client.audio.SoundPoolEntry;
@@ -36,7 +38,7 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
 	public TileTapeDrive() {
 		super("tape_drive");
 		this.state = new TapeDriveState();
-		if(Loader.isModLoaded("OpenComputers")) {
+		if(Loader.isModLoaded("OpenComputers") && node != null) {
 			initOCFilesystem();
 		}
 	}
@@ -47,6 +49,7 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
 	private void initOCFilesystem() {
 		oc_fs = li.cil.oc.api.FileSystem.asManagedEnvironment(li.cil.oc.api.FileSystem.fromClass(Computronics.class, "computronics", "ocfs/tape"),
 				"tape_drive");
+		((Component)oc_fs.node()).setVisibility(Visibility.Network);
 	}
 	
 	// GUI/State
@@ -301,20 +304,6 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
     @Optional.Method(modid="OpenComputers")
     public Object[] getState(Context context, Arguments args) {
     	return new Object[]{state.toString()};
-    }
-    
-    @Override
-	@Optional.Method(modid="OpenComputers")
-    public void onConnect(final Node node) {
-    	super.onConnect(node);
-    	if (node != oc_fs.node()) node.connect(oc_fs.node());
-    }
-
-    @Override
-	@Optional.Method(modid="OpenComputers")
-    public void onDisconnect(final Node node) {
-    	super.onDisconnect(node);
-    	node.disconnect(oc_fs.node());
     }
     
 	@Override
