@@ -64,6 +64,12 @@ import cpw.mods.fml.common.network.FMLEventChannel;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import dan200.computercraft.api.ComputerCraftAPI;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+import net.minecraft.client.Minecraft;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.network.FMLNetworkEvent;
+import cpw.mods.fml.common.network.internal.FMLProxyPacket;
 
 @Mod(modid="computronics", name="Computronics", version="0.5.0", dependencies="required-after:asielib;after:ComputerCraft;after:OpenComputers;after:OpenComputers|Core;after:BuildCraft|Core")
 public class Computronics {
@@ -88,6 +94,7 @@ public class Computronics {
 	public static boolean RADAR_ONLY_DISTANCE = false;
 	public static double RADAR_OC_ENERGY_COST = 5.0;
 	public static double RADAR_CC_TIME = 0.5;
+	public static double FX_ENERGY_COST = 0.5;
 	public static String CHATBOX_PREFIX = "ChatBox";
 
 	public static String TAPE_LENGTHS;
@@ -141,6 +148,7 @@ public class Computronics {
 		}
 		if(Loader.isModLoaded("OpenComputers")) {
 			RADAR_OC_ENERGY_COST = config.get("opencomputers", "radarEnergyPerDistanceUnit", 50.0).getDouble(50.0);
+			FX_ENERGY_COST = config.get("opencomputers", "particleEnergyCost", 0.5).getDouble(0.5);
 		}
 		
 		config.get("camera", "sendRedstoneSignal", true).comment = "Setting this to false might help Camera tick lag issues, at the cost of making them useless with redstone circuitry.";
@@ -269,5 +277,32 @@ public class Computronics {
 		Computronics.storage = new StorageManager();
 	}
 	
+	public static void sendParticlePacket(String name, int dimension, double x, double y, double z, double vx, double vy, double vz) {
+        ByteBuf data = Unpooled.buffer();
+        byte[] nameBytes = name.getBytes();
+        data.writeShort(nameBytes.length);
+        data.writeBytes(nameBytes);
+        data.writeFloat((float) x);
+        data.writeFloat((float) y);
+        data.writeFloat((float) z);
+        data.writeFloat((float) vx);
+        data.writeFloat((float) vy);
+        data.writeFloat((float) vz);
+        channel.sendToAllAround(new FMLProxyPacket(data, "Computronics"), new NetworkRegistry.TargetPoint(dimension, x, y, z, 64));
+    }
+
+    @SubscribeEvent
+    public void onPacket(FMLNetworkEvent.ClientCustomPacketEvent event) {
+        ByteBuf data = event.packet.payload();
+        int nameLength = data.readShort();
+        String name = new String(data.readBytes(nameLength).array());
+        double x = data.readFloat();
+        double y = data.readFloat();
+        double z = data.readFloat();
+        double vx = data.readFloat();
+        double vy = data.readFloat();
+        double vz = data.readFloat();
+        Minecraft.getMinecraft().thePlayer.getEntityWorld().spawnParticle(name, x, y, z, vx, vy, vz);
+    }
 	
 }

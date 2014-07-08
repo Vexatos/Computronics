@@ -122,6 +122,7 @@ public class TileRadar extends TileEntityPeripheralBase implements Environment {
 	}
 
 	@Override
+	@Optional.Method(modid="ComputerCraft")
 	public Object[] callMethod(IComputerAccess computer, ILuaContext context,
 			int method, Object[] arguments) throws LuaException,
 			InterruptedException {
