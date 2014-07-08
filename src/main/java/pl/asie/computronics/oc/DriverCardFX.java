@@ -21,6 +21,7 @@ public class DriverCardFX extends ManagedEnvironment {
         this.container = (TileEntity) container;
         node = Network.newNode(this, Visibility.Neighbors).
                 withComponent("particle").
+                withConnector(Computronics.FX_ENERGY_COST * 32).
                 create();
     }
 
