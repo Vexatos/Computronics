@@ -21,13 +21,11 @@ public class ItemBlockChatBox extends ItemBlock {
 		this.setHasSubtypes(true);
 	}
 	
-	/*
 	@Override
 	public void getSubItems(Item id, CreativeTabs tab, List list) {
 		list.add(new ItemStack(this, 1, 0));
 		if(Computronics.CHATBOX_CREATIVE) list.add(new ItemStack(this, 1, 8));
 	}
-	*/
 	
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean wat) {
@@ -38,14 +36,4 @@ public class ItemBlockChatBox extends ItemBlock {
 	public String getUnlocalizedName(ItemStack stack) {
 		return (stack.getItemDamage() >= 8 ? "tile.computronics.chatBox.creative" : "tile.computronics.chatBox");
 	}
-	
-	@Override
-	public int getMetadata(int meta) {
-		return meta;
-	}
-	
-	public int damageDropped(int meta) {
-        return meta;
-    }
-
 }

@@ -49,13 +49,15 @@ public class GuiTapePlayer extends GuiBase {
 	}
 	
 	public void setState(State state) {
-		try {
-			Packet packet = Computronics.packet.create(Packets.PACKET_TAPE_GUI_STATE)
-					.writeTileLocation(this.container.getEntity())
-					.writeByte((byte)state.ordinal());
-			Computronics.packet.sendToServer(packet);
-			((TileTapeDrive)this.container.getEntity()).switchState(state);
-		} catch(Exception e) { }
+		if(this.container.getEntity() != null) {
+			try {
+				Packet packet = Computronics.packet.create(Packets.PACKET_TAPE_GUI_STATE)
+						.writeTileLocation(this.container.getEntity())
+						.writeByte((byte)state.ordinal());
+				Computronics.packet.sendToServer(packet);
+				((TileTapeDrive)this.container.getEntity()).switchState(state);
+			} catch(Exception e) { }
+		}
 	}
 	
 	public void handleButtonPress(Button button) {

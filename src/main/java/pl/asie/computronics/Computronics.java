@@ -14,6 +14,7 @@ import pl.asie.computronics.block.BlockIronNote;
 import pl.asie.computronics.block.BlockRadar;
 import pl.asie.computronics.block.BlockTapeReader;
 import pl.asie.computronics.cc.CCPeripheralProvider;
+import pl.asie.computronics.cc.MusicalTurtleUpgrade;
 import pl.asie.computronics.cc.RadarTurtleUpgrade;
 import pl.asie.computronics.cc.SpeakingTurtleUpgrade;
 import pl.asie.computronics.gui.GuiOneSlot;
@@ -187,16 +188,6 @@ public class Computronics {
 		GameRegistry.registerItem(itemParts, "computronics.parts");
 		
 		if(Loader.isModLoaded("OpenComputers")) preInitOC();
-		if(Loader.isModLoaded("ComputerCraft")) preInitCC();
-	}
-
-	@Optional.Method(modid="ComputerCraft")
-	private void preInitCC() {
-		ComputerCraftAPI.registerPeripheralProvider(new CCPeripheralProvider());
-		ComputerCraftAPI.registerMediaProvider(itemTape);
-		
-		new SpeakingTurtleUpgrade(config.get("turtleUpgradeIDs", "speaking", 190).getInt());
-		new RadarTurtleUpgrade(config.get("turtleUpgradeIDs", "radar", 191).getInt());
 	}
 	
 	@Optional.Method(modid="OpenComputers")
@@ -256,9 +247,23 @@ public class Computronics {
 				" i ", "rrr", "iii", 'r', Items.redstone, 'i', Items.iron_ingot));
 		GameRegistry.addRecipe(new RecipeColorizer(itemTape));
 		
+		if(Loader.isModLoaded("ComputerCraft")) initCC();
 		if(Loader.isModLoaded("OpenComputers")) initOC();
 
 		config.save();
+	}
+
+	@Optional.Method(modid="ComputerCraft")
+	private void initCC() {
+		ComputerCraftAPI.registerPeripheralProvider(new CCPeripheralProvider());
+		ComputerCraftAPI.registerMediaProvider(itemTape);
+		
+		ComputerCraftAPI.registerTurtleUpgrade(
+				new SpeakingTurtleUpgrade(config.get("turtleUpgradeIDs", "speaking", 190).getInt()));
+		ComputerCraftAPI.registerTurtleUpgrade(
+				new RadarTurtleUpgrade(config.get("turtleUpgradeIDs", "radar", 191).getInt()));
+		ComputerCraftAPI.registerTurtleUpgrade(
+				new MusicalTurtleUpgrade(config.get("turtleUpgradeIDs", "musical", 192).getInt()));
 	}
 	
 	@Optional.Method(modid="OpenComputers")

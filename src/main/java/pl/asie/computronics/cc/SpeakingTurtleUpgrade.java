@@ -55,7 +55,7 @@ public class SpeakingTurtleUpgrade extends TurtleUpgradeBase {
 
 	@Override
 	public ItemStack getCraftingItem() {
-		return new ItemStack(Computronics.chatBox);
+		return new ItemStack(Computronics.chatBox, 1, 0);
 	}
 
 	@Override

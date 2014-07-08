@@ -47,7 +47,7 @@ public class RadarTurtleUpgrade extends TurtleUpgradeBase {
 
 	@Override
 	public ItemStack getCraftingItem() {
-		return new ItemStack(Computronics.radar);
+		return new ItemStack(Computronics.radar, 1, 0);
 	}
 
 	@Override

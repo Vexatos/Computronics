@@ -21,7 +21,8 @@ public abstract class TurtlePeripheralBase implements IPeripheral {
 
 	@Override
 	public boolean equals(IPeripheral other) {
-		return (other != null && (other.equals(this)));
+		if (other == null || !(other instanceof TurtlePeripheralBase)) return false;
+		return ((TurtlePeripheralBase)other).access.equals(access);
 	}
 
 }

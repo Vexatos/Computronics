@@ -17,7 +17,6 @@ public abstract class TurtleUpgradeBase implements ITurtleUpgrade {
 	private int upgradeID;
 	
 	public TurtleUpgradeBase(int id) {
-		ComputerCraftAPI.registerTurtleUpgrade(this);
 		upgradeID = id;
 	}
 	
