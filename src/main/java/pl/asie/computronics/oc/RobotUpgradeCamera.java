@@ -23,7 +23,7 @@ public class RobotUpgradeCamera extends ManagedEnvironment {
 		this.node = Network.newNode(this, Visibility.Network).withConnector().withComponent("camera", Visibility.Neighbors).create();
 	}
 
-	private final Camera camera = new Camera();
+	private Camera camera = null;
 	private static final int CALL_LIMIT = 15;
 	
     @Callback(direct = true, limit = CALL_LIMIT)
@@ -31,13 +31,13 @@ public class RobotUpgradeCamera extends ManagedEnvironment {
     	camera.reset();
     	float x = args.count() == 2 ? (float)args.checkDouble(0) : 0.0F;
     	float y = args.count() == 2 ? (float)args.checkDouble(1) : 0.0F;
-    	if(args.count() == 2) {
+    	if(args.count() == 2 || camera == null) {
         	int l = MathHelper.floor_double((double)(robot.player().rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
         	l = Direction.directionToFacing[l];
+        	if(camera == null) camera = new Camera();
         	return new Object[]{
     			camera.setRayDirection(((TileEntity)entity).getWorldObj(), (float)entity.xPosition(), (float)entity.yPosition(), (float)entity.zPosition(),
-    					ForgeDirection.getOrientation(l),
-    					(float)args.checkDouble(0), (float)args.checkDouble(1))
+    					ForgeDirection.getOrientation(l), x, y)
     		};
     	}
     	return null;
