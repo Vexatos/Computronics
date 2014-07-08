@@ -1,5 +1,8 @@
 package pl.asie.computronics.tile;
 
+import java.nio.file.FileSystem;
+
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import dan200.computercraft.api.lua.ILuaContext;
@@ -8,6 +11,8 @@ import dan200.computercraft.api.peripheral.IComputerAccess;
 import li.cil.oc.api.network.Arguments;
 import li.cil.oc.api.network.Callback;
 import li.cil.oc.api.network.Context;
+import li.cil.oc.api.network.ManagedEnvironment;
+import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.SimpleComponent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundManager;
@@ -31,6 +36,17 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
 	public TileTapeDrive() {
 		super("tape_drive");
 		this.state = new TapeDriveState();
+		if(Loader.isModLoaded("OpenComputers")) {
+			initOCFilesystem();
+		}
+	}
+	
+	private ManagedEnvironment oc_fs;
+	
+	@Optional.Method(modid="OpenComputers")
+	private void initOCFilesystem() {
+		oc_fs = li.cil.oc.api.FileSystem.asManagedEnvironment(li.cil.oc.api.FileSystem.fromClass(Computronics.class, "computronics", "ocfs/tape"),
+				"tape_drive");
 	}
 	
 	// GUI/State
@@ -285,6 +301,20 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
     @Optional.Method(modid="OpenComputers")
     public Object[] getState(Context context, Arguments args) {
     	return new Object[]{state.toString()};
+    }
+    
+    @Override
+	@Optional.Method(modid="OpenComputers")
+    public void onConnect(final Node node) {
+    	super.onConnect(node);
+    	node.connect(oc_fs.node());
+    }
+
+    @Override
+	@Optional.Method(modid="OpenComputers")
+    public void onDisconnect(final Node node) {
+    	super.onDisconnect(node);
+    	node.disconnect(oc_fs.node());
     }
     
 	@Override

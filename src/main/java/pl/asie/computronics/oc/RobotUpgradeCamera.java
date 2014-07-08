@@ -28,7 +28,6 @@ public class RobotUpgradeCamera extends ManagedEnvironment {
 	
     @Callback(direct = true, limit = CALL_LIMIT)
     public Object[] setRayDirection(Context context, Arguments args) {
-    	camera.reset();
     	float x = args.count() == 2 ? (float)args.checkDouble(0) : 0.0F;
     	float y = args.count() == 2 ? (float)args.checkDouble(1) : 0.0F;
     	if(args.count() == 2 || camera == null) {
