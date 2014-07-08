@@ -33,11 +33,11 @@ public class NetworkHandlerClient extends MessageHandlerBase {
 	@Override
 	public void onMessage(Packet packet, INetHandler handler, EntityPlayer player, int command)
 			throws IOException {
+		//System.out.println("CLIENT PACKET " + command);
 		switch(command) {
 			case Packets.PACKET_TAPE_GUI_STATE: {
 				TileEntity entity = packet.readTileEntity();
 				State state = State.values()[packet.readUnsignedByte()];
-				//int volume = packet.readByte() & 127;
 				if(entity instanceof TileTapeDrive) {
 					TileTapeDrive tile = (TileTapeDrive)entity;
 					tile.switchState(state);

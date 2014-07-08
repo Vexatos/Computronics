@@ -79,7 +79,6 @@ public class CollisionFinder {
 		MovingObjectPosition mop = world.rayTraceBlocks(origin, target, true);
 
 		if(mop == null) return null;
-		System.out.println("HIT!");
 		cx = mop.hitVec.xCoord;
 		cy = mop.hitVec.yCoord;
 		cz = mop.hitVec.zCoord;

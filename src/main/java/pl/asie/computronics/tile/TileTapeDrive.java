@@ -35,7 +35,7 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
 	
 	// GUI/State
 
-	private void sendState() {
+	protected void sendState() {
 		if(worldObj.isRemote) return;
 		try {
 			Packet packet = Computronics.packet.create(Packets.PACKET_TAPE_GUI_STATE)
@@ -50,8 +50,11 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
 	public State getEnumState() { return this.state.getState(); }
 	
 	public void switchState(State s) {
+		System.out.println("Switchy switch to " + s.name());
 		this.state.switchState(worldObj, xCoord, yCoord, zCoord, s);
+		this.sendState();
 	}
+	
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
