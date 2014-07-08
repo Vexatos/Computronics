@@ -70,8 +70,8 @@ public class CCRadarProxy {
 			int method, Object[] arguments) throws LuaException,
 			InterruptedException {
 		int distance = Computronics.RADAR_RANGE;
-		if(arguments.length >= 1 && (arguments[0] instanceof Integer)) {
-			distance = ((Integer)arguments[0]).intValue();
+		if(arguments.length >= 1 && (arguments[0] instanceof Double)) {
+			distance = ((Double)arguments[0]).intValue();
 			if(distance <= 0 || distance > Computronics.RADAR_RANGE) distance = Computronics.RADAR_RANGE;
 		}
 		AxisAlignedBB bounds = getBounds(xCoord, yCoord, zCoord, distance);

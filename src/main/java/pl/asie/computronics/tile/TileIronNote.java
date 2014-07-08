@@ -22,6 +22,7 @@ public class TileIronNote extends TileEntityPeripheralBase {
         float f = (float)Math.pow(2.0D, (double)(note- 12) / 12.0D);
 
         worldObj.playSoundEffect((double)xCoord + 0.5D, (double)yCoord + 0.5D, (double)zCoord + 0.5D, "note." + instrument, 3.0F, f);
+        worldObj.spawnParticle("note", (double)xCoord + 0.5D, (double)yCoord + 1.2D, (double)zCoord + 0.5D, (double)f / 24.0D, 0.0D, 0.0D);
 	}
 	
 	public void playNote(int instrument, int note) {
@@ -71,13 +72,13 @@ public class TileIronNote extends TileEntityPeripheralBase {
 	public Object[] callMethod(IComputerAccess computer, ILuaContext context,
 			int method, Object[] arguments) throws LuaException,
 			InterruptedException {
-		if(arguments.length == 1 && (arguments[0] instanceof Integer)) {
-			playNote(0, ((Integer)arguments[0]).intValue());
-		} else if(arguments.length == 2 && (arguments[1] instanceof Integer)) {
-			if(arguments[0] instanceof Integer) {
-				playNote(((Integer)arguments[0]).intValue(), ((Integer)arguments[1]).intValue());
+		if(arguments.length == 1 && (arguments[0] instanceof Double)) {
+			playNote(0, ((Double)arguments[0]).intValue());
+		} else if(arguments.length == 2 && (arguments[1] instanceof Double)) {
+			if(arguments[0] instanceof Double) {
+				playNote(((Double)arguments[0]).intValue(), ((Double)arguments[1]).intValue());
 			} else if(arguments[0] instanceof String) {
-				playNote((String)arguments[0], ((Integer)arguments[1]).intValue());
+				playNote((String)arguments[0], ((Double)arguments[1]).intValue());
 			}
 		}
 		return null;

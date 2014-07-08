@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import nedocomputers.INedoPeripheral;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import li.cil.oc.api.Network;
 import li.cil.oc.api.network.Environment;
 import li.cil.oc.api.network.Message;
@@ -149,7 +150,15 @@ public abstract class TileEntityPeripheralInventory extends TileEntityInventory 
 	@Override
 	@Optional.Method(modid="ComputerCraft")
 	public boolean equals(IPeripheral other) {
-		return ((other != null) && other.equals(this));
+		if(other == null) return false;
+		if(this == other) return true;
+		if(other instanceof TileEntity) {
+			TileEntity tother = (TileEntity)other;
+			if(!tother.getWorldObj().equals(worldObj)) return false;
+			if(tother.xCoord != this.xCoord || tother.yCoord != this.yCoord || tother.zCoord != this.zCoord) return false;
+		}
+		
+		return true;
 	}
 
 	@Override

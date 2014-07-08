@@ -34,8 +34,8 @@ public class SpeakingTurtleUpgrade extends TurtleUpgradeBase {
 			if(arguments.length == 0 || !(arguments[0] instanceof String)) return null;
 			
 			int distance = Computronics.CHATBOX_DISTANCE;
-			if(arguments.length > 1 && arguments[1] instanceof Integer) {
-				distance = Math.min(Computronics.CHATBOX_DISTANCE, ((Integer)arguments[1]).intValue());
+			if(arguments.length > 1 && arguments[1] instanceof Double) {
+				distance = Math.min(Computronics.CHATBOX_DISTANCE, ((Double)arguments[1]).intValue());
 				if(distance <= 0) distance = Computronics.CHATBOX_DISTANCE;
 			}
 			ChatBoxUtils.sendChatMessage(access.getWorld(), access.getPosition().posX, access.getPosition().posY, access.getPosition().posZ,

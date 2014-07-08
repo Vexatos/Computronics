@@ -9,6 +9,7 @@ import pl.asie.computronics.Computronics;
 public class Camera {
 	public CollisionFinder cf;
 	private Object hit;
+	private boolean MUST_REFRESH = true;
 	
 	public boolean setRayDirection(World worldObj, float xCoord, float yCoord, float zCoord, ForgeDirection dir, float x, float y) {
 		if(x < -1.0F || x > 1.0F || y < -1.0F || y > 1.0F) return false;
@@ -31,33 +32,42 @@ public class Camera {
 			if(cf != null) reset();
 			cf = new CollisionFinder(worldObj, xCoord, yCoord, zCoord, xInc, yInc, zInc);
 			hit = cf.nextCollision(Computronics.CAMERA_DISTANCE);
+			MUST_REFRESH = false;
 			return true;
 		}
 		return false;
 	}
 	
-	public Object getHit() { return hit; }
+	public Object getHit() { refresh(); return hit; }
 	
 	public void reset() {
-		if(cf != null) {
-			synchronized(cf) {
+		if(hit != null) {
+			synchronized(hit) {
 				hit = null;
-				cf = null;
+				MUST_REFRESH = true;
 			}
 		}
 	}
 	
+	private void refresh() {
+		if(MUST_REFRESH && cf != null)
+			hit = cf.nextCollision(Computronics.CAMERA_DISTANCE);
+	}
+	
 	public String getBlockHash() {
+		refresh();
 		if(cf != null && hit != null) synchronized(cf) { return cf.blockHash(); }
 		else return null;
 	}
 	
 	public double getDistance() {
+		refresh();
 		if(cf != null && hit != null) synchronized(cf) { return cf.distance(); }
 		else return -1.0;
 	}
 	
 	public Map<String, Object> getBlockData() {
+		refresh();
 		if(cf != null && hit != null) synchronized(cf) { return cf.blockData(); }
 		else return null;
 	}

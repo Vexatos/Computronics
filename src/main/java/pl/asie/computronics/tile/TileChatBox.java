@@ -125,8 +125,8 @@ public class TileChatBox extends TileEntityPeripheralBase {
 		case 0: { // say
 			if(arguments.length >= 1 && arguments[0] instanceof String) {
 				int d = distance;
-				if(arguments.length >= 2 && arguments[1] instanceof Integer) {
-					d = Math.min(Computronics.CHATBOX_DISTANCE, ((Integer)arguments[1]).intValue());
+				if(arguments.length >= 2 && arguments[1] instanceof Double) {
+					d = Math.min(Computronics.CHATBOX_DISTANCE, ((Double)arguments[1]).intValue());
 					if(d <= 0) d = distance;
 				}
 				ChatBoxUtils.sendChatMessage(this, d, Computronics.CHATBOX_PREFIX, ((String)arguments[0]));
@@ -136,8 +136,8 @@ public class TileChatBox extends TileEntityPeripheralBase {
 			return new Object[]{distance};
 		}
 		case 2: { // setDistance
-			if(arguments.length == 1 && arguments[0] instanceof Integer) {
-				setDistance(((Integer)arguments[0]).intValue());
+			if(arguments.length == 1 && arguments[0] instanceof Double) {
+				setDistance(((Double)arguments[0]).intValue());
 			}
 		}
 		}

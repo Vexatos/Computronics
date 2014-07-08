@@ -19,7 +19,7 @@ import pl.asie.lib.block.TileEntityBase;
 
 public class TileCamera extends TileEntityPeripheralBase {
 	private static final int CALL_LIMIT = 20;
-	private final Camera camera = new Camera();
+	private Camera camera;
 	private final Camera cameraRedstone = new Camera();
 	private int tick;
 
@@ -47,7 +47,12 @@ public class TileCamera extends TileEntityPeripheralBase {
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
-		camera.reset();
+		if(camera == null) {
+			// Initialize camera
+			camera = new Camera();
+			camera.setRayDirection(worldObj, xCoord, yCoord, zCoord, getFacingDirection(), 0.0f, 0.0f);
+		} else camera.reset();
+		
 		if(tick % 20 == 0 && Computronics.CAMERA_REDSTONE_REFRESH) {
 			this.worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, this.worldObj.getBlock(xCoord, yCoord, zCoord));
 		}
@@ -58,7 +63,7 @@ public class TileCamera extends TileEntityPeripheralBase {
     @Callback(direct = true, limit = CALL_LIMIT)
     @Optional.Method(modid="OpenComputers")
     public Object[] setRayDirection(Context context, Arguments args) {
-    	if(args.count() == 2) {
+    	if(camera != null && args.count() == 2) {
     		return new Object[]{
     			camera.setRayDirection(worldObj, xCoord, yCoord, zCoord, getFacingDirection(),
     					(float)args.checkDouble(0), (float)args.checkDouble(1))
@@ -70,6 +75,7 @@ public class TileCamera extends TileEntityPeripheralBase {
     @Callback(direct = true, limit = CALL_LIMIT)
     @Optional.Method(modid="OpenComputers")
     public Object[] distance(Context context, Arguments args) {
+		if(camera == null) return null;
     	setRayDirection(context, args);
     	return new Object[]{camera.getDistance()};
     }
@@ -77,6 +83,7 @@ public class TileCamera extends TileEntityPeripheralBase {
     @Callback(direct = true, limit = CALL_LIMIT / 2)
     @Optional.Method(modid="OpenComputers")
     public Object[] block(Context context, Arguments args) {
+		if(camera == null) return null;
     	setRayDirection(context, args);
     	return new Object[]{camera.getBlockData()};
     }
@@ -84,7 +91,7 @@ public class TileCamera extends TileEntityPeripheralBase {
 	@Override
     @Optional.Method(modid="ComputerCraft")
 	public String[] getMethodNames() {
-		return new String[]{"setRayDirection", "distance"};
+		return new String[]{"setRayDirection", "distance", "block"};
 	}
 
 	@Override
@@ -92,16 +99,21 @@ public class TileCamera extends TileEntityPeripheralBase {
 	public Object[] callMethod(IComputerAccess computer, ILuaContext context,
 			int method, Object[] arguments) throws LuaException,
 			InterruptedException {
-    	if(arguments.length == 2 && arguments[0] instanceof Float && arguments[1] instanceof Float) {
-    		return new Object[]{
+		if(camera == null) return null;
+		Object[] rayDir = null;
+    	if(arguments.length == 2 && arguments[0] instanceof Double && arguments[1] instanceof Double) {
+    		rayDir = new Object[]{
     			camera.setRayDirection(worldObj, xCoord, yCoord, zCoord, getFacingDirection(),
-    					((Float)arguments[0]).floatValue(), ((Float)arguments[1]).floatValue())
+    					((Double)arguments[0]).floatValue(), ((Double)arguments[1]).floatValue())
     		};
     	}
 		switch(method) {
-			case 0: break; // setRayDirection
+			case 0: return rayDir; // setRayDirection
 			case 1: { // distance
-				return new Object[]{camera.getDistance()};
+				return new Object[]{new Double(camera.getDistance())};
+			}
+			case 2: { // block
+				return new Object[]{camera.getBlockHash()};
 			}
 		}
 		return null;

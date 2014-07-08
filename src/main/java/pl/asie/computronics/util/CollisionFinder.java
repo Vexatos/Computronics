@@ -79,6 +79,7 @@ public class CollisionFinder {
 		MovingObjectPosition mop = world.rayTraceBlocks(origin, target, true);
 
 		if(mop == null) return null;
+		System.out.println("HIT!");
 		cx = mop.hitVec.xCoord;
 		cy = mop.hitVec.yCoord;
 		cz = mop.hitVec.zCoord;
@@ -87,7 +88,7 @@ public class CollisionFinder {
 					return mop.entityHit;
 				}
 			case BLOCK: {
-					return WorldUtils.getBlock(world, mop.blockX, mop.blockY, mop.blockZ);
+					return world.getBlock(mop.blockX, mop.blockY, mop.blockZ);
 				}
 			case MISS:
 			default:

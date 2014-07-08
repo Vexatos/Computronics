@@ -1,4 +1,4 @@
-package pl.asie.computronics.tape;
+package pl.asie.computronics.tile;
 
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
@@ -19,8 +19,7 @@ import pl.asie.computronics.Computronics;
 import pl.asie.computronics.Packets;
 import pl.asie.computronics.api.IItemStorage;
 import pl.asie.computronics.item.ItemTape;
-import pl.asie.computronics.tape.TapeDriveState.State;
-import pl.asie.computronics.tile.TileEntityPeripheralInventory;
+import pl.asie.computronics.tile.TapeDriveState.State;
 import pl.asie.lib.audio.DFPWM;
 import pl.asie.lib.block.TileEntityInventory;
 import pl.asie.lib.network.Packet;
@@ -306,26 +305,20 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
 		}
 		
 		// methods which take floats and do something
-		if(arguments.length == 1 && (arguments[0] instanceof Float)) {
-			float f = ((Float)arguments[0]).floatValue();
+		if(arguments.length == 1 && (arguments[0] instanceof Double)) {
+			float f = ((Double)arguments[0]).floatValue();
+			int i = ((Double)arguments[0]).intValue();
 			switch(method) {
 			case 6: return new Object[]{this.state.setSpeed(f)};
 			case 7: this.state.setVolume(f); return null;
-			}
-		}
-
-		// methods which take integers and do something
-		if(arguments.length == 1 && (arguments[0] instanceof Integer)) {
-			int i = ((Integer)arguments[0]).intValue();
-			switch(method) {
 			case 8: if(state.getStorage() != null) return new Object[]{state.getStorage().seek(i)};
-			case 10: if(state.getStorage() != null) state.getStorage().write((byte)i);
+			case 10: if(state.getStorage() != null) state.getStorage().write((byte)i); break;
 			case 9: if(state.getStorage() != null) {
 				if(i >= 256) i = 256;
 				byte[] data = new byte[i];
 				state.getStorage().read(data, false);
 				return new Object[]{new String(data)};
-			}
+			} break;
 			}
 		}
 

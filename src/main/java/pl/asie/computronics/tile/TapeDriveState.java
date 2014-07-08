@@ -1,7 +1,8 @@
-package pl.asie.computronics.tape;
+package pl.asie.computronics.tile;
 
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.Packets;
+import pl.asie.computronics.tape.Storage;
 import pl.asie.lib.network.Packet;
 import net.minecraft.world.World;
 
