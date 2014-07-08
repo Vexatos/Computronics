@@ -9,10 +9,10 @@ import li.cil.oc.api.network.Callback;
 import li.cil.oc.api.network.Context;
 import li.cil.oc.api.network.Environment;
 import li.cil.oc.api.network.SimpleComponent;
+import pl.asie.computronics.Computronics;
 import pl.asie.lib.block.TileEntityBase;
 
-@Optional.Interface(iface = "li.cil.li.oc.network.Environment", modid = "OpenComputers")
-public class TileIronNote extends TileEntityPeripheralBase implements Environment {
+public class TileIronNote extends TileEntityPeripheralBase {
 	public TileIronNote() {
 		super("iron_noteblock");
 	}
@@ -23,7 +23,7 @@ public class TileIronNote extends TileEntityPeripheralBase implements Environmen
         float f = (float)Math.pow(2.0D, (double)(note- 12) / 12.0D);
 
         worldObj.playSoundEffect((double)xCoord + 0.5D, (double)yCoord + 0.5D, (double)zCoord + 0.5D, "note." + instrument, 3.0F, f);
-        worldObj.spawnParticle("note", (double)xCoord + 0.5D, (double)yCoord + 1.2D, (double)zCoord + 0.5D, (double)f / 24.0D, 0.0D, 0.0D);
+        //worldObj.spawnParticle("note", (double)xCoord + 0.5D, (double)yCoord + 1.2D, (double)zCoord + 0.5D, (double)f / 24.0D, 0.0D, 0.0D);
 	}
 	
 	public void playNote(int instrument, int note) {
@@ -41,7 +41,7 @@ public class TileIronNote extends TileEntityPeripheralBase implements Environmen
 	}
 
 	@Override
-	public boolean canUpdate() { return false; }
+	public boolean canUpdate() { return Computronics.MUST_UPDATE_TILE_ENTITIES; }
 	
 	// OpenComputers
 	

@@ -114,6 +114,8 @@ public class Computronics {
 	public static ItemMultiple itemParts;
 	public static ItemOpenComputers itemRobotUpgrade;
 	
+	public static boolean MUST_UPDATE_TILE_ENTITIES = false;
+	
 	public static CreativeTabs tab = new CreativeTabs("tabComputronics") {
         public Item getTabIconItem() {
                 return itemTape;
@@ -202,6 +204,11 @@ public class Computronics {
 		itemRobotUpgrade = new ItemOpenComputers();
 		GameRegistry.registerItem(itemRobotUpgrade, "computronics.robotUpgrade");
 		Driver.add(itemRobotUpgrade);
+		
+		// OpenComputers needs a hook in updateEntity in order to proprly register peripherals.
+		// Fixes Iron Note Block, among others.
+		// To ensure less TE ticks for those who don't use OC, we keep this tidbit around.
+		MUST_UPDATE_TILE_ENTITIES = true;
 	}
 	
 	@EventHandler

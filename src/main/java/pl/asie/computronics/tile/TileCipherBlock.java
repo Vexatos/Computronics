@@ -14,6 +14,7 @@ import li.cil.oc.api.network.Arguments;
 import li.cil.oc.api.network.Callback;
 import li.cil.oc.api.network.Context;
 import li.cil.oc.api.network.SimpleComponent;
+import pl.asie.computronics.Computronics;
 import pl.asie.lib.AsieLibMod;
 import pl.asie.lib.block.TileEntityInventory;
 import pl.asie.lib.util.Base64;
@@ -32,6 +33,9 @@ public class TileCipherBlock extends TileEntityPeripheralInventory {
 			e.printStackTrace();
 		}
 	}
+	
+	@Override
+	public boolean canUpdate() { return Computronics.MUST_UPDATE_TILE_ENTITIES; }
 	
 	public void updateKey() {
 		byte[] realKey = new byte[16];

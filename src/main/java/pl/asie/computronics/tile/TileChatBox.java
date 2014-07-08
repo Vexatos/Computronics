@@ -36,6 +36,9 @@ public class TileChatBox extends TileEntityPeripheralBase {
 		distance = Computronics.CHATBOX_DISTANCE;
 	}
 	
+	@Override
+	public boolean canUpdate() { return Computronics.MUST_UPDATE_TILE_ENTITIES; }
+	
 	public boolean isCreative() {
 		if(!Computronics.CHATBOX_CREATIVE || worldObj == null) return false;
 		else return worldObj.getBlockMetadata(xCoord, yCoord, zCoord) >= 8;

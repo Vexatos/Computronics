@@ -38,6 +38,9 @@ public class TileRadar extends TileEntityPeripheralBase implements Environment {
 		super("radar");
 	}
    
+	@Override
+	public boolean canUpdate() { return Computronics.MUST_UPDATE_TILE_ENTITIES; }
+	
     private int getDistance(Arguments args) {
     	if(args.isInteger(0)) {
     		return args.checkInteger(0);
