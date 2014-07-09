@@ -8,6 +8,7 @@ import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
+//import li.cil.oc.api.FileSystem;
 import li.cil.oc.api.network.Arguments;
 import li.cil.oc.api.network.Callback;
 import li.cil.oc.api.network.Component;
@@ -47,7 +48,7 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
 	
 	@Optional.Method(modid="OpenComputers")
 	private void initOCFilesystem() {
-		oc_fs = li.cil.oc.api.FileSystem.asManagedEnvironment(li.cil.oc.api.FileSystem.fromClass(Computronics.class, "computronics", "ocfs/tape"),
+		oc_fs = li.cil.oc.api.FileSystem.asManagedEnvironment(li.cil.oc.api.FileSystem.fromClass(Computronics.class, "computronics", "lua/component/tape_drive"),
 				"tape_drive");
 		((Component)oc_fs.node()).setVisibility(Visibility.Network);
 	}
@@ -207,6 +208,14 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
 	}
 	
 	// OpenComputers
+	
+	@Override
+	@Optional.Method(modid="OpenComputers")
+    public void onConnect(final Node node) {
+		super.onConnect(node);
+		if (node == this.node) node.connect(oc_fs.node());
+	}
+	
 	@Callback(direct = true)
     @Optional.Method(modid="OpenComputers")
 	public Object[] isEnd(Context context, Arguments args) {
