@@ -14,8 +14,8 @@ import pl.asie.computronics.tile.TileIronNote;
 import pl.asie.computronics.tile.TileTapeDrive;
 import pl.asie.lib.block.BlockBase;
 
-public class BlockEEPROMReader extends BlockMachineSidedIcon {
-	private IIcon mFront;
+public class BlockEEPROMReader extends BlockPeripheral {
+	private IIcon mTopOff, mTopOn, mSide, mBottom;
 	
 	public BlockEEPROMReader() {
 		super();
@@ -30,14 +30,21 @@ public class BlockEEPROMReader extends BlockMachineSidedIcon {
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public IIcon getAbsoluteSideIcon(int sideNumber, int metadata) {
-		return sideNumber == 2 ? mFront : super.getAbsoluteSideIcon(sideNumber, metadata);
+	public IIcon getAbsoluteIcon(int sideNumber, int metadata) {
+		switch(sideNumber) {
+		case 0: return mBottom;
+		case 1: return (metadata > 0 ? mTopOn : mTopOff);
+		default: return mSide;
+		}
 	}
 	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister r) {
 		super.registerBlockIcons(r);
-		mFront = r.registerIcon("computronics:eeprom_reader_front");
+		mTopOff = r.registerIcon("computronics:eepromreader_top_nochip");
+		mTopOn = r.registerIcon("computronics:eepromreader_top_chip");
+		mSide = r.registerIcon("computronics:machine_side");
+		mBottom = r.registerIcon("computronics:machine_bottom");
 	}
 }

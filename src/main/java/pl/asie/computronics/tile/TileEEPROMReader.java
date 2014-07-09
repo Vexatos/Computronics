@@ -20,7 +20,13 @@ public class TileEEPROMReader extends TileEntityPeripheralInventory {
 	}
 
 	@Override
-	public void onInventoryUpdate(int arg0) { }
+	public void onInventoryUpdate(int arg0) {
+		int meta = this.worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
+		int newMeta = -1;
+		if(isReady() && meta == 0) newMeta = 1;
+		else if(!isReady() && meta == 1) newMeta = 0;
+		if(newMeta >= 0) this.worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, newMeta, 2);
+	}
 
 	public boolean isReady() {
     	ItemStack is = this.getStackInSlot(0);

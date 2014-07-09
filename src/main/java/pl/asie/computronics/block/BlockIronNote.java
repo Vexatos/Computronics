@@ -9,8 +9,7 @@ import pl.asie.lib.block.BlockBase;
 
 public class BlockIronNote extends BlockPeripheral {
 	public BlockIronNote() {
-		super(Material.iron, Computronics.instance);
-		this.setCreativeTab(Computronics.tab);
+		super();
 		this.setIconName("computronics:noteblock");
 		this.setBlockName("computronics.ironNoteBlock");
 	}

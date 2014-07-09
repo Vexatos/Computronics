@@ -16,8 +16,7 @@ public abstract class BlockMachineSidedIcon extends BlockPeripheral {
 	protected IIcon mSide, mTop, mBottom;
 	
 	public BlockMachineSidedIcon() {
-		super(Material.iron, Computronics.instance);
-		this.setCreativeTab(Computronics.tab);
+		super();
 		this.setRotation(Rotation.FOUR);
 	}
 	

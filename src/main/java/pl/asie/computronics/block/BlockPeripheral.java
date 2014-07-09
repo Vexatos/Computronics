@@ -6,12 +6,14 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import pl.asie.computronics.Computronics;
 import pl.asie.lib.block.BlockBase;
 
 public abstract class BlockPeripheral extends BlockBase {
 
-	public BlockPeripheral(Material material, Object parent) {
-		super(material, parent);
+	public BlockPeripheral() {
+		super(Material.iron, Computronics.instance);
+		this.setCreativeTab(Computronics.tab);
 	}
 
 	@Override
