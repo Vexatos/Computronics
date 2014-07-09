@@ -41,12 +41,12 @@ public class DriverCardFX extends ManagedEnvironment {
         double x = container.xCoord + 0.5 + args.checkDouble(1);
         double y = container.yCoord + 0.5 + args.checkDouble(2);
         double z = container.zCoord + 0.5 + args.checkDouble(3);
-        double defaultv = (container.getWorldObj().rand.nextDouble() * 0.1);
-        if(args.count() >= 4 && args.count() < 6) defaultv = args.checkDouble(4);
+        double defaultv = (rng.nextDouble() * 0.1);
+        if(args.count() >= 5) defaultv = args.checkDouble(4);
         double vx = defaultv * rng.nextGaussian();
         double vy = defaultv * rng.nextGaussian();
         double vz = defaultv * rng.nextGaussian();
-        if(args.count() >= 6) {
+        if(args.count() >= 7) {
         	vx = args.checkDouble(4);
         	vy = args.checkDouble(5);
         	vz = args.checkDouble(6);

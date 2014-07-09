@@ -15,6 +15,7 @@ import pl.asie.computronics.block.BlockRadar;
 import pl.asie.computronics.block.BlockTapeReader;
 import pl.asie.computronics.cc.CCPeripheralProvider;
 import pl.asie.computronics.cc.MusicalTurtleUpgrade;
+import pl.asie.computronics.cc.ParticleTurtleUpgrade;
 import pl.asie.computronics.cc.RadarTurtleUpgrade;
 import pl.asie.computronics.cc.SpeakingTurtleUpgrade;
 import pl.asie.computronics.gui.GuiOneSlot;
@@ -264,6 +265,8 @@ public class Computronics {
 				new RadarTurtleUpgrade(config.get("turtleUpgradeIDs", "radar", 191).getInt()));
 		ComputerCraftAPI.registerTurtleUpgrade(
 				new MusicalTurtleUpgrade(config.get("turtleUpgradeIDs", "musical", 192).getInt()));
+		ComputerCraftAPI.registerTurtleUpgrade(
+				new ParticleTurtleUpgrade(config.get("turtleUpgradeIDs", "particle", 193).getInt()));
 	}
 	
 	@Optional.Method(modid="OpenComputers")
