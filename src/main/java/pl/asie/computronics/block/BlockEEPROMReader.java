@@ -1,9 +1,12 @@
 package pl.asie.computronics.block;
 
+import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
@@ -36,6 +39,31 @@ public class BlockEEPROMReader extends BlockPeripheral {
 		case 1: return (metadata > 0 ? mTopOn : mTopOff);
 		default: return mSide;
 		}
+	}
+	
+	@Override
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int a, float _x, float _y, float _z) {
+		if (!world.isRemote && !player.isSneaking()) {
+			ItemStack h = player.getHeldItem();
+			if(h != null && h.stackSize > 0 && h.getItem().equals(GameRegistry.findItem("nedocomputers", "EEPROM"))
+					&& h.hasTagCompound() && h.getTagCompound().hasKey("ram")) {
+				TileEEPROMReader te = (TileEEPROMReader)world.getTileEntity(x, y, z);
+				if(te.getStackInSlot(0) == null) {
+					te.setInventorySlotContents(0, h);
+					player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
+					return true;
+				}
+			} else if(h == null) {
+				TileEEPROMReader te = (TileEEPROMReader)world.getTileEntity(x, y, z);
+				if(te.getStackInSlot(0) != null) {
+					ItemStack is = te.getStackInSlot(0);
+					te.setInventorySlotContents(0, null);
+					player.inventory.setInventorySlotContents(player.inventory.currentItem, is);
+					return true;
+				}
+			}
+		}
+		return super.onBlockActivated(world, x, y, z, player, a, _x, _y, _z);
 	}
 	
 	@Override
