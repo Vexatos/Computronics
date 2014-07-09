@@ -100,7 +100,7 @@ public class Computronics {
 	public static double RADAR_CC_TIME = 0.5;
 	public static double FX_ENERGY_COST = 0.5;
 	public static String CHATBOX_PREFIX = "ChatBox";
-
+	
 	public static String TAPE_LENGTHS;
 	public static boolean CAMERA_REDSTONE_REFRESH, CHATBOX_ME_DETECT, CHATBOX_CREATIVE;
 	

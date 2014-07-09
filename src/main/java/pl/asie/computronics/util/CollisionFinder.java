@@ -43,23 +43,13 @@ public class CollisionFinder {
 		return (float)Math.sqrt(x*x + y*y + z*z);
 	}
 	
-	public String blockHash(ItemStack stack) {
-		String temp = stack.getItem().getUnlocalizedName(stack) + ";" + stack.getItemDamage() + ";" + stack.getUnlocalizedName();
-		try {
-			byte[] data = MessageDigest.getInstance("MD5").digest(temp.getBytes());
-			return MiscUtils.asHexString(data).substring(0, 8);
-		} catch(Exception e) {
-			return null;
-		}
-	}
-	
 	public String blockHash() {
 		Block block = WorldUtils.getBlock(world(), x(), y(), z());
 		if(block == null) return null;
 		
 		int meta = world().getBlockMetadata(x(), y(), z());
 
-		return blockHash(new ItemStack(block, 1, meta));
+		return MiscCUtils.getHashForStack(new ItemStack(block, 1, meta), true);
 	}
 	
 	public Map<String, Object> blockData() {
