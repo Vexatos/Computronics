@@ -12,7 +12,7 @@ import pl.asie.computronics.Computronics;
 import pl.asie.lib.block.BlockBase;
 import pl.asie.lib.util.MiscUtils;
 
-public abstract class BlockMachineSidedIcon extends BlockBase {
+public abstract class BlockMachineSidedIcon extends BlockPeripheral {
 	protected IIcon mSide, mTop, mBottom;
 	
 	public BlockMachineSidedIcon() {

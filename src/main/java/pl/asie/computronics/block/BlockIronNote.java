@@ -7,7 +7,7 @@ import pl.asie.computronics.Computronics;
 import pl.asie.computronics.tile.TileIronNote;
 import pl.asie.lib.block.BlockBase;
 
-public class BlockIronNote extends BlockBase {
+public class BlockIronNote extends BlockPeripheral {
 	public BlockIronNote() {
 		super(Material.iron, Computronics.instance);
 		this.setCreativeTab(Computronics.tab);

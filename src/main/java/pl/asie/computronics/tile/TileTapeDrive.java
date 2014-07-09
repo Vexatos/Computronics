@@ -40,10 +40,10 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
 		super("tape_drive");
 		this.state = new TapeDriveState();
 		if(Loader.isModLoaded("OpenComputers") && node != null) {
-			initOCFilesystem();
+			//initOCFilesystem();
 		}
 	}
-	
+	/*
 	private ManagedEnvironment oc_fs;
 	
 	@Optional.Method(modid="OpenComputers")
@@ -57,6 +57,7 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
 		((Component)oc_fs.node()).setVisibility(Visibility.Network);
 		this.node.connect(oc_fs.node());
 	}
+	*/
 	// GUI/State
 
 	protected void sendState() {
