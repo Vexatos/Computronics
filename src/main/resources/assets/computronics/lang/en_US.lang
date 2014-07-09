@@ -5,7 +5,8 @@ tile.computronics.chatBox.name=Chat Box
 tile.computronics.chatBox.creative.name=Creative Chat Box
 tile.computronics.sorter.name=Sorter
 tile.computronics.cipher.name=Cipher Block
-tile.computronics.radar.name=Radar Block
+tile.computronics.radar.name=Radar
+tile.computronics.eepromReader.name=EEPROM Reader
 
 tooltip.computronics.chatBox.creative=NSA in a box!
 tooltip.computronics.tape.length=Length: %s minutes

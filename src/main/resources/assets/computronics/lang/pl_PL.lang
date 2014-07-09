@@ -2,9 +2,11 @@ tile.computronics.ironNoteBlock.name=Żelazny blok dźwiękowy
 tile.computronics.tapeDrive.name=Magnetofon
 tile.computronics.camera.name=Kamera
 tile.computronics.chatBox.name=Blok Czatu
-tile.computronics.chatBox.name=Kreatywny Blok Czatu
+tile.computronics.chatBox.creative.name=Kreatywny Blok Czatu
 tile.computronics.sorter.name=Sortownik
 tile.computronics.cipher.name=Blok Szyfru
+tile.computronics.radar.name=Radar
+tile.computronics.eepromReader.name=Czytnik EEPROM
 
 tooltip.computronics.chatBox.creative=NSA w pudełku!
 tooltip.computronics.tape.length=Długość: %s minut
