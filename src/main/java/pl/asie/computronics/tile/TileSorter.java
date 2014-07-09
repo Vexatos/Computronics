@@ -1,5 +1,8 @@
 package pl.asie.computronics.tile;
 
+import li.cil.oc.api.network.Arguments;
+import li.cil.oc.api.network.Callback;
+import li.cil.oc.api.network.Context;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -65,6 +68,30 @@ public class TileSorter extends TileEntityPeripheralInventory implements ISidedI
 			});
 		}
 	}
+	
+	// OpenComputers
+	
+	@Callback(direct = true)
+	@Optional.Method(modid = "OpenComputers")
+	public Object[] getItemName(Context ctx, Arguments args) {
+		if(this.getStackInSlot(0) == null) return null;
+		else return new Object[]{MiscCUtils.getHashForStack(this.getStackInSlot(0), false)};
+	}
+	
+	@Callback(direct = true)
+	@Optional.Method(modid = "OpenComputers")
+	public Object[] getItemDamage(Context ctx, Arguments args) {
+		if(this.getStackInSlot(0) == null) return null;
+		else return new Object[]{this.getStackInSlot(0).getItemDamage()};
+	}
+	
+	@Callback(direct = true)
+	@Optional.Method(modid = "OpenComputers")
+	public Object[] getStackSize(Context ctx, Arguments args) {
+		if(this.getStackInSlot(0) == null) return null;
+		else return new Object[]{this.getStackInSlot(0).stackSize};
+	}
+	// ComputerCraft
 
 	@Override
 	public String[] getMethodNames() {
