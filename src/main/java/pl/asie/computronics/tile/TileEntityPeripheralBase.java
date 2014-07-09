@@ -93,7 +93,13 @@ public abstract class TileEntityPeripheralBase extends TileEntityBase implements
         if (!addedToNetwork) {
             addedToNetwork = true;
             Network.joinOrCreateNetwork(this);
+            this.onOCNetworkCreation();
         }
+    }
+    
+    @Optional.Method(modid="OpenComputers")
+    public void onOCNetworkCreation() {
+    	
     }
 
     @Override

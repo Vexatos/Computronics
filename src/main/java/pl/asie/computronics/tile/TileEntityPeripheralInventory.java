@@ -93,7 +93,13 @@ public abstract class TileEntityPeripheralInventory extends TileEntityInventory 
         if (!addedToNetwork) {
             addedToNetwork = true;
             Network.joinOrCreateNetwork(this);
+            this.onOCNetworkCreation();
         }
+    }
+    
+    @Optional.Method(modid="OpenComputers")
+    public void onOCNetworkCreation() {
+    	
     }
 
     @Override

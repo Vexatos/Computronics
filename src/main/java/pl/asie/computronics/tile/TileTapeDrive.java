@@ -50,9 +50,13 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
 	private void initOCFilesystem() {
 		oc_fs = li.cil.oc.api.FileSystem.asManagedEnvironment(li.cil.oc.api.FileSystem.fromClass(Computronics.class, "computronics", "lua/component/tape_drive"),
 				"tape_drive");
-		((Component)oc_fs.node()).setVisibility(Visibility.Network);
 	}
 	
+	@Optional.Method(modid="OpenComputers")
+	public void onOCNetworkCreation() {
+		((Component)oc_fs.node()).setVisibility(Visibility.Network);
+		this.node.connect(oc_fs.node());
+	}
 	// GUI/State
 
 	protected void sendState() {
@@ -208,14 +212,7 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
 	}
 	
 	// OpenComputers
-	
-	@Override
-	@Optional.Method(modid="OpenComputers")
-    public void onConnect(final Node node) {
-		super.onConnect(node);
-		if (node == this.node) node.connect(oc_fs.node());
-	}
-	
+
 	@Callback(direct = true)
     @Optional.Method(modid="OpenComputers")
 	public Object[] isEnd(Context context, Arguments args) {
