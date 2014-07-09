@@ -150,9 +150,6 @@ public class TileChatBox extends TileEntityPeripheralBase {
 	@Override
     @Optional.Method(modid="nedocomputers")
 	public short busRead(int addr) {
-		switch((addr & 0xFFFE)) {
-		case 0: return (short)distance;
-		}
 		return 0;
 	}
 
