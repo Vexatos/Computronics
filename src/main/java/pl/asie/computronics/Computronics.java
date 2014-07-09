@@ -10,6 +10,7 @@ import pl.asie.computronics.audio.DFPWMPlaybackManager;
 import pl.asie.computronics.block.BlockCamera;
 import pl.asie.computronics.block.BlockChatBox;
 import pl.asie.computronics.block.BlockCipher;
+import pl.asie.computronics.block.BlockEEPROMReader;
 import pl.asie.computronics.block.BlockIronNote;
 import pl.asie.computronics.block.BlockRadar;
 import pl.asie.computronics.block.BlockTapeReader;
@@ -27,6 +28,7 @@ import pl.asie.computronics.tile.ContainerTapeReader;
 import pl.asie.computronics.tile.TileCamera;
 import pl.asie.computronics.tile.TileChatBox;
 import pl.asie.computronics.tile.TileCipherBlock;
+import pl.asie.computronics.tile.TileEEPROMReader;
 import pl.asie.computronics.tile.TileIronNote;
 import pl.asie.computronics.tile.TileRadar;
 import pl.asie.computronics.tile.TileTapeDrive;
@@ -111,6 +113,7 @@ public class Computronics {
 	public static BlockChatBox chatBox;
 	public static BlockCipher cipher;
     public static BlockRadar radar;
+    public static BlockEEPROMReader nc_eepromreader;
 	
 	public static ItemTape itemTape;
 	public static ItemMultiple itemParts;
@@ -180,6 +183,12 @@ public class Computronics {
 		radar = new BlockRadar();
 		GameRegistry.registerBlock(radar, "computronics.radar");
 		GameRegistry.registerTileEntity(TileRadar.class, "computronics.radar");
+		
+		if(Loader.isModLoaded("nedocomputers")) {
+			nc_eepromreader = new BlockEEPROMReader();
+			GameRegistry.registerBlock(nc_eepromreader, "computronics.eepromReader");
+			GameRegistry.registerTileEntity(TileEEPROMReader.class, "computronics.eepromReader");
+		}
 		
 		itemTape = new ItemTape(TAPE_LENGTHS);
 		GameRegistry.registerItem(itemTape, "computronics.tape");
