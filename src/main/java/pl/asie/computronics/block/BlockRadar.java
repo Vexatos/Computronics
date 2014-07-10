@@ -20,8 +20,6 @@ import pl.asie.computronics.tile.TileIronNote;
 import pl.asie.lib.block.BlockBase;
 
 public class BlockRadar extends BlockMachineSidedIcon {
-	private IIcon mSide;
-	
 	public BlockRadar() {
 		super();
 		this.setCreativeTab(Computronics.tab);
@@ -32,12 +30,6 @@ public class BlockRadar extends BlockMachineSidedIcon {
 	@Override
 	public TileEntity createNewTileEntity(World world, int metadata) {
 		return new TileRadar();
-	}
-	
-	@Override
-	@SideOnly(Side.CLIENT)
-	public IIcon getAbsoluteSideIcon(int sideNumber, int metadata) {
-		return mSide;
 	}
 	
 	@Override
