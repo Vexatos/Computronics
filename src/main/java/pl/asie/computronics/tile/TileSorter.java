@@ -122,7 +122,19 @@ public class TileSorter extends TileEntityPeripheralInventory implements ISidedI
 
 	@Override
 	public short busRead(int addr) {
-		// TODO Auto-generated method stub
+		addr &= 0xFFFE;
+		if(addr < 8) {
+			ItemStack is = this.getStackInSlot(0);
+			if(is == null) return 0;
+			switch(addr) {
+			case 0: return (short)(MiscCUtils.getIntegerHashForStack(is, false) & 0xFFFF);
+			case 2: return (short)(MiscCUtils.getIntegerHashForStack(is, false) >> 16);
+			case 4: return (short)is.getItemDamage();
+			case 6: return (short)is.stackSize;
+			}
+		}
+		
+		// catch-all
 		return 0;
 	}
 
