@@ -36,7 +36,7 @@ public class MusicalTurtleUpgrade extends TurtleUpgradeBase {
 				int method, Object[] arguments) throws LuaException,
 				InterruptedException {
 			if(arguments.length == 1 && (arguments[0] instanceof Double)) {
-				NoteUtils.playNote(access.getWorld(), access.getPosition().posX, access.getPosition().posY, access.getPosition().posZ, 0, ((Double)arguments[0]).intValue());
+				NoteUtils.playNote(access.getWorld(), access.getPosition().posX, access.getPosition().posY, access.getPosition().posZ, -1, ((Double)arguments[0]).intValue());
 			} else if(arguments.length == 2 && (arguments[1] instanceof Double)) {
 				if(arguments[0] instanceof Double) {
 					NoteUtils.playNote(access.getWorld(), access.getPosition().posX, access.getPosition().posY, access.getPosition().posZ, ((Double)arguments[0]).intValue(), ((Double)arguments[1]).intValue());

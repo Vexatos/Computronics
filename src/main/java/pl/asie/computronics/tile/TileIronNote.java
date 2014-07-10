@@ -34,7 +34,7 @@ public class TileIronNote extends TileEntityPeripheralBase {
     				NoteUtils.playNote(worldObj, xCoord, yCoord, zCoord, args.checkString(0), args.checkInteger(1));
     			}
     		} else if(args.isInteger(0)) {
-    			NoteUtils.playNote(worldObj, xCoord, yCoord, zCoord, 0, args.checkInteger(0));
+    			NoteUtils.playNote(worldObj, xCoord, yCoord, zCoord, -1, args.checkInteger(0));
     		}
     	}
     	return null;

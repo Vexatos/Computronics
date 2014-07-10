@@ -102,7 +102,7 @@ public class Computronics {
 	public static String CHATBOX_PREFIX = "ChatBox";
 	
 	public static String TAPE_LENGTHS;
-	public static boolean CAMERA_REDSTONE_REFRESH, CHATBOX_ME_DETECT, CHATBOX_CREATIVE;
+	public static boolean CAMERA_REDSTONE_REFRESH, CHATBOX_ME_DETECT, CHATBOX_CREATIVE, DISABLE_IRONNOTE_FORGE_EVENTS;
 	
 	@SidedProxy(clientSide="pl.asie.computronics.ClientProxy", serverSide="pl.asie.computronics.CommonProxy")	
 	public static CommonProxy proxy;
@@ -153,14 +153,12 @@ public class Computronics {
 		TAPE_LENGTHS = config.get("tapedrive", "tapeLengths", "4,8,16,32,64,2,6,16,128").getString();
 		RADAR_RANGE = config.get("radar", "maxRange", 8).getInt();
 		RADAR_ONLY_DISTANCE = config.get("radar", "onlyOutputDistance", false).getBoolean(false);
+		DISABLE_IRONNOTE_FORGE_EVENTS = config.get("ironnoteblock", "disableForgeEvents", false).getBoolean(false);
 		
-		if(Loader.isModLoaded("ComputerCraft")) {
-			RADAR_CC_TIME = config.get("computercraft", "radarSpeedPerDistanceUnit", 0.5).getDouble(0.5);
-		}
-		if(Loader.isModLoaded("OpenComputers")) {
-			RADAR_OC_ENERGY_COST = config.get("opencomputers", "radarEnergyPerDistanceUnit", 50.0).getDouble(50.0);
-			FX_ENERGY_COST = config.get("opencomputers", "particleEnergyCost", 0.5).getDouble(0.5);
-		}
+		RADAR_CC_TIME = config.get("computercraft", "radarSpeedPerDistanceUnit", 0.5).getDouble(0.5);
+		
+		RADAR_OC_ENERGY_COST = config.get("opencomputers", "radarEnergyPerDistanceUnit", 50.0).getDouble(50.0);
+		FX_ENERGY_COST = config.get("opencomputers", "particleEnergyCost", 0.5).getDouble(0.5);
 		
 		config.get("camera", "sendRedstoneSignal", true).comment = "Setting this to false might help Camera tick lag issues, at the cost of making them useless with redstone circuitry.";
 		
