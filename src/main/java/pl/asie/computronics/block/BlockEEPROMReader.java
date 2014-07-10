@@ -23,7 +23,6 @@ public class BlockEEPROMReader extends BlockPeripheral {
 	public BlockEEPROMReader() {
 		super();
 		this.setBlockName("computronics.eepromReader");
-		this.setGuiID(2);
 	}
 	
 	@Override
