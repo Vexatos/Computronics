@@ -1,5 +1,7 @@
 package pl.asie.computronics.tile;
 
+import java.util.ArrayList;
+
 import li.cil.oc.api.network.Arguments;
 import li.cil.oc.api.network.Callback;
 import li.cil.oc.api.network.Context;
@@ -8,6 +10,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
+import pl.asie.computronics.api.ISortingOutputHandler;
 import pl.asie.computronics.util.MiscCUtils;
 import pl.asie.lib.util.ItemUtils;
 import dan200.computercraft.api.lua.ILuaContext;
@@ -16,9 +19,15 @@ import dan200.computercraft.api.peripheral.IComputerAccess;
 
 public class TileSorter extends TileEntityPeripheralInventory implements ISidedInventory {
 	private int TICKS_SINCE_UPDATE = 0;
+	private boolean updatedOutputYet = false;
+	private ArrayList<ISortingOutputHandler> sortingOutputHandlers;
+	private ISortingOutputHandler sortingOutputHandler;
 	
 	public TileSorter() {
 		super("sorter");
+		
+		sortingOutputHandlers = new ArrayList<ISortingOutputHandler>();
+		
 	};
 	
 	@Override
@@ -26,6 +35,7 @@ public class TileSorter extends TileEntityPeripheralInventory implements ISidedI
 	@Override
 	public void updateEntity() {
 		TICKS_SINCE_UPDATE++;
+		if(!updatedOutputYet) { updatedOutputYet = true; updateOutput(); }
 		// Pop out items which were not sorted for more than 5 seconds.
 		// This way, prevent clogging.
 		if(TICKS_SINCE_UPDATE >= 100 && this.getStackInSlot(0) != null) {
@@ -33,6 +43,10 @@ public class TileSorter extends TileEntityPeripheralInventory implements ISidedI
 			this.setInventorySlotContents(0, null);
 			TICKS_SINCE_UPDATE = 0;
 		}
+	}
+
+	public void updateOutput() {
+		// get TE on top
 	}
 
 	@Override
@@ -120,17 +134,17 @@ public class TileSorter extends TileEntityPeripheralInventory implements ISidedI
 	
 	// SidedInventory code
 	// We will be inserting items into pipes ourselves, so only allow insertion
-	// into the sorter from the sides and bottom.
+	// into the sorter from the sides.
 	
 	@Override
 	public int[] getAccessibleSlotsFromSide(int side) {
-		if(side != 1) return new int[]{0};
+		if(side >= 2) return new int[]{0};
 		else return new int[]{};
 	}
 
 	@Override
 	public boolean canInsertItem(int slot, ItemStack is, int side) {
-		return (side != 1 && this.getStackInSlot(0) == null);
+		return (side >= 2 && this.getStackInSlot(0) == null);
 	}
 
 	@Override
