@@ -62,6 +62,10 @@ if not tape.isReady() then
 end
 
 local function label(name)
+  if not name then
+    print("Tape is currently labeled: "..tape.getLabel())
+    return
+  end
   tape.setLabel(name)
   print("Tape label set to "..name)
 end
