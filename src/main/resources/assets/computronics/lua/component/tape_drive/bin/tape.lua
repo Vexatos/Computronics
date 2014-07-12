@@ -63,9 +63,9 @@ end
 
 local function label(name)
   if not name then
-    local lb = tape.getLabel()
-    if lb == "" then
+    if tape.getLabel() == "" then
       print("Tape is currently not labeled.")
+      return
     end
     print("Tape is currently labeled: "..tape.getLabel())
     return
