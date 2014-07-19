@@ -23,19 +23,18 @@ public class RobotUpgradeCamera extends ManagedEnvironment {
 		this.node = Network.newNode(this, Visibility.Network).withConnector().withComponent("camera", Visibility.Neighbors).create();
 	}
 
-	private Camera camera = null;
+	private final Camera camera = new Camera();
 	private static final int CALL_LIMIT = 15;
 	
-    @Callback(direct = true, limit = CALL_LIMIT)
-    public Object[] setRayDirection(Context context, Arguments args) {
+    //@Callback(direct = true, limit = CALL_LIMIT)
+    public Object[] ray(Context context, Arguments args) {
     	float x = args.count() == 2 ? (float)args.checkDouble(0) : 0.0F;
     	float y = args.count() == 2 ? (float)args.checkDouble(1) : 0.0F;
-    	if(args.count() == 2 || camera == null) {
+    	if(args.count() == 2) {
         	int l = MathHelper.floor_double((double)(robot.player().rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
         	l = Direction.directionToFacing[l];
-        	if(camera == null) camera = new Camera();
         	return new Object[]{
-    			camera.setRayDirection(((TileEntity)entity).getWorldObj(), (float)entity.xPosition(), (float)entity.yPosition(), (float)entity.zPosition(),
+    			camera.ray(((TileEntity)entity).getWorldObj(), (float)entity.xPosition(), (float)entity.yPosition(), (float)entity.zPosition(),
     					ForgeDirection.getOrientation(l), x, y)
     		};
     	}
@@ -44,19 +43,18 @@ public class RobotUpgradeCamera extends ManagedEnvironment {
     
     @Callback(direct = true, limit = CALL_LIMIT)
     public Object[] distance(Context context, Arguments args) {
-    	setRayDirection(context, args);
+    	ray(context, args);
     	return new Object[]{camera.getDistance()};
     }
     
     @Callback(direct = true, limit = CALL_LIMIT)
     public Object[] distanceUp(Context context, Arguments args) {
-    	camera.reset();
     	if(args.count() == 2) {
-    		camera.setRayDirection(((TileEntity)entity).getWorldObj(), (float)entity.xPosition(), (float)entity.yPosition(), (float)entity.zPosition(),
+    		camera.ray(((TileEntity)entity).getWorldObj(), (float)entity.xPosition(), (float)entity.yPosition(), (float)entity.zPosition(),
     				ForgeDirection.UP,
     				(float)args.checkDouble(0), (float)args.checkDouble(1));
     	} else {
-    		camera.setRayDirection(((TileEntity)entity).getWorldObj(), (float)entity.xPosition(), (float)entity.yPosition(), (float)entity.zPosition(),
+    		camera.ray(((TileEntity)entity).getWorldObj(), (float)entity.xPosition(), (float)entity.yPosition(), (float)entity.zPosition(),
     				ForgeDirection.UP,
     				0.0F, 0.0F);
     	}
@@ -65,22 +63,15 @@ public class RobotUpgradeCamera extends ManagedEnvironment {
     
     @Callback(direct = true, limit = CALL_LIMIT)
     public Object[] distanceDown(Context context, Arguments args) {
-    	camera.reset();
     	if(args.count() == 2) {
-    		camera.setRayDirection(((TileEntity)entity).getWorldObj(), (float)entity.xPosition(), (float)entity.yPosition(), (float)entity.zPosition(),
+    		camera.ray(((TileEntity)entity).getWorldObj(), (float)entity.xPosition(), (float)entity.yPosition(), (float)entity.zPosition(),
     				ForgeDirection.DOWN,
     				(float)args.checkDouble(0), (float)args.checkDouble(1));
     	} else {
-    		camera.setRayDirection(((TileEntity)entity).getWorldObj(), (float)entity.xPosition(), (float)entity.yPosition(), (float)entity.zPosition(),
+    		camera.ray(((TileEntity)entity).getWorldObj(), (float)entity.xPosition(), (float)entity.yPosition(), (float)entity.zPosition(),
     				ForgeDirection.DOWN,
     				0.0F, 0.0F);
     	}
     	return new Object[]{camera.getDistance()};
-    }
-    
-    @Callback(direct = true, limit = CALL_LIMIT / 2)
-    public Object[] block(Context context, Arguments args) {
-    	setRayDirection(context, args);
-    	return new Object[]{camera.getBlockData()};
     }
 }

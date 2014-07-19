@@ -2,73 +2,73 @@ package pl.asie.computronics.util;
 
 import java.util.Map;
 
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.Computronics;
 
 public class Camera {
-	public CollisionFinder cf;
+	private World world;
+	private float oxPos, oyPos, ozPos, xPos, yPos, zPos, xDirection, yDirection, zDirection;
 	private Object hit;
-	private boolean MUST_REFRESH = true;
 	
-	public boolean setRayDirection(World worldObj, float xCoord, float yCoord, float zCoord, ForgeDirection dir, float x, float y) {
+	public Camera() {
+		// not initialized
+	}
+	
+	public boolean ray(World worldObj, float xCoord, float yCoord, float zCoord, ForgeDirection dir, float x, float y) {
 		if(x < -1.0F || x > 1.0F || y < -1.0F || y > 1.0F) return false;
 		if(dir != null) {
-			float xInc = 0.0F;
-			float yInc = y;
-			float zInc = 0.0F;
+			hit = null;
+			xDirection = 0.0F;
+			yDirection = y;
+			zDirection = 0.0F;
+			
 			switch(dir) {
-				case EAST: { xInc = 1.0F; zInc = -x; xCoord += 0.6F; } break;
-				case NORTH: { zInc = -1.0F; xInc = x; zCoord -= 0.6F; } break;
-				case SOUTH: { zInc = 1.0F; xInc = -x; zCoord += 0.6F; } break;
-				case WEST: { xInc = -1.0F; zInc = x; xCoord -= 0.6F; } break;
-				case DOWN: { yInc = -1.0F; xInc = x; zInc = y; yCoord -= 0.6F; } break;
-				case UP: { yInc = 1.0F; xInc = x; zInc = y; yCoord += 0.6F; } break;
+				case EAST: { xDirection = 1.0F; zDirection = -x; xCoord += 0.6F; } break;
+				case NORTH: { zDirection = -1.0F; xDirection = x; zCoord -= 0.6F; } break;
+				case SOUTH: { zDirection = 1.0F; xDirection = -x; zCoord += 0.6F; } break;
+				case WEST: { xDirection = -1.0F; zDirection = x; xCoord -= 0.6F; } break;
+				case DOWN: { yDirection = -1.0F; xDirection = x; zDirection = y; yCoord -= 0.6F; } break;
+				case UP: { yDirection = 1.0F; xDirection = x; zDirection = y; yCoord += 0.6F; } break;
 				case UNKNOWN: return false;
 				default: return false;
 			}
-			if(cf != null && cf.xDirection() == xInc && cf.yDirection() == yInc && cf.zDirection() == zInc)
-				return true;
-			if(cf != null) reset();
-			cf = new CollisionFinder(worldObj, xCoord, yCoord, zCoord, xInc, yInc, zInc);
-			hit = cf.nextCollision(Computronics.CAMERA_DISTANCE);
-			MUST_REFRESH = false;
+			world = worldObj;
+			xPos = xCoord + 0.5f;
+			yPos = yCoord + 0.5f;
+			zPos = zCoord + 0.5f;
+			oxPos = xPos; oyPos = yPos; ozPos = zPos;
+			float steps = Computronics.CAMERA_DISTANCE;
+			// shoot ray
+			Vec3 origin = Vec3.createVectorHelper(oxPos, oyPos, ozPos);
+			Vec3 target = Vec3.createVectorHelper(xPos + (xDirection * steps), yPos + (yDirection * steps), zPos + (zDirection * steps));
+			MovingObjectPosition mop = world.rayTraceBlocks(origin, target);
+			if(mop !=  null) {
+				xPos = (float)mop.hitVec.xCoord;
+				yPos = (float)mop.hitVec.yCoord;
+				zPos = (float)mop.hitVec.zCoord;
+				switch(mop.typeOfHit) {
+					case ENTITY: {
+							hit = mop.entityHit;
+						} break;
+					case BLOCK: {
+							hit = world.getBlock(mop.blockX, mop.blockY, mop.blockZ);
+						} break;
+					default: break;
+				}
+			}
 			return true;
 		}
 		return false;
 	}
 	
-	public Object getHit() { refresh(); return hit; }
-	
-	public void reset() {
-		if(hit != null) {
-			synchronized(hit) {
-				hit = null;
-				MUST_REFRESH = true;
-			}
-		}
-	}
-	
-	private void refresh() {
-		if(MUST_REFRESH && cf != null)
-			hit = cf.nextCollision(Computronics.CAMERA_DISTANCE);
-	}
-	
-	public String getBlockHash() {
-		refresh();
-		if(cf != null && hit != null) synchronized(cf) { return cf.blockHash(); }
-		else return null;
-	}
-	
 	public double getDistance() {
-		refresh();
-		if(cf != null && hit != null) synchronized(cf) { return cf.distance(); }
-		else return -1.0;
-	}
-	
-	public Map<String, Object> getBlockData() {
-		refresh();
-		if(cf != null && hit != null) synchronized(cf) { return cf.blockData(); }
-		else return null;
+		if(hit == null) return -1.0;
+		double x = xPos-oxPos;
+		double y = yPos-oyPos;
+		double z = zPos-ozPos;
+		return Math.sqrt(x*x + y*y + z*z);
 	}
 }
