@@ -19,7 +19,7 @@ local function printUsage()
   print("'tape pause' to pause playing the tape")
   print("'tape stop' to stop playing and rewind the tape")
   print("'tape rewind' to rewind the tape")
-  print("'tape label <name>' to label the tape")
+  print("'tape label [name]' to label the tape, leave 'name' empty to get current label")
   print("'tape speed <speed>' to set the playback speed. Needs to be between 0.25 and 2.0")
   print("'tape volume <volume>' to set the volume of the tape. Needs to be between 0.0 and 1.0")
   print("'tape write <path/of/audio/file>' to write to the tape from a file")
@@ -62,6 +62,14 @@ if not tape.isReady() then
 end
 
 local function label(name)
+  if not name then
+    if tape.getLabel() == "" then
+      print("Tape is currently not labeled.")
+      return
+    end
+    print("Tape is currently labeled: "..tape.getLabel())
+    return
+  end
   tape.setLabel(name)
   print("Tape label set to "..name)
 end
