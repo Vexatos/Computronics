@@ -18,9 +18,9 @@ public class Camera {
 	}
 	
 	public boolean ray(World worldObj, float xCoord, float yCoord, float zCoord, ForgeDirection dir, float x, float y) {
+		hit = null;
 		if(x < -1.0F || x > 1.0F || y < -1.0F || y > 1.0F) return false;
 		if(dir != null) {
-			hit = null;
 			xDirection = 0.0F;
 			yDirection = y;
 			zDirection = 0.0F;

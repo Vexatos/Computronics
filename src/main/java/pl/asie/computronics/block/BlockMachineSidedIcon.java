@@ -13,11 +13,17 @@ import pl.asie.lib.block.BlockBase;
 import pl.asie.lib.util.MiscUtils;
 
 public abstract class BlockMachineSidedIcon extends BlockPeripheral {
-	protected IIcon mSide, mTop, mBottom;
+	protected IIcon mSide, mSideBI, mSideBO, mTop, mBottom;
+	private String sidingType;
 	
-	public BlockMachineSidedIcon() {
+	public BlockMachineSidedIcon(String sidingType) {
 		super();
+		this.sidingType = sidingType;
 		this.setRotation(Rotation.FOUR);
+	}
+
+	public BlockMachineSidedIcon() {
+		this("");
 	}
 	
 	@SideOnly(Side.CLIENT)
@@ -31,7 +37,11 @@ public abstract class BlockMachineSidedIcon extends BlockPeripheral {
 	
 	@SideOnly(Side.CLIENT)
 	public IIcon getAbsoluteSideIcon(int sideNumber, int metadata) {
-		return mSide;
+		if(this.sidingType.equals("bundled")) {
+			if(sideNumber == 4) return mSideBI;
+			else if(sideNumber == 4) return mSideBO;
+			else return mSide;
+		} else return mSide;
 	}
 	
 	@Override
@@ -40,6 +50,10 @@ public abstract class BlockMachineSidedIcon extends BlockPeripheral {
 		mSide = r.registerIcon("computronics:machine_side");
 		mTop = r.registerIcon("computronics:machine_top");
 		mBottom = r.registerIcon("computronics:machine_bottom");
+		if(this.sidingType.equals("bundled")) {
+			mSideBI = r.registerIcon("computronics:machine_side_bundled_input");
+			mSideBO = r.registerIcon("computronics:machine_side_bundled_output");
+		}
 	}
 	
 	@Override

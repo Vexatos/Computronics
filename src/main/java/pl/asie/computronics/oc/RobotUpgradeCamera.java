@@ -53,10 +53,6 @@ public class RobotUpgradeCamera extends ManagedEnvironment {
     		camera.ray(((TileEntity)entity).getWorldObj(), (float)entity.xPosition(), (float)entity.yPosition(), (float)entity.zPosition(),
     				ForgeDirection.UP,
     				(float)args.checkDouble(0), (float)args.checkDouble(1));
-    	} else {
-    		camera.ray(((TileEntity)entity).getWorldObj(), (float)entity.xPosition(), (float)entity.yPosition(), (float)entity.zPosition(),
-    				ForgeDirection.UP,
-    				0.0F, 0.0F);
     	}
     	return new Object[]{camera.getDistance()};
     }
@@ -67,10 +63,6 @@ public class RobotUpgradeCamera extends ManagedEnvironment {
     		camera.ray(((TileEntity)entity).getWorldObj(), (float)entity.xPosition(), (float)entity.yPosition(), (float)entity.zPosition(),
     				ForgeDirection.DOWN,
     				(float)args.checkDouble(0), (float)args.checkDouble(1));
-    	} else {
-    		camera.ray(((TileEntity)entity).getWorldObj(), (float)entity.xPosition(), (float)entity.yPosition(), (float)entity.zPosition(),
-    				ForgeDirection.DOWN,
-    				0.0F, 0.0F);
     	}
     	return new Object[]{camera.getDistance()};
     }

@@ -20,6 +20,8 @@ import pl.asie.computronics.cc.ParticleTurtleUpgrade;
 import pl.asie.computronics.cc.RadarTurtleUpgrade;
 import pl.asie.computronics.cc.SpeakingTurtleUpgrade;
 import pl.asie.computronics.gui.GuiOneSlot;
+import pl.asie.computronics.integration.redlogic.DriverLamp;
+import pl.asie.computronics.integration.redlogic.LampPeripheral;
 import pl.asie.computronics.item.ItemBlockChatBox;
 import pl.asie.computronics.item.ItemOpenComputers;
 import pl.asie.computronics.item.ItemTape;
@@ -294,7 +296,10 @@ public class Computronics {
 
 	@Optional.Method(modid="ComputerCraft")
 	private void initCC() {
-
+		if(Loader.isModLoaded("RedLogic")) {
+			ComputerCraftAPI.registerPeripheralProvider(new LampPeripheral());
+		}
+		
 		ComputerCraftAPI.registerPeripheralProvider(new CCPeripheralProvider());
 		if(itemTape != null) ComputerCraftAPI.registerMediaProvider(itemTape);
 		
@@ -312,6 +317,10 @@ public class Computronics {
 	
 	@Optional.Method(modid="OpenComputers")
 	private void initOC() {
+		if(Loader.isModLoaded("RedLogic")) {
+			li.cil.oc.api.Driver.add(new DriverLamp());
+		}
+		
 		if(isEnabled("ocRobotUpgrades")) {
 			Block[] b = {camera, chatBox, radar};
 			for(int i = 0; i < b.length; i++) {
