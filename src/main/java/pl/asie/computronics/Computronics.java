@@ -20,6 +20,7 @@ import pl.asie.computronics.cc.ParticleTurtleUpgrade;
 import pl.asie.computronics.cc.RadarTurtleUpgrade;
 import pl.asie.computronics.cc.SpeakingTurtleUpgrade;
 import pl.asie.computronics.gui.GuiOneSlot;
+import pl.asie.computronics.integration.redlogic.DriverCrateStorage;
 import pl.asie.computronics.integration.redlogic.DriverLamp;
 import pl.asie.computronics.integration.redlogic.LampPeripheral;
 import pl.asie.computronics.item.ItemBlockChatBox;
@@ -77,7 +78,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.network.FMLNetworkEvent;
 import cpw.mods.fml.common.network.internal.FMLProxyPacket;
 
-@Mod(modid="computronics", name="Computronics", version="0.6.0", dependencies="required-after:asielib;after:ComputerCraft;after:OpenComputers;after:OpenComputers|Core;after:BuildCraft|Core")
+@Mod(modid="computronics", name="Computronics", version="0.5.2", dependencies="required-after:asielib;after:ComputerCraft;after:OpenComputers;after:OpenComputers|Core;after:BuildCraft|Core")
 public class Computronics {
 	public Configuration config;
 	public static Random rand = new Random();
@@ -129,8 +130,8 @@ public class Computronics {
         }
 	};
 
-	private boolean isEnabled(String name) {
-		return config.get("enable", name, true).getBoolean(true);
+	private boolean isEnabled(String name, boolean def) {
+		return config.get("enable", name, def).getBoolean(def);
 	}
 	
 	@EventHandler
@@ -164,49 +165,49 @@ public class Computronics {
 		
 		config.get("camera", "sendRedstoneSignal", true).comment = "Setting this to false might help Camera tick lag issues, at the cost of making them useless with redstone circuitry.";
 		
-		if(isEnabled("ironNoteBlock")) {
+		if(isEnabled("ironNoteBlock", true)) {
 			ironNote = new BlockIronNote();
 			GameRegistry.registerBlock(ironNote, "computronics.ironNoteBlock");
 			GameRegistry.registerTileEntity(TileIronNote.class, "computronics.ironNoteBlock");
 		}
 		
-		if(isEnabled("tape")) {
+		if(isEnabled("tape", true)) {
 			tapeReader = new BlockTapeReader();
 			GameRegistry.registerBlock(tapeReader, "computronics.tapeReader");
 			GameRegistry.registerTileEntity(TileTapeDrive.class, "computronics.tapeReader");
 		}
 		
-		if(isEnabled("camera")) {
+		if(isEnabled("camera", true)) {
 			camera = new BlockCamera();
 			GameRegistry.registerBlock(camera, "computronics.camera");
 			GameRegistry.registerTileEntity(TileCamera.class, "computronics.camera");
 		}
 		
-		if(isEnabled("chatBox")) {
+		if(isEnabled("chatBox", true)) {
 			chatBox = new BlockChatBox();
 			GameRegistry.registerBlock(chatBox, ItemBlockChatBox.class, "computronics.chatBox");
 			GameRegistry.registerTileEntity(TileChatBox.class, "computronics.chatBox");
 		}
 		
-		if(isEnabled("cipher")) {
+		if(isEnabled("cipher", true)) {
 			cipher = new BlockCipher();
 			GameRegistry.registerBlock(cipher, "computronics.cipher");
 			GameRegistry.registerTileEntity(TileCipherBlock.class, "computronics.cipher");
 		}
 		
-		if(isEnabled("radar")) {
+		if(isEnabled("radar", true)) {
 			radar = new BlockRadar();
 			GameRegistry.registerBlock(radar, "computronics.radar");
 			GameRegistry.registerTileEntity(TileRadar.class, "computronics.radar");
 		}
 		
-		if(Loader.isModLoaded("nedocomputers") && isEnabled("eepromReader")) {
+		if(Loader.isModLoaded("nedocomputers") && isEnabled("eepromReader", true)) {
 			nc_eepromreader = new BlockEEPROMReader();
 			GameRegistry.registerBlock(nc_eepromreader, "computronics.eepromReader");
 			GameRegistry.registerTileEntity(TileEEPROMReader.class, "computronics.eepromReader");
 		}
 		
-		if(isEnabled("tape")) {
+		if(isEnabled("tape", true)) {
 			itemTape = new ItemTape(TAPE_LENGTHS);
 			GameRegistry.registerItem(itemTape, "computronics.tape");
 		}
@@ -220,7 +221,7 @@ public class Computronics {
 	
 	@Optional.Method(modid="OpenComputers")
 	private void preInitOC() {
-		if(isEnabled("ocRobotUpgrades")) {
+		if(isEnabled("ocRobotUpgrades", true)) {
 			itemRobotUpgrade = new ItemOpenComputers();
 			GameRegistry.registerItem(itemRobotUpgrade, "computronics.robotUpgrade");
 			Driver.add(itemRobotUpgrade);
@@ -297,13 +298,13 @@ public class Computronics {
 	@Optional.Method(modid="ComputerCraft")
 	private void initCC() {
 		if(Loader.isModLoaded("RedLogic")) {
-			ComputerCraftAPI.registerPeripheralProvider(new LampPeripheral());
+			if(isEnabled("modPeripheral_lamp", true)) ComputerCraftAPI.registerPeripheralProvider(new LampPeripheral());
 		}
 		
 		ComputerCraftAPI.registerPeripheralProvider(new CCPeripheralProvider());
 		if(itemTape != null) ComputerCraftAPI.registerMediaProvider(itemTape);
 		
-		if(isEnabled("ccTurtleUpgrades")) {
+		if(isEnabled("ccTurtleUpgrades", true)) {
 			ComputerCraftAPI.registerTurtleUpgrade(
 					new SpeakingTurtleUpgrade(config.get("turtleUpgradeIDs", "speaking", 190).getInt()));
 			ComputerCraftAPI.registerTurtleUpgrade(
@@ -318,10 +319,13 @@ public class Computronics {
 	@Optional.Method(modid="OpenComputers")
 	private void initOC() {
 		if(Loader.isModLoaded("RedLogic")) {
-			li.cil.oc.api.Driver.add(new DriverLamp());
+			if(isEnabled("modPeripheral_lamp", true)) li.cil.oc.api.Driver.add(new DriverLamp());
+		}
+		if(Loader.isModLoaded("betterstorage")) {
+			if(isEnabled("modPeripheral_betterStorageCrate", true)) li.cil.oc.api.Driver.add(new DriverCrateStorage());
 		}
 		
-		if(isEnabled("ocRobotUpgrades")) {
+		if(isEnabled("ocRobotUpgrades", true)) {
 			Block[] b = {camera, chatBox, radar};
 			for(int i = 0; i < b.length; i++) {
 				Block t = b[i];
