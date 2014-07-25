@@ -23,6 +23,7 @@ import pl.asie.computronics.cc.SpeakingTurtleUpgrade;
 import pl.asie.computronics.client.LampRender;
 import pl.asie.computronics.gui.GuiOneSlot;
 import pl.asie.computronics.integration.betterstorage.DriverCrateStorage;
+import pl.asie.computronics.integration.mfr.DriverDeepStorageUnit;
 import pl.asie.computronics.integration.projectred.CCBundledRedstoneProviderProjectRed;
 import pl.asie.computronics.integration.redlogic.CCBundledRedstoneProviderRedLogic;
 import pl.asie.computronics.integration.redlogic.DriverLamp;
@@ -83,7 +84,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.network.FMLNetworkEvent;
 import cpw.mods.fml.common.network.internal.FMLProxyPacket;
 
-@Mod(modid="computronics", name="Computronics", version="0.6.0", dependencies="required-after:asielib;after:ComputerCraft;after:OpenComputers;after:OpenComputers|Core;after:BuildCraft|Core")
+@Mod(modid="computronics", name="Computronics", version="0.6.1", dependencies="required-after:asielib;after:ComputerCraft;after:OpenComputers;after:OpenComputers|Core;after:BuildCraft|Core")
 public class Computronics {
 	public Configuration config;
 	public static Random rand = new Random();
@@ -344,6 +345,9 @@ public class Computronics {
 		}
 		if(Loader.isModLoaded("betterstorage")) {
 			if(isEnabled("modPeripheral_betterStorageCrate", true)) li.cil.oc.api.Driver.add(new DriverCrateStorage());
+		}
+		if(Loader.isModLoaded("MineFactoryReloaded")) {
+			if(isEnabled("modPeripheral_mfrDeepStorageUnit", true)) li.cil.oc.api.Driver.add(new DriverDeepStorageUnit());
 		}
 		
 		if(isEnabled("ocRobotUpgrades", true)) {
