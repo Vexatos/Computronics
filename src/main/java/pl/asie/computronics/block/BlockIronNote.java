@@ -16,7 +16,6 @@ import powercrystals.minefactoryreloaded.api.rednet.IRedNetInputNode;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
 
 @Optional.InterfaceList({
-	@Optional.Interface(iface = "mods.immibis.redlogic.api.wiring.IBundledTile", modid = "ProjRed|Core"),
 	@Optional.Interface(iface = "powercrystals.minefactoryreloaded.api.rednet.IRedNetInputNode", modid = "MineFactoryReloaded")
 })
 public class BlockIronNote extends BlockPeripheral implements IRedNetInputNode {

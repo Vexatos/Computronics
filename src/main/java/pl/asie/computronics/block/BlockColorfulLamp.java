@@ -1,16 +1,25 @@
 package pl.asie.computronics.block;
 
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.client.LampRender;
 import pl.asie.computronics.tile.TileColorfulLamp;
+import powercrystals.minefactoryreloaded.api.rednet.IRedNetInputNode;
+import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
+import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
-public class BlockColorfulLamp extends BlockPeripheral {
+@Optional.InterfaceList({
+	@Optional.Interface(iface = "powercrystals.minefactoryreloaded.api.rednet.IRedNetInputNode", modid = "MineFactoryReloaded")
+})
+public class BlockColorfulLamp extends BlockPeripheral implements IRedNetInputNode {
 	public IIcon m0, m1;
 	
 	public BlockColorfulLamp() {
@@ -32,6 +41,13 @@ public class BlockColorfulLamp extends BlockPeripheral {
 	}
 	
 	@Override
+	public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
+		TileEntity tile = world.getTileEntity(x, y, z);
+		if(Loader.isModLoaded("ProjRed|Core"))
+			((TileColorfulLamp)tile).onProjectRedBundledInputChanged();
+	}
+
+	@Override
 	@SideOnly(Side.CLIENT)
 	public int getLightValue() { return 15; } 
 	
@@ -47,5 +63,22 @@ public class BlockColorfulLamp extends BlockPeripheral {
 	@SideOnly(Side.CLIENT)
 	public IIcon getIcon(int side, int meta) {
 		return renderingPass == 1 ? m1 : m0;
+	}
+
+	@Override
+	@Optional.Method(modid = "MineFactoryReloaded")
+	public RedNetConnectionType getConnectionType(World world, int x, int y,
+			int z, ForgeDirection side) { return RedNetConnectionType.CableSingle; }
+
+	@Override
+	@Optional.Method(modid = "MineFactoryReloaded")
+	public void onInputsChanged(World world, int x, int y, int z,
+			ForgeDirection side, int[] inputValues) { }
+
+	@Override
+	@Optional.Method(modid = "MineFactoryReloaded")
+	public void onInputChanged(World world, int x, int y, int z,
+			ForgeDirection side, int inputValue) {
+		((TileColorfulLamp)world.getTileEntity(x, y, z)).setLampColor(inputValue & 0x7FFF);
 	}
 }
