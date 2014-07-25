@@ -23,6 +23,7 @@ import pl.asie.computronics.cc.SpeakingTurtleUpgrade;
 import pl.asie.computronics.client.LampRender;
 import pl.asie.computronics.gui.GuiOneSlot;
 import pl.asie.computronics.integration.betterstorage.DriverCrateStorage;
+import pl.asie.computronics.integration.mfr.DeepStorageUnitPeripheral;
 import pl.asie.computronics.integration.mfr.DriverDeepStorageUnit;
 import pl.asie.computronics.integration.projectred.CCBundledRedstoneProviderProjectRed;
 import pl.asie.computronics.integration.redlogic.CCBundledRedstoneProviderRedLogic;
@@ -315,12 +316,14 @@ public class Computronics {
 	@Optional.Method(modid="ComputerCraft")
 	private void initCC() {
 		if(Loader.isModLoaded("RedLogic")) {
-			if(isEnabled("modPeripheral_lamp", true)) ComputerCraftAPI.registerPeripheralProvider(new LampPeripheral());
+			ComputerCraftAPI.registerPeripheralProvider(new LampPeripheral());
 			ComputerCraftAPI.registerBundledRedstoneProvider(new CCBundledRedstoneProviderRedLogic());
 		}
-		
 		if(Loader.isModLoaded("ProjRed|Core")) {
 			ComputerCraftAPI.registerBundledRedstoneProvider(new CCBundledRedstoneProviderProjectRed());
+		}
+		if(Loader.isModLoaded("MineFactoryReloaded") || Loader.isModLoaded("JABBA")) {
+			ComputerCraftAPI.registerPeripheralProvider(new DeepStorageUnitPeripheral());
 		}
 		
 		ComputerCraftAPI.registerPeripheralProvider(new CCPeripheralProvider());
@@ -341,13 +344,13 @@ public class Computronics {
 	@Optional.Method(modid="OpenComputers")
 	private void initOC() {
 		if(Loader.isModLoaded("RedLogic")) {
-			if(isEnabled("modPeripheral_lamp", true)) li.cil.oc.api.Driver.add(new DriverLamp());
+			li.cil.oc.api.Driver.add(new DriverLamp());
 		}
 		if(Loader.isModLoaded("betterstorage")) {
-			if(isEnabled("modPeripheral_betterStorageCrate", true)) li.cil.oc.api.Driver.add(new DriverCrateStorage());
+			if(isEnabled("modPeripheral_betterStorageCrates", true)) li.cil.oc.api.Driver.add(new DriverCrateStorage());
 		}
-		if(Loader.isModLoaded("MineFactoryReloaded")) {
-			if(isEnabled("modPeripheral_mfrDeepStorageUnit", true)) li.cil.oc.api.Driver.add(new DriverDeepStorageUnit());
+		if(Loader.isModLoaded("MineFactoryReloaded") || Loader.isModLoaded("JABBA")) {
+			li.cil.oc.api.Driver.add(new DriverDeepStorageUnit());
 		}
 		
 		if(isEnabled("ocRobotUpgrades", true)) {

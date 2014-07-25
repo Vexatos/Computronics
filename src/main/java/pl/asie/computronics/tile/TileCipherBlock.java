@@ -32,7 +32,7 @@ import pl.asie.lib.util.Base64;
 	@Optional.Interface(iface = "mods.immibis.redlogic.api.wiring.IBundledEmitter", modid = "RedLogic"),
 	@Optional.Interface(iface = "mods.immibis.redlogic.api.wiring.IBundledUpdatable", modid = "RedLogic"),
 	@Optional.Interface(iface = "mods.immibis.redlogic.api.wiring.IConnectable", modid = "RedLogic"),
-	@Optional.Interface(iface = "mods.immibis.redlogic.api.wiring.IBundledTile", modid = "ProjRed|Core")
+	@Optional.Interface(iface = "mrtjp.projectred.api.IBundledTile", modid = "ProjRed|Core")
 })
 public class TileCipherBlock extends TileEntityPeripheralInventory implements IBundledEmitter, IBundledTile, IBundledUpdatable, IConnectable {
 	private byte[] key = new byte[32];

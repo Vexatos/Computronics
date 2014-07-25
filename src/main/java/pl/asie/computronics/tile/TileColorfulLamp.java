@@ -25,7 +25,7 @@ import dan200.computercraft.api.peripheral.IComputerAccess;
 @Optional.InterfaceList({
 	@Optional.Interface(iface = "mods.immibis.redlogic.api.wiring.IBundledUpdatable", modid = "RedLogic"),
 	@Optional.Interface(iface = "mods.immibis.redlogic.api.wiring.IConnectable", modid = "RedLogic"),
-	@Optional.Interface(iface = "mods.immibis.redlogic.api.wiring.IBundledTile", modid = "ProjRed|Core")
+	@Optional.Interface(iface = "mrtjp.projectred.api.IBundledTile", modid = "ProjRed|Core")
 })
 public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundledTile, IBundledUpdatable, IConnectable {
 	public TileColorfulLamp() {
