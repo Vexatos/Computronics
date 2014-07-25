@@ -77,8 +77,6 @@ public class LampRender implements ISimpleBlockRenderingHandler {
         float g = 0.2f + ((((color >> 5) & 31) / 31.0f) * 0.8f);
         float r = 0.2f + ((((color >> 10) & 31) / 31.0f) * 0.8f);
         
-        System.out.println("RENDER: " + color + " -> " + r + ", " + g + ", " + b);
-        
 		// HACK! HACK! HACK! HACK! HACK!
 		lb.setRenderingPass(0);
 		renderer.renderStandardBlockWithColorMultiplier(lb, x, y, z, r, g, b);

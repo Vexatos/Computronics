@@ -118,7 +118,6 @@ public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundl
 		NBTTagCompound tag = pkt.func_148857_g();
 		if(tag != null && tag.hasKey("c")) {
 			this.color = tag.getShort("c");
-			System.out.println("client color is now " + this.color);
 			this.worldObj.markBlockRangeForRenderUpdate(xCoord, yCoord, zCoord, xCoord, yCoord, zCoord);
 		}
     }

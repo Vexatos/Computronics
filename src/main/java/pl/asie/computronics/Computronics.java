@@ -23,6 +23,8 @@ import pl.asie.computronics.cc.SpeakingTurtleUpgrade;
 import pl.asie.computronics.client.LampRender;
 import pl.asie.computronics.gui.GuiOneSlot;
 import pl.asie.computronics.integration.betterstorage.DriverCrateStorage;
+import pl.asie.computronics.integration.redlogic.CCBundledRedstoneProviderProjectRed;
+import pl.asie.computronics.integration.redlogic.CCBundledRedstoneProviderRedLogic;
 import pl.asie.computronics.integration.redlogic.DriverLamp;
 import pl.asie.computronics.integration.redlogic.LampPeripheral;
 import pl.asie.computronics.item.ItemBlockChatBox;
@@ -312,6 +314,11 @@ public class Computronics {
 	private void initCC() {
 		if(Loader.isModLoaded("RedLogic")) {
 			if(isEnabled("modPeripheral_lamp", true)) ComputerCraftAPI.registerPeripheralProvider(new LampPeripheral());
+			ComputerCraftAPI.registerBundledRedstoneProvider(new CCBundledRedstoneProviderRedLogic());
+		}
+		
+		if(Loader.isModLoaded("ProjRed|Core")) {
+			ComputerCraftAPI.registerBundledRedstoneProvider(new CCBundledRedstoneProviderProjectRed());
 		}
 		
 		ComputerCraftAPI.registerPeripheralProvider(new CCPeripheralProvider());
