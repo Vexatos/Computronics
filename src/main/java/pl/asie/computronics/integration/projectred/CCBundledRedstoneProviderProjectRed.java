@@ -1,4 +1,4 @@
-package pl.asie.computronics.integration.redlogic;
+package pl.asie.computronics.integration.projectred;
 
 import pl.asie.computronics.Computronics;
 import mrtjp.projectred.api.ProjectRedAPI;

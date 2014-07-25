@@ -68,7 +68,6 @@ public class LampRender implements ISimpleBlockRenderingHandler {
 			Block block, int modelId, RenderBlocks renderer) {
 		BlockColorfulLamp lb = (BlockColorfulLamp)block;
 		GL11.glPushMatrix();
-		GL11.glScalef(0.8f, 0.8f, 0.8f);
         Tessellator t = Tessellator.instance;
         
         // calculate colors
