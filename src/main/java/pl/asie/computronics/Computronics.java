@@ -105,7 +105,7 @@ public class Computronics {
 	public static String CHATBOX_PREFIX = "ChatBox";
 	
 	public static String TAPE_LENGTHS;
-	public static boolean CAMERA_REDSTONE_REFRESH, CHATBOX_ME_DETECT, CHATBOX_CREATIVE, DISABLE_IRONNOTE_FORGE_EVENTS;
+	public static boolean REDSTONE_REFRESH, CHATBOX_ME_DETECT, CHATBOX_CREATIVE, DISABLE_IRONNOTE_FORGE_EVENTS;
 	
 	@SidedProxy(clientSide="pl.asie.computronics.ClientProxy", serverSide="pl.asie.computronics.CommonProxy")	
 	public static CommonProxy proxy;
@@ -147,7 +147,7 @@ public class Computronics {
 		// Configs
 		CHATBOX_DISTANCE = config.get("chatbox", "maxDistance", 40).getInt();
 		CAMERA_DISTANCE = config.get("camera", "maxDistance", 32).getInt();
-		CAMERA_REDSTONE_REFRESH = config.get("camera", "sendRedstoneSignal", true).getBoolean(true);
+		REDSTONE_REFRESH = config.get("general", "enableTickingRedstoneSupport", true).getBoolean(true);
 		BUFFER_MS = config.get("tapedrive", "audioPreloadMs", 750).getInt();
 		CHATBOX_PREFIX = config.get("chatbox", "prefix", "ChatBox").getString();
 		CHATBOX_ME_DETECT = config.get("chatbox", "readCommandMe", false).getBoolean(false);

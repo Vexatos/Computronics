@@ -17,13 +17,14 @@ import net.minecraftforge.event.world.WorldEvent;
 public class ChatBoxHandler {
 	@SubscribeEvent
 	public void chatEvent(ServerChatEvent event) {
+		System.out.println("event");
 		for(Object o: event.player.worldObj.loadedTileEntityList) {
 			if(o instanceof TileChatBox) {
 				TileChatBox te = (TileChatBox)o;
 				if(te.isCreative() || event.player.getDistance(te.xCoord, te.yCoord, te.zCoord) < te.getDistance()) {
 					te.receiveChatMessage(event);
 				}
-			} else if(o instanceof Robot && o instanceof TileEntity) {
+			} else if(o instanceof Robot) {
 				Robot r = (Robot)o;
 				TileEntity te = (TileEntity)o;
 				if(event.player.getDistance(te.xCoord, te.yCoord, te.zCoord) < Computronics.CHATBOX_DISTANCE) {

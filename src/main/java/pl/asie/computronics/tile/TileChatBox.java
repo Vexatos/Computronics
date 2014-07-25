@@ -30,6 +30,8 @@ import net.minecraftforge.event.ServerChatEvent;
 
 public class TileChatBox extends TileEntityPeripheralBase {
 	private int distance;
+	private int ticksUntilOff = 0;
+	private boolean mustRefresh = false;
 	
 	public TileChatBox() {
 		super("chat_box");
@@ -37,11 +39,26 @@ public class TileChatBox extends TileEntityPeripheralBase {
 	}
 	
 	@Override
-	public boolean canUpdate() { return Computronics.MUST_UPDATE_TILE_ENTITIES; }
+	public int requestCurrentRedstoneValue(int side) {
+		return (ticksUntilOff > 0) ? 15 : 0;
+	}
+	
+	@Override
+	public boolean canUpdate() { return Computronics.MUST_UPDATE_TILE_ENTITIES || Computronics.REDSTONE_REFRESH; }
 	
 	public boolean isCreative() {
 		if(!Computronics.CHATBOX_CREATIVE || worldObj == null) return false;
 		else return worldObj.getBlockMetadata(xCoord, yCoord, zCoord) >= 8;
+	}
+	
+	@Override
+	public void updateEntity() {
+		super.updateEntity();
+		if(Computronics.REDSTONE_REFRESH && ticksUntilOff > 0) {
+			ticksUntilOff--;
+			if(ticksUntilOff == 0 || mustRefresh)
+				this.worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, this.blockType);
+		}
 	}
 	
 	public int getDistance() { return distance; }
@@ -54,6 +71,10 @@ public class TileChatBox extends TileEntityPeripheralBase {
 	}
 	
 	public void receiveChatMessage(ServerChatEvent event) {
+		if(Computronics.REDSTONE_REFRESH) {
+			ticksUntilOff = 5;
+			mustRefresh = true;
+		}
 		if(Loader.isModLoaded("OpenComputers")) eventOC(event);
 		if(Loader.isModLoaded("ComputerCraft")) eventCC(event);
 	}

@@ -41,6 +41,6 @@ public class BlockCamera extends BlockMachineSidedIcon {
 	
 	@Override
 	public boolean emitsRedstone(IBlockAccess world, int x, int y, int z) {
-		return Computronics.CAMERA_REDSTONE_REFRESH;
+		return Computronics.REDSTONE_REFRESH;
 	}
 }

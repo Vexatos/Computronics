@@ -66,4 +66,9 @@ public class BlockChatBox extends BlockMachineSidedIcon {
 		super.registerBlockIcons(r);
 		mSide = r.registerIcon("computronics:chatbox_side");
 	}
+	
+	@Override
+	public boolean emitsRedstone(IBlockAccess world, int x, int y, int z) {
+		return Computronics.REDSTONE_REFRESH;
+	}
 }
