@@ -1,5 +1,7 @@
 package pl.asie.computronics.tile;
 
+import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.common.Optional;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
@@ -17,9 +19,11 @@ import mrtjp.projectred.api.ProjectRedAPI;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.util.NoteUtils;
 import pl.asie.lib.block.TileEntityBase;
+import powercrystals.minefactoryreloaded.api.rednet.IRedNetInputNode;
+import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
 
 @Optional.InterfaceList({
-	@Optional.Interface(iface = "mods.immibis.redlogic.api.wiring.IBundledTile", modid = "ProjRed|Core")
+	@Optional.Interface(iface = "mods.immibis.redlogic.api.wiring.IBundledTile", modid = "ProjRed|Core"),
 })
 public class TileIronNote extends TileEntityPeripheralBase implements IBundledTile {
 	public TileIronNote() {
