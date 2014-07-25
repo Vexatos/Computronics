@@ -1,5 +1,6 @@
 package pl.asie.computronics.tile;
 
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.common.Optional;
@@ -11,6 +12,7 @@ import li.cil.oc.api.network.Callback;
 import li.cil.oc.api.network.Context;
 import li.cil.oc.api.network.Environment;
 import li.cil.oc.api.network.SimpleComponent;
+import mods.immibis.redlogic.api.wiring.IBundledEmitter;
 import mods.immibis.redlogic.api.wiring.IBundledUpdatable;
 import mods.immibis.redlogic.api.wiring.IConnectable;
 import mods.immibis.redlogic.api.wiring.IWire;
@@ -23,9 +25,11 @@ import powercrystals.minefactoryreloaded.api.rednet.IRedNetInputNode;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
 
 @Optional.InterfaceList({
-	@Optional.Interface(iface = "mods.immibis.redlogic.api.wiring.IBundledTile", modid = "ProjRed|Core"),
+	@Optional.Interface(iface = "mods.immibis.redlogic.api.wiring.IBundledUpdatable", modid = "RedLogic"),
+	@Optional.Interface(iface = "mods.immibis.redlogic.api.wiring.IConnectable", modid = "RedLogic"),
+	@Optional.Interface(iface = "mods.immibis.redlogic.api.wiring.IBundledTile", modid = "ProjRed|Core")
 })
-public class TileIronNote extends TileEntityPeripheralBase implements IBundledTile {
+public class TileIronNote extends TileEntityPeripheralBase implements IBundledTile, IBundledUpdatable, IConnectable {
 	public TileIronNote() {
 		super("iron_noteblock");
 	}
@@ -109,6 +113,26 @@ public class TileIronNote extends TileEntityPeripheralBase implements IBundledTi
 	public void onProjectRedBundledInputChanged() {
 		for(int i = 0; i < 6; i++) {
 			parseBundledInput(ProjectRedAPI.transmissionAPI.getBundledInput(worldObj, xCoord, yCoord, zCoord, i));
+		}
+	}
+
+	@Override
+	@Optional.Method(modid = "RedLogic")
+	public boolean connects(IWire wire, int blockFace, int fromDirection) { return (wire instanceof IBundledEmitter); }
+	@Override
+	@Optional.Method(modid = "RedLogic")
+	public boolean connectsAroundCorner(IWire wire, int blockFace, int fromDirection) { return false; }
+	@Override
+	@Optional.Method(modid = "RedLogic")
+	public void onBundledInputChanged() {
+		for(int side = 0; side < 6; side++) {
+			ForgeDirection dir = ForgeDirection.getOrientation(side);
+			TileEntity input = worldObj.getTileEntity(xCoord+dir.offsetX, yCoord+dir.offsetY, zCoord+dir.offsetZ);
+			if(!(input instanceof IBundledEmitter)) continue;
+			for(int direction = -1; direction < 6; direction++) {
+ 				byte[] data = ((IBundledEmitter)input).getBundledCableStrength(direction, side ^ 1);
+ 				if(data != null) parseBundledInput(data);
+			}
 		}
 	}
 }

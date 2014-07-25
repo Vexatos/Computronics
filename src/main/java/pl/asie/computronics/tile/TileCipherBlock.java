@@ -257,9 +257,9 @@ public class TileCipherBlock extends TileEntityPeripheralInventory implements IB
 	public void onBundledInputChanged() {
 		ForgeDirection input = ForgeDirection.getOrientation(Computronics.cipher.relToAbs(4, blockMetadata));
 		TileEntity inputTE = worldObj.getTileEntity(xCoord + input.offsetX, yCoord + input.offsetY, zCoord + input.offsetZ);
-		if(inputTE instanceof IBundledWire) {
-			IBundledWire inputWire = (IBundledWire)inputTE;
-			parseBundledInput(inputWire.getBundledCableStrength(0, Computronics.cipher.relToAbs(4, blockMetadata) ^ 1));
+		if(inputTE instanceof IBundledEmitter) {
+			IBundledEmitter inputWire = (IBundledEmitter)inputTE;
+			parseBundledInput(inputWire.getBundledCableStrength(0, input.ordinal() ^ 1));
 		}
 	}
 	
@@ -275,7 +275,7 @@ public class TileCipherBlock extends TileEntityPeripheralInventory implements IB
 	@Override
 	@Optional.Method(modid = "RedLogic")
 	public boolean connects(IWire wire, int blockFace, int fromDirection) {
-		if(blockFace != 0 || !(wire instanceof IBundledWire)) return false;
+		if(blockFace != 0 || !(wire instanceof IBundledEmitter)) return false;
 		return canConnectBundled(fromDirection);
 	}
 
