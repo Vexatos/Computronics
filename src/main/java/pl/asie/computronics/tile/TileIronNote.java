@@ -9,11 +9,19 @@ import li.cil.oc.api.network.Callback;
 import li.cil.oc.api.network.Context;
 import li.cil.oc.api.network.Environment;
 import li.cil.oc.api.network.SimpleComponent;
+import mods.immibis.redlogic.api.wiring.IBundledUpdatable;
+import mods.immibis.redlogic.api.wiring.IConnectable;
+import mods.immibis.redlogic.api.wiring.IWire;
+import mrtjp.projectred.api.IBundledTile;
+import mrtjp.projectred.api.ProjectRedAPI;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.util.NoteUtils;
 import pl.asie.lib.block.TileEntityBase;
 
-public class TileIronNote extends TileEntityPeripheralBase {
+@Optional.InterfaceList({
+	@Optional.Interface(iface = "mods.immibis.redlogic.api.wiring.IBundledTile", modid = "ProjRed|Core")
+})
+public class TileIronNote extends TileEntityPeripheralBase implements IBundledTile {
 	public TileIronNote() {
 		super("iron_noteblock");
 	}
@@ -73,5 +81,30 @@ public class TileIronNote extends TileEntityPeripheralBase {
     @Optional.Method(modid="nedocomputers")
 	public void busWrite(int addr, short data) {
 		NoteUtils.playNote(worldObj, xCoord, yCoord, zCoord, (data >> 5), (data & 31));
+	}
+	
+	private void parseBundledInput(byte[] data) {
+		int baseNote = 4;
+		if(data != null) for(int i = 0; i < 16; i++) {
+			if(data[i] != 0)
+				NoteUtils.playNote(worldObj, xCoord, yCoord, zCoord, -1, baseNote + i);
+		}
+	}
+
+	@Override
+	@Optional.Method(modid="ProjRed|Core")
+	public byte[] getBundledSignal(int side) {
+		return new byte[]{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+	}
+
+	@Override
+	@Optional.Method(modid="ProjRed|Core")
+	public boolean canConnectBundled(int side) { return true; }
+	
+	@Optional.Method(modid = "ProjRed|Core")
+	public void onProjectRedBundledInputChanged() {
+		for(int i = 0; i < 6; i++) {
+			parseBundledInput(ProjectRedAPI.transmissionAPI.getBundledInput(worldObj, xCoord, yCoord, zCoord, i));
+		}
 	}
 }

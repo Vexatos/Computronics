@@ -1,7 +1,9 @@
 package pl.asie.computronics.block;
 
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.tileentity.TileEntity;
@@ -11,6 +13,7 @@ import net.minecraft.world.World;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.tile.TileCipherBlock;
 import pl.asie.computronics.tile.TileIronNote;
+import pl.asie.computronics.tile.TileSorter;
 import pl.asie.computronics.tile.TileTapeDrive;
 import pl.asie.lib.block.BlockBase;
 
@@ -18,7 +21,7 @@ public class BlockCipher extends BlockMachineSidedIcon {
 	private IIcon mFront;
 	
 	public BlockCipher() {
-		super();
+		super("bundled");
 		this.setBlockName("computronics.cipher");
 		this.setGuiID(1);
 	}
@@ -26,6 +29,13 @@ public class BlockCipher extends BlockMachineSidedIcon {
 	@Override
 	public TileEntity createNewTileEntity(World world, int metadata) {
 		return new TileCipherBlock();
+	}
+	
+	@Override
+	public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
+		TileEntity tile = world.getTileEntity(x, y, z);
+		if(Loader.isModLoaded("ProjRed|Core"))
+			((TileCipherBlock)tile).onProjectRedBundledInputChanged();
 	}
 	
 	@Override

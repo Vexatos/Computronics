@@ -1,5 +1,6 @@
 package pl.asie.computronics.block;
 
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.material.Material;
@@ -19,6 +20,8 @@ public abstract class BlockMachineSidedIcon extends BlockPeripheral {
 	public BlockMachineSidedIcon(String sidingType) {
 		super();
 		this.sidingType = sidingType;
+		if(sidingType.equals("bundled") && !Loader.isModLoaded("RedLogic") && !Loader.isModLoaded("ProjRed|Core"))
+			this.sidingType = "";
 		this.setRotation(Rotation.FOUR);
 	}
 
@@ -39,7 +42,7 @@ public abstract class BlockMachineSidedIcon extends BlockPeripheral {
 	public IIcon getAbsoluteSideIcon(int sideNumber, int metadata) {
 		if(this.sidingType.equals("bundled")) {
 			if(sideNumber == 4) return mSideBI;
-			else if(sideNumber == 4) return mSideBO;
+			else if(sideNumber == 5) return mSideBO;
 			else return mSide;
 		} else return mSide;
 	}

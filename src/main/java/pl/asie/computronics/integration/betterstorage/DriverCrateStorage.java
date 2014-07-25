@@ -1,4 +1,4 @@
-package pl.asie.computronics.integration.redlogic;
+package pl.asie.computronics.integration.betterstorage;
 
 import java.util.List;
 

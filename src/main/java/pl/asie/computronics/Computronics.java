@@ -20,7 +20,7 @@ import pl.asie.computronics.cc.ParticleTurtleUpgrade;
 import pl.asie.computronics.cc.RadarTurtleUpgrade;
 import pl.asie.computronics.cc.SpeakingTurtleUpgrade;
 import pl.asie.computronics.gui.GuiOneSlot;
-import pl.asie.computronics.integration.redlogic.DriverCrateStorage;
+import pl.asie.computronics.integration.betterstorage.DriverCrateStorage;
 import pl.asie.computronics.integration.redlogic.DriverLamp;
 import pl.asie.computronics.integration.redlogic.LampPeripheral;
 import pl.asie.computronics.item.ItemBlockChatBox;

@@ -4,8 +4,17 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import mods.immibis.redlogic.api.wiring.IBundledEmitter;
+import mods.immibis.redlogic.api.wiring.IBundledUpdatable;
+import mods.immibis.redlogic.api.wiring.IBundledWire;
+import mods.immibis.redlogic.api.wiring.IConnectable;
+import mods.immibis.redlogic.api.wiring.IWire;
+import mrtjp.projectred.api.IBundledTile;
+import mrtjp.projectred.api.ProjectRedAPI;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.common.Optional;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
@@ -19,7 +28,13 @@ import pl.asie.lib.AsieLibMod;
 import pl.asie.lib.block.TileEntityInventory;
 import pl.asie.lib.util.Base64;
 
-public class TileCipherBlock extends TileEntityPeripheralInventory {
+@Optional.InterfaceList({
+	@Optional.Interface(iface = "mods.immibis.redlogic.api.wiring.IBundledEmitter", modid = "RedLogic"),
+	@Optional.Interface(iface = "mods.immibis.redlogic.api.wiring.IBundledUpdatable", modid = "RedLogic"),
+	@Optional.Interface(iface = "mods.immibis.redlogic.api.wiring.IConnectable", modid = "RedLogic"),
+	@Optional.Interface(iface = "mods.immibis.redlogic.api.wiring.IBundledTile", modid = "ProjRed|Core")
+})
+public class TileCipherBlock extends TileEntityPeripheralInventory implements IBundledEmitter, IBundledTile, IBundledUpdatable, IConnectable {
 	private byte[] key = new byte[32];
 	private byte[] iv = new byte[16];
 	private SecretKeySpec skey;
@@ -97,6 +112,7 @@ public class TileCipherBlock extends TileEntityPeripheralInventory {
 	@Override
 	public void onInventoryUpdate(int slot) {
 		updateKey();
+		updateOutputWires();
 	}
 	
 	@Callback(direct = true)
@@ -186,5 +202,103 @@ public class TileCipherBlock extends TileEntityPeripheralInventory {
 				_nedo_status = 1;
 			}
 		}
+	}
+	
+	private int bundledXORData;
+	
+	private int getBundledXORKey() {
+		int key = 0;
+		for(int i = 0; i < 6; i++) {
+			ItemStack stack = this.getStackInSlot(i);
+			if(stack == null || stack.getItem() == null) continue;
+			
+			int stackId = Item.getIdFromItem(stack.getItem());
+			if(stackId < 4096) stackId <<= 4;
+			key ^= stackId;
+			key ^= stack.getItemDamage();
+			key ^= stack.stackSize * (193 * i);
+		}
+		return key;
+	}
+	
+	private byte[] getBundledOutput() {
+		int output = getBundledXORKey() ^ bundledXORData;
+		byte[] out = new byte[16];
+		for(int i = 0; i < 16; i++) {
+			out[i] = (output & 1) > 0 ? (byte)255 : 0;
+			output >>= 1;
+		}
+		return out;
+	}
+
+	@Override // modid = "ProjectRed", but we can use it for more
+	public boolean canConnectBundled(int side) {
+		blockMetadata = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
+		return ((side == Computronics.cipher.relToAbs(4, blockMetadata)))
+				|| ((side == Computronics.cipher.relToAbs(5, blockMetadata)));
+	}
+	
+	private void updateOutputWires() {
+		worldObj.notifyBlockChange(xCoord, yCoord, zCoord, this.blockType);
+	}
+	
+	private void parseBundledInput(byte[] data) {
+		if(data != null) {
+			bundledXORData = 0;
+			for(int i = 0; i < 16; i++) {
+				bundledXORData |= (data[i] != 0) ? (1 << i) : 0;
+			}
+			updateOutputWires();
+		}
+	}
+
+	@Override
+	@Optional.Method(modid = "RedLogic")
+	public void onBundledInputChanged() {
+		ForgeDirection input = ForgeDirection.getOrientation(Computronics.cipher.relToAbs(4, blockMetadata));
+		TileEntity inputTE = worldObj.getTileEntity(xCoord + input.offsetX, yCoord + input.offsetY, zCoord + input.offsetZ);
+		if(inputTE instanceof IBundledWire) {
+			IBundledWire inputWire = (IBundledWire)inputTE;
+			parseBundledInput(inputWire.getBundledCableStrength(0, Computronics.cipher.relToAbs(4, blockMetadata) ^ 1));
+		}
+	}
+	
+	@Override
+	@Optional.Method(modid = "RedLogic")
+	public byte[] getBundledCableStrength(int blockFace, int toDirection) {
+		blockMetadata = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
+		if(blockFace == 0 && (toDirection == (Computronics.cipher.relToAbs(5, blockMetadata)))) {
+			return getBundledOutput();
+		} else return new byte[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+	}
+
+	@Override
+	@Optional.Method(modid = "RedLogic")
+	public boolean connects(IWire wire, int blockFace, int fromDirection) {
+		if(blockFace != 0 || !(wire instanceof IBundledWire)) return false;
+		return canConnectBundled(fromDirection);
+	}
+
+	@Override
+	@Optional.Method(modid = "RedLogic")
+	public boolean connectsAroundCorner(IWire wire, int blockFace,
+			int fromDirection) {
+		return false;
+	}
+	
+	@Optional.Method(modid = "ProjRed|Core")
+	public void onProjectRedBundledInputChanged() {
+		blockMetadata = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
+		parseBundledInput(ProjectRedAPI.transmissionAPI.getBundledInput(worldObj, xCoord, yCoord, zCoord,
+				Computronics.cipher.relToAbs(4, blockMetadata)));
+	}
+
+	@Override
+	@Optional.Method(modid = "ProjRed|Core")
+	public byte[] getBundledSignal(int side) {
+		blockMetadata = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
+		if(side == (Computronics.cipher.relToAbs(5, blockMetadata))) {
+			return getBundledOutput();
+		} else return new byte[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 	}
 }
