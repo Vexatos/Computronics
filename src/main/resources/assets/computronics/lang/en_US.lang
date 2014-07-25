@@ -6,6 +6,7 @@ tile.computronics.chatBox.creative.name=Creative Chat Box
 tile.computronics.sorter.name=Sorter
 tile.computronics.cipher.name=Cipher Block
 tile.computronics.radar.name=Radar
+tile.computronics.colorfulLamp.name=Colorful Lamp
 tile.computronics.eepromReader.name=EEPROM Reader
 
 tooltip.computronics.chatBox.creative=NSA in a box!

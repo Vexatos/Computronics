@@ -10,6 +10,7 @@ import pl.asie.computronics.audio.DFPWMPlaybackManager;
 import pl.asie.computronics.block.BlockCamera;
 import pl.asie.computronics.block.BlockChatBox;
 import pl.asie.computronics.block.BlockCipher;
+import pl.asie.computronics.block.BlockColorfulLamp;
 import pl.asie.computronics.block.BlockEEPROMReader;
 import pl.asie.computronics.block.BlockIronNote;
 import pl.asie.computronics.block.BlockRadar;
@@ -19,6 +20,7 @@ import pl.asie.computronics.cc.MusicalTurtleUpgrade;
 import pl.asie.computronics.cc.ParticleTurtleUpgrade;
 import pl.asie.computronics.cc.RadarTurtleUpgrade;
 import pl.asie.computronics.cc.SpeakingTurtleUpgrade;
+import pl.asie.computronics.client.LampRender;
 import pl.asie.computronics.gui.GuiOneSlot;
 import pl.asie.computronics.integration.betterstorage.DriverCrateStorage;
 import pl.asie.computronics.integration.redlogic.DriverLamp;
@@ -31,6 +33,7 @@ import pl.asie.computronics.tile.ContainerTapeReader;
 import pl.asie.computronics.tile.TileCamera;
 import pl.asie.computronics.tile.TileChatBox;
 import pl.asie.computronics.tile.TileCipherBlock;
+import pl.asie.computronics.tile.TileColorfulLamp;
 import pl.asie.computronics.tile.TileEEPROMReader;
 import pl.asie.computronics.tile.TileIronNote;
 import pl.asie.computronics.tile.TileRadar;
@@ -117,6 +120,7 @@ public class Computronics {
 	public static BlockCipher cipher;
     public static BlockRadar radar;
     public static BlockEEPROMReader nc_eepromreader;
+	public static BlockColorfulLamp colorfulLamp;
 	
 	public static ItemTape itemTape;
 	public static ItemMultiple itemParts;
@@ -201,6 +205,12 @@ public class Computronics {
 			GameRegistry.registerTileEntity(TileRadar.class, "computronics.radar");
 		}
 		
+		if(isEnabled("lamp", true)) {
+			colorfulLamp = new BlockColorfulLamp();
+			GameRegistry.registerBlock(colorfulLamp, "computronics.colorfulLamp");
+			GameRegistry.registerTileEntity(TileColorfulLamp.class, "computronics.colorfulLamp");
+		}
+		
 		if(Loader.isModLoaded("nedocomputers") && isEnabled("eepromReader", true)) {
 			nc_eepromreader = new BlockEEPROMReader();
 			GameRegistry.registerBlock(nc_eepromreader, "computronics.eepromReader");
@@ -241,6 +251,9 @@ public class Computronics {
 		MinecraftForge.EVENT_BUS.register(new ChatBoxHandler());
 		
 		proxy.registerGuis(gui);
+		if(proxy.isClient()) {
+			new LampRender();
+		}
 		
 		FMLInterModComms.sendMessage("Waila", "register", "pl.asie.computronics.integration.waila.IntegrationWaila.register");
 		
