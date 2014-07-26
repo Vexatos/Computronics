@@ -23,6 +23,7 @@ import pl.asie.computronics.cc.SpeakingTurtleUpgrade;
 import pl.asie.computronics.client.LampRender;
 import pl.asie.computronics.gui.GuiOneSlot;
 import pl.asie.computronics.integration.betterstorage.DriverCrateStorage;
+import pl.asie.computronics.integration.fsp.DriverSteamTransporter;
 import pl.asie.computronics.integration.mfr.DeepStorageUnitPeripheral;
 import pl.asie.computronics.integration.mfr.DriverDeepStorageUnit;
 import pl.asie.computronics.integration.projectred.CCBundledRedstoneProviderProjectRed;
@@ -351,6 +352,9 @@ public class Computronics {
 		}
 		if(Loader.isModLoaded("MineFactoryReloaded") || Loader.isModLoaded("JABBA")) {
 			if(config.get("modCompatibility", "enableDeepStorageUnit", true).getBoolean(true)) li.cil.oc.api.Driver.add(new DriverDeepStorageUnit());
+		}
+		if(Loader.isModLoaded("Steamcraft")) {
+			if(config.get("modCompatibility", "enableFlaxbeardSteamTransporters", true).getBoolean(true)) li.cil.oc.api.Driver.add(new DriverSteamTransporter());
 		}
 		
 		if(isEnabled("ocRobotUpgrades", true)) {
