@@ -316,14 +316,14 @@ public class Computronics {
 	@Optional.Method(modid="ComputerCraft")
 	private void initCC() {
 		if(Loader.isModLoaded("RedLogic")) {
-			ComputerCraftAPI.registerPeripheralProvider(new LampPeripheral());
-			ComputerCraftAPI.registerBundledRedstoneProvider(new CCBundledRedstoneProviderRedLogic());
+			if(config.get("modCompatibility", "enableRedLogicLamps", true).getBoolean(true)) ComputerCraftAPI.registerPeripheralProvider(new LampPeripheral());
+			if(config.get("computercraft", "enableBundledRedstoneProviders", true).getBoolean(true)) ComputerCraftAPI.registerBundledRedstoneProvider(new CCBundledRedstoneProviderRedLogic());
 		}
 		if(Loader.isModLoaded("ProjRed|Core")) {
-			ComputerCraftAPI.registerBundledRedstoneProvider(new CCBundledRedstoneProviderProjectRed());
+			if(config.get("computercraft", "enableBundledRedstoneProviders", true).getBoolean(true)) ComputerCraftAPI.registerBundledRedstoneProvider(new CCBundledRedstoneProviderProjectRed());
 		}
 		if(Loader.isModLoaded("MineFactoryReloaded") || Loader.isModLoaded("JABBA")) {
-			ComputerCraftAPI.registerPeripheralProvider(new DeepStorageUnitPeripheral());
+			if(config.get("modCompatibility", "enableDeepStorageUnit", true).getBoolean(true)) ComputerCraftAPI.registerPeripheralProvider(new DeepStorageUnitPeripheral());
 		}
 		
 		ComputerCraftAPI.registerPeripheralProvider(new CCPeripheralProvider());
@@ -344,13 +344,13 @@ public class Computronics {
 	@Optional.Method(modid="OpenComputers")
 	private void initOC() {
 		if(Loader.isModLoaded("RedLogic")) {
-			li.cil.oc.api.Driver.add(new DriverLamp());
+			if(config.get("modCompatibility", "enableRedLogicLamps", true).getBoolean(true)) li.cil.oc.api.Driver.add(new DriverLamp());
 		}
 		if(Loader.isModLoaded("betterstorage")) {
-			if(isEnabled("modPeripheral_betterStorageCrates", true)) li.cil.oc.api.Driver.add(new DriverCrateStorage());
+			if(config.get("modCompatibility", "enableBetterStorageCrates", true).getBoolean(true)) li.cil.oc.api.Driver.add(new DriverCrateStorage());
 		}
 		if(Loader.isModLoaded("MineFactoryReloaded") || Loader.isModLoaded("JABBA")) {
-			li.cil.oc.api.Driver.add(new DriverDeepStorageUnit());
+			if(config.get("modCompatibility", "enableDeepStorageUnit", true).getBoolean(true)) li.cil.oc.api.Driver.add(new DriverDeepStorageUnit());
 		}
 		
 		if(isEnabled("ocRobotUpgrades", true)) {

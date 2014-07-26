@@ -1,6 +1,7 @@
 package pl.asie.computronics.block;
 
 import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
@@ -20,6 +21,9 @@ import pl.asie.lib.block.BlockBase;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetOmniNode;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
 
+@Optional.InterfaceList({
+	@Optional.Interface(iface = "powercrystals.minefactoryreloaded.api.rednet.IRedNetOmniNode", modid = "MineFactoryReloaded")
+})
 public class BlockCipher extends BlockMachineSidedIcon implements IRedNetOmniNode {
 	private IIcon mFront;
 	
@@ -55,6 +59,7 @@ public class BlockCipher extends BlockMachineSidedIcon implements IRedNetOmniNod
 	}
 
 	@Override
+	@Optional.Method(modid = "MineFactoryReloaded")
 	public void onInputsChanged(World world, int x, int y, int z,
 			ForgeDirection side, int[] inputValues) {
 		((TileCipherBlock)world.getTileEntity(x, y, z)).updateRedNet(inputValues);
@@ -62,24 +67,28 @@ public class BlockCipher extends BlockMachineSidedIcon implements IRedNetOmniNod
 	}
 
 	@Override
+	@Optional.Method(modid = "MineFactoryReloaded")
 	public void onInputChanged(World world, int x, int y, int z,
 			ForgeDirection side, int inputValue) {
 		((TileCipherBlock)world.getTileEntity(x, y, z)).updateRedNet(inputValue);
 	}
 
 	@Override
+	@Optional.Method(modid = "MineFactoryReloaded")
 	public RedNetConnectionType getConnectionType(World world, int x, int y,
 			int z, ForgeDirection side) {
 		return RedNetConnectionType.PlateAll;
 	}
 
 	@Override
+	@Optional.Method(modid = "MineFactoryReloaded")
 	public int[] getOutputValues(World world, int x, int y, int z,
 			ForgeDirection side) {
 		return ((TileCipherBlock)world.getTileEntity(x, y, z)).redNetMultiOutput;
 	}
 
 	@Override
+	@Optional.Method(modid = "MineFactoryReloaded")
 	public int getOutputValue(World world, int x, int y, int z,
 			ForgeDirection side, int subnet) {
 		return ((TileCipherBlock)world.getTileEntity(x, y, z)).redNetSingleOutput;

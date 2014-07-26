@@ -224,6 +224,7 @@ public class TileCipherBlock extends TileEntityPeripheralInventory implements IB
 	public int redNetSingleOutput = 0;
 	public int[] redNetMultiOutput = new int[16];
 	
+	@Optional.Method(modid = "MineFactoryReloaded")
 	private int getRedNetXORKey() {
 		int key = 0;
 		int amountOfItems = 0;
@@ -242,10 +243,12 @@ public class TileCipherBlock extends TileEntityPeripheralInventory implements IB
 		return key;
 	}
 	
+	@Optional.Method(modid = "MineFactoryReloaded")
 	public void updateRedNet(int in) {
 		redNetSingleOutput = in ^ getRedNetXORKey();
 	}
 	
+	@Optional.Method(modid = "MineFactoryReloaded")
 	public void updateRedNet(int[] in) {
 		redNetMultiOutput = in;
 		int key = getRedNetXORKey();
