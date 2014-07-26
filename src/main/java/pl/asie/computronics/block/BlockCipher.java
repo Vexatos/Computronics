@@ -10,14 +10,17 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.tile.TileCipherBlock;
 import pl.asie.computronics.tile.TileIronNote;
 import pl.asie.computronics.tile.TileSorter;
 import pl.asie.computronics.tile.TileTapeDrive;
 import pl.asie.lib.block.BlockBase;
+import powercrystals.minefactoryreloaded.api.rednet.IRedNetOmniNode;
+import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
 
-public class BlockCipher extends BlockMachineSidedIcon {
+public class BlockCipher extends BlockMachineSidedIcon implements IRedNetOmniNode {
 	private IIcon mFront;
 	
 	public BlockCipher() {
@@ -49,5 +52,36 @@ public class BlockCipher extends BlockMachineSidedIcon {
 	public void registerBlockIcons(IIconRegister r) {
 		super.registerBlockIcons(r);
 		mFront = r.registerIcon("computronics:cipher_front");
+	}
+
+	@Override
+	public void onInputsChanged(World world, int x, int y, int z,
+			ForgeDirection side, int[] inputValues) {
+		((TileCipherBlock)world.getTileEntity(x, y, z)).updateRedNet(inputValues);
+		
+	}
+
+	@Override
+	public void onInputChanged(World world, int x, int y, int z,
+			ForgeDirection side, int inputValue) {
+		((TileCipherBlock)world.getTileEntity(x, y, z)).updateRedNet(inputValue);
+	}
+
+	@Override
+	public RedNetConnectionType getConnectionType(World world, int x, int y,
+			int z, ForgeDirection side) {
+		return RedNetConnectionType.PlateAll;
+	}
+
+	@Override
+	public int[] getOutputValues(World world, int x, int y, int z,
+			ForgeDirection side) {
+		return ((TileCipherBlock)world.getTileEntity(x, y, z)).redNetMultiOutput;
+	}
+
+	@Override
+	public int getOutputValue(World world, int x, int y, int z,
+			ForgeDirection side, int subnet) {
+		return ((TileCipherBlock)world.getTileEntity(x, y, z)).redNetSingleOutput;
 	}
 }

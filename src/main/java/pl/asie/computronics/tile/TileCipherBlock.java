@@ -221,6 +221,39 @@ public class TileCipherBlock extends TileEntityPeripheralInventory implements IB
 		return key;
 	}
 	
+	public int redNetSingleOutput = 0;
+	public int[] redNetMultiOutput = new int[16];
+	
+	private int getRedNetXORKey() {
+		int key = 0;
+		int amountOfItems = 0;
+		for(int i = 0; i < 6; i++) {
+			ItemStack stack = this.getStackInSlot(i);
+			if(stack == null || stack.getItem() == null) continue;
+			
+			amountOfItems++;
+			int keyPart = Item.getIdFromItem(stack.getItem());
+			if(keyPart < 4096) keyPart <<= 4;
+			keyPart ^= stack.getItemDamage();
+			keyPart ^= stack.stackSize * (193 * i);
+			key ^= (keyPart << 3);
+		}
+		key ^= (amountOfItems & 1) << 31;
+		return key;
+	}
+	
+	public void updateRedNet(int in) {
+		redNetSingleOutput = in ^ getRedNetXORKey();
+	}
+	
+	public void updateRedNet(int[] in) {
+		redNetMultiOutput = in;
+		int key = getRedNetXORKey();
+		for(int i = 0; i < redNetMultiOutput.length; i++) {
+			redNetMultiOutput[i] ^= key;
+		}
+	}
+	
 	private byte[] getBundledOutput() {
 		int output = getBundledXORKey() ^ bundledXORData;
 		byte[] out = new byte[16];
