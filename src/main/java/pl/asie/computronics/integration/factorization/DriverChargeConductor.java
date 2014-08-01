@@ -3,6 +3,7 @@ package pl.asie.computronics.integration.factorization;
 import java.util.List;
 
 import factorization.api.IChargeConductor;
+import factorization.crafting.TileEntityCompressionCrafter;
 import li.cil.oc.api.Network;
 import li.cil.oc.api.network.Arguments;
 import li.cil.oc.api.network.Callback;
@@ -20,6 +21,13 @@ public class DriverChargeConductor extends DriverTileEntity {
 		public ManagedEnvironmentCC(IChargeConductor cc) {
 			this.cc = cc;
 			node = Network.newNode(this, Visibility.Network).withComponent("chargeConductor", Visibility.Network).create();
+		}
+		
+		@Callback(direct = true)
+		public Object[] getCharge(Context c, Arguments a) {
+			if(cc.getCharge() != null) {
+				return new Object[]{cc.getCharge().getValue()};
+			} else return new Object[]{0};
 		}
 	}
 	

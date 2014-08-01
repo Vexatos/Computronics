@@ -23,7 +23,10 @@ import pl.asie.computronics.cc.SpeakingTurtleUpgrade;
 import pl.asie.computronics.client.LampRender;
 import pl.asie.computronics.gui.GuiOneSlot;
 import pl.asie.computronics.integration.betterstorage.DriverCrateStorage;
+import pl.asie.computronics.integration.factorization.ChargeConductorPeripheral;
+import pl.asie.computronics.integration.factorization.DriverChargeConductor;
 import pl.asie.computronics.integration.fsp.DriverSteamTransporter;
+import pl.asie.computronics.integration.fsp.SteamTransporterPeripheral;
 import pl.asie.computronics.integration.mfr.DeepStorageUnitPeripheral;
 import pl.asie.computronics.integration.mfr.DriverDeepStorageUnit;
 import pl.asie.computronics.integration.projectred.CCBundledRedstoneProviderProjectRed;
@@ -324,6 +327,12 @@ public class Computronics {
 		if(Loader.isModLoaded("MineFactoryReloaded") || Loader.isModLoaded("JABBA")) {
 			if(config.get("modCompatibility", "enableDeepStorageUnit", true).getBoolean(true)) ComputerCraftAPI.registerPeripheralProvider(new DeepStorageUnitPeripheral());
 		}
+		if(Loader.isModLoaded("Steamcraft")) {
+			if(config.get("modCompatibility", "enableFlaxbeardSteamTransporters", true).getBoolean(true)) ComputerCraftAPI.registerPeripheralProvider(new SteamTransporterPeripheral());
+		}
+		if(Loader.isModLoaded("factorization")) {
+			if(config.get("modCompatibility", "enableFactorizationChargePeripheral", true).getBoolean(true)) ComputerCraftAPI.registerPeripheralProvider(new ChargeConductorPeripheral());
+		}
 		
 		ComputerCraftAPI.registerPeripheralProvider(new CCPeripheralProvider());
 		if(itemTape != null) ComputerCraftAPI.registerMediaProvider(itemTape);
@@ -353,6 +362,9 @@ public class Computronics {
 		}
 		if(Loader.isModLoaded("Steamcraft")) {
 			if(config.get("modCompatibility", "enableFlaxbeardSteamTransporters", true).getBoolean(true)) li.cil.oc.api.Driver.add(new DriverSteamTransporter());
+		}
+		if(Loader.isModLoaded("factorization")) {
+			if(config.get("modCompatibility", "enableFactorizationChargePeripheral", true).getBoolean(true)) li.cil.oc.api.Driver.add(new DriverChargeConductor());
 		}
 		
 		if(isEnabled("ocRobotUpgrades", true)) {
