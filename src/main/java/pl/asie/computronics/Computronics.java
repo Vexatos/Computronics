@@ -46,8 +46,6 @@ import pl.asie.computronics.tile.TileTapeDrive;
 import pl.asie.lib.gui.GuiHandler;
 import pl.asie.lib.item.ItemMultiple;
 import pl.asie.lib.network.PacketHandler;
-import pl.asie.lib.util.ModIntegrationHandler;
-import pl.asie.lib.util.ModIntegrationHandler.Stage;
 import pl.asie.lib.util.color.RecipeColorizer;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
@@ -86,7 +84,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.network.FMLNetworkEvent;
 import cpw.mods.fml.common.network.internal.FMLProxyPacket;
 
-@Mod(modid="computronics", name="Computronics", version="0.6.1", dependencies="required-after:asielib;after:ComputerCraft;after:OpenComputers;after:OpenComputers|Core;after:BuildCraft|Core")
+@Mod(modid="computronics", name="Computronics", version="0.7.0", dependencies="required-after:asielib;after:ComputerCraft;after:OpenComputers;after:OpenComputers|Core;after:BuildCraft|Core")
 public class Computronics {
 	public Configuration config;
 	public static Random rand = new Random();
