@@ -26,24 +26,12 @@ public class RobotUpgradeCamera extends ManagedEnvironment {
 	private final Camera camera = new Camera();
 	private static final int CALL_LIMIT = 15;
 	
-    //@Callback(direct = true, limit = CALL_LIMIT)
-    public Object[] ray(Context context, Arguments args) {
-    	float x = args.count() == 2 ? (float)args.checkDouble(0) : 0.0F;
-    	float y = args.count() == 2 ? (float)args.checkDouble(1) : 0.0F;
-    	if(args.count() == 2) {
-        	int l = MathHelper.floor_double((double)(robot.player().rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-        	l = Direction.directionToFacing[l];
-        	return new Object[]{
-    			camera.ray(((TileEntity)entity).getWorldObj(), (float)entity.xPosition(), (float)entity.yPosition(), (float)entity.zPosition(),
-    					ForgeDirection.getOrientation(l), x, y)
-    		};
-    	}
-    	return null;
-    }
-    
     @Callback(direct = true, limit = CALL_LIMIT)
     public Object[] distance(Context context, Arguments args) {
-    	ray(context, args);
+    	int l = MathHelper.floor_double((double)(robot.player().rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+    	l = Direction.directionToFacing[l];
+    	camera.ray(((TileEntity)entity).getWorldObj(), (float)entity.xPosition(), (float)entity.yPosition(), (float)entity.zPosition(),
+				ForgeDirection.getOrientation(l), (float)args.checkDouble(0), (float)args.checkDouble(1));
     	return new Object[]{camera.getDistance()};
     }
     
