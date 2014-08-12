@@ -58,13 +58,4 @@ public abstract class BlockMachineSidedIcon extends BlockPeripheral {
 			mSideBO = r.registerIcon("computronics:machine_side_bundled_output");
 		}
 	}
-	
-	@Override
-	public boolean isOpaqueCube() {
-		return true;
-	}
-	
-	public boolean isBlockNormalCube(World world, int x, int y, int z) {
-		return true;
-	}
 }

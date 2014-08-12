@@ -39,7 +39,7 @@ public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundl
 	}
 	
 	public void setLampColor(int color) {
-		this.color = color;
+		this.color = color & 0x7FFF;
 		this.markDirty();
 		this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
@@ -54,7 +54,7 @@ public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundl
     @Optional.Method(modid="OpenComputers")
 	public Object[] setLampColor(Context context, Arguments args) throws Exception {
 		if(args.count() >= 1 && args.isInteger(0))
-			this.setLampColor(args.checkInteger(0) & 0x7FFF);
+			this.setLampColor(args.checkInteger(0));
 		return null;
 	}
 	

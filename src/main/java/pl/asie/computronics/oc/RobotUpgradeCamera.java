@@ -28,11 +28,13 @@ public class RobotUpgradeCamera extends ManagedEnvironment {
 	
     @Callback(direct = true, limit = CALL_LIMIT)
     public Object[] distance(Context context, Arguments args) {
-    	int l = MathHelper.floor_double((double)(robot.player().rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-    	l = Direction.directionToFacing[l];
-    	camera.ray(((TileEntity)entity).getWorldObj(), (float)entity.xPosition(), (float)entity.yPosition(), (float)entity.zPosition(),
-				ForgeDirection.getOrientation(l), (float)args.checkDouble(0), (float)args.checkDouble(1));
-    	return new Object[]{camera.getDistance()};
+    	if(args.count() == 2) {
+    		int l = MathHelper.floor_double((double)(robot.player().rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+    		l = Direction.directionToFacing[l];
+    		camera.ray(((TileEntity)entity).getWorldObj(), (float)entity.xPosition(), (float)entity.yPosition(), (float)entity.zPosition(),
+    				ForgeDirection.getOrientation(l), (float)args.checkDouble(0), (float)args.checkDouble(1));
+    		return new Object[]{camera.getDistance()};
+    	} else return null;
     }
     
     @Callback(direct = true, limit = CALL_LIMIT)
@@ -41,8 +43,8 @@ public class RobotUpgradeCamera extends ManagedEnvironment {
     		camera.ray(((TileEntity)entity).getWorldObj(), (float)entity.xPosition(), (float)entity.yPosition(), (float)entity.zPosition(),
     				ForgeDirection.UP,
     				(float)args.checkDouble(0), (float)args.checkDouble(1));
-    	}
-    	return new Object[]{camera.getDistance()};
+    		return new Object[]{camera.getDistance()};
+    	} else return null;
     }
     
     @Callback(direct = true, limit = CALL_LIMIT)
@@ -51,7 +53,7 @@ public class RobotUpgradeCamera extends ManagedEnvironment {
     		camera.ray(((TileEntity)entity).getWorldObj(), (float)entity.xPosition(), (float)entity.yPosition(), (float)entity.zPosition(),
     				ForgeDirection.DOWN,
     				(float)args.checkDouble(0), (float)args.checkDouble(1));
-    	}
-    	return new Object[]{camera.getDistance()};
+    		return new Object[]{camera.getDistance()};
+    	} else return null;
     }
 }

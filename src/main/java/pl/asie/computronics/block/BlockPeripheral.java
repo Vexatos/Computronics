@@ -5,6 +5,7 @@ import cpw.mods.fml.common.Optional;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import pl.asie.computronics.Computronics;
 import pl.asie.lib.block.BlockBase;
@@ -27,5 +28,20 @@ public abstract class BlockPeripheral extends BlockBase {
 			} catch(Exception e) { e.printStackTrace(); }
 		}
 		return super.onBlockActivated(world, x, y, z, player, a, _x, _y, _z);
+	}
+	
+	@Override
+	public boolean isOpaqueCube() {
+		return true;
+	}
+	
+	@Override
+	public boolean isNormalCube() {
+		return true;
+	}
+	
+	@Override
+	public boolean isNormalCube(IBlockAccess world, int x, int y, int z) {
+		return true;
 	}
 }
