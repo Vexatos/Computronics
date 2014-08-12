@@ -32,6 +32,7 @@ public class TileChatBox extends TileEntityPeripheralBase {
 	private int distance;
 	private int ticksUntilOff = 0;
 	private boolean mustRefresh = false;
+	private String name = "";
 	
 	public TileChatBox() {
 		super("chat_box");
@@ -102,7 +103,7 @@ public class TileChatBox extends TileEntityPeripheralBase {
 				d = Math.min(Computronics.CHATBOX_DISTANCE, args.checkInteger(1));
 				if(d <= 0) d = distance;
 			}
-			if(args.isString(0)) ChatBoxUtils.sendChatMessage(this, d, Computronics.CHATBOX_PREFIX, args.checkString(0));
+			if(args.isString(0)) ChatBoxUtils.sendChatMessage(this, d, name.length() > 0 ? name : Computronics.CHATBOX_PREFIX, args.checkString(0));
 		}
 		return null;
 	}
@@ -116,8 +117,23 @@ public class TileChatBox extends TileEntityPeripheralBase {
 	@Callback(direct = true)
 	@Optional.Method(modid="OpenComputers")
 	public Object[] setDistance(Context context, Arguments args) {
-		if(args.count() >= 1) {
+		if(args.count() == 1) {
 			if(args.isInteger(0)) setDistance(args.checkInteger(0));
+		}
+		return null;
+	}
+	
+	@Callback(direct = true)
+	@Optional.Method(modid="OpenComputers")
+	public Object[] getName(Context context, Arguments args) {
+		return new Object[]{distance};
+	}
+	
+	@Callback(direct = true)
+	@Optional.Method(modid="OpenComputers")
+	public Object[] setName(Context context, Arguments args) {
+		if(args.count() == 1) {
+			if(args.isString(0)) this.name = args.checkString(0);
 		}
 		return null;
 	}
@@ -126,18 +142,20 @@ public class TileChatBox extends TileEntityPeripheralBase {
     public void readFromNBT(final NBTTagCompound nbt) {
         super.readFromNBT(nbt);
         if(nbt.hasKey("d")) this.distance = nbt.getShort("d");
+        if(nbt.hasKey("n")) this.name = nbt.getString("n");
     }
 
     @Override
     public void writeToNBT(final NBTTagCompound nbt) {
         super.writeToNBT(nbt);
         nbt.setShort("d", (short)this.distance);
+        if(name.length() > 0) nbt.setString("n", this.name);
     }
 
 	@Override
     @Optional.Method(modid="ComputerCraft")
 	public String[] getMethodNames() {
-		return new String[]{"say", "getDistance", "setDistance"};
+		return new String[]{"say", "getDistance", "setDistance", "getName", "setName"};
 	}
 
 	@Override
@@ -162,6 +180,14 @@ public class TileChatBox extends TileEntityPeripheralBase {
 		case 2: { // setDistance
 			if(arguments.length == 1 && arguments[0] instanceof Double) {
 				setDistance(((Double)arguments[0]).intValue());
+			}
+		}
+		case 3: { // getName
+			return new Object[]{name};
+		}
+		case 4: { // setName
+			if(arguments.length == 1 && arguments[0] instanceof String) {
+				this.name = (String)arguments[0];
 			}
 		}
 		}

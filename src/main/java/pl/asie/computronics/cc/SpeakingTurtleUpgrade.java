@@ -38,8 +38,9 @@ public class SpeakingTurtleUpgrade extends TurtleUpgradeBase {
 				distance = Math.min(Computronics.CHATBOX_DISTANCE, ((Double)arguments[1]).intValue());
 				if(distance <= 0) distance = Computronics.CHATBOX_DISTANCE;
 			}
+			String prefix = Computronics.CHATBOX_PREFIX;
 			ChatBoxUtils.sendChatMessage(access.getWorld(), access.getPosition().posX, access.getPosition().posY, access.getPosition().posZ,
-					distance, Computronics.CHATBOX_PREFIX, ((String)arguments[0]));
+					distance, prefix, ((String)arguments[0]));
 			return null;
 		}
 		
