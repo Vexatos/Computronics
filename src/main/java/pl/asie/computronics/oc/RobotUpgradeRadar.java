@@ -31,7 +31,7 @@ public class RobotUpgradeRadar extends ManagedEnvironment {
 	public RobotUpgradeRadar(Container container) {
 		this.container = container;
 		this.robot = (Robot)container;
-		this.node = Network.newNode(this, Visibility.Network).withConnector().withComponent("radar", Visibility.Neighbors).create();
+		this.node = Network.newNode(this, Visibility.Network).withConnector(Computronics.RADAR_OC_ENERGY_COST * Computronics.RADAR_RANGE * 1.75).withComponent("radar", Visibility.Neighbors).create();
 	}
 	
 	private int getDistance(Arguments args) {
@@ -52,14 +52,12 @@ public class RobotUpgradeRadar extends ManagedEnvironment {
     public Object[] getEntities(Context context, Arguments args) {
 		List<Map> entities = new ArrayList<Map>();
 		int distance = getDistance(args);
-		AxisAlignedBB bounds = getBounds(distance);
-		entities.addAll(RadarUtils.getEntities(((TileEntity)container).getWorldObj(), (int)container.xPosition(), (int)container.yPosition(), (int)container.zPosition(), bounds, EntityPlayer.class));
-		entities.addAll(RadarUtils.getEntities(((TileEntity)container).getWorldObj(), (int)container.xPosition(), (int)container.yPosition(), (int)container.zPosition(), bounds, EntityLiving.class));
-		context.pause(0.5);
-			
-		// Suck some power
-		((Connector) this.node).tryChangeBuffer(0 - (Computronics.RADAR_OC_ENERGY_COST * distance * 2));
-		
+		if(((Connector) this.node).tryChangeBuffer(0 - (Computronics.RADAR_OC_ENERGY_COST * distance * 1.75))) {
+			AxisAlignedBB bounds = getBounds(distance);
+			entities.addAll(RadarUtils.getEntities(((TileEntity)container).getWorldObj(), (int)container.xPosition(), (int)container.yPosition(), (int)container.zPosition(), bounds, EntityPlayer.class));
+			entities.addAll(RadarUtils.getEntities(((TileEntity)container).getWorldObj(), (int)container.xPosition(), (int)container.yPosition(), (int)container.zPosition(), bounds, EntityLiving.class));
+			context.pause(0.5);
+		}
 		// The returned array is treated as a tuple, meaning if we return the
 		// entities as an array directly, we'd end up with each entity as an
 		// individual result value (i.e. in Lua we'd have to write
@@ -73,12 +71,11 @@ public class RobotUpgradeRadar extends ManagedEnvironment {
     public Object[] getPlayers(Context context, Arguments args) {
         List<Map> entities = new ArrayList<Map>();
 		int distance = getDistance(args);
-		AxisAlignedBB bounds = getBounds(distance);
-		entities.addAll(RadarUtils.getEntities(((TileEntity)container).getWorldObj(), (int)container.xPosition(), (int)container.yPosition(), (int)container.zPosition(), bounds, EntityPlayer.class));
-		context.pause(0.5);
-		// Suck some power
-		((Connector) this.node).tryChangeBuffer(0 - (Computronics.RADAR_OC_ENERGY_COST * distance));
-		
+		if(((Connector) this.node).tryChangeBuffer(0 - (Computronics.RADAR_OC_ENERGY_COST * distance * 1.0))) {
+			AxisAlignedBB bounds = getBounds(distance);
+			entities.addAll(RadarUtils.getEntities(((TileEntity)container).getWorldObj(), (int)container.xPosition(), (int)container.yPosition(), (int)container.zPosition(), bounds, EntityPlayer.class));
+			context.pause(0.5);
+		}
         return new Object[]{entities.toArray()};
     }
 	
@@ -86,12 +83,11 @@ public class RobotUpgradeRadar extends ManagedEnvironment {
     public Object[] getMobs(Context context, Arguments args) {
         List<Map> entities = new ArrayList<Map>();
 		int distance = getDistance(args);
-		AxisAlignedBB bounds = getBounds(distance);
-		entities.addAll(RadarUtils.getEntities(((TileEntity)container).getWorldObj(), (int)container.xPosition(), (int)container.yPosition(), (int)container.zPosition(), bounds, EntityLiving.class));
-		context.pause(0.5);
-		// Suck some power
-		((Connector) this.node).tryChangeBuffer(0 - (Computronics.RADAR_OC_ENERGY_COST * distance));
-		
+		if(((Connector) this.node).tryChangeBuffer(0 - (Computronics.RADAR_OC_ENERGY_COST * distance * 1.0))) {
+			AxisAlignedBB bounds = getBounds(distance);
+			entities.addAll(RadarUtils.getEntities(((TileEntity)container).getWorldObj(), (int)container.xPosition(), (int)container.yPosition(), (int)container.zPosition(), bounds, EntityLiving.class));
+			context.pause(0.5);
+		}
         return new Object[]{entities.toArray()};
     }
 }

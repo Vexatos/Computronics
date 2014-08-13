@@ -21,8 +21,7 @@ public class RadarUtils {
             double dx = entity.posX - (xCoord + 0.5);
 			double dy = entity.posY - (yCoord + 0.5);
             double dz = entity.posZ - (zCoord + 0.5);
-            // Check if the entity is actually in range. I forget, is there a cubed root function?
-            if (Math.sqrt(dx * dx + dz * dz) < Computronics.RADAR_RANGE && Math.sqrt(dx * dx + dy * dy) < Computronics.RADAR_RANGE && Math.sqrt(dy * dy + dz * dz) < Computronics.RADAR_RANGE) {
+            if (Math.sqrt(dx * dx + dy * dy + dz * dz) < Computronics.RADAR_RANGE) {
                 // Maps are converted to tables on the Lua side.
                 Map<String, Object> entry = new HashMap<String, Object>();
                 if(entity instanceof EntityPlayer) {
