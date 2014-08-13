@@ -54,7 +54,7 @@ public class TileCamera extends TileEntityPeripheralBase {
     @Callback(direct = true, limit = CALL_LIMIT)
     @Optional.Method(modid="OpenComputers")
     public Object[] distance(Context context, Arguments args) {
-    	if(camera != null && args.count() == 2) {
+    	if(args.count() == 2) {
     		camera.ray(worldObj, xCoord, yCoord, zCoord, getFacingDirection(),
     				(float)args.checkDouble(0), (float)args.checkDouble(1));
     	}

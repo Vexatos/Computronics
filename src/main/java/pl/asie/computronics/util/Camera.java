@@ -40,8 +40,14 @@ public class Camera {
 			yPos = yCoord + 0.5f;
 			zPos = zCoord + 0.5f;
 			oxPos = xPos; oyPos = yPos; ozPos = zPos;
-			float steps = Computronics.CAMERA_DISTANCE;
+			// A little workaround for the way I do things (skipping the block right in front, that is)
+			if(!world.isAirBlock((int)Math.floor(xPos), (int)Math.floor(yPos), (int)Math.floor(zPos))) {
+				hit = world.getBlock((int)Math.floor(xPos), (int)Math.floor(yPos), (int)Math.floor(zPos));
+				return true;
+			}
+					
 			// shoot ray
+			float steps = Computronics.CAMERA_DISTANCE;
 			Vec3 origin = Vec3.createVectorHelper(oxPos, oyPos, ozPos);
 			Vec3 target = Vec3.createVectorHelper(xPos + (xDirection * steps), yPos + (yDirection * steps), zPos + (zDirection * steps));
 			MovingObjectPosition mop = world.rayTraceBlocks(origin, target);

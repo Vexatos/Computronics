@@ -26,34 +26,48 @@ public class RobotUpgradeCamera extends ManagedEnvironment {
 	private final Camera camera = new Camera();
 	private static final int CALL_LIMIT = 15;
 	
+	private int getFacingDirection() {
+		int l = MathHelper.floor_double((double)(robot.player().rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+		l = Direction.directionToFacing[l];
+		return l;
+	}
+	
     @Callback(direct = true, limit = CALL_LIMIT)
     public Object[] distance(Context context, Arguments args) {
+    	float x = 0.0f;
+    	float y = 0.0f;
     	if(args.count() == 2) {
-    		int l = MathHelper.floor_double((double)(robot.player().rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-    		l = Direction.directionToFacing[l];
-    		camera.ray(((TileEntity)entity).getWorldObj(), (float)entity.xPosition(), (float)entity.yPosition(), (float)entity.zPosition(),
-    				ForgeDirection.getOrientation(l), (float)args.checkDouble(0), (float)args.checkDouble(1));
-    		return new Object[]{camera.getDistance()};
-    	} else return null;
+    		x = (float)args.checkDouble(0);
+    		y = (float)args.checkDouble(1);
+    	}
+		camera.ray(entity.world(), (int)Math.floor(entity.xPosition()), (int)Math.floor(entity.yPosition()), (int)Math.floor(entity.zPosition()),
+				ForgeDirection.getOrientation(getFacingDirection()), x, y);
+		return new Object[]{camera.getDistance()};
     }
     
     @Callback(direct = true, limit = CALL_LIMIT)
     public Object[] distanceUp(Context context, Arguments args) {
+    	float x = 0.0f;
+    	float y = 0.0f;
     	if(args.count() == 2) {
-    		camera.ray(((TileEntity)entity).getWorldObj(), (float)entity.xPosition(), (float)entity.yPosition(), (float)entity.zPosition(),
-    				ForgeDirection.UP,
-    				(float)args.checkDouble(0), (float)args.checkDouble(1));
-    		return new Object[]{camera.getDistance()};
-    	} else return null;
+    		x = (float)args.checkDouble(0);
+    		y = (float)args.checkDouble(1);
+    	}
+		camera.ray(entity.world(), (int)Math.floor(entity.xPosition()), (int)Math.floor(entity.yPosition()), (int)Math.floor(entity.zPosition()),
+				ForgeDirection.UP, x, y);
+		return new Object[]{camera.getDistance()};
     }
     
     @Callback(direct = true, limit = CALL_LIMIT)
     public Object[] distanceDown(Context context, Arguments args) {
+    	float x = 0.0f;
+    	float y = 0.0f;
     	if(args.count() == 2) {
-    		camera.ray(((TileEntity)entity).getWorldObj(), (float)entity.xPosition(), (float)entity.yPosition(), (float)entity.zPosition(),
-    				ForgeDirection.DOWN,
-    				(float)args.checkDouble(0), (float)args.checkDouble(1));
-    		return new Object[]{camera.getDistance()};
-    	} else return null;
+    		x = (float)args.checkDouble(0);
+    		y = (float)args.checkDouble(1);
+    	}
+		camera.ray(entity.world(), (int)Math.floor(entity.xPosition()), (int)Math.floor(entity.yPosition()), (int)Math.floor(entity.zPosition()),
+				ForgeDirection.DOWN, x, y);
+		return new Object[]{camera.getDistance()};
     }
 }
