@@ -30,6 +30,7 @@ import pl.asie.computronics.integration.fsp.SteamTransporterPeripheral;
 import pl.asie.computronics.integration.mfr.DeepStorageUnitPeripheral;
 import pl.asie.computronics.integration.mfr.DriverDeepStorageUnit;
 import pl.asie.computronics.integration.projectred.CCBundledRedstoneProviderProjectRed;
+import pl.asie.computronics.integration.railcraft.DriverReceiverBox;
 import pl.asie.computronics.integration.railcraft.DriverRoutingDetector;
 import pl.asie.computronics.integration.railcraft.DriverRoutingSwitch;
 import pl.asie.computronics.integration.railcraft.DriverRoutingTrack;
@@ -374,6 +375,7 @@ public class Computronics {
                 li.cil.oc.api.Driver.add(new DriverRoutingTrack());
                 li.cil.oc.api.Driver.add(new DriverRoutingDetector());
                 li.cil.oc.api.Driver.add(new DriverRoutingSwitch());
+                li.cil.oc.api.Driver.add(new DriverReceiverBox());
             }
         }
 		

@@ -8,6 +8,7 @@ import li.cil.oc.api.network.Context;
 import li.cil.oc.api.network.Visibility;
 import li.cil.oc.api.prefab.DriverTileEntity;
 import li.cil.oc.api.prefab.ManagedEnvironment;
+import mods.railcraft.api.tracks.ITrackTile;
 import mods.railcraft.common.blocks.tracks.TileTrack;
 import mods.railcraft.common.blocks.tracks.TrackRouting;
 import mods.railcraft.common.items.ItemTicketGold;
@@ -33,29 +34,32 @@ public class DriverRoutingTrack extends DriverTileEntity {
             return "routing_track";
         }
 
-        @Callback(doc = "function(destination:String,[title:String]):boolean; Sets the ticket destination and opionally title (defaults to destination name)")
-        public Object[] setTicket(Context c, Arguments a) {
-            ItemStack ticket = ((TrackRouting) ((TileTrack) track).getTrackInstance()).getInventory().getStackInSlot(0);
+        @Callback(doc = "function(destination:String):boolean; Sets the ticket destination")
+        public Object[] setDestination(Context c, Arguments a) {
+            ItemStack ticket = ((TrackRouting) ((ITrackTile) track).getTrackInstance()).getInventory().getStackInSlot(0);
             if(ticket != null && ticket.getItem() instanceof ItemTicketGold) {
-                String destination = a.checkString(1);
-                String title = destination;
-                if(a.checkAny(2) != null) {
-                    title = a.checkString(2);
+                if(!((TrackRouting) ((ITrackTile) track).getTrackInstance()).isSecure()) {
+                    String destination = a.checkString(0);
+                    ((TrackRouting) ((ITrackTile) track).getTrackInstance()).setTicket(destination, destination, ItemTicketGold.getOwner(ticket));
+                    ItemTicketGold.setTicketData(ticket, destination, destination, ItemTicketGold.getOwner(ticket));
+                    return new Object[] { true };
+                } else {
+                    return new Object[] { false, "routing track is locked" };
                 }
-                //((TrackRouting) ((TileTrack) track).getTrackInstance()).setTicket(destination, title, ItemTicketGold.getOwner(ticket));
-                ItemTicketGold.setTicketData(ticket, destination, title, ItemTicketGold.getOwner(ticket));
-                return new Object[] { true };
             } else {
                 return new Object[] { false, "there is no golden ticket inside the track" };
             }
-
         }
 
         @Callback(doc = "function():String; gets the destination the routing track is currently set to")
         public Object[] getDestination(Context c, Arguments a) {
-            ItemStack ticket = ((TrackRouting) ((TileTrack) track).getTrackInstance()).getInventory().getStackInSlot(0);
+            ItemStack ticket = ((TrackRouting) ((ITrackTile) track).getTrackInstance()).getInventory().getStackInSlot(0);
             if(ticket != null && ticket.getItem() instanceof ItemTicketGold) {
-                return new Object[] { ItemTicketGold.getDestination(ticket) };
+                if(!((TrackRouting) ((ITrackTile) track).getTrackInstance()).isSecure()) {
+                    return new Object[] { ItemTicketGold.getDestination(ticket) };
+                } else {
+                    return new Object[] { false, "routing track is locked" };
+                }
             } else {
                 return new Object[] { false, "there is no golden ticket inside the track" };
             }
@@ -63,9 +67,13 @@ public class DriverRoutingTrack extends DriverTileEntity {
 
         @Callback(doc = "function():String; gets the current owner of the ticket inside the track")
         public Object[] getOwner(Context c, Arguments a) {
-            ItemStack ticket = ((TrackRouting) ((TileTrack) track).getTrackInstance()).getInventory().getStackInSlot(0);
+            ItemStack ticket = ((TrackRouting) ((ITrackTile) track).getTrackInstance()).getInventory().getStackInSlot(0);
             if(ticket != null && ticket.getItem() instanceof ItemTicketGold) {
-                return new Object[] { ItemTicketGold.getOwner(ticket) };
+                if(!((TrackRouting) ((ITrackTile) track).getTrackInstance()).isSecure()) {
+                    return new Object[] { ItemTicketGold.getOwner(ticket) };
+                } else {
+                    return new Object[] { false, "routing track is locked" };
+                }
             } else {
                 return new Object[] { false, "there is no golden ticket inside the track" };
             }
@@ -73,7 +81,12 @@ public class DriverRoutingTrack extends DriverTileEntity {
 
         @Callback()
         public Object[] isPowered(Context c, Arguments a) {
-            return new Object[] { ((TrackRouting) ((TileTrack) track).getTrackInstance()).isPowered() };
+            if(!((TrackRouting) ((ITrackTile) track).getTrackInstance()).isSecure()) {
+                return new Object[] { ((TrackRouting) ((ITrackTile) track).getTrackInstance()).isPowered() };
+            } else {
+                return new Object[] { null, "routing track is locked" };
+            }
+
         }
     }
 
@@ -84,8 +97,10 @@ public class DriverRoutingTrack extends DriverTileEntity {
 
     @Override
     public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
-        if(world.getTileEntity(x, y, z) instanceof TileTrack
-            && ((TileTrack) world.getTileEntity(x, y, z)).getTrackInstance() instanceof TrackRouting) {
+        System.out.println(world.getTileEntity(x, y, z) instanceof ITrackTile);
+        System.out.println(((ITrackTile) world.getTileEntity(x, y, z)).getTrackInstance() instanceof TrackRouting);
+        if(world.getTileEntity(x, y, z) instanceof ITrackTile
+            && ((ITrackTile) world.getTileEntity(x, y, z)).getTrackInstance() instanceof TrackRouting) {
             return new ManagedEnvironmentRoutingTrack(world.getTileEntity(x, y, z));
         }
         return null;
