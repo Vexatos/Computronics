@@ -30,6 +30,9 @@ import pl.asie.computronics.integration.fsp.SteamTransporterPeripheral;
 import pl.asie.computronics.integration.mfr.DeepStorageUnitPeripheral;
 import pl.asie.computronics.integration.mfr.DriverDeepStorageUnit;
 import pl.asie.computronics.integration.projectred.CCBundledRedstoneProviderProjectRed;
+import pl.asie.computronics.integration.railcraft.DriverRoutingDetector;
+import pl.asie.computronics.integration.railcraft.DriverRoutingSwitch;
+import pl.asie.computronics.integration.railcraft.DriverRoutingTrack;
 import pl.asie.computronics.integration.redlogic.CCBundledRedstoneProviderRedLogic;
 import pl.asie.computronics.integration.redlogic.DriverLamp;
 import pl.asie.computronics.integration.redlogic.LampPeripheral;
@@ -366,6 +369,13 @@ public class Computronics {
 		if(Loader.isModLoaded("factorization")) {
 			if(config.get("modCompatibility", "enableFactorizationChargePeripheral", true).getBoolean(true)) li.cil.oc.api.Driver.add(new DriverChargeConductor());
 		}
+        if(Loader.isModLoaded("Railcraft")) {
+            if(config.get("modCompatibility", "enableRailcraftRoutingComponents", true).getBoolean(true)){
+                li.cil.oc.api.Driver.add(new DriverRoutingTrack());
+                li.cil.oc.api.Driver.add(new DriverRoutingDetector());
+                li.cil.oc.api.Driver.add(new DriverRoutingSwitch());
+            }
+        }
 		
 		if(isEnabled("ocRobotUpgrades", true)) {
 			Block[] b = {camera, chatBox, radar};
