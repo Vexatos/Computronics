@@ -79,7 +79,7 @@ public class DriverRoutingTrack extends DriverTileEntity {
             }
         }
 
-        @Callback()
+        @Callback(doc = "function():boolean; returns whether the track is currently receiving a redstone signal, or nil if it cannot be accessed")
         public Object[] isPowered(Context c, Arguments a) {
             if(!((TrackRouting) ((ITrackTile) track).getTrackInstance()).isSecure()) {
                 return new Object[] { ((TrackRouting) ((ITrackTile) track).getTrackInstance()).isPowered() };

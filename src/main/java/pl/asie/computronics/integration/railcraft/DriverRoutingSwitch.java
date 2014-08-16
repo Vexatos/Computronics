@@ -34,7 +34,7 @@ public class DriverRoutingSwitch extends DriverTileEntity {
             return "routing_switch";
         }
 
-        @Callback()
+        @Callback(doc = "function():table; returns the full routing table inside the switch motor, or false and an error message if the table is empty or cannot be accessed")
         public Object[] getRoutingTable(Context c, Arguments a) {
             if((((TileSwitchRouting) routingSwitch)).getInventory().getStackInSlot(0) != null
                 && ((TileSwitchRouting) routingSwitch).getInventory().getStackInSlot(0).getItem() instanceof ItemRoutingTable) {

@@ -36,7 +36,7 @@ public class DriverRoutingDetector extends DriverTileEntity {
             return "routing_detector";
         }
 
-        @Callback()
+        @Callback(doc = "function():table; returns the full routing table inside the detector, or false and an error message if there is no table or it cannot be accessed")
         public Object[] getRoutingTable(Context c, Arguments a) {
             if(((DetectorRouting) ((TileDetector) detector).getDetector()).getInventory().getStackInSlot(0) != null
                 && ((DetectorRouting) ((TileDetector) detector).getDetector()).getInventory().getStackInSlot(0).getItem() instanceof ItemRoutingTable) {
