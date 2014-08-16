@@ -31,7 +31,7 @@ public class DriverReceiverBox extends DriverTileEntity {
         public Object[] getSignal(Context c, Arguments a) {
             TileBoxReceiver box = (TileBoxReceiver) this.box;
             int signal = box.getTriggerAspect().ordinal();
-            if(signal == 3) {
+            if(signal == 5) {
                 signal = -1;
             }
             return new Object[] { signal };
