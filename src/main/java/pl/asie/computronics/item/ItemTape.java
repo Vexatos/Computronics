@@ -48,7 +48,7 @@ public class ItemTape extends Item implements IItemStorage, IMedia, IMediaProvid
 		String[] l = lengths.split(",");
 		sizes = new int[l.length];
 		for(int i = 0; i < l.length; i++) {
-			sizes[i] = new Integer(l[i]).intValue() * L_MINUTE;
+			sizes[i] = Integer.parseInt(l[i]) * L_MINUTE;
 			if(sizes[i] <= 0) sizes[i] = 4;
 		}
 	}

@@ -65,7 +65,7 @@ public class DriverRoutingTrack extends DriverTileEntity {
             }
         }
 
-        @Callback(doc = "function():String; gets the current owner of the ticket inside the track")
+        /*@Callback(doc = "function():String; gets the current owner of the ticket inside the track")
         public Object[] getOwner(Context c, Arguments a) {
             ItemStack ticket = ((TrackRouting) ((ITrackTile) track).getTrackInstance()).getInventory().getStackInSlot(0);
             if(ticket != null && ticket.getItem() instanceof ItemTicketGold) {
@@ -77,7 +77,7 @@ public class DriverRoutingTrack extends DriverTileEntity {
             } else {
                 return new Object[] { false, "there is no golden ticket inside the track" };
             }
-        }
+        }*/
 
         @Callback(doc = "function():boolean; returns whether the track is currently receiving a redstone signal, or nil if it cannot be accessed")
         public Object[] isPowered(Context c, Arguments a) {
@@ -97,8 +97,6 @@ public class DriverRoutingTrack extends DriverTileEntity {
 
     @Override
     public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
-        System.out.println(world.getTileEntity(x, y, z) instanceof ITrackTile);
-        System.out.println(((ITrackTile) world.getTileEntity(x, y, z)).getTrackInstance() instanceof TrackRouting);
         if(world.getTileEntity(x, y, z) instanceof ITrackTile
             && ((ITrackTile) world.getTileEntity(x, y, z)).getTrackInstance() instanceof TrackRouting) {
             return new ManagedEnvironmentRoutingTrack(world.getTileEntity(x, y, z));
