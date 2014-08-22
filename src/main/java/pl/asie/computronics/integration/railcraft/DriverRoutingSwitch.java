@@ -13,8 +13,10 @@ import mods.railcraft.common.items.ItemRoutingTable;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Vexatos
@@ -26,7 +28,7 @@ public class DriverRoutingSwitch extends DriverTileEntity {
 
         public ManagedEnvironmentRoutingSwitch(TileEntity routingSwitch) {
             this.routingSwitch = routingSwitch;
-            node = Network.newNode(this, Visibility.Network).withComponent("routing_detector", Visibility.Network).create();
+            node = Network.newNode(this, Visibility.Network).withComponent("routing_switch", Visibility.Network).create();
         }
 
         @Override
@@ -51,6 +53,35 @@ public class DriverRoutingSwitch extends DriverTileEntity {
                         i++;
                     }
                     return new Object[] { pageMap };
+                } else {
+                    return new Object[] { false, "routing switch is locked" };
+                }
+            }
+            return new Object[] { false, "no routing table found" };
+        }
+
+        @Callback(doc = "function(routingTable:table):boolean; Sets the routing table inside the switch; argument needs to be a table with number indices and string values, every value being a new line, for a new page, use '{newline}' as a value; returns 'true' on success, 'false' and an error message otherwise")
+        public Object[] setRoutingTable(Context c, Arguments a) {
+            Map pageMap = a.checkTable(0);
+            if(((TileSwitchRouting) routingSwitch).getInventory().getStackInSlot(0) != null
+                && ((TileSwitchRouting) routingSwitch).getInventory().getStackInSlot(0).getItem() instanceof ItemRoutingTable) {
+                if(!((TileSwitchRouting) routingSwitch).isSecure()) {
+                    List<List<String>> pages = new ArrayList<List<String>>();
+                    pages.add(new ArrayList<String>());
+                    int pageIndex = 0;
+                    for(Object key : pageMap.keySet()) {
+                        Object line = pageMap.get(key);
+                        if(line instanceof String) {
+                            if(((String) line).toLowerCase().equals("{newline}")) {
+                                pages.add(new ArrayList<String>());
+                                pageIndex++;
+                            } else {
+                                pages.get(pageIndex).add((String) line);
+                            }
+                        }
+                    }
+                    ItemRoutingTable.setPages(((TileSwitchRouting) routingSwitch).getInventory().getStackInSlot(0), pages);
+                    return new Object[] { true };
                 } else {
                     return new Object[] { false, "routing switch is locked" };
                 }

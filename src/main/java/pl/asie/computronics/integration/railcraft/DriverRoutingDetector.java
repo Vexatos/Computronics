@@ -15,8 +15,10 @@ import mods.railcraft.common.items.ItemRoutingTable;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Vexatos
@@ -53,6 +55,35 @@ public class DriverRoutingDetector extends DriverTileEntity {
                         i++;
                     }
                     return new Object[] { pageMap };
+                } else {
+                    return new Object[] { false, "routing detector is locked" };
+                }
+            }
+            return new Object[] { false, "no routing table found" };
+        }
+
+        @Callback(doc = "function(routingTable:table):boolean; Sets the routing table inside the detector; argument needs to be a table with number indices and string values; returns 'true' on success, 'false' and an error message otherwise.")
+        public Object[] setRoutingTable(Context c, Arguments a) {
+            Map pageMap = a.checkTable(0);
+            if(((DetectorRouting) ((TileDetector) detector).getDetector()).getInventory().getStackInSlot(0) != null
+                && ((DetectorRouting) ((TileDetector) detector).getDetector()).getInventory().getStackInSlot(0).getItem() instanceof ItemRoutingTable) {
+                if(!((DetectorRouting) ((TileDetector) detector).getDetector()).isSecure()) {
+                    List<List<String>> pages = new ArrayList<List<String>>();
+                    pages.add(new ArrayList<String>());
+                    int pageIndex = 0;
+                    for(Object key : pageMap.keySet()) {
+                        Object line = pageMap.get(key);
+                        if(line instanceof String) {
+                            if(((String) line).toLowerCase().equals("{newline}")) {
+                                pages.add(new ArrayList<String>());
+                                pageIndex++;
+                            } else {
+                                pages.get(pageIndex).add((String) line);
+                            }
+                        }
+                    }
+                    ItemRoutingTable.setPages(((DetectorRouting) ((TileDetector) detector).getDetector()).getInventory().getStackInSlot(0), pages);
+                    return new Object[] { true };
                 } else {
                     return new Object[] { false, "routing detector is locked" };
                 }

@@ -30,11 +30,15 @@ public class DriverReceiverBox extends DriverTileEntity {
         @Callback(doc = "function():number; Returns the currently most restrictive received aspect that triggers the receiver box")
         public Object[] getSignal(Context c, Arguments a) {
             TileBoxReceiver box = (TileBoxReceiver) this.box;
-            int signal = box.getTriggerAspect().ordinal();
-            if(signal == 5) {
-                signal = -1;
+            if(!box.isSecure()) {
+                int signal = box.getTriggerAspect().ordinal();
+                if(signal == 5) {
+                    signal = -1;
+                }
+                return new Object[] { signal };
+            } else {
+                return new Object[] { null, "signal receiver box is locked" };
             }
-            return new Object[] { signal };
         }
     }
 
