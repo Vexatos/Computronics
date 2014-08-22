@@ -20,6 +20,7 @@ import li.cil.oc.api.network.Visibility;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundManager;
 import net.minecraft.client.audio.SoundPoolEntry;
+import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -28,16 +29,18 @@ import pl.asie.computronics.Packets;
 import pl.asie.computronics.api.IItemStorage;
 import pl.asie.computronics.item.ItemTape;
 import pl.asie.computronics.tile.TapeDriveState.State;
+import pl.asie.lib.api.tile.IInventoryProvider;
 import pl.asie.lib.audio.DFPWM;
 import pl.asie.lib.block.TileEntityInventory;
 import pl.asie.lib.network.Packet;
 
-public class TileTapeDrive extends TileEntityPeripheralInventory {
+public class TileTapeDrive extends TileEntityPeripheralBase implements IInventoryProvider {
 	private String storageName = "";
 	private TapeDriveState state;
 	
 	public TileTapeDrive() {
 		super("tape_drive");
+		this.createInventory(1);
 		this.state = new TapeDriveState();
 		if(Loader.isModLoaded("OpenComputers") && node != null) {
 			//initOCFilesystem();
@@ -162,16 +165,16 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
 	}
 	
 	@Override
-	public void onInventoryUpdate(int slot) {
+	public void onSlotUpdate(int slot) {
 		if(this.getStackInSlot(0) == null) {
-			if(slot == 0 && state.getStorage() != null) { // Tape was inserted
+			if(state.getStorage() != null) { // Tape was inserted
 				// Play eject sound
 				worldObj.playSoundEffect(xCoord, yCoord, zCoord, "computronics:tape_eject", 1, 0);
 			}
 			unloadStorage();
 		} else {
 			loadStorage();
-			if(slot == 0 && this.getStackInSlot(0).getItem() instanceof IItemStorage) {
+			if(this.getStackInSlot(0).getItem() instanceof IItemStorage) {
 				// Play insert sound
 				worldObj.playSoundEffect(xCoord, yCoord, zCoord, "computronics:tape_insert", 1, 0);
 			}
@@ -180,21 +183,10 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
 	
 	@Override
 	public void onChunkUnload() {
-		super.onWorldUnload();
-		unloadStorage();
-	}
-	
-	@Override
-	public void onWorldUnload() {
-		super.onWorldUnload();
+		super.onChunkUnload();
 		unloadStorage();
 	}
 
-	@Override
-	public int getSizeInventory() {
-		return 1;
-	}
-	
 	@Override
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
@@ -316,7 +308,6 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
 	@Override
     @Optional.Method(modid="ComputerCraft")
 	public String[] getMethodNames() {
-		// TODO Auto-generated method stub
 		return new String[]{"isEnd", "isReady", "getSize", "getLabel", "getState", "setLabel", "setSpeed", "setVolume", "seek", "read", "write", "play", "stop"};
 	}
 

@@ -17,7 +17,11 @@ import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 
-public class TileSorter extends TileEntityPeripheralInventory implements ISidedInventory {
+public class TileSorter {
+}
+/*
+extends TileEntityPeripheralInventory implements ISidedInventory {
+}
 	private int TICKS_SINCE_UPDATE = 0;
 	private boolean updatedOutputYet = false;
 	private ArrayList<ISortingOutputHandler> sortingOutputHandlers;
@@ -163,4 +167,4 @@ public class TileSorter extends TileEntityPeripheralInventory implements ISidedI
 	public boolean canExtractItem(int var1, ItemStack var2, int var3) {
 		return false;
 	}
-}
+}*/

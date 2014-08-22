@@ -26,12 +26,13 @@ public class BlockSorter extends BlockMachineSidedIcon {
 	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
 		TileEntity tile = world.getTileEntity(x, y, z);
-		((TileSorter)tile).updateOutput();
+		//((TileSorter)tile).updateOutput();
 	}
 	
 	@Override
 	public TileEntity createNewTileEntity(World world, int metadata) {
-		return new TileSorter();
+		return null;
+		//return new TileSorter();
 	}
 	
 	@Override
