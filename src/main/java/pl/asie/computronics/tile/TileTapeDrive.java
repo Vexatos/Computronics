@@ -1,6 +1,6 @@
 package pl.asie.computronics.tile;
 
-import java.nio.file.FileSystem;
+//import java.nio.file.FileSystem;
 
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
@@ -8,7 +8,6 @@ import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
-//import li.cil.oc.api.FileSystem;
 import li.cil.oc.api.network.Arguments;
 import li.cil.oc.api.network.Callback;
 import li.cil.oc.api.network.Component;
@@ -35,30 +34,45 @@ import pl.asie.lib.network.Packet;
 public class TileTapeDrive extends TileEntityPeripheralInventory {
 	private String storageName = "";
 	private TapeDriveState state;
-	
+
 	public TileTapeDrive() {
 		super("tape_drive");
 		this.state = new TapeDriveState();
 		if(Loader.isModLoaded("OpenComputers") && node != null) {
-			//initOCFilesystem();
+			initOCFilesystem();
 		}
 	}
-	/*
+
 	private ManagedEnvironment oc_fs;
-	
+
 	@Optional.Method(modid="OpenComputers")
 	private void initOCFilesystem() {
 		oc_fs = li.cil.oc.api.FileSystem.asManagedEnvironment(li.cil.oc.api.FileSystem.fromClass(Computronics.class, "computronics", "lua/component/tape_drive"),
 				"tape_drive");
 	}
-	
-	@Optional.Method(modid="OpenComputers")
-	public void onOCNetworkCreation() {
-		((Component)oc_fs.node()).setVisibility(Visibility.Network);
-		this.node.connect(oc_fs.node());
+
+	@Override
+	public void onConnect(final Node node)
+	{
+		if(node.host() instanceof Context) {
+			((Component)oc_fs.node()).setVisibility(Visibility.Network);
+			node.connect(oc_fs.node());
+		}
 	}
-	*/
 	// GUI/State
+
+	@Override
+	public void onDisconnect(final Node node) {
+		if (node.host() instanceof Context) {
+			// Remove our file systems when we get disconnected from a
+			// computer.
+			node.disconnect(oc_fs.node());
+		} else if (node == this.node) {
+			// Remove the file system if we are disconnected, because in that
+			// case this method is only called once.
+			oc_fs.node().remove();
+		}
+	}
 
 	protected void sendState() {
 		if(worldObj.isRemote) return;
@@ -70,16 +84,16 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
 			Computronics.packet.sendToAllAround(packet, this, 64.0D);
 		} catch(Exception e) { e.printStackTrace(); }
 	}
-	
+
 	// Logic
 	public State getEnumState() { return this.state.getState(); }
-	
+
 	public void switchState(State s) {
 		System.out.println("Switchy switch to " + s.name());
 		this.state.switchState(worldObj, xCoord, yCoord, zCoord, s);
 		this.sendState();
 	}
-	
+
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
@@ -88,9 +102,9 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
 			Computronics.packet.sendToAllAround(pkt, this, Computronics.TAPEDRIVE_DISTANCE * 2);
 		}
 	}
-	
+
 	// Minecraft boilerplate
-	
+
     private void setLabel(String label) {
 		ItemStack stack = this.getStackInSlot(0);
 		if(stack != null && stack.getTagCompound() != null) {
@@ -102,38 +116,38 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
 			storageName = label;
 		}
 	}
-	
+
 	@Override
 	public boolean canUpdate() { return true; }
-	
+
 	@Override
 	public void openInventory() {
 		super.openInventory();
 		sendState();
 	}
-	
+
 	@Override
 	public void onBlockDestroy() {
 		super.onBlockDestroy();
 		unloadStorage();
 	}
-	
+
 	@Override
 	public void invalidate() {
 		super.invalidate();
 		unloadStorage();
 	}
-	
+
 	@Override
 	public void onRedstoneSignal(int signal) {
 		this.switchState(signal > 0 ? State.PLAYING : State.STOPPED);
 	}
-	
+
 	// Storage handling
-	
+
 	private void loadStorage() {
 		if(worldObj != null && worldObj.isRemote) return;
-		
+
 		if(state.getStorage() != null) unloadStorage();
 		ItemStack stack = this.getStackInSlot(0);
 		if(stack != null) {
@@ -142,7 +156,7 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
 			if(item instanceof IItemStorage) {
 				state.setStorage(((IItemStorage)item).getStorage(stack));
 			}
-			
+
 			// Get possible label.
 			if(stack.getTagCompound() != null) {
 				NBTTagCompound tag = stack.getTagCompound();
@@ -150,17 +164,17 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
 			} else storageName = "";
 		}
 	}
-    
+
 	private void unloadStorage() {
 		if(worldObj.isRemote || state.getStorage() == null) return;
-		
+
 		switchState(State.STOPPED);
 		try {
 			state.getStorage().writeFileIfModified();
 		} catch(Exception e) { e.printStackTrace(); }
 		state.setStorage(null);
 	}
-	
+
 	@Override
 	public void onInventoryUpdate(int slot) {
 		if(this.getStackInSlot(0) == null) {
@@ -177,13 +191,13 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
 			}
 		}
 	}
-	
+
 	@Override
 	public void onChunkUnload() {
 		super.onWorldUnload();
 		unloadStorage();
 	}
-	
+
 	@Override
 	public void onWorldUnload() {
 		super.onWorldUnload();
@@ -194,7 +208,7 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
 	public int getSizeInventory() {
 		return 1;
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
@@ -203,7 +217,7 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
 		if(tag.hasKey("vo")) this.state.soundVolume = tag.getByte("vo"); else this.state.soundVolume = 127;
 		loadStorage();
 	}
-	
+
 	@Override
 	public void writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
@@ -211,7 +225,7 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
 		tag.setByte("state", (byte)this.state.getState().ordinal());
 		if(this.state.soundVolume != 127) tag.setByte("vo", (byte)this.state.soundVolume);
 	}
-	
+
 	// OpenComputers
 
 	@Callback(direct = true)
@@ -220,19 +234,19 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
 		if(state.getStorage() != null) return new Object[]{state.getStorage().getPosition() + state.packetSize <= state.getStorage().getSize()};
 		else return new Object[]{true};
 	}
-	
+
     @Callback(direct = true)
     @Optional.Method(modid="OpenComputers")
     public Object[] isReady(Context context, Arguments args) {
     	return new Object[]{state.getStorage() != null};
     }
-    
+
     @Callback(direct = true)
     @Optional.Method(modid="OpenComputers")
     public Object[] getSize(Context context, Arguments args) {
     	return new Object[]{(state.getStorage() != null ? state.getStorage().getSize() : 0)};
     }
-    
+
     @Callback
     @Optional.Method(modid="OpenComputers")
     public Object[] setLabel(Context context, Arguments args) {
@@ -241,7 +255,7 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
     	}
     	return new Object[]{(state.getStorage() != null ? storageName : "")};
     }
-    
+
     @Callback
     @Optional.Method(modid="OpenComputers")
     public Object[] getLabel(Context context, Arguments args) {
@@ -256,7 +270,7 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
     	}
     	return null;
     }
-    
+
     @Callback
     @Optional.Method(modid="OpenComputers")
     public Object[] read(Context context, Arguments args) {
@@ -268,7 +282,7 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
     		} else return new Object[]{(int)state.getStorage().read() & 0xFF};
     	} else return null;
     }
-    
+
     @Callback
     @Optional.Method(modid="OpenComputers")
     public Object[] write(Context context, Arguments args) {
@@ -280,7 +294,7 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
     	}
     	return null;
     }
-    
+
     @Callback
     @Optional.Method(modid="OpenComputers")
     public Object[] play(Context context, Arguments args) {
@@ -294,25 +308,25 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
     	switchState(State.STOPPED);
     	return new Object[]{state.getStorage() != null};
     }
-    
+
     @Callback
     public Object[] setSpeed(Context context, Arguments args) {
     	if(args.count() > 0 && args.isDouble(0)) return new Object[]{this.state.setSpeed((float)args.checkDouble(0))};
     	else return null;
     }
-    
+
     @Callback
     public Object[] setVolume(Context context, Arguments args) {
     	if(args.count() > 0 && args.isDouble(0)) this.state.setVolume((float)args.checkDouble(0));
     	return null;
     }
-    
+
     @Callback
     @Optional.Method(modid="OpenComputers")
     public Object[] getState(Context context, Arguments args) {
     	return new Object[]{state.toString()};
     }
-    
+
 	@Override
     @Optional.Method(modid="ComputerCraft")
 	public String[] getMethodNames() {
@@ -332,7 +346,7 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
 			case 10: if(state.getStorage() != null) return new Object[]{state.getStorage().write(((String)arguments[0]).getBytes())}; break;
 			}
 		}
-		
+
 		// methods which take floats and do something
 		if(arguments.length == 1 && (arguments[0] instanceof Double)) {
 			float f = ((Double)arguments[0]).floatValue();
@@ -356,29 +370,29 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
 		case 11: switchState(State.PLAYING);
 		case 12: switchState(State.STOPPED);
 		}
-		
+
 		// returns for the methods which didn't return something before
 		switch(method) {
 		case 0: if(state.getStorage() != null) return new Object[]{state.getStorage().getPosition() + state.packetSize <= state.getStorage().getSize()};
-		
+
 		case 1:  // isReady, play, stop
 		case 11:
 		case 12: return new Object[]{state.getStorage() != null};
-		
+
 		case 2: return new Object[]{(state.getStorage() != null ? state.getStorage().getSize() : 0)};
-		
+
 		case 3: // getLabel, setLabel
 		case 5: return new Object[]{(state.getStorage() != null ? storageName : "")};
-		
+
 		case 4: return new Object[]{state.toString()};
-		
+
 		case 9: if(state.getStorage() != null) return new Object[]{(int)state.getStorage().read() & 0xFF};
 		}
-		
+
 		// catch all other methods
 		return null;
 	}
-	
+
 	private int _nedo_lastSeek = 0;
 
 	@Override
