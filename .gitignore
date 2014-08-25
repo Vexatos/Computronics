@@ -1,11 +1,13 @@
-*.class
-build/**
-.gradle/**
-# Package Files #
-*.jar
-*.war
-*.ear
-lib/**
-*.ipr
-*.iml
-*.iws
+/*
+
+# folders
+!/docs
+!/gradle
+!/src
+
+# files
+!/.gitignore
+!/README.md
+!/build.gradle
+!/gradlew
+!/gradlew.bat

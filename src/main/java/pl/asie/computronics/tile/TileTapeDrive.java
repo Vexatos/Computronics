@@ -1,6 +1,6 @@
 package pl.asie.computronics.tile;
 
-import java.nio.file.FileSystem;
+//import java.nio.file.FileSystem;
 
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
@@ -8,7 +8,6 @@ import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
-//import li.cil.oc.api.FileSystem;
 import li.cil.oc.api.network.Arguments;
 import li.cil.oc.api.network.Callback;
 import li.cil.oc.api.network.Component;
@@ -37,31 +36,48 @@ import pl.asie.lib.network.Packet;
 public class TileTapeDrive extends TileEntityPeripheralBase implements IInventoryProvider {
 	private String storageName = "";
 	private TapeDriveState state;
-	
+
 	public TileTapeDrive() {
 		super("tape_drive");
 		this.createInventory(1);
 		this.state = new TapeDriveState();
 		if(Loader.isModLoaded("OpenComputers") && node != null) {
-			//initOCFilesystem();
+			initOCFilesystem();
 		}
 	}
-	/*
+
 	private ManagedEnvironment oc_fs;
-	
+
 	@Optional.Method(modid="OpenComputers")
 	private void initOCFilesystem() {
 		oc_fs = li.cil.oc.api.FileSystem.asManagedEnvironment(li.cil.oc.api.FileSystem.fromClass(Computronics.class, "computronics", "lua/component/tape_drive"),
 				"tape_drive");
 	}
-	
+
+	@Override
 	@Optional.Method(modid="OpenComputers")
-	public void onOCNetworkCreation() {
-		((Component)oc_fs.node()).setVisibility(Visibility.Network);
-		this.node.connect(oc_fs.node());
+	public void onConnect(final Node node)
+	{
+		if(node.host() instanceof Context) {
+			((Component)oc_fs.node()).setVisibility(Visibility.Network);
+			node.connect(oc_fs.node());
+		}
 	}
-	*/
 	// GUI/State
+
+	@Override
+	@Optional.Method(modid="OpenComputers")
+	public void onDisconnect(final Node node) {
+		if (node.host() instanceof Context) {
+			// Remove our file systems when we get disconnected from a
+			// computer.
+			node.disconnect(oc_fs.node());
+		} else if (node == this.node) {
+			// Remove the file system if we are disconnected, because in that
+			// case this method is only called once.
+			oc_fs.node().remove();
+		}
+	}
 
 	protected void sendState() {
 		if(worldObj.isRemote) return;
@@ -186,7 +202,18 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 		super.onChunkUnload();
 		unloadStorage();
 	}
+	
+	@Override
+	public void onWorldUnload() {
+		super.onWorldUnload();
+		unloadStorage();
+	}
 
+	@Override
+	public int getSizeInventory() {
+		return 1;
+	}
+	
 	@Override
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
