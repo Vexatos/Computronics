@@ -62,7 +62,7 @@ public class BlockChatBox extends BlockMachineSidedIcon {
 	}
 	
 	@Override
-	public boolean emitsRedstone(IBlockAccess world, int x, int y, int z) {
+	public boolean emitsRedstone(IBlockAccess world, int x, int y, int z, int side) {
 		return Computronics.REDSTONE_REFRESH;
 	}
 }
