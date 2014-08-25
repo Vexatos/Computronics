@@ -1,6 +1,5 @@
 package pl.asie.computronics;
 
-import pl.asie.computronics.gui.GuiCipherBlock;
 import pl.asie.computronics.tile.ContainerCipherBlock;
 import pl.asie.computronics.tile.ContainerTapeReader;
 import pl.asie.lib.gui.GuiHandler;

@@ -1,12 +1,9 @@
 package pl.asie.computronics.integration.redlogic;
 
-import pl.asie.computronics.Computronics;
+import dan200.computercraft.api.redstone.IBundledRedstoneProvider;
 import mods.immibis.redlogic.api.wiring.IBundledEmitter;
-import mods.immibis.redlogic.api.wiring.IConnectable;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
-import dan200.computercraft.api.redstone.IBundledRedstoneProvider;
 
 public class CCBundledRedstoneProviderRedLogic implements
 		IBundledRedstoneProvider {

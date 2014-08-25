@@ -1,21 +1,5 @@
 package pl.asie.computronics.tile;
 
-import javax.crypto.Cipher;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
-
-import mods.immibis.redlogic.api.wiring.IBundledEmitter;
-import mods.immibis.redlogic.api.wiring.IBundledUpdatable;
-import mods.immibis.redlogic.api.wiring.IBundledWire;
-import mods.immibis.redlogic.api.wiring.IConnectable;
-import mods.immibis.redlogic.api.wiring.IWire;
-import mrtjp.projectred.api.IBundledTile;
-import mrtjp.projectred.api.ProjectRedAPI;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.common.Optional;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
@@ -23,11 +7,16 @@ import dan200.computercraft.api.peripheral.IComputerAccess;
 import li.cil.oc.api.network.Arguments;
 import li.cil.oc.api.network.Callback;
 import li.cil.oc.api.network.Context;
-import li.cil.oc.api.network.SimpleComponent;
+import net.minecraft.inventory.ISidedInventory;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import pl.asie.computronics.Computronics;
-import pl.asie.lib.AsieLibMod;
 import pl.asie.lib.api.tile.IBundledRedstoneProvider;
 import pl.asie.lib.util.Base64;
+
+import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 
 public class TileCipherBlock extends TileEntityPeripheralBase implements IBundledRedstoneProvider, ISidedInventory {
 	private byte[] key = new byte[32];

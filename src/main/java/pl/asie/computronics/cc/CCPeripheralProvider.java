@@ -1,10 +1,10 @@
 package pl.asie.computronics.cc;
 
-import pl.asie.computronics.tile.TileEntityPeripheralBase;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheralProvider;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
+import pl.asie.computronics.tile.TileEntityPeripheralBase;
 
 public class CCPeripheralProvider implements IPeripheralProvider {
 	@Override

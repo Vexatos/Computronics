@@ -1,21 +1,15 @@
 package pl.asie.computronics.integration.mfr;
 
-import java.util.List;
-
-import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
-import net.minecraft.block.Block;
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 import li.cil.oc.api.Network;
 import li.cil.oc.api.network.Arguments;
 import li.cil.oc.api.network.Callback;
 import li.cil.oc.api.network.Context;
 import li.cil.oc.api.network.ManagedEnvironment;
 import li.cil.oc.api.network.Visibility;
-import li.cil.oc.api.prefab.DriverBlock;
 import li.cil.oc.api.prefab.DriverTileEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
+import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
 
 public class DriverDeepStorageUnit extends DriverTileEntity {
 	public class ManagedEnvironmentDSU extends li.cil.oc.api.prefab.ManagedEnvironment {

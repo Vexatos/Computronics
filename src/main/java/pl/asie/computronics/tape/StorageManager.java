@@ -1,12 +1,11 @@
 package pl.asie.computronics.tape;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.Random;
-
 import net.minecraftforge.common.DimensionManager;
 import pl.asie.computronics.Computronics;
 import pl.asie.lib.util.MiscUtils;
+
+import java.io.File;
+import java.util.Random;
 
 public class StorageManager {
 	// Map

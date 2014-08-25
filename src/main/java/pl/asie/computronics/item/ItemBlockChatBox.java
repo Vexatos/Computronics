@@ -1,19 +1,16 @@
 package pl.asie.computronics.item;
 
-import java.util.List;
-
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.block.Block;
 import net.minecraft.util.EnumChatFormatting;
 import pl.asie.computronics.Computronics;
+
+import java.util.List;
 
 public class ItemBlockChatBox extends ItemBlock {
 	public ItemBlockChatBox(Block block) {

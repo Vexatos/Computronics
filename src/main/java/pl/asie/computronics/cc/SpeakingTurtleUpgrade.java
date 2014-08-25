@@ -1,15 +1,15 @@
 package pl.asie.computronics.cc;
 
-import pl.asie.computronics.Computronics;
-import pl.asie.computronics.util.ChatBoxUtils;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.turtle.ITurtleAccess;
 import dan200.computercraft.api.turtle.TurtleSide;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
+import pl.asie.computronics.Computronics;
+import pl.asie.computronics.util.ChatBoxUtils;
 
 public class SpeakingTurtleUpgrade extends TurtleUpgradeBase {
 	private class SpeakingTurtlePeripheral extends TurtlePeripheralBase {

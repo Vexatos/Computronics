@@ -1,25 +1,22 @@
 package pl.asie.computronics.oc;
 
-import pl.asie.computronics.Computronics;
-import pl.asie.computronics.util.RadarUtils;
 import li.cil.oc.api.Network;
 import li.cil.oc.api.driver.Container;
 import li.cil.oc.api.machine.Robot;
 import li.cil.oc.api.network.Arguments;
 import li.cil.oc.api.network.Callback;
+import li.cil.oc.api.network.Connector;
 import li.cil.oc.api.network.Context;
 import li.cil.oc.api.network.Visibility;
-import li.cil.oc.api.network.Connector;
 import li.cil.oc.api.prefab.ManagedEnvironment;
-import pl.asie.computronics.Computronics;
-import pl.asie.computronics.util.RadarUtils;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
+import pl.asie.computronics.Computronics;
+import pl.asie.computronics.util.RadarUtils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

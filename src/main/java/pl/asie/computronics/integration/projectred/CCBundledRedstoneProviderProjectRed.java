@@ -1,11 +1,9 @@
 package pl.asie.computronics.integration.projectred;
 
-import pl.asie.computronics.Computronics;
+import dan200.computercraft.api.redstone.IBundledRedstoneProvider;
 import mrtjp.projectred.api.ProjectRedAPI;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import dan200.computercraft.api.redstone.IBundledRedstoneProvider;
 
 public class CCBundledRedstoneProviderProjectRed implements
 		IBundledRedstoneProvider {

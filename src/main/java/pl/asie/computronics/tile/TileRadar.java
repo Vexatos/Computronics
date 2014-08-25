@@ -1,33 +1,24 @@
 package pl.asie.computronics.tile;
 
+import cpw.mods.fml.common.Optional;
+import dan200.computercraft.api.lua.ILuaContext;
+import dan200.computercraft.api.lua.LuaException;
+import dan200.computercraft.api.peripheral.IComputerAccess;
 import li.cil.oc.api.network.Arguments;
 import li.cil.oc.api.network.Callback;
+import li.cil.oc.api.network.Connector;
 import li.cil.oc.api.network.Context;
 import li.cil.oc.api.network.Environment;
-import li.cil.oc.api.network.SimpleComponent;
-import li.cil.oc.api.network.Connector;
-import li.cil.oc.api.network.Node;
-import li.cil.oc.api.network.Visibility;
-import li.cil.oc.api.Network;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.AxisAlignedBB;
-import pl.asie.lib.block.TileEntityBase;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.cc.CCRadarProxy;
 import pl.asie.computronics.util.RadarUtils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
-import cpw.mods.fml.common.Optional;
-import dan200.computercraft.api.lua.ILuaContext;
-import dan200.computercraft.api.lua.LuaException;
-import dan200.computercraft.api.peripheral.IComputerAccess;
 
 @Optional.Interface(iface = "li.cil.li.oc.network.Environment", modid = "OpenComputers")
 public class TileRadar extends TileEntityPeripheralBase implements Environment {

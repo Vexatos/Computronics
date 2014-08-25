@@ -1,18 +1,15 @@
 package pl.asie.computronics.integration.mfr;
 
-import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
-import mods.immibis.redlogic.api.misc.ILampBlock;
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheralProvider;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
+import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
 
 public class DeepStorageUnitPeripheral implements IPeripheral, IPeripheralProvider {
 	private IDeepStorageUnit dsu;

@@ -1,23 +1,20 @@
 package pl.asie.computronics.tile;
 
-import java.util.ArrayList;
-
-import nedocomputers.INedoPeripheral;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.Optional;
+import dan200.computercraft.api.peripheral.IComputerAccess;
+import dan200.computercraft.api.peripheral.IPeripheral;
 import li.cil.oc.api.Network;
 import li.cil.oc.api.network.Environment;
 import li.cil.oc.api.network.Message;
 import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.Visibility;
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.Optional;
-import dan200.computercraft.api.lua.ILuaContext;
-import dan200.computercraft.api.lua.LuaException;
-import dan200.computercraft.api.peripheral.IComputerAccess;
-import dan200.computercraft.api.peripheral.IPeripheral;
-import pl.asie.lib.block.TileEntityBase;
+import nedocomputers.INedoPeripheral;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import pl.asie.lib.tile.TileMachine;
+
+import java.util.ArrayList;
 
 // #######################################################
 //

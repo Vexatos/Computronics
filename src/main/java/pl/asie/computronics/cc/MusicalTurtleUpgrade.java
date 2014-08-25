@@ -1,17 +1,16 @@
 package pl.asie.computronics.cc;
 
 import cpw.mods.fml.common.Optional;
-import pl.asie.computronics.Computronics;
-import pl.asie.computronics.util.ChatBoxUtils;
-import pl.asie.computronics.util.NoteUtils;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.turtle.ITurtleAccess;
 import dan200.computercraft.api.turtle.TurtleSide;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
+import pl.asie.computronics.Computronics;
+import pl.asie.computronics.util.NoteUtils;
 
 public class MusicalTurtleUpgrade extends TurtleUpgradeBase {
 	private class MusicalTurtlePeripheral extends TurtlePeripheralBase {

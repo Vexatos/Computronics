@@ -1,13 +1,13 @@
 package pl.asie.computronics.integration.waila;
 
-import java.util.List;
-
-import pl.asie.computronics.Computronics;
-import pl.asie.computronics.tile.TileTapeDrive;
-import net.minecraft.item.ItemStack;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.IWailaDataProvider;
+import net.minecraft.item.ItemStack;
+import pl.asie.computronics.Computronics;
+import pl.asie.computronics.tile.TileTapeDrive;
+
+import java.util.List;
 
 public class WailaTapeDrive implements IWailaDataProvider {
 

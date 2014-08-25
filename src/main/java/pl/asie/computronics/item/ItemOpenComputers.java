@@ -1,16 +1,15 @@
 package pl.asie.computronics.item;
 
-import li.cil.oc.api.driver.Slot;
 import li.cil.oc.api.driver.Container;
+import li.cil.oc.api.driver.Slot;
 import li.cil.oc.api.network.ManagedEnvironment;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.oc.DriverCardFX;
 import pl.asie.computronics.oc.RobotUpgradeCamera;
 import pl.asie.computronics.oc.RobotUpgradeChatBox;
 import pl.asie.computronics.oc.RobotUpgradeRadar;
-import pl.asie.computronics.oc.DriverCardFX;
 import pl.asie.lib.item.ItemMultiple;
 
 public class ItemOpenComputers extends ItemMultiple implements li.cil.oc.api.driver.Item {
