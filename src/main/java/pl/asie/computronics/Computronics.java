@@ -54,6 +54,10 @@ import pl.asie.computronics.integration.railcraft.DriverReceiverBox;
 import pl.asie.computronics.integration.railcraft.DriverRoutingDetector;
 import pl.asie.computronics.integration.railcraft.DriverRoutingSwitch;
 import pl.asie.computronics.integration.railcraft.DriverRoutingTrack;
+import pl.asie.computronics.integration.railcraft.ReceiverBoxPeripheral;
+import pl.asie.computronics.integration.railcraft.RoutingDetectorPeripheral;
+import pl.asie.computronics.integration.railcraft.RoutingSwitchPeripheral;
+import pl.asie.computronics.integration.railcraft.RoutingTrackPeripheral;
 import pl.asie.computronics.integration.redlogic.CCBundledRedstoneProviderRedLogic;
 import pl.asie.computronics.integration.redlogic.DriverLamp;
 import pl.asie.computronics.integration.redlogic.LampPeripheral;
@@ -81,16 +85,16 @@ public class Computronics {
 	public Configuration config;
 	public static Random rand = new Random();
 	public static Logger log;
-	
+
 	public static FMLEventChannel channel;
-	
+
 	@Instance(value="computronics")
 	public static Computronics instance;
 	public static StorageManager storage;
 	public static GuiHandler gui;
 	public static PacketHandler packet;
 	public DFPWMPlaybackManager audio;
-	
+
 	public static int CHATBOX_DISTANCE = 40;
 	public static int CAMERA_DISTANCE = 32;
 	public static int TAPEDRIVE_DISTANCE = 24;
@@ -101,13 +105,13 @@ public class Computronics {
 	public static double RADAR_CC_TIME = 0.5;
 	public static double FX_ENERGY_COST = 0.5;
 	public static String CHATBOX_PREFIX = "ChatBox";
-	
+
 	public static String TAPE_LENGTHS;
 	public static boolean REDSTONE_REFRESH, CHATBOX_ME_DETECT, CHATBOX_CREATIVE, DISABLE_IRONNOTE_FORGE_EVENTS;
-	
-	@SidedProxy(clientSide="pl.asie.computronics.ClientProxy", serverSide="pl.asie.computronics.CommonProxy")	
+
+	@SidedProxy(clientSide="pl.asie.computronics.ClientProxy", serverSide="pl.asie.computronics.CommonProxy")
 	public static CommonProxy proxy;
-	
+
 	public static BlockIronNote ironNote;
 	public static BlockTapeReader tapeReader;
 	public static BlockCamera camera;
@@ -116,13 +120,13 @@ public class Computronics {
     public static BlockRadar radar;
     public static BlockEEPROMReader nc_eepromreader;
 	public static BlockColorfulLamp colorfulLamp;
-	
+
 	public static ItemTape itemTape;
 	public static ItemMultiple itemParts;
 	public static ItemOpenComputers itemRobotUpgrade;
-	
+
 	public static boolean MUST_UPDATE_TILE_ENTITIES = false;
-	
+
 	public static CreativeTabs tab = new CreativeTabs("tabComputronics") {
         public Item getTabIconItem() {
                 return itemTape;
@@ -132,17 +136,17 @@ public class Computronics {
 	private boolean isEnabled(String name, boolean def) {
 		return config.get("enable", name, def).getBoolean(def);
 	}
-	
+
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		log = LogManager.getLogger("computronics");
 
 		config = new Configuration(event.getSuggestedConfigurationFile());
 		config.load();
-		
+
 		audio = new DFPWMPlaybackManager(proxy.isClient());
 		packet = new PacketHandler("computronics", new NetworkHandlerClient(), new NetworkHandlerServer());
-		
+
 		// Configs
 		CHATBOX_DISTANCE = config.get("chatbox", "maxDistance", 40).getInt();
 		CAMERA_DISTANCE = config.get("camera", "maxDistance", 32).getInt();
@@ -156,74 +160,74 @@ public class Computronics {
 		RADAR_RANGE = config.get("radar", "maxRange", 8).getInt();
 		RADAR_ONLY_DISTANCE = config.get("radar", "onlyOutputDistance", false).getBoolean(false);
 		DISABLE_IRONNOTE_FORGE_EVENTS = config.get("ironnoteblock", "disableForgeEvents", false).getBoolean(false);
-		
+
 		RADAR_CC_TIME = config.get("computercraft", "radarSpeedPerDistanceUnit", 0.5).getDouble(0.5);
-		
+
 		RADAR_OC_ENERGY_COST = config.get("opencomputers", "radarEnergyPerDistanceUnit", 50.0).getDouble(50.0);
 		FX_ENERGY_COST = config.get("opencomputers", "particleEnergyCost", 0.5).getDouble(0.5);
-		
+
 		config.get("camera", "sendRedstoneSignal", true).comment = "Setting this to false might help Camera tick lag issues, at the cost of making them useless with redstone circuitry.";
-		
+
 		if(isEnabled("ironNoteBlock", true)) {
 			ironNote = new BlockIronNote();
 			GameRegistry.registerBlock(ironNote, "computronics.ironNoteBlock");
 			GameRegistry.registerTileEntity(TileIronNote.class, "computronics.ironNoteBlock");
 		}
-		
+
 		if(isEnabled("tape", true)) {
 			tapeReader = new BlockTapeReader();
 			GameRegistry.registerBlock(tapeReader, "computronics.tapeReader");
 			GameRegistry.registerTileEntity(TileTapeDrive.class, "computronics.tapeReader");
 		}
-		
+
 		if(isEnabled("camera", true)) {
 			camera = new BlockCamera();
 			GameRegistry.registerBlock(camera, "computronics.camera");
 			GameRegistry.registerTileEntity(TileCamera.class, "computronics.camera");
 		}
-		
+
 		if(isEnabled("chatBox", true)) {
 			chatBox = new BlockChatBox();
 			GameRegistry.registerBlock(chatBox, ItemBlockChatBox.class, "computronics.chatBox");
 			GameRegistry.registerTileEntity(TileChatBox.class, "computronics.chatBox");
 		}
-		
+
 		if(isEnabled("cipher", true)) {
 			cipher = new BlockCipher();
 			GameRegistry.registerBlock(cipher, "computronics.cipher");
 			GameRegistry.registerTileEntity(TileCipherBlock.class, "computronics.cipher");
 		}
-		
+
 		if(isEnabled("radar", true)) {
 			radar = new BlockRadar();
 			GameRegistry.registerBlock(radar, "computronics.radar");
 			GameRegistry.registerTileEntity(TileRadar.class, "computronics.radar");
 		}
-		
+
 		if(isEnabled("lamp", true)) {
 			colorfulLamp = new BlockColorfulLamp();
 			GameRegistry.registerBlock(colorfulLamp, "computronics.colorfulLamp");
 			GameRegistry.registerTileEntity(TileColorfulLamp.class, "computronics.colorfulLamp");
 		}
-		
+
 		if(Loader.isModLoaded("nedocomputers") && isEnabled("eepromReader", true)) {
 			nc_eepromreader = new BlockEEPROMReader();
 			GameRegistry.registerBlock(nc_eepromreader, "computronics.eepromReader");
 			GameRegistry.registerTileEntity(TileEEPROMReader.class, "computronics.eepromReader");
 		}
-		
+
 		if(isEnabled("tape", true)) {
 			itemTape = new ItemTape(TAPE_LENGTHS);
 			GameRegistry.registerItem(itemTape, "computronics.tape");
 		}
-		
+
 		itemParts = new ItemMultiple("computronics", new String[]{"part_tape_track"});
 		itemParts.setCreativeTab(tab);
 		GameRegistry.registerItem(itemParts, "computronics.parts");
-		
+
 		if(Loader.isModLoaded("OpenComputers")) preInitOC();
 	}
-	
+
 	@Optional.Method(modid="OpenComputers")
 	private void preInitOC() {
 		if(isEnabled("ocRobotUpgrades", true)) {
@@ -231,27 +235,27 @@ public class Computronics {
 			GameRegistry.registerItem(itemRobotUpgrade, "computronics.robotUpgrade");
 			Driver.add(itemRobotUpgrade);
 		}
-		
+
 		// OpenComputers needs a hook in updateEntity in order to proprly register peripherals.
 		// Fixes Iron Note Block, among others.
 		// To ensure less TE ticks for those who don't use OC, we keep this tidbit around.
 		MUST_UPDATE_TILE_ENTITIES = true;
 	}
-	
+
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
 		gui = new GuiHandler();
 		NetworkRegistry.INSTANCE.registerGuiHandler(Computronics.instance, gui);
-		
+
 		MinecraftForge.EVENT_BUS.register(new ChatBoxHandler());
-		
+
 		proxy.registerGuis(gui);
 		if(proxy.isClient()) {
 			new LampRender();
 		}
-		
+
 		FMLInterModComms.sendMessage("Waila", "register", "pl.asie.computronics.integration.waila.IntegrationWaila.register");
-		
+
 		if(camera != null)
 			GameRegistry.addShapedRecipe(new ItemStack(camera, 1, 0), "sss", "geg", "iii", 's', Blocks.stonebrick, 'i', Items.iron_ingot, 'e', Items.ender_pearl, 'g', Blocks.glass);
 		if(chatBox != null)
@@ -282,22 +286,22 @@ public class Computronics {
 					" d ", "dnd", " T ", 'T', new ItemStack(itemParts, 1, 0), 'n', Items.nether_star, 'd', Items.diamond));
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 8),
 					" n ", "nnn", " T ", 'T', new ItemStack(itemParts, 1, 0), 'n', Items.nether_star));
-			
+
 			// Mod compat - copper/steel
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 5),
 					" i ", " c ", " T ", 'T', new ItemStack(itemParts, 1, 0), 'i', Items.iron_ingot, 'c', "ingotCopper"));
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 6),
 					" i ", "isi", " T ", 'T', new ItemStack(itemParts, 1, 0), 'i', Items.iron_ingot, 's', "ingotSteel"));
-			
+
 			// Mod compat - GregTech
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 7),
 					" i ", "isi", " T ", 'T', new ItemStack(itemParts, 1, 0), 'i', "plateIridium", 's', "plateTungstenSteel"));
-					
+
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 1, 0),
 					" i ", "rrr", "iii", 'r', Items.redstone, 'i', Items.iron_ingot));
 			GameRegistry.addRecipe(new RecipeColorizer(itemTape));
         }
-        
+
 		if(Loader.isModLoaded("ComputerCraft")) initCC();
 		if(Loader.isModLoaded("OpenComputers")) initOC();
 
@@ -322,10 +326,19 @@ public class Computronics {
 		if(Loader.isModLoaded("factorization")) {
 			if(config.get("modCompatibility", "enableFactorizationChargePeripheral", true).getBoolean(true)) ComputerCraftAPI.registerPeripheralProvider(new ChargeConductorPeripheral());
 		}
-		
+
+		if(Loader.isModLoaded("Railcraft")) {
+			if(config.get("modCompatibility", "enableRailcraftRoutingPeripherals", true).getBoolean(true)){
+				ComputerCraftAPI.registerPeripheralProvider(new RoutingTrackPeripheral());
+				ComputerCraftAPI.registerPeripheralProvider(new RoutingDetectorPeripheral());
+				ComputerCraftAPI.registerPeripheralProvider(new RoutingSwitchPeripheral());
+				ComputerCraftAPI.registerPeripheralProvider(new ReceiverBoxPeripheral());
+			}
+		}
+
 		ComputerCraftAPI.registerPeripheralProvider(new CCPeripheralProvider());
 		if(itemTape != null) ComputerCraftAPI.registerMediaProvider(itemTape);
-		
+
 		if(isEnabled("ccTurtleUpgrades", true)) {
 			ComputerCraftAPI.registerTurtleUpgrade(
 					new SpeakingTurtleUpgrade(config.get("turtleUpgradeIDs", "speaking", 190).getInt()));
@@ -337,7 +350,7 @@ public class Computronics {
 					new ParticleTurtleUpgrade(config.get("turtleUpgradeIDs", "particle", 193).getInt()));
 		}
 	}
-	
+
 	@Optional.Method(modid="OpenComputers")
 	private void initOC() {
 		if(Loader.isModLoaded("RedLogic")) {
@@ -363,7 +376,7 @@ public class Computronics {
                 li.cil.oc.api.Driver.add(new DriverReceiverBox());
             }
         }
-		
+
 		if(isEnabled("ocRobotUpgrades", true)) {
 			Block[] b = {camera, chatBox, radar};
 			for(int i = 0; i < b.length; i++) {
@@ -374,11 +387,11 @@ public class Computronics {
 			GameRegistry.addShapedRecipe(new ItemStack(itemRobotUpgrade, 1, 3), "mf", " b", 'm', li.cil.oc.api.Items.get("chip2").createItemStack(1), 'f', Items.firework_charge, 'b', li.cil.oc.api.Items.get("card").createItemStack(1));
 		}
 	}
-	
+
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
 	}
-	
+
 	@EventHandler
 	public void serverStart(FMLServerAboutToStartEvent event) {
 		Computronics.storage = new StorageManager();
