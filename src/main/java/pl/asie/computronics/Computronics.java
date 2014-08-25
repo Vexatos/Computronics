@@ -25,8 +25,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.oredict.ShapedOreRecipe;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import pl.asie.computronics.audio.DFPWMPlaybackManager;
 import pl.asie.computronics.block.BlockCamera;
 import pl.asie.computronics.block.BlockChatBox;
@@ -47,6 +49,10 @@ import pl.asie.computronics.integration.factorization.ChargeConductorPeripheral;
 import pl.asie.computronics.integration.factorization.DriverChargeConductor;
 import pl.asie.computronics.integration.fsp.DriverSteamTransporter;
 import pl.asie.computronics.integration.fsp.SteamTransporterPeripheral;
+import pl.asie.computronics.integration.gregtech.DriverBaseMetaTileEntity;
+import pl.asie.computronics.integration.gregtech.DriverDeviceInformation;
+import pl.asie.computronics.integration.gregtech.DriverDigitalChest;
+import pl.asie.computronics.integration.gregtech.DriverMachine;
 import pl.asie.computronics.integration.mfr.DeepStorageUnitPeripheral;
 import pl.asie.computronics.integration.mfr.DriverDeepStorageUnit;
 import pl.asie.computronics.integration.projectred.CCBundledRedstoneProviderProjectRed;
@@ -362,6 +368,16 @@ public class Computronics {
                 li.cil.oc.api.Driver.add(new DriverRoutingSwitch());
                 li.cil.oc.api.Driver.add(new DriverReceiverBox());
             }
+        }
+        if(Loader.isModLoaded("gregtech_addon")) {
+        	if(config.get("modCompatibility", "enableGregTechMachines", true).getBoolean(true)) {
+        		li.cil.oc.api.Driver.add(new DriverBaseMetaTileEntity());
+        		li.cil.oc.api.Driver.add(new DriverDeviceInformation());
+        		li.cil.oc.api.Driver.add(new DriverMachine());
+        	}
+        	if(config.get("modCompatibility", "enableGregTechDigitalChests", true).getBoolean(true)) {
+        		li.cil.oc.api.Driver.add(new DriverDigitalChest());
+        	}
         }
 		
 		if(isEnabled("ocRobotUpgrades", true)) {
