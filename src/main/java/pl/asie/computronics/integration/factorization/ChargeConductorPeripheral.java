@@ -1,14 +1,14 @@
 package pl.asie.computronics.integration.factorization;
 
-import net.minecraft.block.Block;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheralProvider;
 import factorization.api.IChargeConductor;
+import net.minecraft.block.Block;
+import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 
 public class ChargeConductorPeripheral implements IPeripheral, IPeripheralProvider {
 	private IChargeConductor block;

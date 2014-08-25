@@ -1,11 +1,5 @@
 package pl.asie.computronics.cc;
 
-import java.util.HashMap;
-
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
-import dan200.computercraft.api.ComputerCraftAPI;
-import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.turtle.ITurtleAccess;
 import dan200.computercraft.api.turtle.ITurtleUpgrade;
 import dan200.computercraft.api.turtle.TurtleCommandResult;

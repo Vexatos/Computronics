@@ -3,15 +3,11 @@ package pl.asie.computronics.block;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import pl.asie.computronics.Computronics;
-import pl.asie.computronics.tile.TileCipherBlock;
 import pl.asie.computronics.tile.TileIronNote;
 import pl.asie.computronics.util.NoteUtils;
-import pl.asie.lib.block.BlockBase;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetInputNode;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
 

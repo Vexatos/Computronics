@@ -1,32 +1,21 @@
 package pl.asie.computronics.tile;
 
-import java.util.HashSet;
-
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
-//import dan200.computer.api.IComputerAccess;
-//import dan200.computer.api.ILuaContext;
-//import dan200.computer.api.IPeripheral;
-import li.cil.oc.api.Network;
 import li.cil.oc.api.network.Arguments;
 import li.cil.oc.api.network.Callback;
 import li.cil.oc.api.network.Context;
-import li.cil.oc.api.network.Environment;
-import li.cil.oc.api.network.Message;
-import li.cil.oc.api.network.Node;
-import li.cil.oc.api.network.Visibility;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.event.ServerChatEvent;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.util.ChatBoxUtils;
-import pl.asie.lib.block.TileEntityBase;
-import pl.asie.lib.util.ChatUtils;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraftforge.event.ServerChatEvent;
+
+//import dan200.computer.api.IComputerAccess;
+//import dan200.computer.api.ILuaContext;
+//import dan200.computer.api.IPeripheral;
 
 public class TileChatBox extends TileEntityPeripheralBase {
 	private int distance;

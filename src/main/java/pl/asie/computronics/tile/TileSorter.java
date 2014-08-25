@@ -1,22 +1,5 @@
 package pl.asie.computronics.tile;
 
-import java.util.ArrayList;
-
-import li.cil.oc.api.network.Arguments;
-import li.cil.oc.api.network.Callback;
-import li.cil.oc.api.network.Context;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.Optional;
-import pl.asie.computronics.api.ISortingOutputHandler;
-import pl.asie.computronics.util.MiscCUtils;
-import pl.asie.lib.util.ItemUtils;
-import dan200.computercraft.api.lua.ILuaContext;
-import dan200.computercraft.api.lua.LuaException;
-import dan200.computercraft.api.peripheral.IComputerAccess;
-
 public class TileSorter {
 }
 /*

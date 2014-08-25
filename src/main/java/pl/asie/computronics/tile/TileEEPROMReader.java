@@ -1,15 +1,14 @@
 package pl.asie.computronics.tile;
 
-import pl.asie.lib.api.tile.IInventoryProvider;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.item.ItemStack;
-import li.cil.oc.api.network.Arguments;
-import li.cil.oc.api.network.Callback;
-import li.cil.oc.api.network.Context;
 import cpw.mods.fml.common.Optional;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
+import li.cil.oc.api.network.Arguments;
+import li.cil.oc.api.network.Callback;
+import li.cil.oc.api.network.Context;
+import net.minecraft.item.ItemStack;
+import pl.asie.lib.api.tile.IInventoryProvider;
 
 public class TileEEPROMReader extends TileEntityPeripheralBase implements IInventoryProvider {
 	public TileEEPROMReader() {

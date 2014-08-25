@@ -1,14 +1,14 @@
 package pl.asie.computronics.integration.redlogic;
 
-import mods.immibis.redlogic.api.misc.ILampBlock;
-import net.minecraft.block.Block;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheralProvider;
+import mods.immibis.redlogic.api.misc.ILampBlock;
+import net.minecraft.block.Block;
+import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 
 public class LampPeripheral implements IPeripheral, IPeripheralProvider {
 	private ILampBlock block;

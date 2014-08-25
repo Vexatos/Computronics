@@ -4,7 +4,6 @@ package pl.asie.computronics.tile;
 
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
-import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
@@ -14,12 +13,7 @@ import li.cil.oc.api.network.Component;
 import li.cil.oc.api.network.Context;
 import li.cil.oc.api.network.ManagedEnvironment;
 import li.cil.oc.api.network.Node;
-import li.cil.oc.api.network.SimpleComponent;
 import li.cil.oc.api.network.Visibility;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.SoundManager;
-import net.minecraft.client.audio.SoundPoolEntry;
-import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -29,8 +23,6 @@ import pl.asie.computronics.api.IItemStorage;
 import pl.asie.computronics.item.ItemTape;
 import pl.asie.computronics.tile.TapeDriveState.State;
 import pl.asie.lib.api.tile.IInventoryProvider;
-import pl.asie.lib.audio.DFPWM;
-import pl.asie.lib.block.TileEntityInventory;
 import pl.asie.lib.network.Packet;
 
 public class TileTapeDrive extends TileEntityPeripheralBase implements IInventoryProvider {

@@ -1,19 +1,19 @@
 package pl.asie.computronics.cc;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
+import cpw.mods.fml.common.Optional;
+import dan200.computercraft.api.lua.ILuaContext;
+import dan200.computercraft.api.lua.LuaException;
+import dan200.computercraft.api.peripheral.IComputerAccess;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.util.RadarUtils;
-import cpw.mods.fml.common.Optional;
-import dan200.computercraft.api.lua.ILuaContext;
-import dan200.computercraft.api.lua.LuaException;
-import dan200.computercraft.api.peripheral.IComputerAccess;
+
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class CCRadarProxy {
     private static AxisAlignedBB getBounds(int xCoord, int yCoord, int zCoord, int d) {

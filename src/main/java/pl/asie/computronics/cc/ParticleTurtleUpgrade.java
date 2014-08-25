@@ -1,20 +1,17 @@
 package pl.asie.computronics.cc;
 
-import java.util.Random;
-
-import li.cil.oc.api.network.Connector;
-import pl.asie.computronics.Computronics;
-import pl.asie.computronics.util.ChatBoxUtils;
-import pl.asie.computronics.util.ParticleUtils;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.turtle.ITurtleAccess;
 import dan200.computercraft.api.turtle.TurtleSide;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
+import pl.asie.computronics.util.ParticleUtils;
+
+import java.util.Random;
 
 public class ParticleTurtleUpgrade extends TurtleUpgradeBase {
 	private class ParticleTurtlePeripheral extends TurtlePeripheralBase {

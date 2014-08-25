@@ -1,7 +1,5 @@
 package pl.asie.computronics.item;
 
-import java.util.List;
-
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
@@ -9,10 +7,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 import dan200.computercraft.api.filesystem.IMount;
 import dan200.computercraft.api.media.IMedia;
 import dan200.computercraft.api.media.IMediaProvider;
-import pl.asie.computronics.Computronics;
-import pl.asie.computronics.api.IItemStorage;
-import pl.asie.computronics.tape.Storage;
-import pl.asie.lib.util.color.ItemColorizer;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
@@ -23,6 +17,12 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+import pl.asie.computronics.Computronics;
+import pl.asie.computronics.api.IItemStorage;
+import pl.asie.computronics.tape.Storage;
+import pl.asie.lib.util.color.ItemColorizer;
+
+import java.util.List;
 
 @Optional.InterfaceList({
 	@Optional.Interface(iface = "dan200.computercraft.api.media.IMediaProvider", modid = "ComputerCraft"),

@@ -1,14 +1,14 @@
 package pl.asie.computronics.integration.fsp;
 
-import net.minecraft.block.Block;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheralProvider;
 import flaxbeard.steamcraft.api.ISteamTransporter;
+import net.minecraft.block.Block;
+import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 
 public class SteamTransporterPeripheral implements IPeripheral, IPeripheralProvider {
 	private ISteamTransporter block;

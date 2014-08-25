@@ -5,7 +5,6 @@ import net.minecraft.inventory.IInventory;
 import pl.asie.computronics.Computronics;
 import pl.asie.lib.block.ContainerBase;
 import pl.asie.lib.block.TileEntityBase;
-import pl.asie.lib.block.TileEntityInventory;
 import pl.asie.lib.util.SlotTyped;
 
 public class ContainerTapeReader extends ContainerBase {

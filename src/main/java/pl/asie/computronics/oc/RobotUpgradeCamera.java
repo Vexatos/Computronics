@@ -1,18 +1,17 @@
 package pl.asie.computronics.oc;
 
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.MathHelper;
-import net.minecraftforge.common.util.ForgeDirection;
-import pl.asie.computronics.util.Camera;
 import li.cil.oc.api.Network;
+import li.cil.oc.api.driver.Container;
 import li.cil.oc.api.machine.Robot;
 import li.cil.oc.api.network.Arguments;
 import li.cil.oc.api.network.Callback;
 import li.cil.oc.api.network.Context;
 import li.cil.oc.api.network.Visibility;
 import li.cil.oc.api.prefab.ManagedEnvironment;
-import li.cil.oc.api.driver.Container;
+import net.minecraft.util.Direction;
+import net.minecraft.util.MathHelper;
+import net.minecraftforge.common.util.ForgeDirection;
+import pl.asie.computronics.util.Camera;
 
 public class RobotUpgradeCamera extends ManagedEnvironment {
 	private final Container entity;

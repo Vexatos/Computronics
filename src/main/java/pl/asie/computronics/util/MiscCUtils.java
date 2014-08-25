@@ -1,10 +1,10 @@
 package pl.asie.computronics.util;
 
-import java.security.MessageDigest;
-
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import pl.asie.lib.util.MiscUtils;
+
+import java.security.MessageDigest;
 
 public class MiscCUtils {
 	public static String getHashForStack(ItemStack stack, boolean includeMetadata) {

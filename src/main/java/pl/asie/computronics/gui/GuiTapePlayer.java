@@ -1,18 +1,14 @@
 package pl.asie.computronics.gui;
 
-import net.minecraft.client.resources.I18n;
 import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
-
-import org.lwjgl.opengl.GL11;
-
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.Packets;
 import pl.asie.computronics.item.ItemTape;
-import pl.asie.computronics.tile.TileTapeDrive;
 import pl.asie.computronics.tile.TapeDriveState.State;
+import pl.asie.computronics.tile.TileTapeDrive;
 import pl.asie.lib.block.ContainerBase;
 import pl.asie.lib.gui.GuiBase;
 import pl.asie.lib.network.Packet;

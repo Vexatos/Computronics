@@ -4,17 +4,12 @@ import cpw.mods.fml.common.Optional;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
-import net.minecraft.world.IBlockAccess;
-import net.minecraftforge.common.util.ForgeDirection;
 import li.cil.oc.api.network.Arguments;
 import li.cil.oc.api.network.Callback;
 import li.cil.oc.api.network.Context;
-import li.cil.oc.api.network.Environment;
-import li.cil.oc.api.network.SimpleComponent;
+import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.Computronics;
-import pl.asie.computronics.block.BlockCamera;
 import pl.asie.computronics.util.Camera;
-import pl.asie.lib.block.TileEntityBase;
 
 public class TileCamera extends TileEntityPeripheralBase {
 	private static final int CALL_LIMIT = 20;

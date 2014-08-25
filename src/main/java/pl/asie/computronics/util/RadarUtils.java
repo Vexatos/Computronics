@@ -1,17 +1,16 @@
 package pl.asie.computronics.util;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import li.cil.oc.api.machine.Robot;
-import pl.asie.computronics.Computronics;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
+import pl.asie.computronics.Computronics;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class RadarUtils {
 	public static Set<Map> getEntities(World world, int xCoord, int yCoord ,int zCoord, AxisAlignedBB bounds, Class eClass) {

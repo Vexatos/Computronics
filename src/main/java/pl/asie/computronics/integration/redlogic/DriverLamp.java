@@ -1,9 +1,5 @@
 package pl.asie.computronics.integration.redlogic;
 
-import mods.immibis.redlogic.api.misc.ILampBlock;
-import net.minecraft.block.Block;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
 import li.cil.oc.api.Network;
 import li.cil.oc.api.network.Arguments;
 import li.cil.oc.api.network.Callback;
@@ -11,7 +7,10 @@ import li.cil.oc.api.network.Context;
 import li.cil.oc.api.network.ManagedEnvironment;
 import li.cil.oc.api.network.Visibility;
 import li.cil.oc.api.prefab.DriverBlock;
-import li.cil.oc.api.prefab.DriverTileEntity;
+import mods.immibis.redlogic.api.misc.ILampBlock;
+import net.minecraft.block.Block;
+import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 
 public class DriverLamp extends DriverBlock {
 	public class ManagedEnvironmentLamp extends li.cil.oc.api.prefab.ManagedEnvironment {
