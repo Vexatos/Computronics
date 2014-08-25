@@ -55,6 +55,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 	}
 
 	@Override
+	@Optional.Method(modid="OpenComputers")
 	public void onConnect(final Node node)
 	{
 		if(node.host() instanceof Context) {
@@ -65,6 +66,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 	// GUI/State
 
 	@Override
+	@Optional.Method(modid="OpenComputers")
 	public void onDisconnect(final Node node) {
 		if (node.host() instanceof Context) {
 			// Remove our file systems when we get disconnected from a
