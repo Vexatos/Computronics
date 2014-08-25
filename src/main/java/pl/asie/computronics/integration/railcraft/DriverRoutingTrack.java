@@ -86,7 +86,6 @@ public class DriverRoutingTrack extends DriverTileEntity {
 			} else {
 				return new Object[] { null, "routing track is locked" };
 			}
-
 		}
 	}
 
