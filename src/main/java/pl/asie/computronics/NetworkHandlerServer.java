@@ -29,7 +29,6 @@ public class NetworkHandlerServer extends MessageHandlerBase {
 	@Override
 	public void onMessage(Packet packet, INetHandler handler, EntityPlayer player, int command)
 			throws IOException {
-		//System.out.println("SERVER PACKET " + command);
 		switch(command) {
 			case Packets.PACKET_TAPE_GUI_STATE: {
 				TileEntity entity = packet.readTileEntityServer();

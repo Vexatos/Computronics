@@ -1,0 +1,25 @@
+tile.computronics.ironNoteBlock.name=Bloc musical de Fer
+tile.computronics.tapeDrive.name=Lecteur de Cassette
+tile.computronics.camera.name=Caméra
+tile.computronics.chatBox.name=Boîte de Discussion
+tile.computronics.chatBox.creative.name=Boîte Créative de Discussion
+tile.computronics.sorter.name=Trieur
+tile.computronics.cipher.name=Bloc de Chiffrement
+tile.computronics.radar.name=Radar
+tile.computronics.colorfulLamp.name=Lampe Colorée
+tile.computronics.eepromReader.name=Lecteur EEPROM
+
+tooltip.computronics.chatBox.creative=La NSA dans une boîte!
+tooltip.computronics.tape.length=Durée: %s minutes
+tooltip.computronics.tape.balanced=Equilibré!
+tooltip.computronics.tape.unnamed=Cassette sans nom
+tooltip.computronics.tape.none=Pas de Cassette
+
+item.computronics.robot_upgrade_camera.name=Amélioration de Caméra
+item.computronics.robot_upgrade_chatbox.name=Amélioration de Boîte à Discussion
+item.computronics.robot_upgrade_radar.name=Amélioration de Radar
+item.computronics.card_fx.name=Carte d'Effet de Particules
+item.computronics.part_tape_track.name=Piste de la Cassette
+item.computronics.tape.name=Cassette
+
+itemGroup.tabComputronics=Computronics

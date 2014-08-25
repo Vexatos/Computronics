@@ -1,5 +1,7 @@
 package pl.asie.computronics.tile;
 
+import pl.asie.lib.api.tile.IInventoryProvider;
+import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import li.cil.oc.api.network.Arguments;
 import li.cil.oc.api.network.Callback;
@@ -9,18 +11,14 @@ import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 
-public class TileEEPROMReader extends TileEntityPeripheralInventory {
+public class TileEEPROMReader extends TileEntityPeripheralBase implements IInventoryProvider {
 	public TileEEPROMReader() {
 		super("eeprom");
+		this.createInventory(1);
 	}
 
 	@Override
-	public int getSizeInventory() {
-		return 1;
-	}
-
-	@Override
-	public void onInventoryUpdate(int arg0) {
+	public void onSlotUpdate(int slot) {
 		int meta = this.worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
 		int newMeta = -1;
 		if(isReady() && meta == 0) newMeta = 1;

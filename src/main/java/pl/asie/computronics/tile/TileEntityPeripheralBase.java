@@ -17,6 +17,7 @@ import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import pl.asie.lib.block.TileEntityBase;
+import pl.asie.lib.tile.TileMachine;
 
 // #######################################################
 //
@@ -29,7 +30,7 @@ import pl.asie.lib.block.TileEntityBase;
 	@Optional.Interface(iface = "dan200.computercraft.api.peripheral.IPeripheral", modid = "ComputerCraft"),
 	@Optional.Interface(iface = "nedocomputers.INedoPeripheral", modid = "nedocomputers")
 })
-public abstract class TileEntityPeripheralBase extends TileEntityBase implements Environment, IPeripheral, INedoPeripheral {
+public abstract class TileEntityPeripheralBase extends TileMachine implements Environment, IPeripheral, INedoPeripheral {
 	protected String peripheralName;
 	
 	public TileEntityPeripheralBase(String name) {

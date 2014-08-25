@@ -11,6 +11,7 @@ import mods.immibis.redlogic.api.wiring.IConnectable;
 import mods.immibis.redlogic.api.wiring.IWire;
 import mrtjp.projectred.api.IBundledTile;
 import mrtjp.projectred.api.ProjectRedAPI;
+import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -25,16 +26,10 @@ import li.cil.oc.api.network.Context;
 import li.cil.oc.api.network.SimpleComponent;
 import pl.asie.computronics.Computronics;
 import pl.asie.lib.AsieLibMod;
-import pl.asie.lib.block.TileEntityInventory;
+import pl.asie.lib.api.tile.IBundledRedstoneProvider;
 import pl.asie.lib.util.Base64;
 
-@Optional.InterfaceList({
-	@Optional.Interface(iface = "mods.immibis.redlogic.api.wiring.IBundledEmitter", modid = "RedLogic"),
-	@Optional.Interface(iface = "mods.immibis.redlogic.api.wiring.IBundledUpdatable", modid = "RedLogic"),
-	@Optional.Interface(iface = "mods.immibis.redlogic.api.wiring.IConnectable", modid = "RedLogic"),
-	@Optional.Interface(iface = "mrtjp.projectred.api.IBundledTile", modid = "ProjRed|Core")
-})
-public class TileCipherBlock extends TileEntityPeripheralInventory implements IBundledEmitter, IBundledTile, IBundledUpdatable, IConnectable {
+public class TileCipherBlock extends TileEntityPeripheralBase implements IBundledRedstoneProvider, ISidedInventory {
 	private byte[] key = new byte[32];
 	private byte[] iv = new byte[16];
 	private SecretKeySpec skey;
@@ -42,6 +37,8 @@ public class TileCipherBlock extends TileEntityPeripheralInventory implements IB
 	
 	public TileCipherBlock() {
 		super("cipher");
+		this.createInventory(6);
+		this.registerBundledRedstone(this);
 		try {
 			cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
 		} catch(Exception e) {
@@ -102,17 +99,6 @@ public class TileCipherBlock extends TileEntityPeripheralInventory implements IB
 		if(skey == null) updateKey();
 		cipher.init(Cipher.DECRYPT_MODE, skey, new IvParameterSpec(iv));
 		return new String(cipher.doFinal(Base64.decode(data)), "UTF8");
-	}
-	
-	@Override
-	public int getSizeInventory() {
-		return 6;
-	}
-
-	@Override
-	public void onInventoryUpdate(int slot) {
-		updateKey();
-		updateOutputWires();
 	}
 	
 	@Callback(direct = true)
@@ -267,74 +253,38 @@ public class TileCipherBlock extends TileEntityPeripheralInventory implements IB
 		return out;
 	}
 
-	@Override // modid = "ProjectRed", but we can use it for more
-	public boolean canConnectBundled(int side) {
-		blockMetadata = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
-		return ((side == Computronics.cipher.relToAbs(4, blockMetadata)))
-				|| ((side == Computronics.cipher.relToAbs(5, blockMetadata)));
-	}
-	
-	private void updateOutputWires() {
+	public void updateOutputWires() {
 		worldObj.notifyBlockChange(xCoord, yCoord, zCoord, this.blockType);
 	}
 	
-	private void parseBundledInput(byte[] data) {
-		if(data != null) {
+	@Override
+	public void onSlotUpdate(int slot) {
+		updateKey();
+		updateOutputWires();
+	}
+	
+	@Override
+	public boolean canBundledConnectTo(int arg0, int arg1) {
+		int s = Computronics.cipher.relToAbs(5, blockMetadata);
+		return (arg0 == s || arg0 == (s ^ 1));
+	}
+
+	@Override
+	public byte[] getBundledOutput(int side, int arg1) {
+		blockMetadata = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
+		if(side == (Computronics.cipher.relToAbs(5, blockMetadata))) {
+			return getBundledOutput();
+		} else return new byte[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+	}
+
+	@Override
+	public void onBundledInputChange(int arg0, int arg1, byte[] data) {
+		if(data != null && arg0 == Computronics.cipher.relToAbs(4, blockMetadata)) {
 			bundledXORData = 0;
 			for(int i = 0; i < 16; i++) {
 				bundledXORData |= (data[i] != 0) ? (1 << i) : 0;
 			}
 			updateOutputWires();
 		}
-	}
-
-	@Override
-	@Optional.Method(modid = "RedLogic")
-	public void onBundledInputChanged() {
-		ForgeDirection input = ForgeDirection.getOrientation(Computronics.cipher.relToAbs(4, blockMetadata));
-		TileEntity inputTE = worldObj.getTileEntity(xCoord + input.offsetX, yCoord + input.offsetY, zCoord + input.offsetZ);
-		if(inputTE instanceof IBundledEmitter) {
-			IBundledEmitter inputWire = (IBundledEmitter)inputTE;
-			parseBundledInput(inputWire.getBundledCableStrength(0, input.ordinal() ^ 1));
-		}
-	}
-	
-	@Override
-	@Optional.Method(modid = "RedLogic")
-	public byte[] getBundledCableStrength(int blockFace, int toDirection) {
-		blockMetadata = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
-		if(blockFace == 0 && (toDirection == (Computronics.cipher.relToAbs(5, blockMetadata)))) {
-			return getBundledOutput();
-		} else return new byte[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-	}
-
-	@Override
-	@Optional.Method(modid = "RedLogic")
-	public boolean connects(IWire wire, int blockFace, int fromDirection) {
-		if(blockFace != 0 || !(wire instanceof IBundledEmitter)) return false;
-		return canConnectBundled(fromDirection);
-	}
-
-	@Override
-	@Optional.Method(modid = "RedLogic")
-	public boolean connectsAroundCorner(IWire wire, int blockFace,
-			int fromDirection) {
-		return false;
-	}
-	
-	@Optional.Method(modid = "ProjRed|Core")
-	public void onProjectRedBundledInputChanged() {
-		blockMetadata = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
-		parseBundledInput(ProjectRedAPI.transmissionAPI.getBundledInput(worldObj, xCoord, yCoord, zCoord,
-				Computronics.cipher.relToAbs(4, blockMetadata)));
-	}
-
-	@Override
-	@Optional.Method(modid = "ProjRed|Core")
-	public byte[] getBundledSignal(int side) {
-		blockMetadata = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
-		if(side == (Computronics.cipher.relToAbs(5, blockMetadata))) {
-			return getBundledOutput();
-		} else return new byte[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 	}
 }

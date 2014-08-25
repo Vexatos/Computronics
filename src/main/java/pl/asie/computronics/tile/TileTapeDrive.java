@@ -19,6 +19,7 @@ import li.cil.oc.api.network.Visibility;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundManager;
 import net.minecraft.client.audio.SoundPoolEntry;
+import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -27,16 +28,18 @@ import pl.asie.computronics.Packets;
 import pl.asie.computronics.api.IItemStorage;
 import pl.asie.computronics.item.ItemTape;
 import pl.asie.computronics.tile.TapeDriveState.State;
+import pl.asie.lib.api.tile.IInventoryProvider;
 import pl.asie.lib.audio.DFPWM;
 import pl.asie.lib.block.TileEntityInventory;
 import pl.asie.lib.network.Packet;
 
-public class TileTapeDrive extends TileEntityPeripheralInventory {
+public class TileTapeDrive extends TileEntityPeripheralBase implements IInventoryProvider {
 	private String storageName = "";
 	private TapeDriveState state;
 
 	public TileTapeDrive() {
 		super("tape_drive");
+		this.createInventory(1);
 		this.state = new TapeDriveState();
 		if(Loader.isModLoaded("OpenComputers") && node != null) {
 			initOCFilesystem();
@@ -84,16 +87,16 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
 			Computronics.packet.sendToAllAround(packet, this, 64.0D);
 		} catch(Exception e) { e.printStackTrace(); }
 	}
-
+	
 	// Logic
 	public State getEnumState() { return this.state.getState(); }
-
+	
 	public void switchState(State s) {
 		System.out.println("Switchy switch to " + s.name());
 		this.state.switchState(worldObj, xCoord, yCoord, zCoord, s);
 		this.sendState();
 	}
-
+	
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
@@ -102,9 +105,9 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
 			Computronics.packet.sendToAllAround(pkt, this, Computronics.TAPEDRIVE_DISTANCE * 2);
 		}
 	}
-
+	
 	// Minecraft boilerplate
-
+	
     private void setLabel(String label) {
 		ItemStack stack = this.getStackInSlot(0);
 		if(stack != null && stack.getTagCompound() != null) {
@@ -116,38 +119,38 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
 			storageName = label;
 		}
 	}
-
+	
 	@Override
 	public boolean canUpdate() { return true; }
-
+	
 	@Override
 	public void openInventory() {
 		super.openInventory();
 		sendState();
 	}
-
+	
 	@Override
 	public void onBlockDestroy() {
 		super.onBlockDestroy();
 		unloadStorage();
 	}
-
+	
 	@Override
 	public void invalidate() {
 		super.invalidate();
 		unloadStorage();
 	}
-
+	
 	@Override
 	public void onRedstoneSignal(int signal) {
 		this.switchState(signal > 0 ? State.PLAYING : State.STOPPED);
 	}
-
+	
 	// Storage handling
-
+	
 	private void loadStorage() {
 		if(worldObj != null && worldObj.isRemote) return;
-
+		
 		if(state.getStorage() != null) unloadStorage();
 		ItemStack stack = this.getStackInSlot(0);
 		if(stack != null) {
@@ -156,7 +159,7 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
 			if(item instanceof IItemStorage) {
 				state.setStorage(((IItemStorage)item).getStorage(stack));
 			}
-
+			
 			// Get possible label.
 			if(stack.getTagCompound() != null) {
 				NBTTagCompound tag = stack.getTagCompound();
@@ -164,40 +167,40 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
 			} else storageName = "";
 		}
 	}
-
+    
 	private void unloadStorage() {
 		if(worldObj.isRemote || state.getStorage() == null) return;
-
+		
 		switchState(State.STOPPED);
 		try {
 			state.getStorage().writeFileIfModified();
 		} catch(Exception e) { e.printStackTrace(); }
 		state.setStorage(null);
 	}
-
+	
 	@Override
-	public void onInventoryUpdate(int slot) {
+	public void onSlotUpdate(int slot) {
 		if(this.getStackInSlot(0) == null) {
-			if(slot == 0 && state.getStorage() != null) { // Tape was inserted
+			if(state.getStorage() != null) { // Tape was inserted
 				// Play eject sound
 				worldObj.playSoundEffect(xCoord, yCoord, zCoord, "computronics:tape_eject", 1, 0);
 			}
 			unloadStorage();
 		} else {
 			loadStorage();
-			if(slot == 0 && this.getStackInSlot(0).getItem() instanceof IItemStorage) {
+			if(this.getStackInSlot(0).getItem() instanceof IItemStorage) {
 				// Play insert sound
 				worldObj.playSoundEffect(xCoord, yCoord, zCoord, "computronics:tape_insert", 1, 0);
 			}
 		}
 	}
-
+	
 	@Override
 	public void onChunkUnload() {
-		super.onWorldUnload();
+		super.onChunkUnload();
 		unloadStorage();
 	}
-
+	
 	@Override
 	public void onWorldUnload() {
 		super.onWorldUnload();
@@ -208,7 +211,7 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
 	public int getSizeInventory() {
 		return 1;
 	}
-
+	
 	@Override
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
@@ -217,7 +220,7 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
 		if(tag.hasKey("vo")) this.state.soundVolume = tag.getByte("vo"); else this.state.soundVolume = 127;
 		loadStorage();
 	}
-
+	
 	@Override
 	public void writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
@@ -225,7 +228,7 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
 		tag.setByte("state", (byte)this.state.getState().ordinal());
 		if(this.state.soundVolume != 127) tag.setByte("vo", (byte)this.state.soundVolume);
 	}
-
+	
 	// OpenComputers
 
 	@Callback(direct = true)
@@ -234,19 +237,19 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
 		if(state.getStorage() != null) return new Object[]{state.getStorage().getPosition() + state.packetSize <= state.getStorage().getSize()};
 		else return new Object[]{true};
 	}
-
+	
     @Callback(direct = true)
     @Optional.Method(modid="OpenComputers")
     public Object[] isReady(Context context, Arguments args) {
     	return new Object[]{state.getStorage() != null};
     }
-
+    
     @Callback(direct = true)
     @Optional.Method(modid="OpenComputers")
     public Object[] getSize(Context context, Arguments args) {
     	return new Object[]{(state.getStorage() != null ? state.getStorage().getSize() : 0)};
     }
-
+    
     @Callback
     @Optional.Method(modid="OpenComputers")
     public Object[] setLabel(Context context, Arguments args) {
@@ -255,7 +258,7 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
     	}
     	return new Object[]{(state.getStorage() != null ? storageName : "")};
     }
-
+    
     @Callback
     @Optional.Method(modid="OpenComputers")
     public Object[] getLabel(Context context, Arguments args) {
@@ -270,7 +273,7 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
     	}
     	return null;
     }
-
+    
     @Callback
     @Optional.Method(modid="OpenComputers")
     public Object[] read(Context context, Arguments args) {
@@ -282,7 +285,7 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
     		} else return new Object[]{(int)state.getStorage().read() & 0xFF};
     	} else return null;
     }
-
+    
     @Callback
     @Optional.Method(modid="OpenComputers")
     public Object[] write(Context context, Arguments args) {
@@ -294,7 +297,7 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
     	}
     	return null;
     }
-
+    
     @Callback
     @Optional.Method(modid="OpenComputers")
     public Object[] play(Context context, Arguments args) {
@@ -308,29 +311,28 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
     	switchState(State.STOPPED);
     	return new Object[]{state.getStorage() != null};
     }
-
+    
     @Callback
     public Object[] setSpeed(Context context, Arguments args) {
     	if(args.count() > 0 && args.isDouble(0)) return new Object[]{this.state.setSpeed((float)args.checkDouble(0))};
     	else return null;
     }
-
+    
     @Callback
     public Object[] setVolume(Context context, Arguments args) {
     	if(args.count() > 0 && args.isDouble(0)) this.state.setVolume((float)args.checkDouble(0));
     	return null;
     }
-
+    
     @Callback
     @Optional.Method(modid="OpenComputers")
     public Object[] getState(Context context, Arguments args) {
     	return new Object[]{state.toString()};
     }
-
+    
 	@Override
     @Optional.Method(modid="ComputerCraft")
 	public String[] getMethodNames() {
-		// TODO Auto-generated method stub
 		return new String[]{"isEnd", "isReady", "getSize", "getLabel", "getState", "setLabel", "setSpeed", "setVolume", "seek", "read", "write", "play", "stop"};
 	}
 
@@ -346,7 +348,7 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
 			case 10: if(state.getStorage() != null) return new Object[]{state.getStorage().write(((String)arguments[0]).getBytes())}; break;
 			}
 		}
-
+		
 		// methods which take floats and do something
 		if(arguments.length == 1 && (arguments[0] instanceof Double)) {
 			float f = ((Double)arguments[0]).floatValue();
@@ -370,29 +372,29 @@ public class TileTapeDrive extends TileEntityPeripheralInventory {
 		case 11: switchState(State.PLAYING);
 		case 12: switchState(State.STOPPED);
 		}
-
+		
 		// returns for the methods which didn't return something before
 		switch(method) {
 		case 0: if(state.getStorage() != null) return new Object[]{state.getStorage().getPosition() + state.packetSize <= state.getStorage().getSize()};
-
+		
 		case 1:  // isReady, play, stop
 		case 11:
 		case 12: return new Object[]{state.getStorage() != null};
-
+		
 		case 2: return new Object[]{(state.getStorage() != null ? state.getStorage().getSize() : 0)};
-
+		
 		case 3: // getLabel, setLabel
 		case 5: return new Object[]{(state.getStorage() != null ? storageName : "")};
-
+		
 		case 4: return new Object[]{state.toString()};
-
+		
 		case 9: if(state.getStorage() != null) return new Object[]{(int)state.getStorage().read() & 0xFF};
 		}
-
+		
 		// catch all other methods
 		return null;
 	}
-
+	
 	private int _nedo_lastSeek = 0;
 
 	@Override
