@@ -120,10 +120,4 @@ public class GT_BaseCrop extends CropCard {
     	if (!canBeHarvested(aCrop)) return false;
     	return aCrop.harvest(aPlayer==null?false:aPlayer instanceof EntityPlayerMP);
     }
-
-	@Override
-	public int getOptimalHavestSize(ICropTile crop) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 }
