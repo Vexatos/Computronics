@@ -11,7 +11,7 @@ import pl.asie.computronics.tile.TileChatBox;
 public class ChatBoxHandler {
 	@SubscribeEvent
 	public void chatEvent(ServerChatEvent event) {
-		System.out.println("event");
+		//System.out.println("event");
 		for(Object o: event.player.worldObj.loadedTileEntityList) {
 			if(o instanceof TileChatBox) {
 				TileChatBox te = (TileChatBox)o;
