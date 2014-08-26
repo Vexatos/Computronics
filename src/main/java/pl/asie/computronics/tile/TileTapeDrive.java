@@ -86,7 +86,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 	public State getEnumState() { return this.state.getState(); }
 	
 	public void switchState(State s) {
-		System.out.println("Switchy switch to " + s.name());
+		//System.out.println("Switchy switch to " + s.name());
 		this.state.switchState(worldObj, xCoord, yCoord, zCoord, s);
 		this.sendState();
 	}

@@ -15,6 +15,8 @@ import cpw.mods.fml.common.network.FMLEventChannel;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import dan200.computercraft.api.ComputerCraftAPI;
+import gregtech.api.enums.ItemList;
+import gregtech.api.util.GT_Recipe;
 import li.cil.oc.api.Driver;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
@@ -24,6 +26,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
 import org.apache.logging.log4j.LogManager;
@@ -129,6 +132,7 @@ public class Computronics {
 
 	public static ItemTape itemTape;
 	public static ItemMultiple itemParts;
+	public static ItemMultiple itemPartsGreg;
 	public static ItemOpenComputers itemRobotUpgrade;
 
 	public static boolean MUST_UPDATE_TILE_ENTITIES = false;
@@ -162,7 +166,7 @@ public class Computronics {
 		CHATBOX_ME_DETECT = config.get("chatbox", "readCommandMe", false).getBoolean(false);
 		CHATBOX_CREATIVE = config.get("chatbox", "enableCreative", true).getBoolean(true);
 		TAPEDRIVE_DISTANCE = config.get("tapedrive", "hearingDistance", 24).getInt();
-		TAPE_LENGTHS = config.get("tapedrive", "tapeLengths", "4,8,16,32,64,2,6,16,128").getString();
+		TAPE_LENGTHS = config.get("tapedrive", "tapeLengths", "4,8,16,32,64,2,6,16,128,128").getString();
 		RADAR_RANGE = config.get("radar", "maxRange", 8).getInt();
 		RADAR_ONLY_DISTANCE = config.get("radar", "onlyOutputDistance", false).getBoolean(false);
 		DISABLE_IRONNOTE_FORGE_EVENTS = config.get("ironnoteblock", "disableForgeEvents", false).getBoolean(false);
@@ -230,6 +234,13 @@ public class Computronics {
 		itemParts = new ItemMultiple("computronics", new String[]{"part_tape_track"});
 		itemParts.setCreativeTab(tab);
 		GameRegistry.registerItem(itemParts, "computronics.parts");
+
+		//if(Loader.isModLoaded("gregtech")){
+			itemPartsGreg = new ItemMultiple("computronics", new String[]{"gt_itemIngotChromoxide","gt_itemDustChromoxide","gt_itemReelChromoxide"});
+			itemPartsGreg.setCreativeTab(tab);
+			GameRegistry.registerItem(itemPartsGreg, "computronics.gt_parts");
+			proxy.registerEntities();
+		//}
 
 		if(Loader.isModLoaded("OpenComputers")) preInitOC();
 	}
@@ -300,9 +311,27 @@ public class Computronics {
 					" i ", "isi", " T ", 'T', new ItemStack(itemParts, 1, 0), 'i', Items.iron_ingot, 's', "ingotSteel"));
 
 			// Mod compat - GregTech
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 7),
+			if(Loader.isModLoaded("gregtech") && itemPartsGreg != null) {
+
+				OreDictionary.registerOre("ingotChromiumDioxide", new ItemStack(itemPartsGreg, 1, 0));
+				OreDictionary.registerOre("dustChromiumDioxide", new ItemStack(itemPartsGreg, 1, 1));
+
+				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 7),
 					" i ", "isi", " T ", 'T', new ItemStack(itemParts, 1, 0), 'i', "plateIridium", 's', "plateTungstenSteel"));
 
+				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 9),
+					"psp", "tst", "ror", 'o', "dustOlivine", 'r', "dustRedstone", 's', "plateSilicon", 't', new ItemStack(itemPartsGreg, 1, 2), 'p', "plateTungstenSteel"));
+
+				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPartsGreg, 1, 2),
+					" o ", "fff", " c ", 'o', "dustOlivine", 'f', "foilChromiumDioxide", 'c', "craftingToolWireCutter"));
+
+				GameRegistry.addSmelting(new ItemStack(itemPartsGreg, 1, 1), new ItemStack(itemPartsGreg, 1, 0), 0f);
+
+				GT_Recipe.GT_Recipe_Map.sChemicalRecipes.addRecipe(new GT_Recipe(new ItemStack(ItemList.Cell_Air.getItem(), 1, 0), new ItemStack(itemPartsGreg, 1, 0), 120, 100, new ItemStack(itemPartsGreg, 1, 1)));
+
+				//GT_RecipeRegistrator.registerUsagesForMaterials(new ItemStack(itemPartsGreg, 1, 0), new ItemStack(itemPartsGreg, 1, 1), "plateChromiumDioxide", true, true, true);
+
+			}
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 1, 0),
 					" i ", "rrr", "iii", 'r', Items.redstone, 'i', Items.iron_ingot));
 			GameRegistry.addRecipe(new RecipeColorizer(itemTape));
@@ -382,7 +411,7 @@ public class Computronics {
                 li.cil.oc.api.Driver.add(new DriverReceiverBox());
             }
         }
-        if(Loader.isModLoaded("gregtech_addon")) {
+        if(Loader.isModLoaded("gregtech")) {
         	if(config.get("modCompatibility", "enableGregTechMachines", true).getBoolean(true)) {
         		li.cil.oc.api.Driver.add(new DriverBaseMetaTileEntity());
         		li.cil.oc.api.Driver.add(new DriverDeviceInformation());

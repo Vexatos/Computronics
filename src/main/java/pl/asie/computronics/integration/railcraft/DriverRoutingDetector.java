@@ -99,8 +99,6 @@ public class DriverRoutingDetector extends DriverTileEntity {
 
 	@Override
 	public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
-		System.out.println(world.getTileEntity(x, y, z) instanceof TileDetector);
-		System.out.println(((TileDetector) world.getTileEntity(x, y, z)).getDetector().getType().toString());
 		if(world.getTileEntity(x, y, z) instanceof TileDetector
 			&& ((TileDetector) world.getTileEntity(x, y, z)).getDetector().getType() == EnumDetector.ROUTING) {
 			return new ManagedEnvironmentRoutingDetector(world.getTileEntity(x, y, z));
