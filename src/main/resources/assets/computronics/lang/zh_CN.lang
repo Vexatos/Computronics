@@ -1,0 +1,25 @@
+tile.computronics.ironNoteBlock.name=铁音符盒
+tile.computronics.tapeDrive.name=录音带驱动器
+tile.computronics.camera.name=摄像头
+tile.computronics.chatBox.name=聊天盒
+tile.computronics.chatBox.creative.name=创造模式聊天盒
+tile.computronics.sorter.name=排序机
+tile.computronics.cipher.name=加密机
+tile.computronics.radar.name=雷达
+tile.computronics.colorfulLamp.name=彩灯
+tile.computronics.eepromReader.name=EEPROM读入器
+
+tooltip.computronics.chatBox.creative=盒中NSA!
+tooltip.computronics.tape.length=时长: %s分
+tooltip.computronics.tape.balanced=已平衡.
+tooltip.computronics.tape.unnamed=未命名录音带
+tooltip.computronics.tape.none=无录音带
+
+item.computronics.robot_upgrade_camera.name=摄像升级
+item.computronics.robot_upgrade_chatbox.name=聊天升级
+item.computronics.robot_upgrade_radar.name=雷达升级
+item.computronics.card_fx.name=粒子特效升级
+item.computronics.part_tape_track.name=录音带轨道
+item.computronics.tape.name=盒式录音带
+
+itemGroup.tabComputronics=Computronics
