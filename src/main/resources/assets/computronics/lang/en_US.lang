@@ -30,3 +30,5 @@ item.computronics.tape.ig.name=Intergalactical CDVR
 item.computronics.tape.name=Cassette Tape
 
 itemGroup.tabComputronics=Computronics
+
+chat.computronics.cipher.locked=This Cipher Block is locked! You may not access it.

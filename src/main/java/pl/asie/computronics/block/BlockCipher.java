@@ -6,10 +6,13 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import pl.asie.computronics.Computronics;
 import pl.asie.computronics.tile.TileCipherBlock;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetOmniNode;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
@@ -29,6 +32,22 @@ public class BlockCipher extends BlockMachineSidedIcon implements IRedNetOmniNod
 	@Override
 	public TileEntity createNewTileEntity(World world, int metadata) {
 		return new TileCipherBlock();
+	}
+	
+	@Override
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9) {
+		boolean isLocked = false;
+		if(!world.isRemote && Computronics.CIPHER_CAN_LOCK) {
+			TileEntity tile = world.getTileEntity(x, y, z);
+			if(tile != null) {
+				isLocked = ((TileCipherBlock)tile).isLocked();
+			}
+			if(isLocked) {
+				player.addChatMessage(new ChatComponentTranslation("chat.computronics.cipher.locked"));	
+			}
+		}
+		if(!isLocked) return super.onBlockActivated(world, x, y, z, player, par6, par7, par8, par9);
+		else return true;
 	}
 	
 	@Override
