@@ -307,12 +307,14 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
     }
     
     @Callback
+	@Optional.Method(modid="OpenComputers")
     public Object[] setSpeed(Context context, Arguments args) {
     	if(args.count() > 0 && args.isDouble(0)) return new Object[]{this.state.setSpeed((float)args.checkDouble(0))};
     	else return null;
     }
     
     @Callback
+	@Optional.Method(modid="OpenComputers")
     public Object[] setVolume(Context context, Arguments args) {
     	if(args.count() > 0 && args.isDouble(0)) this.state.setVolume((float)args.checkDouble(0));
     	return null;

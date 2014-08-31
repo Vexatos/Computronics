@@ -15,8 +15,8 @@ import cpw.mods.fml.common.network.FMLEventChannel;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import dan200.computercraft.api.ComputerCraftAPI;
-import gregtech.api.enums.ItemList;
-import gregtech.api.util.GT_Recipe;
+//import gregtech.api.enums.ItemList;
+//import gregtech.api.util.GT_Recipe;
 import li.cil.oc.api.Driver;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
@@ -41,6 +41,7 @@ import pl.asie.computronics.block.BlockCipher;
 import pl.asie.computronics.block.BlockColorfulLamp;
 import pl.asie.computronics.block.BlockEEPROMReader;
 import pl.asie.computronics.block.BlockIronNote;
+import pl.asie.computronics.block.BlockLocomotiveRelay;
 import pl.asie.computronics.block.BlockRadar;
 import pl.asie.computronics.block.BlockTapeReader;
 import pl.asie.computronics.cc.CCPeripheralProvider;
@@ -73,6 +74,7 @@ import pl.asie.computronics.integration.redlogic.DriverLamp;
 import pl.asie.computronics.integration.redlogic.LampPeripheral;
 import pl.asie.computronics.item.ItemBlockChatBox;
 import pl.asie.computronics.item.ItemOpenComputers;
+import pl.asie.computronics.item.ItemRelaySensor;
 import pl.asie.computronics.item.ItemTape;
 import pl.asie.computronics.tape.StorageManager;
 import pl.asie.computronics.tile.TileCamera;
@@ -81,6 +83,7 @@ import pl.asie.computronics.tile.TileCipherBlock;
 import pl.asie.computronics.tile.TileColorfulLamp;
 import pl.asie.computronics.tile.TileEEPROMReader;
 import pl.asie.computronics.tile.TileIronNote;
+import pl.asie.computronics.tile.TileLocomotiveRelay;
 import pl.asie.computronics.tile.TileRadar;
 import pl.asie.computronics.tile.TileTapeDrive;
 import pl.asie.lib.gui.GuiHandler;
@@ -116,6 +119,7 @@ public class Computronics {
 	public static double RADAR_CC_TIME = 0.5;
 	public static double FX_ENERGY_COST = 0.5;
 	public static String CHATBOX_PREFIX = "ChatBox";
+	public static double LOCOMOTIVE_RELAY_RANGE = 128.0;
 
 	public static String TAPE_LENGTHS;
 	public static boolean REDSTONE_REFRESH, CHATBOX_CREATIVE, DISABLE_IRONNOTE_FORGE_EVENTS;
@@ -131,11 +135,13 @@ public class Computronics {
     public static BlockRadar radar;
     public static BlockEEPROMReader nc_eepromreader;
 	public static BlockColorfulLamp colorfulLamp;
+	public static BlockLocomotiveRelay locomotiveRelay;
 
 	public static ItemTape itemTape;
 	public static ItemMultiple itemParts;
 	public static ItemMultiple itemPartsGreg;
 	public static ItemOpenComputers itemRobotUpgrade;
+	public static ItemRelaySensor relaySensor;
 
 	public static boolean MUST_UPDATE_TILE_ENTITIES = false;
 
@@ -189,6 +195,8 @@ public class Computronics {
 		RADAR_OC_ENERGY_COST = config.getFloat("opencomputers", "radarEnergyPerDistanceUnit", 50.0f, 0.0f, 10000.0f, "How much energy, in OC units, each 1-block distance takes by OpenComputers radars.");
 		FX_ENERGY_COST = config.getFloat("opencomputers", "particleEnergyCost", 0.5f, 0.0f, 10000.0f, "How much energy, in OC units, 1 particle emission should take.");
 
+		LOCOMOTIVE_RELAY_RANGE = config.getFloat("railcraft", "locomotiveRelayRange", 128.0f, 0.0f, 512.0f, "The range of Locomotive Relays.");
+
 		if(isEnabled("ironNoteBlock", true)) {
 			ironNote = new BlockIronNote();
 			registerBlockWithTileEntity(ironNote, TileIronNote.class, "computronics.ironNoteBlock");
@@ -232,18 +240,27 @@ public class Computronics {
 		if(isEnabled("tape", true)) {
 			itemTape = new ItemTape(TAPE_LENGTHS);
 			GameRegistry.registerItem(itemTape, "computronics.tape");
+
+			//if(Loader.isModLoaded("gregtech")){
+				itemPartsGreg = new ItemMultiple("computronics", new String[]{"gt_itemIngotChromoxide","gt_itemDustChromoxide","gt_itemReelChromoxide"});
+				itemPartsGreg.setCreativeTab(tab);
+				GameRegistry.registerItem(itemPartsGreg, "computronics.gt_parts");
+				proxy.registerEntities();
+			//}
 		}
 
 		itemParts = new ItemMultiple("computronics", new String[]{"part_tape_track"});
 		itemParts.setCreativeTab(tab);
 		GameRegistry.registerItem(itemParts, "computronics.parts");
 
-		//if(Loader.isModLoaded("gregtech")){
-			itemPartsGreg = new ItemMultiple("computronics", new String[]{"gt_itemIngotChromoxide","gt_itemDustChromoxide","gt_itemReelChromoxide"});
-			itemPartsGreg.setCreativeTab(tab);
-			GameRegistry.registerItem(itemPartsGreg, "computronics.gt_parts");
-			proxy.registerEntities();
-		//}
+		if(Loader.isModLoaded("Railcraft") && isEnabled("railcraftLocomotiveRelay", true)){
+			locomotiveRelay = new BlockLocomotiveRelay();
+			GameRegistry.registerBlock(locomotiveRelay, "computronics.locomotiveRelay");
+			GameRegistry.registerTileEntity(TileLocomotiveRelay.class, "computronics.locomotiveRelay");
+
+			relaySensor = new ItemRelaySensor();
+			GameRegistry.registerItem(relaySensor, "computronics.relaySensor");
+		}
 
 		if(Loader.isModLoaded("OpenComputers")) preInitOC();
 	}
@@ -330,7 +347,7 @@ public class Computronics {
 
 				GameRegistry.addSmelting(new ItemStack(itemPartsGreg, 1, 1), new ItemStack(itemPartsGreg, 1, 0), 0f);
 
-				GT_Recipe.GT_Recipe_Map.sChemicalRecipes.addRecipe(new GT_Recipe(new ItemStack(ItemList.Cell_Air.getItem(), 1, 0), new ItemStack(itemPartsGreg, 1, 0), 120, 100, new ItemStack(itemPartsGreg, 1, 1)));
+				//GT_Recipe.GT_Recipe_Map.sChemicalRecipes.addRecipe(new GT_Recipe(new ItemStack(ItemList.Cell_Air.getItem(), 1, 0), new ItemStack(itemPartsGreg, 1, 0), 120, 100, new ItemStack(itemPartsGreg, 1, 1)));
 
 				//GT_RecipeRegistrator.registerUsagesForMaterials(new ItemStack(itemPartsGreg, 1, 0), new ItemStack(itemPartsGreg, 1, 1), "plateChromiumDioxide", true, true, true);
 

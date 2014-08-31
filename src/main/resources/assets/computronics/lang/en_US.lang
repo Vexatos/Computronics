@@ -1,3 +1,7 @@
+chat.computronics.sensor.bound=Relay successfully bound to locomotive!
+chat.computronics.sensor.error1=There is no relay at the specified coordinates!
+chat.computronics.sensor.error2=Relay can only be attached to electric locomotives!
+
 entity.computronics.itemTape.name=Intergalactical CDVR
 
 tile.computronics.ironNoteBlock.name=Iron Note Block
@@ -10,8 +14,12 @@ tile.computronics.cipher.name=Cipher Block
 tile.computronics.radar.name=Radar
 tile.computronics.colorfulLamp.name=Colorful Lamp
 tile.computronics.eepromReader.name=EEPROM Reader
+tile.computronics.locomotiveRelay.name=Digital Locomotive Relay
 
 tooltip.computronics.chatBox.creative=NSA in a box!
+tooltip.computronics.sensor.bound=Bound to [%1$s,%2$s,%3$s]
+tooltip.computronics.sensor.desc1=Right click on Locomotive Relay while sneaking\n to bind it
+tooltip.computronics.sensor.desc2=Left click on Electric Locomotive while sneaking\n to attach it
 tooltip.computronics.tape.length=Length: %s minutes
 tooltip.computronics.tape.balanced=Balanced!
 tooltip.computronics.tape.unnamed=Unnamed Tape
@@ -25,6 +33,7 @@ item.computronics.robot_upgrade_camera.name=Camera Upgrade
 item.computronics.robot_upgrade_chatbox.name=Chat Upgrade
 item.computronics.robot_upgrade_radar.name=Radar Upgrade
 item.computronics.card_fx.name=Particle Effects Card
+item.computronics.relaySensor.name=Digital Relay Sensor
 item.computronics.part_tape_track.name=Tape Track
 item.computronics.tape.ig.name=Intergalactical CDVR
 item.computronics.tape.name=Cassette Tape
