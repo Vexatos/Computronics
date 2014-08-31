@@ -1,5 +1,6 @@
 package pl.asie.computronics.integration.gregtech;
 
+import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
 import gregtech.api.interfaces.tileentity.IGregTechDeviceInformation;
 import li.cil.oc.api.Network;
 import li.cil.oc.api.network.Arguments;
@@ -11,24 +12,22 @@ import li.cil.oc.api.prefab.DriverTileEntity;
 import net.minecraft.world.World;
 
 public class DriverDeviceInformation extends DriverTileEntity {
-	public class ManagedEnvironmentInfo extends li.cil.oc.api.prefab.ManagedEnvironment {
-		private IGregTechDeviceInformation info;
-		
-		public ManagedEnvironmentInfo(IGregTechDeviceInformation info) {
-			this.info = info;
-			node = Network.newNode(this, Visibility.Network).withComponent("gtDeviceInformation", Visibility.Network).create();
+	public class ManagedEnvironmentInfo extends ManagedEnvironmentOCTile<IGregTechDeviceInformation> {
+		public ManagedEnvironmentInfo(IGregTechDeviceInformation tile,
+				String name) {
+			super(tile, name);
 		}
-		
+
 		@Callback(direct = true)
 		public Object[] getSensorInformation(Context c, Arguments a) {
-			return new Object[]{info.getInfoData()};
+			return new Object[]{tile.getInfoData()};
 		}
 	}
 	
 	@Override
 	public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
 		IGregTechDeviceInformation dc = (IGregTechDeviceInformation)world.getTileEntity(x, y, z);
-		if(dc != null && dc.isGivingInformation()) return new ManagedEnvironmentInfo((IGregTechDeviceInformation)world.getTileEntity(x, y, z));
+		if(dc != null && dc.isGivingInformation()) return new ManagedEnvironmentInfo((IGregTechDeviceInformation)world.getTileEntity(x, y, z), "gt_machine");
 		else return null;
 	}
 
