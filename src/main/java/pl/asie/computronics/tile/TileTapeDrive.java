@@ -19,7 +19,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.Packets;
-import pl.asie.computronics.api.IItemStorage;
+import pl.asie.computronics.api.tape.IItemTapeStorage;
 import pl.asie.computronics.item.ItemTape;
 import pl.asie.computronics.tile.TapeDriveState.State;
 import pl.asie.lib.api.tile.IInventoryProvider;
@@ -150,8 +150,8 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 		if(stack != null) {
 			// Get Storage.
 			Item item = stack.getItem();
-			if(item instanceof IItemStorage) {
-				state.setStorage(((IItemStorage)item).getStorage(stack));
+			if(item instanceof IItemTapeStorage) {
+				state.setStorage(((IItemTapeStorage)item).getStorage(stack));
 			}
 			
 			// Get possible label.
@@ -167,7 +167,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 		
 		switchState(State.STOPPED);
 		try {
-			state.getStorage().writeFileIfModified();
+			state.getStorage().onStorageUnload();
 		} catch(Exception e) { e.printStackTrace(); }
 		state.setStorage(null);
 	}
@@ -182,7 +182,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 			unloadStorage();
 		} else {
 			loadStorage();
-			if(this.getStackInSlot(0).getItem() instanceof IItemStorage) {
+			if(this.getStackInSlot(0).getItem() instanceof IItemTapeStorage) {
 				// Play insert sound
 				worldObj.playSoundEffect(xCoord, yCoord, zCoord, "computronics:tape_insert", 1, 0);
 			}
@@ -276,7 +276,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
     			byte[] data = new byte[args.checkInteger(0)];
     			state.getStorage().read(data, false);
     			return new Object[]{data};
-    		} else return new Object[]{(int)state.getStorage().read() & 0xFF};
+    		} else return new Object[]{(int)state.getStorage().read(false) & 0xFF};
     	} else return null;
     }
     
@@ -384,7 +384,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 		
 		case 4: return new Object[]{state.toString()};
 		
-		case 9: if(state.getStorage() != null) return new Object[]{(int)state.getStorage().read() & 0xFF};
+		case 9: if(state.getStorage() != null) return new Object[]{(int)state.getStorage().read(false) & 0xFF};
 		}
 		
 		// catch all other methods
@@ -402,7 +402,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 		case 4: return (short)state.soundVolume;
 		case 6: return (state.getStorage() != null ? (short)(state.getStorage().getSize() / ItemTape.L_MINUTE) : 0);
 		case 8: return (short)_nedo_lastSeek;
-		case 10: return (state.getStorage() != null ? (short)state.getStorage().read() : 0);
+		case 10: return (state.getStorage() != null ? (short)state.getStorage().read(false) : 0);
 		}
 		return 0;
 	}

@@ -23,13 +23,17 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import pl.asie.computronics.audio.DFPWMPlaybackManager;
 import pl.asie.computronics.block.BlockCamera;
 import pl.asie.computronics.block.BlockChatBox;
@@ -110,6 +114,7 @@ public class Computronics {
 	public static int BUFFER_MS = 750;
 	public static int RADAR_RANGE = 8;
 	public static boolean RADAR_ONLY_DISTANCE = false;
+	public static boolean CIPHER_CAN_LOCK = true;
 	public static double RADAR_OC_ENERGY_COST = 5.0;
 	public static double RADAR_CC_TIME = 0.5;
 	public static double FX_ENERGY_COST = 0.5;
@@ -117,7 +122,7 @@ public class Computronics {
 	public static double LOCOMOTIVE_RELAY_RANGE = 128.0;
 
 	public static String TAPE_LENGTHS;
-	public static boolean REDSTONE_REFRESH, CHATBOX_ME_DETECT, CHATBOX_CREATIVE, DISABLE_IRONNOTE_FORGE_EVENTS;
+	public static boolean REDSTONE_REFRESH, CHATBOX_CREATIVE, DISABLE_IRONNOTE_FORGE_EVENTS;
 
 	@SidedProxy(clientSide="pl.asie.computronics.ClientProxy", serverSide="pl.asie.computronics.CommonProxy")
 	public static CommonProxy proxy;
@@ -150,6 +155,17 @@ public class Computronics {
 		return config.get("enable", name, def).getBoolean(def);
 	}
 
+	private void registerBlockWithTileEntity(Block block, Class<? extends TileEntity> tile, String name) {
+		registerBlockWithTileEntity(block, ItemBlock.class, tile, name);
+	}
+	
+	private void registerBlockWithTileEntity(Block block, Class<? extends ItemBlock> itemBlock, Class<? extends TileEntity> tile, String name) {
+		GameRegistry.registerBlock(block, itemBlock, name);
+		GameRegistry.registerTileEntity(tile, name);
+		System.out.println("Registering " + name + " as TE " + tile.getCanonicalName());
+		FMLInterModComms.sendMessage("appliedenergistics2", "whitelist-spatial", tile.getCanonicalName());
+	}
+	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		log = LogManager.getLogger("computronics");
@@ -161,77 +177,64 @@ public class Computronics {
 		packet = new PacketHandler("computronics", new NetworkHandlerClient(), new NetworkHandlerServer());
 
 		// Configs
-		CHATBOX_DISTANCE = config.get("chatbox", "maxDistance", 40).getInt();
-		CAMERA_DISTANCE = config.get("camera", "maxDistance", 32).getInt();
-		REDSTONE_REFRESH = config.get("general", "enableTickingRedstoneSupport", true).getBoolean(true);
-		BUFFER_MS = config.get("tapedrive", "audioPreloadMs", 750).getInt();
-		CHATBOX_PREFIX = config.get("chatbox", "prefix", "ChatBox").getString();
-		CHATBOX_ME_DETECT = config.get("chatbox", "readCommandMe", false).getBoolean(false);
-		CHATBOX_CREATIVE = config.get("chatbox", "enableCreative", true).getBoolean(true);
-		TAPEDRIVE_DISTANCE = config.get("tapedrive", "hearingDistance", 24).getInt();
+		CHATBOX_DISTANCE = config.getInt("chatbox", "maxDistance", 40, 4, Integer.MAX_VALUE, "The maximum chat box distance, in blocks.");
+		CAMERA_DISTANCE = config.getInt("camera", "maxDistance", 32, 16, 256, "The maximum camera distance, in blocks.");
+		REDSTONE_REFRESH = config.getBoolean("general", "enableTickingRedstoneSupport", true, "Set whether some machines should stop being tickless in exchange for redstone output support.");
+		BUFFER_MS = config.getInt("tapedrive", "audioPreloadMs", 750, 500, 10000, "The amount of time (in milliseconds) used for pre-buffering the tape for audio playback. If you get audio playback glitches in SMP/your TPS is under 20, RAISE THIS VALUE!");
+		CHATBOX_PREFIX = config.getString("chatbox", "prefix", "ChatBox", "The Chat Box's default prefix.");
+		CHATBOX_CREATIVE = config.getBoolean("chatbox", "enableCreative", true, "Enable Creative Chat Boxes.");
+		TAPEDRIVE_DISTANCE = config.getInt("tapedrive", "hearingDistance", 24, 0, 64, "The distance up to which Tape Drives can be heard.");
 		TAPE_LENGTHS = config.get("tapedrive", "tapeLengths", "4,8,16,32,64,2,6,16,128,128").getString();
-		RADAR_RANGE = config.get("radar", "maxRange", 8).getInt();
-		RADAR_ONLY_DISTANCE = config.get("radar", "onlyOutputDistance", false).getBoolean(false);
-		DISABLE_IRONNOTE_FORGE_EVENTS = config.get("ironnoteblock", "disableForgeEvents", false).getBoolean(false);
+		RADAR_RANGE = config.getInt("radar", "maxRange", 8, 0, 256, "The maximum range of the Radar.");
+		RADAR_ONLY_DISTANCE = config.getBoolean("radar", "onlyOutputDistance", false, "Stop Radars from outputting X/Y/Z coordinates and instead only output the distance from an entity.");
+		DISABLE_IRONNOTE_FORGE_EVENTS = config.getBoolean("ironnoteblock", "disableForgeEvents", false, "Disables creating Forge events for Iron Note Blocks in some cases.");
+		CIPHER_CAN_LOCK = config.getBoolean("cipher", "canLock", true, "Decides whether Cipher Blocks can or cannot be locked.");
+		
+		RADAR_CC_TIME = config.getFloat("computercraft", "radarSpeedPerDistanceUnit", 0.5f, 0.05f, 10000.0f, "How long, in seconds, each 1-block distance takes to be processed by ComputerCraft radars.");
 
-		RADAR_CC_TIME = config.get("computercraft", "radarSpeedPerDistanceUnit", 0.5).getDouble(0.5);
+		RADAR_OC_ENERGY_COST = config.getFloat("opencomputers", "radarEnergyPerDistanceUnit", 50.0f, 0.0f, 10000.0f, "How much energy, in OC units, each 1-block distance takes by OpenComputers radars.");
+		FX_ENERGY_COST = config.getFloat("opencomputers", "particleEnergyCost", 0.5f, 0.0f, 10000.0f, "How much energy, in OC units, 1 particle emission should take.");
 
-		RADAR_OC_ENERGY_COST = config.get("opencomputers", "radarEnergyPerDistanceUnit", 50.0).getDouble(50.0);
-		FX_ENERGY_COST = config.get("opencomputers", "particleEnergyCost", 0.5).getDouble(0.5);
-
-		LOCOMOTIVE_RELAY_RANGE = config.get("railcraft", "locomotiveRelayRange", 128).getDouble(128.0);
-		if(LOCOMOTIVE_RELAY_RANGE < 0.0){
-			LOCOMOTIVE_RELAY_RANGE = Double.MAX_VALUE;
-		}
-
-		config.get("camera", "sendRedstoneSignal", true).comment = "Setting this to false might help Camera tick lag issues, at the cost of making them useless with redstone circuitry.";
+		LOCOMOTIVE_RELAY_RANGE = config.getFloat("railcraft", "locomotiveRelayRange", 128.0f, 0.0f, 512.0f, "The range of Locomotive Relays.");
 
 		if(isEnabled("ironNoteBlock", true)) {
 			ironNote = new BlockIronNote();
-			GameRegistry.registerBlock(ironNote, "computronics.ironNoteBlock");
-			GameRegistry.registerTileEntity(TileIronNote.class, "computronics.ironNoteBlock");
+			registerBlockWithTileEntity(ironNote, TileIronNote.class, "computronics.ironNoteBlock");
 		}
 
 		if(isEnabled("tape", true)) {
 			tapeReader = new BlockTapeReader();
-			GameRegistry.registerBlock(tapeReader, "computronics.tapeReader");
-			GameRegistry.registerTileEntity(TileTapeDrive.class, "computronics.tapeReader");
+			registerBlockWithTileEntity(tapeReader, TileTapeDrive.class, "computronics.tapeReader");
 		}
 
 		if(isEnabled("camera", true)) {
 			camera = new BlockCamera();
-			GameRegistry.registerBlock(camera, "computronics.camera");
-			GameRegistry.registerTileEntity(TileCamera.class, "computronics.camera");
+			registerBlockWithTileEntity(camera, TileCamera.class, "computronics.camera");
 		}
 
 		if(isEnabled("chatBox", true)) {
 			chatBox = new BlockChatBox();
-			GameRegistry.registerBlock(chatBox, ItemBlockChatBox.class, "computronics.chatBox");
-			GameRegistry.registerTileEntity(TileChatBox.class, "computronics.chatBox");
+			registerBlockWithTileEntity(chatBox, ItemBlockChatBox.class, TileChatBox.class, "computronics.chatBox");
 		}
 
 		if(isEnabled("cipher", true)) {
 			cipher = new BlockCipher();
-			GameRegistry.registerBlock(cipher, "computronics.cipher");
-			GameRegistry.registerTileEntity(TileCipherBlock.class, "computronics.cipher");
+			registerBlockWithTileEntity(cipher, TileCipherBlock.class, "computronics.cipher");
 		}
 
 		if(isEnabled("radar", true)) {
 			radar = new BlockRadar();
-			GameRegistry.registerBlock(radar, "computronics.radar");
-			GameRegistry.registerTileEntity(TileRadar.class, "computronics.radar");
+			registerBlockWithTileEntity(radar, TileRadar.class, "computronics.radar");
 		}
 
 		if(isEnabled("lamp", true)) {
 			colorfulLamp = new BlockColorfulLamp();
-			GameRegistry.registerBlock(colorfulLamp, "computronics.colorfulLamp");
-			GameRegistry.registerTileEntity(TileColorfulLamp.class, "computronics.colorfulLamp");
+			registerBlockWithTileEntity(colorfulLamp, TileColorfulLamp.class, "computronics.colorfulLamp");
 		}
 
 		if(Loader.isModLoaded("nedocomputers") && isEnabled("eepromReader", true)) {
 			nc_eepromreader = new BlockEEPROMReader();
-			GameRegistry.registerBlock(nc_eepromreader, "computronics.eepromReader");
-			GameRegistry.registerTileEntity(TileEEPROMReader.class, "computronics.eepromReader");
+			registerBlockWithTileEntity(nc_eepromreader, TileEEPROMReader.class, "computronics.eepromReader");
 		}
 
 		if(isEnabled("tape", true)) {

@@ -15,15 +15,10 @@ import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
  */
 public class DriverReceiverBox extends DriverTileEntity {
 
-	public class ManagedEnvironmentReceiverBox extends ManagedEnvironmentOCTile<TileBoxReceiver> implements NamedBlock {
+	public class ManagedEnvironmentReceiverBox extends ManagedEnvironmentOCTile<TileBoxReceiver> {
 
 		public ManagedEnvironmentReceiverBox(TileBoxReceiver box) {
 			super(box, "receiver_box");
-		}
-
-		@Override
-		public String preferredName() {
-			return name;
 		}
 
 		@Callback(doc = "function():number; Returns the currently most restrictive received aspect that triggers the receiver box")

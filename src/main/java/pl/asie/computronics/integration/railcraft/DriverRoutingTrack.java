@@ -25,11 +25,6 @@ public class DriverRoutingTrack extends DriverTileEntity {
 			super(track, "routing_track");
 		}
 
-		@Override
-		public String preferredName() {
-			return name;
-		}
-
 		@Callback(doc = "function(destination:String):boolean; Sets the ticket destination")
 		public Object[] setDestination(Context c, Arguments a) {
 			ItemStack ticket = ((TrackRouting) tile.getTrackInstance()).getInventory().getStackInSlot(0);

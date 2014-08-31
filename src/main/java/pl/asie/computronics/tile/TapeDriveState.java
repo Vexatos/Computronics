@@ -3,7 +3,7 @@ package pl.asie.computronics.tile;
 import net.minecraft.world.World;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.Packets;
-import pl.asie.computronics.tape.Storage;
+import pl.asie.computronics.api.tape.ITapeStorage;
 import pl.asie.lib.network.Packet;
 
 public class TapeDriveState {
@@ -18,10 +18,10 @@ public class TapeDriveState {
 	private int codecId, codecTick, packetId;
 	protected int packetSize = 1024;
 	protected int soundVolume = 127;
-	private Storage storage;
+	private ITapeStorage storage;
 	
-	public Storage getStorage() { return storage; }
-	protected void setStorage(Storage storage) { this.storage = storage; }
+	public ITapeStorage getStorage() { return storage; }
+	protected void setStorage(ITapeStorage storage) { this.storage = storage; }
 	protected void setState(State state) { this.state = state; }
 	
 	public boolean setSpeed(float speed) {
@@ -67,7 +67,7 @@ public class TapeDriveState {
 
 	private Packet createMusicPacket(World worldObj, int x, int y, int z) {
 		byte[] packet = new byte[packetSize];
-		int amount = storage.read(packet, 0, false); // read data into packet array
+		int amount = storage.read(packet, false); // read data into packet array
 		try {
 			Packet pkt = Computronics.packet.create(Packets.PACKET_AUDIO_DATA)
 				.writeInt(worldObj.provider.dimensionId)

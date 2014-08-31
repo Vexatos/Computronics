@@ -10,6 +10,7 @@ import li.cil.oc.api.network.Context;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import pl.asie.computronics.Computronics;
 import pl.asie.lib.api.tile.IBundledRedstoneProvider;
 import pl.asie.lib.util.Base64;
@@ -23,6 +24,7 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements IBundle
 	private byte[] iv = new byte[16];
 	private SecretKeySpec skey;
 	private Cipher cipher;
+	private boolean isLocked = false;
 	
 	public TileCipherBlock() {
 		super("cipher");
@@ -34,6 +36,8 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements IBundle
 			e.printStackTrace();
 		}
 	}
+	
+	public boolean isLocked() { return isLocked; }
 	
 	@Override
 	public boolean canUpdate() { return Computronics.MUST_UPDATE_TILE_ENTITIES; }
@@ -250,6 +254,18 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements IBundle
 	public void onSlotUpdate(int slot) {
 		updateKey();
 		updateOutputWires();
+	}
+	
+	@Override
+	public void readFromNBT(NBTTagCompound tag) {
+		super.readFromNBT(tag);
+		if(tag.hasKey("cb_l") && Computronics.CIPHER_CAN_LOCK) isLocked = tag.getBoolean("cb_l");
+	}
+	
+	@Override
+	public void writeToNBT(NBTTagCompound tag) {
+		super.writeToNBT(tag);
+		if(isLocked) tag.setBoolean("cb_l", isLocked);
 	}
 	
 	@Override

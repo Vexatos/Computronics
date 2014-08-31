@@ -25,7 +25,7 @@ public class StorageManager {
 		return storageName + ".dsk";
 	}
 	
-	public Storage newStorage(int size) {
+	public TapeStorage newStorage(int size) {
 		String storageName;
 		while(true) {
 			byte[] nameHex = new byte[16];
@@ -40,7 +40,7 @@ public class StorageManager {
 		return new File(saveDir, filename(name)).exists();
 	}
 	
-	public Storage get(String name, int size, int position) {
-		return new Storage(name, new File(saveDir, filename(name)), size, position);
+	public TapeStorage get(String name, int size, int position) {
+		return new TapeStorage(name, new File(saveDir, filename(name)), size, position);
 	}
 }
