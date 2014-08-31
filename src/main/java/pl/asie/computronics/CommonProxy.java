@@ -11,4 +11,8 @@ public class CommonProxy {
 		gui.registerGui(ContainerTapeReader.class, null);
 		gui.registerGui(ContainerCipherBlock.class, null);
 	}
+
+	public void registerEntities(){
+		//NO-OP
+	}
 }

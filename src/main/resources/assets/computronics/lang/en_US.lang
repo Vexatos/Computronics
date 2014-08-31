@@ -1,3 +1,5 @@
+entity.computronics.itemTape.name=Intergalactical CDVR
+
 tile.computronics.ironNoteBlock.name=Iron Note Block
 tile.computronics.tapeDrive.name=Tape Drive
 tile.computronics.camera.name=Camera
@@ -14,12 +16,17 @@ tooltip.computronics.tape.length=Length: %s minutes
 tooltip.computronics.tape.balanced=Balanced!
 tooltip.computronics.tape.unnamed=Unnamed Tape
 tooltip.computronics.tape.none=No Tape
+tooltip.computronics.tape.ig=The standard CDVR for\n GregTech Intergalactical's ships
 
+item.computronics.gt_itemIngotChromoxide.name=Chromium Dioxide Ingot
+item.computronics.gt_itemDustChromoxide.name=Chromium Dioxide Dust
+item.computronics.gt_itemReelChromoxide.name=Chromium Dioxide Tape Reel
 item.computronics.robot_upgrade_camera.name=Camera Upgrade
 item.computronics.robot_upgrade_chatbox.name=Chat Upgrade
 item.computronics.robot_upgrade_radar.name=Radar Upgrade
 item.computronics.card_fx.name=Particle Effects Card
 item.computronics.part_tape_track.name=Tape Track
+item.computronics.tape.ig.name=Intergalactical CDVR
 item.computronics.tape.name=Cassette Tape
 
 itemGroup.tabComputronics=Computronics

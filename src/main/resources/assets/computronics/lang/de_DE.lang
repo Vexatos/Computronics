@@ -1,3 +1,5 @@
+entity.computronics.itemTape.name=Intergalaktischer CDVR
+
 tile.computronics.ironNoteBlock.name=Eiserner Notenblock
 tile.computronics.tapeDrive.name=Bandlaufwerk
 tile.computronics.camera.name=Kamera
@@ -11,15 +13,20 @@ tile.computronics.eepromReader.name=EEPROM-Lesegerät
 
 tooltip.computronics.chatBox.creative=NSA für zu Hause!
 tooltip.computronics.tape.length=Länge: %s Minuten
-tooltip.computronics.tape.balanced=Ausgewogener Preis!
+tooltip.computronics.tape.balanced=Welch ein ausgewogener Preis!
 tooltip.computronics.tape.unnamed=Unbenanntes Band
 tooltip.computronics.tape.none=Kein Band
+tooltip.computronics.tape.ig=Der Standard-CDVR für\n Schiffe von GregTech Intergalactical
 
+item.computronics.gt_itemIngotChromoxide.name=Chromdioxidbarren
+item.computronics.gt_itemDustChromoxide.name=Chromdioxidstaub
+item.computronics.gt_itemReelChromoxide.name=Chromdioxidbandspur
 item.computronics.robot_upgrade_camera.name=Kamera-Upgrade
 item.computronics.robot_upgrade_chatbox.name=Chat-Upgrade
 item.computronics.robot_upgrade_radar.name=Radar-Upgrade
 item.computronics.card_fx.name=Partikeleffektkarte
 item.computronics.part_tape_track.name=Bandspur
+item.computronics.tape.ig.name=Intergalaktischer CDVR
 item.computronics.tape.name=Kasettenband
 
 itemGroup.tabComputronics=Computronics
