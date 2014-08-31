@@ -1,15 +1,13 @@
 package pl.asie.computronics.integration.factorization;
 
-import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
 import factorization.api.IChargeConductor;
-import li.cil.oc.api.Network;
 import li.cil.oc.api.network.Arguments;
 import li.cil.oc.api.network.Callback;
 import li.cil.oc.api.network.Context;
 import li.cil.oc.api.network.ManagedEnvironment;
-import li.cil.oc.api.network.Visibility;
 import li.cil.oc.api.prefab.DriverTileEntity;
 import net.minecraft.world.World;
+import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
 
 public class DriverChargeConductor extends DriverTileEntity {
 	public class ManagedEnvironmentCC extends ManagedEnvironmentOCTile<IChargeConductor> {
