@@ -5,7 +5,7 @@
             - Routing Detectors can now be accessed using the Adapter Block
             - Routing Switch Motors can now be accessed using the Adapter Block
             - Signal Receiver Boxes can now be accessed using the Adapter Block
-            - Added the Digital Locomotive Relay to access Electric Locomotives
+            - Added the Digital Locomotive Relay to access Electric Locomotives remotely
             - Added the Digital Relay Sensor to bind a relay to a locomotive
   * ADDED: GregTech integration
             - machine monitoring
