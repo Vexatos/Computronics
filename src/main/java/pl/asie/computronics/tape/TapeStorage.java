@@ -7,16 +7,19 @@ import java.io.IOException;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
-public class Storage {
-	private String name;
+import pl.asie.computronics.Computronics;
+import pl.asie.computronics.api.tape.ITapeStorage;
+
+public class TapeStorage implements ITapeStorage {
+	private String uniqueId;
 	private File file;
 	private int size;
 	private byte[] data;
 	private int position;
 	private boolean modified = false;
 	
-	protected Storage(String storageName, File file, int size, int position) {
-		this.name = storageName;
+	protected TapeStorage(String uniqueId, File file, int size, int position) {
+		this.uniqueId = uniqueId;
 		this.file = file;
 		this.size = size;
 		this.data = new byte[size];
@@ -39,7 +42,8 @@ public class Storage {
 		}
 	}
 	
-	public String getName() { return name; }
+	public String getUniqueId() { return uniqueId; }
+	public String getName() { return "Tape"; }
 	public int getPosition() { return position; }
 	public int getSize() { return size; }
 	
@@ -64,11 +68,15 @@ public class Storage {
 		return seek;
 	}
 	
-	public int read() {
+	public int read(boolean simulate) {
 		if(position >= size) return 0;
 		
-		modified = true;
-		return (int)data[position++] & 0xFF;
+		if(simulate) {
+			return (int)data[position] & 0xFF;
+		} else {
+			modified = true;
+			return (int)data[position++] & 0xFF;
+		}
 	}
 	public int read(byte[] v, int offset, boolean simulate) {
 		int len = Math.min(size - (position + offset) - 1, v.length);
@@ -148,5 +156,15 @@ public class Storage {
 	
 	public void writeFileIfModified() throws IOException {
 		if(modified) writeFile();
+	}
+
+	@Override
+	public void onStorageUnload() {
+		try {
+			writeFileIfModified();
+		} catch(Exception e) {
+			Computronics.log.error("Tape ID " + this.getUniqueId() + " was NOT saved!");
+			e.printStackTrace();
+		}
 	}
 }

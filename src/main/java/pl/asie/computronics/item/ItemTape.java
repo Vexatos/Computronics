@@ -18,8 +18,8 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import pl.asie.computronics.Computronics;
-import pl.asie.computronics.api.IItemStorage;
-import pl.asie.computronics.tape.Storage;
+import pl.asie.computronics.api.tape.IItemTapeStorage;
+import pl.asie.computronics.tape.TapeStorage;
 import pl.asie.lib.util.color.ItemColorizer;
 
 import java.util.List;
@@ -28,7 +28,7 @@ import java.util.List;
 	@Optional.Interface(iface = "dan200.computercraft.api.media.IMediaProvider", modid = "ComputerCraft"),
 	@Optional.Interface(iface = "dan200.computercraft.api.media.IMedia", modid = "ComputerCraft")
 })
-public class ItemTape extends Item implements IItemStorage, IMedia, IMediaProvider {
+public class ItemTape extends Item implements IItemTapeStorage, IMedia, IMediaProvider {
 	public static final int L_SECOND = 4096;
 	public static final int L_MINUTE = 4096*60;
 	
@@ -123,7 +123,7 @@ public class ItemTape extends Item implements IItemStorage, IMedia, IMediaProvid
 		return sizes[meta % sizes.length];
 	}
 
-	public Storage getStorage(ItemStack stack) {
+	public TapeStorage getStorage(ItemStack stack) {
 		int size = getSize(stack);
 		
 		if(stack.getTagCompound() != null && stack.getTagCompound().hasKey("storage")) {
@@ -135,7 +135,7 @@ public class ItemTape extends Item implements IItemStorage, IMedia, IMediaProvid
 		}
 		
 		// Doesn't exist, create new storage and write NBT data
-		Storage storage = Computronics.storage.newStorage(size);
+		TapeStorage storage = Computronics.storage.newStorage(size);
 		if(stack.getTagCompound() == null) stack.setTagCompound(new NBTTagCompound());
 		stack.getTagCompound().setString("storage", storage.getName());
 		return storage;
