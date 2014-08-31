@@ -10,9 +10,11 @@
   * ADDED: GregTech integration
             - machine monitoring
             - Digital Chests support
-            - Added a new high-end tape using GregTech materials!
+            - Added a new virtually indestructable high-end tape using GregTech materials!
   * ADDED: New French (AegisLesha) and Chinese (crafteverywhere) translations.
   * ADDED: ITapeStorage API - developers can now create their own compatible tapes and tape devices.
+
+  * SOON: GregTech recipe mode for all the Computronics blocks and items (Vexatos)
 
 ==== 0.6.4 (13 August 2014 [1.7.2, 1.7.10]) ====
 
