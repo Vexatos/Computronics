@@ -37,8 +37,7 @@ public class DriverRoutingTrack extends DriverTileEntity {
 				if(!((TrackRouting) tile.getTrackInstance()).isSecure()) {
 					String destination = a.checkString(0);
 					((TrackRouting) tile.getTrackInstance()).setTicket(destination, destination, ItemTicketGold.getOwner(ticket));
-					ItemTicketGold.setTicketData(ticket, destination, destination, ItemTicketGold.getOwner(ticket));
-					return new Object[] { true };
+					return new Object[] { ItemTicketGold.setTicketData(ticket, destination, destination, ItemTicketGold.getOwner(ticket)) };
 				} else {
 					return new Object[] { false, "routing track is locked" };
 				}
