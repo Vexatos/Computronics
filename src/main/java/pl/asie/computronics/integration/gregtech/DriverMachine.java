@@ -1,5 +1,6 @@
 package pl.asie.computronics.integration.gregtech;
 
+import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
 import gregtech.api.interfaces.tileentity.IMachineProgress;
 import li.cil.oc.api.Network;
 import li.cil.oc.api.network.Arguments;
@@ -11,52 +12,49 @@ import li.cil.oc.api.prefab.DriverTileEntity;
 import net.minecraft.world.World;
 
 public class DriverMachine extends DriverTileEntity {
-	public class ManagedEnvironmentMachine extends li.cil.oc.api.prefab.ManagedEnvironment {
-		private IMachineProgress mp;
-		
-		public ManagedEnvironmentMachine(IMachineProgress dc) {
-			this.mp = dc;
-			node = Network.newNode(this, Visibility.Network).withComponent("gtMachine", Visibility.Network).create();
+	public class ManagedEnvironmentMachine extends ManagedEnvironmentOCTile<IMachineProgress> {
+		public ManagedEnvironmentMachine(IMachineProgress tile, String name) {
+			super(tile, name);
 		}
-		
+
 		@Callback(direct = true)
 		public Object[] hasWork(Context c, Arguments a) {
-			return new Object[]{mp.hasThingsToDo()};
+			return new Object[]{tile.hasThingsToDo()};
 		}
 		
 		@Callback(direct = true)
 		public Object[] getWorkProgress(Context c, Arguments a) {
-			return new Object[]{mp.getProgress()};
+			return new Object[]{tile.getProgress()};
 		}
 		
 		@Callback(direct = true)
 		public Object[] getWorkMaxProgress(Context c, Arguments a) {
-			return new Object[]{mp.getMaxProgress()};
+			return new Object[]{tile.getMaxProgress()};
 		}
 		
 		@Callback(direct = true)
 		public Object[] isWorkAllowed(Context c, Arguments a) {
-			return new Object[]{mp.isAllowedToWork()};
+			return new Object[]{tile.isAllowedToWork()};
 		}
 		
 		@Callback(direct = true)
 		public Object[] setWorkAllowed(Context c, Arguments a) {
 			if(a.count() == 1 && a.isBoolean(0)) {
-				if(a.checkBoolean(0)) mp.enableWorking();
-				else mp.disableWorking();
+				if(a.checkBoolean(0)) tile.enableWorking();
+				else tile.disableWorking();
 			}
 			return null;
 		}
 		
 		@Callback(direct = true)
 		public Object[] isMachineActive(Context c, Arguments a) {
-			return new Object[]{mp.isActive()};
+			return new Object[]{tile.isActive()};
 		}
 	}
 	
 	@Override
 	public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
-		return new ManagedEnvironmentMachine((IMachineProgress)world.getTileEntity(x, y, z));
+		return new ManagedEnvironmentMachine((IMachineProgress)world.getTileEntity(x, y, z), "gt_machine");
 	}
 
 	@Override

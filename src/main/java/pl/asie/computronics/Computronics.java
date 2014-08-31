@@ -55,7 +55,6 @@ import pl.asie.computronics.integration.gregtech.DriverDigitalChest;
 import pl.asie.computronics.integration.gregtech.DriverMachine;
 import pl.asie.computronics.integration.mfr.DeepStorageUnitPeripheral;
 import pl.asie.computronics.integration.mfr.DriverDeepStorageUnit;
-import pl.asie.computronics.integration.projectred.CCBundledRedstoneProviderProjectRed;
 import pl.asie.computronics.integration.railcraft.DriverReceiverBox;
 import pl.asie.computronics.integration.railcraft.DriverRoutingDetector;
 import pl.asie.computronics.integration.railcraft.DriverRoutingSwitch;
@@ -86,7 +85,7 @@ import pl.asie.lib.util.color.RecipeColorizer;
 
 import java.util.Random;
 
-@Mod(modid="computronics", name="Computronics", version="0.6.5", dependencies="required-after:asielib;after:ComputerCraft;after:OpenComputers;after:OpenComputers|Core;after:MineFactoryReloaded;after:RedLogic;after:ProjRed|Core;after:nedocomputers")
+@Mod(modid="computronics", name="Computronics", version="1.0.0", dependencies="required-after:asielib;after:ComputerCraft;after:OpenComputers;after:OpenComputers|Core;after:MineFactoryReloaded;after:RedLogic;after:ProjRed|Core;after:nedocomputers")
 public class Computronics {
 	public Configuration config;
 	public static Random rand = new Random();
@@ -319,9 +318,6 @@ public class Computronics {
 		if(Loader.isModLoaded("RedLogic")) {
 			if(config.get("modCompatibility", "enableRedLogicLamps", true).getBoolean(true)) ComputerCraftAPI.registerPeripheralProvider(new LampPeripheral());
 			if(config.get("computercraft", "enableBundledRedstoneProviders", true).getBoolean(true)) ComputerCraftAPI.registerBundledRedstoneProvider(new CCBundledRedstoneProviderRedLogic());
-		}
-		if(Loader.isModLoaded("ProjRed|Core")) {
-			if(config.get("computercraft", "enableBundledRedstoneProviders", true).getBoolean(true)) ComputerCraftAPI.registerBundledRedstoneProvider(new CCBundledRedstoneProviderProjectRed());
 		}
 		if(Loader.isModLoaded("MineFactoryReloaded") || Loader.isModLoaded("JABBA")) {
 			if(config.get("modCompatibility", "enableDeepStorageUnit", true).getBoolean(true)) ComputerCraftAPI.registerPeripheralProvider(new DeepStorageUnitPeripheral());
