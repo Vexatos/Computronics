@@ -1,3 +1,4 @@
+chat.computronics.cipher.locked=This Cipher Block is locked! You may not access it.
 chat.computronics.sensor.bound=Relay successfully bound to locomotive!
 chat.computronics.sensor.error1=There is no relay at the specified coordinates!
 chat.computronics.sensor.error2=Relay can only be attached to electric locomotives!
@@ -39,5 +40,3 @@ item.computronics.tape.ig.name=Intergalactical CDVR
 item.computronics.tape.name=Cassette Tape
 
 itemGroup.tabComputronics=Computronics
-
-chat.computronics.cipher.locked=This Cipher Block is locked! You may not access it.

@@ -1,7 +1,16 @@
-==== (Indev) ====
+==== 1.0.0 (Indev) ====
 
   * ADDED: RailCraft integration, courtesy of Vexatos! Routing can now be fully controlled with computers!
-  * ADDED: GregTech integration - specifically, machine monitoring and Digital Chests, as well as a new high-end tape using GregTech materials!
+            - Routing Tracks can now be accessed using the Adapter Block
+            - Routing Detectors can now be accessed using the Adapter Block
+            - Routing Switch Motors can now be accessed using the Adapter Block
+            - Signal Receiver Boxes can now be accessed using the Adapter Block
+            - Added the Digital Locomotive Relay to access Electric Locomotives
+            - Added the Digital Relay Sensor to bind a relay to a locomotive
+  * ADDED: GregTech integration
+            - machine monitoring
+            - Digital Chests support
+            - Added a new high-end tape using GregTech materials!
   * ADDED: New French (AegisLesha) and Chinese (crafteverywhere) translations.
   * ADDED: ITapeStorage API - developers can now create their own compatible tapes and tape devices.
 
