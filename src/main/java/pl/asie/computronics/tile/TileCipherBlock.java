@@ -114,11 +114,25 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements IBundle
 		}
 		return null;
 	}
+	
+	@Callback(direct = true)
+    @Optional.Method(modid="OpenComputers")
+	public Object[] isLocked(Context context, Arguments args) throws Exception {
+		return new Object[]{isLocked};
+	}
 
+	@Callback()
+    @Optional.Method(modid="OpenComputers")
+	public Object[] setLocked(Context context, Arguments args) throws Exception {
+		if(args.count() == 1 && args.isBoolean(0))
+			this.isLocked = args.checkBoolean(0);
+		return null;
+	}
+	
 	@Override
     @Optional.Method(modid="ComputerCraft")
 	public String[] getMethodNames() {
-		return new String[]{"encrypt", "decrypt"};
+		return new String[]{"encrypt", "decrypt", "isLocked", "setLocked"};
 	}
 
 	@Override
@@ -133,6 +147,11 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements IBundle
 				case 0: return new Object[]{encrypt(message)};
 				case 1: return new Object[]{decrypt(message)};
 				}
+			} else if(arguments.length == 1 && (arguments[0] instanceof Boolean) && method == 3) {
+				this.isLocked = ((Boolean)arguments[0]).booleanValue();
+				return null;
+			} else if(method == 2) {
+				return new Object[]{this.isLocked};
 			}
 		} catch(Exception e) {
 			throw new LuaException(e.getMessage());
@@ -149,6 +168,7 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements IBundle
 		int a = ((addr & 0xFFFE)) >> 1;
 		if(a < 16) return _nedo_cipher[a];
 		else if(a == 16) return _nedo_status;
+		else if(a == 18) return (short)(isLocked ? 1 : 0);
 		else return 0;
 	}
 
@@ -181,6 +201,7 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements IBundle
 				_nedo_status = 1;
 			}
 		}
+		else if(a == 18) isLocked = (data != 0) ? true : false;
 	}
 	
 	private int bundledXORData;
@@ -291,5 +312,34 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements IBundle
 			}
 			updateOutputWires();
 		}
+	}
+	
+	// Security
+	
+	@Override
+	public ItemStack getStackInSlot(int slot) {
+		if(isLocked) return null;
+		else return super.getStackInSlot(slot);
+	}
+	
+	@Override
+	public void setInventorySlotContents(int slot, ItemStack stack) {
+		if(!isLocked) super.setInventorySlotContents(slot, stack);
+	}
+	
+	@Override
+	public boolean canInsertItem(int slot, ItemStack item, int side) {
+		return !isLocked && slot == side;
+	}
+	
+	@Override
+	public boolean canExtractItem(int slot, ItemStack item, int side) {
+		return !isLocked && slot == side;
+	}
+	
+	@Override
+	public int[] getAccessibleSlotsFromSide(int side) {
+		if(isLocked) return new int[]{};
+		else return new int[]{side};
 	}
 }

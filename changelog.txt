@@ -8,13 +8,16 @@
             - Added the Digital Locomotive Relay to access Electric Locomotives remotely
             - Added the Digital Relay Sensor to bind a relay to a locomotive
   * ADDED: GregTech integration
-            - machine monitoring
+            - Machine monitoring
             - Digital Chests support
             - Added a new virtually indestructable high-end tape using GregTech materials!
   * ADDED: New French (AegisLesha) and Chinese (crafteverywhere) translations.
   * ADDED: ITapeStorage API - developers can now create their own compatible tapes and tape devices.
   * ADDED: BetterStorage 0.10+ compatibility for Storage Crate drivers.
   * ADDED: Radars now use energy uniformly for OC, CC turtles (coal) and ComputerCraft itself (MJ, RF or EU).
+  * ADDED: Changed Cipher Block behaviour:
+            - Cipher Blocks can now be locked - their inventory is not accessible via automation or manually while they are locked. They can still be broken, though!
+            - Each side of the Cipher Block now corresponds to one of its six slots.
 
   * SOON: GregTech recipe mode for all the Computronics blocks and items (Vexatos)
 
