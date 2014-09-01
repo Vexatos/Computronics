@@ -166,6 +166,7 @@ public class Computronics {
 		GameRegistry.registerTileEntity(tile, name);
 		System.out.println("Registering " + name + " as TE " + tile.getCanonicalName());
 		FMLInterModComms.sendMessage("appliedenergistics2", "whitelist-spatial", tile.getCanonicalName());
+		FMLInterModComms.sendMessage("appliedenergistics2", "movabletile", tile.getCanonicalName());
 	}
 	
 	@EventHandler
@@ -303,10 +304,12 @@ public class Computronics {
 		gui = new GuiHandler();
 		NetworkRegistry.INSTANCE.registerGuiHandler(Computronics.instance, gui);
 
-		MinecraftForge.EVENT_BUS.register(new ChatBoxHandler());
-
+		if(chatBox != null) {
+			MinecraftForge.EVENT_BUS.register(new ChatBoxHandler());
+		}
+		
 		proxy.registerGuis(gui);
-		if(proxy.isClient()) {
+		if(proxy.isClient() && colorfulLamp != null) {
 			new LampRender();
 		}
 
@@ -474,12 +477,17 @@ public class Computronics {
 
 		if(isEnabled("ocRobotUpgrades", true)) {
 			Block[] b = {camera, chatBox, radar};
-			for(int i = 0; i < b.length; i++) {
-				Block t = b[i];
-				GameRegistry.addShapedRecipe(new ItemStack(itemRobotUpgrade, 1, i), "mcm", 'c', new ItemStack(t, 1, 0), 'm', li.cil.oc.api.Items.get("chip2").createItemStack(1));
-				GameRegistry.addShapedRecipe(new ItemStack(itemRobotUpgrade, 1, i), "m", "c", "m", 'c', new ItemStack(t, 1, 0), 'm', li.cil.oc.api.Items.get("chip2").createItemStack(1));
+			try {
+				for(int i = 0; i < b.length; i++) {
+					Block t = b[i];
+					GameRegistry.addShapedRecipe(new ItemStack(itemRobotUpgrade, 1, i), "mcm", 'c', new ItemStack(t, 1, 0), 'm', li.cil.oc.api.Items.get("chip2").createItemStack(1));
+					GameRegistry.addShapedRecipe(new ItemStack(itemRobotUpgrade, 1, i), "m", "c", "m", 'c', new ItemStack(t, 1, 0), 'm', li.cil.oc.api.Items.get("chip2").createItemStack(1));
+				}	
+				GameRegistry.addShapedRecipe(new ItemStack(itemRobotUpgrade, 1, 3), "mf", " b", 'm', li.cil.oc.api.Items.get("chip2").createItemStack(1), 'f', Items.firework_charge, 'b', li.cil.oc.api.Items.get("card").createItemStack(1));
+			} catch(Exception e) {
+				log.error("Could not create robot upgrade recipes! You are most likely using OpenComputers 1,2 - please upgrade to 1.3.0+!");
+				e.printStackTrace();
 			}
-			GameRegistry.addShapedRecipe(new ItemStack(itemRobotUpgrade, 1, 3), "mf", " b", 'm', li.cil.oc.api.Items.get("chip2").createItemStack(1), 'f', Items.firework_charge, 'b', li.cil.oc.api.Items.get("card").createItemStack(1));
 		}
 	}
 
