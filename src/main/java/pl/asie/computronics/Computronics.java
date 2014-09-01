@@ -90,6 +90,7 @@ import pl.asie.computronics.tile.TileTapeDrive;
 import pl.asie.lib.gui.GuiHandler;
 import pl.asie.lib.item.ItemMultiple;
 import pl.asie.lib.network.PacketHandler;
+import pl.asie.lib.util.EnergyConverter;
 import pl.asie.lib.util.color.RecipeColorizer;
 
 import java.util.Random;
@@ -112,18 +113,18 @@ public class Computronics {
 	public static int CHATBOX_DISTANCE = 40;
 	public static int CAMERA_DISTANCE = 32;
 	public static int TAPEDRIVE_DISTANCE = 24;
-	public static int BUFFER_MS = 750;
+	public static int TAPEDRIVE_BUFFER_MS = 750;
 	public static int RADAR_RANGE = 8;
 	public static boolean RADAR_ONLY_DISTANCE = false;
 	public static boolean CIPHER_CAN_LOCK = true;
-	public static double RADAR_OC_ENERGY_COST = 5.0;
+	public static double RADAR_ENERGY_COST_RF = 5.0;
 	public static double RADAR_CC_TIME = 0.5;
 	public static double FX_ENERGY_COST = 0.5;
 	public static String CHATBOX_PREFIX = "ChatBox";
 	public static double LOCOMOTIVE_RELAY_RANGE = 128.0;
 
 	public static String TAPE_LENGTHS;
-	public static boolean REDSTONE_REFRESH, CHATBOX_CREATIVE, DISABLE_IRONNOTE_FORGE_EVENTS;
+	public static boolean REDSTONE_REFRESH, CHATBOX_CREATIVE;
 
 	@SidedProxy(clientSide="pl.asie.computronics.ClientProxy", serverSide="pl.asie.computronics.CommonProxy")
 	public static CommonProxy proxy;
@@ -178,24 +179,41 @@ public class Computronics {
 		packet = new PacketHandler("computronics", new NetworkHandlerClient(), new NetworkHandlerServer());
 
 		// Configs
-		CHATBOX_DISTANCE = config.getInt("chatbox", "maxDistance", 40, 4, Integer.MAX_VALUE, "The maximum chat box distance, in blocks.");
+		
+		// Camera
 		CAMERA_DISTANCE = config.getInt("camera", "maxDistance", 32, 16, 256, "The maximum camera distance, in blocks.");
-		REDSTONE_REFRESH = config.getBoolean("general", "enableTickingRedstoneSupport", true, "Set whether some machines should stop being tickless in exchange for redstone output support.");
-		BUFFER_MS = config.getInt("tapedrive", "audioPreloadMs", 750, 500, 10000, "The amount of time (in milliseconds) used for pre-buffering the tape for audio playback. If you get audio playback glitches in SMP/your TPS is under 20, RAISE THIS VALUE!");
-		CHATBOX_PREFIX = config.getString("chatbox", "prefix", "ChatBox", "The Chat Box's default prefix.");
+		
+		// Chat Box
 		CHATBOX_CREATIVE = config.getBoolean("chatbox", "enableCreative", true, "Enable Creative Chat Boxes.");
-		TAPEDRIVE_DISTANCE = config.getInt("tapedrive", "hearingDistance", 24, 0, 64, "The distance up to which Tape Drives can be heard.");
-		TAPE_LENGTHS = config.get("tapedrive", "tapeLengths", "4,8,16,32,64,2,6,16,128,128").getString();
+		CHATBOX_DISTANCE = config.getInt("chatbox", "maxDistance", 40, 4, Integer.MAX_VALUE, "The maximum chat box distance, in blocks.");
+		CHATBOX_PREFIX = config.getString("chatbox", "prefix", "ChatBox", "The Chat Box's default prefix.");
+		
+		// Cipher Block
+		CIPHER_CAN_LOCK = config.getBoolean("cipherblock", "canLock", true, "Decides whether Cipher Blocks can or cannot be locked.");
+		
+		// Particle Card
+		if(Loader.isModLoaded("OpenComputers")) {
+			FX_ENERGY_COST = EnergyConverter.convertEnergy(
+					config.getFloat("power", "ocParticleCardCostPerParticle", 0.5f, 0.0f, 10000.0f, "How much energy, in RF, 1 particle emission should take."),
+					"RF", "OC");
+		}
+		
+		// Radar
 		RADAR_RANGE = config.getInt("radar", "maxRange", 8, 0, 256, "The maximum range of the Radar.");
 		RADAR_ONLY_DISTANCE = config.getBoolean("radar", "onlyOutputDistance", false, "Stop Radars from outputting X/Y/Z coordinates and instead only output the distance from an entity.");
-		DISABLE_IRONNOTE_FORGE_EVENTS = config.getBoolean("ironnoteblock", "disableForgeEvents", false, "Disables creating Forge events for Iron Note Blocks in some cases.");
-		CIPHER_CAN_LOCK = config.getBoolean("cipher", "canLock", true, "Decides whether Cipher Blocks can or cannot be locked.");
 		
-		RADAR_CC_TIME = config.getFloat("computercraft", "radarSpeedPerDistanceUnit", 0.5f, 0.05f, 10000.0f, "How long, in seconds, each 1-block distance takes to be processed by ComputerCraft radars.");
+		// Tape Drive
+		TAPEDRIVE_BUFFER_MS = config.getInt("tapedrive", "audioPreloadMs", 750, 500, 10000, "The amount of time (in milliseconds) used for pre-buffering the tape for audio playback. If you get audio playback glitches in SMP/your TPS is under 20, RAISE THIS VALUE!");
+		TAPEDRIVE_DISTANCE = config.getInt("tapedrive", "hearingDistance", 24, 0, 64, "The distance up to which Tape Drives can be heard.");
+		TAPE_LENGTHS = config.get("tapedrive", "tapeLengths", "4,8,16,32,64,2,6,16,128,128").getString();
+		
+		// General
+		REDSTONE_REFRESH = config.getBoolean("general", "enableTickingRedstoneSupport", true, "Set whether some machines should stop being tickless in exchange for redstone output support.");
 
-		RADAR_OC_ENERGY_COST = config.getFloat("opencomputers", "radarEnergyPerDistanceUnit", 50.0f, 0.0f, 10000.0f, "How much energy, in OC units, each 1-block distance takes by OpenComputers radars.");
-		FX_ENERGY_COST = config.getFloat("opencomputers", "particleEnergyCost", 0.5f, 0.0f, 10000.0f, "How much energy, in OC units, 1 particle emission should take.");
+		// Power
+		RADAR_ENERGY_COST_RF = config.getFloat("power", "radarCostPerBlock", 500.0f, 0.0f, 10000.0f, "How much energy, in RF, each 1-block distance takes by OpenComputers radars.");
 
+		// Railcraft integration
 		LOCOMOTIVE_RELAY_RANGE = config.getFloat("railcraft", "locomotiveRelayRange", 128.0f, 0.0f, 512.0f, "The range of Locomotive Relays.");
 
 		if(isEnabled("ironNoteBlock", true)) {

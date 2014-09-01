@@ -15,18 +15,23 @@ import net.minecraft.util.AxisAlignedBB;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.cc.CCRadarProxy;
 import pl.asie.computronics.util.RadarUtils;
+import pl.asie.lib.api.tile.IBattery;
+import pl.asie.lib.api.tile.IBatteryProvider;
+import pl.asie.lib.tile.BatteryBasic;
+import pl.asie.lib.util.EnergyConverter;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 @Optional.Interface(iface = "li.cil.li.oc.network.Environment", modid = "OpenComputers")
-public class TileRadar extends TileEntityPeripheralBase implements Environment {
-
+public class TileRadar extends TileEntityPeripheralBase implements Environment, IBatteryProvider {
 	protected boolean hasEnergy;
+	private IBattery battery;
 	
 	public TileRadar() {
-		super("radar", Computronics.RADAR_OC_ENERGY_COST * Computronics.RADAR_RANGE * 3.5);
+		super("radar", EnergyConverter.convertEnergy(Computronics.RADAR_ENERGY_COST_RF * Computronics.RADAR_RANGE * 3.5, "OC", "RF"));
+		this.registerBattery(new BatteryBasic(Computronics.RADAR_ENERGY_COST_RF * Computronics.RADAR_RANGE * 3.5));
 	}
    
 	@Override
@@ -45,14 +50,21 @@ public class TileRadar extends TileEntityPeripheralBase implements Environment {
                 getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 1, zCoord + 1).
                 expand(distance, distance, distance);
     }
+    
+    public boolean extractFromBattery(double amount) {
+    	if(this.getBatteryProvider().getEnergyStored() < amount) return false;
+    	this.getBatteryProvider().extract(-1, amount, false);
+    	return true;
+    }
 
     @Callback
     @Optional.Method(modid="OpenComputers")
     public Object[] getEntities(Context context, Arguments args) {
 		List<Map> entities = new ArrayList<Map>();
 		int distance = getDistance(args);
-		double energyNeeded = (Computronics.RADAR_OC_ENERGY_COST * distance * 1.75);
-		if(((Connector) node).tryChangeBuffer(0 - energyNeeded)) {
+		double energyNeeded = (Computronics.RADAR_ENERGY_COST_RF * distance * 1.75);
+		if(((Connector) node).tryChangeBuffer(0 - EnergyConverter.convertEnergy(energyNeeded, "RF", "OC"))
+				|| extractFromBattery(energyNeeded)) {
 			AxisAlignedBB bounds = getBounds(distance);
 			entities.addAll(RadarUtils.getEntities(worldObj, xCoord, yCoord, zCoord, bounds, EntityPlayer.class));
 			entities.addAll(RadarUtils.getEntities(worldObj, xCoord, yCoord, zCoord, bounds, EntityLiving.class));
@@ -72,8 +84,9 @@ public class TileRadar extends TileEntityPeripheralBase implements Environment {
     public Object[] getPlayers(Context context, Arguments args) {
 		List<Map> entities = new ArrayList<Map>();
 		int distance = getDistance(args);
-		double energyNeeded = (Computronics.RADAR_OC_ENERGY_COST * distance * 1.0);
-		if(((Connector) node).tryChangeBuffer(0 - energyNeeded)) {
+		double energyNeeded = (Computronics.RADAR_ENERGY_COST_RF * distance * 1.0);
+		if(((Connector) node).tryChangeBuffer(0 - EnergyConverter.convertEnergy(energyNeeded, "RF", "OC"))
+				|| extractFromBattery(energyNeeded)) {
 			AxisAlignedBB bounds = getBounds(distance);
 			entities.addAll(RadarUtils.getEntities(worldObj, xCoord, yCoord, zCoord, bounds, EntityPlayer.class));
 			context.pause(0.5);
@@ -86,8 +99,9 @@ public class TileRadar extends TileEntityPeripheralBase implements Environment {
     public Object[] getMobs(Context context, Arguments args) {
 		List<Map> entities = new ArrayList<Map>();
 		int distance = getDistance(args);
-		double energyNeeded = (Computronics.RADAR_OC_ENERGY_COST * distance * 1.0);
-		if(((Connector) node).tryChangeBuffer(0 - energyNeeded)) {
+		double energyNeeded = (Computronics.RADAR_ENERGY_COST_RF * distance * 1.0);
+		if(((Connector) node).tryChangeBuffer(0 - EnergyConverter.convertEnergy(energyNeeded, "RF", "OC"))
+				|| extractFromBattery(energyNeeded)) {
 			AxisAlignedBB bounds = getBounds(distance);
 			entities.addAll(RadarUtils.getEntities(worldObj, xCoord, yCoord, zCoord, bounds, EntityLiving.class));
 			context.pause(0.5);
@@ -116,6 +130,6 @@ public class TileRadar extends TileEntityPeripheralBase implements Environment {
 	public Object[] callMethod(IComputerAccess computer, ILuaContext context,
 			int method, Object[] arguments) throws LuaException,
 			InterruptedException {
-		return CCRadarProxy.callMethod(worldObj, xCoord, yCoord, zCoord, computer, context, method, arguments);
+		return CCRadarProxy.callMethod(worldObj, xCoord, yCoord, zCoord, computer, context, method, arguments, this);
 	}
 }

@@ -14,6 +14,7 @@
   * ADDED: New French (AegisLesha) and Chinese (crafteverywhere) translations.
   * ADDED: ITapeStorage API - developers can now create their own compatible tapes and tape devices.
   * ADDED: BetterStorage 0.10+ compatibility for Storage Crate drivers.
+  * ADDED: Radars now use energy uniformly for OC, CC turtles (coal) and ComputerCraft itself (MJ, RF or EU).
 
   * SOON: GregTech recipe mode for all the Computronics blocks and items (Vexatos)
 

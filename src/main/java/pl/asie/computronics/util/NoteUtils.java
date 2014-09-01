@@ -28,7 +28,7 @@ public class NoteUtils {
 		}
 		instrument %= 7;
 		
-		if(instrument <= 4 && !Computronics.DISABLE_IRONNOTE_FORGE_EVENTS) {
+		if(instrument <= 4) {
 			NoteBlockEvent.Play e = new NoteBlockEvent.Play(worldObj, xCoord, yCoord, zCoord, 32767, note, instrument);
 			if(MinecraftForge.EVENT_BUS.post(e)) return;
 			instrument = e.instrument.ordinal();

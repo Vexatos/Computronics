@@ -31,7 +31,7 @@ public class RadarTurtleUpgrade extends TurtleUpgradeBase {
 				ILuaContext context, int method, Object[] arguments)
 				throws LuaException, InterruptedException {
 			return CCRadarProxy.callMethod(access.getWorld(), access.getPosition().posX, access.getPosition().posY, access.getPosition().posZ,
-					computer, context, method, arguments);
+					computer, context, method, arguments, access);
 		}
 		
 	}
