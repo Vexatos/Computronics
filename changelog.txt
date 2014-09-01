@@ -13,6 +13,7 @@
             - Added a new virtually indestructable high-end tape using GregTech materials!
   * ADDED: New French (AegisLesha) and Chinese (crafteverywhere) translations.
   * ADDED: ITapeStorage API - developers can now create their own compatible tapes and tape devices.
+  * ADDED: BetterStorage 0.10+ compatibility for Storage Crate drivers.
 
   * SOON: GregTech recipe mode for all the Computronics blocks and items (Vexatos)
 

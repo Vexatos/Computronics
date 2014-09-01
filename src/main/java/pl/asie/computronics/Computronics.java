@@ -50,7 +50,8 @@ import pl.asie.computronics.cc.ParticleTurtleUpgrade;
 import pl.asie.computronics.cc.RadarTurtleUpgrade;
 import pl.asie.computronics.cc.SpeakingTurtleUpgrade;
 import pl.asie.computronics.client.LampRender;
-import pl.asie.computronics.integration.betterstorage.DriverCrateStorage;
+import pl.asie.computronics.integration.betterstorage.DriverCrateStorageNew;
+import pl.asie.computronics.integration.betterstorage.DriverCrateStorageOld;
 import pl.asie.computronics.integration.factorization.ChargeConductorPeripheral;
 import pl.asie.computronics.integration.factorization.DriverChargeConductor;
 import pl.asie.computronics.integration.fsp.DriverSteamTransporter;
@@ -409,7 +410,21 @@ public class Computronics {
 			if(config.get("modCompatibility", "enableRedLogicLamps", true).getBoolean(true)) li.cil.oc.api.Driver.add(new DriverLamp());
 		}
 		if(Loader.isModLoaded("betterstorage")) {
-			if(config.get("modCompatibility", "enableBetterStorageCrates", true).getBoolean(true)) li.cil.oc.api.Driver.add(new DriverCrateStorage());
+			if(config.get("modCompatibility", "enableBetterStorageCrates", true).getBoolean(true)) {
+				try {
+					Class.forName("net.mcft.copy.betterstorage.api.ICrateStorage");
+					log.info("Using old (pre-0.10) BetterStorage crate API!");
+					li.cil.oc.api.Driver.add(new DriverCrateStorageOld());
+				}
+				catch(Exception e) { }
+				
+				try {
+					Class.forName("net.mcft.copy.betterstorage.api.crate.ICrateStorage");
+					log.info("Using new (0.10+) BetterStorage crate API!");
+					li.cil.oc.api.Driver.add(new DriverCrateStorageNew());
+				}
+				catch(Exception e) { }
+			}
 		}
 		if(Loader.isModLoaded("MineFactoryReloaded") || Loader.isModLoaded("JABBA")) {
 			if(config.get("modCompatibility", "enableDeepStorageUnit", true).getBoolean(true)) li.cil.oc.api.Driver.add(new DriverDeepStorageUnit());
