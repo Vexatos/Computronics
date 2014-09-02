@@ -21,13 +21,13 @@ tile.computronics.locomotiveRelay.name=Digital Locomotive Relay
 
 tooltip.computronics.chatBox.creative=NSA in a box!
 tooltip.computronics.sensor.bound=Bound to [%1$s,%2$s,%3$s]
-tooltip.computronics.sensor.desc1=Right click on Locomotive Relay while sneaking\n to bind it
-tooltip.computronics.sensor.desc2=Left click on Electric Locomotive while sneaking\n to attach it
+tooltip.computronics.sensor.desc1=Right click on Locomotive Relay\nwhile sneaking to bind it
+tooltip.computronics.sensor.desc2=Left click on Electric Locomotive\nwhile sneaking to attach it
 tooltip.computronics.tape.length=Length: %s minutes
 tooltip.computronics.tape.balanced=Balanced!
 tooltip.computronics.tape.unnamed=Unnamed Tape
 tooltip.computronics.tape.none=No Tape
-tooltip.computronics.tape.ig=The standard CDVR for\n GregTech Intergalactical's ships
+tooltip.computronics.tape.ig=The standard CDVR for\nGregTech Intergalactical's ships
 
 item.computronics.gt_itemIngotChromoxide.name=Chromium Dioxide Ingot
 item.computronics.gt_itemDustChromoxide.name=Chromium Dioxide Dust

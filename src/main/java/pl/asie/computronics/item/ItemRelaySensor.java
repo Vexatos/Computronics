@@ -58,7 +58,9 @@ public class ItemRelaySensor extends Item {
 				data.setInteger("relayY", y);
 				data.setInteger("relayZ", z);
 				data.setBoolean("bound", true);
+				stack.setTagCompound(data);
 				player.swingItem();
+				return true;
 			}
 		}
 		return false;
