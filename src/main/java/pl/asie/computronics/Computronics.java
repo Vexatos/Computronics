@@ -15,8 +15,8 @@ import cpw.mods.fml.common.network.FMLEventChannel;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import dan200.computercraft.api.ComputerCraftAPI;
-//import gregtech.api.enums.ItemList;
-//import gregtech.api.util.GT_Recipe;
+import gregtech.api.enums.ItemList;
+import gregtech.api.util.GT_Recipe;
 import li.cil.oc.api.Driver;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
@@ -30,10 +30,8 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import pl.asie.computronics.audio.DFPWMPlaybackManager;
 import pl.asie.computronics.block.BlockCamera;
 import pl.asie.computronics.block.BlockChatBox;
@@ -95,7 +93,10 @@ import pl.asie.lib.util.color.RecipeColorizer;
 
 import java.util.Random;
 
-@Mod(modid="computronics", name="Computronics", version="1.0.0", dependencies="required-after:asielib;after:ComputerCraft;after:OpenComputers;after:OpenComputers|Core;after:MineFactoryReloaded;after:RedLogic;after:ProjRed|Core;after:nedocomputers")
+//import gregtech.api.enums.ItemList;
+//import gregtech.api.util.GT_Recipe;
+
+@Mod(modid = "computronics", name = "Computronics", version = "1.0.0", dependencies = "required-after:asielib;after:ComputerCraft;after:OpenComputers;after:OpenComputers|Core;after:MineFactoryReloaded;after:RedLogic;after:ProjRed|Core;after:nedocomputers")
 public class Computronics {
 	public Configuration config;
 	public static Random rand = new Random();
@@ -103,7 +104,7 @@ public class Computronics {
 
 	public static FMLEventChannel channel;
 
-	@Instance(value="computronics")
+	@Instance(value = "computronics")
 	public static Computronics instance;
 	public static StorageManager storage;
 	public static GuiHandler gui;
@@ -122,11 +123,12 @@ public class Computronics {
 	public static double FX_ENERGY_COST = 0.5;
 	public static String CHATBOX_PREFIX = "ChatBox";
 	public static double LOCOMOTIVE_RELAY_RANGE = 128.0;
+	public static boolean GREGTECH_RECIPES = false;
 
 	public static String TAPE_LENGTHS;
 	public static boolean REDSTONE_REFRESH, CHATBOX_CREATIVE;
 
-	@SidedProxy(clientSide="pl.asie.computronics.ClientProxy", serverSide="pl.asie.computronics.CommonProxy")
+	@SidedProxy(clientSide = "pl.asie.computronics.ClientProxy", serverSide = "pl.asie.computronics.CommonProxy")
 	public static CommonProxy proxy;
 
 	public static BlockIronNote ironNote;
@@ -134,8 +136,8 @@ public class Computronics {
 	public static BlockCamera camera;
 	public static BlockChatBox chatBox;
 	public static BlockCipher cipher;
-    public static BlockRadar radar;
-    public static BlockEEPROMReader nc_eepromreader;
+	public static BlockRadar radar;
+	public static BlockEEPROMReader nc_eepromreader;
 	public static BlockColorfulLamp colorfulLamp;
 	public static BlockLocomotiveRelay locomotiveRelay;
 
@@ -148,9 +150,9 @@ public class Computronics {
 	public static boolean MUST_UPDATE_TILE_ENTITIES = false;
 
 	public static CreativeTabs tab = new CreativeTabs("tabComputronics") {
-        public Item getTabIconItem() {
-                return itemTape;
-        }
+		public Item getTabIconItem() {
+			return itemTape;
+		}
 	};
 
 	private boolean isEnabled(String name, boolean def) {
@@ -160,15 +162,15 @@ public class Computronics {
 	private void registerBlockWithTileEntity(Block block, Class<? extends TileEntity> tile, String name) {
 		registerBlockWithTileEntity(block, ItemBlock.class, tile, name);
 	}
-	
+
 	private void registerBlockWithTileEntity(Block block, Class<? extends ItemBlock> itemBlock, Class<? extends TileEntity> tile, String name) {
 		GameRegistry.registerBlock(block, itemBlock, name);
 		GameRegistry.registerTileEntity(tile, name);
-		System.out.println("Registering " + name + " as TE " + tile.getCanonicalName());
+		//System.out.println("Registering " + name + " as TE " + tile.getCanonicalName());
 		FMLInterModComms.sendMessage("appliedenergistics2", "whitelist-spatial", tile.getCanonicalName());
 		FMLInterModComms.sendMessage("appliedenergistics2", "movabletile", tile.getCanonicalName());
 	}
-	
+
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		log = LogManager.getLogger("computronics");
@@ -180,42 +182,45 @@ public class Computronics {
 		packet = new PacketHandler("computronics", new NetworkHandlerClient(), new NetworkHandlerServer());
 
 		// Configs
-		
+
 		// Camera
-		CAMERA_DISTANCE = config.getInt("camera", "maxDistance", 32, 16, 256, "The maximum camera distance, in blocks.");
-		
+		CAMERA_DISTANCE = config.getInt("maxDistance", "camera", 32, 16, 256, "The maximum camera distance, in blocks.");
+
 		// Chat Box
-		CHATBOX_CREATIVE = config.getBoolean("chatbox", "enableCreative", true, "Enable Creative Chat Boxes.");
-		CHATBOX_DISTANCE = config.getInt("chatbox", "maxDistance", 40, 4, Integer.MAX_VALUE, "The maximum chat box distance, in blocks.");
-		CHATBOX_PREFIX = config.getString("chatbox", "prefix", "ChatBox", "The Chat Box's default prefix.");
-		
+		CHATBOX_CREATIVE = config.getBoolean("enableCreative", "chatbox", true, "Enable Creative Chat Boxes.");
+		CHATBOX_DISTANCE = config.getInt("maxDistance", "chatbox", 40, 4, Integer.MAX_VALUE, "The maximum chat box distance, in blocks.");
+		CHATBOX_PREFIX = config.getString("prefix", "chatbox", "ChatBox", "The Chat Box's default prefix.");
+
 		// Cipher Block
-		CIPHER_CAN_LOCK = config.getBoolean("cipherblock", "canLock", true, "Decides whether Cipher Blocks can or cannot be locked.");
-		
+		CIPHER_CAN_LOCK = config.getBoolean("canLock", "cipherblock", true, "Decides whether Cipher Blocks can or cannot be locked.");
+
 		// Particle Card
 		if(Loader.isModLoaded("OpenComputers")) {
 			FX_ENERGY_COST = EnergyConverter.convertEnergy(
-					config.getFloat("power", "ocParticleCardCostPerParticle", 0.5f, 0.0f, 10000.0f, "How much energy, in RF, 1 particle emission should take."),
-					"RF", "OC");
+				config.getFloat("ocParticleCardCostPerParticle", "power", 0.5f, 0.0f, 10000.0f, "How much energy, in RF, 1 particle emission should take."),
+				"RF", "OC");
 		}
-		
+
 		// Radar
-		RADAR_RANGE = config.getInt("radar", "maxRange", 8, 0, 256, "The maximum range of the Radar.");
-		RADAR_ONLY_DISTANCE = config.getBoolean("radar", "onlyOutputDistance", false, "Stop Radars from outputting X/Y/Z coordinates and instead only output the distance from an entity.");
-		
+		RADAR_RANGE = config.getInt("maxRange", "radar", 8, 0, 256, "The maximum range of the Radar.");
+		RADAR_ONLY_DISTANCE = config.getBoolean("onlyOutputDistance", "radar", false, "Stop Radars from outputting X/Y/Z coordinates and instead only output the distance from an entity.");
+
 		// Tape Drive
-		TAPEDRIVE_BUFFER_MS = config.getInt("tapedrive", "audioPreloadMs", 750, 500, 10000, "The amount of time (in milliseconds) used for pre-buffering the tape for audio playback. If you get audio playback glitches in SMP/your TPS is under 20, RAISE THIS VALUE!");
-		TAPEDRIVE_DISTANCE = config.getInt("tapedrive", "hearingDistance", 24, 0, 64, "The distance up to which Tape Drives can be heard.");
-		TAPE_LENGTHS = config.get("tapedrive", "tapeLengths", "4,8,16,32,64,2,6,16,128,128").getString();
-		
+		TAPEDRIVE_BUFFER_MS = config.getInt("audioPreloadMs", "tapedrive", 750, 500, 10000, "The amount of time (in milliseconds) used for pre-buffering the tape for audio playback. If you get audio playback glitches in SMP/your TPS is under 20, RAISE THIS VALUE!");
+		TAPEDRIVE_DISTANCE = config.getInt("hearingDistance", "tapedrive", 24, 0, 64, "The distance up to which Tape Drives can be heard.");
+		TAPE_LENGTHS = config.get("tapeLengths", "tapedrive", "4,8,16,32,64,2,6,16,128,128", "The lengths of the computronics tapes. [default: 4,8,16,32,64,2,6,16,128,128]").getString();
+
 		// General
-		REDSTONE_REFRESH = config.getBoolean("general", "enableTickingRedstoneSupport", true, "Set whether some machines should stop being tickless in exchange for redstone output support.");
+		REDSTONE_REFRESH = config.getBoolean("enableTickingRedstoneSupport", "general", true, "Set whether some machines should stop being tickless in exchange for redstone output support.");
 
 		// Power
-		RADAR_ENERGY_COST_RF = config.getFloat("power", "radarCostPerBlock", 500.0f, 0.0f, 10000.0f, "How much energy, in RF, each 1-block distance takes by OpenComputers radars.");
+		RADAR_ENERGY_COST_RF = config.getFloat("radarCostPerBlock", "power", 500.0f, 0.0f, 10000.0f, "How much energy, in RF, each 1-block distance takes by OpenComputers radars.");
 
 		// Railcraft integration
-		LOCOMOTIVE_RELAY_RANGE = config.getFloat("railcraft", "locomotiveRelayRange", 128.0f, 0.0f, 512.0f, "The range of Locomotive Relays.");
+		LOCOMOTIVE_RELAY_RANGE = (double) config.getInt("locomotiveRelayRange", "railcraft", 128, 0, 512, "The range of Locomotive Relays in Blocks.");
+
+		// GregTech recipe mode
+		GREGTECH_RECIPES = config.getBoolean("gtRecipeMode", "gregtech", Loader.isModLoaded("gregtech"), "Set this to true to enable GregTech-style recipes");
 
 		if(isEnabled("ironNoteBlock", true)) {
 			ironNote = new BlockIronNote();
@@ -262,18 +267,18 @@ public class Computronics {
 			GameRegistry.registerItem(itemTape, "computronics.tape");
 
 			//if(Loader.isModLoaded("gregtech")){
-				itemPartsGreg = new ItemMultiple("computronics", new String[]{"gt_itemIngotChromoxide","gt_itemDustChromoxide","gt_itemReelChromoxide"});
-				itemPartsGreg.setCreativeTab(tab);
-				GameRegistry.registerItem(itemPartsGreg, "computronics.gt_parts");
-				proxy.registerEntities();
+			itemPartsGreg = new ItemMultiple("computronics", new String[] { "gt_itemIngotChromoxide", "gt_itemDustChromoxide", "gt_itemReelChromoxide" });
+			itemPartsGreg.setCreativeTab(tab);
+			GameRegistry.registerItem(itemPartsGreg, "computronics.gt_parts");
+			proxy.registerEntities();
 			//}
 		}
 
-		itemParts = new ItemMultiple("computronics", new String[]{"part_tape_track"});
+		itemParts = new ItemMultiple("computronics", new String[] { "part_tape_track" });
 		itemParts.setCreativeTab(tab);
 		GameRegistry.registerItem(itemParts, "computronics.parts");
 
-		if(Loader.isModLoaded("Railcraft") && isEnabled("railcraftLocomotiveRelay", true)){
+		if(Loader.isModLoaded("Railcraft") && isEnabled("railcraftLocomotiveRelay", true)) {
 			locomotiveRelay = new BlockLocomotiveRelay();
 			GameRegistry.registerBlock(locomotiveRelay, "computronics.locomotiveRelay");
 			GameRegistry.registerTileEntity(TileLocomotiveRelay.class, "computronics.locomotiveRelay");
@@ -282,10 +287,12 @@ public class Computronics {
 			GameRegistry.registerItem(relaySensor, "computronics.relaySensor");
 		}
 
-		if(Loader.isModLoaded("OpenComputers")) preInitOC();
+		if(Loader.isModLoaded("OpenComputers")) {
+			preInitOC();
+		}
 	}
 
-	@Optional.Method(modid="OpenComputers")
+	@Optional.Method(modid = "OpenComputers")
 	private void preInitOC() {
 		if(isEnabled("ocRobotUpgrades", true)) {
 			itemRobotUpgrade = new ItemOpenComputers();
@@ -307,7 +314,7 @@ public class Computronics {
 		if(chatBox != null) {
 			MinecraftForge.EVENT_BUS.register(new ChatBoxHandler());
 		}
-		
+
 		proxy.registerGuis(gui);
 		if(proxy.isClient() && colorfulLamp != null) {
 			new LampRender();
@@ -315,94 +322,188 @@ public class Computronics {
 
 		FMLInterModComms.sendMessage("Waila", "register", "pl.asie.computronics.integration.waila.IntegrationWaila.register");
 
-		if(camera != null)
-			GameRegistry.addShapedRecipe(new ItemStack(camera, 1, 0), "sss", "geg", "iii", 's', Blocks.stonebrick, 'i', Items.iron_ingot, 'e', Items.ender_pearl, 'g', Blocks.glass);
-		if(chatBox != null)
-			GameRegistry.addShapedRecipe(new ItemStack(chatBox, 1, 0), "sss", "ses", "iri", 's', Blocks.stonebrick, 'i', Items.iron_ingot, 'e', Items.ender_pearl, 'r', Items.redstone);
-		if(ironNote != null)
-			GameRegistry.addShapedRecipe(new ItemStack(ironNote, 1, 0), "iii", "ini", "iii", 'i', Items.iron_ingot, 'n', Blocks.noteblock);
-		if(tapeReader != null)
-			GameRegistry.addShapedRecipe(new ItemStack(tapeReader, 1, 0), "iii", "iri", "iai", 'i', Items.iron_ingot, 'r', Items.redstone, 'a', ironNote);
-		if(cipher != null)
-			GameRegistry.addShapedRecipe(new ItemStack(cipher, 1, 0), "sss", "srs", "eie", 'i', Items.iron_ingot, 'r', Items.redstone, 'e', Items.ender_pearl, 's', Blocks.stonebrick);
-		if(radar != null)
-			GameRegistry.addShapedRecipe(new ItemStack(radar, 1, 0), "sts", "rbr", "scs", 'i', Items.iron_ingot, 'r', Items.redstone, 't', Blocks.redstone_torch, 's', Blocks.stonebrick, 'b', Items.bowl, 'c', Items.comparator);
-        if(nc_eepromreader != null)
-            GameRegistry.addShapedRecipe(new ItemStack(nc_eepromreader, 1, 0), "sts", "iei", "srs", 'i', Items.iron_ingot, 'r', Items.redstone, 't', Blocks.redstone_torch, 's', Blocks.stonebrick, 'e', GameRegistry.findItem("nedocomputers", "EEPROM"));
-        if(colorfulLamp != null)
-        	GameRegistry.addShapedRecipe(new ItemStack(colorfulLamp, 1, 0), "igi", "glg", "igi", 'i', Items.iron_ingot, 'g', Blocks.glass, 'l', Items.glowstone_dust);
-        if(itemTape != null) {
-			// Tape recipes
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 0),
+		if(GREGTECH_RECIPES) {
+			log.info("Registering GregTech-style recipes for Computronics. Turn it off in the configs if you don't want it.");
+
+			if(camera != null) {
+				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(camera, 1, 0), "gct", "ges", "gct", 's', ItemList.Hull_LV.get(1), 'i', "plateIron", 'e', "lensRuby", 'g', "lensGlass", 'c', "circuitPrimitive", 't', "cableTin"));
+			}
+			if(chatBox != null) {
+				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(chatBox, 1, 0), "ili", "rer", "tst", 's', ItemList.Hull_LV.get(1), 'i', "plateGlass", 'e', ItemList.Emitter_LV.get(1), 'r', "circuitBasic", 't', "cableTin", 'l', ItemList.Sensor_LV.get(1)));
+			}
+			if(ironNote != null) {
+				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ironNote, 1, 0), "iii", "ini", "iii", 'i', "plateIron", 'n', Blocks.noteblock));
+			}
+			if(tapeReader != null) {
+				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(tapeReader, 1, 0), "tit", "mrm", "cac", 'i', ItemList.Hull_LV.get(1), 'r', "circuitBasic", 'a', ironNote, 'm', ItemList.Electric_Motor_LV.get(1), 't', "cableTin", 'c', "plateIronMagnetic"));
+			}
+			if(cipher != null) {
+				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(cipher, 1, 0), "isi", "trt", "ele", 'i', "cableCopper", 'r', ItemList.Robot_Arm_MV.get(1), 'e', "circuitElite", 's', ItemList.Hull_MV.get(1), 'l', "plateSilicon", 't', "screwAluminium"));
+			}
+			if(radar != null) {
+				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(radar, 1, 0), "ftf", "dbd", "lcl", 't', ItemList.Sensor_HV.get(1), 'b', ItemList.Emitter_HV.get(1), 'c', ItemList.Hull_HV.get(1), 'f', "circuitMaster", 'd', "circuitElite", 'l', "cableGold"));
+			}
+			if(nc_eepromreader != null) {
+				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(nc_eepromreader, 1, 0), "ntn", "cec", "nhn", 'e', GameRegistry.findItem("nedocomputers", "EEPROM"), 'c', "circuitBasic", 't', "cableTin", 'h', ItemList.Hull_LV.get(1), 'n', "circuitPrimitive"));
+			}
+			if(colorfulLamp != null) {
+				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(colorfulLamp, 1, 0), "igi", "glg", "ini", 'i', "plateIron", 'g', "plateGlass", 'l', Blocks.redstone_lamp, 'n', "circuitPrimitive"));
+			}
+			if(itemTape != null) {
+				// Tape recipes
+				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 0),
+					"sis", "ipi", "sTs", 'T', new ItemStack(itemParts, 1, 0), 'i', "plateIron", 'p', "plateOlivine", 's', "screwIron"));
+				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 0),
+					"sis", "ipi", "sTs", 'T', new ItemStack(itemParts, 1, 0), 'i', "plateIron", 'p', "plateEmerald", 's', "screwIron"));
+
+				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 1),
+					"sis", "ngn", "sTs", 'T', new ItemStack(itemParts, 1, 0), 'i', "plateIron", 'n', "plateElectrum", 'g', "plateOlivine", 's', "screwIron"));
+				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 1),
+					"sis", "ngn", "sTs", 'T', new ItemStack(itemParts, 1, 0), 'i', "plateIron", 'n', "plateElectrum", 'g', "plateEmerald", 's', "screwIron"));
+
+				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 2),
+					"sis", "idi", "sTs", 'T', new ItemStack(itemParts, 1, 0), 'i', "plateElectrum", 's', "screwSteel", 'd', "circuitData"));
+
+				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 3),
+					"sps", "pep", "sTs", 'T', new ItemStack(itemParts, 1, 0), 's', "screwStainlessSteel", 'p', "plateDiamond", 'e', "circuitElite"));
+
+				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 4),
+					"dcd", "ncn", "dTd", 'T', new ItemStack(itemParts, 1, 0), 'd', ItemList.Duct_Tape.get(1), 'c', "circuitElite", 'n', "plateNetherStar"));
+
+				//GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 8),
+				//	" n ", "nnn", " T ", 'T', new ItemStack(itemParts, 1, 0), 'n', Items.nether_star));
+
+				// Mod compat - copper/steel
+				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 5),
+					"sps", "pop", "sTs", 'T', new ItemStack(itemParts, 1, 0), 'p', "plateCopper", 's', "screwCopper", 'o', "dustOlivine"));
+				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 5),
+					"sps", "pop", "sTs", 'T', new ItemStack(itemParts, 1, 0), 'p', "plateCopper", 's', "screwCopper", 'o', "dustEmerald"));
+
+				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 6),
+					"sps", "pop", "sTs", 'T', new ItemStack(itemParts, 1, 0), 's', "screwIron", 'p', "plateSteel", 'o', "plateOlivine"));
+				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 6),
+					"sps", "pop", "sTs", 'T', new ItemStack(itemParts, 1, 0), 's', "screwIron", 'p', "plateSteel", 'o', "plateEmerald"));
+
+				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 1, 0),
+					"iii", "iei", "eoe", 'e', "foilElectrum", 'i', "foilIron", 'o', "dustOlivine"));
+				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 1, 0),
+					"iii", "eoe", "iii", 'e', "foilElectrum", 'i', "foilIron", 'o', "dustEmerald"));
+				GameRegistry.addRecipe(new RecipeColorizer(itemTape));
+			}
+		} else {
+			if(camera != null) {
+				GameRegistry.addShapedRecipe(new ItemStack(camera, 1, 0), "sss", "geg", "iii", 's', Blocks.stonebrick, 'i', Items.iron_ingot, 'e', Items.ender_pearl, 'g', Blocks.glass);
+			}
+			if(chatBox != null) {
+				GameRegistry.addShapedRecipe(new ItemStack(chatBox, 1, 0), "sss", "ses", "iri", 's', Blocks.stonebrick, 'i', Items.iron_ingot, 'e', Items.ender_pearl, 'r', Items.redstone);
+			}
+			if(ironNote != null) {
+				GameRegistry.addShapedRecipe(new ItemStack(ironNote, 1, 0), "iii", "ini", "iii", 'i', Items.iron_ingot, 'n', Blocks.noteblock);
+			}
+			if(tapeReader != null) {
+				GameRegistry.addShapedRecipe(new ItemStack(tapeReader, 1, 0), "iii", "iri", "iai", 'i', Items.iron_ingot, 'r', Items.redstone, 'a', ironNote);
+			}
+			if(cipher != null) {
+				GameRegistry.addShapedRecipe(new ItemStack(cipher, 1, 0), "sss", "srs", "eie", 'i', Items.iron_ingot, 'r', Items.redstone, 'e', Items.ender_pearl, 's', Blocks.stonebrick);
+			}
+			if(radar != null) {
+				GameRegistry.addShapedRecipe(new ItemStack(radar, 1, 0), "sts", "rbr", "scs", 'i', Items.iron_ingot, 'r', Items.redstone, 't', Blocks.redstone_torch, 's', Blocks.stonebrick, 'b', Items.bowl, 'c', Items.comparator);
+			}
+			if(nc_eepromreader != null) {
+				GameRegistry.addShapedRecipe(new ItemStack(nc_eepromreader, 1, 0), "sts", "iei", "srs", 'i', Items.iron_ingot, 'r', Items.redstone, 't', Blocks.redstone_torch, 's', Blocks.stonebrick, 'e', GameRegistry.findItem("nedocomputers", "EEPROM"));
+			}
+			if(colorfulLamp != null) {
+				GameRegistry.addShapedRecipe(new ItemStack(colorfulLamp, 1, 0), "igi", "glg", "igi", 'i', Items.iron_ingot, 'g', Blocks.glass, 'l', Items.glowstone_dust);
+			}
+			if(itemTape != null) {
+				// Tape recipes
+				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 0),
 					" i ", "iii", " T ", 'T', new ItemStack(itemParts, 1, 0), 'i', Items.iron_ingot));
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 1),
+				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 1),
 					" i ", "ngn", " T ", 'T', new ItemStack(itemParts, 1, 0), 'i', Items.iron_ingot, 'n', Items.gold_nugget, 'g', Items.gold_ingot));
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 2),
+				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 2),
 					" i ", "ggg", "nTn", 'T', new ItemStack(itemParts, 1, 0), 'i', Items.iron_ingot, 'n', Items.gold_nugget, 'g', Items.gold_ingot));
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 3),
+				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 3),
 					" i ", "ddd", " T ", 'T', new ItemStack(itemParts, 1, 0), 'i', Items.iron_ingot, 'd', Items.diamond));
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 4),
+				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 4),
 					" d ", "dnd", " T ", 'T', new ItemStack(itemParts, 1, 0), 'n', Items.nether_star, 'd', Items.diamond));
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 8),
+				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 8),
 					" n ", "nnn", " T ", 'T', new ItemStack(itemParts, 1, 0), 'n', Items.nether_star));
 
-			// Mod compat - copper/steel
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 5),
+				// Mod compat - copper/steel
+				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 5),
 					" i ", " c ", " T ", 'T', new ItemStack(itemParts, 1, 0), 'i', Items.iron_ingot, 'c', "ingotCopper"));
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 6),
+				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 6),
 					" i ", "isi", " T ", 'T', new ItemStack(itemParts, 1, 0), 'i', Items.iron_ingot, 's', "ingotSteel"));
 
-			// Mod compat - GregTech
-			if(Loader.isModLoaded("gregtech") && itemPartsGreg != null) {
+				//Materials ChromiumDioxide = new Materials(255, Textures.SET_DULL, 11.0F, 256, 3, 1 | 2, 230, 200, 200, 0, "ChromiumDioxide", 0, 0, 0, 0, 0, 0, false, false, 5, 1, 1, Dyes.dyePink, 1, Arrays.asList(new MaterialStack(Materials.Chrome, 1), new MaterialStack(Materials.Oxygen, 2)), Arrays.asList(new TC_Aspects.TC_AspectStack(TC_Aspects.METALLUM, 2), new TC_Aspects.TC_AspectStack(TC_Aspects.MACHINA, 1)));
 
-				OreDictionary.registerOre("ingotChromiumDioxide", new ItemStack(itemPartsGreg, 1, 0));
-				OreDictionary.registerOre("dustChromiumDioxide", new ItemStack(itemPartsGreg, 1, 1));
-
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 7),
-					" i ", "isi", " T ", 'T', new ItemStack(itemParts, 1, 0), 'i', "plateIridium", 's', "plateTungstenSteel"));
-
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 9),
-					"psp", "tst", "ror", 'o', "dustOlivine", 'r', "dustRedstone", 's', "plateSilicon", 't', new ItemStack(itemPartsGreg, 1, 2), 'p', "plateTungstenSteel"));
-
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPartsGreg, 1, 2),
-					" o ", "fff", " c ", 'o', "dustOlivine", 'f', "foilChromiumDioxide", 'c', "craftingToolWireCutter"));
-
-				GameRegistry.addSmelting(new ItemStack(itemPartsGreg, 1, 1), new ItemStack(itemPartsGreg, 1, 0), 0f);
-
-				//GT_Recipe.GT_Recipe_Map.sChemicalRecipes.addRecipe(new GT_Recipe(new ItemStack(ItemList.Cell_Air.getItem(), 1, 0), new ItemStack(itemPartsGreg, 1, 0), 120, 100, new ItemStack(itemPartsGreg, 1, 1)));
-
-				//GT_RecipeRegistrator.registerUsagesForMaterials(new ItemStack(itemPartsGreg, 1, 0), new ItemStack(itemPartsGreg, 1, 1), "plateChromiumDioxide", true, true, true);
-
-			}
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 1, 0),
+				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 1, 0),
 					" i ", "rrr", "iii", 'r', Items.redstone, 'i', Items.iron_ingot));
-			GameRegistry.addRecipe(new RecipeColorizer(itemTape));
-        }
+				GameRegistry.addRecipe(new RecipeColorizer(itemTape));
+			}
+		}
 
-		if(Loader.isModLoaded("ComputerCraft")) initCC();
-		if(Loader.isModLoaded("OpenComputers")) initOC();
+		// Mod compat - GregTech
+		if(itemTape != null && Loader.isModLoaded("gregtech") && itemPartsGreg != null) {
+
+			OreDictionary.registerOre("ingotChromiumDioxide", new ItemStack(itemPartsGreg, 1, 0));
+			OreDictionary.registerOre("dustChromiumDioxide", new ItemStack(itemPartsGreg, 1, 1));
+
+			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 7),
+				" i ", "isi", " T ", 'T', new ItemStack(itemParts, 1, 0), 'i', "plateIridium", 's', "plateTungstenSteel"));
+
+			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 9),
+				"psp", "tct", "prp", 'o', "dustOlivine", 'r', new ItemStack(itemParts, 1, 0), 's', ItemList.Duct_Tape.get(1), 't', new ItemStack(itemPartsGreg, 1, 2), 'p', "plateTungstenSteel", 'c', "circuitUltimate"));
+
+			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPartsGreg, 1, 2),
+				"srs", "fff", "hch", 's', "foilStainlessSteel", 'f', "foilChromiumDioxide", 'c', "craftingToolWireCutter", 'r', "ringTitanium"));
+
+			GameRegistry.addSmelting(new ItemStack(itemPartsGreg, 1, 1), new ItemStack(itemPartsGreg, 1, 0), 0f);
+
+			GT_Recipe.GT_Recipe_Map.sChemicalRecipes.addRecipe(new GT_Recipe(ItemList.Cell_Air.get(1), new ItemStack(itemPartsGreg, 1, 0), 120, 100, new ItemStack(itemPartsGreg, 1, 1)));
+
+			//GT_RecipeRegistrator.registerUsagesForMaterials(new ItemStack(itemPartsGreg, 1, 0), new ItemStack(itemPartsGreg, 1, 1), "plateChromiumDioxide", true, true, true);
+		}
+
+		if(Loader.isModLoaded("ComputerCraft")) {
+			initCC();
+		}
+		if(Loader.isModLoaded("OpenComputers")) {
+			initOC();
+		}
 
 		config.save();
 	}
 
-	@Optional.Method(modid="ComputerCraft")
+	@Optional.Method(modid = "ComputerCraft")
 	private void initCC() {
 		if(Loader.isModLoaded("RedLogic")) {
-			if(config.get("modCompatibility", "enableRedLogicLamps", true).getBoolean(true)) ComputerCraftAPI.registerPeripheralProvider(new LampPeripheral());
-			if(config.get("computercraft", "enableBundledRedstoneProviders", true).getBoolean(true)) ComputerCraftAPI.registerBundledRedstoneProvider(new CCBundledRedstoneProviderRedLogic());
+			if(config.get("modCompatibility", "enableRedLogicLamps", true).getBoolean(true)) {
+				ComputerCraftAPI.registerPeripheralProvider(new LampPeripheral());
+			}
+			if(config.get("computercraft", "enableBundledRedstoneProviders", true).getBoolean(true)) {
+				ComputerCraftAPI.registerBundledRedstoneProvider(new CCBundledRedstoneProviderRedLogic());
+			}
 		}
 		if(Loader.isModLoaded("MineFactoryReloaded") || Loader.isModLoaded("JABBA")) {
-			if(config.get("modCompatibility", "enableDeepStorageUnit", true).getBoolean(true)) ComputerCraftAPI.registerPeripheralProvider(new DeepStorageUnitPeripheral());
+			if(config.get("modCompatibility", "enableDeepStorageUnit", true).getBoolean(true)) {
+				ComputerCraftAPI.registerPeripheralProvider(new DeepStorageUnitPeripheral());
+			}
 		}
 		if(Loader.isModLoaded("Steamcraft")) {
-			if(config.get("modCompatibility", "enableFlaxbeardSteamTransporters", true).getBoolean(true)) ComputerCraftAPI.registerPeripheralProvider(new SteamTransporterPeripheral());
+			if(config.get("modCompatibility", "enableFlaxbeardSteamTransporters", true).getBoolean(true)) {
+				ComputerCraftAPI.registerPeripheralProvider(new SteamTransporterPeripheral());
+			}
 		}
 		if(Loader.isModLoaded("factorization")) {
-			if(config.get("modCompatibility", "enableFactorizationChargePeripheral", true).getBoolean(true)) ComputerCraftAPI.registerPeripheralProvider(new ChargeConductorPeripheral());
+			if(config.get("modCompatibility", "enableFactorizationChargePeripheral", true).getBoolean(true)) {
+				ComputerCraftAPI.registerPeripheralProvider(new ChargeConductorPeripheral());
+			}
 		}
 
 		if(Loader.isModLoaded("Railcraft")) {
-			if(config.get("modCompatibility", "enableRailcraftRoutingPeripherals", true).getBoolean(true)){
+			if(config.get("modCompatibility", "enableRailcraftRoutingPeripherals", true).getBoolean(true)) {
 				ComputerCraftAPI.registerPeripheralProvider(new RoutingTrackPeripheral());
 				ComputerCraftAPI.registerPeripheralProvider(new RoutingDetectorPeripheral());
 				ComputerCraftAPI.registerPeripheralProvider(new RoutingSwitchPeripheral());
@@ -411,24 +512,28 @@ public class Computronics {
 		}
 
 		ComputerCraftAPI.registerPeripheralProvider(new CCPeripheralProvider());
-		if(itemTape != null) ComputerCraftAPI.registerMediaProvider(itemTape);
+		if(itemTape != null) {
+			ComputerCraftAPI.registerMediaProvider(itemTape);
+		}
 
 		if(isEnabled("ccTurtleUpgrades", true)) {
 			ComputerCraftAPI.registerTurtleUpgrade(
-					new SpeakingTurtleUpgrade(config.get("turtleUpgradeIDs", "speaking", 190).getInt()));
+				new SpeakingTurtleUpgrade(config.get("turtleUpgradeIDs", "speaking", 190).getInt()));
 			ComputerCraftAPI.registerTurtleUpgrade(
-					new RadarTurtleUpgrade(config.get("turtleUpgradeIDs", "radar", 191).getInt()));
+				new RadarTurtleUpgrade(config.get("turtleUpgradeIDs", "radar", 191).getInt()));
 			ComputerCraftAPI.registerTurtleUpgrade(
-					new MusicalTurtleUpgrade(config.get("turtleUpgradeIDs", "musical", 192).getInt()));
+				new MusicalTurtleUpgrade(config.get("turtleUpgradeIDs", "musical", 192).getInt()));
 			ComputerCraftAPI.registerTurtleUpgrade(
-					new ParticleTurtleUpgrade(config.get("turtleUpgradeIDs", "particle", 193).getInt()));
+				new ParticleTurtleUpgrade(config.get("turtleUpgradeIDs", "particle", 193).getInt()));
 		}
 	}
 
-	@Optional.Method(modid="OpenComputers")
+	@Optional.Method(modid = "OpenComputers")
 	private void initOC() {
 		if(Loader.isModLoaded("RedLogic")) {
-			if(config.get("modCompatibility", "enableRedLogicLamps", true).getBoolean(true)) li.cil.oc.api.Driver.add(new DriverLamp());
+			if(config.get("modCompatibility", "enableRedLogicLamps", true).getBoolean(true)) {
+				li.cil.oc.api.Driver.add(new DriverLamp());
+			}
 		}
 		if(Loader.isModLoaded("betterstorage")) {
 			if(config.get("modCompatibility", "enableBetterStorageCrates", true).getBoolean(true)) {
@@ -436,53 +541,59 @@ public class Computronics {
 					Class.forName("net.mcft.copy.betterstorage.api.ICrateStorage");
 					log.info("Using old (pre-0.10) BetterStorage crate API!");
 					li.cil.oc.api.Driver.add(new DriverCrateStorageOld());
+				} catch(Exception e) {
 				}
-				catch(Exception e) { }
-				
+
 				try {
 					Class.forName("net.mcft.copy.betterstorage.api.crate.ICrateStorage");
 					log.info("Using new (0.10+) BetterStorage crate API!");
 					li.cil.oc.api.Driver.add(new DriverCrateStorageNew());
+				} catch(Exception e) {
 				}
-				catch(Exception e) { }
 			}
 		}
 		if(Loader.isModLoaded("MineFactoryReloaded") || Loader.isModLoaded("JABBA")) {
-			if(config.get("modCompatibility", "enableDeepStorageUnit", true).getBoolean(true)) li.cil.oc.api.Driver.add(new DriverDeepStorageUnit());
+			if(config.get("modCompatibility", "enableDeepStorageUnit", true).getBoolean(true)) {
+				li.cil.oc.api.Driver.add(new DriverDeepStorageUnit());
+			}
 		}
 		if(Loader.isModLoaded("Steamcraft")) {
-			if(config.get("modCompatibility", "enableFlaxbeardSteamTransporters", true).getBoolean(true)) li.cil.oc.api.Driver.add(new DriverSteamTransporter());
+			if(config.get("modCompatibility", "enableFlaxbeardSteamTransporters", true).getBoolean(true)) {
+				li.cil.oc.api.Driver.add(new DriverSteamTransporter());
+			}
 		}
 		if(Loader.isModLoaded("factorization")) {
-			if(config.get("modCompatibility", "enableFactorizationChargePeripheral", true).getBoolean(true)) li.cil.oc.api.Driver.add(new DriverChargeConductor());
+			if(config.get("modCompatibility", "enableFactorizationChargePeripheral", true).getBoolean(true)) {
+				li.cil.oc.api.Driver.add(new DriverChargeConductor());
+			}
 		}
-        if(Loader.isModLoaded("Railcraft")) {
-            if(config.get("modCompatibility", "enableRailcraftRoutingComponents", true).getBoolean(true)){
-                li.cil.oc.api.Driver.add(new DriverRoutingTrack());
-                li.cil.oc.api.Driver.add(new DriverRoutingDetector());
-                li.cil.oc.api.Driver.add(new DriverRoutingSwitch());
-                li.cil.oc.api.Driver.add(new DriverReceiverBox());
-            }
-        }
-        if(Loader.isModLoaded("gregtech")) {
-        	if(config.get("modCompatibility", "enableGregTechMachines", true).getBoolean(true)) {
-        		li.cil.oc.api.Driver.add(new DriverBaseMetaTileEntity());
-        		li.cil.oc.api.Driver.add(new DriverDeviceInformation());
-        		li.cil.oc.api.Driver.add(new DriverMachine());
-        	}
-        	if(config.get("modCompatibility", "enableGregTechDigitalChests", true).getBoolean(true)) {
-        		li.cil.oc.api.Driver.add(new DriverDigitalChest());
-        	}
-        }
+		if(Loader.isModLoaded("Railcraft")) {
+			if(config.get("modCompatibility", "enableRailcraftRoutingComponents", true).getBoolean(true)) {
+				li.cil.oc.api.Driver.add(new DriverRoutingTrack());
+				li.cil.oc.api.Driver.add(new DriverRoutingDetector());
+				li.cil.oc.api.Driver.add(new DriverRoutingSwitch());
+				li.cil.oc.api.Driver.add(new DriverReceiverBox());
+			}
+		}
+		if(Loader.isModLoaded("gregtech")) {
+			if(config.get("modCompatibility", "enableGregTechMachines", true).getBoolean(true)) {
+				li.cil.oc.api.Driver.add(new DriverBaseMetaTileEntity());
+				li.cil.oc.api.Driver.add(new DriverDeviceInformation());
+				li.cil.oc.api.Driver.add(new DriverMachine());
+			}
+			if(config.get("modCompatibility", "enableGregTechDigitalChests", true).getBoolean(true)) {
+				li.cil.oc.api.Driver.add(new DriverDigitalChest());
+			}
+		}
 
 		if(isEnabled("ocRobotUpgrades", true)) {
-			Block[] b = {camera, chatBox, radar};
+			Block[] b = { camera, chatBox, radar };
 			try {
 				for(int i = 0; i < b.length; i++) {
 					Block t = b[i];
 					GameRegistry.addShapedRecipe(new ItemStack(itemRobotUpgrade, 1, i), "mcm", 'c', new ItemStack(t, 1, 0), 'm', li.cil.oc.api.Items.get("chip2").createItemStack(1));
 					GameRegistry.addShapedRecipe(new ItemStack(itemRobotUpgrade, 1, i), "m", "c", "m", 'c', new ItemStack(t, 1, 0), 'm', li.cil.oc.api.Items.get("chip2").createItemStack(1));
-				}	
+				}
 				GameRegistry.addShapedRecipe(new ItemStack(itemRobotUpgrade, 1, 3), "mf", " b", 'm', li.cil.oc.api.Items.get("chip2").createItemStack(1), 'f', Items.firework_charge, 'b', li.cil.oc.api.Items.get("card").createItemStack(1));
 			} catch(Exception e) {
 				log.error("Could not create robot upgrade recipes! You are most likely using OpenComputers 1,2 - please upgrade to 1.3.0+!");

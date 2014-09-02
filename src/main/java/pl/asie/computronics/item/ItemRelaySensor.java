@@ -48,7 +48,7 @@ public class ItemRelaySensor extends Item {
 
 	@Override
 	public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
-		if(player.isSneaking() && world.getTileEntity(x, y, z) != null && world.getTileEntity(x, y, z) instanceof TileLocomotiveRelay && player.worldObj.isRemote) {
+		if(player.isSneaking() && world.getTileEntity(x, y, z) != null && world.getTileEntity(x, y, z) instanceof TileLocomotiveRelay && !player.worldObj.isRemote) {
 			if(!stack.hasTagCompound()) {
 				stack.setTagCompound(new NBTTagCompound());
 			}
@@ -67,7 +67,7 @@ public class ItemRelaySensor extends Item {
 	@Override
 	public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity) {
 		if(player.isSneaking() && entity != null) {
-			if(stack.hasTagCompound() && stack.getTagCompound().getBoolean("bound") && player.worldObj.isRemote) {
+			if(stack.hasTagCompound() && stack.getTagCompound().getBoolean("bound") && !player.worldObj.isRemote) {
 				NBTTagCompound data = stack.getTagCompound();
 				int x = data.getInteger("relayX");
 				int y = data.getInteger("relayY");
@@ -75,15 +75,24 @@ public class ItemRelaySensor extends Item {
 				if(entity instanceof EntityLocomotiveElectric) {
 					if(entity.worldObj.getTileEntity(x, y, z) instanceof TileLocomotiveRelay) {
 						TileLocomotiveRelay relay = (TileLocomotiveRelay) entity.worldObj.getTileEntity(x, y, z);
-						relay.setLocomotive((EntityLocomotiveElectric) entity);
-						player.addChatComponentMessage(new ChatComponentTranslation("chat.computronics.sensor.bound"));
-						player.swingItem();
-						player.destroyCurrentEquippedItem();
+						EntityLocomotiveElectric loco = (EntityLocomotiveElectric) entity;
+						if(loco.dimension == relay.getWorldObj().provider.dimensionId) {
+							if(loco.getDistance(relay.xCoord, relay.yCoord, relay.zCoord) <= Computronics.LOCOMOTIVE_RELAY_RANGE) {
+								relay.setLocomotive(loco);
+								player.addChatComponentMessage(new ChatComponentTranslation("chat.computronics.sensor.bound"));
+								player.swingItem();
+								player.destroyCurrentEquippedItem();
+							} else {
+								player.addChatComponentMessage(new ChatComponentTranslation("chat.computronics.sensor.tooFarAway"));
+							}
+						} else {
+							player.addChatComponentMessage(new ChatComponentTranslation("chat.computronics.sensor.wrongDim"));
+						}
 					} else {
-						player.addChatComponentMessage(new ChatComponentTranslation("chat.computronics.sensor.error1"));
+						player.addChatComponentMessage(new ChatComponentTranslation("chat.computronics.sensor.noRelay"));
 					}
 				} else if(entity instanceof EntityLocomotive) {
-					player.addChatComponentMessage(new ChatComponentTranslation("chat.computronics.sensor.error2"));
+					player.addChatComponentMessage(new ChatComponentTranslation("chat.computronics.sensor.wrongLoco"));
 					return true;
 				}
 			}
