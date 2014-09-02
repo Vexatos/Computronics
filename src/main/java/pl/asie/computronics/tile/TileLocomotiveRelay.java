@@ -12,7 +12,10 @@ import mods.railcraft.common.items.ItemTicket;
 import mods.railcraft.common.items.ItemTicketGold;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.AxisAlignedBB;
 import pl.asie.computronics.Computronics;
+
+import java.util.List;
 
 /**
  * @author Vexatos
@@ -20,7 +23,7 @@ import pl.asie.computronics.Computronics;
 public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 
 	private EntityLocomotiveElectric locomotive;
-	private int locomotiveID;
+	private double locomotiveX, locomotiveY, locomotiveZ;
 	private boolean isInitialized = false;
 
 	public TileLocomotiveRelay() {
@@ -29,7 +32,9 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 
 	public void setLocomotive(EntityLocomotiveElectric loco) {
 		this.locomotive = loco;
-		this.locomotiveID = this.locomotive.getEntityId();
+		this.locomotiveX = this.locomotive.posX;
+		this.locomotiveY = this.locomotive.posY;
+		this.locomotiveZ = this.locomotive.posZ;
 	}
 
 	public EntityLocomotiveElectric getLocomotive() {
@@ -40,13 +45,15 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 	public void updateEntity() {
 		super.updateEntity();
 		if(!isInitialized && !worldObj.isRemote) {
-			System.out.println(locomotiveID);
-			System.out.println(worldObj.getEntityByID(locomotiveID));
-			if(worldObj.getEntityByID(locomotiveID) instanceof EntityLocomotiveElectric) {
-				System.out.println("updating things " + this.locomotive.getEntityId());
-				System.out.println("updating things " + worldObj.getEntityByID(locomotiveID));
-				this.setLocomotive((EntityLocomotiveElectric) worldObj.getEntityByID(locomotiveID));
-				System.out.println("updating things " + this.locomotive);
+			System.out.println(this.locomotiveX + " " + this.locomotiveY + " " + this.locomotiveZ);
+			List locos = worldObj.getEntitiesWithinAABB(EntityLocomotiveElectric.class, AxisAlignedBB.getBoundingBox(locomotiveX, locomotiveY, locomotiveZ, locomotiveX, locomotiveY, locomotiveZ));
+			for(Object loco : locos) {
+				if(loco instanceof EntityLocomotiveElectric) {
+					System.out.println("updating things " + ((EntityLocomotiveElectric) loco).posX + " " + ((EntityLocomotiveElectric) loco).posY + " " + ((EntityLocomotiveElectric) loco).posZ);
+					System.out.println("updating things " + loco);
+					this.setLocomotive((EntityLocomotiveElectric) loco);
+					System.out.println("updating things " + this.locomotive);
+				}
 			}
 			isInitialized = true;
 		}
@@ -56,18 +63,22 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-		if(locomotiveID == 0) {
-			this.locomotiveID = nbt.getInteger("locomotive");
+		if(this.locomotive == null) {
+			this.locomotiveX = nbt.getDouble("locomotiveX");
+			this.locomotiveY = nbt.getDouble("locomotiveY");
+			this.locomotiveZ = nbt.getDouble("locomotiveZ");
 		}
-		System.out.println("reading NBT " + this.locomotiveID);
+		System.out.println("reading NBT " + this.locomotiveX + " " + this.locomotiveY + " " + this.locomotiveZ);
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 		if(this.locomotive != null) {
-			System.out.println("writing NBT " + this.locomotive.getEntityId());
-			nbt.setInteger("locomotive", this.locomotive.getEntityId());
+			System.out.println("writing NBT " + this.locomotive.posX + " " + this.locomotive.posY + " " + this.locomotive.posZ);
+			nbt.setDouble("locomotiveX", this.locomotive.posX);
+			nbt.setDouble("locomotiveY", this.locomotive.posY);
+			nbt.setDouble("locomotiveZ", this.locomotive.posZ);
 		}
 	}
 
