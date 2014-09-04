@@ -15,12 +15,9 @@ import cpw.mods.fml.common.network.FMLEventChannel;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import dan200.computercraft.api.ComputerCraftAPI;
-import gregtech.api.enums.ItemList;
-import gregtech.api.util.GT_Recipe;
 import li.cil.oc.api.Driver;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -28,8 +25,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.oredict.OreDictionary;
-import net.minecraftforge.oredict.ShapedOreRecipe;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pl.asie.computronics.audio.DFPWMPlaybackManager;
@@ -48,6 +43,7 @@ import pl.asie.computronics.cc.ParticleTurtleUpgrade;
 import pl.asie.computronics.cc.RadarTurtleUpgrade;
 import pl.asie.computronics.cc.SpeakingTurtleUpgrade;
 import pl.asie.computronics.client.LampRender;
+import pl.asie.computronics.integration.ModRecipes;
 import pl.asie.computronics.integration.betterstorage.DriverCrateStorageNew;
 import pl.asie.computronics.integration.betterstorage.DriverCrateStorageOld;
 import pl.asie.computronics.integration.factorization.ChargeConductorPeripheral;
@@ -85,18 +81,15 @@ import pl.asie.computronics.tile.TileIronNote;
 import pl.asie.computronics.tile.TileLocomotiveRelay;
 import pl.asie.computronics.tile.TileRadar;
 import pl.asie.computronics.tile.TileTapeDrive;
+import pl.asie.computronics.util.ComputronicsAchievements;
 import pl.asie.lib.gui.GuiHandler;
 import pl.asie.lib.item.ItemMultiple;
 import pl.asie.lib.network.PacketHandler;
 import pl.asie.lib.util.EnergyConverter;
-import pl.asie.lib.util.color.RecipeColorizer;
 
 import java.util.Random;
 
-//import gregtech.api.enums.ItemList;
-//import gregtech.api.util.GT_Recipe;
-
-@Mod(modid = "computronics", name = "Computronics", version = "1.0.0", dependencies = "required-after:asielib;after:ComputerCraft;after:OpenComputers;after:OpenComputers|Core;after:MineFactoryReloaded;after:RedLogic;after:ProjRed|Core;after:nedocomputers")
+@Mod(modid = "computronics", name = "Computronics", version = "1.0.0", dependencies = "required-after:asielib;after:ComputerCraft;after:OpenComputers;after:OpenComputers|Core;after:MineFactoryReloaded;after:RedLogic;after:ProjRed|Core;after:nedocomputers;after:Railcraft")
 public class Computronics {
 	public Configuration config;
 	public static Random rand = new Random();
@@ -148,6 +141,7 @@ public class Computronics {
 	public static ItemRelaySensor relaySensor;
 
 	public static boolean MUST_UPDATE_TILE_ENTITIES = false;
+	public ComputronicsAchievements achievements;
 
 	public static CreativeTabs tab = new CreativeTabs("tabComputronics") {
 		public Item getTabIconItem() {
@@ -220,7 +214,7 @@ public class Computronics {
 		LOCOMOTIVE_RELAY_RANGE = (double) config.getInt("locomotiveRelayRange", "railcraft", 128, 0, 512, "The range of Locomotive Relays in Blocks.");
 
 		// GregTech recipe mode
-		GREGTECH_RECIPES = config.getBoolean("gtRecipeMode", "gregtech", Loader.isModLoaded("gregtech"), "Set this to true to enable GregTech-style recipes");
+		GREGTECH_RECIPES = config.getBoolean("gtRecipeMode", "gregtech", Loader.isModLoaded("gregtech"), "Set this to true to enable GregTech-style recipes") && Loader.isModLoaded("gregtech");
 
 		if(isEnabled("ironNoteBlock", true)) {
 			ironNote = new BlockIronNote();
@@ -266,12 +260,12 @@ public class Computronics {
 			itemTape = new ItemTape(TAPE_LENGTHS);
 			GameRegistry.registerItem(itemTape, "computronics.tape");
 
-			//if(Loader.isModLoaded("gregtech")){
-			itemPartsGreg = new ItemMultiple("computronics", new String[] { "gt_itemIngotChromoxide", "gt_itemDustChromoxide", "gt_itemReelChromoxide" });
-			itemPartsGreg.setCreativeTab(tab);
-			GameRegistry.registerItem(itemPartsGreg, "computronics.gt_parts");
-			proxy.registerEntities();
-			//}
+			if(Loader.isModLoaded("gregtech")) {
+				itemPartsGreg = new ItemMultiple("computronics", new String[] { "reelChromoxide" });
+				itemPartsGreg.setCreativeTab(tab);
+				GameRegistry.registerItem(itemPartsGreg, "computronics.gt_parts");
+				proxy.registerEntities();
+			}
 		}
 
 		itemParts = new ItemMultiple("computronics", new String[] { "part_tape_track" });
@@ -322,148 +316,15 @@ public class Computronics {
 
 		FMLInterModComms.sendMessage("Waila", "register", "pl.asie.computronics.integration.waila.IntegrationWaila.register");
 
-		if(GREGTECH_RECIPES) {
-			log.info("Registering GregTech-style recipes for Computronics. Turn it off in the configs if you don't want it.");
-
-			if(camera != null) {
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(camera, 1, 0), "gct", "ges", "gct", 's', ItemList.Hull_LV.get(1), 'i', "plateIron", 'e', "lensRuby", 'g', "lensGlass", 'c', "circuitPrimitive", 't', "cableTin"));
-			}
-			if(chatBox != null) {
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(chatBox, 1, 0), "ili", "rer", "tst", 's', ItemList.Hull_LV.get(1), 'i', "plateGlass", 'e', ItemList.Emitter_LV.get(1), 'r', "circuitBasic", 't', "cableTin", 'l', ItemList.Sensor_LV.get(1)));
-			}
-			if(ironNote != null) {
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ironNote, 1, 0), "iii", "ini", "iii", 'i', "plateIron", 'n', Blocks.noteblock));
-			}
-			if(tapeReader != null) {
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(tapeReader, 1, 0), "tit", "mrm", "cac", 'i', ItemList.Hull_LV.get(1), 'r', "circuitBasic", 'a', ironNote, 'm', ItemList.Electric_Motor_LV.get(1), 't', "cableTin", 'c', "plateIronMagnetic"));
-			}
-			if(cipher != null) {
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(cipher, 1, 0), "isi", "trt", "ele", 'i', "cableCopper", 'r', ItemList.Robot_Arm_MV.get(1), 'e', "circuitElite", 's', ItemList.Hull_MV.get(1), 'l', "plateSilicon", 't', "screwAluminium"));
-			}
-			if(radar != null) {
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(radar, 1, 0), "ftf", "dbd", "lcl", 't', ItemList.Sensor_HV.get(1), 'b', ItemList.Emitter_HV.get(1), 'c', ItemList.Hull_HV.get(1), 'f', "circuitMaster", 'd', "circuitElite", 'l', "cableGold"));
-			}
-			if(nc_eepromreader != null) {
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(nc_eepromreader, 1, 0), "ntn", "cec", "nhn", 'e', GameRegistry.findItem("nedocomputers", "EEPROM"), 'c', "circuitBasic", 't', "cableTin", 'h', ItemList.Hull_LV.get(1), 'n', "circuitPrimitive"));
-			}
-			if(colorfulLamp != null) {
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(colorfulLamp, 1, 0), "igi", "glg", "ini", 'i', "plateIron", 'g', "plateGlass", 'l', Blocks.redstone_lamp, 'n', "circuitPrimitive"));
-			}
-			if(itemTape != null) {
-				// Tape recipes
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 0),
-					"sis", "ipi", "sTs", 'T', new ItemStack(itemParts, 1, 0), 'i', "plateIron", 'p', "plateOlivine", 's', "screwIron"));
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 0),
-					"sis", "ipi", "sTs", 'T', new ItemStack(itemParts, 1, 0), 'i', "plateIron", 'p', "plateEmerald", 's', "screwIron"));
-
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 1),
-					"sis", "ngn", "sTs", 'T', new ItemStack(itemParts, 1, 0), 'i', "plateIron", 'n', "plateElectrum", 'g', "plateOlivine", 's', "screwIron"));
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 1),
-					"sis", "ngn", "sTs", 'T', new ItemStack(itemParts, 1, 0), 'i', "plateIron", 'n', "plateElectrum", 'g', "plateEmerald", 's', "screwIron"));
-
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 2),
-					"sis", "idi", "sTs", 'T', new ItemStack(itemParts, 1, 0), 'i', "plateElectrum", 's', "screwSteel", 'd', "circuitData"));
-
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 3),
-					"sps", "pep", "sTs", 'T', new ItemStack(itemParts, 1, 0), 's', "screwStainlessSteel", 'p', "plateDiamond", 'e', "circuitElite"));
-
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 4),
-					"dcd", "ncn", "dTd", 'T', new ItemStack(itemParts, 1, 0), 'd', ItemList.Duct_Tape.get(1), 'c', "circuitElite", 'n', "plateNetherStar"));
-
-				//GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 8),
-				//	" n ", "nnn", " T ", 'T', new ItemStack(itemParts, 1, 0), 'n', Items.nether_star));
-
-				// Mod compat - copper/steel
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 5),
-					"sps", "pop", "sTs", 'T', new ItemStack(itemParts, 1, 0), 'p', "plateCopper", 's', "screwCopper", 'o', "dustOlivine"));
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 5),
-					"sps", "pop", "sTs", 'T', new ItemStack(itemParts, 1, 0), 'p', "plateCopper", 's', "screwCopper", 'o', "dustEmerald"));
-
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 6),
-					"sps", "pop", "sTs", 'T', new ItemStack(itemParts, 1, 0), 's', "screwIron", 'p', "plateSteel", 'o', "plateOlivine"));
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 6),
-					"sps", "pop", "sTs", 'T', new ItemStack(itemParts, 1, 0), 's', "screwIron", 'p', "plateSteel", 'o', "plateEmerald"));
-
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 1, 0),
-					"iii", "iei", "eoe", 'e', "foilElectrum", 'i', "foilIron", 'o', "dustOlivine"));
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 1, 0),
-					"iii", "eoe", "iii", 'e', "foilElectrum", 'i', "foilIron", 'o', "dustEmerald"));
-				GameRegistry.addRecipe(new RecipeColorizer(itemTape));
-			}
+		if(Loader.isModLoaded("gregtech") && GREGTECH_RECIPES) {
+			ModRecipes.GregTechRecipes.registerGregTechRecipes();
 		} else {
-			if(camera != null) {
-				GameRegistry.addShapedRecipe(new ItemStack(camera, 1, 0), "sss", "geg", "iii", 's', Blocks.stonebrick, 'i', Items.iron_ingot, 'e', Items.ender_pearl, 'g', Blocks.glass);
-			}
-			if(chatBox != null) {
-				GameRegistry.addShapedRecipe(new ItemStack(chatBox, 1, 0), "sss", "ses", "iri", 's', Blocks.stonebrick, 'i', Items.iron_ingot, 'e', Items.ender_pearl, 'r', Items.redstone);
-			}
-			if(ironNote != null) {
-				GameRegistry.addShapedRecipe(new ItemStack(ironNote, 1, 0), "iii", "ini", "iii", 'i', Items.iron_ingot, 'n', Blocks.noteblock);
-			}
-			if(tapeReader != null) {
-				GameRegistry.addShapedRecipe(new ItemStack(tapeReader, 1, 0), "iii", "iri", "iai", 'i', Items.iron_ingot, 'r', Items.redstone, 'a', ironNote);
-			}
-			if(cipher != null) {
-				GameRegistry.addShapedRecipe(new ItemStack(cipher, 1, 0), "sss", "srs", "eie", 'i', Items.iron_ingot, 'r', Items.redstone, 'e', Items.ender_pearl, 's', Blocks.stonebrick);
-			}
-			if(radar != null) {
-				GameRegistry.addShapedRecipe(new ItemStack(radar, 1, 0), "sts", "rbr", "scs", 'i', Items.iron_ingot, 'r', Items.redstone, 't', Blocks.redstone_torch, 's', Blocks.stonebrick, 'b', Items.bowl, 'c', Items.comparator);
-			}
-			if(nc_eepromreader != null) {
-				GameRegistry.addShapedRecipe(new ItemStack(nc_eepromreader, 1, 0), "sts", "iei", "srs", 'i', Items.iron_ingot, 'r', Items.redstone, 't', Blocks.redstone_torch, 's', Blocks.stonebrick, 'e', GameRegistry.findItem("nedocomputers", "EEPROM"));
-			}
-			if(colorfulLamp != null) {
-				GameRegistry.addShapedRecipe(new ItemStack(colorfulLamp, 1, 0), "igi", "glg", "igi", 'i', Items.iron_ingot, 'g', Blocks.glass, 'l', Items.glowstone_dust);
-			}
-			if(itemTape != null) {
-				// Tape recipes
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 0),
-					" i ", "iii", " T ", 'T', new ItemStack(itemParts, 1, 0), 'i', Items.iron_ingot));
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 1),
-					" i ", "ngn", " T ", 'T', new ItemStack(itemParts, 1, 0), 'i', Items.iron_ingot, 'n', Items.gold_nugget, 'g', Items.gold_ingot));
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 2),
-					" i ", "ggg", "nTn", 'T', new ItemStack(itemParts, 1, 0), 'i', Items.iron_ingot, 'n', Items.gold_nugget, 'g', Items.gold_ingot));
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 3),
-					" i ", "ddd", " T ", 'T', new ItemStack(itemParts, 1, 0), 'i', Items.iron_ingot, 'd', Items.diamond));
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 4),
-					" d ", "dnd", " T ", 'T', new ItemStack(itemParts, 1, 0), 'n', Items.nether_star, 'd', Items.diamond));
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 8),
-					" n ", "nnn", " T ", 'T', new ItemStack(itemParts, 1, 0), 'n', Items.nether_star));
-
-				// Mod compat - copper/steel
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 5),
-					" i ", " c ", " T ", 'T', new ItemStack(itemParts, 1, 0), 'i', Items.iron_ingot, 'c', "ingotCopper"));
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 6),
-					" i ", "isi", " T ", 'T', new ItemStack(itemParts, 1, 0), 'i', Items.iron_ingot, 's', "ingotSteel"));
-
-				//Materials ChromiumDioxide = new Materials(255, Textures.SET_DULL, 11.0F, 256, 3, 1 | 2, 230, 200, 200, 0, "ChromiumDioxide", 0, 0, 0, 0, 0, 0, false, false, 5, 1, 1, Dyes.dyePink, 1, Arrays.asList(new MaterialStack(Materials.Chrome, 1), new MaterialStack(Materials.Oxygen, 2)), Arrays.asList(new TC_Aspects.TC_AspectStack(TC_Aspects.METALLUM, 2), new TC_Aspects.TC_AspectStack(TC_Aspects.MACHINA, 1)));
-
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemParts, 1, 0),
-					" i ", "rrr", "iii", 'r', Items.redstone, 'i', Items.iron_ingot));
-				GameRegistry.addRecipe(new RecipeColorizer(itemTape));
-			}
+			ModRecipes.registerRecipes();
 		}
 
 		// Mod compat - GregTech
 		if(itemTape != null && Loader.isModLoaded("gregtech") && itemPartsGreg != null) {
-
-			OreDictionary.registerOre("ingotChromiumDioxide", new ItemStack(itemPartsGreg, 1, 0));
-			OreDictionary.registerOre("dustChromiumDioxide", new ItemStack(itemPartsGreg, 1, 1));
-
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 7),
-				" i ", "isi", " T ", 'T', new ItemStack(itemParts, 1, 0), 'i', "plateIridium", 's', "plateTungstenSteel"));
-
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemTape, 1, 9),
-				"psp", "tct", "prp", 'o', "dustOlivine", 'r', new ItemStack(itemParts, 1, 0), 's', ItemList.Duct_Tape.get(1), 't', new ItemStack(itemPartsGreg, 1, 2), 'p', "plateTungstenSteel", 'c', "circuitUltimate"));
-
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPartsGreg, 1, 2),
-				"srs", "fff", "hch", 's', "foilStainlessSteel", 'f', "foilChromiumDioxide", 'c', "craftingToolWireCutter", 'r', "ringTitanium"));
-
-			GameRegistry.addSmelting(new ItemStack(itemPartsGreg, 1, 1), new ItemStack(itemPartsGreg, 1, 0), 0f);
-
-			GT_Recipe.GT_Recipe_Map.sChemicalRecipes.addRecipe(new GT_Recipe(ItemList.Cell_Air.get(1), new ItemStack(itemPartsGreg, 1, 0), 120, 100, new ItemStack(itemPartsGreg, 1, 1)));
-
-			//GT_RecipeRegistrator.registerUsagesForMaterials(new ItemStack(itemPartsGreg, 1, 0), new ItemStack(itemPartsGreg, 1, 1), "plateChromiumDioxide", true, true, true);
+			ModRecipes.GregTechRecipes.regsiterGregTechTapeRecipes();
 		}
 
 		if(Loader.isModLoaded("ComputerCraft")) {
@@ -472,6 +333,8 @@ public class Computronics {
 		if(Loader.isModLoaded("OpenComputers")) {
 			initOC();
 		}
+
+		achievements = new ComputronicsAchievements();
 
 		config.save();
 	}
@@ -542,6 +405,7 @@ public class Computronics {
 					log.info("Using old (pre-0.10) BetterStorage crate API!");
 					li.cil.oc.api.Driver.add(new DriverCrateStorageOld());
 				} catch(Exception e) {
+					//NO-OP
 				}
 
 				try {
@@ -549,6 +413,7 @@ public class Computronics {
 					log.info("Using new (0.10+) BetterStorage crate API!");
 					li.cil.oc.api.Driver.add(new DriverCrateStorageNew());
 				} catch(Exception e) {
+					//NO-OP
 				}
 			}
 		}

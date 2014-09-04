@@ -8,7 +8,6 @@ import li.cil.oc.api.prefab.DriverTileEntity;
 import net.mcft.copy.betterstorage.api.crate.ICrateStorage;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
 
 import java.util.ArrayList;

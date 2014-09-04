@@ -23,27 +23,38 @@ import java.util.List;
  */
 public class ItemRelaySensor extends Item {
 
-	private IIcon icon;
+	private IIcon icon_off;
+	private IIcon icon_on;
 
 	public ItemRelaySensor() {
 		super();
 		this.setCreativeTab(Computronics.tab);
 		this.setHasSubtypes(false);
 		this.setUnlocalizedName("computronics.relaySensor");
-		this.setTextureName("computronics:relay_sensor");
+		this.setTextureName("computronics:relay_sensor_off");
 		this.setMaxDamage(0);
 		this.setMaxStackSize(1);
+		this.setFull3D();
 		this.setNoRepair();
 	}
 
 	@Override
 	public void registerIcons(IIconRegister ir) {
-		icon = ir.registerIcon("computronics:relay_sensor");
+		icon_off = ir.registerIcon("computronics:relay_sensor_off");
+		icon_on = ir.registerIcon("computronics:relay_sensor_on");
 	}
 
 	@Override
 	public IIcon getIcon(ItemStack stack, int pass) {
-		return icon;
+		if(stack.hasTagCompound() && stack.getTagCompound().getBoolean("bound")) {
+			return icon_on;
+		}
+		return icon_off;
+	}
+
+	@Override
+	public IIcon getIconIndex(ItemStack stack) {
+		return getIcon(stack, 0);
 	}
 
 	@Override
@@ -75,7 +86,8 @@ public class ItemRelaySensor extends Item {
 				int y = data.getInteger("relayY");
 				int z = data.getInteger("relayZ");
 				if(entity instanceof EntityLocomotiveElectric) {
-					if(entity.worldObj.getTileEntity(x, y, z) instanceof TileLocomotiveRelay) {
+					if(entity.worldObj.getTileEntity(x, y, z) != null
+						&& entity.worldObj.getTileEntity(x, y, z) instanceof TileLocomotiveRelay) {
 						TileLocomotiveRelay relay = (TileLocomotiveRelay) entity.worldObj.getTileEntity(x, y, z);
 						EntityLocomotiveElectric loco = (EntityLocomotiveElectric) entity;
 						if(loco.dimension == relay.getWorldObj().provider.dimensionId) {

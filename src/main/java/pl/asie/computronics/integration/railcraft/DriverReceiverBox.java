@@ -1,6 +1,5 @@
 package pl.asie.computronics.integration.railcraft;
 
-import li.cil.oc.api.driver.NamedBlock;
 import li.cil.oc.api.network.Arguments;
 import li.cil.oc.api.network.Callback;
 import li.cil.oc.api.network.Context;

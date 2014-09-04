@@ -1,12 +1,3 @@
-chat.computronics.cipher.locked=This Cipher Block is locked! You may not access it.
-chat.computronics.sensor.bound=Relay successfully bound to locomotive!
-chat.computronics.sensor.noRelay=There is no relay at the specified coordinates!
-chat.computronics.sensor.tooFarAway=Relay and locomotive are too far away from each other!
-chat.computronics.sensor.wrongLoco=Relay can only be attached to electric locomotives!
-chat.computronics.sensor.wrongDim=Relay and locomotive are in different dimensions!
-
-entity.computronics.itemTape.name=Intergalactical CDVR
-
 tile.computronics.ironNoteBlock.name=Iron Note Block
 tile.computronics.tapeDrive.name=Tape Drive
 tile.computronics.camera.name=Camera
@@ -21,7 +12,7 @@ tile.computronics.locomotiveRelay.name=Digital Locomotive Relay
 
 tooltip.computronics.chatBox.creative=NSA in a box!
 tooltip.computronics.sensor.bound=Bound to [%1$s,%2$s,%3$s]
-tooltip.computronics.sensor.desc1=Right click on Locomotive Relay\nwhile sneaking to bind it
+tooltip.computronics.sensor.desc1=Right click on Locomotive Relay\nwhile sneaking to bind to it
 tooltip.computronics.sensor.desc2=Left click on Electric Locomotive\nwhile sneaking to attach it
 tooltip.computronics.tape.length=Length: %s minutes
 tooltip.computronics.tape.balanced=Balanced!
@@ -29,9 +20,7 @@ tooltip.computronics.tape.unnamed=Unnamed Tape
 tooltip.computronics.tape.none=No Tape
 tooltip.computronics.tape.ig=The standard CDVR for\nGregTech Intergalactical's ships
 
-item.computronics.gt_itemIngotChromoxide.name=Chromium Dioxide Ingot
-item.computronics.gt_itemDustChromoxide.name=Chromium Dioxide Dust
-item.computronics.gt_itemReelChromoxide.name=Chromium Dioxide Tape Reel
+item.computronics.reelChromoxide.name=Chromium Dioxide Tape Reel
 item.computronics.robot_upgrade_camera.name=Camera Upgrade
 item.computronics.robot_upgrade_chatbox.name=Chat Upgrade
 item.computronics.robot_upgrade_radar.name=Radar Upgrade
@@ -42,3 +31,25 @@ item.computronics.tape.ig.name=Intergalactical CDVR
 item.computronics.tape.name=Cassette Tape
 
 itemGroup.tabComputronics=Computronics
+
+entity.computronics.itemTape.name=Intergalactical CDVR
+
+chat.computronics.cipher.locked=This Cipher Block is locked! You may not access it.
+chat.computronics.sensor.bound=Relay successfully bound to locomotive!
+chat.computronics.sensor.noRelay=There is no relay at the specified coordinates!
+chat.computronics.sensor.tooFarAway=Relay and locomotive are too far away from each other!
+chat.computronics.sensor.wrongLoco=Sensor can only be attached to electric locomotives!
+chat.computronics.sensor.wrongDim=Relay and locomotive are in different dimensions!
+
+achievement.computronics.gotTape=Music for everyone
+achievement.computronics.gotTape.desc=Certainly better than Duct Tape
+achievement.computronics.gotStarTape=Over the Rainbow
+achievement.computronics.gotStarTape.desc=Where Nyan Cat lives
+achievement.computronics.gotIGTape=First part of your spaceship
+achievement.computronics.gotIGTape.desc=Not that you can build one
+achievement.computronics.droppedIGTape=MH370
+achievement.computronics.droppedIGTape.desc=You cannot find it anymore
+achievement.computronics.gotLoco=Electrical Revolution
+achievement.computronics.gotLoco.desc=And so it begins.
+achievement.computronics.gotRelay=Digital Revolution
+achievement.computronics.gotRelay.desc=0100100001000101010011000101000000100001

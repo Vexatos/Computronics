@@ -1,14 +1,14 @@
 package pl.asie.computronics.tape;
 
+import pl.asie.computronics.Computronics;
+import pl.asie.computronics.api.tape.ITapeStorage;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
-
-import pl.asie.computronics.Computronics;
-import pl.asie.computronics.api.tape.ITapeStorage;
 
 public class TapeStorage implements ITapeStorage {
 	private String uniqueId;

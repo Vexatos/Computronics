@@ -1,5 +1,6 @@
 package pl.asie.computronics.item;
 
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -75,7 +76,7 @@ public class ItemTape extends Item implements IItemTapeStorage, IMedia, IMediaPr
 		tape_co = r.registerIcon("computronics:tape_copper");
 		tape_st = r.registerIcon("computronics:tape_steel");
 		tape_greg = r.registerIcon("computronics:tape_greg");
-		tape_ig = r.registerIcon("computronics:tape_greg");
+		tape_ig = r.registerIcon("computronics:tape_ig");
 	}
 
 	@Override
@@ -140,9 +141,9 @@ public class ItemTape extends Item implements IItemTapeStorage, IMedia, IMediaPr
 	@SideOnly(Side.CLIENT)
     public void getSubItems(Item item, CreativeTabs tabs, List list) {
 		for(int i = 0; i < TAPE_COUNT; i++) {
-			/*if((i == 7 || i == 9) && !Loader.isModLoaded("gregtech")) {
+			if((i == 7 || i == 9) && !Loader.isModLoaded("gregtech")) {
 				//Do nothing. If we return here, we lose all new tapes.
-			}*/
+			}
 			list.add(new ItemStack(item, 1, i));
 		}
      }

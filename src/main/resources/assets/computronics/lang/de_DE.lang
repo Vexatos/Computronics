@@ -1,5 +1,3 @@
-entity.computronics.itemTape.name=Intergalaktischer CDVR
-
 tile.computronics.ironNoteBlock.name=Eiserner Notenblock
 tile.computronics.tapeDrive.name=Bandlaufwerk
 tile.computronics.camera.name=Kamera
@@ -10,23 +8,48 @@ tile.computronics.cipher.name=Chiffrierblock
 tile.computronics.radar.name=Radarblock
 tile.computronics.colorfulLamp.name=Farbenfrohe Lampe
 tile.computronics.eepromReader.name=EEPROM-Lesegerät
+tile.computronics.locomotiveRelay.name=Digitales Lokomotivenrelais
 
-tooltip.computronics.chatBox.creative=NSA für zu Hause!
+tooltip.computronics.chatBox.creative=Die NSA für zu Hause!
+tooltip.computronics.sensor.bound=Gebunden an [%1$s,%2$s,%3$s]
+tooltip.computronics.sensor.desc1=Rechtsklicke schleichend auf ein\nLokomotivenrelais, um ihn an dieses zu binden
+tooltip.computronics.sensor.desc2=Linksklicke schleichend auf eine\nElektrische Lokomotive, um ihn anzubringen
 tooltip.computronics.tape.length=Länge: %s Minuten
 tooltip.computronics.tape.balanced=Welch ein ausgewogener Preis!
 tooltip.computronics.tape.unnamed=Unbenanntes Band
 tooltip.computronics.tape.none=Kein Band
 tooltip.computronics.tape.ig=Der Standard-CDVR für\n Schiffe von GregTech Intergalactical
 
-item.computronics.gt_itemIngotChromoxide.name=Chromdioxidbarren
-item.computronics.gt_itemDustChromoxide.name=Chromdioxidstaub
-item.computronics.gt_itemReelChromoxide.name=Chromdioxidbandspur
+item.computronics.reelChromoxide.name=Chromdioxidbandspur
 item.computronics.robot_upgrade_camera.name=Kamera-Upgrade
 item.computronics.robot_upgrade_chatbox.name=Chat-Upgrade
 item.computronics.robot_upgrade_radar.name=Radar-Upgrade
 item.computronics.card_fx.name=Partikeleffektkarte
+item.computronics.relaySensor.name=Digitaler Relaissensor
 item.computronics.part_tape_track.name=Bandspur
 item.computronics.tape.ig.name=Intergalaktischer CDVR
 item.computronics.tape.name=Kasettenband
 
 itemGroup.tabComputronics=Computronics
+
+entity.computronics.itemTape.name=Intergalaktischer CDVR
+
+chat.computronics.cipher.locked=Dieser Chiffrierblock ist versperrt! Du darfst nicht darauf zugreifen.
+chat.computronics.sensor.bound=Relais wurde erfolgreich mit der Lokomotive verbunden!
+chat.computronics.sensor.noRelay=Es gibt kein Relais an diesen Koordinaten!
+chat.computronics.sensor.tooFarAway=Relais und Lokomotive sind zu weit voneinander entfernt!
+chat.computronics.sensor.wrongLoco=Sensor kann nur an Elektrische Lokomotiven angebracht werden!
+chat.computronics.sensor.wrongDim=Relais und Lokomotive sind in unterschiedlichen Dimensionen!
+
+achievement.computronics.gotTape=Musik für alle
+achievement.computronics.gotTape.desc=Mit Sicherheit besser als Klebeband
+achievement.computronics.gotStarTape=Over the Rainbow
+achievement.computronics.gotStarTape.desc=Where Nyan Cat lives
+achievement.computronics.gotIGTape=Erster Teil deines Raumschiffs
+achievement.computronics.gotIGTape.desc=Nicht, dass du eins bauen könntest
+achievement.computronics.droppedIGTape=MH370
+achievement.computronics.droppedIGTape.desc=Du kannst ihn nicht mehr finden
+achievement.computronics.gotLoco=Elektrische Revolution
+achievement.computronics.gotLoco.desc=So beginnt es.
+achievement.computronics.gotRelay=Digitale Revolution
+achievement.computronics.gotRelay.desc=010010000100100101001100010001100100010100100001

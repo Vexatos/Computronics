@@ -45,14 +45,10 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 	public void updateEntity() {
 		super.updateEntity();
 		if(!isInitialized && !worldObj.isRemote) {
-			System.out.println(this.locomotiveX + " " + this.locomotiveY + " " + this.locomotiveZ);
 			List locos = worldObj.getEntitiesWithinAABB(EntityLocomotiveElectric.class, AxisAlignedBB.getBoundingBox(locomotiveX, locomotiveY, locomotiveZ, locomotiveX, locomotiveY, locomotiveZ));
 			for(Object loco : locos) {
 				if(loco instanceof EntityLocomotiveElectric) {
-					System.out.println("updating things " + ((EntityLocomotiveElectric) loco).posX + " " + ((EntityLocomotiveElectric) loco).posY + " " + ((EntityLocomotiveElectric) loco).posZ);
-					System.out.println("updating things " + loco);
 					this.setLocomotive((EntityLocomotiveElectric) loco);
-					System.out.println("updating things " + this.locomotive);
 				}
 			}
 			isInitialized = true;
@@ -68,14 +64,12 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 			this.locomotiveY = nbt.getDouble("locomotiveY");
 			this.locomotiveZ = nbt.getDouble("locomotiveZ");
 		}
-		System.out.println("reading NBT " + this.locomotiveX + " " + this.locomotiveY + " " + this.locomotiveZ);
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 		if(this.locomotive != null) {
-			System.out.println("writing NBT " + this.locomotive.posX + " " + this.locomotive.posY + " " + this.locomotive.posZ);
 			nbt.setDouble("locomotiveX", this.locomotive.posX);
 			nbt.setDouble("locomotiveY", this.locomotive.posY);
 			nbt.setDouble("locomotiveZ", this.locomotive.posZ);
@@ -110,6 +104,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 	}
 
 	@Callback(doc = "function(destination:String):boolean; Sets the locomotive's destination; there needs to be a golden ticket inside the locomotive")
+	@Optional.Method(modid = "OpenComputers")
 	public Object[] setDestination(Context c, Arguments a) {
 		if(cannotAccessLocomotive() != null) {
 			return new Object[] { null, cannotAccessLocomotive() };
@@ -142,11 +137,13 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 	}
 
 	@Override
+	@Optional.Method(modid = "ComputerCraft")
 	public String[] getMethodNames() {
 		return new String[] { "getDestination", "setDestination", "getCharge", "getMode" };
 	}
 
 	@Override
+	@Optional.Method(modid = "ComputerCraft")
 	public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments)
 		throws LuaException, InterruptedException {
 		if(method < 4) {
@@ -189,11 +186,13 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 	}
 
 	@Override
+	@Optional.Method(modid = "nedocomputers")
 	public short busRead(int addr) {
 		return 0;
 	}
 
 	@Override
+	@Optional.Method(modid = "nedocomputers")
 	public void busWrite(int addr, short data) {
 
 	}

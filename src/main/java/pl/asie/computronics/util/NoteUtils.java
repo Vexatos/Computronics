@@ -4,7 +4,6 @@ import net.minecraft.block.material.Material;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.NoteBlockEvent;
-import pl.asie.computronics.Computronics;
 
 public class NoteUtils {
 	public static void playNote(World worldObj, int xCoord, int yCoord, int zCoord, String instrument, int note) {

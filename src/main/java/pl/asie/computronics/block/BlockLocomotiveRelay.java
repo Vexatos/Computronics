@@ -16,7 +16,7 @@ public class BlockLocomotiveRelay extends BlockPeripheral {
 
 	public BlockLocomotiveRelay() {
 		super();
-		this.setIconName("computronics:locorelay");
+		this.setIconName("computronics:machine_top");
 		this.setBlockName("computronics.locomotiveRelay");
 		this.setRotation(Rotation.NONE);
 	}
@@ -30,7 +30,7 @@ public class BlockLocomotiveRelay extends BlockPeripheral {
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister r) {
 		super.registerBlockIcons(r);
-		mTop = r.registerIcon("computronics:locorelay_side");
+		mTop = r.registerIcon("computronics:locorelay_top");
 		mSide = r.registerIcon("computronics:machine_side");
 		mBottom = r.registerIcon("computronics:machine_bottom");
 	}
