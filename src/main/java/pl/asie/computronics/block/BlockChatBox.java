@@ -42,6 +42,7 @@ public class BlockChatBox extends BlockMachineSidedIcon {
 		return new TileChatBox();
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
     public void getSubBlocks (Item item, CreativeTabs creativeTabs, List blockList) {
 		blockList.add(new ItemStack(item, 1, 0));

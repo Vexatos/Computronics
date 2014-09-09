@@ -2,6 +2,7 @@ package pl.asie.computronics.tape;
 
 import net.minecraftforge.common.DimensionManager;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.reference.Mods;
 import pl.asie.lib.util.MiscUtils;
 
 import java.io.File;
@@ -15,7 +16,7 @@ public class StorageManager {
 	private File saveDir;
 	
 	public StorageManager() {
-		this.saveDir = new File(DimensionManager.getCurrentSaveRootDirectory(), "computronics");
+		this.saveDir = new File(DimensionManager.getCurrentSaveRootDirectory(), Mods.Computronics);
 		if(!this.saveDir.exists() && !this.saveDir.mkdir()) {
 			Computronics.log.error("COULD NOT CREATE SAVE DIRECTORY: " + this.saveDir.getAbsolutePath());
 		}

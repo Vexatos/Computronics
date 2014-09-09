@@ -12,6 +12,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.reference.Mods;
 import pl.asie.lib.api.tile.IBundledRedstoneProvider;
 import pl.asie.lib.util.Base64;
 
@@ -95,7 +96,7 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements IBundle
 	}
 	
 	@Callback(direct = true)
-    @Optional.Method(modid="OpenComputers")
+    @Optional.Method(modid=Mods.OpenComputers)
 	public Object[] encrypt(Context context, Arguments args) throws Exception {
 		if(args.count() >= 1) {
 			if(args.isByteArray(0))
@@ -107,7 +108,7 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements IBundle
 	}
 	
 	@Callback(direct = true)
-    @Optional.Method(modid="OpenComputers")
+    @Optional.Method(modid=Mods.OpenComputers)
 	public Object[] decrypt(Context context, Arguments args) throws Exception {
 		if(args.count() >= 1 && args.isString(0)) {
 			return new Object[]{decrypt(args.checkString(0))};
@@ -116,13 +117,13 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements IBundle
 	}
 	
 	@Callback(direct = true)
-    @Optional.Method(modid="OpenComputers")
+    @Optional.Method(modid=Mods.OpenComputers)
 	public Object[] isLocked(Context context, Arguments args) throws Exception {
 		return new Object[]{isLocked};
 	}
 
 	@Callback()
-    @Optional.Method(modid="OpenComputers")
+    @Optional.Method(modid=Mods.OpenComputers)
 	public Object[] setLocked(Context context, Arguments args) throws Exception {
 		if(args.count() == 1 && args.isBoolean(0))
 			this.isLocked = args.checkBoolean(0);
@@ -130,13 +131,13 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements IBundle
 	}
 	
 	@Override
-    @Optional.Method(modid="ComputerCraft")
+    @Optional.Method(modid=Mods.ComputerCraft)
 	public String[] getMethodNames() {
 		return new String[]{"encrypt", "decrypt", "isLocked", "setLocked"};
 	}
 
 	@Override
-    @Optional.Method(modid="ComputerCraft")
+    @Optional.Method(modid=Mods.ComputerCraft)
 	public Object[] callMethod(IComputerAccess computer, ILuaContext context,
 			int method, Object[] arguments) throws LuaException,
 			InterruptedException {
@@ -148,7 +149,7 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements IBundle
 				case 1: return new Object[]{decrypt(message)};
 				}
 			} else if(arguments.length == 1 && (arguments[0] instanceof Boolean) && method == 3) {
-				this.isLocked = ((Boolean)arguments[0]).booleanValue();
+				this.isLocked = (Boolean) arguments[0];
 				return null;
 			} else if(method == 2) {
 				return new Object[]{this.isLocked};
@@ -163,7 +164,7 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements IBundle
 	private byte _nedo_status = 0;
 	
 	@Override
-    @Optional.Method(modid="nedocomputers")
+    @Optional.Method(modid=Mods.NedoComputers)
 	public short busRead(int addr) {
 		int a = ((addr & 0xFFFE)) >> 1;
 		if(a < 16) return _nedo_cipher[a];
@@ -173,7 +174,7 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements IBundle
 	}
 
 	@Override
-    @Optional.Method(modid="nedocomputers")
+    @Optional.Method(modid=Mods.NedoComputers)
 	public void busWrite(int addr, short data) {
 		if(cipher == null) return;
 		
@@ -201,7 +202,7 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements IBundle
 				_nedo_status = 1;
 			}
 		}
-		else if(a == 18) isLocked = (data != 0) ? true : false;
+		else if(a == 18) isLocked = (data != 0);
 	}
 	
 	private int bundledXORData;
@@ -224,7 +225,7 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements IBundle
 	public int redNetSingleOutput = 0;
 	public int[] redNetMultiOutput = new int[16];
 	
-	@Optional.Method(modid = "MineFactoryReloaded")
+	@Optional.Method(modid = Mods.MFR)
 	private int getRedNetXORKey() {
 		int key = 0;
 		int amountOfItems = 0;
@@ -243,12 +244,12 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements IBundle
 		return key;
 	}
 	
-	@Optional.Method(modid = "MineFactoryReloaded")
+	@Optional.Method(modid = Mods.MFR)
 	public void updateRedNet(int in) {
 		redNetSingleOutput = in ^ getRedNetXORKey();
 	}
 	
-	@Optional.Method(modid = "MineFactoryReloaded")
+	@Optional.Method(modid = Mods.MFR)
 	public void updateRedNet(int[] in) {
 		redNetMultiOutput = in;
 		int key = getRedNetXORKey();
@@ -286,7 +287,7 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements IBundle
 	@Override
 	public void writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
-		if(isLocked) tag.setBoolean("cb_l", isLocked);
+		if(isLocked) tag.setBoolean("cb_l", true);
 	}
 	
 	@Override

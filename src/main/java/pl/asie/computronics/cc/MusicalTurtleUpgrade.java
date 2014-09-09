@@ -10,6 +10,7 @@ import dan200.computercraft.api.turtle.TurtleSide;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.NoteUtils;
 
 public class MusicalTurtleUpgrade extends TurtleUpgradeBase {
@@ -24,13 +25,13 @@ public class MusicalTurtleUpgrade extends TurtleUpgradeBase {
 		}
 
 		@Override
-	    @Optional.Method(modid="ComputerCraft")
+	    @Optional.Method(modid=Mods.ComputerCraft)
 		public String[] getMethodNames() {
 			return new String[]{"playNote"};
 		}
 
 		@Override
-	    @Optional.Method(modid="ComputerCraft")
+	    @Optional.Method(modid=Mods.ComputerCraft)
 		public Object[] callMethod(IComputerAccess computer, ILuaContext context,
 				int method, Object[] arguments) throws LuaException,
 				InterruptedException {

@@ -14,6 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.reference.Mods;
 
 import java.util.List;
 
@@ -95,7 +96,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 	//Computer stuff
 
 	@Callback(doc = "function():String; gets the destination the locomotive is currently set to")
-	@Optional.Method(modid = "OpenComputers")
+	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] getDestination(Context context, Arguments args) {
 		if(cannotAccessLocomotive() != null) {
 			return new Object[] { null, cannotAccessLocomotive() };
@@ -104,7 +105,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 	}
 
 	@Callback(doc = "function(destination:String):boolean; Sets the locomotive's destination; there needs to be a golden ticket inside the locomotive")
-	@Optional.Method(modid = "OpenComputers")
+	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] setDestination(Context c, Arguments a) {
 		if(cannotAccessLocomotive() != null) {
 			return new Object[] { null, cannotAccessLocomotive() };
@@ -119,7 +120,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 	}
 
 	@Callback(doc = "function():number; gets the current charge of the locomotive")
-	@Optional.Method(modid = "OpenComputers")
+	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] getCharge(Context context, Arguments args) {
 		if(cannotAccessLocomotive() != null) {
 			return new Object[] { null, cannotAccessLocomotive() };
@@ -128,7 +129,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 	}
 
 	@Callback(doc = "function():string; returns the current mode of the locomotive; can be RUNNING, IDLE or SHUTDOWN")
-	@Optional.Method(modid = "OpenComputers")
+	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] getMode(Context context, Arguments args) {
 		if(cannotAccessLocomotive() != null) {
 			return new Object[] { null, cannotAccessLocomotive() };
@@ -137,13 +138,13 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 	}
 
 	@Override
-	@Optional.Method(modid = "ComputerCraft")
+	@Optional.Method(modid = Mods.ComputerCraft)
 	public String[] getMethodNames() {
 		return new String[] { "getDestination", "setDestination", "getCharge", "getMode" };
 	}
 
 	@Override
-	@Optional.Method(modid = "ComputerCraft")
+	@Optional.Method(modid = Mods.ComputerCraft)
 	public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments)
 		throws LuaException, InterruptedException {
 		if(method < 4) {
@@ -180,19 +181,19 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 	}
 
 	@Override
-	@Optional.Method(modid = "nedocomputers")
+	@Optional.Method(modid = Mods.NedoComputers)
 	public boolean Connectable(int side) {
 		return false;
 	}
 
 	@Override
-	@Optional.Method(modid = "nedocomputers")
+	@Optional.Method(modid = Mods.NedoComputers)
 	public short busRead(int addr) {
 		return 0;
 	}
 
 	@Override
-	@Optional.Method(modid = "nedocomputers")
+	@Optional.Method(modid = Mods.NedoComputers)
 	public void busWrite(int addr, short data) {
 
 	}

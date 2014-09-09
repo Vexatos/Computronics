@@ -1,5 +1,6 @@
 package pl.asie.computronics.cc;
 
+import cpw.mods.fml.common.Optional;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
@@ -9,6 +10,7 @@ import dan200.computercraft.api.turtle.TurtleSide;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.ChatBoxUtils;
 
 public class SpeakingTurtleUpgrade extends TurtleUpgradeBase {
@@ -23,11 +25,13 @@ public class SpeakingTurtleUpgrade extends TurtleUpgradeBase {
 		}
 
 		@Override
+		@Optional.Method(modid= Mods.ComputerCraft)
 		public String[] getMethodNames() {
 			return new String[]{"say"};
 		}
 
 		@Override
+		@Optional.Method(modid=Mods.ComputerCraft)
 		public Object[] callMethod(IComputerAccess computer,
 				ILuaContext context, int method, Object[] arguments)
 				throws LuaException, InterruptedException {

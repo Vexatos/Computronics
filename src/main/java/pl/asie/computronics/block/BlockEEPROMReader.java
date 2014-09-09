@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TileEEPROMReader;
 
 public class BlockEEPROMReader extends BlockPeripheral {
@@ -38,7 +39,7 @@ public class BlockEEPROMReader extends BlockPeripheral {
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int a, float _x, float _y, float _z) {
 		if (!world.isRemote && !player.isSneaking()) {
 			ItemStack h = player.getHeldItem();
-			if(h != null && h.stackSize > 0 && h.getItem().equals(GameRegistry.findItem("nedocomputers", "EEPROM"))
+			if(h != null && h.stackSize > 0 && h.getItem().equals(GameRegistry.findItem(Mods.NedoComputers, "EEPROM"))
 					&& h.hasTagCompound() && h.getTagCompound().hasKey("ram")) {
 				TileEEPROMReader te = (TileEEPROMReader)world.getTileEntity(x, y, z);
 				if(te.getStackInSlot(0) == null) {

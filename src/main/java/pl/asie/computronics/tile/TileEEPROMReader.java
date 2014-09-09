@@ -8,6 +8,7 @@ import li.cil.oc.api.network.Arguments;
 import li.cil.oc.api.network.Callback;
 import li.cil.oc.api.network.Context;
 import net.minecraft.item.ItemStack;
+import pl.asie.computronics.reference.Mods;
 import pl.asie.lib.api.tile.IInventoryProvider;
 
 public class TileEEPROMReader extends TileEntityPeripheralBase implements IInventoryProvider {
@@ -41,23 +42,23 @@ public class TileEEPROMReader extends TileEntityPeripheralBase implements IInven
 	public void setData(byte[] data) {
     	ItemStack is = this.getStackInSlot(0);
 		if(!isReady()) return;
-		else is.getTagCompound().setByteArray("ram", data);
+		is.getTagCompound().setByteArray("ram", data);
 	}
 	
     @Callback(direct = true)
-    @Optional.Method(modid="OpenComputers")
+    @Optional.Method(modid=Mods.OpenComputers)
     public Object[] isReady(Context context, Arguments args) {
 		return new Object[]{ isReady() };
     }
     
     @Callback(direct = true)
-    @Optional.Method(modid="OpenComputers")
+    @Optional.Method(modid=Mods.OpenComputers)
     public Object[] getSize(Context context, Arguments args) {
 		return new Object[]{ getSize() };
     }
     
     @Callback(direct = true)
-    @Optional.Method(modid="OpenComputers")
+    @Optional.Method(modid=Mods.OpenComputers)
     public Object[] read(Context context, Arguments args) {
     	byte[] data = getData();
 		if(args.count() >= 1 && args.isInteger(0)) {
@@ -74,7 +75,7 @@ public class TileEEPROMReader extends TileEntityPeripheralBase implements IInven
     }
 
     @Callback(direct = true)
-    @Optional.Method(modid="OpenComputers")
+    @Optional.Method(modid=Mods.OpenComputers)
     public Object[] write(Context context, Arguments args) {
     	byte[] data = getData();
     	if(args.count() == 2 && args.isInteger(0)) {
@@ -94,13 +95,13 @@ public class TileEEPROMReader extends TileEntityPeripheralBase implements IInven
     }
     
 	@Override
-    @Optional.Method(modid="ComputerCraft")
+    @Optional.Method(modid=Mods.ComputerCraft)
 	public String[] getMethodNames() {
 		return new String[]{"isReady", "getSize", "read", "write"};
 	}
 
 	@Override
-    @Optional.Method(modid="ComputerCraft")
+    @Optional.Method(modid=Mods.ComputerCraft)
 	public Object[] callMethod(IComputerAccess computer, ILuaContext context,
 			int method, Object[] arguments) throws LuaException,
 			InterruptedException {

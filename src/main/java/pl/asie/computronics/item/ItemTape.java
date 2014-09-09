@@ -23,14 +23,15 @@ import pl.asie.computronics.Computronics;
 import pl.asie.computronics.api.tape.IItemTapeStorage;
 import pl.asie.computronics.api.tape.ITapeStorage;
 import pl.asie.computronics.item.entity.EntityItemIndestructable;
+import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tape.TapeStorage;
 import pl.asie.lib.util.color.ItemColorizer;
 
 import java.util.List;
 
 @Optional.InterfaceList({
-	@Optional.Interface(iface = "dan200.computercraft.api.media.IMediaProvider", modid = "ComputerCraft"),
-	@Optional.Interface(iface = "dan200.computercraft.api.media.IMedia", modid = "ComputerCraft")
+	@Optional.Interface(iface = "dan200.computercraft.api.media.IMediaProvider", modid = Mods.ComputerCraft),
+	@Optional.Interface(iface = "dan200.computercraft.api.media.IMedia", modid = Mods.ComputerCraft)
 })
 public class ItemTape extends Item implements IItemTapeStorage, IMedia, IMediaProvider {
 	public static final int L_SECOND = 4096;
@@ -141,7 +142,7 @@ public class ItemTape extends Item implements IItemTapeStorage, IMedia, IMediaPr
 	@SideOnly(Side.CLIENT)
     public void getSubItems(Item item, CreativeTabs tabs, List list) {
 		for(int i = 0; i < TAPE_COUNT; i++) {
-			if((i == 7 || i == 9) && !Loader.isModLoaded("gregtech")) {
+			if((i == 7 || i == 9) && !Loader.isModLoaded(Mods.GregTech)) {
 				//Do nothing. If we return here, we lose all new tapes.
 			}
 			list.add(new ItemStack(item, 1, i));

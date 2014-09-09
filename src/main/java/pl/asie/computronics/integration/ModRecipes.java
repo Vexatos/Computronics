@@ -130,16 +130,12 @@ public class ModRecipes {
 		}
 
 		public static void regsiterGregTechTapeRecipes() {
-			//OreDictionary.registerOre("ingotChromiumDioxide", new ItemStack(itemPartsGreg, 1, 0));
-			//OreDictionary.registerOre("dustChromiumDioxide", new ItemStack(itemPartsGreg, 1, 1));
 
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Computronics.itemTape, 1, 9),
 				"psp", "tct", "prp", 'o', "dustOlivine", 'r', new ItemStack(Computronics.itemParts, 1, 0), 's', ItemList.Duct_Tape.get(1), 't', new ItemStack(Computronics.itemPartsGreg, 1, 0), 'p', "plateTungstenSteel", 'c', "circuitUltimate"));
 
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Computronics.itemPartsGreg, 1, 0),
 				"srs", "fff", "hch", 's', "foilStainlessSteel", 'f', "foilChromiumDioxide", 'c', "craftingToolWireCutter", 'r', "ringNiobiumTitanium", 'h', "cellHelium"));
-
-			//GameRegistry.addSmelting(new ItemStack(itemPartsGreg, 1, 1), new ItemStack(itemPartsGreg, 1, 0), 0f);
 
 			//Materials(255, Textures.SET_DULL, 11.0F, 256, 3, 1 | 2, 230, 200, 200, 0, "ChromiumDioxide", 0, 0, 0, 0, 375, 0, false, false, 1, 1, 1, Dyes.dyePink, 1, Arrays.asList(new MaterialStack(Materials.Chrome, 1), new MaterialStack(Materials.Oxygen, 2)), Arrays.asList(new TC_Aspects.TC_AspectStack(TC_Aspects.METALLUM, 2), new TC_Aspects.TC_AspectStack(TC_Aspects.MACHINA, 1)));
 

@@ -12,7 +12,7 @@ public class ContainerTapeReader extends ContainerBase {
 	public ContainerTapeReader(TileEntityBase entity,
 			InventoryPlayer inventoryPlayer) {
 		super(entity, inventoryPlayer);
-		this.addSlotToContainer(new SlotTyped((IInventory)entity, 0, 80, 34, new Object[]{Computronics.instance.itemTape}));
+		this.addSlotToContainer(new SlotTyped((IInventory)entity, 0, 80, 34, new Object[]{ Computronics.itemTape }));
 		this.bindPlayerInventory(inventoryPlayer, 8, 84);
 	}
 

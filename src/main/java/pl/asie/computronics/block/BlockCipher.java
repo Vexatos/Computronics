@@ -13,12 +13,13 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TileCipherBlock;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetOmniNode;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
 
 @Optional.InterfaceList({
-	@Optional.Interface(iface = "powercrystals.minefactoryreloaded.api.rednet.IRedNetOmniNode", modid = "MineFactoryReloaded")
+	@Optional.Interface(iface = "powercrystals.minefactoryreloaded.api.rednet.IRedNetOmniNode", modid = Mods.MFR)
 })
 public class BlockCipher extends BlockMachineSidedIcon implements IRedNetOmniNode {
 	private IIcon mFront;
@@ -53,7 +54,7 @@ public class BlockCipher extends BlockMachineSidedIcon implements IRedNetOmniNod
 	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
 		TileEntity tile = world.getTileEntity(x, y, z);
-		if(Loader.isModLoaded("ProjRed|Core"))
+		if(Loader.isModLoaded(Mods.ProjectRed))
 			((TileCipherBlock)tile).onProjectRedBundledInputChanged();
 	}
 	
@@ -71,7 +72,7 @@ public class BlockCipher extends BlockMachineSidedIcon implements IRedNetOmniNod
 	}
 
 	@Override
-	@Optional.Method(modid = "MineFactoryReloaded")
+	@Optional.Method(modid = Mods.MFR)
 	public void onInputsChanged(World world, int x, int y, int z,
 			ForgeDirection side, int[] inputValues) {
 		((TileCipherBlock)world.getTileEntity(x, y, z)).updateRedNet(inputValues);
@@ -79,28 +80,28 @@ public class BlockCipher extends BlockMachineSidedIcon implements IRedNetOmniNod
 	}
 
 	@Override
-	@Optional.Method(modid = "MineFactoryReloaded")
+	@Optional.Method(modid = Mods.MFR)
 	public void onInputChanged(World world, int x, int y, int z,
 			ForgeDirection side, int inputValue) {
 		((TileCipherBlock)world.getTileEntity(x, y, z)).updateRedNet(inputValue);
 	}
 
 	@Override
-	@Optional.Method(modid = "MineFactoryReloaded")
+	@Optional.Method(modid = Mods.MFR)
 	public RedNetConnectionType getConnectionType(World world, int x, int y,
 			int z, ForgeDirection side) {
 		return RedNetConnectionType.PlateAll;
 	}
 
 	@Override
-	@Optional.Method(modid = "MineFactoryReloaded")
+	@Optional.Method(modid = Mods.MFR)
 	public int[] getOutputValues(World world, int x, int y, int z,
 			ForgeDirection side) {
 		return ((TileCipherBlock)world.getTileEntity(x, y, z)).redNetMultiOutput;
 	}
 
 	@Override
-	@Optional.Method(modid = "MineFactoryReloaded")
+	@Optional.Method(modid = Mods.MFR)
 	public int getOutputValue(World world, int x, int y, int z,
 			ForgeDirection side, int subnet) {
 		return ((TileCipherBlock)world.getTileEntity(x, y, z)).redNetSingleOutput;

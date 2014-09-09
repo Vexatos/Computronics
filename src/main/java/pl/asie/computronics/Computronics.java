@@ -71,6 +71,7 @@ import pl.asie.computronics.item.ItemBlockChatBox;
 import pl.asie.computronics.item.ItemOpenComputers;
 import pl.asie.computronics.item.ItemRelaySensor;
 import pl.asie.computronics.item.ItemTape;
+import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tape.StorageManager;
 import pl.asie.computronics.tile.TileCamera;
 import pl.asie.computronics.tile.TileChatBox;
@@ -89,7 +90,7 @@ import pl.asie.lib.util.EnergyConverter;
 
 import java.util.Random;
 
-@Mod(modid = "computronics", name = "Computronics", version = "1.0.0", dependencies = "required-after:asielib;after:ComputerCraft;after:OpenComputers;after:OpenComputers|Core;after:MineFactoryReloaded;after:RedLogic;after:ProjRed|Core;after:nedocomputers;after:Railcraft")
+@Mod(modid = Mods.Computronics, name = Mods.Computronics_NAME, version = "1.0.0", dependencies = "required-after:asielib;after:ComputerCraft;after:OpenComputers;after:OpenComputers|Core;after:MineFactoryReloaded;after:RedLogic;after:ProjRed|Core;after:nedocomputers;after:Railcraft")
 public class Computronics {
 	public Configuration config;
 	public static Random rand = new Random();
@@ -97,7 +98,7 @@ public class Computronics {
 
 	public static FMLEventChannel channel;
 
-	@Instance(value = "computronics")
+	@Instance(value = Mods.Computronics)
 	public static Computronics instance;
 	public static StorageManager storage;
 	public static GuiHandler gui;
@@ -161,19 +162,19 @@ public class Computronics {
 		GameRegistry.registerBlock(block, itemBlock, name);
 		GameRegistry.registerTileEntity(tile, name);
 		//System.out.println("Registering " + name + " as TE " + tile.getCanonicalName());
-		FMLInterModComms.sendMessage("appliedenergistics2", "whitelist-spatial", tile.getCanonicalName());
-		FMLInterModComms.sendMessage("appliedenergistics2", "movabletile", tile.getCanonicalName());
+		FMLInterModComms.sendMessage(Mods.AE2, "whitelist-spatial", tile.getCanonicalName());
+		FMLInterModComms.sendMessage(Mods.AE2, "movabletile", tile.getCanonicalName());
 	}
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-		log = LogManager.getLogger("computronics");
+		log = LogManager.getLogger(Mods.Computronics);
 
 		config = new Configuration(event.getSuggestedConfigurationFile());
 		config.load();
 
 		audio = new DFPWMPlaybackManager(proxy.isClient());
-		packet = new PacketHandler("computronics", new NetworkHandlerClient(), new NetworkHandlerServer());
+		packet = new PacketHandler(Mods.Computronics, new NetworkHandlerClient(), new NetworkHandlerServer());
 
 		// Configs
 
@@ -214,7 +215,7 @@ public class Computronics {
 		LOCOMOTIVE_RELAY_RANGE = (double) config.getInt("locomotiveRelayRange", "railcraft", 128, 0, 512, "The range of Locomotive Relays in Blocks.");
 
 		// GregTech recipe mode
-		GREGTECH_RECIPES = config.getBoolean("gtRecipeMode", "gregtech", Loader.isModLoaded("gregtech"), "Set this to true to enable GregTech-style recipes") && Loader.isModLoaded("gregtech");
+		GREGTECH_RECIPES = config.getBoolean("gtRecipeMode", "gregtech", Loader.isModLoaded(Mods.GregTech), "Set this to true to enable GregTech-style recipes") && Loader.isModLoaded(Mods.GregTech);
 
 		if(isEnabled("ironNoteBlock", true)) {
 			ironNote = new BlockIronNote();
@@ -251,7 +252,7 @@ public class Computronics {
 			registerBlockWithTileEntity(colorfulLamp, TileColorfulLamp.class, "computronics.colorfulLamp");
 		}
 
-		if(Loader.isModLoaded("nedocomputers") && isEnabled("eepromReader", true)) {
+		if(Loader.isModLoaded(Mods.NedoComputers) && isEnabled("eepromReader", true)) {
 			nc_eepromreader = new BlockEEPROMReader();
 			registerBlockWithTileEntity(nc_eepromreader, TileEEPROMReader.class, "computronics.eepromReader");
 		}
@@ -260,19 +261,19 @@ public class Computronics {
 			itemTape = new ItemTape(TAPE_LENGTHS);
 			GameRegistry.registerItem(itemTape, "computronics.tape");
 
-			if(Loader.isModLoaded("gregtech")) {
-				itemPartsGreg = new ItemMultiple("computronics", new String[] { "reelChromoxide" });
+			if(Loader.isModLoaded(Mods.GregTech)) {
+				itemPartsGreg = new ItemMultiple(Mods.Computronics, new String[] { "reelChromoxide" });
 				itemPartsGreg.setCreativeTab(tab);
 				GameRegistry.registerItem(itemPartsGreg, "computronics.gt_parts");
 				proxy.registerEntities();
 			}
 		}
 
-		itemParts = new ItemMultiple("computronics", new String[] { "part_tape_track" });
+		itemParts = new ItemMultiple(Mods.Computronics, new String[] { "part_tape_track" });
 		itemParts.setCreativeTab(tab);
 		GameRegistry.registerItem(itemParts, "computronics.parts");
 
-		if(Loader.isModLoaded("Railcraft") && isEnabled("railcraftLocomotiveRelay", true)) {
+		if(Loader.isModLoaded(Mods.Railcraft) && isEnabled("railcraftLocomotiveRelay", true)) {
 			locomotiveRelay = new BlockLocomotiveRelay();
 			GameRegistry.registerBlock(locomotiveRelay, "computronics.locomotiveRelay");
 			GameRegistry.registerTileEntity(TileLocomotiveRelay.class, "computronics.locomotiveRelay");
@@ -281,12 +282,12 @@ public class Computronics {
 			GameRegistry.registerItem(relaySensor, "computronics.relaySensor");
 		}
 
-		if(Loader.isModLoaded("OpenComputers")) {
+		if(Loader.isModLoaded(Mods.OpenComputers)) {
 			preInitOC();
 		}
 	}
 
-	@Optional.Method(modid = "OpenComputers")
+	@Optional.Method(modid = Mods.OpenComputers)
 	private void preInitOC() {
 		if(isEnabled("ocRobotUpgrades", true)) {
 			itemRobotUpgrade = new ItemOpenComputers();
@@ -314,23 +315,23 @@ public class Computronics {
 			new LampRender();
 		}
 
-		FMLInterModComms.sendMessage("Waila", "register", "pl.asie.computronics.integration.waila.IntegrationWaila.register");
+		FMLInterModComms.sendMessage(Mods.Waila, "register", "pl.asie.computronics.integration.waila.IntegrationWaila.register");
 
-		if(Loader.isModLoaded("gregtech") && GREGTECH_RECIPES) {
+		if(Loader.isModLoaded(Mods.GregTech) && GREGTECH_RECIPES) {
 			ModRecipes.GregTechRecipes.registerGregTechRecipes();
 		} else {
 			ModRecipes.registerRecipes();
 		}
 
 		// Mod compat - GregTech
-		if(itemTape != null && Loader.isModLoaded("gregtech") && itemPartsGreg != null) {
+		if(itemTape != null && Loader.isModLoaded(Mods.GregTech) && itemPartsGreg != null) {
 			ModRecipes.GregTechRecipes.regsiterGregTechTapeRecipes();
 		}
 
-		if(Loader.isModLoaded("ComputerCraft")) {
+		if(Loader.isModLoaded(Mods.ComputerCraft)) {
 			initCC();
 		}
-		if(Loader.isModLoaded("OpenComputers")) {
+		if(Loader.isModLoaded(Mods.OpenComputers)) {
 			initOC();
 		}
 
@@ -339,9 +340,9 @@ public class Computronics {
 		config.save();
 	}
 
-	@Optional.Method(modid = "ComputerCraft")
+	@Optional.Method(modid = Mods.ComputerCraft)
 	private void initCC() {
-		if(Loader.isModLoaded("RedLogic")) {
+		if(Loader.isModLoaded(Mods.RedLogic)) {
 			if(config.get("modCompatibility", "enableRedLogicLamps", true).getBoolean(true)) {
 				ComputerCraftAPI.registerPeripheralProvider(new LampPeripheral());
 			}
@@ -349,23 +350,23 @@ public class Computronics {
 				ComputerCraftAPI.registerBundledRedstoneProvider(new CCBundledRedstoneProviderRedLogic());
 			}
 		}
-		if(Loader.isModLoaded("MineFactoryReloaded") || Loader.isModLoaded("JABBA")) {
+		if(Loader.isModLoaded(Mods.MFR) || Loader.isModLoaded(Mods.JABBA)) {
 			if(config.get("modCompatibility", "enableDeepStorageUnit", true).getBoolean(true)) {
 				ComputerCraftAPI.registerPeripheralProvider(new DeepStorageUnitPeripheral());
 			}
 		}
-		if(Loader.isModLoaded("Steamcraft")) {
+		if(Loader.isModLoaded(Mods.FSP)) {
 			if(config.get("modCompatibility", "enableFlaxbeardSteamTransporters", true).getBoolean(true)) {
 				ComputerCraftAPI.registerPeripheralProvider(new SteamTransporterPeripheral());
 			}
 		}
-		if(Loader.isModLoaded("factorization")) {
+		if(Loader.isModLoaded(Mods.Factorization)) {
 			if(config.get("modCompatibility", "enableFactorizationChargePeripheral", true).getBoolean(true)) {
 				ComputerCraftAPI.registerPeripheralProvider(new ChargeConductorPeripheral());
 			}
 		}
 
-		if(Loader.isModLoaded("Railcraft")) {
+		if(Loader.isModLoaded(Mods.Railcraft)) {
 			if(config.get("modCompatibility", "enableRailcraftRoutingPeripherals", true).getBoolean(true)) {
 				ComputerCraftAPI.registerPeripheralProvider(new RoutingTrackPeripheral());
 				ComputerCraftAPI.registerPeripheralProvider(new RoutingDetectorPeripheral());
@@ -391,14 +392,14 @@ public class Computronics {
 		}
 	}
 
-	@Optional.Method(modid = "OpenComputers")
+	@Optional.Method(modid = Mods.OpenComputers)
 	private void initOC() {
-		if(Loader.isModLoaded("RedLogic")) {
+		if(Loader.isModLoaded(Mods.RedLogic)) {
 			if(config.get("modCompatibility", "enableRedLogicLamps", true).getBoolean(true)) {
 				li.cil.oc.api.Driver.add(new DriverLamp());
 			}
 		}
-		if(Loader.isModLoaded("betterstorage")) {
+		if(Loader.isModLoaded(Mods.BetterStorage)) {
 			if(config.get("modCompatibility", "enableBetterStorageCrates", true).getBoolean(true)) {
 				try {
 					Class.forName("net.mcft.copy.betterstorage.api.ICrateStorage");
@@ -417,22 +418,22 @@ public class Computronics {
 				}
 			}
 		}
-		if(Loader.isModLoaded("MineFactoryReloaded") || Loader.isModLoaded("JABBA")) {
+		if(Loader.isModLoaded(Mods.MFR) || Loader.isModLoaded(Mods.JABBA)) {
 			if(config.get("modCompatibility", "enableDeepStorageUnit", true).getBoolean(true)) {
 				li.cil.oc.api.Driver.add(new DriverDeepStorageUnit());
 			}
 		}
-		if(Loader.isModLoaded("Steamcraft")) {
+		if(Loader.isModLoaded(Mods.FSP)) {
 			if(config.get("modCompatibility", "enableFlaxbeardSteamTransporters", true).getBoolean(true)) {
 				li.cil.oc.api.Driver.add(new DriverSteamTransporter());
 			}
 		}
-		if(Loader.isModLoaded("factorization")) {
+		if(Loader.isModLoaded(Mods.Factorization)) {
 			if(config.get("modCompatibility", "enableFactorizationChargePeripheral", true).getBoolean(true)) {
 				li.cil.oc.api.Driver.add(new DriverChargeConductor());
 			}
 		}
-		if(Loader.isModLoaded("Railcraft")) {
+		if(Loader.isModLoaded(Mods.Railcraft)) {
 			if(config.get("modCompatibility", "enableRailcraftRoutingComponents", true).getBoolean(true)) {
 				li.cil.oc.api.Driver.add(new DriverRoutingTrack());
 				li.cil.oc.api.Driver.add(new DriverRoutingDetector());
@@ -440,7 +441,7 @@ public class Computronics {
 				li.cil.oc.api.Driver.add(new DriverReceiverBox());
 			}
 		}
-		if(Loader.isModLoaded("gregtech")) {
+		if(Loader.isModLoaded(Mods.GregTech)) {
 			if(config.get("modCompatibility", "enableGregTechMachines", true).getBoolean(true)) {
 				li.cil.oc.api.Driver.add(new DriverBaseMetaTileEntity());
 				li.cil.oc.api.Driver.add(new DriverDeviceInformation());

@@ -6,6 +6,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.reference.Mods;
 import pl.asie.lib.block.BlockBase;
 
 public abstract class BlockPeripheral extends BlockBase {
@@ -16,7 +17,7 @@ public abstract class BlockPeripheral extends BlockBase {
 	}
 
 	@Override
-	@Optional.Method(modid = "nedocomputers")
+	@Optional.Method(modid = Mods.NedoComputers)
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int a, float _x, float _y, float _z) {
 		if (!world.isRemote && player.isSneaking()) {
 			try {

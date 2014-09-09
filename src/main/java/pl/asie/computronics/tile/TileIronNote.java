@@ -16,12 +16,13 @@ import mrtjp.projectred.api.ProjectRedAPI;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.NoteUtils;
 
 @Optional.InterfaceList({
-	@Optional.Interface(iface = "mods.immibis.redlogic.api.wiring.IBundledUpdatable", modid = "RedLogic"),
-	@Optional.Interface(iface = "mods.immibis.redlogic.api.wiring.IConnectable", modid = "RedLogic"),
-	@Optional.Interface(iface = "mrtjp.projectred.api.IBundledTile", modid = "ProjRed|Core")
+	@Optional.Interface(iface = "mods.immibis.redlogic.api.wiring.IBundledUpdatable", modid = Mods.RedLogic),
+	@Optional.Interface(iface = "mods.immibis.redlogic.api.wiring.IConnectable", modid = Mods.RedLogic),
+	@Optional.Interface(iface = "mrtjp.projectred.api.IBundledTile", modid = Mods.ProjectRed)
 })
 public class TileIronNote extends TileEntityPeripheralBase implements IBundledTile, IBundledUpdatable, IConnectable {
 	public TileIronNote() {
@@ -34,7 +35,7 @@ public class TileIronNote extends TileEntityPeripheralBase implements IBundledTi
 	// OpenComputers
 	
     @Callback(direct = true)
-    @Optional.Method(modid="OpenComputers")
+    @Optional.Method(modid=Mods.OpenComputers)
     public Object[] playNote(Context context, Arguments args) {
     	if(args.count() >= 1) {
     		if(args.count() >= 2 && args.isInteger(1)) {
@@ -51,13 +52,13 @@ public class TileIronNote extends TileEntityPeripheralBase implements IBundledTi
     }
 
 	@Override
-    @Optional.Method(modid="ComputerCraft")
+    @Optional.Method(modid=Mods.ComputerCraft)
 	public String[] getMethodNames() {
 		return new String[]{"playNote"};
 	}
 
 	@Override
-    @Optional.Method(modid="ComputerCraft")
+    @Optional.Method(modid=Mods.ComputerCraft)
 	public Object[] callMethod(IComputerAccess computer, ILuaContext context,
 			int method, Object[] arguments) throws LuaException,
 			InterruptedException {
@@ -74,13 +75,13 @@ public class TileIronNote extends TileEntityPeripheralBase implements IBundledTi
 	}
 
 	@Override
-    @Optional.Method(modid="nedocomputers")
+    @Optional.Method(modid=Mods.NedoComputers)
 	public short busRead(int addr) {
 		return 0;
 	}
 
 	@Override
-    @Optional.Method(modid="nedocomputers")
+    @Optional.Method(modid=Mods.NedoComputers)
 	public void busWrite(int addr, short data) {
 		NoteUtils.playNote(worldObj, xCoord, yCoord, zCoord, (data >> 5), (data & 31));
 	}
@@ -94,16 +95,16 @@ public class TileIronNote extends TileEntityPeripheralBase implements IBundledTi
 	}
 
 	@Override
-	@Optional.Method(modid="ProjRed|Core")
+	@Optional.Method(modid=Mods.ProjectRed)
 	public byte[] getBundledSignal(int side) {
 		return new byte[]{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 	}
 
 	@Override
-	@Optional.Method(modid="ProjRed|Core")
+	@Optional.Method(modid=Mods.ProjectRed)
 	public boolean canConnectBundled(int side) { return true; }
 	
-	@Optional.Method(modid = "ProjRed|Core")
+	@Optional.Method(modid=Mods.ProjectRed)
 	public void onProjectRedBundledInputChanged() {
 		for(int i = 0; i < 6; i++) {
 			parseBundledInput(ProjectRedAPI.transmissionAPI.getBundledInput(worldObj, xCoord, yCoord, zCoord, i));
@@ -111,13 +112,13 @@ public class TileIronNote extends TileEntityPeripheralBase implements IBundledTi
 	}
 
 	@Override
-	@Optional.Method(modid = "RedLogic")
+	@Optional.Method(modid=Mods.RedLogic)
 	public boolean connects(IWire wire, int blockFace, int fromDirection) { return (wire instanceof IBundledEmitter); }
 	@Override
-	@Optional.Method(modid = "RedLogic")
+	@Optional.Method(modid=Mods.RedLogic)
 	public boolean connectsAroundCorner(IWire wire, int blockFace, int fromDirection) { return false; }
 	@Override
-	@Optional.Method(modid = "RedLogic")
+	@Optional.Method(modid=Mods.RedLogic)
 	public void onBundledInputChanged() {
 		for(int side = 0; side < 6; side++) {
 			ForgeDirection dir = ForgeDirection.getOrientation(side);

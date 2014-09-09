@@ -43,7 +43,7 @@ public class SteamTransporterPeripheral implements IPeripheral, IPeripheralProvi
 			int method, Object[] arguments) throws LuaException,
 			InterruptedException {
 		switch(method) {
-		case 0: return new Object[]{new Double(block.getPressure())};
+		case 0: return new Object[]{ (double) block.getPressure() };
 		case 1: return new Object[]{block.getCapacity()};
 		case 2: return new Object[]{block.getSteam()};
 		}

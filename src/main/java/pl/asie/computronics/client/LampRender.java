@@ -15,7 +15,7 @@ public class LampRender implements ISimpleBlockRenderingHandler {
 	private static int renderId;
 	
 	public LampRender() {
-		this.renderId = RenderingRegistry.getNextAvailableRenderId();
+		renderId = RenderingRegistry.getNextAvailableRenderId();
 		RenderingRegistry.registerBlockHandler(this);
 	}
 	
@@ -90,7 +90,7 @@ public class LampRender implements ISimpleBlockRenderingHandler {
 
 	@Override
 	public int getRenderId() {
-		return this.renderId;
+		return renderId;
 	}
 
 	public static int id() {

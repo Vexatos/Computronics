@@ -21,6 +21,7 @@ import pl.asie.computronics.Computronics;
 import pl.asie.computronics.Packets;
 import pl.asie.computronics.api.tape.IItemTapeStorage;
 import pl.asie.computronics.item.ItemTape;
+import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TapeDriveState.State;
 import pl.asie.lib.api.tile.IInventoryProvider;
 import pl.asie.lib.network.Packet;
@@ -33,21 +34,21 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 		super("tape_drive");
 		this.createInventory(1);
 		this.state = new TapeDriveState();
-		if(Loader.isModLoaded("OpenComputers") && node != null) {
+		if(Loader.isModLoaded(Mods.OpenComputers) && node != null) {
 			initOCFilesystem();
 		}
 	}
 
 	private ManagedEnvironment oc_fs;
 
-	@Optional.Method(modid="OpenComputers")
+	@Optional.Method(modid=Mods.OpenComputers)
 	private void initOCFilesystem() {
 		oc_fs = li.cil.oc.api.FileSystem.asManagedEnvironment(li.cil.oc.api.FileSystem.fromClass(Computronics.class, "computronics", "lua/component/tape_drive"),
 				"tape_drive");
 	}
 
 	@Override
-	@Optional.Method(modid="OpenComputers")
+	@Optional.Method(modid=Mods.OpenComputers)
 	public void onConnect(final Node node)
 	{
 		if(node.host() instanceof Context) {
@@ -58,7 +59,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 	// GUI/State
 
 	@Override
-	@Optional.Method(modid="OpenComputers")
+	@Optional.Method(modid=Mods.OpenComputers)
 	public void onDisconnect(final Node node) {
 		if (node.host() instanceof Context) {
 			// Remove our file systems when we get disconnected from a
@@ -226,26 +227,26 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 	// OpenComputers
 
 	@Callback(direct = true)
-    @Optional.Method(modid="OpenComputers")
+    @Optional.Method(modid=Mods.OpenComputers)
 	public Object[] isEnd(Context context, Arguments args) {
 		if(state.getStorage() != null) return new Object[]{state.getStorage().getPosition() + state.packetSize <= state.getStorage().getSize()};
 		else return new Object[]{true};
 	}
 	
     @Callback(direct = true)
-    @Optional.Method(modid="OpenComputers")
+    @Optional.Method(modid=Mods.OpenComputers)
     public Object[] isReady(Context context, Arguments args) {
     	return new Object[]{state.getStorage() != null};
     }
     
     @Callback(direct = true)
-    @Optional.Method(modid="OpenComputers")
+    @Optional.Method(modid=Mods.OpenComputers)
     public Object[] getSize(Context context, Arguments args) {
     	return new Object[]{(state.getStorage() != null ? state.getStorage().getSize() : 0)};
     }
     
     @Callback
-    @Optional.Method(modid="OpenComputers")
+    @Optional.Method(modid=Mods.OpenComputers)
     public Object[] setLabel(Context context, Arguments args) {
     	if(args.count() == 1) {
     		if(args.isString(0)) setLabel(args.checkString(0));
@@ -254,13 +255,13 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
     }
     
     @Callback
-    @Optional.Method(modid="OpenComputers")
+    @Optional.Method(modid=Mods.OpenComputers)
     public Object[] getLabel(Context context, Arguments args) {
     	return new Object[]{(state.getStorage() != null ? storageName : "")};
     }
 
 	@Callback
-    @Optional.Method(modid="OpenComputers")
+    @Optional.Method(modid=Mods.OpenComputers)
     public Object[] seek(Context context, Arguments args) {
     	if(state.getStorage() != null && args.count() >= 1 && args.isInteger(0)) {
     		return new Object[]{state.getStorage().seek(args.checkInteger(0))};
@@ -269,7 +270,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
     }
     
     @Callback
-    @Optional.Method(modid="OpenComputers")
+    @Optional.Method(modid=Mods.OpenComputers)
     public Object[] read(Context context, Arguments args) {
     	if(state.getStorage() != null) {
     		if(args.count() >= 1 && args.isInteger(0) && (args.checkInteger(0) >= 0)) {
@@ -281,7 +282,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
     }
     
     @Callback
-    @Optional.Method(modid="OpenComputers")
+    @Optional.Method(modid=Mods.OpenComputers)
     public Object[] write(Context context, Arguments args) {
     	if(state.getStorage() != null && args.count() >= 1) {
     		if(args.isInteger(0))
@@ -293,47 +294,47 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
     }
     
     @Callback
-    @Optional.Method(modid="OpenComputers")
+    @Optional.Method(modid=Mods.OpenComputers)
     public Object[] play(Context context, Arguments args) {
     	switchState(State.PLAYING);
     	return new Object[]{state.getStorage() != null};
     }
 
     @Callback
-    @Optional.Method(modid="OpenComputers")
+    @Optional.Method(modid=Mods.OpenComputers)
     public Object[] stop(Context context, Arguments args) {
     	switchState(State.STOPPED);
     	return new Object[]{state.getStorage() != null};
     }
     
     @Callback
-	@Optional.Method(modid="OpenComputers")
+	@Optional.Method(modid=Mods.OpenComputers)
     public Object[] setSpeed(Context context, Arguments args) {
     	if(args.count() > 0 && args.isDouble(0)) return new Object[]{this.state.setSpeed((float)args.checkDouble(0))};
     	else return null;
     }
     
     @Callback
-	@Optional.Method(modid="OpenComputers")
+	@Optional.Method(modid=Mods.OpenComputers)
     public Object[] setVolume(Context context, Arguments args) {
     	if(args.count() > 0 && args.isDouble(0)) this.state.setVolume((float)args.checkDouble(0));
     	return null;
     }
     
     @Callback
-    @Optional.Method(modid="OpenComputers")
+    @Optional.Method(modid=Mods.OpenComputers)
     public Object[] getState(Context context, Arguments args) {
     	return new Object[]{state.toString()};
     }
     
 	@Override
-    @Optional.Method(modid="ComputerCraft")
+    @Optional.Method(modid=Mods.ComputerCraft)
 	public String[] getMethodNames() {
 		return new String[]{"isEnd", "isReady", "getSize", "getLabel", "getState", "setLabel", "setSpeed", "setVolume", "seek", "read", "write", "play", "stop"};
 	}
 
 	@Override
-    @Optional.Method(modid="ComputerCraft")
+    @Optional.Method(modid=Mods.ComputerCraft)
 	public Object[] callMethod(IComputerAccess computer, ILuaContext context,
 			int method, Object[] arguments) throws LuaException,
 			InterruptedException {
@@ -394,7 +395,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 	private int _nedo_lastSeek = 0;
 
 	@Override
-    @Optional.Method(modid="nedocomputers")
+    @Optional.Method(modid=Mods.NedoComputers)
 	public short busRead(int addr) {
 		switch(addr & 0xFFFE) {
 		case 0: return (short)state.getState().ordinal();
@@ -408,7 +409,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 	}
 
 	@Override
-    @Optional.Method(modid="nedocomputers")
+    @Optional.Method(modid=Mods.NedoComputers)
 	public void busWrite(int addr, short data) {
 		switch(addr & 0xFFFE) {
 		case 0: state.setState(State.values()[data % State.values().length]); break;

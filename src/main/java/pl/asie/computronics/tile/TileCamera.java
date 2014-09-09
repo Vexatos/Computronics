@@ -9,6 +9,7 @@ import li.cil.oc.api.network.Callback;
 import li.cil.oc.api.network.Context;
 import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.Camera;
 
 public class TileCamera extends TileEntityPeripheralBase {
@@ -25,7 +26,7 @@ public class TileCamera extends TileEntityPeripheralBase {
 	public boolean canUpdate() { return true; }
 	
 	private ForgeDirection getFacingDirection() {
-		return Computronics.instance.camera.getFacingDirection(worldObj, xCoord, yCoord, zCoord);
+		return Computronics.camera.getFacingDirection(worldObj, xCoord, yCoord, zCoord);
 	}
 	
 	@Override
@@ -47,7 +48,7 @@ public class TileCamera extends TileEntityPeripheralBase {
 	
 	// OpenComputers
     @Callback(direct = true, limit = CALL_LIMIT)
-    @Optional.Method(modid="OpenComputers")
+    @Optional.Method(modid= Mods.OpenComputers)
     public Object[] distance(Context context, Arguments args) {
     	if(args.count() == 2) {
     		camera.ray(worldObj, xCoord, yCoord, zCoord, getFacingDirection(),
@@ -57,13 +58,13 @@ public class TileCamera extends TileEntityPeripheralBase {
     }
 
 	@Override
-    @Optional.Method(modid="ComputerCraft")
+    @Optional.Method(modid=Mods.ComputerCraft)
 	public String[] getMethodNames() {
 		return new String[]{"distance"};
 	}
 
 	@Override
-    @Optional.Method(modid="ComputerCraft")
+    @Optional.Method(modid=Mods.ComputerCraft)
 	public Object[] callMethod(IComputerAccess computer, ILuaContext context,
 			int method, Object[] arguments) throws LuaException,
 			InterruptedException {
@@ -77,7 +78,7 @@ public class TileCamera extends TileEntityPeripheralBase {
     	}
 		switch(method) {
 			case 0: { // distance
-				return new Object[]{new Double(camera.getDistance())};
+				return new Object[]{ camera.getDistance() };
 			}
 		}
 		return null;
@@ -86,7 +87,7 @@ public class TileCamera extends TileEntityPeripheralBase {
 	private float _nedo_xDir, _nedo_yDir;
 
 	@Override
-    @Optional.Method(modid="nedocomputers")
+    @Optional.Method(modid=Mods.NedoComputers)
 	public short busRead(int addr) {
 		switch((addr & 0xFFFE)) {
 		case 4: return ((short)(camera.getDistance() * 64));
@@ -95,7 +96,7 @@ public class TileCamera extends TileEntityPeripheralBase {
 	}
 
 	@Override
-    @Optional.Method(modid="nedocomputers")
+    @Optional.Method(modid=Mods.NedoComputers)
 	public void busWrite(int addr, short data) {
 		float dataAsDir = (data / 32768.0F);
 		switch((addr & 0xFFFE)) {

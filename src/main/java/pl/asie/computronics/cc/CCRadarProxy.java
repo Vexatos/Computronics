@@ -10,6 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TileRadar;
 import pl.asie.computronics.util.RadarUtils;
 import pl.asie.lib.util.EnergyConverter;
@@ -27,12 +28,12 @@ public class CCRadarProxy {
                 expand(distance, distance, distance);
     }
 
-    @Optional.Method(modid="ComputerCraft")
+    @Optional.Method(modid=Mods.ComputerCraft)
 	public static String[] getMethodNames() {
 		return new String[]{"getEntities", "getPlayers", "getMobs"};
 	}
 	
-    @Optional.Method(modid="ComputerCraft")
+    @Optional.Method(modid=Mods.ComputerCraft)
 	public static Object[] callMethod(World worldObj, int xCoord, int yCoord, int zCoord, IComputerAccess computer, ILuaContext context,
 			int method, Object[] arguments, Object powerProvider) throws LuaException,
 			InterruptedException {

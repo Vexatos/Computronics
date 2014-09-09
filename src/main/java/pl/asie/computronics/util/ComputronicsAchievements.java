@@ -19,6 +19,7 @@ import net.minecraftforge.event.entity.item.ItemExpireEvent;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TileLocomotiveRelay;
 
 import java.util.HashMap;
@@ -66,12 +67,12 @@ public class ComputronicsAchievements {
 		this.registerAchievement(EnumAchievements.Tape, 0, 0, new ItemStack(Computronics.itemTape, 1, 0), null, false, true);
 		this.registerAchievement(EnumAchievements.Tape_Star, 4, 0, new ItemStack(Computronics.itemTape, 1, 8), this.getAchievement(EnumAchievements.Tape), false, false);
 
-		if(Loader.isModLoaded("gregtech")) {
+		if(Loader.isModLoaded(Mods.GregTech)) {
 			this.registerAchievement(EnumAchievements.Tape_IG, 8, 2, new ItemStack(Computronics.itemTape, 1, 9), this.getAchievement(EnumAchievements.Tape_Star), true, false);
 			this.registerAchievement(EnumAchievements.Tape_IG_Dropped, 8, 10, ItemList.IC2_Scrap.get(1), this.getAchievement(EnumAchievements.Tape_IG), true, false);
 		}
 
-		if(Loader.isModLoaded("Railcraft")) {
+		if(Loader.isModLoaded(Mods.Railcraft)) {
 			this.registerAchievement(EnumAchievements.Locomotive, 0, 4, EnumCart.LOCO_ELECTRIC.getCartItem(), null, false, true);
 			this.registerAchievement(EnumAchievements.Relay, 2, 6, new ItemStack(Computronics.relaySensor), this.getAchievement(EnumAchievements.Locomotive), false, false);
 		}

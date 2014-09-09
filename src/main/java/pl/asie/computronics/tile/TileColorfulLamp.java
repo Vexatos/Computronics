@@ -19,11 +19,12 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
+import pl.asie.computronics.reference.Mods;
 
 @Optional.InterfaceList({
-	@Optional.Interface(iface = "mods.immibis.redlogic.api.wiring.IBundledUpdatable", modid = "RedLogic"),
-	@Optional.Interface(iface = "mods.immibis.redlogic.api.wiring.IConnectable", modid = "RedLogic"),
-	@Optional.Interface(iface = "mrtjp.projectred.api.IBundledTile", modid = "ProjRed|Core")
+	@Optional.Interface(iface = "mods.immibis.redlogic.api.wiring.IBundledUpdatable", modid = Mods.RedLogic),
+	@Optional.Interface(iface = "mods.immibis.redlogic.api.wiring.IConnectable", modid = Mods.RedLogic),
+	@Optional.Interface(iface = "mrtjp.projectred.api.IBundledTile", modid = Mods.ProjectRed)
 })
 public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundledTile, IBundledUpdatable, IConnectable {
 	public TileColorfulLamp() {
@@ -43,13 +44,13 @@ public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundl
 	}
 	
 	@Callback(direct = true)
-    @Optional.Method(modid="OpenComputers")
+    @Optional.Method(modid=Mods.OpenComputers)
 	public Object[] getLampColor(Context context, Arguments args) throws Exception {
 		return new Object[]{this.getLampColor()};
 	}
 	
 	@Callback()
-    @Optional.Method(modid="OpenComputers")
+    @Optional.Method(modid=Mods.OpenComputers)
 	public Object[] setLampColor(Context context, Arguments args) throws Exception {
 		if(args.count() >= 1 && args.isInteger(0))
 			this.setLampColor(args.checkInteger(0));
@@ -57,13 +58,13 @@ public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundl
 	}
 	
 	@Override
-    @Optional.Method(modid="ComputerCraft")
+    @Optional.Method(modid=Mods.ComputerCraft)
 	public String[] getMethodNames() {
 		return new String[]{"getLampColor", "setLampColor"};
 	}
 
 	@Override
-    @Optional.Method(modid="ComputerCraft")
+    @Optional.Method(modid=Mods.ComputerCraft)
 	public Object[] callMethod(IComputerAccess computer, ILuaContext context,
 			int method, Object[] arguments) throws LuaException,
 			InterruptedException {
@@ -80,13 +81,13 @@ public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundl
 	}
 
 	@Override
-	@Optional.Method(modid="nedocomputers")
+	@Optional.Method(modid=Mods.NedoComputers)
 	public short busRead(int addr) {
 		return (short)color;
 	}
 
 	@Override
-	@Optional.Method(modid="nedocomputers")
+	@Optional.Method(modid=Mods.NedoComputers)
 	public void busWrite(int addr, short data) {
 		this.setLampColor(((int)data) & 0x7FFF);
 	}
@@ -133,16 +134,16 @@ public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundl
 	}
 
 	@Override
-	@Optional.Method(modid="ProjRed|Core")
+	@Optional.Method(modid=Mods.ProjectRed)
 	public byte[] getBundledSignal(int side) {
 		return new byte[]{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 	}
 
 	@Override
-	@Optional.Method(modid="ProjRed|Core")
+	@Optional.Method(modid=Mods.ProjectRed)
 	public boolean canConnectBundled(int side) { return true; }
 	
-	@Optional.Method(modid = "ProjRed|Core")
+	@Optional.Method(modid=Mods.ProjectRed)
 	public void onProjectRedBundledInputChanged() {
 		for(int i = 0; i < 6; i++) {
 			if(parseBundledInput(ProjectRedAPI.transmissionAPI.getBundledInput(worldObj, xCoord, yCoord, zCoord, i)))
@@ -151,13 +152,13 @@ public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundl
 	}
 
 	@Override
-	@Optional.Method(modid = "RedLogic")
+	@Optional.Method(modid = Mods.RedLogic)
 	public boolean connects(IWire wire, int blockFace, int fromDirection) { return (wire instanceof IBundledEmitter); }
 	@Override
-	@Optional.Method(modid = "RedLogic")
+	@Optional.Method(modid = Mods.RedLogic)
 	public boolean connectsAroundCorner(IWire wire, int blockFace, int fromDirection) { return false; }
 	@Override
-	@Optional.Method(modid = "RedLogic")
+	@Optional.Method(modid = Mods.RedLogic)
 	public void onBundledInputChanged() {
 		for(int side = 0; side < 6; side++) {
 			ForgeDirection dir = ForgeDirection.getOrientation(side);

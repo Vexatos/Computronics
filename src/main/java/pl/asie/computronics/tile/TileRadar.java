@@ -14,6 +14,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.AxisAlignedBB;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.cc.CCRadarProxy;
+import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.RadarUtils;
 import pl.asie.lib.api.tile.IBattery;
 import pl.asie.lib.api.tile.IBatteryProvider;
@@ -24,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@Optional.Interface(iface = "li.cil.li.oc.network.Environment", modid = "OpenComputers")
+@Optional.Interface(iface = "li.cil.li.oc.network.Environment", modid = Mods.OpenComputers)
 public class TileRadar extends TileEntityPeripheralBase implements Environment, IBatteryProvider {
 	protected boolean hasEnergy;
 	private IBattery battery;

@@ -1,5 +1,6 @@
 package pl.asie.computronics.cc;
 
+import cpw.mods.fml.common.Optional;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
@@ -9,6 +10,7 @@ import dan200.computercraft.api.turtle.TurtleSide;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
+import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.ParticleUtils;
 
 import java.util.Random;
@@ -25,11 +27,13 @@ public class ParticleTurtleUpgrade extends TurtleUpgradeBase {
 		}
 
 		@Override
+		@Optional.Method(modid= Mods.ComputerCraft)
 		public String[] getMethodNames() {
 			return new String[]{"spawn"};
 		}
 
 		@Override
+		@Optional.Method(modid=Mods.ComputerCraft)
 		public Object[] callMethod(IComputerAccess computer,
 				ILuaContext context, int method, Object[] arguments)
 				throws LuaException, InterruptedException {
@@ -45,18 +49,18 @@ public class ParticleTurtleUpgrade extends TurtleUpgradeBase {
 	        }
 
 	        Random rng = access.getWorld().rand;
-	        double x = access.getPosition().posX + 0.5 + ((Double)arguments[1]).doubleValue();
-	        double y = access.getPosition().posY + 0.5 + ((Double)arguments[2]).doubleValue();
-	        double z = access.getPosition().posZ + 0.5 + ((Double)arguments[3]).doubleValue();
+	        double x = access.getPosition().posX + 0.5 + (Double) arguments[1];
+	        double y = access.getPosition().posY + 0.5 + (Double) arguments[2];
+	        double z = access.getPosition().posZ + 0.5 + (Double) arguments[3];
 	        double defaultv = (rng.nextDouble() * 0.1);
-	        if(arguments.length >= 5) defaultv = ((Double)arguments[4]).doubleValue();
+	        if(arguments.length >= 5) defaultv = (Double) arguments[4];
 	        double vx = defaultv * rng.nextGaussian();
 	        double vy = defaultv * rng.nextGaussian();
 	        double vz = defaultv * rng.nextGaussian();
 	        if(arguments.length >= 7) {
-	        	vx = ((Double)arguments[4]).doubleValue();
-	        	vy = ((Double)arguments[5]).doubleValue();
-	        	vz = ((Double)arguments[6]).doubleValue();
+	        	vx = (Double) arguments[4];
+	        	vy = (Double) arguments[5];
+	        	vz = (Double) arguments[6];
 	        }
 	        ParticleUtils.sendParticlePacket(name, access.getWorld(), x, y, z, vx, vy, vz);
 	        return new Object[]{true};

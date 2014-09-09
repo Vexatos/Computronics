@@ -11,6 +11,7 @@ import li.cil.oc.api.network.Context;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.event.ServerChatEvent;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.ChatBoxUtils;
 
 //import dan200.computer.api.IComputerAccess;
@@ -37,8 +38,8 @@ public class TileChatBox extends TileEntityPeripheralBase {
 	public boolean canUpdate() { return Computronics.MUST_UPDATE_TILE_ENTITIES || Computronics.REDSTONE_REFRESH; }
 	
 	public boolean isCreative() {
-		if(!Computronics.CHATBOX_CREATIVE || worldObj == null) return false;
-		else return worldObj.getBlockMetadata(xCoord, yCoord, zCoord) >= 8;
+		return Computronics.CHATBOX_CREATIVE && worldObj != null
+			&& worldObj.getBlockMetadata(xCoord, yCoord, zCoord) >= 8;
 	}
 	
 	@Override
@@ -65,16 +66,16 @@ public class TileChatBox extends TileEntityPeripheralBase {
 			ticksUntilOff = 5;
 			mustRefresh = true;
 		}
-		if(Loader.isModLoaded("OpenComputers")) eventOC(event);
-		if(Loader.isModLoaded("ComputerCraft")) eventCC(event);
+		if(Loader.isModLoaded(Mods.OpenComputers)) eventOC(event);
+		if(Loader.isModLoaded(Mods.ComputerCraft)) eventCC(event);
 	}
 	
-	@Optional.Method(modid="OpenComputers")
+	@Optional.Method(modid=Mods.OpenComputers)
 	public void eventOC(ServerChatEvent event) {
 		node.sendToReachable("computer.signal", "chat_message", event.username, event.message);
 	}
 	
-	@Optional.Method(modid="ComputerCraft")
+	@Optional.Method(modid=Mods.ComputerCraft)
 	public void eventCC(ServerChatEvent event) {
 		for(IComputerAccess computer: attachedComputersCC) {
 			computer.queueEvent("chat_message", new Object[]{event.username, event.message});
@@ -84,7 +85,7 @@ public class TileChatBox extends TileEntityPeripheralBase {
 	// OpenComputers API
 	
 	@Callback
-	@Optional.Method(modid="OpenComputers")
+	@Optional.Method(modid=Mods.OpenComputers)
 	public Object[] say(Context context, Arguments args) {
 		int d = distance;
 		if(args.count() >= 1) {
@@ -98,13 +99,13 @@ public class TileChatBox extends TileEntityPeripheralBase {
 	}
 	
 	@Callback(direct = true)
-	@Optional.Method(modid="OpenComputers")
+	@Optional.Method(modid=Mods.OpenComputers)
 	public Object[] getDistance(Context context, Arguments args) {
 		return new Object[]{distance};
 	}
 	
 	@Callback(direct = true)
-	@Optional.Method(modid="OpenComputers")
+	@Optional.Method(modid=Mods.OpenComputers)
 	public Object[] setDistance(Context context, Arguments args) {
 		if(args.count() == 1) {
 			if(args.isInteger(0)) setDistance(args.checkInteger(0));
@@ -113,13 +114,13 @@ public class TileChatBox extends TileEntityPeripheralBase {
 	}
 	
 	@Callback(direct = true)
-	@Optional.Method(modid="OpenComputers")
+	@Optional.Method(modid=Mods.OpenComputers)
 	public Object[] getName(Context context, Arguments args) {
 		return new Object[]{distance};
 	}
 	
 	@Callback(direct = true)
-	@Optional.Method(modid="OpenComputers")
+	@Optional.Method(modid=Mods.OpenComputers)
 	public Object[] setName(Context context, Arguments args) {
 		if(args.count() == 1) {
 			if(args.isString(0)) this.name = args.checkString(0);
@@ -142,13 +143,13 @@ public class TileChatBox extends TileEntityPeripheralBase {
     }
 
 	@Override
-    @Optional.Method(modid="ComputerCraft")
+    @Optional.Method(modid=Mods.ComputerCraft)
 	public String[] getMethodNames() {
 		return new String[]{"say", "getDistance", "setDistance", "getName", "setName"};
 	}
 
 	@Override
-    @Optional.Method(modid="ComputerCraft")
+    @Optional.Method(modid=Mods.ComputerCraft)
 	public Object[] callMethod(IComputerAccess computer, ILuaContext context,
 			int method, Object[] arguments) throws LuaException,
 			InterruptedException {
@@ -184,13 +185,13 @@ public class TileChatBox extends TileEntityPeripheralBase {
 	}
 
 	@Override
-    @Optional.Method(modid="nedocomputers")
+    @Optional.Method(modid=Mods.NedoComputers)
 	public short busRead(int addr) {
 		return 0;
 	}
 
 	@Override
-    @Optional.Method(modid="nedocomputers")
+    @Optional.Method(modid=Mods.NedoComputers)
 	public void busWrite(int addr, short data) {
 		switch((addr & 0xFFFE)) {
 		case 0: if(data > 0) distance = data; break;

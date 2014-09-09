@@ -52,7 +52,9 @@ public class GuiTapePlayer extends GuiBase {
 						.writeByte((byte)state.ordinal());
 				Computronics.packet.sendToServer(packet);
 				((TileTapeDrive)this.container.getEntity()).switchState(state);
-			} catch(Exception e) { }
+			} catch(Exception e) {
+				//NO-OP
+			}
 		}
 	}
 	

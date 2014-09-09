@@ -1,5 +1,6 @@
 package pl.asie.computronics.item;
 
+import cpw.mods.fml.common.Optional;
 import li.cil.oc.api.driver.Container;
 import li.cil.oc.api.driver.Slot;
 import li.cil.oc.api.network.ManagedEnvironment;
@@ -10,8 +11,10 @@ import pl.asie.computronics.oc.DriverCardFX;
 import pl.asie.computronics.oc.RobotUpgradeCamera;
 import pl.asie.computronics.oc.RobotUpgradeChatBox;
 import pl.asie.computronics.oc.RobotUpgradeRadar;
+import pl.asie.computronics.reference.Mods;
 import pl.asie.lib.item.ItemMultiple;
 
+@Optional.Interface(iface="li.cil.oc.api.driver.Item", modid = Mods.OpenComputers)
 public class ItemOpenComputers extends ItemMultiple implements li.cil.oc.api.driver.Item {
 	public ItemOpenComputers() {
 		super("computronics", new String[]{"robot_upgrade_camera", "robot_upgrade_chatbox", "robot_upgrade_radar", "card_fx"});
@@ -19,11 +22,13 @@ public class ItemOpenComputers extends ItemMultiple implements li.cil.oc.api.dri
 	}
 
 	@Override
+	@Optional.Method(modid=Mods.OpenComputers)
 	public boolean worksWith(ItemStack stack) {
 		return stack.getItem().equals(this);
 	}
 
 	@Override
+	@Optional.Method(modid=Mods.OpenComputers)
 	public ManagedEnvironment createEnvironment(ItemStack stack,
 			Container container) {
 		switch(stack.getItemDamage()) {
@@ -36,6 +41,7 @@ public class ItemOpenComputers extends ItemMultiple implements li.cil.oc.api.dri
 	}
 
 	@Override
+	@Optional.Method(modid=Mods.OpenComputers)
 	public Slot slot(ItemStack stack) {
 		switch(stack.getItemDamage()) {
 			case 0: return Slot.Upgrade;
@@ -47,6 +53,7 @@ public class ItemOpenComputers extends ItemMultiple implements li.cil.oc.api.dri
 	}
 
 	@Override
+	@Optional.Method(modid=Mods.OpenComputers)
 	public int tier(ItemStack stack) {
 		switch(stack.getItemDamage()) {
 			case 0: return 1; // Tier 2
@@ -58,6 +65,7 @@ public class ItemOpenComputers extends ItemMultiple implements li.cil.oc.api.dri
 	}
 
 	@Override
+	@Optional.Method(modid=Mods.OpenComputers)
 	public NBTTagCompound dataTag(ItemStack stack) {
         if (!stack.hasTagCompound()) {
             stack.setTagCompound(new NBTTagCompound());
