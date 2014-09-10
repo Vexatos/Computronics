@@ -103,7 +103,7 @@ extends TileEntityPeripheralInventory implements ISidedInventory {
 	public Object[] callMethod(IComputerAccess computer, ILuaContext context,
 			int method, Object[] arguments) throws LuaException,
 			InterruptedException {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		return null;
 	}
 
@@ -127,7 +127,7 @@ extends TileEntityPeripheralInventory implements ISidedInventory {
 
 	@Override
 	public void busWrite(int addr, short data) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 
 	}
 	
