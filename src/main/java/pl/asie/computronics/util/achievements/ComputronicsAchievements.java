@@ -57,7 +57,9 @@ public class ComputronicsAchievements {
 
 	public ComputronicsAchievements() {
 
-		rcAchievements = new RailcraftAchievements();
+		if(Loader.isModLoaded(Mods.Railcraft)) {
+			rcAchievements = new RailcraftAchievements();
+		}
 
 		initializeAchievements();
 
@@ -76,7 +78,7 @@ public class ComputronicsAchievements {
 			this.registerAchievement(EnumAchievements.Tape_IG_Dropped, 8, 10, ItemList.IC2_Scrap.get(1), this.getAchievement(EnumAchievements.Tape_IG), true, false);
 		}
 
-		if(Loader.isModLoaded(Mods.Railcraft)) {
+		if(Loader.isModLoaded(Mods.Railcraft) && rcAchievements != null) {
 			rcAchievements.initializeRCAchievements();
 		}
 	}
@@ -130,14 +132,14 @@ public class ComputronicsAchievements {
 					break;
 				}
 			}
-		} else if(Loader.isModLoaded(Mods.Railcraft)) {
+		} else if(Loader.isModLoaded(Mods.Railcraft) && rcAchievements != null) {
 			rcAchievements.onCrafting(stack, player);
 		}
 	}
 
 	@SubscribeEvent
 	public void onLeftClickEntity(AttackEntityEvent event) {
-		if(Loader.isModLoaded(Mods.Railcraft)) {
+		if(Loader.isModLoaded(Mods.Railcraft) && rcAchievements != null) {
 			rcAchievements.onLeftClickEntity(event);
 		}
 	}
@@ -203,14 +205,15 @@ public class ComputronicsAchievements {
 	 * All the Railcraft related Achievements
 	 */
 	private class RailcraftAchievements {
+
 		private void initializeRCAchievements() {
 			Computronics.instance.achievements.registerAchievement(EnumAchievements.Locomotive, 0, 4, EnumCart.LOCO_ELECTRIC.getCartItem(), null, false, true);
 			Computronics.instance.achievements.registerAchievement(EnumAchievements.Relay, 2, 6, new ItemStack(Computronics.relaySensor), Computronics.instance.achievements.getAchievement(EnumAchievements.Locomotive), false, false);
 		}
 
-		private void onCrafting(ItemStack stack, EntityPlayer player){
+		private void onCrafting(ItemStack stack, EntityPlayer player) {
 			if(stack.getItem() instanceof ItemLocomotive
-				&& ItemLocomotive.getModel(stack).equals(ItemLocomotive.getModel(EnumCart.LOCO_ELECTRIC.getCartItem()))){
+				&& ItemLocomotive.getModel(stack).equals(ItemLocomotive.getModel(EnumCart.LOCO_ELECTRIC.getCartItem()))) {
 				Computronics.instance.achievements.triggerAchievement(player, EnumAchievements.Locomotive);
 			}
 		}
