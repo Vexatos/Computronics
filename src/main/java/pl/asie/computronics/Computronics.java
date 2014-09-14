@@ -467,7 +467,6 @@ public class Computronics {
 				e.printStackTrace();
 			}
 		}
-		proxy.registerRenderers();
 	}
 
 	@EventHandler
