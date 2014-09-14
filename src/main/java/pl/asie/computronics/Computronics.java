@@ -336,6 +336,7 @@ public class Computronics {
 		}
 
 		achievements = new ComputronicsAchievements();
+		achievements.initialize();
 
 		config.save();
 	}

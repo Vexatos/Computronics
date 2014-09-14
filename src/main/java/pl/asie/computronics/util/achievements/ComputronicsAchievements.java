@@ -32,8 +32,6 @@ public class ComputronicsAchievements {
 	private HashMap<Number, String> playerMap = new HashMap<Number, String>();
 	private int playerIndex = 0;
 
-	private RailcraftAchievements rcAchievements;
-
 	private enum EnumAchievements {
 
 		Tape("gotTape"),
@@ -55,12 +53,7 @@ public class ComputronicsAchievements {
 
 	}
 
-	public ComputronicsAchievements() {
-
-		if(Loader.isModLoaded(Mods.Railcraft)) {
-			rcAchievements = new RailcraftAchievements();
-		}
-
+	public void initialize() {
 		initializeAchievements();
 
 		AchievementPage.registerAchievementPage(new AchievementPage("Computronics", (Achievement[]) this.achievementMap.values().toArray(new Achievement[this.achievementMap.size()])));
@@ -78,8 +71,8 @@ public class ComputronicsAchievements {
 			this.registerAchievement(EnumAchievements.Tape_IG_Dropped, 8, 10, ItemList.IC2_Scrap.get(1), this.getAchievement(EnumAchievements.Tape_IG), true, false);
 		}
 
-		if(Loader.isModLoaded(Mods.Railcraft) && rcAchievements != null) {
-			rcAchievements.initializeRCAchievements();
+		if(Loader.isModLoaded(Mods.Railcraft)) {
+			RailcraftAchievements.initializeRCAchievements();
 		}
 	}
 
@@ -132,15 +125,15 @@ public class ComputronicsAchievements {
 					break;
 				}
 			}
-		} else if(Loader.isModLoaded(Mods.Railcraft) && rcAchievements != null) {
-			rcAchievements.onCrafting(stack, player);
+		} else if(Loader.isModLoaded(Mods.Railcraft)) {
+			RailcraftAchievements.onCrafting(stack, player);
 		}
 	}
 
 	@SubscribeEvent
 	public void onLeftClickEntity(AttackEntityEvent event) {
-		if(Loader.isModLoaded(Mods.Railcraft) && rcAchievements != null) {
-			rcAchievements.onLeftClickEntity(event);
+		if(Loader.isModLoaded(Mods.Railcraft)) {
+			RailcraftAchievements.onLeftClickEntity(event);
 		}
 	}
 
@@ -204,21 +197,21 @@ public class ComputronicsAchievements {
 	/**
 	 * All the Railcraft related Achievements
 	 */
-	private class RailcraftAchievements {
+	private static class RailcraftAchievements {
 
-		private void initializeRCAchievements() {
+		private static void initializeRCAchievements() {
 			Computronics.instance.achievements.registerAchievement(EnumAchievements.Locomotive, 0, 4, EnumCart.LOCO_ELECTRIC.getCartItem(), null, false, true);
 			Computronics.instance.achievements.registerAchievement(EnumAchievements.Relay, 2, 6, new ItemStack(Computronics.relaySensor), Computronics.instance.achievements.getAchievement(EnumAchievements.Locomotive), false, false);
 		}
 
-		private void onCrafting(ItemStack stack, EntityPlayer player) {
+		private static void onCrafting(ItemStack stack, EntityPlayer player) {
 			if(stack.getItem() instanceof ItemLocomotive
 				&& ItemLocomotive.getModel(stack).equals(ItemLocomotive.getModel(EnumCart.LOCO_ELECTRIC.getCartItem()))) {
 				Computronics.instance.achievements.triggerAchievement(player, EnumAchievements.Locomotive);
 			}
 		}
 
-		private void onLeftClickEntity(AttackEntityEvent event) {
+		private static void onLeftClickEntity(AttackEntityEvent event) {
 			if(Loader.isModLoaded(Mods.Railcraft) && event != null && event.target != null
 				&& event.target instanceof EntityLocomotiveElectric) {
 
