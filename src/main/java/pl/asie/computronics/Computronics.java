@@ -82,7 +82,7 @@ import pl.asie.computronics.tile.TileIronNote;
 import pl.asie.computronics.tile.TileLocomotiveRelay;
 import pl.asie.computronics.tile.TileRadar;
 import pl.asie.computronics.tile.TileTapeDrive;
-import pl.asie.computronics.util.ComputronicsAchievements;
+import pl.asie.computronics.util.achievements.ComputronicsAchievements;
 import pl.asie.lib.gui.GuiHandler;
 import pl.asie.lib.item.ItemMultiple;
 import pl.asie.lib.network.PacketHandler;
@@ -90,7 +90,7 @@ import pl.asie.lib.util.EnergyConverter;
 
 import java.util.Random;
 
-@Mod(modid = Mods.Computronics, name = Mods.Computronics_NAME, version = "1.0.0", dependencies = "required-after:asielib;after:ComputerCraft;after:OpenComputers;after:OpenComputers|Core;after:MineFactoryReloaded;after:RedLogic;after:ProjRed|Core;after:nedocomputers;after:Railcraft")
+@Mod(modid = Mods.Computronics, name = Mods.Computronics_NAME, version = "1.0.1", dependencies = "required-after:asielib;after:ComputerCraft;after:OpenComputers;after:OpenComputers|Core;after:MineFactoryReloaded;after:RedLogic;after:ProjRed|Core;after:nedocomputers;after:Railcraft")
 public class Computronics {
 	public Configuration config;
 	public static Random rand = new Random();
@@ -467,6 +467,7 @@ public class Computronics {
 				e.printStackTrace();
 			}
 		}
+		proxy.registerRenderers();
 	}
 
 	@EventHandler
