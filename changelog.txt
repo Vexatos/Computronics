@@ -1,4 +1,8 @@
-==== 1.0.0 (Indev) ====
+==== 1.0.1 ====
+
+  * FIXED: Fixed horrible derp with the Achievements
+
+==== 1.0.0 ====
 
     Yes, this is what you should think it is, this is the version 1.0.0, so the first actual full release. Prepare for a lot of new stuff:
   * ADDED: RailCraft integration, courtesy of Vexatos! Routing can now be fully controlled with computers!
@@ -14,6 +18,7 @@
             - Battery Buffer support (make sure to place the adapter after you placed the battery buffer!)
             - Added a new virtually indestructable high-end tape using GregTech materials!
             - Added a GregTech recipe mode for all the Computronics blocks and items (Thanks to SpwnX for helping with this)
+  * ADDED: New fancy Achievements for Computronics and its GregTech and Railcraft integration
   * ADDED: New French (AegisLesha) and Chinese (crafteverywhere) translations.
   * ADDED: ITapeStorage API - developers can now create their own compatible tapes and tape devices.
   * ADDED: tape.lua to tape drives - a utility program to write songs to tapes (from a hard drive or the Internet) and to play, stop, pause etc. songs
