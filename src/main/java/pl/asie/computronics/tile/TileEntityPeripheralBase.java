@@ -24,7 +24,7 @@ import java.util.ArrayList;
 // #######################################################
 
 @Optional.InterfaceList({
-	@Optional.Interface(iface = "li.cil.li.oc.network.Environment", modid = Mods.OpenComputers),
+	@Optional.Interface(iface = "li.cil.oc.api.network.Environment", modid = Mods.OpenComputers),
 	@Optional.Interface(iface = "dan200.computercraft.api.peripheral.IPeripheral", modid = Mods.ComputerCraft),
 	@Optional.Interface(iface = "nedocomputers.INedoPeripheral", modid = Mods.NedoComputers)
 })

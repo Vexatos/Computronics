@@ -15,7 +15,6 @@ import cpw.mods.fml.common.network.FMLEventChannel;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import dan200.computercraft.api.ComputerCraftAPI;
-import li.cil.oc.api.Driver;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
@@ -293,7 +292,7 @@ public class Computronics {
 		if(isEnabled("ocRobotUpgrades", true)) {
 			itemRobotUpgrade = new ItemOpenComputers();
 			GameRegistry.registerItem(itemRobotUpgrade, "computronics.robotUpgrade");
-			Driver.add(itemRobotUpgrade);
+			li.cil.oc.api.Driver.add(itemRobotUpgrade);
 		}
 
 		// OpenComputers needs a hook in updateEntity in order to proprly register peripherals.

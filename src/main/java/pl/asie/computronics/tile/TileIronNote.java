@@ -103,7 +103,8 @@ public class TileIronNote extends TileEntityPeripheralBase implements IBundledTi
 	@Override
 	@Optional.Method(modid=Mods.ProjectRed)
 	public boolean canConnectBundled(int side) { return true; }
-	
+
+	@Override
 	@Optional.Method(modid=Mods.ProjectRed)
 	public void onProjectRedBundledInputChanged() {
 		for(int i = 0; i < 6; i++) {

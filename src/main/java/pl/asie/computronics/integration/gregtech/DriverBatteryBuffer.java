@@ -1,6 +1,5 @@
 package pl.asie.computronics.integration.gregtech;
 
-import gregtech.api.GregTech_API;
 import gregtech.api.metatileentity.BaseMetaTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicBatteryBuffer;
 import gregtech.api.util.GT_ModHandler;
