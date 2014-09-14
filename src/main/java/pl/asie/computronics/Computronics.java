@@ -51,6 +51,7 @@ import pl.asie.computronics.integration.factorization.DriverChargeConductor;
 import pl.asie.computronics.integration.fsp.DriverSteamTransporter;
 import pl.asie.computronics.integration.fsp.SteamTransporterPeripheral;
 import pl.asie.computronics.integration.gregtech.DriverBaseMetaTileEntity;
+import pl.asie.computronics.integration.gregtech.DriverBatteryBuffer;
 import pl.asie.computronics.integration.gregtech.DriverDeviceInformation;
 import pl.asie.computronics.integration.gregtech.DriverDigitalChest;
 import pl.asie.computronics.integration.gregtech.DriverMachine;
@@ -446,6 +447,7 @@ public class Computronics {
 				li.cil.oc.api.Driver.add(new DriverBaseMetaTileEntity());
 				li.cil.oc.api.Driver.add(new DriverDeviceInformation());
 				li.cil.oc.api.Driver.add(new DriverMachine());
+				li.cil.oc.api.Driver.add(new DriverBatteryBuffer());
 			}
 			if(config.get("modCompatibility", "enableGregTechDigitalChests", true).getBoolean(true)) {
 				li.cil.oc.api.Driver.add(new DriverDigitalChest());

@@ -125,7 +125,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 		if(cannotAccessLocomotive() != null) {
 			return new Object[] { null, cannotAccessLocomotive() };
 		}
-		return new Object[] { this.locomotive.getCharge() };
+		return new Object[] { this.locomotive.getChargeHandler().getCharge() };
 	}
 
 	@Callback(doc = "function():string; returns the current mode of the locomotive; can be RUNNING, IDLE or SHUTDOWN")
@@ -170,7 +170,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 					}
 				}
 				case 2:{
-					return new Object[] { this.locomotive.getCharge() };
+					return new Object[] { this.locomotive.getChargeHandler().getCharge() };
 				}
 				case 3:{
 					return new Object[] { this.locomotive.getMode().toString() };
