@@ -1,6 +1,14 @@
+==== 1.0.3 ====
+
+  * FIXED: Chat Boxes crashing when OpenComputers is not installed (thanks to Grovert11 for finding the bug)
+
+==== 1.0.2 ====
+
+  * FIXED: EVERYTHING!
+
 ==== 1.0.1 ====
 
-  * FIXED: Fixed horrible derp with the Achievements
+  * FIXED: RailCraft stuff breaking everything without RailCraft installed.
 
 ==== 1.0.0 ====
 
