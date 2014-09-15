@@ -163,7 +163,6 @@ public class Computronics {
 		GameRegistry.registerTileEntity(tile, name);
 		//System.out.println("Registering " + name + " as TE " + tile.getCanonicalName());
 		FMLInterModComms.sendMessage(Mods.AE2, "whitelist-spatial", tile.getCanonicalName());
-		FMLInterModComms.sendMessage(Mods.AE2, "movabletile", tile.getCanonicalName());
 	}
 
 	@EventHandler
