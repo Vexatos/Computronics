@@ -14,7 +14,8 @@
 
 ==== 1.0.0 ====
 
-    Yes, this is what you should think it is, this is the version 1.0.0, so the first actual full release. Prepare for a lot of new stuff:
+  **Yes, this is what you should think it is, this is the version 1.0.0, so the first actual full release. Prepare for a lot of new stuff:**
+
   * ADDED: RailCraft integration, courtesy of Vexatos! Routing can now be fully controlled with computers!
             - Routing Tracks can now be accessed using the Adapter Block
             - Routing Detectors can now be accessed using the Adapter Block
