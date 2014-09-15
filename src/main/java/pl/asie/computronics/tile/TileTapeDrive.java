@@ -195,12 +195,6 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 		super.onChunkUnload();
 		unloadStorage();
 	}
-	
-	@Override
-	public void onWorldUnload() {
-		super.onWorldUnload();
-		unloadStorage();
-	}
 
 	@Override
 	public int getSizeInventory() {
