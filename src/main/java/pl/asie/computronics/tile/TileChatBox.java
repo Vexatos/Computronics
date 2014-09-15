@@ -93,39 +93,48 @@ public class TileChatBox extends TileEntityPeripheralBase {
 				d = Math.min(Computronics.CHATBOX_DISTANCE, args.checkInteger(1));
 				if(d <= 0) d = distance;
 			}
-			if(args.isString(0)) ChatBoxUtils.sendChatMessage(this, d, name.length() > 0 ? name : Computronics.CHATBOX_PREFIX, args.checkString(0));
+			if(args.isString(0)){
+				ChatBoxUtils.sendChatMessage(this, d, name.length() > 0 ? name : Computronics.CHATBOX_PREFIX, args.checkString(0));
+				return new Object[] { true };
+			}
 		}
-		return null;
+		return new Object[] { false };
 	}
 	
 	@Callback(direct = true)
 	@Optional.Method(modid=Mods.OpenComputers)
 	public Object[] getDistance(Context context, Arguments args) {
-		return new Object[]{distance};
+		return new Object[]{ distance };
 	}
 	
 	@Callback(direct = true)
 	@Optional.Method(modid=Mods.OpenComputers)
 	public Object[] setDistance(Context context, Arguments args) {
 		if(args.count() == 1) {
-			if(args.isInteger(0)) setDistance(args.checkInteger(0));
+			if(args.isInteger(0)) {
+				setDistance(args.checkInteger(0));
+				return new Object[]{ true };
+			}
 		}
-		return null;
+		return new Object[] { false };
 	}
 	
 	@Callback(direct = true)
 	@Optional.Method(modid=Mods.OpenComputers)
 	public Object[] getName(Context context, Arguments args) {
-		return new Object[]{distance};
+		return new Object[]{name};
 	}
 	
 	@Callback(direct = true)
 	@Optional.Method(modid=Mods.OpenComputers)
 	public Object[] setName(Context context, Arguments args) {
 		if(args.count() == 1) {
-			if(args.isString(0)) this.name = args.checkString(0);
+			if(args.isString(0)){
+				this.name = args.checkString(0);
+				return new Object[]{ true };
+			}
 		}
-		return null;
+		return new Object[]{ false };
 	}
 
     @Override
@@ -161,8 +170,10 @@ public class TileChatBox extends TileEntityPeripheralBase {
 					d = Math.min(Computronics.CHATBOX_DISTANCE, ((Double)arguments[1]).intValue());
 					if(d <= 0) d = distance;
 				}
-				ChatBoxUtils.sendChatMessage(this, d, Computronics.CHATBOX_PREFIX, ((String)arguments[0]));
+				ChatBoxUtils.sendChatMessage(this, d, name.length() > 0 ? name : Computronics.CHATBOX_PREFIX, ((String)arguments[0]));
+				return new Object[]{ true };
 			}
+			return new Object[]{ false };
 		}
 		case 1: { // getDistance
 			return new Object[]{distance};
@@ -170,15 +181,19 @@ public class TileChatBox extends TileEntityPeripheralBase {
 		case 2: { // setDistance
 			if(arguments.length == 1 && arguments[0] instanceof Double) {
 				setDistance(((Double)arguments[0]).intValue());
+				return new Object[]{ true };
 			}
+			return new Object[] { false };
 		}
 		case 3: { // getName
-			return new Object[]{name};
+			return new Object[]{ name };
 		}
 		case 4: { // setName
 			if(arguments.length == 1 && arguments[0] instanceof String) {
 				this.name = (String)arguments[0];
+				return new Object[]{ true };
 			}
+			return new Object[] { false };
 		}
 		}
 		return null;

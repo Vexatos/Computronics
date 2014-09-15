@@ -1,6 +1,8 @@
 ==== 1.0.3 ====
 
   * FIXED: Chat Boxes crashing when OpenComputers is not installed (thanks to Grovert11 for finding the bug)
+  * FIXED: Chat Box Names not being set properly (thanks to Grovert11 for finding this as well)
+  * FIXED: Locomotive Relay's getDestination returning the same as getMode (once again thanks to Grovert11)
 
 ==== 1.0.2 ====
 

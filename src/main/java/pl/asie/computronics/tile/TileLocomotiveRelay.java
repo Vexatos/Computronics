@@ -153,7 +153,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 			}
 			switch(method){
 				case 0:{
-					return new Object[] { this.locomotive.getMode().toString() };
+					return new Object[] { this.locomotive.getDestination() };
 				}
 				case 1:{
 					if(arguments.length < 1 || !(arguments[0] instanceof String)) {
