@@ -8,18 +8,48 @@ tile.computronics.cipher.name=Bloc de Chiffrement
 tile.computronics.radar.name=Radar
 tile.computronics.colorfulLamp.name=Lampe Colorée
 tile.computronics.eepromReader.name=Lecteur EEPROM
+tile.computronics.locomotiveRelay.name=Relais Digital à Locomotive
 
 tooltip.computronics.chatBox.creative=La NSA dans une boîte!
+tooltip.computronics.sensor.bound=Lié à [%1$s,%2$s,%3$s]
+tooltip.computronics.sensor.desc1=Cliquez-droit sur un relais à locomotive\npendant que vous vous accroupissez pour le lier
+tooltip.computronics.sensor.desc2=Cliquez-gauche sur une Locomotive Electrique\npendant que vous vous accroupissez pour l'attacher
 tooltip.computronics.tape.length=Durée: %s minutes
 tooltip.computronics.tape.balanced=Equilibré!
 tooltip.computronics.tape.unnamed=Cassette sans nom
 tooltip.computronics.tape.none=Pas de Cassette
+tooltip.computronics.tape.ig=Le CDVR standard pour \nles vaisseaux GregTech Intergalactical's
 
+item.computronics.reelChromoxide.name=Cassette d'enregistrement en Dioxyde de Chromium
 item.computronics.robot_upgrade_camera.name=Amélioration de Caméra
 item.computronics.robot_upgrade_chatbox.name=Amélioration de Boîte à Discussion
 item.computronics.robot_upgrade_radar.name=Amélioration de Radar
 item.computronics.card_fx.name=Carte d'Effet de Particules
+item.computronics.relaySensor.name=Senseur à Relais Digital
 item.computronics.part_tape_track.name=Piste de la Cassette
+item.computronics.tape.ig.name=CDVR Intergalactique
 item.computronics.tape.name=Cassette
 
 itemGroup.tabComputronics=Computronics
+
+entity.computronics.itemTape.name=CDVR Intergalactique
+
+chat.computronics.cipher.locked=Ce Bloc de Chiffrement est vérouillé. Vous ne pouvez pas y accéder!
+chat.computronics.sensor.bound=Le relais a été lié avec la locomotive avec succès!
+chat.computronics.sensor.noRelay=Il n'y a pas de relais aux coordonnées données!
+chat.computronics.sensor.tooFarAway=Le relais et la locomotives sont trop éloignés!
+chat.computronics.sensor.wrongLoco=Les senseurs ne peuvent être attachés qu'aux locomotives électriques!
+chat.computronics.sensor.wrongDim=Le relais et la locomotive ne sont pas dans la même dimension!
+
+achievement.computronics.gotTape=De la musique pour tout le monde
+achievement.computronics.gotTape.desc=Sûrement mieux que du scotch
+achievement.computronics.gotStarTape=Par delà l'arc-en-ciel (RPZ Iz)
+achievement.computronics.gotStarTape.desc=Où vit le Nyan Cat
+achievement.computronics.gotIGTape=La première pièce de votre vaisseau
+achievement.computronics.gotIGTape.desc=Pas comme si tu pouvais en construire un
+achievement.computronics.droppedIGTape=MH370
+achievement.computronics.droppedIGTape.desc=Comment ça disparu!?
+achievement.computronics.gotLoco=1ère Industrialisation
+achievement.computronics.gotLoco.desc=Et c'est ainsi que tout commença.
+achievement.computronics.gotRelay=Génération Digitale
+achievement.computronics.gotRelay.desc=0100100001000101010011000101000000100001
