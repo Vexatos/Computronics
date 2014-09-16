@@ -23,25 +23,25 @@ public class TileChatBox extends TileEntityPeripheralBase {
 	private int ticksUntilOff = 0;
 	private boolean mustRefresh = false;
 	private String name = "";
-	
+
 	public TileChatBox() {
 		super("chat_box");
 		distance = Computronics.CHATBOX_DISTANCE;
 	}
-	
+
 	@Override
 	public int requestCurrentRedstoneValue(int side) {
 		return (ticksUntilOff > 0) ? 15 : 0;
 	}
-	
+
 	@Override
 	public boolean canUpdate() { return Computronics.MUST_UPDATE_TILE_ENTITIES || Computronics.REDSTONE_REFRESH; }
-	
+
 	public boolean isCreative() {
 		return Computronics.CHATBOX_CREATIVE && worldObj != null
 			&& worldObj.getBlockMetadata(xCoord, yCoord, zCoord) >= 8;
 	}
-	
+
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
@@ -51,16 +51,16 @@ public class TileChatBox extends TileEntityPeripheralBase {
 				this.worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, this.blockType);
 		}
 	}
-	
+
 	public int getDistance() { return distance; }
-	
+
 	public void setDistance(int dist) {
 		if(dist > 32767) dist = 32767;
-		
+
 		this.distance = Math.min(Computronics.CHATBOX_DISTANCE, dist);
 		if(this.distance < 0) this.distance = Computronics.CHATBOX_DISTANCE;
 	}
-	
+
 	public void receiveChatMessage(ServerChatEvent event) {
 		if(Computronics.REDSTONE_REFRESH) {
 			ticksUntilOff = 5;
@@ -69,21 +69,23 @@ public class TileChatBox extends TileEntityPeripheralBase {
 		if(Loader.isModLoaded(Mods.OpenComputers)) eventOC(event);
 		if(Loader.isModLoaded(Mods.ComputerCraft)) eventCC(event);
 	}
-	
+
 	@Optional.Method(modid=Mods.OpenComputers)
 	public void eventOC(ServerChatEvent event) {
-		node.sendToReachable("computer.signal", "chat_message", event.username, event.message);
+		if(node != null) {
+			node.sendToReachable("computer.signal", "chat_message", event.username, event.message);
+		}
 	}
-	
+
 	@Optional.Method(modid=Mods.ComputerCraft)
 	public void eventCC(ServerChatEvent event) {
 		for(IComputerAccess computer: attachedComputersCC) {
 			computer.queueEvent("chat_message", new Object[]{event.username, event.message});
 		}
 	}
-	
+
 	// OpenComputers API
-	
+
 	@Callback
 	@Optional.Method(modid=Mods.OpenComputers)
 	public Object[] say(Context context, Arguments args) {
@@ -100,13 +102,13 @@ public class TileChatBox extends TileEntityPeripheralBase {
 		}
 		return new Object[] { false };
 	}
-	
+
 	@Callback(direct = true)
 	@Optional.Method(modid=Mods.OpenComputers)
 	public Object[] getDistance(Context context, Arguments args) {
 		return new Object[]{ distance };
 	}
-	
+
 	@Callback(direct = true)
 	@Optional.Method(modid=Mods.OpenComputers)
 	public Object[] setDistance(Context context, Arguments args) {
@@ -118,13 +120,13 @@ public class TileChatBox extends TileEntityPeripheralBase {
 		}
 		return new Object[] { false };
 	}
-	
+
 	@Callback(direct = true)
 	@Optional.Method(modid=Mods.OpenComputers)
 	public Object[] getName(Context context, Arguments args) {
 		return new Object[]{name};
 	}
-	
+
 	@Callback(direct = true)
 	@Optional.Method(modid=Mods.OpenComputers)
 	public Object[] setName(Context context, Arguments args) {

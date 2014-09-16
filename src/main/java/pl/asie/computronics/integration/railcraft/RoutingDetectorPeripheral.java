@@ -4,14 +4,13 @@ import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
-import dan200.computercraft.api.peripheral.IPeripheralProvider;
 import mods.railcraft.common.blocks.detector.EnumDetector;
 import mods.railcraft.common.blocks.detector.TileDetector;
 import mods.railcraft.common.blocks.detector.types.DetectorRouting;
 import mods.railcraft.common.items.ItemRoutingTable;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import pl.asie.computronics.integration.CCTilePeripheral;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -21,34 +20,22 @@ import java.util.Map;
 /**
  * @author Vexatos
  */
-public class RoutingDetectorPeripheral implements IPeripheral, IPeripheralProvider {
-	private TileEntity detector;
-	private IBlockAccess w;
-	private int x, y, z;
+public class RoutingDetectorPeripheral extends CCTilePeripheral<TileDetector> {
 
 	public RoutingDetectorPeripheral() {
 	}
 
-	public RoutingDetectorPeripheral(TileEntity detector, World world, int x2, int y2, int z2) {
-		this.detector = detector;
-		w = world;
-		x = x2;
-		y = y2;
-		z = z2;
+	public RoutingDetectorPeripheral(TileDetector detector, World world, int x, int y, int z) {
+		super(detector, "routing_detector", world, x, y, z);
 	}
 
 	@Override
 	public IPeripheral getPeripheral(World world, int x, int y, int z, int side) {
 		TileEntity te = world.getTileEntity(x, y, z);
 		if(te != null && te instanceof TileDetector && ((TileDetector) te).getDetector().getType() == EnumDetector.ROUTING) {
-			return new RoutingDetectorPeripheral(te, world, x, y, z);
+			return new RoutingDetectorPeripheral((TileDetector) te, world, x, y, z);
 		}
 		return null;
-	}
-
-	@Override
-	public String getType() {
-		return "routing_detector";
 	}
 
 	@Override
@@ -63,10 +50,10 @@ public class RoutingDetectorPeripheral implements IPeripheral, IPeripheralProvid
 		if(method < 2) {
 			switch(method){
 				case 0:{
-					if(((DetectorRouting) ((TileDetector) detector).getDetector()).getInventory().getStackInSlot(0) != null
-						&& ((DetectorRouting) ((TileDetector) detector).getDetector()).getInventory().getStackInSlot(0).getItem() instanceof ItemRoutingTable) {
-						if(!((DetectorRouting) ((TileDetector) detector).getDetector()).isSecure()) {
-							List<List<String>> pages = ItemRoutingTable.getPages(((DetectorRouting) ((TileDetector) detector).getDetector()).getInventory().getStackInSlot(0));
+					if(((DetectorRouting) tile.getDetector()).getInventory().getStackInSlot(0) != null
+						&& ((DetectorRouting) tile.getDetector()).getInventory().getStackInSlot(0).getItem() instanceof ItemRoutingTable) {
+						if(!((DetectorRouting) tile.getDetector()).isSecure()) {
+							List<List<String>> pages = ItemRoutingTable.getPages(((DetectorRouting) tile.getDetector()).getInventory().getStackInSlot(0));
 							LinkedHashMap<Number, String> pageMap = new LinkedHashMap<Number, String>();
 							int i = 1;
 							for(List<String> currentPage : pages) {
@@ -89,9 +76,9 @@ public class RoutingDetectorPeripheral implements IPeripheral, IPeripheralProvid
 						throw new LuaException("first argument needs to be a table");
 					}
 					Map pageMap = (Map) arguments[0];
-					if(((DetectorRouting) ((TileDetector) detector).getDetector()).getInventory().getStackInSlot(0) != null
-						&& ((DetectorRouting) ((TileDetector) detector).getDetector()).getInventory().getStackInSlot(0).getItem() instanceof ItemRoutingTable) {
-						if(!((DetectorRouting) ((TileDetector) detector).getDetector()).isSecure()) {
+					if(((DetectorRouting) tile.getDetector()).getInventory().getStackInSlot(0) != null
+						&& ((DetectorRouting) tile.getDetector()).getInventory().getStackInSlot(0).getItem() instanceof ItemRoutingTable) {
+						if(!((DetectorRouting) tile.getDetector()).isSecure()) {
 							List<List<String>> pages = new ArrayList<List<String>>();
 							pages.add(new ArrayList<String>());
 							int pageIndex = 0;
@@ -106,7 +93,7 @@ public class RoutingDetectorPeripheral implements IPeripheral, IPeripheralProvid
 									}
 								}
 							}
-							ItemRoutingTable.setPages(((DetectorRouting) ((TileDetector) detector).getDetector()).getInventory().getStackInSlot(0), pages);
+							ItemRoutingTable.setPages(((DetectorRouting) tile.getDetector()).getInventory().getStackInSlot(0), pages);
 							return new Object[] { true };
 						} else {
 							return new Object[] { false, "routing detector is locked" };
@@ -117,31 +104,5 @@ public class RoutingDetectorPeripheral implements IPeripheral, IPeripheralProvid
 			}
 		}
 		return null;
-	}
-
-	@Override
-	public void attach(IComputerAccess computer) {
-	}
-
-	@Override
-	public void detach(IComputerAccess computer) {
-	}
-
-	@Override
-	public boolean equals(IPeripheral other) {
-		if(other == null) {
-			return false;
-		}
-		if(this == other) {
-			return true;
-		}
-		if(other instanceof RoutingDetectorPeripheral) {
-			RoutingDetectorPeripheral o = (RoutingDetectorPeripheral) other;
-			if(w == o.w && x == o.x && z == o.z && y == o.y) {
-				return true;
-			}
-		}
-
-		return false;
 	}
 }

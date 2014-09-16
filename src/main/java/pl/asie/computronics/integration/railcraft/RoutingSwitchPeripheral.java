@@ -4,12 +4,11 @@ import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
-import dan200.computercraft.api.peripheral.IPeripheralProvider;
 import mods.railcraft.common.blocks.signals.TileSwitchRouting;
 import mods.railcraft.common.items.ItemRoutingTable;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import pl.asie.computronics.integration.CCTilePeripheral;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -19,34 +18,22 @@ import java.util.Map;
 /**
  * @author Vexatos
  */
-public class RoutingSwitchPeripheral implements IPeripheral, IPeripheralProvider {
-	private TileEntity routingSwitch;
-	private IBlockAccess w;
-	private int x, y, z;
+public class RoutingSwitchPeripheral extends CCTilePeripheral<TileSwitchRouting> {
 
 	public RoutingSwitchPeripheral() {
 	}
 
-	public RoutingSwitchPeripheral(TileEntity routingSwitch, World world, int x2, int y2, int z2) {
-		this.routingSwitch = routingSwitch;
-		w = world;
-		x = x2;
-		y = y2;
-		z = z2;
+	public RoutingSwitchPeripheral(TileSwitchRouting routingSwitch, World world, int x, int y, int z) {
+		super(routingSwitch, "routing_switch", world, x, y, z);
 	}
 
 	@Override
 	public IPeripheral getPeripheral(World world, int x, int y, int z, int side) {
 		TileEntity te = world.getTileEntity(x, y, z);
 		if(te != null && te instanceof TileSwitchRouting) {
-			return new RoutingSwitchPeripheral(te, world, x, y, z);
+			return new RoutingSwitchPeripheral((TileSwitchRouting) te, world, x, y, z);
 		}
 		return null;
-	}
-
-	@Override
-	public String getType() {
-		return "routing_switch";
 	}
 
 	@Override
@@ -61,10 +48,10 @@ public class RoutingSwitchPeripheral implements IPeripheral, IPeripheralProvider
 		if(method < 2) {
 			switch(method){
 				case 0:{
-					if((((TileSwitchRouting) routingSwitch)).getInventory().getStackInSlot(0) != null
-						&& ((TileSwitchRouting) routingSwitch).getInventory().getStackInSlot(0).getItem() instanceof ItemRoutingTable) {
-						if(!(((TileSwitchRouting) routingSwitch)).isSecure()) {
-							List<List<String>> pages = ItemRoutingTable.getPages(((TileSwitchRouting) routingSwitch).getInventory().getStackInSlot(0));
+					if(tile.getInventory().getStackInSlot(0) != null
+						&& tile.getInventory().getStackInSlot(0).getItem() instanceof ItemRoutingTable) {
+						if(!tile.isSecure()) {
+							List<List<String>> pages = ItemRoutingTable.getPages(tile.getInventory().getStackInSlot(0));
 							LinkedHashMap<Number, String> pageMap = new LinkedHashMap<Number, String>();
 							int i = 1;
 							for(List<String> currentPage : pages) {
@@ -87,9 +74,9 @@ public class RoutingSwitchPeripheral implements IPeripheral, IPeripheralProvider
 						throw new LuaException("first argument needs to be a table");
 					}
 					Map pageMap = (Map) arguments[0];
-					if(((TileSwitchRouting) routingSwitch).getInventory().getStackInSlot(0) != null
-						&& ((TileSwitchRouting) routingSwitch).getInventory().getStackInSlot(0).getItem() instanceof ItemRoutingTable) {
-						if(!((TileSwitchRouting) routingSwitch).isSecure()) {
+					if(tile.getInventory().getStackInSlot(0) != null
+						&& tile.getInventory().getStackInSlot(0).getItem() instanceof ItemRoutingTable) {
+						if(!tile.isSecure()) {
 							List<List<String>> pages = new ArrayList<List<String>>();
 							pages.add(new ArrayList<String>());
 							int pageIndex = 0;
@@ -104,7 +91,7 @@ public class RoutingSwitchPeripheral implements IPeripheral, IPeripheralProvider
 									}
 								}
 							}
-							ItemRoutingTable.setPages(((TileSwitchRouting) routingSwitch).getInventory().getStackInSlot(0), pages);
+							ItemRoutingTable.setPages(tile.getInventory().getStackInSlot(0), pages);
 							return new Object[] { true };
 						} else {
 							return new Object[] { false, "routing switch is locked" };
@@ -115,31 +102,5 @@ public class RoutingSwitchPeripheral implements IPeripheral, IPeripheralProvider
 			}
 		}
 		return null;
-	}
-
-	@Override
-	public void attach(IComputerAccess computer) {
-	}
-
-	@Override
-	public void detach(IComputerAccess computer) {
-	}
-
-	@Override
-	public boolean equals(IPeripheral other) {
-		if(other == null) {
-			return false;
-		}
-		if(this == other) {
-			return true;
-		}
-		if(other instanceof RoutingSwitchPeripheral) {
-			RoutingSwitchPeripheral o = (RoutingSwitchPeripheral) other;
-			if(w == o.w && x == o.x && z == o.z && y == o.y) {
-				return true;
-			}
-		}
-
-		return false;
 	}
 }

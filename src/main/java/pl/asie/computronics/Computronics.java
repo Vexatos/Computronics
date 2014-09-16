@@ -56,10 +56,12 @@ import pl.asie.computronics.integration.gregtech.DriverDigitalChest;
 import pl.asie.computronics.integration.gregtech.DriverMachine;
 import pl.asie.computronics.integration.mfr.DeepStorageUnitPeripheral;
 import pl.asie.computronics.integration.mfr.DriverDeepStorageUnit;
+import pl.asie.computronics.integration.railcraft.DriverElectricGrid;
 import pl.asie.computronics.integration.railcraft.DriverReceiverBox;
 import pl.asie.computronics.integration.railcraft.DriverRoutingDetector;
 import pl.asie.computronics.integration.railcraft.DriverRoutingSwitch;
 import pl.asie.computronics.integration.railcraft.DriverRoutingTrack;
+import pl.asie.computronics.integration.railcraft.ElectricGridPeripheral;
 import pl.asie.computronics.integration.railcraft.ReceiverBoxPeripheral;
 import pl.asie.computronics.integration.railcraft.RoutingDetectorPeripheral;
 import pl.asie.computronics.integration.railcraft.RoutingSwitchPeripheral;
@@ -372,6 +374,7 @@ public class Computronics {
 				ComputerCraftAPI.registerPeripheralProvider(new RoutingDetectorPeripheral());
 				ComputerCraftAPI.registerPeripheralProvider(new RoutingSwitchPeripheral());
 				ComputerCraftAPI.registerPeripheralProvider(new ReceiverBoxPeripheral());
+				ComputerCraftAPI.registerPeripheralProvider(new ElectricGridPeripheral());
 			}
 		}
 
@@ -439,6 +442,7 @@ public class Computronics {
 				li.cil.oc.api.Driver.add(new DriverRoutingDetector());
 				li.cil.oc.api.Driver.add(new DriverRoutingSwitch());
 				li.cil.oc.api.Driver.add(new DriverReceiverBox());
+				li.cil.oc.api.Driver.add(new DriverElectricGrid());
 			}
 		}
 		if(Loader.isModLoaded(Mods.GregTech)) {

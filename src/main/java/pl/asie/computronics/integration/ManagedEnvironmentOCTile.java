@@ -5,7 +5,7 @@ import li.cil.oc.api.driver.NamedBlock;
 import li.cil.oc.api.network.Visibility;
 import li.cil.oc.api.prefab.ManagedEnvironment;
 
-public class ManagedEnvironmentOCTile<T> extends ManagedEnvironment implements NamedBlock {
+public abstract class ManagedEnvironmentOCTile<T> extends ManagedEnvironment implements NamedBlock {
 	protected final T tile;
 	protected final String name;
 	

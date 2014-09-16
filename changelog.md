@@ -1,3 +1,8 @@
+==== 1.0.4 ====
+
+  * ADDED: You can now read charge and loss of Railcraft's Electric blocks using OpenComputers or ComputerCraft!
+  * FIXED: Forge log getting spammed with errors regarding Applied Energistics 2
+
 ==== 1.0.3 ====
 
   * FIXED: Chat Boxes crashing when OpenComputers is not installed (thanks to Grovert11 for finding the bug)
