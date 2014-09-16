@@ -25,8 +25,8 @@ public class ElectricGridPeripheral extends CCTilePeripheral<IElectricGrid> {
 	@Override
 	public IPeripheral getPeripheral(World world, int x, int y, int z, int side) {
 		TileEntity te = world.getTileEntity(x, y, z);
-		if(te != null && tile.getClass().isInstance(te)) {
-			return new ElectricGridPeripheral((IElectricGrid) te, "electric_grid", world, x, y, z);
+		if(te != null && te instanceof IElectricGrid) {
+			return new ElectricGridPeripheral((IElectricGrid) te, "electric_tile", world, x, y, z);
 		}
 		return null;
 	}
