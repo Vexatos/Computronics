@@ -8,18 +8,48 @@ tile.computronics.cipher.name=Блок-шифровщик
 tile.computronics.radar.name=Радар
 tile.computronics.colorfulLamp.name=Цветной светильник
 tile.computronics.eepromReader.name=Считыватель EEPROM
+tile.computronics.locomotiveRelay.name=Цифровое локомотивное реле
 
 tooltip.computronics.chatBox.creative=АНБ в миниатюре!
+tooltip.computronics.sensor.bound=Связан с [%1$s,%2$s,%3$s]
+tooltip.computronics.sensor.desc1=ПКМ по локомотивному реле,\nсидя, чтобы привязать к нему
+tooltip.computronics.sensor.desc2=ЛКМ по электровозу,\nnсидя, что прикрепить к нему
 tooltip.computronics.tape.length=Длина: %s минут
 tooltip.computronics.tape.balanced=Сбалансирована!
 tooltip.computronics.tape.unnamed=Безымянная лента
 tooltip.computronics.tape.none=Нет ленты
+tooltip.computronics.tape.ig=Обычный CDVR для\n межгалактических кораблей GregTech
 
+item.computronics.reelChromoxide.name=Катушечная лента из диоксида хрома
 item.computronics.robot_upgrade_camera.name=Улучшение камеры
 item.computronics.robot_upgrade_chatbox.name=Улучшение чата
 item.computronics.robot_upgrade_radar.name=Улучшение радара
 item.computronics.card_fx.name=Карта эффектов частиц
+item.computronics.relaySensor.name=Цифровой датчик реле
 item.computronics.part_tape_track.name=Направляющая лента
+item.computronics.tape.ig.name=Межгалактический CDVR
 item.computronics.tape.name=Ленточная кассета
 
 itemGroup.tabComputronics=Computronics
+
+entity.computronics.itemTape.name=Межгалактический CDVR
+
+chat.computronics.cipher.locked=Этот блок-шифровщик закрыт! Вы не можете получить доступ к нему.
+chat.computronics.sensor.bound=Реле успешно привязано к локомотиву!
+chat.computronics.sensor.noRelay=Реле, по указанным координатам, не обнаружено!
+chat.computronics.sensor.tooFarAway=Реле и локомотив слишком далеко друг от друга!
+chat.computronics.sensor.wrongLoco=Датчик может быть прикреплён только к электровозам!
+chat.computronics.sensor.wrongDim=Реле и локомотив в разных измерениях!
+
+achievement.computronics.gotTape=Музыка для каждого
+achievement.computronics.gotTape.desc=Конечно же лучше, чем клейкая лента
+achievement.computronics.gotStarTape=По радуге
+achievement.computronics.gotStarTape.desc=Где живёт Nyan Cat
+achievement.computronics.gotIGTape=Первая часть Вашего корабля
+achievement.computronics.gotIGTape.desc=Не того, который Вы можете построить
+achievement.computronics.droppedIGTape=MH370
+achievement.computronics.droppedIGTape.desc=Оно исчезло!?
+achievement.computronics.gotLoco=Электрическая революция
+achievement.computronics.gotLoco.desc=И так, начинается.
+achievement.computronics.gotRelay=Цифровая революция
+achievement.computronics.gotRelay.desc=0100100001000101010011000101000000100001
