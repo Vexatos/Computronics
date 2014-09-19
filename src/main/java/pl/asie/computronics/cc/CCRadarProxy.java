@@ -44,18 +44,19 @@ public class CCRadarProxy {
 		}
 		double energyNeeded = (Computronics.RADAR_ENERGY_COST_RF * distance);
 		if(method == 0) energyNeeded *= 1.75;
-		
+
 		if(powerProvider instanceof TileRadar && !((TileRadar)powerProvider).extractFromBattery(energyNeeded)) return null;
 		else if(powerProvider instanceof ITurtleAccess
 			&& ((ITurtleAccess)powerProvider).isFuelNeeded()
 			&& !((ITurtleAccess)powerProvider).consumeFuel(
 				(int)Math.ceil(EnergyConverter.convertEnergy(energyNeeded, "RF", "COAL"))
 			)) return null;
-		
+
 		AxisAlignedBB bounds = getBounds(xCoord, yCoord, zCoord, distance);
     	Set<Map> entities = new HashSet<Map>();
     	if(method == 0 || method == 1) entities.addAll(RadarUtils.getEntities(worldObj, xCoord, yCoord, zCoord, bounds, EntityPlayer.class));
     	if(method == 0 || method == 2) entities.addAll(RadarUtils.getEntities(worldObj, xCoord, yCoord, zCoord, bounds, EntityLiving.class));
-    	return new Object[]{entities.toArray(new Map[entities.size()])};
+
+    	return new Object[]{ RadarUtils.convertSetToMap(entities) };
 	}
 }

@@ -14,18 +14,17 @@ import net.minecraft.util.AxisAlignedBB;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.cc.CCRadarProxy;
 import pl.asie.computronics.util.RadarUtils;
-import pl.asie.lib.api.tile.IBattery;
 import pl.asie.lib.api.tile.IBatteryProvider;
 import pl.asie.lib.tile.BatteryBasic;
 import pl.asie.lib.util.EnergyConverter;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class TileRadar extends TileEntityPeripheralBase implements IBatteryProvider {
-	protected boolean hasEnergy;
-	private IBattery battery;
 	
 	public TileRadar() {
 		super("radar", EnergyConverter.convertEnergy(Computronics.RADAR_ENERGY_COST_RF * Computronics.RADAR_RANGE * 3.5, "OC", "RF"));
@@ -58,7 +57,7 @@ public class TileRadar extends TileEntityPeripheralBase implements IBatteryProvi
     @Callback
     @Optional.Method(modid="OpenComputers")
     public Object[] getEntities(Context context, Arguments args) {
-		List<Map> entities = new ArrayList<Map>();
+		Set<Map> entities = new HashSet<Map>();
 		int distance = getDistance(args);
 		double energyNeeded = (Computronics.RADAR_ENERGY_COST_RF * distance * 1.75);
 		if(((Connector) node).tryChangeBuffer(0 - EnergyConverter.convertEnergy(energyNeeded, "RF", "OC"))
@@ -74,13 +73,13 @@ public class TileRadar extends TileEntityPeripheralBase implements IBatteryProvi
 		//   result = {radar.getEntities()}
 		// and we'd be limited in the number of entities, due to the limit of
 		// return values. So we wrap it in an array to return it as a list.
-		return new Object[]{entities.toArray()};
+		return new Object[]{ RadarUtils.convertSetToMap(entities) };
     }
 	
 	@Callback
     @Optional.Method(modid="OpenComputers")
     public Object[] getPlayers(Context context, Arguments args) {
-		List<Map> entities = new ArrayList<Map>();
+		Set<Map> entities = new HashSet<Map>();
 		int distance = getDistance(args);
 		double energyNeeded = (Computronics.RADAR_ENERGY_COST_RF * distance * 1.0);
 		if(((Connector) node).tryChangeBuffer(0 - EnergyConverter.convertEnergy(energyNeeded, "RF", "OC"))
@@ -89,13 +88,13 @@ public class TileRadar extends TileEntityPeripheralBase implements IBatteryProvi
 			entities.addAll(RadarUtils.getEntities(worldObj, xCoord, yCoord, zCoord, bounds, EntityPlayer.class));
 			context.pause(0.5);
 		}
-        return new Object[]{entities.toArray()};
+		return new Object[]{ RadarUtils.convertSetToMap(entities) };
     }
 	
 	@Callback
     @Optional.Method(modid="OpenComputers")
     public Object[] getMobs(Context context, Arguments args) {
-		List<Map> entities = new ArrayList<Map>();
+		Set<Map> entities = new HashSet<Map>();
 		int distance = getDistance(args);
 		double energyNeeded = (Computronics.RADAR_ENERGY_COST_RF * distance * 1.0);
 		if(((Connector) node).tryChangeBuffer(0 - EnergyConverter.convertEnergy(energyNeeded, "RF", "OC"))
@@ -104,7 +103,7 @@ public class TileRadar extends TileEntityPeripheralBase implements IBatteryProvi
 			entities.addAll(RadarUtils.getEntities(worldObj, xCoord, yCoord, zCoord, bounds, EntityLiving.class));
 			context.pause(0.5);
 		}
-        return new Object[]{entities.toArray()};
+		return new Object[]{ RadarUtils.convertSetToMap(entities) };
     }
 
 	@Override
