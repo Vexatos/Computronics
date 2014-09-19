@@ -21,28 +21,28 @@
 
   **Yes, this is what you should think it is, this is the version 1.0.0, so the first actual full release. Prepare for a lot of new stuff:**
 
-  * ADDED: RailCraft integration, courtesy of Vexatos! Routing can now be fully controlled with computers!
-            - Routing Tracks can now be accessed using the Adapter Block
-            - Routing Detectors can now be accessed using the Adapter Block
-            - Routing Switch Motors can now be accessed using the Adapter Block
-            - Signal Receiver Boxes can now be accessed using the Adapter Block
-            - Added the Digital Locomotive Relay to access Electric Locomotives remotely
-            - Added the Digital Relay Sensor to bind a relay to a locomotive
-  * ADDED: GregTech integration
-            - Machine monitoring
-            - Digital Chests support
-            - Battery Buffer support (make sure to place the adapter after you placed the battery buffer!)
-            - Added a new virtually indestructable high-end tape using GregTech materials!
-            - Added a GregTech recipe mode for all the Computronics blocks and items (Thanks to SpwnX for helping with this)
+  * ADDED: RailCraft integration, courtesy of Vexatos! Routing can now be fully controlled with computers!  
+            - Routing Tracks can now be accessed using the Adapter Block  
+            - Routing Detectors can now be accessed using the Adapter Block  
+            - Routing Switch Motors can now be accessed using the Adapter Block  
+            - Signal Receiver Boxes can now be accessed using the Adapter Block  
+            - Added the Digital Locomotive Relay to access Electric Locomotives remotely  
+            - Added the Digital Relay Sensor to bind a relay to a locomotive  
+  * ADDED: GregTech integration  
+            - Machine monitoring  
+            - Digital Chests support  
+            - Battery Buffer support (make sure to place the adapter after you placed the battery buffer!)  
+            - Added a new virtually indestructable high-end tape using GregTech materials!  
+            - Added a GregTech recipe mode for all the Computronics blocks and items (Thanks to SpwnX for helping with this)  
   * ADDED: New fancy Achievements for Computronics and its GregTech and Railcraft integration
   * ADDED: New French (AegisLesha) and Chinese (crafteverywhere) translations.
   * ADDED: ITapeStorage API - developers can now create their own compatible tapes and tape devices.
   * ADDED: tape.lua to tape drives - a utility program to write songs to tapes (from a hard drive or the Internet) and to play, stop, pause etc. songs
   * ADDED: BetterStorage 0.10+ compatibility for Storage Crate drivers.
   * ADDED: Radars now use energy uniformly for OC, CC turtles (coal) and ComputerCraft itself (MJ, RF or EU).
-  * ADDED: Changed Cipher Block behaviour:
-            - Cipher Blocks can now be locked - their inventory is not accessible via automation or manually while they are locked. They can still be broken, though!
-            - Each side of the Cipher Block now corresponds to one of its six slots.
+  * ADDED: Changed Cipher Block behaviour:  
+            - Cipher Blocks can now be locked - their inventory is not accessible via automation or manually while they are locked. They can still be broken, though!  
+            - Each side of the Cipher Block now corresponds to one of its six slots.  
   * REMOVED: Project: Red CC redstone integration - it's now improved and inside P:Red itself!
   * FIXED: Disabling the Chat Box will now disable the (potentially lag-inducing on large server) Chat Box event code.
   * FIXED: OC 1.2 will now give an error message when used. (YES, USE OC 1.3, IT'S BETTER)
