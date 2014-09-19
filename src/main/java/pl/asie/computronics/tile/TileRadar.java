@@ -18,9 +18,7 @@ import pl.asie.lib.api.tile.IBatteryProvider;
 import pl.asie.lib.tile.BatteryBasic;
 import pl.asie.lib.util.EnergyConverter;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
