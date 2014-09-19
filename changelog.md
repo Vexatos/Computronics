@@ -1,7 +1,7 @@
 ==== 1.0.4 ====
 
   * ADDED: You can now read charge and loss of Railcraft's Electric Blocks using OpenComputers or ComputerCraft!  
-            - Note: Apparently the Electric Track can only be connected to using OpenComputers, the other electric blocks work fine with ComputerCraft.
+            - Note: Apparently the Electric Track can only be connected to using OpenComputers, the other electric blocks work fine with OpenComputers and ComputerCraft.
   * FIXED: Forge log getting spammed with errors regarding Applied Energistics 2
   * FIXED: Radar not working when used with ComputerCraft (Thanks to Grovert11 for finding the bug)
 
