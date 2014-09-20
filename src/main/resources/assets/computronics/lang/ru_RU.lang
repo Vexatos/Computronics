@@ -18,7 +18,7 @@ tooltip.computronics.tape.length=Длина: %s минут
 tooltip.computronics.tape.balanced=Сбалансирована!
 tooltip.computronics.tape.unnamed=Безымянная лента
 tooltip.computronics.tape.none=Нет ленты
-tooltip.computronics.tape.ig=Обычный CDVR для\n межгалактических кораблей GregTech
+tooltip.computronics.tape.ig=Обычный CDVR для\nмежгалактических кораблей GregTech
 
 item.computronics.reelChromoxide.name=Катушечная лента из диоксида хрома
 item.computronics.robot_upgrade_camera.name=Улучшение камеры

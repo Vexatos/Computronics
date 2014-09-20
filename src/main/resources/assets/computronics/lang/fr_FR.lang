@@ -18,7 +18,7 @@ tooltip.computronics.tape.length=Durée: %s minutes
 tooltip.computronics.tape.balanced=Equilibré!
 tooltip.computronics.tape.unnamed=Cassette sans nom
 tooltip.computronics.tape.none=Pas de Cassette
-tooltip.computronics.tape.ig=Le CDVR standard pour \nles vaisseaux GregTech Intergalactical's
+tooltip.computronics.tape.ig=Le CDVR standard pour\nles vaisseaux GregTech Intergalactical's
 
 item.computronics.reelChromoxide.name=Cassette d'enregistrement en Dioxyde de Chromium
 item.computronics.robot_upgrade_camera.name=Amélioration de Caméra

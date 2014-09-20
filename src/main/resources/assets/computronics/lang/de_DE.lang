@@ -18,7 +18,7 @@ tooltip.computronics.tape.length=Länge: %s Minuten
 tooltip.computronics.tape.balanced=Welch ein ausgewogener Preis!
 tooltip.computronics.tape.unnamed=Unbenanntes Band
 tooltip.computronics.tape.none=Kein Band
-tooltip.computronics.tape.ig=Der Standard-CDVR für\n Schiffe von GregTech Intergalactical
+tooltip.computronics.tape.ig=Der Standard-CDVR für\nSchiffe von GregTech Intergalactical
 
 item.computronics.reelChromoxide.name=Chromdioxidbandspur
 item.computronics.robot_upgrade_camera.name=Kamera-Upgrade
