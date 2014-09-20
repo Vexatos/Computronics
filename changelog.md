@@ -1,3 +1,7 @@
+==== 1.0.5 ====
+
+  * FIXED: Some weird Crash with GregTech
+
 ==== 1.0.4 ====
 
   * ADDED: You can now read charge and loss of Railcraft's Electric Blocks using OpenComputers or ComputerCraft!  
