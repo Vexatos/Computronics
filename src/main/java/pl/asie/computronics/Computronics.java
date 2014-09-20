@@ -92,7 +92,7 @@ import pl.asie.lib.util.EnergyConverter;
 
 import java.util.Random;
 
-@Mod(modid = Mods.Computronics, name = Mods.Computronics_NAME, version = "1.0.4", dependencies = "required-after:asielib;after:ComputerCraft;after:OpenComputers;after:OpenComputers|Core;after:MineFactoryReloaded;after:RedLogic;after:ProjRed|Core;after:nedocomputers;after:Railcraft")
+@Mod(modid = Mods.Computronics, name = Mods.Computronics_NAME, version = "1.0.5", dependencies = "required-after:asielib;after:ComputerCraft;after:OpenComputers;after:OpenComputers|Core;after:MineFactoryReloaded;after:RedLogic;after:ProjRed|Core;after:nedocomputers;after:Railcraft;after:gregtech")
 public class Computronics {
 	public Configuration config;
 	public static Random rand = new Random();
@@ -213,10 +213,14 @@ public class Computronics {
 		RADAR_ENERGY_COST_RF = config.getFloat("radarCostPerBlock", "power", 500.0f, 0.0f, 10000.0f, "How much energy, in RF, each 1-block distance takes by OpenComputers radars.");
 
 		// Railcraft integration
-		LOCOMOTIVE_RELAY_RANGE = (double) config.getInt("locomotiveRelayRange", "railcraft", 128, 0, 512, "The range of Locomotive Relays in Blocks.");
+		if(Loader.isModLoaded(Mods.Railcraft)) {
+			LOCOMOTIVE_RELAY_RANGE = (double) config.getInt("locomotiveRelayRange", "railcraft", 128, 0, 512, "The range of Locomotive Relays in Blocks.");
+		}
 
 		// GregTech recipe mode
-		GREGTECH_RECIPES = config.getBoolean("gtRecipeMode", "gregtech", Loader.isModLoaded(Mods.GregTech), "Set this to true to enable GregTech-style recipes") && Loader.isModLoaded(Mods.GregTech);
+		if(Loader.isModLoaded(Mods.GregTech)) {
+			GREGTECH_RECIPES = config.getBoolean("gtRecipeMode", "gregtech", true, "Set this to true to enable GregTech-style recipes");
+		}
 
 		if(isEnabled("ironNoteBlock", true)) {
 			ironNote = new BlockIronNote();
