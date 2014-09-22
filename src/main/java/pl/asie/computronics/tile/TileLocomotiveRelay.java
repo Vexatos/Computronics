@@ -7,8 +7,8 @@ import dan200.computercraft.api.peripheral.IComputerAccess;
 import li.cil.oc.api.network.Arguments;
 import li.cil.oc.api.network.Callback;
 import li.cil.oc.api.network.Context;
+import mods.railcraft.api.carts.CartTools;
 import mods.railcraft.common.carts.EntityLocomotiveElectric;
-import mods.railcraft.common.carts.LinkageManager;
 import mods.railcraft.common.items.ItemTicket;
 import mods.railcraft.common.items.ItemTicketGold;
 import mods.railcraft.common.util.misc.MiscTools;
@@ -55,7 +55,9 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 		if(locomotive == null && !isInitialized && !worldObj.isRemote) {
 			this.tryFindLocomotive(this.uuid);
 			if(locomotive == null) {
-				List locos = worldObj.getEntitiesWithinAABB(EntityLocomotiveElectric.class, AxisAlignedBB.getBoundingBox(locomotiveX, locomotiveY, locomotiveZ, locomotiveX, locomotiveY, locomotiveZ));
+				List locos = worldObj.getEntitiesWithinAABB(EntityLocomotiveElectric.class, AxisAlignedBB.getBoundingBox(locomotiveX, locomotiveY, locomotiveZ,
+					locomotiveX, locomotiveY, locomotiveZ));
+
 				for(Object loco : locos) {
 					if(loco instanceof EntityLocomotiveElectric) {
 						this.setLocomotive((EntityLocomotiveElectric) loco);
@@ -71,7 +73,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 	}
 
 	private void tryFindLocomotive(UUID uuid) {
-		EntityMinecart cart = LinkageManager.instance().getCartFromUUID(uuid);
+		EntityMinecart cart = CartTools.getLinkageManager(worldObj).getCartFromUUID(uuid);
 		if(cart != null && cart instanceof EntityLocomotiveElectric) {
 			this.setLocomotive((EntityLocomotiveElectric) cart);
 		}
