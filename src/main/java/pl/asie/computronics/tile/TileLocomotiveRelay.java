@@ -8,8 +8,11 @@ import li.cil.oc.api.network.Arguments;
 import li.cil.oc.api.network.Callback;
 import li.cil.oc.api.network.Context;
 import mods.railcraft.common.carts.EntityLocomotiveElectric;
+import mods.railcraft.common.carts.LinkageManager;
 import mods.railcraft.common.items.ItemTicket;
 import mods.railcraft.common.items.ItemTicketGold;
+import mods.railcraft.common.util.misc.MiscTools;
+import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
@@ -17,6 +20,7 @@ import pl.asie.computronics.Computronics;
 import pl.asie.computronics.reference.Mods;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author Vexatos
@@ -25,7 +29,8 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 
 	private EntityLocomotiveElectric locomotive;
 	private double locomotiveX, locomotiveY, locomotiveZ;
-	private boolean isInitialized = false;
+	private boolean isInitialized = false, isBound = false;
+	private UUID uuid;
 
 	public TileLocomotiveRelay() {
 		super("locomotive_relay");
@@ -36,6 +41,8 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 		this.locomotiveX = this.locomotive.posX;
 		this.locomotiveY = this.locomotive.posY;
 		this.locomotiveZ = this.locomotive.posZ;
+		this.isBound = true;
+		this.uuid = this.locomotive.getUniqueID();
 	}
 
 	public EntityLocomotiveElectric getLocomotive() {
@@ -45,16 +52,29 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
-		if(!isInitialized && !worldObj.isRemote) {
-			List locos = worldObj.getEntitiesWithinAABB(EntityLocomotiveElectric.class, AxisAlignedBB.getBoundingBox(locomotiveX, locomotiveY, locomotiveZ, locomotiveX, locomotiveY, locomotiveZ));
-			for(Object loco : locos) {
-				if(loco instanceof EntityLocomotiveElectric) {
-					this.setLocomotive((EntityLocomotiveElectric) loco);
+		if(locomotive == null && !isInitialized && !worldObj.isRemote) {
+			this.tryFindLocomotive(this.uuid);
+			if(locomotive == null) {
+				List locos = worldObj.getEntitiesWithinAABB(EntityLocomotiveElectric.class, AxisAlignedBB.getBoundingBox(locomotiveX, locomotiveY, locomotiveZ, locomotiveX, locomotiveY, locomotiveZ));
+				for(Object loco : locos) {
+					if(loco instanceof EntityLocomotiveElectric) {
+						this.setLocomotive((EntityLocomotiveElectric) loco);
+					}
 				}
 			}
 			isInitialized = true;
 		}
+		if(locomotive != null || !isBound) {
+			return;
+		}
+		this.tryFindLocomotive(this.uuid);
+	}
 
+	private void tryFindLocomotive(UUID uuid) {
+		EntityMinecart cart = LinkageManager.instance().getCartFromUUID(uuid);
+		if(cart != null && cart instanceof EntityLocomotiveElectric) {
+			this.setLocomotive((EntityLocomotiveElectric) cart);
+		}
 	}
 
 	@Override
@@ -64,6 +84,8 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 			this.locomotiveX = nbt.getDouble("locomotiveX");
 			this.locomotiveY = nbt.getDouble("locomotiveY");
 			this.locomotiveZ = nbt.getDouble("locomotiveZ");
+			this.uuid = MiscTools.readUUID(nbt, "locomotive");
+			this.tryFindLocomotive(this.uuid);
 		}
 	}
 
@@ -74,6 +96,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 			nbt.setDouble("locomotiveX", this.locomotive.posX);
 			nbt.setDouble("locomotiveY", this.locomotive.posY);
 			nbt.setDouble("locomotiveZ", this.locomotive.posZ);
+			MiscTools.writeUUID(nbt, "locomotive", this.locomotive.getUniqueID());
 		}
 	}
 
