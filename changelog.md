@@ -1,3 +1,7 @@
+==== 1.0.6 ====
+
+  * CHANGED: Locomotive Relays should now remember the locomotive they are bound to through chunk unloading properly.
+
 ==== 1.0.5 ====
 
   * FIXED: Some weird Crash with GregTech

@@ -69,13 +69,18 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 		if(locomotive != null || !isBound) {
 			return;
 		}
-		this.tryFindLocomotive(this.uuid);
+		// Only check every second
+		if(worldObj.getTotalWorldTime() % 20 == 0) {
+			this.tryFindLocomotive(this.uuid);
+		}
 	}
 
 	private void tryFindLocomotive(UUID uuid) {
-		EntityMinecart cart = CartTools.getLinkageManager(worldObj).getCartFromUUID(uuid);
-		if(cart != null && cart instanceof EntityLocomotiveElectric) {
-			this.setLocomotive((EntityLocomotiveElectric) cart);
+		if(uuid != null) {
+			EntityMinecart cart = CartTools.getLinkageManager(worldObj).getCartFromUUID(uuid);
+			if(cart != null && cart instanceof EntityLocomotiveElectric) {
+				this.setLocomotive((EntityLocomotiveElectric) cart);
+			}
 		}
 	}
 
@@ -87,6 +92,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 			this.locomotiveY = nbt.getDouble("locomotiveY");
 			this.locomotiveZ = nbt.getDouble("locomotiveZ");
 			this.uuid = MiscTools.readUUID(nbt, "locomotive");
+			this.isBound = nbt.getBoolean("bound");
 		}
 	}
 
@@ -97,6 +103,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 			nbt.setDouble("locomotiveX", this.locomotive.posX);
 			nbt.setDouble("locomotiveY", this.locomotive.posY);
 			nbt.setDouble("locomotiveZ", this.locomotive.posZ);
+			nbt.setBoolean("bound", isBound);
 			MiscTools.writeUUID(nbt, "locomotive", this.locomotive.getPersistentID());
 		}
 	}
