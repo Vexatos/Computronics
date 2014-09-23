@@ -97,7 +97,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 			nbt.setDouble("locomotiveX", this.locomotive.posX);
 			nbt.setDouble("locomotiveY", this.locomotive.posY);
 			nbt.setDouble("locomotiveZ", this.locomotive.posZ);
-			MiscTools.writeUUID(nbt, "locomotive", this.locomotive.getUniqueID());
+			MiscTools.writeUUID(nbt, "locomotive", this.locomotive.getPersistentID());
 		}
 	}
 
