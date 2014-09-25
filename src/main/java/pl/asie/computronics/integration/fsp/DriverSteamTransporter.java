@@ -17,27 +17,27 @@ public class DriverSteamTransporter extends DriverTileEntity {
 
 		@Callback(direct = true)
 		public Object[] getSteamPressure(Context c, Arguments a) {
-			return new Object[]{tile.getPressure()};
+			return new Object[] { tile.getPressure() };
 		}
-		
+
 		@Callback(direct = true)
 		public Object[] getSteamCapacity(Context c, Arguments a) {
-			return new Object[]{tile.getCapacity()};
+			return new Object[] { tile.getCapacity() };
 		}
-		
+
 		@Callback(direct = true)
 		public Object[] getSteamAmount(Context c, Arguments a) {
-			return new Object[]{tile.getSteam()};
+			return new Object[] { tile.getSteam() };
 		}
-	}
-	
-	@Override
-	public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
-		return new ManagedEnvironmentST((ISteamTransporter)world.getTileEntity(x, y, z), "steam_transporter");
 	}
 
 	@Override
 	public Class<?> getTileEntityClass() {
 		return ISteamTransporter.class;
+	}
+
+	@Override
+	public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
+		return new ManagedEnvironmentST((ISteamTransporter) world.getTileEntity(x, y, z), "steam_transporter");
 	}
 }

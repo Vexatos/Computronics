@@ -5,6 +5,7 @@ import li.cil.oc.api.network.Callback;
 import li.cil.oc.api.network.Context;
 import li.cil.oc.api.network.ManagedEnvironment;
 import li.cil.oc.api.prefab.DriverTileEntity;
+import mods.railcraft.api.electricity.GridTools;
 import mods.railcraft.api.electricity.IElectricGrid;
 import net.minecraft.world.World;
 import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
@@ -42,7 +43,12 @@ public class DriverElectricGrid extends DriverTileEntity {
 	}
 
 	@Override
+	public boolean worksWith(World world, int x, int y, int z) {
+		return GridTools.getGridObjectAt(world, x, y, z) != null;
+	}
+
+	@Override
 	public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
-		return new ManagedEnvironmentElectricGrid((IElectricGrid) world.getTileEntity(x, y, z), "electric_tile");
+		return new ManagedEnvironmentElectricGrid(GridTools.getGridObjectAt(world, x, y, z), "electric_tile");
 	}
 }

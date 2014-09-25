@@ -10,6 +10,7 @@ import mods.railcraft.common.blocks.detector.EnumDetector;
 import mods.railcraft.common.blocks.detector.TileDetector;
 import mods.railcraft.common.blocks.detector.types.DetectorRouting;
 import mods.railcraft.common.items.ItemRoutingTable;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
 
@@ -89,11 +90,14 @@ public class DriverRoutingDetector extends DriverTileEntity {
 	}
 
 	@Override
+	public boolean worksWith(World world, int x, int y, int z) {
+		TileEntity tileEntity = world.getTileEntity(x, y, z);
+		return (tileEntity != null) && tileEntity instanceof TileDetector
+			&& ((TileDetector) tileEntity).getDetector().getType() == EnumDetector.ROUTING;
+	}
+
+	@Override
 	public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
-		if(world.getTileEntity(x, y, z) instanceof TileDetector
-			&& ((TileDetector) world.getTileEntity(x, y, z)).getDetector().getType() == EnumDetector.ROUTING) {
-			return new ManagedEnvironmentRoutingDetector((TileDetector) world.getTileEntity(x, y, z));
-		}
-		return null;
+		return new ManagedEnvironmentRoutingDetector((TileDetector) world.getTileEntity(x, y, z));
 	}
 }

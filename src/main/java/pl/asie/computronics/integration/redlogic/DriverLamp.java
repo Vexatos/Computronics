@@ -42,16 +42,16 @@ public class DriverLamp extends DriverBlock {
 			return new Object[]{block.isPowered()};
 		}
 	}
-	
+
+	@Override
+	public boolean worksWith(final World world, final int x, final int y, final int z) {
+		return world.getBlock(x, y, z) instanceof ILampBlock;
+	}
+
 	@Override
 	public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
 		Block block = world.getBlock(x, y, z);
 		if(block instanceof ILampBlock) return new ManagedEnvironmentLamp((ILampBlock)block, world, x, y, z);
 		else return null;
-	}
-
-	@Override
-	public boolean worksWith(final World world, final int x, final int y, final int z) {
-		return world.getBlock(x, y, z) instanceof ILampBlock;
 	}
 }

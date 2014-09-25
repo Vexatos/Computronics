@@ -22,17 +22,17 @@ public class DriverCrateStorageOld extends DriverTileEntity {
 		@Callback()
 		public Object[] getContents(Context c, Arguments a) {
 			List<ItemStack> l = tile.getContents(ForgeDirection.UNKNOWN);
-			return new Object[]{l.toArray(new ItemStack[l.size()])};
+			return new Object[] { l.toArray(new ItemStack[l.size()]) };
 		}
-	}
-	
-	@Override
-	public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
-		return new ManagedEnvironmentCrate((ICrateStorage)world.getTileEntity(x, y, z), "crate");
 	}
 
 	@Override
 	public Class<?> getTileEntityClass() {
 		return ICrateStorage.class;
+	}
+
+	@Override
+	public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
+		return new ManagedEnvironmentCrate((ICrateStorage) world.getTileEntity(x, y, z), "crate");
 	}
 }

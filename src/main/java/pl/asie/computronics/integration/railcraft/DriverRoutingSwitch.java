@@ -26,7 +26,7 @@ public class DriverRoutingSwitch extends DriverTileEntity {
 		public ManagedEnvironmentRoutingSwitch(TileSwitchRouting routingSwitch) {
 			super(routingSwitch, "routing_switch");
 		}
-		
+
 		@Callback(doc = "function():table; returns the full routing table inside the switch motor, or false and an error message if the table is empty or cannot be accessed")
 		public Object[] getRoutingTable(Context c, Arguments a) {
 			if((((TileSwitchRouting) tile)).getInventory().getStackInSlot(0) != null
@@ -88,9 +88,6 @@ public class DriverRoutingSwitch extends DriverTileEntity {
 
 	@Override
 	public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
-		if((world.getTileEntity(x, y, z)) instanceof TileSwitchRouting) {
-			return new ManagedEnvironmentRoutingSwitch((TileSwitchRouting) world.getTileEntity(x, y, z));
-		}
-		return null;
+		return new ManagedEnvironmentRoutingSwitch((TileSwitchRouting) world.getTileEntity(x, y, z));
 	}
 }

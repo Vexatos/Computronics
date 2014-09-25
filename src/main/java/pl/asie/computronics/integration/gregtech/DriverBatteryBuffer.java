@@ -11,6 +11,7 @@ import li.cil.oc.api.network.Context;
 import li.cil.oc.api.network.ManagedEnvironment;
 import li.cil.oc.api.prefab.DriverTileEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
 
@@ -62,15 +63,19 @@ public class DriverBatteryBuffer extends DriverTileEntity {
 	}
 
 	@Override
-	public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
-		if(((BaseMetaTileEntity) world.getTileEntity(x, y, z)).getMetaTileEntity() instanceof GT_MetaTileEntity_BasicBatteryBuffer) {
-			return new ManagedEnvironmentBatteryBuffer(((BaseMetaTileEntity) world.getTileEntity(x, y, z)), "gt_machine");
-		}
-		return null;
+	public Class<?> getTileEntityClass() {
+		return BaseMetaTileEntity.class;
 	}
 
 	@Override
-	public Class<?> getTileEntityClass() {
-		return BaseMetaTileEntity.class;
+	public boolean worksWith(World world, int x, int y, int z) {
+		TileEntity tileEntity = world.getTileEntity(x, y, z);
+		return (tileEntity != null) && tileEntity instanceof BaseMetaTileEntity
+			&& ((BaseMetaTileEntity) tileEntity).getMetaTileEntity() instanceof GT_MetaTileEntity_BasicBatteryBuffer;
+	}
+
+	@Override
+	public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
+		return new ManagedEnvironmentBatteryBuffer(((BaseMetaTileEntity) world.getTileEntity(x, y, z)), "gt_machine");
 	}
 }

@@ -13,6 +13,7 @@ import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
  * GREEEEEEEEEEEEEEEEEEEEEEEEG
  */
 public class DriverBaseMetaTileEntity extends DriverTileEntity {
+
 	public class ManagedEnvironmentMachine extends ManagedEnvironmentOCTile<BaseMetaTileEntity> {
 		public ManagedEnvironmentMachine(BaseMetaTileEntity tile, String name) {
 			super(tile, name);
@@ -20,47 +21,47 @@ public class DriverBaseMetaTileEntity extends DriverTileEntity {
 
 		@Callback(direct = true)
 		public Object[] getEUStored(Context c, Arguments a) {
-			return new Object[]{tile.getStoredEU()};
+			return new Object[] { tile.getStoredEU() };
 		}
-		
+
 		@Callback(direct = true)
 		public Object[] getSteamStored(Context c, Arguments a) {
-			return new Object[]{tile.getStoredSteam()};
+			return new Object[] { tile.getStoredSteam() };
 		}
-		
+
 		@Callback(direct = true)
 		public Object[] getEUMaxStored(Context c, Arguments a) {
-			return new Object[]{tile.getEUCapacity()};
+			return new Object[] { tile.getEUCapacity() };
 		}
-		
+
 		@Callback(direct = true)
 		public Object[] getSteamMaxStored(Context c, Arguments a) {
-			return new Object[]{tile.getSteamCapacity()};
+			return new Object[] { tile.getSteamCapacity() };
 		}
-		
+
 		@Callback(direct = true)
 		public Object[] getEUInputAverage(Context c, Arguments a) {
-			return new Object[]{tile.getAverageElectricInput()};
+			return new Object[] { tile.getAverageElectricInput() };
 		}
-		
+
 		@Callback(direct = true)
 		public Object[] getEUOutputAverage(Context c, Arguments a) {
-			return new Object[]{tile.getAverageElectricOutput()};
+			return new Object[] { tile.getAverageElectricOutput() };
 		}
-		
+
 		@Callback(direct = true)
 		public Object[] getOwnerName(Context c, Arguments a) {
-			return new Object[]{tile.getOwnerName()};
+			return new Object[] { tile.getOwnerName() };
 		}
-	}
-	
-	@Override
-	public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
-		return new ManagedEnvironmentMachine((BaseMetaTileEntity)world.getTileEntity(x, y, z), "gt_machine");
 	}
 
 	@Override
 	public Class<?> getTileEntityClass() {
 		return BaseMetaTileEntity.class;
+	}
+
+	@Override
+	public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
+		return new ManagedEnvironmentMachine((BaseMetaTileEntity) world.getTileEntity(x, y, z), "gt_machine");
 	}
 }

@@ -17,46 +17,49 @@ public class DriverMachine extends DriverTileEntity {
 
 		@Callback(direct = true)
 		public Object[] hasWork(Context c, Arguments a) {
-			return new Object[]{tile.hasThingsToDo()};
+			return new Object[] { tile.hasThingsToDo() };
 		}
-		
+
 		@Callback(direct = true)
 		public Object[] getWorkProgress(Context c, Arguments a) {
-			return new Object[]{tile.getProgress()};
+			return new Object[] { tile.getProgress() };
 		}
-		
+
 		@Callback(direct = true)
 		public Object[] getWorkMaxProgress(Context c, Arguments a) {
-			return new Object[]{tile.getMaxProgress()};
+			return new Object[] { tile.getMaxProgress() };
 		}
-		
+
 		@Callback(direct = true)
 		public Object[] isWorkAllowed(Context c, Arguments a) {
-			return new Object[]{tile.isAllowedToWork()};
+			return new Object[] { tile.isAllowedToWork() };
 		}
-		
+
 		@Callback(direct = true)
 		public Object[] setWorkAllowed(Context c, Arguments a) {
 			if(a.count() == 1 && a.isBoolean(0)) {
-				if(a.checkBoolean(0)) tile.enableWorking();
-				else tile.disableWorking();
+				if(a.checkBoolean(0)) {
+					tile.enableWorking();
+				} else {
+					tile.disableWorking();
+				}
 			}
 			return null;
 		}
-		
+
 		@Callback(direct = true)
 		public Object[] isMachineActive(Context c, Arguments a) {
-			return new Object[]{tile.isActive()};
+			return new Object[] { tile.isActive() };
 		}
-	}
-	
-	@Override
-	public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
-		return new ManagedEnvironmentMachine((IMachineProgress)world.getTileEntity(x, y, z), "gt_machine");
 	}
 
 	@Override
 	public Class<?> getTileEntityClass() {
 		return IMachineProgress.class;
+	}
+
+	@Override
+	public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
+		return new ManagedEnvironmentMachine((IMachineProgress) world.getTileEntity(x, y, z), "gt_machine");
 	}
 }

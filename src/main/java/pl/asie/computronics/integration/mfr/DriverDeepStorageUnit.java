@@ -18,28 +18,28 @@ public class DriverDeepStorageUnit extends DriverTileEntity {
 
 		@Callback()
 		public Object[] getStoredItem(Context c, Arguments a) {
-			return new Object[]{tile.getStoredItemType()};
+			return new Object[] { tile.getStoredItemType() };
 		}
-		
+
 		@Callback(direct = true)
 		public Object[] isLocked(Context c, Arguments a) {
 			ItemStack is = tile.getStoredItemType();
-			return new Object[]{(is != null && is.stackSize == 0)};
+			return new Object[] { (is != null && is.stackSize == 0) };
 		}
-		
+
 		@Callback(direct = true)
 		public Object[] getMaxItemCount(Context c, Arguments a) {
-			return new Object[]{tile.getMaxStoredCount()};
+			return new Object[] { tile.getMaxStoredCount() };
 		}
-	}
-	
-	@Override
-	public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
-		return new ManagedEnvironmentDSU((IDeepStorageUnit)world.getTileEntity(x, y, z), "deep_storage_unit");
 	}
 
 	@Override
 	public Class<?> getTileEntityClass() {
 		return IDeepStorageUnit.class;
+	}
+
+	@Override
+	public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
+		return new ManagedEnvironmentDSU((IDeepStorageUnit) world.getTileEntity(x, y, z), "deep_storage_unit");
 	}
 }

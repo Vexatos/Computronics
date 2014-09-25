@@ -18,18 +18,20 @@ public class DriverChargeConductor extends DriverTileEntity {
 		@Callback(direct = true)
 		public Object[] getCharge(Context c, Arguments a) {
 			if(tile.getCharge() != null) {
-				return new Object[]{tile.getCharge().getValue()};
-			} else return new Object[]{0};
+				return new Object[] { tile.getCharge().getValue() };
+			} else {
+				return new Object[] { 0 };
+			}
 		}
-	}
-	
-	@Override
-	public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
-		return new ManagedEnvironmentCC((IChargeConductor)world.getTileEntity(x, y, z), "charge_conductor");
 	}
 
 	@Override
 	public Class<?> getTileEntityClass() {
 		return IChargeConductor.class;
+	}
+
+	@Override
+	public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
+		return new ManagedEnvironmentCC((IChargeConductor) world.getTileEntity(x, y, z), "charge_conductor");
 	}
 }

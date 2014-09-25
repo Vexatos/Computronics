@@ -6,11 +6,11 @@ import li.cil.oc.api.network.Callback;
 import li.cil.oc.api.network.Context;
 import li.cil.oc.api.prefab.DriverTileEntity;
 import li.cil.oc.api.prefab.ManagedEnvironment;
-import mods.railcraft.api.tracks.ITrackTile;
 import mods.railcraft.common.blocks.tracks.TileTrack;
 import mods.railcraft.common.blocks.tracks.TrackRouting;
 import mods.railcraft.common.items.ItemTicketGold;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
 
@@ -85,11 +85,14 @@ public class DriverRoutingTrack extends DriverTileEntity {
 	}
 
 	@Override
+	public boolean worksWith(World world, int x, int y, int z) {
+		TileEntity tileEntity = world.getTileEntity(x, y, z);
+		return (tileEntity != null) && tileEntity instanceof TileTrack
+			&& ((TileTrack) tileEntity).getTrackInstance() instanceof TrackRouting;
+	}
+
+	@Override
 	public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
-		if(world.getTileEntity(x, y, z) instanceof ITrackTile
-			&& ((ITrackTile) world.getTileEntity(x, y, z)).getTrackInstance() instanceof TrackRouting) {
-			return new ManagedEnvironmentRoutingTrack((TileTrack) world.getTileEntity(x, y, z));
-		}
-		return null;
+		return new ManagedEnvironmentRoutingTrack((TileTrack) world.getTileEntity(x, y, z));
 	}
 }

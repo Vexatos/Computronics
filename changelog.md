@@ -1,6 +1,8 @@
 ==== 1.0.6 ====
 
   * CHANGED: Locomotive Relays should now remember the locomotive they are bound to through chunk unloading properly.
+  * FIXED: GregTech Battery Buffer not being recognized by OpenComputers if placed after the adjacent adapter was.
+  * FIXED: Electric Tracks not being regognized as peripherals/components
 
 ==== 1.0.5 ====
 

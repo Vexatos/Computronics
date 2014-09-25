@@ -4,8 +4,8 @@ import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
+import mods.railcraft.api.electricity.GridTools;
 import mods.railcraft.api.electricity.IElectricGrid;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import pl.asie.computronics.integration.CCTilePeripheral;
 
@@ -24,9 +24,8 @@ public class ElectricGridPeripheral extends CCTilePeripheral<IElectricGrid> {
 
 	@Override
 	public IPeripheral getPeripheral(World world, int x, int y, int z, int side) {
-		TileEntity te = world.getTileEntity(x, y, z);
-		if(te != null && te instanceof IElectricGrid) {
-			return new ElectricGridPeripheral((IElectricGrid) te, "electric_tile", world, x, y, z);
+		if(GridTools.getGridObjectAt(world, x, y, z) != null) {
+			return new ElectricGridPeripheral(GridTools.getGridObjectAt(world, x, y, z), "electric_tile", world, x, y, z);
 		}
 		return null;
 	}
