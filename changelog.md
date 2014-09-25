@@ -1,3 +1,7 @@
+==== 1.0.7 ====
+
+  * FIXED: Robot upgrades crashing when not used inside robot.
+
 ==== 1.0.6 ====
 
   * CHANGED: Locomotive Relays should now remember the locomotive they are bound to through chunk unloading properly.

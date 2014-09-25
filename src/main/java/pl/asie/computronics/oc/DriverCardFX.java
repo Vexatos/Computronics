@@ -8,7 +8,6 @@ import li.cil.oc.api.network.Connector;
 import li.cil.oc.api.network.Context;
 import li.cil.oc.api.network.Visibility;
 import li.cil.oc.api.prefab.ManagedEnvironment;
-import net.minecraft.tileentity.TileEntity;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.util.ParticleUtils;
 
@@ -16,10 +15,10 @@ import java.util.Random;
 
 public class DriverCardFX extends ManagedEnvironment {
     
-    protected final TileEntity container;
+    protected final Container container;
 
     public DriverCardFX(Container container) {
-        this.container = (TileEntity) container;
+        this.container = container;
         node = Network.newNode(this, Visibility.Neighbors).
                 withComponent("particle").
                 withConnector(Computronics.FX_ENERGY_COST * 32).
@@ -38,10 +37,10 @@ public class DriverCardFX extends ManagedEnvironment {
             return new Object[]{false, "name too long"};
         }
 
-        Random rng = container.getWorldObj().rand;
-        double x = container.xCoord + 0.5 + args.checkDouble(1);
-        double y = container.yCoord + 0.5 + args.checkDouble(2);
-        double z = container.zCoord + 0.5 + args.checkDouble(3);
+        Random rng = container.world().rand;
+        double x = container.xPosition() + 0.5 + args.checkDouble(1);
+        double y = container.yPosition() + 0.5 + args.checkDouble(2);
+        double z = container.zPosition() + 0.5 + args.checkDouble(3);
         double defaultv = (rng.nextDouble() * 0.1);
         if(args.count() >= 5) defaultv = args.checkDouble(4);
         double vx = defaultv * rng.nextGaussian();
@@ -52,7 +51,7 @@ public class DriverCardFX extends ManagedEnvironment {
         	vy = args.checkDouble(5);
         	vz = args.checkDouble(6);
         }
-        ParticleUtils.sendParticlePacket(name, container.getWorldObj(), x, y, z, vx, vy, vz);
+        ParticleUtils.sendParticlePacket(name, container.world(), x, y, z, vx, vy, vz);
 		((Connector) this.node).tryChangeBuffer(0 - Computronics.FX_ENERGY_COST);
         return new Object[]{true};
     }

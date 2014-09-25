@@ -2,7 +2,6 @@ package pl.asie.computronics.oc;
 
 import li.cil.oc.api.Network;
 import li.cil.oc.api.driver.Container;
-import li.cil.oc.api.machine.Robot;
 import li.cil.oc.api.network.Arguments;
 import li.cil.oc.api.network.Callback;
 import li.cil.oc.api.network.Connector;
@@ -22,12 +21,10 @@ import java.util.Map;
 
 public class RobotUpgradeRadar extends ManagedEnvironment {
 	private final Container container;
-	private final Robot robot;
 	private static final int CALL_LIMIT = 15;
 	
 	public RobotUpgradeRadar(Container container) {
 		this.container = container;
-		this.robot = (Robot)container;
 		this.node = Network.newNode(this, Visibility.Network).withConnector(Computronics.RADAR_ENERGY_COST_RF * Computronics.RADAR_RANGE * 1.75).withComponent("radar", Visibility.Neighbors).create();
 	}
 	

@@ -2,7 +2,6 @@ package pl.asie.computronics.oc;
 
 import li.cil.oc.api.Network;
 import li.cil.oc.api.driver.Container;
-import li.cil.oc.api.machine.Robot;
 import li.cil.oc.api.network.Arguments;
 import li.cil.oc.api.network.Callback;
 import li.cil.oc.api.network.Context;
@@ -15,10 +14,8 @@ import pl.asie.computronics.util.Camera;
 
 public class RobotUpgradeCamera extends ManagedEnvironment {
 	private final Container entity;
-	private final Robot robot;
 	public RobotUpgradeCamera(Container entity) {
 		this.entity = entity;
-		this.robot = (Robot)entity;
 		this.node = Network.newNode(this, Visibility.Network).withConnector().withComponent("camera", Visibility.Neighbors).create();
 	}
 
@@ -26,7 +23,7 @@ public class RobotUpgradeCamera extends ManagedEnvironment {
 	private static final int CALL_LIMIT = 15;
 	
 	private int getFacingDirection() {
-		int l = MathHelper.floor_double((double)(robot.player().rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+		int l = MathHelper.floor_double((double)(entity.world().getClosestPlayer(entity.xPosition(),entity.yPosition(),entity.zPosition(), 1.0D).rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
 		l = Direction.directionToFacing[l];
 		return l;
 	}
