@@ -92,7 +92,7 @@ import pl.asie.lib.util.EnergyConverter;
 
 import java.util.Random;
 
-@Mod(modid = Mods.Computronics, name = Mods.Computronics_NAME, version = "1.0.6", dependencies = "required-after:asielib;after:ComputerCraft;after:OpenComputers;after:OpenComputers|Core;after:MineFactoryReloaded;after:RedLogic;after:ProjRed|Core;after:nedocomputers;after:Railcraft;after:gregtech")
+@Mod(modid = Mods.Computronics, name = Mods.Computronics_NAME, version = "1.0.7", dependencies = "required-after:asielib;after:ComputerCraft;after:OpenComputers;after:OpenComputers|Core;after:MineFactoryReloaded;after:RedLogic;after:ProjRed|Core;after:nedocomputers;after:Railcraft;after:gregtech")
 public class Computronics {
 	public Configuration config;
 	public static Random rand = new Random();
