@@ -1,3 +1,7 @@
+==== 1.0.8 ====
+
+  * ADDED: Applied Energistics 2 integration: The Spatial IO port can now be accessed using ComputerCraft and OpenComputers!
+
 ==== 1.0.7 ====
 
   * FIXED: Robot upgrades crashing when not used inside robot.
