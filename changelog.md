@@ -1,4 +1,4 @@
-==== 1.0.8 ====
+==== 1.1.0 ====
 
   * ADDED: Applied Energistics 2 integration: The Spatial IO port can now be accessed using ComputerCraft and OpenComputers!
 
