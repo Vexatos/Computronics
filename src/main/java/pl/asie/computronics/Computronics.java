@@ -43,6 +43,8 @@ import pl.asie.computronics.cc.RadarTurtleUpgrade;
 import pl.asie.computronics.cc.SpeakingTurtleUpgrade;
 import pl.asie.computronics.client.LampRender;
 import pl.asie.computronics.integration.ModRecipes;
+import pl.asie.computronics.integration.appeng.DriverSpatialIOPort;
+import pl.asie.computronics.integration.appeng.SpatialIOPortPeripheral;
 import pl.asie.computronics.integration.betterstorage.DriverCrateStorageNew;
 import pl.asie.computronics.integration.betterstorage.DriverCrateStorageOld;
 import pl.asie.computronics.integration.factorization.ChargeConductorPeripheral;
@@ -382,6 +384,12 @@ public class Computronics {
 			}
 		}
 
+		if(Loader.isModLoaded(Mods.AE2)) {
+			if(config.get("modCompatibility", "enableAE2SpatialIOComponent", true).getBoolean(true)) {
+				ComputerCraftAPI.registerPeripheralProvider(new SpatialIOPortPeripheral());
+			}
+		}
+
 		ComputerCraftAPI.registerPeripheralProvider(new CCPeripheralProvider());
 		if(itemTape != null) {
 			ComputerCraftAPI.registerMediaProvider(itemTape);
@@ -458,6 +466,11 @@ public class Computronics {
 			}
 			if(config.get("modCompatibility", "enableGregTechDigitalChests", true).getBoolean(true)) {
 				li.cil.oc.api.Driver.add(new DriverDigitalChest());
+			}
+		}
+		if(Loader.isModLoaded(Mods.AE2)) {
+			if(config.get("modCompatibility", "enableAE2SpatialIOComponent", true).getBoolean(true)) {
+				li.cil.oc.api.Driver.add(new DriverSpatialIOPort());
 			}
 		}
 

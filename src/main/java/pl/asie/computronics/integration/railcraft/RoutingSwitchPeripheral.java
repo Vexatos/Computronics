@@ -52,7 +52,7 @@ public class RoutingSwitchPeripheral extends CCTilePeripheral<TileSwitchRouting>
 						&& tile.getInventory().getStackInSlot(0).getItem() instanceof ItemRoutingTable) {
 						if(!tile.isSecure()) {
 							List<List<String>> pages = ItemRoutingTable.getPages(tile.getInventory().getStackInSlot(0));
-							LinkedHashMap<Number, String> pageMap = new LinkedHashMap<Number, String>();
+							LinkedHashMap<Integer, String> pageMap = new LinkedHashMap<Integer, String>();
 							int i = 1;
 							for(List<String> currentPage : pages) {
 								for(String currentLine : currentPage) {
