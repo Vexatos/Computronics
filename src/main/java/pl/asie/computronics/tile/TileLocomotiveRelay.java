@@ -168,17 +168,26 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 		return new Object[] { this.locomotive.getMode().toString() };
 	}
 
+	@Callback(doc = "function():string; returns the current name of the locomotive")
+	@Optional.Method(modid = Mods.OpenComputers)
+	public Object[] getName(Context context, Arguments args) {
+		if(cannotAccessLocomotive() != null) {
+			return new Object[] { null, cannotAccessLocomotive() };
+		}
+		return new Object[] { this.locomotive.func_95999_t() != null ? this.locomotive.func_95999_t() : "" };
+	}
+
 	@Override
 	@Optional.Method(modid = Mods.ComputerCraft)
 	public String[] getMethodNames() {
-		return new String[] { "getDestination", "setDestination", "getCharge", "getMode" };
+		return new String[] { "getDestination", "setDestination", "getCharge", "getMode", "getName" };
 	}
 
 	@Override
 	@Optional.Method(modid = Mods.ComputerCraft)
 	public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments)
 		throws LuaException, InterruptedException {
-		if(method < 4) {
+		if(method < getMethodNames().length) {
 			if(cannotAccessLocomotive() != null) {
 				return new Object[] { null, cannotAccessLocomotive() };
 			}
@@ -205,6 +214,9 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 				}
 				case 3:{
 					return new Object[] { this.locomotive.getMode().toString() };
+				}
+				case 4:{
+					return new Object[] { this.locomotive.func_95999_t() != null ? this.locomotive.func_95999_t() : "" };
 				}
 			}
 		}

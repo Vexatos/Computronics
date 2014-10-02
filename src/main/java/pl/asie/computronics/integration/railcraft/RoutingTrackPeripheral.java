@@ -43,44 +43,42 @@ public class RoutingTrackPeripheral extends CCTilePeripheral<ITrackTile> {
 	public Object[] callMethod(IComputerAccess computer, ILuaContext context,
 		int method, Object[] arguments) throws LuaException,
 		InterruptedException {
-		if(method < 3) {
-			switch(method){
-				case 0:{
-					if(arguments.length < 1 || !(arguments[0] instanceof String)) {
-						throw new LuaException("first argument needs to be a string");
-					}
-					ItemStack ticket = ((TrackRouting) tile.getTrackInstance()).getInventory().getStackInSlot(0);
-					if(ticket != null && ticket.getItem() instanceof ItemTicketGold) {
-						if(!((TrackRouting) tile.getTrackInstance()).isSecure()) {
-							String destination = (String) arguments[0];
-							((TrackRouting) tile.getTrackInstance()).setTicket(destination, destination, ItemTicketGold.getOwner(ticket));
-							ItemTicketGold.setTicketData(ticket, destination, destination, ItemTicketGold.getOwner(ticket));
-							return new Object[] { true };
-						} else {
-							return new Object[] { false, "routing track is locked" };
-						}
-					} else {
-						return new Object[] { false, "there is no golden ticket inside the track" };
-					}
+		switch(method){
+			case 0:{
+				if(arguments.length < 1 || !(arguments[0] instanceof String)) {
+					throw new LuaException("first argument needs to be a string");
 				}
-				case 1:{
-					ItemStack ticket = ((TrackRouting) tile.getTrackInstance()).getInventory().getStackInSlot(0);
-					if(ticket != null && ticket.getItem() instanceof ItemTicketGold) {
-						if(!((TrackRouting) tile.getTrackInstance()).isSecure()) {
-							return new Object[] { ItemTicketGold.getDestination(ticket) };
-						} else {
-							return new Object[] { false, "routing track is locked" };
-						}
-					} else {
-						return new Object[] { false, "there is no golden ticket inside the track" };
-					}
-				}
-				case 2:{
+				ItemStack ticket = ((TrackRouting) tile.getTrackInstance()).getInventory().getStackInSlot(0);
+				if(ticket != null && ticket.getItem() instanceof ItemTicketGold) {
 					if(!((TrackRouting) tile.getTrackInstance()).isSecure()) {
-						return new Object[] { ((TrackRouting) tile.getTrackInstance()).isPowered() };
+						String destination = (String) arguments[0];
+						((TrackRouting) tile.getTrackInstance()).setTicket(destination, destination, ItemTicketGold.getOwner(ticket));
+						ItemTicketGold.setTicketData(ticket, destination, destination, ItemTicketGold.getOwner(ticket));
+						return new Object[] { true };
 					} else {
-						return new Object[] { null, "routing track is locked" };
+						return new Object[] { false, "routing track is locked" };
 					}
+				} else {
+					return new Object[] { false, "there is no golden ticket inside the track" };
+				}
+			}
+			case 1:{
+				ItemStack ticket = ((TrackRouting) tile.getTrackInstance()).getInventory().getStackInSlot(0);
+				if(ticket != null && ticket.getItem() instanceof ItemTicketGold) {
+					if(!((TrackRouting) tile.getTrackInstance()).isSecure()) {
+						return new Object[] { ItemTicketGold.getDestination(ticket) };
+					} else {
+						return new Object[] { false, "routing track is locked" };
+					}
+				} else {
+					return new Object[] { false, "there is no golden ticket inside the track" };
+				}
+			}
+			case 2:{
+				if(!((TrackRouting) tile.getTrackInstance()).isSecure()) {
+					return new Object[] { ((TrackRouting) tile.getTrackInstance()).isPowered() };
+				} else {
+					return new Object[] { null, "routing track is locked" };
 				}
 			}
 		}

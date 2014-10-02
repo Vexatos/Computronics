@@ -1,6 +1,8 @@
 ==== 1.1.0 ====
 
   * ADDED: Applied Energistics 2 integration: The Spatial IO port can now be accessed using ComputerCraft and OpenComputers!
+  * ADDED: getRoutingTableTitle and setRoutingTableTitle to the Routing Detector and Routing Switch Motor
+  * ADDED: getName to the Locomotive Relay
 
 ==== 1.0.7 ====
 

@@ -13,6 +13,7 @@ import mods.railcraft.common.items.ItemRoutingTable;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
+import pl.asie.computronics.integration.util.RoutingTableUtil;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -46,6 +47,9 @@ public class DriverRoutingDetector extends DriverTileEntity {
 						pageMap.put(i, "{newpage}");
 						i++;
 					}
+					if(pageMap.get(i - 1).equals("{newpage}")) {
+						pageMap.remove(i - 1);
+					}
 					return new Object[] { pageMap };
 				} else {
 					return new Object[] { false, "routing detector is locked" };
@@ -76,6 +80,32 @@ public class DriverRoutingDetector extends DriverTileEntity {
 					}
 					ItemRoutingTable.setPages(((DetectorRouting) tile.getDetector()).getInventory().getStackInSlot(0), pages);
 					return new Object[] { true };
+				} else {
+					return new Object[] { false, "routing detector is locked" };
+				}
+			}
+			return new Object[] { false, "no routing table found" };
+		}
+
+		@Callback(doc = "function():string; Returns the name of the routing table inside the detector")
+		public Object[] getRoutingTableTitle(Context c, Arguments a) {
+			if(((DetectorRouting) tile.getDetector()).getInventory().getStackInSlot(0) != null
+				&& ((DetectorRouting) tile.getDetector()).getInventory().getStackInSlot(0).getItem() instanceof ItemRoutingTable) {
+				if(!((DetectorRouting) tile.getDetector()).isSecure()) {
+					return new Object[] { RoutingTableUtil.getRoutingTableTitle(((DetectorRouting) tile.getDetector()).getInventory().getStackInSlot(0)) };
+				} else {
+					return new Object[] { false, "routing detector is locked" };
+				}
+			}
+			return new Object[] { false, "no routing table found" };
+		}
+
+		@Callback(doc = "function(name:string):boolean; Sets the name of the routing table inside the detector; returns true on success")
+		public Object[] setRoutingTableTitle(Context c, Arguments a) {
+			if(((DetectorRouting) tile.getDetector()).getInventory().getStackInSlot(0) != null
+				&& ((DetectorRouting) tile.getDetector()).getInventory().getStackInSlot(0).getItem() instanceof ItemRoutingTable) {
+				if(!((DetectorRouting) tile.getDetector()).isSecure()) {
+					return new Object[] { RoutingTableUtil.setRoutingTableTitle(((DetectorRouting) tile.getDetector()).getInventory().getStackInSlot(0), a.checkString(0)) };
 				} else {
 					return new Object[] { false, "routing detector is locked" };
 				}

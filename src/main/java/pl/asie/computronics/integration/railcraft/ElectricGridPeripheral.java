@@ -37,17 +37,15 @@ public class ElectricGridPeripheral extends CCTilePeripheral<IElectricGrid> {
 
 	@Override
 	public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
-		if(method < 3) {
-			switch(method){
-				case 0:{
-					return new Object[] { tile.getChargeHandler().getCharge() };
-				}
-				case 1:{
-					return new Object[] { tile.getChargeHandler().getCapacity() };
-				}
-				case 2:{
-					return new Object[] { tile.getChargeHandler().getLosses() };
-				}
+		switch(method){
+			case 0:{
+				return new Object[] { tile.getChargeHandler().getCharge() };
+			}
+			case 1:{
+				return new Object[] { tile.getChargeHandler().getCapacity() };
+			}
+			case 2:{
+				return new Object[] { tile.getChargeHandler().getLosses() };
 			}
 		}
 		return null;

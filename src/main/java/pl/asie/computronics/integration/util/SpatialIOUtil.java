@@ -1,4 +1,4 @@
-package pl.asie.computronics.integration.appeng.util;
+package pl.asie.computronics.integration.util;
 
 import appeng.api.implementations.items.ISpatialStorageCell;
 import net.minecraft.item.ItemStack;

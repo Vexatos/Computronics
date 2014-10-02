@@ -10,6 +10,7 @@ import mods.railcraft.common.blocks.signals.TileSwitchRouting;
 import mods.railcraft.common.items.ItemRoutingTable;
 import net.minecraft.world.World;
 import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
+import pl.asie.computronics.integration.util.RoutingTableUtil;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -43,6 +44,9 @@ public class DriverRoutingSwitch extends DriverTileEntity {
 						pageMap.put(i, "{newpage}");
 						i++;
 					}
+					if(pageMap.get(i - 1).equals("{newpage}")) {
+						pageMap.remove(i - 1);
+					}
 					return new Object[] { pageMap };
 				} else {
 					return new Object[] { false, "routing switch is locked" };
@@ -73,6 +77,32 @@ public class DriverRoutingSwitch extends DriverTileEntity {
 					}
 					ItemRoutingTable.setPages(tile.getInventory().getStackInSlot(0), pages);
 					return new Object[] { true };
+				} else {
+					return new Object[] { false, "routing switch is locked" };
+				}
+			}
+			return new Object[] { false, "no routing table found" };
+		}
+
+		@Callback(doc = "function():string; Returns the name of the routing table inside the switch motor")
+		public Object[] getRoutingTableTitle(Context c, Arguments a) {
+			if((((TileSwitchRouting) tile)).getInventory().getStackInSlot(0) != null
+				&& tile.getInventory().getStackInSlot(0).getItem() instanceof ItemRoutingTable) {
+				if(!(((TileSwitchRouting) tile)).isSecure()) {
+					return new Object[] { RoutingTableUtil.getRoutingTableTitle(tile.getInventory().getStackInSlot(0)) };
+				} else {
+					return new Object[] { false, "routing switch is locked" };
+				}
+			}
+			return new Object[] { false, "no routing table found" };
+		}
+
+		@Callback(doc = "function(name:string):boolean; Sets the name of the routing table inside the switch motor; returns true on success")
+		public Object[] setRoutingTableTitle(Context c, Arguments a) {
+			if(tile.getInventory().getStackInSlot(0) != null
+				&& tile.getInventory().getStackInSlot(0).getItem() instanceof ItemRoutingTable) {
+				if(!tile.isSecure()) {
+					return new Object[] { RoutingTableUtil.setRoutingTableTitle(tile.getInventory().getStackInSlot(0), a.checkString(0)) };
 				} else {
 					return new Object[] { false, "routing switch is locked" };
 				}

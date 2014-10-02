@@ -9,6 +9,7 @@ import mods.railcraft.common.items.ItemRoutingTable;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import pl.asie.computronics.integration.CCTilePeripheral;
+import pl.asie.computronics.integration.util.RoutingTableUtil;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -38,67 +39,93 @@ public class RoutingSwitchPeripheral extends CCTilePeripheral<TileSwitchRouting>
 
 	@Override
 	public String[] getMethodNames() {
-		return new String[] { "getRoutingTable", "setRoutingTable" };
+		return new String[] { "getRoutingTable", "setRoutingTable", "getRoutingTableTitle", "setRoutingTableTitle" };
 	}
 
 	@Override
 	public Object[] callMethod(IComputerAccess computer, ILuaContext context,
 		int method, Object[] arguments) throws LuaException,
 		InterruptedException {
-		if(method < 2) {
-			switch(method){
-				case 0:{
-					if(tile.getInventory().getStackInSlot(0) != null
-						&& tile.getInventory().getStackInSlot(0).getItem() instanceof ItemRoutingTable) {
-						if(!tile.isSecure()) {
-							List<List<String>> pages = ItemRoutingTable.getPages(tile.getInventory().getStackInSlot(0));
-							LinkedHashMap<Integer, String> pageMap = new LinkedHashMap<Integer, String>();
-							int i = 1;
-							for(List<String> currentPage : pages) {
-								for(String currentLine : currentPage) {
-									pageMap.put(i, currentLine);
-									i++;
-								}
-								pageMap.put(i, "{newpage}");
+		switch(method){
+			case 0:{
+				if(tile.getInventory().getStackInSlot(0) != null
+					&& tile.getInventory().getStackInSlot(0).getItem() instanceof ItemRoutingTable) {
+					if(!tile.isSecure()) {
+						List<List<String>> pages = ItemRoutingTable.getPages(tile.getInventory().getStackInSlot(0));
+						LinkedHashMap<Integer, String> pageMap = new LinkedHashMap<Integer, String>();
+						int i = 1;
+						for(List<String> currentPage : pages) {
+							for(String currentLine : currentPage) {
+								pageMap.put(i, currentLine);
 								i++;
 							}
-							return new Object[] { pageMap };
-						} else {
-							return new Object[] { false, "routing switch is locked" };
+							pageMap.put(i, "{newpage}");
+							i++;
 						}
+						if(pageMap.get(i - 1).equals("{newpage}")) {
+							pageMap.remove(i - 1);
+						}
+						return new Object[] { pageMap };
+					} else {
+						return new Object[] { false, "routing switch is locked" };
 					}
-					return new Object[] { false, "no routing table found" };
 				}
-				case 1:{
-					if(arguments.length < 1 || !(arguments[0] instanceof Map)) {
-						throw new LuaException("first argument needs to be a table");
-					}
-					Map pageMap = (Map) arguments[0];
-					if(tile.getInventory().getStackInSlot(0) != null
-						&& tile.getInventory().getStackInSlot(0).getItem() instanceof ItemRoutingTable) {
-						if(!tile.isSecure()) {
-							List<List<String>> pages = new ArrayList<List<String>>();
-							pages.add(new ArrayList<String>());
-							int pageIndex = 0;
-							for(Object key : pageMap.keySet()) {
-								Object line = pageMap.get(key);
-								if(line instanceof String) {
-									if(((String) line).toLowerCase().equals("{newline}")) {
-										pages.add(new ArrayList<String>());
-										pageIndex++;
-									} else {
-										pages.get(pageIndex).add((String) line);
-									}
+				return new Object[] { false, "no routing table found" };
+			}
+			case 1:{
+				if(arguments.length < 1 || !(arguments[0] instanceof Map)) {
+					throw new LuaException("first argument needs to be a table");
+				}
+				Map pageMap = (Map) arguments[0];
+				if(tile.getInventory().getStackInSlot(0) != null
+					&& tile.getInventory().getStackInSlot(0).getItem() instanceof ItemRoutingTable) {
+					if(!tile.isSecure()) {
+						List<List<String>> pages = new ArrayList<List<String>>();
+						pages.add(new ArrayList<String>());
+						int pageIndex = 0;
+						for(Object key : pageMap.keySet()) {
+							Object line = pageMap.get(key);
+							if(line instanceof String) {
+								if(((String) line).toLowerCase().equals("{newline}")) {
+									pages.add(new ArrayList<String>());
+									pageIndex++;
+								} else {
+									pages.get(pageIndex).add((String) line);
 								}
 							}
-							ItemRoutingTable.setPages(tile.getInventory().getStackInSlot(0), pages);
-							return new Object[] { true };
-						} else {
-							return new Object[] { false, "routing switch is locked" };
 						}
+						ItemRoutingTable.setPages(tile.getInventory().getStackInSlot(0), pages);
+						return new Object[] { true };
+					} else {
+						return new Object[] { false, "routing switch is locked" };
 					}
-					return new Object[] { false, "no routing table found" };
 				}
+				return new Object[] { false, "no routing table found" };
+			}
+			case 2:{
+				if((((TileSwitchRouting) tile)).getInventory().getStackInSlot(0) != null
+					&& tile.getInventory().getStackInSlot(0).getItem() instanceof ItemRoutingTable) {
+					if(!(((TileSwitchRouting) tile)).isSecure()) {
+						return new Object[] { RoutingTableUtil.getRoutingTableTitle(tile.getInventory().getStackInSlot(0)) };
+					} else {
+						return new Object[] { false, "routing switch is locked" };
+					}
+				}
+				return new Object[] { false, "no routing table found" };
+			}
+			case 3:{
+				if(arguments.length < 1 || !(arguments[0] instanceof String)) {
+					throw new LuaException("first argument needs to be a string");
+				}
+				if(tile.getInventory().getStackInSlot(0) != null
+					&& tile.getInventory().getStackInSlot(0).getItem() instanceof ItemRoutingTable) {
+					if(!tile.isSecure()) {
+						return new Object[] { RoutingTableUtil.setRoutingTableTitle(tile.getInventory().getStackInSlot(0), (String) arguments[0]) };
+					} else {
+						return new Object[] { false, "routing switch is locked" };
+					}
+				}
+				return new Object[] { false, "no routing table found" };
 			}
 		}
 		return null;

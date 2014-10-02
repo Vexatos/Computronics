@@ -39,7 +39,7 @@ public class ReceiverBoxPeripheral extends CCTilePeripheral<TileBoxReceiver> {
 	public Object[] callMethod(IComputerAccess computer, ILuaContext context,
 		int method, Object[] arguments) throws LuaException,
 		InterruptedException {
-		if(method < 1) {
+		if(method < getMethodNames().length) {
 			TileBoxReceiver box = this.tile;
 			if(!box.isSecure()) {
 				int signal = box.getTriggerAspect().ordinal();

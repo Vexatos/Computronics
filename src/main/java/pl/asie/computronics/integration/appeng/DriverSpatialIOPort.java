@@ -20,7 +20,7 @@ import li.cil.oc.api.prefab.DriverTileEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
-import pl.asie.computronics.integration.appeng.util.SpatialIOUtil;
+import pl.asie.computronics.integration.util.SpatialIOUtil;
 
 import java.util.HashMap;
 
@@ -71,7 +71,7 @@ public class DriverSpatialIOPort extends DriverTileEntity {
 		}
 
 		@Callback(doc = "function():boolean; Puts the cell in the IO Port's output slot into its input slot if possible; returns true on success")
-		public Object[] swapCells(Context c, Arguments a) {
+		public Object[] swapCell(Context c, Arguments a) {
 			ItemStack cell = tile.getStackInSlot(1);
 			if(cell != null && SpatialIOUtil.isSpatialCell(cell) && tile.getStackInSlot(0) == null) {
 				tile.setInventorySlotContents(0, cell);
@@ -82,7 +82,7 @@ public class DriverSpatialIOPort extends DriverTileEntity {
 		}
 
 		@Callback(doc = "function():boolean; Checks whether the cell in the IO Port's output slot can be moved into its input slot")
-		public Object[] canSwapCells(Context c, Arguments a) {
+		public Object[] canSwapCell(Context c, Arguments a) {
 			ItemStack cell = tile.getStackInSlot(1);
 			if(cell != null && SpatialIOUtil.isSpatialCell(cell) && tile.getStackInSlot(0) == null) {
 				return new Object[] { true };
@@ -100,7 +100,17 @@ public class DriverSpatialIOPort extends DriverTileEntity {
 					return new Object[] { size.x, size.y, size.z };
 				}
 			}
-			return new Object[] { };
+			return new Object[] { null, SpatialIOUtil.getCause(cell, null, false) };
+		}
+
+		@Callback(doc = "function():number; Returns the maximum dimensions of the storage cell in the input slot")
+		public Object[] getMaxCellSize(Context c, Arguments a) {
+			ItemStack cell = tile.getStackInSlot(0);
+			ISpatialStorageCell sc = SpatialIOUtil.getSpatialCell(cell);
+			if(sc != null) {
+				return new Object[] { sc.getMaxStoredDim(cell) };
+			}
+			return new Object[] { null, SpatialIOUtil.getCause(cell, null, false) };
 		}
 
 		@Callback(doc = "function():table; Returns a table with further information about the Spatial IO Port")
