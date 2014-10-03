@@ -1,3 +1,8 @@
+==== 1.1.1 ====
+
+  * FIXED: A pretty serious bug with the Cipher Block
+  * FIXED: Waila integration
+
 ==== 1.1.0 ====
 
   * ADDED: Applied Energistics 2 integration: The Spatial IO port can now be accessed using ComputerCraft and OpenComputers!

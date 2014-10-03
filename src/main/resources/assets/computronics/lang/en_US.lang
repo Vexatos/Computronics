@@ -20,6 +20,10 @@ tooltip.computronics.tape.unnamed=Unnamed Tape
 tooltip.computronics.tape.none=No Tape
 tooltip.computronics.tape.ig=The standard CDVR for\nGregTech Intergalactical's ships
 
+tooltip.computronics.waila.tapeinserted=Tape inserted
+tooltip.computronics.waila.labeltapeinserted=Tape "%s" inserted
+tooltip.computronics.waila.notapeinserted=No tape inserted
+
 item.computronics.reelChromoxide.name=Chromium Dioxide Tape Reel
 item.computronics.robot_upgrade_camera.name=Camera Upgrade
 item.computronics.robot_upgrade_chatbox.name=Chat Upgrade
