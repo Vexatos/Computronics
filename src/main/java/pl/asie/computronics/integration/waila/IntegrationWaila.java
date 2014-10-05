@@ -10,14 +10,25 @@ import pl.asie.computronics.tile.TileTapeDrive;
 public class IntegrationWaila {
 	public static void register(IWailaRegistrar reg) {
 		reg.registerBodyProvider(new WailaPeripheralBase(), TileEntityPeripheralBase.class);
-		reg.registerSyncedNBTKey("oc:node", TileEntityPeripheralBase.class);
+		registerKeys(reg, TileEntityPeripheralBase.class, "oc:node");
 
 		reg.registerBodyProvider(new WailaTapeDrive(), TileTapeDrive.class);
-		reg.registerSyncedNBTKey("*", TileTapeDrive.class);
+		//registerKeys(reg, TileTapeDrive.class, "*");
 
 		if(Loader.isModLoaded(Mods.Railcraft)) {
 			reg.registerBodyProvider(new WailaLocomotiveRelay(), TileLocomotiveRelay.class);
-			reg.registerSyncedNBTKey("bound", TileLocomotiveRelay.class);
+			registerKeys(reg, TileLocomotiveRelay.class, "*");
 		}
+
+		ConfigValues.registerConfigs(reg);
+	}
+
+	private static void registerKeys(IWailaRegistrar reg, Class<?> clazz, String... names) {
+		for(String name : names) {
+			reg.registerSyncedNBTKey(name, clazz);
+		}
+		reg.registerSyncedNBTKey("x", clazz);
+		reg.registerSyncedNBTKey("y", clazz);
+		reg.registerSyncedNBTKey("z", clazz);
 	}
 }

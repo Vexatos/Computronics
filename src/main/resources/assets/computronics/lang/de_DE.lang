@@ -32,6 +32,12 @@ tooltip.computronics.waila.tape.state.playing=Laufend
 tooltip.computronics.waila.tape.state.rewinding=Zurückspulend
 tooltip.computronics.waila.tape.state.forwarding=Vorspulend
 
+option.computronics.enableAddress=Zeige Komponentenaddresse
+option.computronics.enableTape=Zeige enthaltene Kassette
+option.computronics.enableTapeName=Zeige Kassettenname
+option.computronics.enableDriveState=Zeige Kassettenlaufwerkstatus
+option.computronics.enableRelayBound=Zeige Relaisbindung
+
 item.computronics.reelChromoxide.name=Chromdioxidbandspur
 item.computronics.robot_upgrade_camera.name=Kamera-Upgrade
 item.computronics.robot_upgrade_chatbox.name=Chat-Upgrade

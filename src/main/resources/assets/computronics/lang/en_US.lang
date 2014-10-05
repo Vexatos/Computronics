@@ -32,6 +32,12 @@ tooltip.computronics.waila.tape.state.playing=Playing
 tooltip.computronics.waila.tape.state.rewinding=Rewinding
 tooltip.computronics.waila.tape.state.forwarding=Forwarding
 
+option.computronics.enableAddress=Show component address
+option.computronics.enableTape=Show inserted tape
+option.computronics.enableTapeName=Show tape name
+option.computronics.enableDriveState=Show tape drive state
+option.computronics.enableRelayBound=Show Relay binding
+
 item.computronics.reelChromoxide.name=Chromium Dioxide Tape Reel
 item.computronics.robot_upgrade_camera.name=Camera Upgrade
 item.computronics.robot_upgrade_chatbox.name=Chat Upgrade

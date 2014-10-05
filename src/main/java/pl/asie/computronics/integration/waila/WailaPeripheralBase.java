@@ -4,7 +4,6 @@ import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
-import mcp.mobius.waila.api.IWailaDataProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.StatCollector;
@@ -15,25 +14,15 @@ import java.util.List;
 /**
  * @author Vexatos
  */
-public class WailaPeripheralBase implements IWailaDataProvider {
-
-	@Override
-	public ItemStack getWailaStack(IWailaDataAccessor accessor,
-		IWailaConfigHandler config) {
-
-		return null;
-	}
-
-	@Override
-	public List<String> getWailaHead(ItemStack itemStack, List<String> currenttip,
-		IWailaDataAccessor accessor, IWailaConfigHandler config) {
-
-		return currenttip;
-	}
+public class WailaPeripheralBase extends WailaComputronics {
 
 	@Override
 	public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor,
 		IWailaConfigHandler config) {
+
+		if(!ConfigValues.Address.getConfig(config)) {
+			return currenttip;
+		}
 
 		NBTTagCompound nbt = accessor.getNBTData();
 		if(Loader.isModLoaded(Mods.OpenComputers)) {
@@ -60,13 +49,6 @@ public class WailaPeripheralBase implements IWailaDataProvider {
 			currenttip.add(StatCollector.translateToLocalFormatted(
 				"tooltip.computronics.waila.base.bus", nbt.getShort("nc:bus")));
 		}
-		return currenttip;
-	}
-
-	@Override
-	public List<String> getWailaTail(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor,
-		IWailaConfigHandler config) {
-
 		return currenttip;
 	}
 }
