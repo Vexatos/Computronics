@@ -37,7 +37,8 @@ public class WailaTapeDrive implements IWailaDataProvider {
 		if(is != null && is.getItem() == Computronics.itemTape) {
 			String label = Computronics.itemTape.getLabel(is);
 			if(label.length() > 0) {
-				currenttip.add(StatCollector.translateToLocalFormatted("tooltip.computronics.waila.tape.labeltapeinserted", label + SpecialChars.RESET));
+				currenttip.add(StatCollector.translateToLocalFormatted("tooltip.computronics.waila.tape.labeltapeinserted",
+					label + SpecialChars.RESET));
 			} else {
 				currenttip.add(StatCollector.translateToLocal("tooltip.computronics.waila.tape.tapeinserted"));
 			}

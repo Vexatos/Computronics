@@ -20,6 +20,7 @@ tooltip.computronics.tape.unnamed=Unbenanntes Band
 tooltip.computronics.tape.none=Kein Band
 tooltip.computronics.tape.ig=Der Standard-CDVR für\nSchiffe von GregTech Intergalactical
 
+tooltip.computronics.waila.base.bus=§aBus ID§f: %s
 tooltip.computronics.waila.relay.bound=Gebunden
 tooltip.computronics.waila.relay.notbound=Nicht Gebunden
 tooltip.computronics.waila.tape.tapeinserted=Enthält Kassette
