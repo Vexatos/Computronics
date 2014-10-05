@@ -318,7 +318,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
     @Callback
     @Optional.Method(modid=Mods.OpenComputers)
     public Object[] getState(Context context, Arguments args) {
-    	return new Object[]{state.toString()};
+    	return new Object[]{state.getState().toString()};
     }
     
 	@Override
@@ -377,7 +377,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 		case 3: // getLabel, setLabel
 		case 5: return new Object[]{(state.getStorage() != null ? storageName : "")};
 		
-		case 4: return new Object[]{state.toString()};
+		case 4: return new Object[]{state.getState().toString()};
 		
 		case 9: if(state.getStorage() != null) return new Object[]{(int)state.getStorage().read(false) & 0xFF};
 		}

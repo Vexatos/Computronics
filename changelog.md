@@ -1,7 +1,11 @@
 ==== 1.1.1 ====
 
+  * ADDED: More Waila Integration
+            - Tape Drives now show their current state in Waila
+            - Locomotive Relays now show whether they are bound to a locomotive
   * FIXED: A pretty serious bug with the Cipher Block
   * FIXED: Waila integration
+  * FIXED: Tape Drive's getState not properly returning the current state.
 
 ==== 1.1.0 ====
 

@@ -20,9 +20,16 @@ tooltip.computronics.tape.unnamed=Unbenanntes Band
 tooltip.computronics.tape.none=Kein Band
 tooltip.computronics.tape.ig=Der Standard-CDVR für\nSchiffe von GregTech Intergalactical
 
-tooltip.computronics.waila.tapeinserted=Enthält Kassette
-tooltip.computronics.waila.labeltapeinserted=Enthält Kassette "%s"
-tooltip.computronics.waila.notapeinserted=Enthält keine Kassette
+tooltip.computronics.waila.relay.bound=Gebunden
+tooltip.computronics.waila.relay.notbound=Nicht Gebunden
+tooltip.computronics.waila.tape.tapeinserted=Enthält Kassette
+tooltip.computronics.waila.tape.labeltapeinserted=Enthält Kassette "%s"
+tooltip.computronics.waila.tape.notapeinserted=Enthält keine Kassette
+tooltip.computronics.waila.tape.state=Status: %s
+tooltip.computronics.waila.tape.state.stopped=Gestoppt
+tooltip.computronics.waila.tape.state.playing=Laufend
+tooltip.computronics.waila.tape.state.rewinding=Zurückspulend
+tooltip.computronics.waila.tape.state.forwarding=Vorspulend
 
 item.computronics.reelChromoxide.name=Chromdioxidbandspur
 item.computronics.robot_upgrade_camera.name=Kamera-Upgrade
