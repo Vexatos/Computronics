@@ -20,7 +20,7 @@ tooltip.computronics.tape.unnamed=Unnamed Tape
 tooltip.computronics.tape.none=No Tape
 tooltip.computronics.tape.ig=The standard CDVR for\nGregTech Intergalactical's ships
 
-tooltip.computronics.waila.base.bus=§aBus ID§f: %s
+tooltip.computronics.waila.base.bus=Â§aBus IDÂ§f: %s
 tooltip.computronics.waila.relay.bound=Bound
 tooltip.computronics.waila.relay.notbound=Not Bound
 tooltip.computronics.waila.tape.tapeinserted=Tape inserted
