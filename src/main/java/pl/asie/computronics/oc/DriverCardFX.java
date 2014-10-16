@@ -1,11 +1,11 @@
 package pl.asie.computronics.oc;
 
 import li.cil.oc.api.Network;
-import li.cil.oc.api.driver.Container;
-import li.cil.oc.api.network.Arguments;
-import li.cil.oc.api.network.Callback;
+import li.cil.oc.api.driver.EnvironmentHost;
+import li.cil.oc.api.machine.Arguments;
+import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.network.Connector;
-import li.cil.oc.api.network.Context;
+import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.Visibility;
 import li.cil.oc.api.prefab.ManagedEnvironment;
 import pl.asie.computronics.Computronics;
@@ -15,14 +15,14 @@ import java.util.Random;
 
 public class DriverCardFX extends ManagedEnvironment {
     
-    protected final Container container;
+    protected final EnvironmentHost container;
 
-    public DriverCardFX(Container container) {
+    public DriverCardFX(EnvironmentHost container) {
         this.container = container;
-        node = Network.newNode(this, Visibility.Neighbors).
+        this.setNode(Network.newNode(this, Visibility.Neighbors).
                 withComponent("particle").
                 withConnector(Computronics.FX_ENERGY_COST * 32).
-                create();
+                create());
     }
 
     // We allow spawning particle effects. The parameters are the particle
@@ -52,7 +52,7 @@ public class DriverCardFX extends ManagedEnvironment {
         	vz = args.checkDouble(6);
         }
         ParticleUtils.sendParticlePacket(name, container.world(), x, y, z, vx, vy, vz);
-		((Connector) this.node).tryChangeBuffer(0 - Computronics.FX_ENERGY_COST);
+		((Connector) this.node()).tryChangeBuffer(0 - Computronics.FX_ENERGY_COST);
         return new Object[]{true};
     }
 }

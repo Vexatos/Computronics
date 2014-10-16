@@ -1,10 +1,10 @@
 package pl.asie.computronics.oc;
 
 import li.cil.oc.api.Network;
-import li.cil.oc.api.driver.Container;
-import li.cil.oc.api.network.Arguments;
-import li.cil.oc.api.network.Callback;
-import li.cil.oc.api.network.Context;
+import li.cil.oc.api.driver.EnvironmentHost;
+import li.cil.oc.api.machine.Arguments;
+import li.cil.oc.api.machine.Callback;
+import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.Visibility;
 import li.cil.oc.api.prefab.ManagedEnvironment;
 import net.minecraft.util.Direction;
@@ -13,10 +13,10 @@ import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.util.Camera;
 
 public class RobotUpgradeCamera extends ManagedEnvironment {
-	private final Container entity;
-	public RobotUpgradeCamera(Container entity) {
+	private final EnvironmentHost entity;
+	public RobotUpgradeCamera(EnvironmentHost entity) {
 		this.entity = entity;
-		this.node = Network.newNode(this, Visibility.Network).withConnector().withComponent("camera", Visibility.Neighbors).create();
+		this.setNode(Network.newNode(this, Visibility.Network).withConnector().withComponent("camera", Visibility.Neighbors).create());
 	}
 
 	private final Camera camera = new Camera();

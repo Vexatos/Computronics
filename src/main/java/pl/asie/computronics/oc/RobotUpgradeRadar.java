@@ -1,11 +1,11 @@
 package pl.asie.computronics.oc;
 
 import li.cil.oc.api.Network;
-import li.cil.oc.api.driver.Container;
-import li.cil.oc.api.network.Arguments;
-import li.cil.oc.api.network.Callback;
+import li.cil.oc.api.driver.EnvironmentHost;
+import li.cil.oc.api.machine.Arguments;
+import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.network.Connector;
-import li.cil.oc.api.network.Context;
+import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.Visibility;
 import li.cil.oc.api.prefab.ManagedEnvironment;
 import net.minecraft.entity.EntityLiving;
@@ -20,12 +20,12 @@ import java.util.List;
 import java.util.Map;
 
 public class RobotUpgradeRadar extends ManagedEnvironment {
-	private final Container container;
+	private final EnvironmentHost container;
 	private static final int CALL_LIMIT = 15;
 	
-	public RobotUpgradeRadar(Container container) {
+	public RobotUpgradeRadar(EnvironmentHost container) {
 		this.container = container;
-		this.node = Network.newNode(this, Visibility.Network).withConnector(Computronics.RADAR_ENERGY_COST_RF * Computronics.RADAR_RANGE * 1.75).withComponent("radar", Visibility.Neighbors).create();
+		this.setNode(Network.newNode(this, Visibility.Network).withConnector(Computronics.RADAR_ENERGY_COST_RF * Computronics.RADAR_RANGE * 1.75).withComponent("radar", Visibility.Neighbors).create());
 	}
 	
 	private int getDistance(Arguments args) {
@@ -46,7 +46,7 @@ public class RobotUpgradeRadar extends ManagedEnvironment {
     public Object[] getEntities(Context context, Arguments args) {
 		List<Map> entities = new ArrayList<Map>();
 		int distance = getDistance(args);
-		if(((Connector) this.node).tryChangeBuffer(0 - (Computronics.RADAR_ENERGY_COST_RF * distance * 1.75))) {
+		if(((Connector) this.node()).tryChangeBuffer(0 - (Computronics.RADAR_ENERGY_COST_RF * distance * 1.75))) {
 			AxisAlignedBB bounds = getBounds(distance);
 			entities.addAll(RadarUtils.getEntities(((TileEntity)container).getWorldObj(), (int)container.xPosition(), (int)container.yPosition(), (int)container.zPosition(), bounds, EntityPlayer.class));
 			entities.addAll(RadarUtils.getEntities(((TileEntity)container).getWorldObj(), (int)container.xPosition(), (int)container.yPosition(), (int)container.zPosition(), bounds, EntityLiving.class));
@@ -65,7 +65,7 @@ public class RobotUpgradeRadar extends ManagedEnvironment {
     public Object[] getPlayers(Context context, Arguments args) {
         List<Map> entities = new ArrayList<Map>();
 		int distance = getDistance(args);
-		if(((Connector) this.node).tryChangeBuffer(0 - (Computronics.RADAR_ENERGY_COST_RF * distance * 1.0))) {
+		if(((Connector) this.node()).tryChangeBuffer(0 - (Computronics.RADAR_ENERGY_COST_RF * distance * 1.0))) {
 			AxisAlignedBB bounds = getBounds(distance);
 			entities.addAll(RadarUtils.getEntities(((TileEntity)container).getWorldObj(), (int)container.xPosition(), (int)container.yPosition(), (int)container.zPosition(), bounds, EntityPlayer.class));
 			context.pause(0.5);
@@ -77,7 +77,7 @@ public class RobotUpgradeRadar extends ManagedEnvironment {
     public Object[] getMobs(Context context, Arguments args) {
         List<Map> entities = new ArrayList<Map>();
 		int distance = getDistance(args);
-		if(((Connector) this.node).tryChangeBuffer(0 - (Computronics.RADAR_ENERGY_COST_RF * distance * 1.0))) {
+		if(((Connector) this.node()).tryChangeBuffer(0 - (Computronics.RADAR_ENERGY_COST_RF * distance * 1.0))) {
 			AxisAlignedBB bounds = getBounds(distance);
 			entities.addAll(RadarUtils.getEntities(((TileEntity)container).getWorldObj(), (int)container.xPosition(), (int)container.yPosition(), (int)container.zPosition(), bounds, EntityLiving.class));
 			context.pause(0.5);

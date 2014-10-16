@@ -1,6 +1,6 @@
 package pl.asie.computronics.util;
 
-import li.cil.oc.api.driver.Container;
+import li.cil.oc.api.driver.EnvironmentHost;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
@@ -26,7 +26,7 @@ public class ChatBoxUtils {
 		sendChatMessage(te.getWorldObj(), te.xCoord, te.yCoord, te.zCoord, d, prefix, string);
 	}
 
-	public static void sendChatMessage(Container c, int d, String prefix, String string) {
+	public static void sendChatMessage(EnvironmentHost c, int d, String prefix, String string) {
 		if(c == null) return;
 		sendChatMessage(c.world(), (int)Math.round(c.xPosition()), (int)Math.round(c.yPosition()), (int)Math.round(c.zPosition()), d, prefix, string);
 	}
