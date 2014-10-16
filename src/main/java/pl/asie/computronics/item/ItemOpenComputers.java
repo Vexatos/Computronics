@@ -2,6 +2,7 @@ package pl.asie.computronics.item;
 
 import cpw.mods.fml.common.Optional;
 import li.cil.oc.api.driver.EnvironmentHost;
+import li.cil.oc.api.driver.item.Slot;
 import li.cil.oc.api.network.ManagedEnvironment;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -43,11 +44,11 @@ public class ItemOpenComputers extends ItemMultiple implements li.cil.oc.api.dri
 	@Optional.Method(modid=Mods.OpenComputers)
 	public String slot(ItemStack stack) {
 		switch(stack.getItemDamage()) {
-			case 0: return "upgrade";
-			case 1: return "upgrade";
-			case 2: return "upgrade";
-			case 3: return "card";
-			default: return "none";
+			case 0: return Slot.Upgrade;
+			case 1: return Slot.Upgrade;
+			case 2: return Slot.Upgrade;
+			case 3: return Slot.Card;
+			default: return Slot.None;
 		}
 	}
 
