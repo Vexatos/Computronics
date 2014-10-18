@@ -3,7 +3,7 @@ package pl.asie.computronics;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import li.cil.oc.api.machine.Robot;
+import li.cil.oc.api.internal.Robot;
 import li.cil.oc.api.network.Environment;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.event.ServerChatEvent;

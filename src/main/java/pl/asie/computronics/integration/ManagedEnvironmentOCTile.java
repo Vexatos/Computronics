@@ -13,11 +13,16 @@ public abstract class ManagedEnvironmentOCTile<T> extends ManagedEnvironment imp
 	public ManagedEnvironmentOCTile(final T tile, final String name) {
 		this.tile = tile;
 		this.name = name;
-		node = Network.newNode(this, Visibility.Network).withComponent(name, Visibility.Network).create();
+		this.setNode(Network.newNode(this, Visibility.Network).withComponent(name, Visibility.Network).create());
 	}
 
 	@Override
 	public String preferredName() {
 		return name;
+	}
+	
+	@Override
+	public int priority() {
+		return 0;
 	}
 }

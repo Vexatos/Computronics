@@ -8,18 +8,68 @@ tile.computronics.cipher.name=加密机
 tile.computronics.radar.name=雷达
 tile.computronics.colorfulLamp.name=彩灯
 tile.computronics.eepromReader.name=EEPROM读入器
+tile.computronics.locomotiveRelay.name=数字机车中继器
 
 tooltip.computronics.chatBox.creative=盒中NSA!
+tooltip.computronics.sensor.bound=绑定到[%1$s,%2$s,%3$s]
+tooltip.computronics.sensor.desc1=潜行时右击机车中继器\n以绑定它
+tooltip.computronics.sensor.desc2=潜行时左击电力机车\n以安装它
 tooltip.computronics.tape.length=时长: %s分
 tooltip.computronics.tape.balanced=已平衡.
 tooltip.computronics.tape.unnamed=未命名录音带
 tooltip.computronics.tape.none=无录音带
+tooltip.computronics.tape.ig=格雷泛银河飞船专属\n标卡数电录音带
 
+
+tooltip.computronics.waila.base.bus=§a总线号§f: %s
+tooltip.computronics.waila.relay.bound=已绑定
+tooltip.computronics.waila.relay.notbound=未绑定
+tooltip.computronics.waila.tape.tapeinserted=已插入录音带
+tooltip.computronics.waila.tape.labeltapeinserted=已插入录音带"%s"
+tooltip.computronics.waila.tape.notapeinserted=录音带插入
+tooltip.computronics.waila.tape.state=状态: %s
+tooltip.computronics.waila.tape.state.stopped=已停止
+tooltip.computronics.waila.tape.state.playing=播放中
+tooltip.computronics.waila.tape.state.rewinding=倒带中
+tooltip.computronics.waila.tape.state.forwarding=快进中
+
+option.computronics.enableAddress=显示组件地址
+option.computronics.enableTape=显示插入录音带
+option.computronics.enableTapeName=显示录音带名称
+option.computronics.enableDriveState=显示录音带驱动状态
+option.computronics.enableRelayBound=显示中继器绑定状态
+
+item.computronics.reelChromoxide.name=二氧化铬录音带卷轮
 item.computronics.robot_upgrade_camera.name=摄像升级
 item.computronics.robot_upgrade_chatbox.name=聊天升级
 item.computronics.robot_upgrade_radar.name=雷达升级
 item.computronics.card_fx.name=粒子特效升级
+item.computronics.relaySensor.name=数字中继传感器
 item.computronics.part_tape_track.name=录音带轨道
+item.computronics.tape.ig.name=泛银河标卡数电录音带
 item.computronics.tape.name=盒式录音带
 
 itemGroup.tabComputronics=Computronics
+
+
+entity.computronics.itemTape.name=泛银河标卡数电录音带
+
+chat.computronics.cipher.locked=加密机已锁,无法访问.
+chat.computronics.sensor.bound=中继器成功与机车绑定!
+chat.computronics.sensor.noRelay=指定坐标处无中继器!
+chat.computronics.sensor.tooFarAway=中继器与机车彼此相距过远!
+chat.computronics.sensor.wrongLoco=传感器只能安装在电力机车上!
+chat.computronics.sensor.wrongDim=中继器与机车处于不同位面!
+
+achievement.computronics.gotTape=大家的音乐
+achievement.computronics.gotTape.desc=当然远胜过胶带音乐
+achievement.computronics.gotStarTape=彩虹之上
+achievement.computronics.gotStarTape.desc=那彩虹猫居住的地方
+achievement.computronics.gotIGTape=未来太空船的第一个零件
+achievement.computronics.gotIGTape.desc=我可没说你能造了
+achievement.computronics.droppedIGTape=马航MH370
+achievement.computronics.droppedIGTape.desc=它消失了!?
+achievement.computronics.gotLoco=电力革命
+achievement.computronics.gotLoco.desc=就这样开始了.
+achievement.computronics.gotRelay=数字革命
+achievement.computronics.gotRelay.desc=0100100001000101010011000101000000100001

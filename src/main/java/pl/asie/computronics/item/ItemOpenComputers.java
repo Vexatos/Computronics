@@ -1,8 +1,8 @@
 package pl.asie.computronics.item;
 
 import cpw.mods.fml.common.Optional;
-import li.cil.oc.api.driver.Container;
-import li.cil.oc.api.driver.Slot;
+import li.cil.oc.api.driver.EnvironmentHost;
+import li.cil.oc.api.driver.item.Slot;
 import li.cil.oc.api.network.ManagedEnvironment;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -30,7 +30,7 @@ public class ItemOpenComputers extends ItemMultiple implements li.cil.oc.api.dri
 	@Override
 	@Optional.Method(modid=Mods.OpenComputers)
 	public ManagedEnvironment createEnvironment(ItemStack stack,
-			Container container) {
+			EnvironmentHost container) {
 		switch(stack.getItemDamage()) {
 			case 0: return new RobotUpgradeCamera(container);
 			case 1: return new RobotUpgradeChatBox(container);
@@ -42,7 +42,7 @@ public class ItemOpenComputers extends ItemMultiple implements li.cil.oc.api.dri
 
 	@Override
 	@Optional.Method(modid=Mods.OpenComputers)
-	public Slot slot(ItemStack stack) {
+	public String slot(ItemStack stack) {
 		switch(stack.getItemDamage()) {
 			case 0: return Slot.Upgrade;
 			case 1: return Slot.Upgrade;

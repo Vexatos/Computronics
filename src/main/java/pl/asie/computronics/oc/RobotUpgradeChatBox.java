@@ -2,10 +2,10 @@ package pl.asie.computronics.oc;
 
 import cpw.mods.fml.common.Optional;
 import li.cil.oc.api.Network;
-import li.cil.oc.api.driver.Container;
-import li.cil.oc.api.network.Arguments;
-import li.cil.oc.api.network.Callback;
-import li.cil.oc.api.network.Context;
+import li.cil.oc.api.driver.EnvironmentHost;
+import li.cil.oc.api.machine.Arguments;
+import li.cil.oc.api.machine.Callback;
+import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.Visibility;
 import li.cil.oc.api.prefab.ManagedEnvironment;
 import net.minecraftforge.event.ServerChatEvent;
@@ -14,19 +14,19 @@ import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.ChatBoxUtils;
 
 public class RobotUpgradeChatBox extends ManagedEnvironment {
-	private final Container container;
+	private final EnvironmentHost container;
 	private int distance;
 	private String name = "";
 
-	public RobotUpgradeChatBox(Container container) {
+	public RobotUpgradeChatBox(EnvironmentHost container) {
 		this.container = container;
 		distance = Computronics.CHATBOX_DISTANCE;
-		this.node = Network.newNode(this, Visibility.Network).withConnector().withComponent("chat", Visibility.Neighbors).create();
+		this.setNode(Network.newNode(this, Visibility.Network).withConnector().withComponent("chat", Visibility.Neighbors).create());
 	}
 
 	public void receiveChatMessage(ServerChatEvent event) {
-		if(node != null)
-			node.sendToReachable("computer.signal", "chat_message", event.username, event.message);
+		if(this.node() != null)
+			this.node().sendToReachable("computer.signal", "chat_message", event.username, event.message);
 	}
 
 	public int getDistance() { return distance; }
