@@ -63,10 +63,6 @@ import pl.asie.computronics.integration.railcraft.DriverReceiverBox;
 import pl.asie.computronics.integration.railcraft.DriverRoutingDetector;
 import pl.asie.computronics.integration.railcraft.DriverRoutingSwitch;
 import pl.asie.computronics.integration.railcraft.DriverRoutingTrack;
-import pl.asie.computronics.integration.railcraft.ElectricGridPeripheral;
-import pl.asie.computronics.integration.railcraft.ReceiverBoxPeripheral;
-import pl.asie.computronics.integration.railcraft.RoutingDetectorPeripheral;
-import pl.asie.computronics.integration.railcraft.RoutingSwitchPeripheral;
 import pl.asie.computronics.integration.railcraft.RoutingTrackPeripheral;
 import pl.asie.computronics.integration.redlogic.CCBundledRedstoneProviderRedLogic;
 import pl.asie.computronics.integration.redlogic.DriverLamp;
@@ -377,10 +373,10 @@ public class Computronics {
 		if(Loader.isModLoaded(Mods.Railcraft)) {
 			if(config.get("modCompatibility", "enableRailcraftRoutingPeripherals", true).getBoolean(true)) {
 				ComputerCraftAPI.registerPeripheralProvider(new RoutingTrackPeripheral());
-				ComputerCraftAPI.registerPeripheralProvider(new RoutingDetectorPeripheral());
-				ComputerCraftAPI.registerPeripheralProvider(new RoutingSwitchPeripheral());
-				ComputerCraftAPI.registerPeripheralProvider(new ReceiverBoxPeripheral());
-				ComputerCraftAPI.registerPeripheralProvider(new ElectricGridPeripheral());
+				ComputerCraftAPI.registerPeripheralProvider(new DriverRoutingDetector.CCDriver());
+				ComputerCraftAPI.registerPeripheralProvider(new DriverRoutingSwitch.CCDriver());
+				ComputerCraftAPI.registerPeripheralProvider(new DriverReceiverBox.CCDriver());
+				ComputerCraftAPI.registerPeripheralProvider(new DriverElectricGrid.CCDriver());
 			}
 		}
 
@@ -451,10 +447,10 @@ public class Computronics {
 		if(Loader.isModLoaded(Mods.Railcraft)) {
 			if(config.get("modCompatibility", "enableRailcraftRoutingComponents", true).getBoolean(true)) {
 				li.cil.oc.api.Driver.add(new DriverRoutingTrack());
-				li.cil.oc.api.Driver.add(new DriverRoutingDetector());
-				li.cil.oc.api.Driver.add(new DriverRoutingSwitch());
-				li.cil.oc.api.Driver.add(new DriverReceiverBox());
-				li.cil.oc.api.Driver.add(new DriverElectricGrid());
+				li.cil.oc.api.Driver.add(new DriverRoutingDetector.OCDriver());
+				li.cil.oc.api.Driver.add(new DriverRoutingSwitch.OCDriver());
+				li.cil.oc.api.Driver.add(new DriverReceiverBox.OCDriver());
+				li.cil.oc.api.Driver.add(new DriverElectricGrid.OCDriver());
 			}
 		}
 		if(Loader.isModLoaded(Mods.GregTech)) {
