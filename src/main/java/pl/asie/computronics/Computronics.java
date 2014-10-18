@@ -63,7 +63,6 @@ import pl.asie.computronics.integration.railcraft.DriverReceiverBox;
 import pl.asie.computronics.integration.railcraft.DriverRoutingDetector;
 import pl.asie.computronics.integration.railcraft.DriverRoutingSwitch;
 import pl.asie.computronics.integration.railcraft.DriverRoutingTrack;
-import pl.asie.computronics.integration.railcraft.RoutingTrackPeripheral;
 import pl.asie.computronics.integration.redlogic.CCBundledRedstoneProviderRedLogic;
 import pl.asie.computronics.integration.redlogic.DriverLamp;
 import pl.asie.computronics.integration.redlogic.LampPeripheral;
@@ -372,7 +371,7 @@ public class Computronics {
 
 		if(Loader.isModLoaded(Mods.Railcraft)) {
 			if(config.get("modCompatibility", "enableRailcraftRoutingPeripherals", true).getBoolean(true)) {
-				ComputerCraftAPI.registerPeripheralProvider(new RoutingTrackPeripheral());
+				ComputerCraftAPI.registerPeripheralProvider(new DriverRoutingTrack.CCDriver());
 				ComputerCraftAPI.registerPeripheralProvider(new DriverRoutingDetector.CCDriver());
 				ComputerCraftAPI.registerPeripheralProvider(new DriverRoutingSwitch.CCDriver());
 				ComputerCraftAPI.registerPeripheralProvider(new DriverReceiverBox.CCDriver());
@@ -446,7 +445,7 @@ public class Computronics {
 		}
 		if(Loader.isModLoaded(Mods.Railcraft)) {
 			if(config.get("modCompatibility", "enableRailcraftRoutingComponents", true).getBoolean(true)) {
-				li.cil.oc.api.Driver.add(new DriverRoutingTrack());
+				li.cil.oc.api.Driver.add(new DriverRoutingTrack.OCDriver());
 				li.cil.oc.api.Driver.add(new DriverRoutingDetector.OCDriver());
 				li.cil.oc.api.Driver.add(new DriverRoutingSwitch.OCDriver());
 				li.cil.oc.api.Driver.add(new DriverReceiverBox.OCDriver());
