@@ -108,10 +108,10 @@ public class DriverRoutingSwitch {
 	}
 
 	public static class OCDriver extends DriverTileEntity {
-		private class ManagedEnvironmentRoutingSwitch extends ManagedEnvironmentOCTile<TileSwitchRouting> implements NamedBlock {
+		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TileSwitchRouting> implements NamedBlock {
 
-			public ManagedEnvironmentRoutingSwitch(TileSwitchRouting routingSwitch) {
-				super(routingSwitch, Names.RoutingSwitch);
+			public InternalManagedEnvironment(TileSwitchRouting routingSwitch) {
+				super(routingSwitch, Names.Railcraft_RoutingSwitch);
 			}
 
 			@Callback(doc = "function():table; returns the full routing table inside the switch motor, or false and an error message if the table is empty or cannot be accessed")
@@ -144,7 +144,7 @@ public class DriverRoutingSwitch {
 
 		@Override
 		public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
-			return new ManagedEnvironmentRoutingSwitch((TileSwitchRouting) world.getTileEntity(x, y, z));
+			return new InternalManagedEnvironment((TileSwitchRouting) world.getTileEntity(x, y, z));
 		}
 	}
 
@@ -154,7 +154,7 @@ public class DriverRoutingSwitch {
 		}
 
 		public CCDriver(TileSwitchRouting routingSwitch, World world, int x, int y, int z) {
-			super(routingSwitch, Names.RoutingSwitch, world, x, y, z);
+			super(routingSwitch, Names.Railcraft_RoutingSwitch, world, x, y, z);
 		}
 
 		@Override

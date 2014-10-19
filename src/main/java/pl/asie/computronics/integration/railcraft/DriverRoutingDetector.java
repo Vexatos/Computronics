@@ -110,10 +110,10 @@ public class DriverRoutingDetector {
 	}
 
 	public static class OCDriver extends DriverTileEntity {
-		private class ManagedEnvironmentRoutingDetector extends ManagedEnvironmentOCTile<TileDetector> implements NamedBlock {
+		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TileDetector> implements NamedBlock {
 
-			public ManagedEnvironmentRoutingDetector(TileDetector detector) {
-				super(detector, Names.RoutingDetector);
+			public InternalManagedEnvironment(TileDetector detector) {
+				super(detector, Names.Railcraft_RoutingDetector);
 			}
 
 			@Callback(doc = "function():table; returns the full routing table inside the detector, or false and an error message if there is no table or it cannot be accessed")
@@ -153,7 +153,7 @@ public class DriverRoutingDetector {
 
 		@Override
 		public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
-			return new ManagedEnvironmentRoutingDetector((TileDetector) world.getTileEntity(x, y, z));
+			return new InternalManagedEnvironment((TileDetector) world.getTileEntity(x, y, z));
 		}
 	}
 
@@ -163,7 +163,7 @@ public class DriverRoutingDetector {
 		}
 
 		public CCDriver(TileDetector detector, World world, int x, int y, int z) {
-			super(detector, Names.RoutingDetector, world, x, y, z);
+			super(detector, Names.Railcraft_RoutingDetector, world, x, y, z);
 		}
 
 		@Override

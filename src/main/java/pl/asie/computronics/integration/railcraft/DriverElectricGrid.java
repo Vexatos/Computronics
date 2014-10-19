@@ -23,10 +23,10 @@ public class DriverElectricGrid {
 
 	public static class OCDriver extends DriverTileEntity {
 
-		private class InternalManagedEnvironment extends ManagedEnvironmentOCTile<IElectricGrid> {
+		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<IElectricGrid> {
 
 			public InternalManagedEnvironment(IElectricGrid tile) {
-				super(tile, Names.ElectricGrid);
+				super(tile, Names.Railcraft_ElectricGrid);
 			}
 
 			@Callback(doc = "function():number; Returns the current charge of the electric tile")
@@ -68,7 +68,7 @@ public class DriverElectricGrid {
 		}
 
 		public CCDriver(IElectricGrid tile, World world, int x, int y, int z) {
-			super(tile, Names.ElectricGrid, world, x, y, z);
+			super(tile, Names.Railcraft_ElectricGrid, world, x, y, z);
 		}
 
 		@Override

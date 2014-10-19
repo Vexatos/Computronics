@@ -46,10 +46,10 @@ public class DriverReceiverBox {
 
 	public static class OCDriver extends DriverTileEntity {
 
-		private class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TileBoxReceiver> {
+		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TileBoxReceiver> {
 
 			public InternalManagedEnvironment(TileBoxReceiver box) {
-				super(box, Names.ReceiverBox);
+				super(box, Names.Railcraft_ReceiverBox);
 			}
 
 			@Callback(doc = "function():number; Returns the currently most restrictive received aspect that triggers the receiver box")
@@ -80,7 +80,7 @@ public class DriverReceiverBox {
 		}
 
 		public CCDriver(TileBoxReceiver box, World world, int x, int y, int z) {
-			super(box, Names.ReceiverBox, world, x, y, z);
+			super(box, Names.Railcraft_ReceiverBox, world, x, y, z);
 		}
 
 		@Override

@@ -65,10 +65,10 @@ public class DriverRoutingTrack {
 
 	public static class OCDriver extends DriverTileEntity {
 
-		public class ManagedEnvironmentRoutingTrack extends ManagedEnvironmentOCTile<TileTrack> implements NamedBlock {
+		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TileTrack> implements NamedBlock {
 
-			public ManagedEnvironmentRoutingTrack(TileTrack track) {
-				super(track, Names.RoutingTrack);
+			public InternalManagedEnvironment(TileTrack track) {
+				super(track, Names.Railcraft_RoutingTrack);
 			}
 
 			@Callback(doc = "function(destination:String):boolean; Sets the ticket destination")
@@ -116,7 +116,7 @@ public class DriverRoutingTrack {
 
 		@Override
 		public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
-			return new ManagedEnvironmentRoutingTrack((TileTrack) world.getTileEntity(x, y, z));
+			return new InternalManagedEnvironment((TileTrack) world.getTileEntity(x, y, z));
 		}
 	}
 
@@ -126,7 +126,7 @@ public class DriverRoutingTrack {
 		}
 
 		public CCDriver(ITrackTile track, World world, int x, int y, int z) {
-			super(track, Names.RoutingTrack, world, x, y, z);
+			super(track, Names.Railcraft_RoutingTrack, world, x, y, z);
 		}
 
 		@Override
