@@ -55,6 +55,8 @@ import pl.asie.computronics.integration.gregtech.DriverDigitalChest;
 import pl.asie.computronics.integration.gregtech.DriverMachine;
 import pl.asie.computronics.integration.mfr.DriverDeepStorageUnit;
 import pl.asie.computronics.integration.railcraft.DriverElectricGrid;
+import pl.asie.computronics.integration.railcraft.DriverLimiterTrack;
+import pl.asie.computronics.integration.railcraft.DriverLocomotiveTrack;
 import pl.asie.computronics.integration.railcraft.DriverReceiverBox;
 import pl.asie.computronics.integration.railcraft.DriverRoutingDetector;
 import pl.asie.computronics.integration.railcraft.DriverRoutingSwitch;
@@ -84,7 +86,7 @@ import pl.asie.lib.util.EnergyConverter;
 
 import java.util.Random;
 
-@Mod(modid = Mods.Computronics, name = Mods.Computronics_NAME, version = "1.1.1", useMetadata = true, dependencies = "required-after:asielib@[0.3.2,);after:ComputerCraft;after:OpenComputers;after:OpenComputers|Core;after:MineFactoryReloaded;after:RedLogic;after:ProjRed|Core;after:nedocomputers;after:Railcraft;after:gregtech")
+@Mod(modid = Mods.Computronics, name = Mods.Computronics_NAME, version = "1.2.0", useMetadata = true, dependencies = "required-after:asielib@[0.3.2,);after:ComputerCraft;after:OpenComputers@[1.4.0,);after:OpenComputers|Core;after:MineFactoryReloaded;after:RedLogic;after:ProjRed|Core;after:nedocomputers;after:Railcraft;after:gregtech")
 public class Computronics {
 	public Configuration config;
 	public static Random rand = new Random();
@@ -371,6 +373,8 @@ public class Computronics {
 				ComputerCraftAPI.registerPeripheralProvider(new DriverRoutingSwitch.CCDriver());
 				ComputerCraftAPI.registerPeripheralProvider(new DriverReceiverBox.CCDriver());
 				ComputerCraftAPI.registerPeripheralProvider(new DriverElectricGrid.CCDriver());
+				ComputerCraftAPI.registerPeripheralProvider(new DriverLimiterTrack.CCDriver());
+				ComputerCraftAPI.registerPeripheralProvider(new DriverLocomotiveTrack.CCDriver());
 			}
 		}
 
@@ -445,6 +449,8 @@ public class Computronics {
 				li.cil.oc.api.Driver.add(new DriverRoutingSwitch.OCDriver());
 				li.cil.oc.api.Driver.add(new DriverReceiverBox.OCDriver());
 				li.cil.oc.api.Driver.add(new DriverElectricGrid.OCDriver());
+				li.cil.oc.api.Driver.add(new DriverLimiterTrack.OCDriver());
+				li.cil.oc.api.Driver.add(new DriverLocomotiveTrack.OCDriver());
 			}
 		}
 		if(Loader.isModLoaded(Mods.GregTech)) {

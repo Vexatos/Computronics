@@ -126,6 +126,17 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 
 	//Computer stuff
 
+	private static Object[] setDestination(EntityLocomotiveElectric locomotive, Object[] arguments) {
+		ItemStack ticket = locomotive.getStackInSlot(0);
+		if(ticket != null && ticket.getItem() instanceof ItemTicketGold) {
+			ItemTicket.setTicketData(ticket, (String) arguments[0], (String) arguments[0],
+				ItemTicketGold.getOwner(ticket));
+			return new Object[] { locomotive.setDestination(ticket) };
+		} else {
+			return new Object[] { false, "there is no golden ticket inside the locomotive" };
+		}
+	}
+
 	@Callback(doc = "function():String; gets the destination the locomotive is currently set to")
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] getDestination(Context context, Arguments args) {
@@ -141,13 +152,8 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 		if(cannotAccessLocomotive() != null) {
 			return new Object[] { null, cannotAccessLocomotive() };
 		}
-
-		ItemStack ticket = this.locomotive.getStackInSlot(0);
-		if(ticket == null || !(ticket.getItem() instanceof ItemTicketGold)) {
-			return new Object[] { false, "there is no golden ticket inside the locomotive" };
-		}
-		ItemTicket.setTicketData(ticket, a.checkString(0), a.checkString(0), ItemTicketGold.getOwner(ticket));
-		return new Object[] { this.locomotive.setDestination(ticket) };
+		a.checkString(0);
+		return TileLocomotiveRelay.setDestination(this.locomotive, a.toArray());
 	}
 
 	@Callback(doc = "function():number; gets the current charge of the locomotive")
@@ -180,7 +186,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 	@Override
 	@Optional.Method(modid = Mods.ComputerCraft)
 	public String[] getMethodNames() {
-		return new String[] { "getDestination", "setDestination", "getCharge", "getMode", "getName" };
+		return new String[] { "setDestination", "setDestination", "getCharge", "getMode", "getName" };
 	}
 
 	@Override
@@ -200,14 +206,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 						throw new LuaException("first argument needs to be a string");
 					}
 
-					ItemStack ticket = this.locomotive.getStackInSlot(0);
-					if(ticket != null && ticket.getItem() instanceof ItemTicketGold) {
-						ItemTicket.setTicketData(ticket, (String) arguments[0], (String) arguments[0],
-							ItemTicketGold.getOwner(ticket));
-						return new Object[] { this.locomotive.setDestination(ticket) };
-					} else {
-						return new Object[] { false, "there is no golden ticket inside the locomotive" };
-					}
+					return TileLocomotiveRelay.setDestination(this.locomotive, arguments);
 				}
 				case 2:{
 					return new Object[] { this.locomotive.getChargeHandler().getCharge() };

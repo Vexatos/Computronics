@@ -10,7 +10,6 @@ import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.prefab.DriverTileEntity;
 import li.cil.oc.api.prefab.ManagedEnvironment;
-import mods.railcraft.api.tracks.ITrackTile;
 import mods.railcraft.common.blocks.tracks.TileTrack;
 import mods.railcraft.common.blocks.tracks.TrackRouting;
 import mods.railcraft.common.items.ItemTicketGold;
@@ -26,7 +25,7 @@ import pl.asie.computronics.reference.Names;
  */
 public class DriverRoutingTrack {
 
-	private static Object[] setDestination(ITrackTile tile, Object[] arguments) {
+	private static Object[] setDestination(TileTrack tile, Object[] arguments) {
 		ItemStack ticket = ((TrackRouting) tile.getTrackInstance()).getInventory().getStackInSlot(0);
 		if(ticket != null && ticket.getItem() instanceof ItemTicketGold) {
 			if(!((TrackRouting) tile.getTrackInstance()).isSecure()) {
@@ -42,7 +41,7 @@ public class DriverRoutingTrack {
 		}
 	}
 
-	private static Object[] getDestination(ITrackTile tile) {
+	private static Object[] getDestination(TileTrack tile) {
 		ItemStack ticket = ((TrackRouting) tile.getTrackInstance()).getInventory().getStackInSlot(0);
 		if(ticket != null && ticket.getItem() instanceof ItemTicketGold) {
 			if(!((TrackRouting) tile.getTrackInstance()).isSecure()) {
@@ -55,7 +54,7 @@ public class DriverRoutingTrack {
 		}
 	}
 
-	private static Object[] isPowered(ITrackTile tile) {
+	private static Object[] isPowered(TileTrack tile) {
 		if(!((TrackRouting) tile.getTrackInstance()).isSecure()) {
 			return new Object[] { ((TrackRouting) tile.getTrackInstance()).isPowered() };
 		} else {
@@ -120,12 +119,12 @@ public class DriverRoutingTrack {
 		}
 	}
 
-	public static class CCDriver extends CCTilePeripheral<ITrackTile> {
+	public static class CCDriver extends CCTilePeripheral<TileTrack> {
 
 		public CCDriver() {
 		}
 
-		public CCDriver(ITrackTile track, World world, int x, int y, int z) {
+		public CCDriver(TileTrack track, World world, int x, int y, int z) {
 			super(track, Names.Railcraft_RoutingTrack, world, x, y, z);
 		}
 
