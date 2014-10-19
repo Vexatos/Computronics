@@ -1,18 +1,18 @@
-==== 1.1.1 ====
+==== 1.2.0 ====
 
   * ADDED: More Railcraft Integration
             - You can now get/set the track mode in Locomotive Tracks using ComputerCraft/OpenComputers!
                 - You can access `modes` in OpenComputers or `modes()` in ComputerCraft to get a table containing all possible modes
-            - You can now get/set the speed limit in Limiter Tracks using ComputerCraft/OpenComputers!
+            - You can now get/set the speed limit of Limiter Tracks using ComputerCraft/OpenComputers!
             - Receiver Boxes now have an `aspects` table containing every Signal Aspect in Railcraft
                 - You can access it from ComputerCraft using `aspects()`
   * ADDED: More Waila Integration
             - Tape Drives now show their current state in Waila
   * CHANGED: Moved to OpenComputers 1.4
-  * CHANGED: MAJOR refactor of integration code.
   * FIXED: A pretty serious bug with the Cipher Block
   * FIXED: Waila integration
   * FIXED: Tape Drive's getState not properly returning the current state.
+  * MISC: Major refactor of integration code.
 
 ==== 1.1.0 ====
 
