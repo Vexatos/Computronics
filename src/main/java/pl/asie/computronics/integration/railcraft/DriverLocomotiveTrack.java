@@ -40,7 +40,7 @@ public class DriverLocomotiveTrack {
 	private static Object[] getMode(TileTrack tile) {
 		NBTTagCompound data = new NBTTagCompound();
 		tile.getTrackInstance().writeToNBT(data);
-		return new Object[] { Math.abs(data.getByte("mode") % EntityLocomotive.LocoMode.VALUES.length - 2) };
+		return new Object[] { data.hasKey("mode") ? Math.abs(data.getByte("mode") % EntityLocomotive.LocoMode.VALUES.length - 2) : null };
 	}
 
 	private static Object[] modes() {

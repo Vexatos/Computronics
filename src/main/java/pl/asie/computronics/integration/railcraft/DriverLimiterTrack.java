@@ -36,7 +36,7 @@ public class DriverLimiterTrack {
 	private static Object[] getLimit(TileTrack tile) {
 		NBTTagCompound data = new NBTTagCompound();
 		tile.getTrackInstance().writeToNBT(data);
-		return new Object[] { Math.abs(data.getByte("mode") % 4 - 4) };
+		return new Object[] { data.hasKey("mode") ? Math.abs(data.getByte("mode") % 4 - 4) : null };
 	}
 
 	private static Object[] isPowered(TileTrack tile) {
