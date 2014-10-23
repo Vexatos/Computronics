@@ -1,3 +1,8 @@
+==== 1.2.1 ====
+
+  * ADDED: Colored Lights support for the Colorful Lamp!
+  * CHANGED: setLampColor(0) now turns off the lamp.
+
 ==== 1.2.0 ====
 
   * ADDED: More Railcraft Integration

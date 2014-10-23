@@ -10,6 +10,7 @@ import net.minecraft.world.IBlockAccess;
 import org.lwjgl.opengl.GL11;
 import pl.asie.computronics.block.BlockColorfulLamp;
 import pl.asie.computronics.tile.TileColorfulLamp;
+import pl.asie.computronics.util.LampUtil;
 
 public class LampRender implements ISimpleBlockRenderingHandler {
 	private static int renderId;
@@ -54,7 +55,7 @@ public class LampRender implements ISimpleBlockRenderingHandler {
 			RenderBlocks renderer) {
 		BlockColorfulLamp lb = (BlockColorfulLamp)block;
 		GL11.glPushMatrix();
-		GL11.glColor3f(0.25f, 0.25f, 0.25f);
+		GL11.glColor3f(0.75f, 0.75f, 0.75f);
 		GL11.glScalef(0.975f, 0.975f, 0.975f);
 		renderInventoryIcon(lb, lb.m0, renderer);
 		GL11.glPopMatrix();

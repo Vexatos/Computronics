@@ -116,7 +116,7 @@ public class DriverRoutingDetector {
 				super(detector, Names.Railcraft_RoutingDetector);
 			}
 
-			@Callback(doc = "function():table; returns the full routing table inside the detector, or false and an error message if there is no table or it cannot be accessed")
+			@Callback(doc = "function():table; Returns the full routing table inside the detector, or false and an error message if there is no table or it cannot be accessed")
 			public Object[] getRoutingTable(Context c, Arguments a) {
 				return DriverRoutingDetector.getRoutingTable(tile);
 			}
