@@ -15,4 +15,8 @@ public class CommonProxy {
 	public void registerEntities(){
 		//NO-OP
 	}
+
+	public void registerRenderers(){
+		//NO-OP
+	}
 }

@@ -8,7 +8,6 @@ import gregtech.api.enums.ItemList;
 import gregtech.api.enums.Materials;
 import gregtech.api.enums.OrePrefixes;
 import gregtech.api.util.GT_OreDictUnificator;
-import mods.railcraft.common.items.ItemCircuit;
 import mods.railcraft.common.items.ItemElectricMeter;
 import mods.railcraft.common.items.ItemRail;
 import mods.railcraft.common.items.RailcraftItem;
@@ -17,6 +16,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.reference.Mods;
 import pl.asie.lib.util.color.RecipeColorizer;
 
 /**
@@ -27,7 +27,7 @@ public class ModRecipes {
 	public static class RailcraftRecipes {
 		public static void registerRailcraftRecipes() {
 			GameRegistry.addShapedRecipe(new ItemStack(Computronics.locomotiveRelay, 1, 0),
-				"srs", "geg", "scs", 's', Blocks.stonebrick, 'r', ItemCircuit.getReceiverCircuit(), 'e', ItemCircuit.getControllerCircuit(), 'c', ItemElectricMeter.getItem(), 'g', new ItemStack(RailcraftItem.rail.item(), 1, ItemRail.EnumRail.ELECTRIC.ordinal()));
+				"srs", "geg", "scs", 's', Blocks.stonebrick, 'r', GameRegistry.findItemStack(Mods.Railcraft, "part.circuit.receiver", 1), 'e', GameRegistry.findItemStack(Mods.Railcraft, "part.circuit.controller", 1), 'c', ItemElectricMeter.getItem(), 'g', new ItemStack(RailcraftItem.rail.item(), 1, ItemRail.EnumRail.ELECTRIC.ordinal()));
 
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Computronics.relaySensor, 1, 0),
 				" n ", "npr", " r ", 'p', Items.paper, 'n', "nuggetTin", 'r', Items.redstone));
@@ -37,7 +37,7 @@ public class ModRecipes {
 	public static class GregTechRailcraftRecipes {
 		public static void registerGregTechRailcraftRecipes() {
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Computronics.locomotiveRelay, 1, 0),
-				"srm", "lhe", "gcg", 's', ItemList.Sensor_LV.get(1), 'm', ItemList.Emitter_LV.get(1), 'r', ItemCircuit.getReceiverCircuit(), 'l', "cableGt01Tin", 'e', ItemCircuit.getControllerCircuit(), 'c', ItemElectricMeter.getItem(), 'h', ItemList.Hull_LV.get(1), 'g', new ItemStack(RailcraftItem.rail.item(), 1, ItemRail.EnumRail.ELECTRIC.ordinal())));
+				"srm", "lhe", "gcg", 's', ItemList.Sensor_LV.get(1), 'm', ItemList.Emitter_LV.get(1), 'r', GameRegistry.findItemStack(Mods.Railcraft, "part.circuit.receiver", 1), 'l', "cableGt01Tin", 'e', GameRegistry.findItemStack(Mods.Railcraft, "part.circuit.controller", 1), 'c', ItemElectricMeter.getItem(), 'h', ItemList.Hull_LV.get(1), 'g', new ItemStack(RailcraftItem.rail.item(), 1, ItemRail.EnumRail.ELECTRIC.ordinal())));
 
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Computronics.relaySensor, 1, 0),
 				" r ", "rpn", " nc", 'p', ItemList.Emitter_LV.get(1), 'n', "ringRedAlloy", 'r', "cableGt01Tin", 'c', "circuitBoardBasic"));

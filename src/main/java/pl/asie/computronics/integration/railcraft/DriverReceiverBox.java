@@ -26,11 +26,7 @@ public class DriverReceiverBox {
 
 	private static Object[] getSignal(TileBoxReceiver tile) {
 		if(!tile.isSecure()) {
-			int signal = tile.getTriggerAspect().ordinal();
-			if(signal == 5) {
-				signal = -1;
-			}
-			return new Object[] { signal };
+			return new Object[] { tile.getTriggerAspect().ordinal() };
 		} else {
 			return new Object[] { null, "signal receiver box is locked" };
 		}
@@ -52,7 +48,7 @@ public class DriverReceiverBox {
 				super(box, Names.Railcraft_ReceiverBox);
 			}
 
-			@Callback(doc = "function():number; Returns the currently most restrictive received aspect that triggers the receiver box")
+			@Callback(doc = "function():number; Returns the currently received aspect that triggers the receiver box")
 			public Object[] getSignal(Context c, Arguments a) {
 				return DriverReceiverBox.getSignal(tile);
 			}

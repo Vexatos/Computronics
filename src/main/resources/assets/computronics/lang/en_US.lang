@@ -9,6 +9,7 @@ tile.computronics.radar.name=Radar
 tile.computronics.colorfulLamp.name=Colorful Lamp
 tile.computronics.eepromReader.name=EEPROM Reader
 tile.computronics.locomotiveRelay.name=Digital Locomotive Relay
+tile.computronics.signalBox.name=Digital Signal Receiver Box
 
 tooltip.computronics.chatBox.creative=NSA in a box!
 tooltip.computronics.sensor.bound=Bound to [%1$s,%2$s,%3$s]

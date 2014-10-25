@@ -34,7 +34,7 @@ public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundl
 		super("colorful_lamp");
 	}
 
-	private int color = LampUtil.shouldColorLight() ? 0x6318 : 0;
+	private int color = 0x6318;
 
 	private boolean initialized = false;
 

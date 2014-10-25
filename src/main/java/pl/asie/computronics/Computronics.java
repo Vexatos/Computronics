@@ -31,6 +31,7 @@ import pl.asie.computronics.block.BlockCamera;
 import pl.asie.computronics.block.BlockChatBox;
 import pl.asie.computronics.block.BlockCipher;
 import pl.asie.computronics.block.BlockColorfulLamp;
+import pl.asie.computronics.block.BlockDigitalReceiver;
 import pl.asie.computronics.block.BlockEEPROMReader;
 import pl.asie.computronics.block.BlockIronNote;
 import pl.asie.computronics.block.BlockLocomotiveRelay;
@@ -41,7 +42,6 @@ import pl.asie.computronics.cc.MusicalTurtleUpgrade;
 import pl.asie.computronics.cc.ParticleTurtleUpgrade;
 import pl.asie.computronics.cc.RadarTurtleUpgrade;
 import pl.asie.computronics.cc.SpeakingTurtleUpgrade;
-import pl.asie.computronics.client.LampRender;
 import pl.asie.computronics.integration.ModRecipes;
 import pl.asie.computronics.integration.appeng.DriverSpatialIOPort;
 import pl.asie.computronics.integration.betterstorage.DriverCrateStorageNew;
@@ -73,6 +73,7 @@ import pl.asie.computronics.tile.TileCamera;
 import pl.asie.computronics.tile.TileChatBox;
 import pl.asie.computronics.tile.TileCipherBlock;
 import pl.asie.computronics.tile.TileColorfulLamp;
+import pl.asie.computronics.tile.TileDigitalReceiverBox;
 import pl.asie.computronics.tile.TileEEPROMReader;
 import pl.asie.computronics.tile.TileIronNote;
 import pl.asie.computronics.tile.TileLocomotiveRelay;
@@ -130,6 +131,7 @@ public class Computronics {
 	public static BlockEEPROMReader nc_eepromreader;
 	public static BlockColorfulLamp colorfulLamp;
 	public static BlockLocomotiveRelay locomotiveRelay;
+	public static BlockDigitalReceiver signalBox;
 
 	public static ItemTape itemTape;
 	public static ItemMultiple itemParts;
@@ -279,6 +281,10 @@ public class Computronics {
 
 			relaySensor = new ItemRelaySensor();
 			GameRegistry.registerItem(relaySensor, "computronics.relaySensor");
+
+			signalBox = new BlockDigitalReceiver();
+			GameRegistry.registerBlock(signalBox, "computronics.signalBox");
+			GameRegistry.registerTileEntity(TileDigitalReceiverBox.class, "computronics.signalBox");
 		}
 
 		if(Loader.isModLoaded(Mods.OpenComputers)) {
@@ -310,22 +316,8 @@ public class Computronics {
 		}
 
 		proxy.registerGuis(gui);
-		if(proxy.isClient() && colorfulLamp != null) {
-			new LampRender();
-		}
 
 		FMLInterModComms.sendMessage(Mods.Waila, "register", "pl.asie.computronics.integration.waila.IntegrationWaila.register");
-
-		if(Loader.isModLoaded(Mods.GregTech) && GREGTECH_RECIPES) {
-			ModRecipes.GregTechRecipes.registerGregTechRecipes();
-		} else {
-			ModRecipes.registerRecipes();
-		}
-
-		// Mod compat - GregTech
-		if(itemTape != null && Loader.isModLoaded(Mods.GregTech) && itemPartsGreg != null) {
-			ModRecipes.GregTechRecipes.regsiterGregTechTapeRecipes();
-		}
 
 		if(Loader.isModLoaded(Mods.ComputerCraft)) {
 			initCC();
@@ -338,6 +330,7 @@ public class Computronics {
 		achievements.initialize();
 
 		config.save();
+		proxy.registerRenderers();
 	}
 
 	@Optional.Method(modid = Mods.ComputerCraft)
@@ -469,7 +462,28 @@ public class Computronics {
 				li.cil.oc.api.Driver.add(new DriverSpatialIOPort.OCDriver());
 			}
 		}
+	}
 
+	@EventHandler
+	public void postInit(FMLPostInitializationEvent event) {
+
+		if(Loader.isModLoaded(Mods.GregTech) && GREGTECH_RECIPES) {
+			ModRecipes.GregTechRecipes.registerGregTechRecipes();
+		} else {
+			ModRecipes.registerRecipes();
+		}
+
+		// Mod compat - GregTech
+		if(itemTape != null && Loader.isModLoaded(Mods.GregTech) && itemPartsGreg != null) {
+			ModRecipes.GregTechRecipes.regsiterGregTechTapeRecipes();
+		}
+
+		if(Loader.isModLoaded(Mods.OpenComputers)) {
+			postInitOC();
+		}
+	}
+
+	private void postInitOC() {
 		if(isEnabled("ocRobotUpgrades", true)) {
 			Block[] b = { camera, chatBox, radar };
 			try {
@@ -484,10 +498,6 @@ public class Computronics {
 				e.printStackTrace();
 			}
 		}
-	}
-
-	@EventHandler
-	public void postInit(FMLPostInitializationEvent event) {
 	}
 
 	@EventHandler
