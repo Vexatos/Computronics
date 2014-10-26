@@ -37,9 +37,11 @@ import java.util.Locale;
  */
 @Optional.InterfaceList({
 	@Optional.Interface(iface = "li.cil.oc.api.network.Environment", modid = Mods.OpenComputers),
+	@Optional.Interface(iface = "li.cil.oc.api.network.SidedEnvironment", modid = Mods.OpenComputers),
 	@Optional.Interface(iface = "pl.asie.computronics.cc.IComputronicsPeripheral", modid = Mods.ComputerCraft)
 })
-public class TileDigitalDetector extends TileDetector implements Environment, SidedEnvironment, IComputronicsPeripheral, ISidedPeripheral {
+public class TileDigitalDetector extends TileDetector
+	implements Environment, SidedEnvironment, IComputronicsPeripheral, ISidedPeripheral {
 
 	private boolean tested;
 	public DetectorDigital detector;
