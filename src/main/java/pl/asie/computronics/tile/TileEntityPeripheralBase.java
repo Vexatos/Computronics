@@ -12,6 +12,7 @@ import li.cil.oc.api.network.Visibility;
 import nedocomputers.INedoPeripheral;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import pl.asie.computronics.cc.IComputronicsPeripheral;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.lib.tile.TileMachine;
 
@@ -25,10 +26,10 @@ import java.util.ArrayList;
 
 @Optional.InterfaceList({
 	@Optional.Interface(iface = "li.cil.oc.api.network.Environment", modid = Mods.OpenComputers),
-	@Optional.Interface(iface = "dan200.computercraft.api.peripheral.IPeripheral", modid = Mods.ComputerCraft),
+	@Optional.Interface(iface = "pl.asie.computronics.cc.IComputronicsPeripheral", modid = Mods.ComputerCraft),
 	@Optional.Interface(iface = "nedocomputers.INedoPeripheral", modid = Mods.NedoComputers)
 })
-public abstract class TileEntityPeripheralBase extends TileMachine implements Environment, IPeripheral, INedoPeripheral {
+public abstract class TileEntityPeripheralBase extends TileMachine implements Environment, IComputronicsPeripheral, INedoPeripheral {
 	protected String peripheralName;
 
 	public TileEntityPeripheralBase(String name) {

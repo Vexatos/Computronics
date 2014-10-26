@@ -35,7 +35,10 @@ import net.minecraft.util.StatCollector;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import pl.asie.computronics.cc.IComputronicsPeripheral;
+import pl.asie.computronics.cc.ISidedPeripheral;
 import pl.asie.computronics.reference.Mods;
+import pl.asie.computronics.reference.Names;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -50,10 +53,10 @@ import java.util.Locale;
 @Optional.InterfaceList({
 	@Optional.Interface(iface = "li.cil.oc.api.network.Environment", modid = Mods.OpenComputers),
 	@Optional.Interface(iface = "li.cil.oc.api.network.SidedEnvironment", modid = Mods.OpenComputers),
-	@Optional.Interface(iface = "dan200.computercraft.api.peripheral.IPeripheral", modid = Mods.ComputerCraft)
+	@Optional.Interface(iface = "pl.asie.computronics.cc.IComputronicsPeripheral", modid = Mods.ComputerCraft)
 })
 public class TileDigitalReceiverBox extends RailcraftTileEntity
-	implements IReceiverTile, IAspectProvider, Environment, SidedEnvironment, IPeripheral {
+	implements IReceiverTile, IAspectProvider, Environment, SidedEnvironment, IComputronicsPeripheral, ISidedPeripheral {
 
 	private boolean prevBlinkState;
 	private final SimpleSignalReceiver receiver = new SimpleSignalReceiver(getName(), this);
@@ -62,6 +65,7 @@ public class TileDigitalReceiverBox extends RailcraftTileEntity
 		return false;
 	}
 
+	@Override
 	public void updateEntity() {
 		super.updateEntity();
 
@@ -91,6 +95,7 @@ public class TileDigitalReceiverBox extends RailcraftTileEntity
 		}
 	}
 
+	@Override
 	public void onControllerAspectChange(SignalController con, SignalAspect aspect) {
 		if(Loader.isModLoaded(Mods.OpenComputers)) {
 			eventOC(aspect);
@@ -113,26 +118,29 @@ public class TileDigitalReceiverBox extends RailcraftTileEntity
 
 	public void writeToNBT(NBTTagCompound data) {
 		super.writeToNBT(data);
-		if(Loader.isModLoaded("OpenComputers")) {
+		if(Loader.isModLoaded(Mods.OpenComputers)) {
 			writeToNBT_OC(data);
 		}
 		this.receiver.writeToNBT(data);
 	}
 
+	@Override
 	public void readFromNBT(NBTTagCompound data) {
 		super.readFromNBT(data);
-		if(Loader.isModLoaded("OpenComputers")) {
+		if(Loader.isModLoaded(Mods.OpenComputers)) {
 			readFromNBT_OC(data);
 		}
 		this.receiver.readFromNBT(data);
 	}
 
+	@Override
 	public void writePacketData(DataOutputStream data)
 		throws IOException {
 		super.writePacketData(data);
 		this.receiver.writePacketData(data);
 	}
 
+	@Override
 	public void readPacketData(DataInputStream data)
 		throws IOException {
 		super.readPacketData(data);
@@ -161,14 +169,17 @@ public class TileDigitalReceiverBox extends RailcraftTileEntity
 		return true;
 	}
 
+	@Override
 	public SimpleSignalReceiver getReceiver() {
 		return this.receiver;
 	}
 
+	@Override
 	public SignalAspect getTriggerAspect() {
 		return getBoxSignalAspect(null);
 	}
 
+	@Override
 	public Block getBlockType() {
 		if(this.blockType == null) {
 			this.blockType = this.worldObj.getBlock(this.xCoord, this.yCoord, this.zCoord);
@@ -181,10 +192,12 @@ public class TileDigitalReceiverBox extends RailcraftTileEntity
 		return worldObj.getBlock(xCoord, yCoord, zCoord).getBlockHardness(worldObj, xCoord, yCoord, zCoord);
 	}
 
+	@Override
 	public short getId() {
 		return (short) 30;
 	}
 
+	@Override
 	public String getName() {
 		return StatCollector.translateToLocal("tile.computronics.signalBox.name");
 	}
@@ -207,6 +220,7 @@ public class TileDigitalReceiverBox extends RailcraftTileEntity
 		return AxisAlignedBB.getBoundingBox(i + 0.1F, j, k + 0.1F, i + 1 - 0.1F, j + 1 - 0.05F, k + 1 - 0.1F);
 	}
 
+	@Override
 	public boolean canUpdate() {
 		return true;
 	}
@@ -253,6 +267,7 @@ public class TileDigitalReceiverBox extends RailcraftTileEntity
 		this.tileCache.onNeighborChange();
 	}
 
+	@Override
 	public void validate() {
 		this.tileCache.purge();
 		super.validate();
@@ -262,6 +277,7 @@ public class TileDigitalReceiverBox extends RailcraftTileEntity
 		return true;
 	}
 
+	@Override
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
 		NBTTagCompound tag = pkt.func_148857_g();
 		if(tag != null) {
@@ -277,7 +293,7 @@ public class TileDigitalReceiverBox extends RailcraftTileEntity
 	protected boolean addedToNetwork = false;
 
 	public TileDigitalReceiverBox() {
-		super();
+		this(Names.Railcraft_DigitalReceiverBox);
 	}
 
 	public TileDigitalReceiverBox(String name) {
@@ -400,7 +416,6 @@ public class TileDigitalReceiverBox extends RailcraftTileEntity
 
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void readFromNBT_OC(final NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
 		if(node != null && node.host() == this) {
 			node.load(nbt.getCompoundTag("oc:node"));
 		}
@@ -408,7 +423,6 @@ public class TileDigitalReceiverBox extends RailcraftTileEntity
 
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void writeToNBT_OC(final NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
 		if(node != null && node.host() == this) {
 			final NBTTagCompound nodeNbt = new NBTTagCompound();
 			node.save(nodeNbt);
@@ -481,5 +495,11 @@ public class TileDigitalReceiverBox extends RailcraftTileEntity
 		}
 
 		return true;
+	}
+
+	@Override
+	public boolean canConnectPeripheralOnSide(int side) {
+		ForgeDirection forgeDirection = ForgeDirection.getOrientation(side);
+		return forgeDirection == ForgeDirection.DOWN || forgeDirection == ForgeDirection.UP;
 	}
 }

@@ -9,6 +9,8 @@ tile.computronics.radar.name=Radarblock
 tile.computronics.colorfulLamp.name=Farbenfrohe Lampe
 tile.computronics.eepromReader.name=EEPROM-Lesegerät
 tile.computronics.locomotiveRelay.name=Digitales Lokomotivenrelais
+tile.computronics.signalBox.name=Digitale Signalempfängerbox
+tile.computronics.detector.name=Detektor - Digital
 
 tooltip.computronics.chatBox.creative=Die NSA für zu Hause!
 tooltip.computronics.sensor.bound=Gebunden an [%1$s,%2$s,%3$s]

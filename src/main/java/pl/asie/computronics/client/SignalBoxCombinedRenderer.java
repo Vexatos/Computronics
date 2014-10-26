@@ -12,7 +12,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.client.IItemRenderer.ItemRenderType;
 import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
-import pl.asie.computronics.block.BlockDigitalReceiver;
+import pl.asie.computronics.block.BlockDigitalReceiverBox;
 import pl.asie.computronics.tile.TileDigitalReceiverBox;
 
 public class SignalBoxCombinedRenderer
@@ -34,7 +34,7 @@ public class SignalBoxCombinedRenderer
 			this.info.override = null;
 		}
 		this.info.texture[0] = mods.railcraft.common.blocks.signals.BlockSignal.texturesBox[2];
-		this.info.texture[1] = BlockDigitalReceiver.texturesBoxTop;
+		this.info.texture[1] = BlockDigitalReceiverBox.texturesBoxTop;
 		this.info.texture[2] = mods.railcraft.common.blocks.signals.BlockSignal.texturesBox[0];
 		this.info.texture[3] = mods.railcraft.common.blocks.signals.BlockSignal.texturesBox[0];
 		this.info.texture[4] = mods.railcraft.common.blocks.signals.BlockSignal.texturesBox[0];
@@ -147,7 +147,7 @@ public class SignalBoxCombinedRenderer
 		float pix = 0.0625F;
 		this.info.setBlockBounds(2.0F * pix, 0.0F, 2.0F * pix, 14.0F * pix, 15.0F * pix, 14.0F * pix);
 		this.info.texture[0] = mods.railcraft.common.blocks.signals.BlockSignal.texturesBox[2];
-		this.info.texture[1] = BlockDigitalReceiver.texturesBoxTop;
+		this.info.texture[1] = BlockDigitalReceiverBox.texturesBoxTop;
 		this.info.texture[2] = mods.railcraft.common.blocks.signals.BlockSignal.texturesBox[0];
 		this.info.texture[3] = mods.railcraft.common.blocks.signals.BlockSignal.texturesBox[0];
 		this.info.texture[4] = mods.railcraft.common.blocks.signals.BlockSignal.texturesBox[0];

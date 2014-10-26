@@ -2,8 +2,9 @@
 
   * ADDED: Colored Lights support for the Colorful Lamp!
   * ADDED: More Railcraft Integration
-    - Digital Signal Receiver Box: Same as the Receiver Box driver, but also fires an "aspect_changed" event whenever the box aspect changes
-    - Digital Detector: Fires a "minecart" event whenever a minecart passes
+    - Digital Signal Receiver Box: Same as the Receiver Box driver has been, but also fires an "aspect_changed" event whenever the box aspect changes
+    - Digital Detector: Fires a "minecart" event whenever a minecart passes, containing the type of cart as well as the name if the cart has got one
+  * REMOVED: Removed the Signal Receiver Box Driver in favour of the Digital Signal Receiver Box
   * CHANGED: setLampColor(0) now turns off the lamp.
 
 ==== 1.2.0 ====

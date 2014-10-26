@@ -31,7 +31,8 @@ import pl.asie.computronics.block.BlockCamera;
 import pl.asie.computronics.block.BlockChatBox;
 import pl.asie.computronics.block.BlockCipher;
 import pl.asie.computronics.block.BlockColorfulLamp;
-import pl.asie.computronics.block.BlockDigitalReceiver;
+import pl.asie.computronics.block.BlockDigitalDetector;
+import pl.asie.computronics.block.BlockDigitalReceiverBox;
 import pl.asie.computronics.block.BlockEEPROMReader;
 import pl.asie.computronics.block.BlockIronNote;
 import pl.asie.computronics.block.BlockLocomotiveRelay;
@@ -57,7 +58,6 @@ import pl.asie.computronics.integration.mfr.DriverDeepStorageUnit;
 import pl.asie.computronics.integration.railcraft.DriverElectricGrid;
 import pl.asie.computronics.integration.railcraft.DriverLimiterTrack;
 import pl.asie.computronics.integration.railcraft.DriverLocomotiveTrack;
-import pl.asie.computronics.integration.railcraft.DriverReceiverBox;
 import pl.asie.computronics.integration.railcraft.DriverRoutingDetector;
 import pl.asie.computronics.integration.railcraft.DriverRoutingSwitch;
 import pl.asie.computronics.integration.railcraft.DriverRoutingTrack;
@@ -73,6 +73,7 @@ import pl.asie.computronics.tile.TileCamera;
 import pl.asie.computronics.tile.TileChatBox;
 import pl.asie.computronics.tile.TileCipherBlock;
 import pl.asie.computronics.tile.TileColorfulLamp;
+import pl.asie.computronics.tile.TileDigitalDetector;
 import pl.asie.computronics.tile.TileDigitalReceiverBox;
 import pl.asie.computronics.tile.TileEEPROMReader;
 import pl.asie.computronics.tile.TileIronNote;
@@ -131,7 +132,8 @@ public class Computronics {
 	public static BlockEEPROMReader nc_eepromreader;
 	public static BlockColorfulLamp colorfulLamp;
 	public static BlockLocomotiveRelay locomotiveRelay;
-	public static BlockDigitalReceiver signalBox;
+	public static BlockDigitalReceiverBox signalBox;
+	public static BlockDigitalDetector detector;
 
 	public static ItemTape itemTape;
 	public static ItemMultiple itemParts;
@@ -282,9 +284,13 @@ public class Computronics {
 			relaySensor = new ItemRelaySensor();
 			GameRegistry.registerItem(relaySensor, "computronics.relaySensor");
 
-			signalBox = new BlockDigitalReceiver();
+			signalBox = new BlockDigitalReceiverBox();
 			GameRegistry.registerBlock(signalBox, "computronics.signalBox");
 			GameRegistry.registerTileEntity(TileDigitalReceiverBox.class, "computronics.signalBox");
+
+			detector = new BlockDigitalDetector();
+			GameRegistry.registerBlock(detector, "computronics.detector");
+			GameRegistry.registerTileEntity(TileDigitalDetector.class, "computronics.detector");
 		}
 
 		if(Loader.isModLoaded(Mods.OpenComputers)) {
@@ -364,7 +370,6 @@ public class Computronics {
 				ComputerCraftAPI.registerPeripheralProvider(new DriverRoutingTrack.CCDriver());
 				ComputerCraftAPI.registerPeripheralProvider(new DriverRoutingDetector.CCDriver());
 				ComputerCraftAPI.registerPeripheralProvider(new DriverRoutingSwitch.CCDriver());
-				ComputerCraftAPI.registerPeripheralProvider(new DriverReceiverBox.CCDriver());
 				ComputerCraftAPI.registerPeripheralProvider(new DriverElectricGrid.CCDriver());
 				ComputerCraftAPI.registerPeripheralProvider(new DriverLimiterTrack.CCDriver());
 				ComputerCraftAPI.registerPeripheralProvider(new DriverLocomotiveTrack.CCDriver());
@@ -440,7 +445,6 @@ public class Computronics {
 				li.cil.oc.api.Driver.add(new DriverRoutingTrack.OCDriver());
 				li.cil.oc.api.Driver.add(new DriverRoutingDetector.OCDriver());
 				li.cil.oc.api.Driver.add(new DriverRoutingSwitch.OCDriver());
-				li.cil.oc.api.Driver.add(new DriverReceiverBox.OCDriver());
 				li.cil.oc.api.Driver.add(new DriverElectricGrid.OCDriver());
 				li.cil.oc.api.Driver.add(new DriverLimiterTrack.OCDriver());
 				li.cil.oc.api.Driver.add(new DriverLocomotiveTrack.OCDriver());

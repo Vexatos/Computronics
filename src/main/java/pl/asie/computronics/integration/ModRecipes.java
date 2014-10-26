@@ -31,6 +31,12 @@ public class ModRecipes {
 
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Computronics.relaySensor, 1, 0),
 				" n ", "npr", " r ", 'p', Items.paper, 'n', "nuggetTin", 'r', Items.redstone));
+
+			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Computronics.signalBox, 1, 0),
+				"iri", "ibi", "isi", 'i', "ingotIron", 'r', GameRegistry.findItemStack(Mods.Railcraft, "part.circuit.receiver", 1), 'b', GameRegistry.findItemStack(Mods.Railcraft, "signal.box.receiver", 1), 's', GameRegistry.findItemStack(Mods.Railcraft, "part.circuit.signal", 1)));
+
+			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Computronics.detector, 1, 0),
+				"bbb", "bdp", "bbb", 'b', "ingotIron", 'p', Blocks.light_weighted_pressure_plate, 'd', GameRegistry.findItemStack(Mods.Railcraft, "detector.advanced", 1)));
 		}
 	}
 
@@ -41,6 +47,12 @@ public class ModRecipes {
 
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Computronics.relaySensor, 1, 0),
 				" r ", "rpn", " nc", 'p', ItemList.Emitter_LV.get(1), 'n', "ringRedAlloy", 'r', "cableGt01Tin", 'c', "circuitBoardBasic"));
+
+			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Computronics.signalBox, 1, 0),
+				"iri", "ibi", "isi", 'i', "plateIron", 'r', ItemList.Sensor_LV, 'b', GameRegistry.findItemStack(Mods.Railcraft, "signal.box.receiver", 1), 's', GameRegistry.findItemStack(Mods.Railcraft, "part.circuit.signal", 1)));
+
+			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Computronics.detector, 1, 0),
+				"bbb", "bdp", "bbb", 'b', "plateSteel", 'p', "cableGt02Gold", 'd', GameRegistry.findItemStack(Mods.Railcraft, "detector.advanced", 1)));
 		}
 	}
 
