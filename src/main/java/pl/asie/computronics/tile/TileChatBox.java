@@ -79,8 +79,12 @@ public class TileChatBox extends TileEntityPeripheralBase {
 
 	@Optional.Method(modid=Mods.ComputerCraft)
 	public void eventCC(ServerChatEvent event) {
+		if(attachedComputersCC != null)
 		for(IComputerAccess computer: attachedComputersCC) {
-			computer.queueEvent("chat_message", new Object[]{event.username, event.message});
+			computer.queueEvent("chat_message", new Object[] {
+				computer.getAttachmentName(),
+				event.username, event.message
+			});
 		}
 	}
 

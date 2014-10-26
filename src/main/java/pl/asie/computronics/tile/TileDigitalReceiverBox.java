@@ -69,7 +69,7 @@ public class TileDigitalReceiverBox extends RailcraftTileEntity
 	public void updateEntity() {
 		super.updateEntity();
 
-		if(!addedToNetwork) {
+		if(!addedToNetwork && Loader.isModLoaded(Mods.OpenComputers)) {
 			addedToNetwork = true;
 			Network.joinOrCreateNetwork(this);
 		}
@@ -321,8 +321,13 @@ public class TileDigitalReceiverBox extends RailcraftTileEntity
 
 	@Optional.Method(modid = Mods.ComputerCraft)
 	public void eventCC(SignalAspect aspect) {
-		for(IComputerAccess computer : attachedComputersCC) {
-			computer.queueEvent("aspect_changed", new Object[] { aspect.ordinal() });
+		if(attachedComputersCC != null) {
+			for(IComputerAccess computer : attachedComputersCC) {
+				computer.queueEvent("aspect_changed", new Object[] {
+					computer.getAttachmentName(),
+					aspect.ordinal()
+				});
+			}
 		}
 	}
 
@@ -431,7 +436,7 @@ public class TileDigitalReceiverBox extends RailcraftTileEntity
 	}
 
 	@Override
-	@Optional.Method(modid = Mods.OpenComputers)
+	@Optional.Method(modid = Mods.ComputerCraft)
 	public String getType() {
 		return peripheralName;
 	}

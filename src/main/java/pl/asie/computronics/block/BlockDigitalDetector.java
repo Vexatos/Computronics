@@ -59,6 +59,7 @@ public class BlockDigitalDetector extends BlockPeripheral {
 		TileEntity tile = world.getTileEntity(i, j, k);
 		if((tile instanceof TileDigitalDetector)) {
 			((TileDigitalDetector) tile).direction = MiscTools.getSideClosestToPlayer(world, i, j, k, entityliving);
+			world.notifyBlocksOfNeighborChange(i, j, k, this);
 			((TileDigitalDetector) tile).onBlockPlacedBy(entityliving);
 		}
 	}
@@ -99,6 +100,7 @@ public class BlockDigitalDetector extends BlockPeripheral {
 			} else {
 				detector.direction = axis;
 			}
+			world.notifyBlocksOfNeighborChange(x, y, z, this);
 			world.markBlockForUpdate(x, y, z);
 			return true;
 		}

@@ -70,7 +70,7 @@ public class TileDigitalDetector extends TileDetector
 			WorldPlugin.notifyBlocksOfNeighborChangeOnSide(this.worldObj, this.xCoord, this.yCoord, this.zCoord, Computronics.detector, this.direction);
 		}
 
-		if(!addedToNetwork) {
+		if(!addedToNetwork && Loader.isModLoaded(Mods.OpenComputers)) {
 			addedToNetwork = true;
 			Network.joinOrCreateNetwork(this);
 		}
@@ -116,6 +116,7 @@ public class TileDigitalDetector extends TileDetector
 		this.detector = new DetectorDigital();
 		this.detector.setTile(this);
 		this.peripheralName = name;
+		this.direction = ForgeDirection.UNKNOWN;
 		if(Loader.isModLoaded(Mods.OpenComputers)) {
 			initOC();
 		}
@@ -126,6 +127,7 @@ public class TileDigitalDetector extends TileDetector
 		this.detector = new DetectorDigital();
 		this.detector.setTile(this);
 		this.peripheralName = name;
+		this.direction = ForgeDirection.UNKNOWN;
 		if(Loader.isModLoaded(Mods.OpenComputers)) {
 			initOC(bufferSize);
 		}
@@ -140,11 +142,14 @@ public class TileDigitalDetector extends TileDetector
 
 	@Optional.Method(modid = Mods.ComputerCraft)
 	public void eventCC(EntityMinecart cart, EnumCart type) {
-		for(IComputerAccess computer : attachedComputersCC) {
-			computer.queueEvent("minecart", new Object[] {
-				type != null ? type.name().toLowerCase(Locale.ENGLISH) : null,
-				cart.func_95999_t()
-			});
+		if(attachedComputersCC != null) {
+			for(IComputerAccess computer : attachedComputersCC) {
+				computer.queueEvent("minecart", new Object[] {
+					computer.getAttachmentName(),
+					type != null ? type.name().toLowerCase(Locale.ENGLISH) : null,
+					cart.func_95999_t()
+				});
+			}
 		}
 	}
 
@@ -226,7 +231,7 @@ public class TileDigitalDetector extends TileDetector
 	}
 
 	@Override
-	@Optional.Method(modid = Mods.OpenComputers)
+	@Optional.Method(modid = Mods.ComputerCraft)
 	public String getType() {
 		return peripheralName;
 	}
