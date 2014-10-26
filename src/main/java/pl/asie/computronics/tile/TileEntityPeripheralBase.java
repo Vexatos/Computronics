@@ -118,7 +118,6 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 
     @Optional.Method(modid=Mods.OpenComputers)
     public void readFromNBT_OC(final NBTTagCompound nbt) {
-        super.readFromNBT(nbt);
         if (node != null && node.host() == this) {
             node.load(nbt.getCompoundTag("oc:node"));
         }
@@ -126,7 +125,6 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 
 	@Optional.Method(modid=Mods.OpenComputers)
     public void writeToNBT_OC(final NBTTagCompound nbt) {
-        super.writeToNBT(nbt);
         if (node != null && node.host() == this) {
             final NBTTagCompound nodeNbt = new NBTTagCompound();
             node.save(nodeNbt);
