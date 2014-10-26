@@ -16,12 +16,13 @@ public class DetectorDigital extends Detector {
 
 	@Override
 	public int testCarts(List<EntityMinecart> carts) {
-		if(this.getTile() instanceof TileDigitalDetector
-			&& ((TileDigitalDetector) this.getTile()).node() != null) {
+		if(this.getTile() instanceof TileDigitalDetector) {
 
 			for(EntityMinecart cart : carts) {
 				EnumCart type = EnumCart.fromCart(cart);
-				if(Loader.isModLoaded(Mods.OpenComputers)) {
+				if(Loader.isModLoaded(Mods.OpenComputers)
+					&& ((TileDigitalDetector) this.getTile()).node() != null) {
+
 					((TileDigitalDetector) this.getTile()).eventOC(cart, type);
 				}
 				if(Loader.isModLoaded(Mods.ComputerCraft)) {
