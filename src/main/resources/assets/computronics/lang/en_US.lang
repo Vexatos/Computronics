@@ -9,7 +9,7 @@ tile.computronics.radar.name=Radar
 tile.computronics.colorfulLamp.name=Colorful Lamp
 tile.computronics.eepromReader.name=EEPROM Reader
 tile.computronics.locomotiveRelay.name=Digital Locomotive Relay
-tile.computronics.signalBox.name=Digital Signal Receiver Box
+tile.computronics.digitalBox.name=Digital Signal Receiver Box
 tile.computronics.detector.name=Detector - Digital
 
 tooltip.computronics.chatBox.creative=NSA in a box!
@@ -21,6 +21,25 @@ tooltip.computronics.tape.balanced=Balanced!
 tooltip.computronics.tape.unnamed=Unnamed Tape
 tooltip.computronics.tape.none=No Tape
 tooltip.computronics.tape.ig=The standard CDVR for\nGregTech Intergalactical's ships
+
+tooltip.computronics.gate.action.computer_start=Start Computer
+tooltip.computronics.gate.action.computer_stop=Stop Computer
+tooltip.computronics.gate.action.tape_drive_start=Start Tape Drive
+tooltip.computronics.gate.action.tape_drive_stop=Stop Tape Drive
+tooltip.computronics.gate.action.tape_drive_rewind=Rewind Tape Drive
+tooltip.computronics.gate.action.tape_drive_forward=Forward Tape Drive
+tooltip.computronics.gate.action.lamp_color_set=Set Lamp Color
+tooltip.computronics.gate.action.lamp_color_reset=Reset Lamp Color
+tooltip.computronics.gate.action.lamp_color.red=Red: %s
+tooltip.computronics.gate.action.lamp_color.green=Green: %s
+tooltip.computronics.gate.action.lamp_color.blue=Blue: %s
+
+tooltip.computronics.gate.trigger.computer_running=Computer Running
+tooltip.computronics.gate.trigger.computer_stopped=Computer Stopped
+tooltip.computronics.gate.trigger.tape_drive_playing=Tape Drive Playing
+tooltip.computronics.gate.trigger.tape_drive_stopped=Tape Drive Stopped
+tooltip.computronics.gate.trigger.tape_drive_rewinding=Tape Drive Rewinding
+tooltip.computronics.gate.trigger.tape_drive_forwarding=Tape Drive Forwarding
 
 tooltip.computronics.waila.base.bus=§aBus ID§f: %s
 tooltip.computronics.waila.relay.bound=Bound
@@ -64,7 +83,7 @@ chat.computronics.sensor.wrongDim=Relay and locomotive are in different dimensio
 achievement.computronics.gotTape=Music for everyone
 achievement.computronics.gotTape.desc=Certainly better than Duct Tape
 achievement.computronics.gotStarTape=Over the Rainbow
-achievement.computronics.gotStarTape.desc=Where Nyan Cat lives
+achievement.computronics.gotStarTape.desc=To your left.
 achievement.computronics.gotIGTape=First part of your spaceship
 achievement.computronics.gotIGTape.desc=Not that you can build one
 achievement.computronics.droppedIGTape=MH370

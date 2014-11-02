@@ -31,7 +31,7 @@ public class ClientProxy extends CommonProxy {
 		if(Computronics.colorfulLamp != null) {
 			RenderingRegistry.registerBlockHandler(new LampRender());
 		}
-		if(Computronics.signalBox != null) {
+		if(Computronics.railcraft != null) {
 			SignalBoxRenderer renderer = new SignalBoxRenderer();
 			RenderingRegistry.registerBlockHandler(renderer);
 			MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(renderer.getBlock()), renderer.getItemRenderer());

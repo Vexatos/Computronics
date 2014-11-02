@@ -26,32 +26,32 @@ public class ModRecipes {
 
 	public static class RailcraftRecipes {
 		public static void registerRailcraftRecipes() {
-			GameRegistry.addShapedRecipe(new ItemStack(Computronics.locomotiveRelay, 1, 0),
+			GameRegistry.addShapedRecipe(new ItemStack(Computronics.railcraft.locomotiveRelay, 1, 0),
 				"srs", "geg", "scs", 's', Blocks.stonebrick, 'r', GameRegistry.findItemStack(Mods.Railcraft, "part.circuit.receiver", 1), 'e', GameRegistry.findItemStack(Mods.Railcraft, "part.circuit.controller", 1), 'c', ItemElectricMeter.getItem(), 'g', new ItemStack(RailcraftItem.rail.item(), 1, ItemRail.EnumRail.ELECTRIC.ordinal()));
 
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Computronics.relaySensor, 1, 0),
+			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Computronics.railcraft.relaySensor, 1, 0),
 				" n ", "npr", " r ", 'p', Items.paper, 'n', "nuggetTin", 'r', Items.redstone));
 
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Computronics.signalBox, 1, 0),
+			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Computronics.railcraft.digitalBox, 1, 0),
 				"iri", "ibi", "isi", 'i', "ingotIron", 'r', GameRegistry.findItemStack(Mods.Railcraft, "part.circuit.receiver", 1), 'b', GameRegistry.findItemStack(Mods.Railcraft, "signal.box.receiver", 1), 's', GameRegistry.findItemStack(Mods.Railcraft, "part.circuit.signal", 1)));
 
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Computronics.detector, 1, 0),
+			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Computronics.railcraft.detector, 1, 0),
 				"bbb", "bdp", "bbb", 'b', "ingotIron", 'p', Blocks.light_weighted_pressure_plate, 'd', GameRegistry.findItemStack(Mods.Railcraft, "detector.advanced", 1)));
 		}
 	}
 
 	public static class GregTechRailcraftRecipes {
 		public static void registerGregTechRailcraftRecipes() {
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Computronics.locomotiveRelay, 1, 0),
+			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Computronics.railcraft.locomotiveRelay, 1, 0),
 				"srm", "lhe", "gcg", 's', ItemList.Sensor_LV.get(1), 'm', ItemList.Emitter_LV.get(1), 'r', GameRegistry.findItemStack(Mods.Railcraft, "part.circuit.receiver", 1), 'l', "cableGt01Tin", 'e', GameRegistry.findItemStack(Mods.Railcraft, "part.circuit.controller", 1), 'c', ItemElectricMeter.getItem(), 'h', ItemList.Hull_LV.get(1), 'g', new ItemStack(RailcraftItem.rail.item(), 1, ItemRail.EnumRail.ELECTRIC.ordinal())));
 
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Computronics.relaySensor, 1, 0),
+			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Computronics.railcraft.relaySensor, 1, 0),
 				" r ", "rpn", " nc", 'p', ItemList.Emitter_LV.get(1), 'n', "ringRedAlloy", 'r', "cableGt01Tin", 'c', "circuitBoardBasic"));
 
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Computronics.signalBox, 1, 0),
+			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Computronics.railcraft.digitalBox, 1, 0),
 				"iri", "ibi", "isi", 'i', "plateIron", 'r', ItemList.Sensor_LV, 'b', GameRegistry.findItemStack(Mods.Railcraft, "signal.box.receiver", 1), 's', GameRegistry.findItemStack(Mods.Railcraft, "part.circuit.signal", 1)));
 
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Computronics.detector, 1, 0),
+			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Computronics.railcraft.detector, 1, 0),
 				"bbb", "bdp", "bbb", 'b', "plateSteel", 'p', "cableGt02Gold", 'd', GameRegistry.findItemStack(Mods.Railcraft, "detector.advanced", 1)));
 		}
 	}
@@ -92,7 +92,8 @@ public class ModRecipes {
 				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Computronics.colorfulLamp, 1, 0),
 					"igi", "glg", "ini", 'i', "plateIron", 'g', "plateGlass", 'l', Blocks.redstone_lamp, 'n', "circuitPrimitive"));
 			}
-			if(Loader.isModLoaded("Railcraft") && Computronics.locomotiveRelay != null && Computronics.relaySensor != null) {
+			if(Loader.isModLoaded("Railcraft") && Computronics.railcraft != null
+				&& Computronics.railcraft.locomotiveRelay != null && Computronics.railcraft.relaySensor != null) {
 				ModRecipes.GregTechRailcraftRecipes.registerGregTechRailcraftRecipes();
 			}
 			if(Computronics.itemTape != null) {
@@ -204,7 +205,8 @@ public class ModRecipes {
 			GameRegistry.addShapedRecipe(new ItemStack(Computronics.colorfulLamp, 1, 0),
 				"igi", "glg", "igi", 'i', Items.iron_ingot, 'g', Blocks.glass, 'l', Items.glowstone_dust);
 		}
-		if(Loader.isModLoaded("Railcraft") && Computronics.locomotiveRelay != null && Computronics.relaySensor != null) {
+		if(Loader.isModLoaded("Railcraft") && Computronics.railcraft != null
+			&& Computronics.railcraft.locomotiveRelay != null && Computronics.railcraft.relaySensor != null) {
 			ModRecipes.RailcraftRecipes.registerRailcraftRecipes();
 		}
 		if(Computronics.itemTape != null) {

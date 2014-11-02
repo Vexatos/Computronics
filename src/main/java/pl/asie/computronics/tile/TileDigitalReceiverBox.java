@@ -21,22 +21,19 @@ import mods.railcraft.api.signals.IReceiverTile;
 import mods.railcraft.api.signals.SignalAspect;
 import mods.railcraft.api.signals.SignalController;
 import mods.railcraft.api.signals.SimpleSignalReceiver;
-import mods.railcraft.common.blocks.RailcraftTileEntity;
+import mods.railcraft.common.blocks.signals.ISignalTileDefinition;
+import mods.railcraft.common.blocks.signals.TileBoxBase;
 import mods.railcraft.common.plugins.buildcraft.triggers.IAspectProvider;
-import mods.railcraft.common.util.misc.AdjacentTileCache;
 import net.minecraft.block.Block;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.StatCollector;
 import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.cc.IComputronicsPeripheral;
 import pl.asie.computronics.cc.ISidedPeripheral;
+import pl.asie.computronics.integration.railcraft.SignalTypes;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.reference.Names;
 
@@ -53,17 +50,15 @@ import java.util.Locale;
 @Optional.InterfaceList({
 	@Optional.Interface(iface = "li.cil.oc.api.network.Environment", modid = Mods.OpenComputers),
 	@Optional.Interface(iface = "li.cil.oc.api.network.SidedEnvironment", modid = Mods.OpenComputers),
-	@Optional.Interface(iface = "pl.asie.computronics.cc.IComputronicsPeripheral", modid = Mods.ComputerCraft)
+	@Optional.Interface(iface = "pl.asie.computronics.cc.IComputronicsPeripheral", modid = Mods.ComputerCraft),
+	@Optional.Interface(iface = "mods.railcraft.api.signals.IReceiverTile", modid = Mods.Railcraft),
+	@Optional.Interface(iface = "mods.railcraft.common.plugins.buildcraft.triggers.IAspectProvider", modid = Mods.Railcraft)
 })
-public class TileDigitalReceiverBox extends RailcraftTileEntity
+public class TileDigitalReceiverBox extends TileBoxBase
 	implements IReceiverTile, IAspectProvider, Environment, SidedEnvironment, IComputronicsPeripheral, ISidedPeripheral {
 
 	private boolean prevBlinkState;
 	private final SimpleSignalReceiver receiver = new SimpleSignalReceiver(getName(), this);
-
-	public boolean blockActivated(int side, EntityPlayer player) {
-		return false;
-	}
 
 	@Override
 	public void updateEntity() {
@@ -109,11 +104,6 @@ public class TileDigitalReceiverBox extends RailcraftTileEntity
 
 	private void updateNeighbors() {
 		notifyBlocksOfNeighborChange();
-		updateNeighborBoxes();
-	}
-
-	public int getPowerOutput(int side) {
-		return 0;
 	}
 
 	public void writeToNBT(NBTTagCompound data) {
@@ -148,19 +138,6 @@ public class TileDigitalReceiverBox extends RailcraftTileEntity
 		markBlockForUpdate();
 	}
 
-	public boolean isConnected(ForgeDirection side) {
-		TileEntity tile = this.tileCache.getTileOnSide(side);
-		return (tile instanceof TileDigitalReceiverBox) && ((TileDigitalReceiverBox) tile).canReceiveAspect();
-	}
-
-	public boolean isEmitingRedstone(ForgeDirection side) {
-		return false;
-	}
-
-	public boolean canEmitingRedstone(ForgeDirection side) {
-		return false;
-	}
-
 	public SignalAspect getBoxSignalAspect(ForgeDirection side) {
 		return this.receiver.getAspect();
 	}
@@ -184,97 +161,22 @@ public class TileDigitalReceiverBox extends RailcraftTileEntity
 		if(this.blockType == null) {
 			this.blockType = this.worldObj.getBlock(this.xCoord, this.yCoord, this.zCoord);
 		}
-
 		return this.blockType;
-	}
-
-	public float getHardness() {
-		return worldObj.getBlock(xCoord, yCoord, zCoord).getBlockHardness(worldObj, xCoord, yCoord, zCoord);
-	}
-
-	@Override
-	public short getId() {
-		return (short) 30;
-	}
-
-	@Override
-	public String getName() {
-		return StatCollector.translateToLocal("tile.computronics.signalBox.name");
-	}
-
-	public boolean canConnectRedstone(int dir) {
-		return false;
-	}
-
-	private static final float BOUND = 0.1F;
-
-	public void setBlockBoundsBasedOnState(IBlockAccess world, int i, int j, int k) {
-		getBlockType().setBlockBounds(0.1F, 0.0F, 0.1F, 0.9F, 0.95F, 0.9F);
-	}
-
-	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int i, int j, int k) {
-		return AxisAlignedBB.getBoundingBox(i + 0.1F, j, k + 0.1F, i + 1 - 0.1F, j + 1 - 0.05F, k + 1 - 0.1F);
-	}
-
-	public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int i, int j, int k) {
-		return AxisAlignedBB.getBoundingBox(i + 0.1F, j, k + 0.1F, i + 1 - 0.1F, j + 1 - 0.05F, k + 1 - 0.1F);
-	}
-
-	@Override
-	public boolean canUpdate() {
-		return true;
-	}
-
-	public boolean canReceiveAspect() {
-		return false;
-	}
-
-	public void onNeighborStateChange(TileDigitalReceiverBox neighbor, ForgeDirection side) {
-	}
-
-	public final void updateNeighborBoxes() {
-		for(int side = 2; side < 6; side++) {
-			ForgeDirection forgeSide = ForgeDirection.getOrientation(side);
-			TileEntity tile = this.tileCache.getTileOnSide(forgeSide);
-			if((tile instanceof TileDigitalReceiverBox)) {
-				TileDigitalReceiverBox box = (TileDigitalReceiverBox) tile;
-				box.onNeighborStateChange(this, forgeSide);
-			}
-		}
 	}
 
 	public boolean isSideSolid(IBlockAccess world, int i, int j, int k, ForgeDirection side) {
 		return side == ForgeDirection.UP;
 	}
 
-	protected AdjacentTileCache tileCache = new AdjacentTileCache(this);
-
-	public boolean rotateBlock(ForgeDirection axis) {
-		return false;
-	}
-
-	public ForgeDirection[] getValidRotations() {
-		return ForgeDirection.VALID_DIRECTIONS;
-	}
-
-	public void onBlockPlaced() {
-	}
-
-	public void onBlockRemoval() {
-	}
-
-	public void onNeighborBlockChange(Block block) {
-		this.tileCache.onNeighborChange();
+	@Override
+	public boolean isConnected(ForgeDirection side) {
+		TileEntity tile = this.tileCache.getTileOnSide(side);
+		return tile != null && tile instanceof TileBoxBase && ((TileBoxBase) tile).canReceiveAspect();
 	}
 
 	@Override
-	public void validate() {
-		this.tileCache.purge();
-		super.validate();
-	}
-
-	public boolean needsSupport() {
-		return true;
+	public ISignalTileDefinition getSignalType() {
+		return SignalTypes.Digital;
 	}
 
 	@Override

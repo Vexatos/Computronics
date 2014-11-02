@@ -6,8 +6,8 @@ import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.StatCollector;
 import pl.asie.computronics.reference.Mods;
+import pl.asie.computronics.util.StringUtil;
 
 import java.util.List;
 
@@ -20,9 +20,9 @@ public class WailaPeripheralBase extends WailaComputronics {
 	public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor,
 		IWailaConfigHandler config) {
 
-		if(!ConfigValues.Address.getConfig(config)) {
-			return currenttip;
-		}
+		//if(!ConfigValues.Address.getConfig(config)) {
+		//	return currenttip;
+		//}
 
 		NBTTagCompound nbt = accessor.getNBTData();
 		if(Loader.isModLoaded(Mods.OpenComputers)) {
@@ -38,7 +38,7 @@ public class WailaPeripheralBase extends WailaComputronics {
 	private List<String> getWailaOCBody(NBTTagCompound nbt, List<String> currenttip) {
 		NBTTagCompound node = nbt.getCompoundTag("oc:node");
 		if(node.hasKey("address")) {
-			currenttip.add(StatCollector.translateToLocalFormatted("oc:gui.Analyzer.Address", node.getString("address")));
+			currenttip.add(StringUtil.localizeAndFormat("oc:gui.Analyzer.Address", node.getString("address")));
 		}
 		return currenttip;
 	}
@@ -46,7 +46,7 @@ public class WailaPeripheralBase extends WailaComputronics {
 	@Optional.Method(modid = Mods.NedoComputers)
 	private List<String> getWailaNCBody(NBTTagCompound nbt, List<String> currenttip) {
 		if(nbt.hasKey("nc:bus")) {
-			currenttip.add(StatCollector.translateToLocalFormatted(
+			currenttip.add(StringUtil.localizeAndFormat(
 				"tooltip.computronics.waila.base.bus", nbt.getShort("nc:bus")));
 		}
 		return currenttip;

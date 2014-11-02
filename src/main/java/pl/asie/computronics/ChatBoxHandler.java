@@ -11,11 +11,14 @@ import pl.asie.computronics.oc.RobotUpgradeChatBox;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TileChatBox;
 
+import java.util.ArrayList;
+
 public class ChatBoxHandler {
 	@SubscribeEvent
 	public void chatEvent(ServerChatEvent event) {
 		//System.out.println("event");
-		for(Object o : event.player.worldObj.loadedTileEntityList) {
+		ArrayList<Object> tiles = new ArrayList<Object>(event.player.worldObj.loadedTileEntityList);
+		for(Object o : tiles) {
 			if(o instanceof TileChatBox) {
 				TileChatBox te = (TileChatBox) o;
 				if(te.isCreative() || event.player.getDistance(te.xCoord, te.yCoord, te.zCoord) < te.getDistance()) {

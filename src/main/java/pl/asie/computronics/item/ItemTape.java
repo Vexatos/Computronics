@@ -17,7 +17,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
-import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.api.tape.IItemTapeStorage;
@@ -25,6 +24,7 @@ import pl.asie.computronics.api.tape.ITapeStorage;
 import pl.asie.computronics.item.entity.EntityItemIndestructable;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tape.TapeStorage;
+import pl.asie.computronics.util.StringUtil;
 import pl.asie.lib.util.color.ItemColorizer;
 
 import java.util.List;
@@ -122,11 +122,11 @@ public class ItemTape extends Item implements IItemTapeStorage, IMedia, IMediaPr
 
 		switch (stack.getItemDamage()){
 			case 7:{
-				text.add(EnumChatFormatting.AQUA + StatCollector.translateToLocal("tooltip.computronics.tape.balanced"));
+				text.add(EnumChatFormatting.AQUA + StringUtil.localize("tooltip.computronics.tape.balanced"));
 				break;
 			}
 			case 9:{
-				String[] local = StatCollector.translateToLocal("tooltip.computronics.tape.ig")
+				String[] local = StringUtil.localize("tooltip.computronics.tape.ig")
 					.replace("\\n", "\n").split("\\n");
 				for(String s : local) {
 					text.add(EnumChatFormatting.AQUA + s);

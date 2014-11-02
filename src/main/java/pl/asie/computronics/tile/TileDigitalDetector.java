@@ -56,7 +56,7 @@ public class TileDigitalDetector extends TileDetector
 			int meta = this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord);
 			if(meta != 0) {
 				this.worldObj.removeTileEntity(this.xCoord, this.yCoord, this.yCoord);
-				Block block = Computronics.detector;
+				Block block = Computronics.railcraft.detector;
 				if(block != null) {
 					this.worldObj.setBlock(this.xCoord, this.yCoord, this.yCoord, block, 0, 3);
 				}
@@ -66,8 +66,8 @@ public class TileDigitalDetector extends TileDetector
 		if(newPowerState != this.powerState) {
 			this.powerState = newPowerState;
 			sendUpdateToClient();
-			this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord, this.zCoord, Computronics.detector);
-			WorldPlugin.notifyBlocksOfNeighborChangeOnSide(this.worldObj, this.xCoord, this.yCoord, this.zCoord, Computronics.detector, this.direction);
+			this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord, this.zCoord, Computronics.railcraft.detector);
+			WorldPlugin.notifyBlocksOfNeighborChangeOnSide(this.worldObj, this.xCoord, this.yCoord, this.zCoord, Computronics.railcraft.detector, this.direction);
 		}
 
 		if(!addedToNetwork && Loader.isModLoaded(Mods.OpenComputers)) {

@@ -4,6 +4,7 @@ import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
+import cpw.mods.fml.common.ModAPIManager;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -31,11 +32,8 @@ import pl.asie.computronics.block.BlockCamera;
 import pl.asie.computronics.block.BlockChatBox;
 import pl.asie.computronics.block.BlockCipher;
 import pl.asie.computronics.block.BlockColorfulLamp;
-import pl.asie.computronics.block.BlockDigitalDetector;
-import pl.asie.computronics.block.BlockDigitalReceiverBox;
 import pl.asie.computronics.block.BlockEEPROMReader;
 import pl.asie.computronics.block.BlockIronNote;
-import pl.asie.computronics.block.BlockLocomotiveRelay;
 import pl.asie.computronics.block.BlockRadar;
 import pl.asie.computronics.block.BlockTapeReader;
 import pl.asie.computronics.cc.CCPeripheralProvider;
@@ -47,6 +45,9 @@ import pl.asie.computronics.integration.ModRecipes;
 import pl.asie.computronics.integration.appeng.DriverSpatialIOPort;
 import pl.asie.computronics.integration.betterstorage.DriverCrateStorageNew;
 import pl.asie.computronics.integration.betterstorage.DriverCrateStorageOld;
+import pl.asie.computronics.integration.buildcraft.ActionProvider;
+import pl.asie.computronics.integration.buildcraft.StatementParameters;
+import pl.asie.computronics.integration.buildcraft.TriggerProvider;
 import pl.asie.computronics.integration.factorization.DriverChargeConductor;
 import pl.asie.computronics.integration.fsp.DriverSteamTransporter;
 import pl.asie.computronics.integration.gregtech.DriverBaseMetaTileEntity;
@@ -61,11 +62,11 @@ import pl.asie.computronics.integration.railcraft.DriverLocomotiveTrack;
 import pl.asie.computronics.integration.railcraft.DriverRoutingDetector;
 import pl.asie.computronics.integration.railcraft.DriverRoutingSwitch;
 import pl.asie.computronics.integration.railcraft.DriverRoutingTrack;
+import pl.asie.computronics.integration.railcraft.RailcraftIntegration;
 import pl.asie.computronics.integration.redlogic.CCBundledRedstoneProviderRedLogic;
 import pl.asie.computronics.integration.redlogic.DriverLamp;
 import pl.asie.computronics.item.ItemBlockChatBox;
 import pl.asie.computronics.item.ItemOpenComputers;
-import pl.asie.computronics.item.ItemRelaySensor;
 import pl.asie.computronics.item.ItemTape;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tape.StorageManager;
@@ -73,11 +74,8 @@ import pl.asie.computronics.tile.TileCamera;
 import pl.asie.computronics.tile.TileChatBox;
 import pl.asie.computronics.tile.TileCipherBlock;
 import pl.asie.computronics.tile.TileColorfulLamp;
-import pl.asie.computronics.tile.TileDigitalDetector;
-import pl.asie.computronics.tile.TileDigitalReceiverBox;
 import pl.asie.computronics.tile.TileEEPROMReader;
 import pl.asie.computronics.tile.TileIronNote;
-import pl.asie.computronics.tile.TileLocomotiveRelay;
 import pl.asie.computronics.tile.TileRadar;
 import pl.asie.computronics.tile.TileTapeDrive;
 import pl.asie.computronics.util.achievements.ComputronicsAchievements;
@@ -88,7 +86,7 @@ import pl.asie.lib.util.EnergyConverter;
 
 import java.util.Random;
 
-@Mod(modid = Mods.Computronics, name = Mods.Computronics_NAME, version = "1.2.1", useMetadata = true, dependencies = "required-after:asielib@[0.3.2,);after:ComputerCraft;after:OpenComputers@[1.4.0,);after:OpenComputers|Core;after:MineFactoryReloaded;after:RedLogic;after:ProjRed|Core;after:nedocomputers;after:Railcraft;after:gregtech")
+@Mod(modid = Mods.Computronics, name = Mods.Computronics_NAME, version = "1.3.0", useMetadata = true, dependencies = "required-after:asielib@[0.3.3,);after:ComputerCraft;after:OpenComputers@[1.4.0,);after:OpenComputers|Core;after:MineFactoryReloaded;after:RedLogic;after:ProjRed|Core;after:nedocomputers;after:BuildCraft|Core@[6.1.5,);after:Railcraft;after:gregtech")
 public class Computronics {
 	public Configuration config;
 	public static Random rand = new Random();
@@ -131,15 +129,12 @@ public class Computronics {
 	public static BlockRadar radar;
 	public static BlockEEPROMReader nc_eepromreader;
 	public static BlockColorfulLamp colorfulLamp;
-	public static BlockLocomotiveRelay locomotiveRelay;
-	public static BlockDigitalReceiverBox signalBox;
-	public static BlockDigitalDetector detector;
+	public static RailcraftIntegration railcraft;
 
 	public static ItemTape itemTape;
 	public static ItemMultiple itemParts;
 	public static ItemMultiple itemPartsGreg;
 	public static ItemOpenComputers itemRobotUpgrade;
-	public static ItemRelaySensor relaySensor;
 
 	public static boolean MUST_UPDATE_TILE_ENTITIES = false;
 	public ComputronicsAchievements achievements;
@@ -150,7 +145,7 @@ public class Computronics {
 		}
 	};
 
-	private boolean isEnabled(String name, boolean def) {
+	public boolean isEnabled(String name, boolean def) {
 		return config.get("enable", name, def).getBoolean(def);
 	}
 
@@ -276,21 +271,8 @@ public class Computronics {
 		itemParts.setCreativeTab(tab);
 		GameRegistry.registerItem(itemParts, "computronics.parts");
 
-		if(Loader.isModLoaded(Mods.Railcraft) && isEnabled("railcraftLocomotiveRelay", true)) {
-			locomotiveRelay = new BlockLocomotiveRelay();
-			GameRegistry.registerBlock(locomotiveRelay, "computronics.locomotiveRelay");
-			GameRegistry.registerTileEntity(TileLocomotiveRelay.class, "computronics.locomotiveRelay");
-
-			relaySensor = new ItemRelaySensor();
-			GameRegistry.registerItem(relaySensor, "computronics.relaySensor");
-
-			signalBox = new BlockDigitalReceiverBox();
-			GameRegistry.registerBlock(signalBox, "computronics.signalBox");
-			GameRegistry.registerTileEntity(TileDigitalReceiverBox.class, "computronics.signalBox");
-
-			detector = new BlockDigitalDetector();
-			GameRegistry.registerBlock(detector, "computronics.detector");
-			GameRegistry.registerTileEntity(TileDigitalDetector.class, "computronics.detector");
+		if(Loader.isModLoaded(Mods.Railcraft)) {
+			railcraft = new RailcraftIntegration(this);
 		}
 
 		if(Loader.isModLoaded(Mods.OpenComputers)) {
@@ -484,6 +466,12 @@ public class Computronics {
 
 		if(Loader.isModLoaded(Mods.OpenComputers)) {
 			postInitOC();
+		}
+
+		if(ModAPIManager.INSTANCE.hasAPI(Mods.API.BuildCraftStatements)) {
+			TriggerProvider.initialize();
+			ActionProvider.initialize();
+			StatementParameters.initialize();
 		}
 	}
 

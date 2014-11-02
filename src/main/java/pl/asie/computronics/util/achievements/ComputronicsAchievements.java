@@ -201,7 +201,7 @@ public class ComputronicsAchievements {
 
 		private static void initializeRCAchievements() {
 			Computronics.instance.achievements.registerAchievement(EnumAchievements.Locomotive, 0, 4, EnumCart.LOCO_ELECTRIC.getCartItem(), null, false, true);
-			Computronics.instance.achievements.registerAchievement(EnumAchievements.Relay, 2, 6, new ItemStack(Computronics.relaySensor), Computronics.instance.achievements.getAchievement(EnumAchievements.Locomotive), false, false);
+			Computronics.instance.achievements.registerAchievement(EnumAchievements.Relay, 2, 6, new ItemStack(Computronics.railcraft.relaySensor), Computronics.instance.achievements.getAchievement(EnumAchievements.Locomotive), false, false);
 		}
 
 		private static void onCrafting(ItemStack stack, EntityPlayer player) {
@@ -228,7 +228,7 @@ public class ComputronicsAchievements {
 					return;
 				}
 
-				if(player.isSneaking() && stack.getItem() == Computronics.relaySensor
+				if(player.isSneaking() && stack.getItem() == Computronics.railcraft.relaySensor
 					&& stack.hasTagCompound()) {
 
 					NBTTagCompound data = stack.getTagCompound();

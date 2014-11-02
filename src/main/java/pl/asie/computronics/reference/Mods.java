@@ -23,4 +23,8 @@ public class Mods {
 	public static final String ProjectRed = "ProjRed|Core";
 	public static final String Railcraft = "Railcraft";
 	public static final String Waila = "Waila";
+
+	public static class API {
+		public static final String BuildCraftStatements = "BuildCraftAPI|statements";
+	}
 }

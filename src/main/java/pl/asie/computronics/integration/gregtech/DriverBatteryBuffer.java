@@ -25,6 +25,11 @@ public class DriverBatteryBuffer extends DriverTileEntity {
 			super(tile, name);
 		}
 
+		@Override
+		public int priority() {
+			return 2;
+		}
+
 		@Callback(doc = "function(slot:number):number; Returns the amount of stored EU in the battery in the specified slot")
 		public Object[] getBatteryCharge(Context c, Arguments a) {
 			int slot = a.checkInteger(0);
@@ -48,7 +53,7 @@ public class DriverBatteryBuffer extends DriverTileEntity {
 			if(slot <= 0 || slot > ((GT_MetaTileEntity_BasicBatteryBuffer) tile.getMetaTileEntity()).mInventory.length) {
 				return new Object[] { null, "slot does not exist" };
 			}
-			System.out.println(((GT_MetaTileEntity_BasicBatteryBuffer) tile.getMetaTileEntity()).mInventory[slot - 1] == null);
+			//System.out.println(((GT_MetaTileEntity_BasicBatteryBuffer) tile.getMetaTileEntity()).mInventory[slot - 1] == null);
 			if(((GT_MetaTileEntity_BasicBatteryBuffer) tile.getMetaTileEntity()).mInventory[slot - 1] == null) {
 				return new Object[] { null, "slot is empty" };
 			}
@@ -76,6 +81,6 @@ public class DriverBatteryBuffer extends DriverTileEntity {
 
 	@Override
 	public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
-		return new ManagedEnvironmentBatteryBuffer(((BaseMetaTileEntity) world.getTileEntity(x, y, z)), "gt_machine");
+		return new ManagedEnvironmentBatteryBuffer(((BaseMetaTileEntity) world.getTileEntity(x, y, z)), "gt_batterybuffer");
 	}
 }

@@ -271,7 +271,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
     			byte[] data = new byte[args.checkInteger(0)];
     			state.getStorage().read(data, false);
     			return new Object[]{data};
-    		} else return new Object[]{(int)state.getStorage().read(false) & 0xFF};
+    		} else return new Object[]{ state.getStorage().read(false) & 0xFF};
     	} else return null;
     }
     
@@ -379,7 +379,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 		
 		case 4: return new Object[]{state.getState().toString()};
 		
-		case 9: if(state.getStorage() != null) return new Object[]{(int)state.getStorage().read(false) & 0xFF};
+		case 9: if(state.getStorage() != null) return new Object[]{ state.getStorage().read(false) & 0xFF};
 		}
 		
 		// catch all other methods
