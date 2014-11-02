@@ -48,6 +48,11 @@ import pl.asie.computronics.integration.betterstorage.DriverCrateStorageOld;
 import pl.asie.computronics.integration.buildcraft.ActionProvider;
 import pl.asie.computronics.integration.buildcraft.StatementParameters;
 import pl.asie.computronics.integration.buildcraft.TriggerProvider;
+import pl.asie.computronics.integration.enderio.DriverAbstractMachine;
+import pl.asie.computronics.integration.enderio.DriverCapacitorBank;
+import pl.asie.computronics.integration.enderio.DriverIOConfigurable;
+import pl.asie.computronics.integration.enderio.DriverPowerReceptor;
+import pl.asie.computronics.integration.enderio.DriverRedstoneControllable;
 import pl.asie.computronics.integration.factorization.DriverChargeConductor;
 import pl.asie.computronics.integration.fsp.DriverSteamTransporter;
 import pl.asie.computronics.integration.gregtech.DriverBaseMetaTileEntity;
@@ -65,6 +70,8 @@ import pl.asie.computronics.integration.railcraft.DriverRoutingTrack;
 import pl.asie.computronics.integration.railcraft.RailcraftIntegration;
 import pl.asie.computronics.integration.redlogic.CCBundledRedstoneProviderRedLogic;
 import pl.asie.computronics.integration.redlogic.DriverLamp;
+import pl.asie.computronics.integration.util.CCMultiPeripheral;
+import pl.asie.computronics.integration.util.MultiPeripheral;
 import pl.asie.computronics.item.ItemBlockChatBox;
 import pl.asie.computronics.item.ItemOpenComputers;
 import pl.asie.computronics.item.ItemTape;
@@ -84,6 +91,7 @@ import pl.asie.lib.item.ItemMultiple;
 import pl.asie.lib.network.PacketHandler;
 import pl.asie.lib.util.EnergyConverter;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 @Mod(modid = Mods.Computronics, name = Mods.Computronics_NAME, version = "1.3.0", useMetadata = true, dependencies = "required-after:asielib@[0.3.3,);after:ComputerCraft;after:OpenComputers@[1.4.0,);after:OpenComputers|Core;after:MineFactoryReloaded;after:RedLogic;after:ProjRed|Core;after:nedocomputers;after:BuildCraft|Core@[6.1.5,);after:Railcraft@[9.3.3.4,);after:gregtech")
@@ -348,7 +356,7 @@ public class Computronics {
 		}
 
 		if(Loader.isModLoaded(Mods.Railcraft)) {
-			if(config.get("modCompatibility", "enableRailcraftRoutingPeripherals", true).getBoolean(true)) {
+			if(config.get("modCompatibility", "enableRailcraftRoutingComponents", true).getBoolean(true)) {
 				ComputerCraftAPI.registerPeripheralProvider(new DriverRoutingTrack.CCDriver());
 				ComputerCraftAPI.registerPeripheralProvider(new DriverRoutingDetector.CCDriver());
 				ComputerCraftAPI.registerPeripheralProvider(new DriverRoutingSwitch.CCDriver());
@@ -361,6 +369,18 @@ public class Computronics {
 		if(Loader.isModLoaded(Mods.AE2)) {
 			if(config.get("modCompatibility", "enableAE2SpatialIOComponent", true).getBoolean(true)) {
 				ComputerCraftAPI.registerPeripheralProvider(new DriverSpatialIOPort.CCDriver());
+			}
+		}
+
+		if(Loader.isModLoaded(Mods.EnderIO)) {
+			if(config.get("modCompatibility", "enableEnderIOComponents", true).getBoolean(true)) {
+				ArrayList<CCMultiPeripheral> peripherals = new ArrayList<CCMultiPeripheral>();
+				peripherals.add(new DriverPowerReceptor.CCDriver());
+				peripherals.add(new DriverRedstoneControllable.CCDriver());
+				peripherals.add(new DriverIOConfigurable.CCDriver());
+				peripherals.add(new DriverAbstractMachine.CCDriver());
+				peripherals.add(new DriverCapacitorBank.CCDriver());
+				ComputerCraftAPI.registerPeripheralProvider(new MultiPeripheral(peripherals));
 			}
 		}
 
@@ -446,6 +466,15 @@ public class Computronics {
 		if(Loader.isModLoaded(Mods.AE2)) {
 			if(config.get("modCompatibility", "enableAE2SpatialIOComponent", true).getBoolean(true)) {
 				li.cil.oc.api.Driver.add(new DriverSpatialIOPort.OCDriver());
+			}
+		}
+		if(Loader.isModLoaded(Mods.EnderIO)) {
+			if(config.get("modCompatibility", "enableEnderIOComponents", true).getBoolean(true)) {
+				li.cil.oc.api.Driver.add(new DriverPowerReceptor.OCDriver());
+				li.cil.oc.api.Driver.add(new DriverRedstoneControllable.OCDriver());
+				li.cil.oc.api.Driver.add(new DriverIOConfigurable.OCDriver());
+				li.cil.oc.api.Driver.add(new DriverAbstractMachine.OCDriver());
+				li.cil.oc.api.Driver.add(new DriverCapacitorBank.OCDriver());
 			}
 		}
 	}

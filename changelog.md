@@ -4,12 +4,19 @@
   * ADDED: More Railcraft Integration
     - Digital Signal Receiver Box: Same as the Receiver Box driver has been, but also fires an "aspect_changed" event whenever the box aspect changes
     - Digital Detector: Fires a "minecart" event whenever a minecart passes, containing the type of cart as well as the name if the cart has got one
-  * ADDED: Buildcraft Integration
+  * ADDED: Buildcraft Integration (Gate Statements)
     - 2 Triggers (Computer Running/Stopped) for the OpenComputers Computer Case
     - 2 Actions (Start/Stop Computer) for the OpenComputers Computer Case
     - 4 Triggers (Tape Drive Playing/Stopped/Rewinding/Forwarding) for the Tape Drive
     - 4 Actions (Start/Stop/Rewind/Forward Tape) for the Tape Drive
     - 2 Actions (Set/Reset Color) for the Colorful Lamp (Emerald Gate required for Set Color)
+  * ADDED: EnderIO Integration for OpenComputers and ComputerCraft
+    - You can get (max) energy stored of any power-accepting device
+    - You can get and set max Input/Output of Capacitor Banks
+    - You can get/set the IO mode of certain sides of blocks with configurable IO
+    - You can get the RF usage/production per tick of any machine
+    - You can check whether a machine is currently active
+    - You can get/set the redstone control mode of redstone-controllable devices
   * REMOVED: Removed the Signal Receiver Box Driver in favour of the Digital Signal Receiver Box
   * CHANGED: setLampColor(0) now turns off the lamp.
   * CHANGED: Updated to AsieLib 0.3.3

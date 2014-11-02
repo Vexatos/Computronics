@@ -14,6 +14,7 @@ public class Mods {
 
 	public static final String AE2 = "appliedenergistics2";
 	public static final String BetterStorage = "betterstorage";
+	public static final String EnderIO = "EnderIO";
 	public static final String Factorization = "factorization";
 	public static final String FSP = "Steamcraft";
 	public static final String GregTech = "gregtech";
