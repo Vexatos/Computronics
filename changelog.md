@@ -1,4 +1,4 @@
-==== 1.2.1 ====
+==== 1.3.0 ====
 
   * ADDED: Colored Lights support for the Colorful Lamp!
   * ADDED: More Railcraft Integration
