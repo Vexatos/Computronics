@@ -11,12 +11,14 @@
     - 4 Actions (Start/Stop/Rewind/Forward Tape) for the Tape Drive
     - 2 Actions (Set/Reset Color) for the Colorful Lamp (Emerald Gate required for Set Color)
   * ADDED: EnderIO Integration for OpenComputers and ComputerCraft
-    - You can get (max) energy stored of any power-accepting device
     - You can get and set max Input/Output of Capacitor Banks
     - You can get/set the IO mode of certain sides of blocks with configurable IO
     - You can get the RF usage/production per tick of any machine
     - You can check whether a machine is currently active
     - You can get/set the redstone control mode of redstone-controllable devices
+    - You can get/set send/receive channels of the Dimensional Transceiver
+    - You can add/remove public channels to/from the Dimensional Transceiver channel list
+    - You can get the (max) Experience (Levels) of any experience-storing EnderIO device
   * REMOVED: Removed the Signal Receiver Box Driver in favour of the Digital Signal Receiver Box
   * CHANGED: setLampColor(0) now turns off the lamp.
   * CHANGED: Updated to AsieLib 0.3.3

@@ -7,10 +7,12 @@ public class Names {
 
 	public static final String AE2_SpatialIO = "spatial_io";
 	public static final String EnderIO_CapacitorBank = "capacitor_bank";
-	public static final String EnderIO_IOConfigurable = "io_configurable_tile";
+	public static final String EnderIO_ExperienceTile = "experience_tile";
+	public static final String EnderIO_IOConfigurable = "io_config_tile";
 	public static final String EnderIO_MachineTile = "enderio_machine";
 	public static final String EnderIO_PoweredTile = "powered_tile";
 	public static final String EnderIO_RedstoneTile = "redstone_tile";
+	public static final String EnderIO_Transceiver = "dimensional_transceiver";
 	public static final String FSP_SteamTransporter = "steam_transporter";
 	public static final String FZ_ChargeConductor = "charge_conductor";
 	public static final String MFR_DSU = "deep_storage_unit";

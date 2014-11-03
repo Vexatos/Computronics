@@ -27,5 +27,6 @@ public class Mods {
 
 	public static class API {
 		public static final String BuildCraftStatements = "BuildCraftAPI|statements";
+		public static final String CoFHAPI_Energy = "CoFHAPI|energy";
 	}
 }

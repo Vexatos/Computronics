@@ -48,11 +48,13 @@ import pl.asie.computronics.integration.betterstorage.DriverCrateStorageOld;
 import pl.asie.computronics.integration.buildcraft.ActionProvider;
 import pl.asie.computronics.integration.buildcraft.StatementParameters;
 import pl.asie.computronics.integration.buildcraft.TriggerProvider;
+import pl.asie.computronics.integration.cofh.DriverEnergyHandler;
 import pl.asie.computronics.integration.enderio.DriverAbstractMachine;
 import pl.asie.computronics.integration.enderio.DriverCapacitorBank;
+import pl.asie.computronics.integration.enderio.DriverHasExperience;
 import pl.asie.computronics.integration.enderio.DriverIOConfigurable;
-import pl.asie.computronics.integration.enderio.DriverPowerReceptor;
 import pl.asie.computronics.integration.enderio.DriverRedstoneControllable;
+import pl.asie.computronics.integration.enderio.DriverTransceiver;
 import pl.asie.computronics.integration.factorization.DriverChargeConductor;
 import pl.asie.computronics.integration.fsp.DriverSteamTransporter;
 import pl.asie.computronics.integration.gregtech.DriverBaseMetaTileEntity;
@@ -75,6 +77,7 @@ import pl.asie.computronics.integration.util.MultiPeripheral;
 import pl.asie.computronics.item.ItemBlockChatBox;
 import pl.asie.computronics.item.ItemOpenComputers;
 import pl.asie.computronics.item.ItemTape;
+import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tape.StorageManager;
 import pl.asie.computronics.tile.TileCamera;
@@ -94,7 +97,7 @@ import pl.asie.lib.util.EnergyConverter;
 import java.util.ArrayList;
 import java.util.Random;
 
-@Mod(modid = Mods.Computronics, name = Mods.Computronics_NAME, version = "1.3.0", useMetadata = true, dependencies = "required-after:asielib@[0.3.3,);after:ComputerCraft;after:OpenComputers@[1.4.0,);after:OpenComputers|Core;after:MineFactoryReloaded;after:RedLogic;after:ProjRed|Core;after:nedocomputers;after:BuildCraft|Core@[6.1.5,);after:Railcraft@[9.3.3.4,);after:gregtech")
+@Mod(modid = Mods.Computronics, name = Mods.Computronics_NAME, version = "1.3.0", useMetadata = true, dependencies = "required-after:asielib@[0.3.3,);after:ComputerCraft;after:OpenComputers@[1.4.0,);after:OpenComputers|Core;after:MineFactoryReloaded;after:RedLogic;after:ProjRed|Core;after:nedocomputers;after:BuildCraft|Core@[6.1.5,);after:Railcraft@[9.3.3.4,);after:gregtech;after:EnderIO")
 public class Computronics {
 	public Configuration config;
 	public static Random rand = new Random();
@@ -316,9 +319,11 @@ public class Computronics {
 		FMLInterModComms.sendMessage(Mods.Waila, "register", "pl.asie.computronics.integration.waila.IntegrationWaila.register");
 
 		if(Loader.isModLoaded(Mods.ComputerCraft)) {
+			config.setCategoryComment(Config.Compatility, "Set anything here to false to prevent Computronics from adding the respective Peripherals and Drivers");
 			initCC();
 		}
 		if(Loader.isModLoaded(Mods.OpenComputers)) {
+			config.setCategoryComment(Config.Compatility, "Set anything here to false to prevent Computronics from adding the respective Peripherals and Drivers");
 			initOC();
 		}
 
@@ -332,31 +337,31 @@ public class Computronics {
 	@Optional.Method(modid = Mods.ComputerCraft)
 	private void initCC() {
 		if(Loader.isModLoaded(Mods.RedLogic)) {
-			if(config.get("modCompatibility", "enableRedLogicLamps", true).getBoolean(true)) {
+			if(Config.isCompatEnabled(config, Config.RedLogic_Lamps)) {
 				ComputerCraftAPI.registerPeripheralProvider(new DriverLamp.CCDriver());
 			}
-			if(config.get("computercraft", "enableBundledRedstoneProviders", true).getBoolean(true)) {
+			if(Config.isCompatEnabled(config, Config.Bundled_Redstone)) {
 				ComputerCraftAPI.registerBundledRedstoneProvider(new CCBundledRedstoneProviderRedLogic());
 			}
 		}
 		if(Loader.isModLoaded(Mods.MFR) || Loader.isModLoaded(Mods.JABBA)) {
-			if(config.get("modCompatibility", "enableDeepStorageUnit", true).getBoolean(true)) {
+			if(Config.isCompatEnabled(config, Config.MFR_DSU)) {
 				ComputerCraftAPI.registerPeripheralProvider(new DriverDeepStorageUnit.CCDriver());
 			}
 		}
 		if(Loader.isModLoaded(Mods.FSP)) {
-			if(config.get("modCompatibility", "enableFlaxbeardSteamTransporters", true).getBoolean(true)) {
+			if(Config.isCompatEnabled(config, Config.FSP_Steam_Transporter)) {
 				ComputerCraftAPI.registerPeripheralProvider(new DriverSteamTransporter.CCDriver());
 			}
 		}
 		if(Loader.isModLoaded(Mods.Factorization)) {
-			if(config.get("modCompatibility", "enableFactorizationChargePeripheral", true).getBoolean(true)) {
+			if(Config.isCompatEnabled(config, Config.FZ_ChargePeripheral)) {
 				ComputerCraftAPI.registerPeripheralProvider(new DriverChargeConductor.CCDriver());
 			}
 		}
 
 		if(Loader.isModLoaded(Mods.Railcraft)) {
-			if(config.get("modCompatibility", "enableRailcraftRoutingComponents", true).getBoolean(true)) {
+			if(Config.isCompatEnabled(config, Config.Railcraft_Routing)) {
 				ComputerCraftAPI.registerPeripheralProvider(new DriverRoutingTrack.CCDriver());
 				ComputerCraftAPI.registerPeripheralProvider(new DriverRoutingDetector.CCDriver());
 				ComputerCraftAPI.registerPeripheralProvider(new DriverRoutingSwitch.CCDriver());
@@ -367,21 +372,26 @@ public class Computronics {
 		}
 
 		if(Loader.isModLoaded(Mods.AE2)) {
-			if(config.get("modCompatibility", "enableAE2SpatialIOComponent", true).getBoolean(true)) {
+			if(Config.isCompatEnabled(config, Config.AE2_SpatialIO)) {
 				ComputerCraftAPI.registerPeripheralProvider(new DriverSpatialIOPort.CCDriver());
 			}
 		}
 
 		if(Loader.isModLoaded(Mods.EnderIO)) {
-			if(config.get("modCompatibility", "enableEnderIOComponents", true).getBoolean(true)) {
+			if(Config.isCompatEnabled(config, Config.EnderIO)) {
 				ArrayList<CCMultiPeripheral> peripherals = new ArrayList<CCMultiPeripheral>();
-				peripherals.add(new DriverPowerReceptor.CCDriver());
+				peripherals.add(new DriverEnergyHandler.CCDriver());
 				peripherals.add(new DriverRedstoneControllable.CCDriver());
 				peripherals.add(new DriverIOConfigurable.CCDriver());
+				peripherals.add(new DriverHasExperience.CCDriver());
 				peripherals.add(new DriverAbstractMachine.CCDriver());
 				peripherals.add(new DriverCapacitorBank.CCDriver());
+				peripherals.add(new DriverTransceiver.CCDriver());
 				ComputerCraftAPI.registerPeripheralProvider(new MultiPeripheral(peripherals));
 			}
+		} else if(ModAPIManager.INSTANCE.hasAPI(Mods.API.CoFHAPI_Energy)
+			&& Config.isCompatEnabled(config, Config.RedstoneFlux)) {
+			ComputerCraftAPI.registerPeripheralProvider(new DriverEnergyHandler.CCDriver());
 		}
 
 		ComputerCraftAPI.registerPeripheralProvider(new CCPeripheralProvider());
@@ -404,12 +414,12 @@ public class Computronics {
 	@Optional.Method(modid = Mods.OpenComputers)
 	private void initOC() {
 		if(Loader.isModLoaded(Mods.RedLogic)) {
-			if(config.get("modCompatibility", "enableRedLogicLamps", true).getBoolean(true)) {
+			if(Config.isCompatEnabled(config, Config.RedLogic_Lamps)) {
 				li.cil.oc.api.Driver.add(new DriverLamp.OCDriver());
 			}
 		}
 		if(Loader.isModLoaded(Mods.BetterStorage)) {
-			if(config.get("modCompatibility", "enableBetterStorageCrates", true).getBoolean(true)) {
+			if(Config.isCompatEnabled(config, Config.BetterStorage_Crates)) {
 				try {
 					Class.forName("net.mcft.copy.betterstorage.api.ICrateStorage");
 					log.info("Using old (pre-0.10) BetterStorage crate API!");
@@ -428,22 +438,22 @@ public class Computronics {
 			}
 		}
 		if(Loader.isModLoaded(Mods.MFR) || Loader.isModLoaded(Mods.JABBA)) {
-			if(config.get("modCompatibility", "enableDeepStorageUnit", true).getBoolean(true)) {
+			if(Config.isCompatEnabled(config, Config.MFR_DSU)) {
 				li.cil.oc.api.Driver.add(new DriverDeepStorageUnit.OCDriver());
 			}
 		}
 		if(Loader.isModLoaded(Mods.FSP)) {
-			if(config.get("modCompatibility", "enableFlaxbeardSteamTransporters", true).getBoolean(true)) {
+			if(Config.isCompatEnabled(config, Config.FSP_Steam_Transporter)) {
 				li.cil.oc.api.Driver.add(new DriverSteamTransporter.OCDriver());
 			}
 		}
 		if(Loader.isModLoaded(Mods.Factorization)) {
-			if(config.get("modCompatibility", "enableFactorizationChargePeripheral", true).getBoolean(true)) {
+			if(Config.isCompatEnabled(config, Config.FZ_ChargePeripheral)) {
 				li.cil.oc.api.Driver.add(new DriverChargeConductor.OCDriver());
 			}
 		}
 		if(Loader.isModLoaded(Mods.Railcraft)) {
-			if(config.get("modCompatibility", "enableRailcraftRoutingComponents", true).getBoolean(true)) {
+			if(Config.isCompatEnabled(config, Config.Railcraft_Routing)) {
 				li.cil.oc.api.Driver.add(new DriverRoutingTrack.OCDriver());
 				li.cil.oc.api.Driver.add(new DriverRoutingDetector.OCDriver());
 				li.cil.oc.api.Driver.add(new DriverRoutingSwitch.OCDriver());
@@ -453,28 +463,29 @@ public class Computronics {
 			}
 		}
 		if(Loader.isModLoaded(Mods.GregTech)) {
-			if(config.get("modCompatibility", "enableGregTechMachines", true).getBoolean(true)) {
+			if(Config.isCompatEnabled(config, Config.GregTech_Machines)) {
 				li.cil.oc.api.Driver.add(new DriverBaseMetaTileEntity());
 				li.cil.oc.api.Driver.add(new DriverDeviceInformation());
 				li.cil.oc.api.Driver.add(new DriverMachine());
 				li.cil.oc.api.Driver.add(new DriverBatteryBuffer());
 			}
-			if(config.get("modCompatibility", "enableGregTechDigitalChests", true).getBoolean(true)) {
+			if(Config.isCompatEnabled(config, Config.GregTech_DigitalChests)) {
 				li.cil.oc.api.Driver.add(new DriverDigitalChest());
 			}
 		}
 		if(Loader.isModLoaded(Mods.AE2)) {
-			if(config.get("modCompatibility", "enableAE2SpatialIOComponent", true).getBoolean(true)) {
+			if(Config.isCompatEnabled(config, Config.AE2_SpatialIO)) {
 				li.cil.oc.api.Driver.add(new DriverSpatialIOPort.OCDriver());
 			}
 		}
 		if(Loader.isModLoaded(Mods.EnderIO)) {
-			if(config.get("modCompatibility", "enableEnderIOComponents", true).getBoolean(true)) {
-				li.cil.oc.api.Driver.add(new DriverPowerReceptor.OCDriver());
+			if(Config.isCompatEnabled(config, Config.EnderIO)) {
 				li.cil.oc.api.Driver.add(new DriverRedstoneControllable.OCDriver());
 				li.cil.oc.api.Driver.add(new DriverIOConfigurable.OCDriver());
+				li.cil.oc.api.Driver.add(new DriverHasExperience.OCDriver());
 				li.cil.oc.api.Driver.add(new DriverAbstractMachine.OCDriver());
 				li.cil.oc.api.Driver.add(new DriverCapacitorBank.OCDriver());
+				li.cil.oc.api.Driver.add(new DriverTransceiver.OCDriver());
 			}
 		}
 	}

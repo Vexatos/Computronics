@@ -25,16 +25,20 @@ import java.util.Locale;
  */
 public class DriverIOConfigurable {
 
-	public static Object[] getIOMode(IIoConfigurable tile, int side) {
+	private static Object[] getIOMode(IIoConfigurable tile, int side) {
 		return new Object[] { tile.getIoMode(ForgeDirection.getOrientation(side)).name().toLowerCase(Locale.ENGLISH) };
 	}
 
-	public static Object[] setIOMode(IIoConfigurable tile, int side, String mode) {
-		tile.setIoMode(ForgeDirection.getOrientation(side), IoMode.valueOf(mode.toUpperCase(Locale.ENGLISH)));
+	private static Object[] setIOMode(IIoConfigurable tile, int side, String mode) {
+		try {
+			tile.setIoMode(ForgeDirection.getOrientation(side), IoMode.valueOf(mode.toUpperCase(Locale.ENGLISH)));
+		} catch(IllegalArgumentException e){
+			throw new IllegalArgumentException("No valid IO mode given");
+		}
 		return new Object[] { };
 	}
 
-	public static Object[] modes() {
+	private static Object[] modes() {
 		LinkedHashMap<Integer, String> modes = new LinkedHashMap<Integer, String>();
 		int i = 1;
 		for(IoMode mode : IoMode.values()) {
@@ -54,7 +58,7 @@ public class DriverIOConfigurable {
 
 			@Override
 			public int priority() {
-				return 3;
+				return 2;
 			}
 
 			@Callback(doc = "function(side:number):string; Returns the current IO mode on the given side")
@@ -95,7 +99,7 @@ public class DriverIOConfigurable {
 
 		@Override
 		public int priority() {
-			return 3;
+			return 2;
 		}
 
 		@Override

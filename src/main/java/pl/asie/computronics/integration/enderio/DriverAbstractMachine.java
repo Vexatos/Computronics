@@ -29,7 +29,7 @@ public class DriverAbstractMachine {
 
 			@Override
 			public int priority() {
-				return 5;
+				return 3;
 			}
 
 			@Callback(doc = "function():boolean; Returns whether the machine is currently active")
@@ -65,7 +65,7 @@ public class DriverAbstractMachine {
 
 		@Override
 		public int priority() {
-			return 5;
+			return 3;
 		}
 
 		@Override

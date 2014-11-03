@@ -41,9 +41,9 @@ repositories {
 }
 
 dependencies {
-    compile "li.cil.oc:OpenComputers:MC1.7.10-1.4.0.7-rc.1:dev"
-    compile "com.gregoriust.gregtech:gregtech_1.7.10:5.05.06:dev"
-    compile "com.enderio:EnderIO:1.7.10-2.1.8.261:dev"
+    compile "li.cil.oc:OpenComputers:MC1.7.10-1.4.0.214-dev:dev"
+    compile "com.gregoriust.gregtech:gregtech_1.7.10:5.06.02:dev"
+    compile "com.enderio:EnderIO:1.7.10-2.1.8.262:dev"
     compile "mcp.mobius.waila:Waila:1.5.5_1.7.10"
 }
 

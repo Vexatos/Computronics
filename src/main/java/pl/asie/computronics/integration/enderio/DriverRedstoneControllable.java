@@ -24,12 +24,16 @@ import java.util.Locale;
  */
 public class DriverRedstoneControllable {
 
-	public static Object[] getRedstoneMode(IRedstoneModeControlable tile) {
+	private static Object[] getRedstoneMode(IRedstoneModeControlable tile) {
 		return new Object[] { tile.getRedstoneControlMode().name().toLowerCase(Locale.ENGLISH) };
 	}
 
-	public static Object[] setRedstoneMode(IRedstoneModeControlable tile, String mode) {
-		tile.setRedstoneControlMode(RedstoneControlMode.valueOf(mode.toUpperCase(Locale.ENGLISH)));
+	private static Object[] setRedstoneMode(IRedstoneModeControlable tile, String mode) {
+		try {
+			tile.setRedstoneControlMode(RedstoneControlMode.valueOf(mode.toUpperCase(Locale.ENGLISH)));
+		} catch(IllegalArgumentException e) {
+			throw new IllegalArgumentException("No valid Redstone mode given");
+		}
 		return new Object[] { };
 	}
 
@@ -53,7 +57,7 @@ public class DriverRedstoneControllable {
 
 			@Override
 			public int priority() {
-				return 2;
+				return 1;
 			}
 
 			@Callback(doc = "function():string; Returns the current Redstone control mode")
@@ -67,7 +71,7 @@ public class DriverRedstoneControllable {
 			}
 
 			@Callback(doc = "This is a table of every Redstone control mode available", getter = true)
-			public Object[] redstone_control_modes(Context c, Arguments a) {
+			public Object[] redstone_modes(Context c, Arguments a) {
 				return DriverRedstoneControllable.modes();
 			}
 		}
@@ -94,7 +98,7 @@ public class DriverRedstoneControllable {
 
 		@Override
 		public int priority() {
-			return 2;
+			return 1;
 		}
 
 		@Override
@@ -118,8 +122,8 @@ public class DriverRedstoneControllable {
 					return DriverRedstoneControllable.getRedstoneMode(tile);
 				}
 				case 1:{
-					if(arguments.length < 2 || !(arguments[1] instanceof String)) {
-						throw new LuaException("second argument needs to be a string");
+					if(arguments.length < 1 || !(arguments[0] instanceof String)) {
+						throw new LuaException("first argument needs to be a string");
 					}
 					return DriverRedstoneControllable.setRedstoneMode(tile, (String) arguments[0]);
 				}

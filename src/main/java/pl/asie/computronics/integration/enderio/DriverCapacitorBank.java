@@ -1,5 +1,6 @@
 package pl.asie.computronics.integration.enderio;
 
+import crazypants.enderio.machine.RedstoneControlMode;
 import crazypants.enderio.machine.power.TileCapacitorBank;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
@@ -15,10 +16,42 @@ import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
 import pl.asie.computronics.integration.util.CCMultiPeripheral;
 import pl.asie.computronics.reference.Names;
 
+import java.util.LinkedHashMap;
+import java.util.Locale;
+
 /**
  * @author Vexatos
  */
 public class DriverCapacitorBank {
+
+	private static Object[] getRedstoneMode(TileCapacitorBank tile, boolean input) {
+		if(input) {
+			return new Object[] { tile.getInputControlMode().name().toLowerCase(Locale.ENGLISH) };
+		}
+		return new Object[] { tile.getOutputControlMode().name().toLowerCase(Locale.ENGLISH) };
+	}
+
+	private static Object[] setRedstoneMode(TileCapacitorBank tile, String mode, boolean input) {
+		try {
+			if(input) {
+				tile.setInputControlMode(RedstoneControlMode.valueOf(mode.toUpperCase(Locale.ENGLISH)));
+			}
+			tile.setOutputControlMode(RedstoneControlMode.valueOf(mode.toUpperCase(Locale.ENGLISH)));
+		} catch(IllegalArgumentException e) {
+			throw new IllegalArgumentException("No valid Redstone mode given");
+		}
+		return new Object[] { };
+	}
+
+	private static Object[] modes() {
+		LinkedHashMap<Integer, String> modes = new LinkedHashMap<Integer, String>();
+		int i = 1;
+		for(RedstoneControlMode mode : RedstoneControlMode.values()) {
+			modes.put(i, mode.name().toLowerCase(Locale.ENGLISH));
+			i++;
+		}
+		return new Object[] { modes };
+	}
 
 	public static class OCDriver extends DriverTileEntity {
 		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TileCapacitorBank> {
@@ -28,17 +61,17 @@ public class DriverCapacitorBank {
 
 			@Override
 			public int priority() {
-				return 5;
+				return 3;
 			}
 
 			@Callback(doc = "function():number; Returns the maximum input of the capacitor bank")
 			public Object[] getMaxInput(Context c, Arguments a) {
-				return new Object[] { tile.getEnergyStored() };
+				return new Object[] { tile.getMaxInput() };
 			}
 
 			@Callback(doc = "function():number; Returns the maximum output of the capacitor bank")
 			public Object[] getMaxOutput(Context c, Arguments a) {
-				return new Object[] { tile.getMaxEnergyStored() };
+				return new Object[] { tile.getMaxOutput() };
 			}
 
 			@Callback(doc = "function(max:number); Sets the max input of the capacitor bank")
@@ -51,6 +84,31 @@ public class DriverCapacitorBank {
 			public Object[] setMaxOutput(Context c, Arguments a) {
 				tile.setMaxOutput(a.checkInteger(0));
 				return new Object[] { };
+			}
+
+			@Callback(doc = "function():string; Returns the current Redstone control mode for input")
+			public Object[] getInputMode(Context c, Arguments a) {
+				return DriverCapacitorBank.getRedstoneMode(tile, true);
+			}
+
+			@Callback(doc = "function():string; Returns the current Redstone control mode for output")
+			public Object[] getOutputMode(Context c, Arguments a) {
+				return DriverCapacitorBank.getRedstoneMode(tile, false);
+			}
+
+			@Callback(doc = "function(mode:string); Sets the Redstone control mode for input")
+			public Object[] setInputMode(Context c, Arguments a) {
+				return DriverCapacitorBank.setRedstoneMode(tile, a.checkString(0), true);
+			}
+
+			@Callback(doc = "function(mode:string); Sets the Redstone control mode for output")
+			public Object[] setOutputMode(Context c, Arguments a) {
+				return DriverCapacitorBank.setRedstoneMode(tile, a.checkString(0), false);
+			}
+
+			@Callback(doc = "This is a table of every Redstone control mode available", getter = true)
+			public Object[] redstone_modes(Context c, Arguments a) {
+				return DriverCapacitorBank.modes();
 			}
 		}
 
@@ -76,7 +134,7 @@ public class DriverCapacitorBank {
 
 		@Override
 		public int priority() {
-			return 5;
+			return 3;
 		}
 
 		@Override
@@ -90,7 +148,7 @@ public class DriverCapacitorBank {
 
 		@Override
 		public String[] getMethodNames() {
-			return new String[] { "getMaxInput", "getMaxOutput", "setMaxInput", "setMaxOutput" };
+			return new String[] { "getMaxInput", "getMaxOutput", "setMaxInput", "setMaxOutput", "getInputMode", "getOutputMode", "setInputMode", "setOutputMode", "getRedstoneModeTable" };
 		}
 
 		@Override
@@ -115,6 +173,27 @@ public class DriverCapacitorBank {
 					}
 					tile.setMaxOutput(((Double) arguments[0]).intValue());
 					return new Object[] { };
+				}
+				case 4:{
+					return DriverCapacitorBank.getRedstoneMode(tile, true);
+				}
+				case 5:{
+					return DriverCapacitorBank.getRedstoneMode(tile, false);
+				}
+				case 6:{
+					if(arguments.length < 1 || !(arguments[0] instanceof String)) {
+						throw new LuaException("first argument needs to be a string");
+					}
+					return DriverCapacitorBank.setRedstoneMode(tile, (String) arguments[0], true);
+				}
+				case 7:{
+					if(arguments.length < 1 || !(arguments[0] instanceof String)) {
+						throw new LuaException("first argument needs to be a string");
+					}
+					return DriverCapacitorBank.setRedstoneMode(tile, (String) arguments[0], false);
+				}
+				case 8:{
+					return DriverCapacitorBank.modes();
 				}
 			}
 			return null;
