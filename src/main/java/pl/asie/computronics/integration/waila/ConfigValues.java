@@ -7,13 +7,13 @@ import pl.asie.computronics.reference.Mods;
 /**
  * @author Vexatos
  */
-enum ConfigValues {
+public enum ConfigValues {
 
-	//Address(Mods.Computronics + ".enableAddress"),
+	Address(Mods.Computronics + ".enableAddress"),
 	Tape(Mods.Computronics + ".enableTape"),
 	TapeName(Mods.Computronics + ".enableTapeName"),
-	DriveState(Mods.Computronics + ".enableDriveState");
-	//RelayBound(Mods.Computronics + ".enableRelayBound");
+	DriveState(Mods.Computronics + ".enableDriveState"),
+	RelayBound(Mods.Computronics + ".enableRelayBound");
 
 	private String key;
 	private boolean defvalue;
@@ -37,7 +37,7 @@ enum ConfigValues {
 		}
 	}
 
-	boolean getConfig(IWailaConfigHandler config) {
+	public boolean getConfig(IWailaConfigHandler config) {
 		return config.getConfig(key, defvalue);
 	}
 }

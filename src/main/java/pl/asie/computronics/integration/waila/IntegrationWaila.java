@@ -1,20 +1,23 @@
 package pl.asie.computronics.integration.waila;
 
+import cpw.mods.fml.common.Loader;
 import mcp.mobius.waila.api.IWailaRegistrar;
-import pl.asie.computronics.tile.TileTapeDrive;
+import pl.asie.computronics.block.BlockDigitalReceiverBox;
+import pl.asie.computronics.block.BlockPeripheral;
+import pl.asie.computronics.reference.Mods;
+import pl.asie.computronics.tile.TileDigitalReceiverBox;
+import pl.asie.computronics.tile.TileLocomotiveRelay;
 
 public class IntegrationWaila {
 	public static void register(IWailaRegistrar reg) {
-		//reg.registerBodyProvider(new WailaPeripheralBase(), TileEntityPeripheralBase.class);
-		//registerKeys(reg, TileEntityPeripheralBase.class, "oc:node");
+		reg.registerBodyProvider(new WailaComputronics(), BlockPeripheral.class);
+		registerKeys(reg, BlockPeripheral.class, "oc:node");
 
-		reg.registerBodyProvider(new WailaTapeDrive(), TileTapeDrive.class);
-		//registerKeys(reg, TileTapeDrive.class, "*");
-
-		/*if(Loader.isModLoaded(Mods.Railcraft)) {
-			reg.registerBodyProvider(new WailaLocomotiveRelay(), TileLocomotiveRelay.class);
-			registerKeys(reg, TileLocomotiveRelay.class, "*");
-		}*/
+		if(Loader.isModLoaded(Mods.Railcraft)) {
+			registerKeys(reg, TileLocomotiveRelay.class, "bound");
+			reg.registerBodyProvider(new WailaComputronics(), BlockDigitalReceiverBox.class);
+			registerKeys(reg, TileDigitalReceiverBox.class, "oc:node");
+		}
 
 		ConfigValues.registerConfigs(reg);
 	}

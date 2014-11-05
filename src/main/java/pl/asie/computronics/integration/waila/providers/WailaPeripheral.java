@@ -1,4 +1,4 @@
-package pl.asie.computronics.integration.waila;
+package pl.asie.computronics.integration.waila.providers;
 
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
@@ -6,6 +6,7 @@ import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import pl.asie.computronics.integration.waila.ConfigValues;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.StringUtil;
 
@@ -14,15 +15,15 @@ import java.util.List;
 /**
  * @author Vexatos
  */
-public class WailaPeripheralBase extends WailaComputronics {
+public class WailaPeripheral extends ComputronicsWailaProvider {
 
 	@Override
 	public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor,
 		IWailaConfigHandler config) {
 
-		//if(!ConfigValues.Address.getConfig(config)) {
-		//	return currenttip;
-		//}
+		if(!ConfigValues.Address.getConfig(config)) {
+			return currenttip;
+		}
 
 		NBTTagCompound nbt = accessor.getNBTData();
 		if(Loader.isModLoaded(Mods.OpenComputers)) {

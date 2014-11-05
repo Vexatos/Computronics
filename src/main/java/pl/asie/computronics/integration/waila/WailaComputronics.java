@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * @author Vexatos
  */
-public abstract class WailaComputronics implements IWailaDataProvider {
+public class WailaComputronics implements IWailaDataProvider {
 
 	@Override
 	public ItemStack getWailaStack(IWailaDataAccessor accessor,
@@ -23,12 +23,36 @@ public abstract class WailaComputronics implements IWailaDataProvider {
 	public List<String> getWailaHead(ItemStack itemStack, List<String> currenttip,
 		IWailaDataAccessor accessor, IWailaConfigHandler config) {
 
+		for(WailaProviders p : WailaProviders.VALUES) {
+			if(p.isInstance(accessor.getBlock())) {
+				currenttip = p.getProvider().getWailaHead(itemStack, currenttip, accessor, config);
+			}
+		}
+
+		return currenttip;
+	}
+
+	@Override
+	public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+
+		for(WailaProviders p : WailaProviders.VALUES) {
+			if(p.isInstance(accessor.getBlock())) {
+				currenttip = p.getProvider().getWailaBody(itemStack, currenttip, accessor, config);
+			}
+		}
+
 		return currenttip;
 	}
 
 	@Override
 	public List<String> getWailaTail(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor,
 		IWailaConfigHandler config) {
+
+		for(WailaProviders p : WailaProviders.VALUES) {
+			if(p.isInstance(accessor.getBlock())) {
+				currenttip = p.getProvider().getWailaTail(itemStack, currenttip, accessor, config);
+			}
+		}
 
 		return currenttip;
 	}

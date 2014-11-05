@@ -100,7 +100,8 @@ public class ItemTape extends Item implements IItemTapeStorage, IMedia, IMediaPr
 	}
 
 	public String getLabel(ItemStack stack) {
-		return stack.getTagCompound().hasKey("label") ? stack.getTagCompound().getString("label") : "";
+		return stack.hasTagCompound() && stack.getTagCompound().hasKey("label")
+			? stack.getTagCompound().getString("label") : "";
 	}
 
 	public boolean setLabel(ItemStack stack, String label) {

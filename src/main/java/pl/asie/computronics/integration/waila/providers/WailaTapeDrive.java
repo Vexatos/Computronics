@@ -1,4 +1,4 @@
-package pl.asie.computronics.integration.waila;
+package pl.asie.computronics.integration.waila.providers;
 
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
@@ -6,13 +6,14 @@ import mcp.mobius.waila.api.SpecialChars;
 import net.minecraft.item.ItemStack;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.api.tape.IItemTapeStorage;
+import pl.asie.computronics.integration.waila.ConfigValues;
 import pl.asie.computronics.tile.TileTapeDrive;
 import pl.asie.computronics.util.StringUtil;
 
 import java.util.List;
 import java.util.Locale;
 
-public class WailaTapeDrive extends WailaComputronics {
+public class WailaTapeDrive extends ComputronicsWailaProvider {
 
 	@Override
 	public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip,
