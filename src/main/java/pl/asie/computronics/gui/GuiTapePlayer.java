@@ -22,7 +22,7 @@ public class GuiTapePlayer extends GuiBase {
 		PLAY,
 		STOP,
 		FAST_FORWARD
-	};
+	}
 	private Button buttonMouse = null;
 	
 	public GuiTapePlayer(ContainerBase container) {

@@ -16,7 +16,7 @@ public class WailaComputronics implements IWailaDataProvider {
 	public ItemStack getWailaStack(IWailaDataAccessor accessor,
 		IWailaConfigHandler config) {
 
-		return null;
+		return accessor.getStack();
 	}
 
 	@Override
