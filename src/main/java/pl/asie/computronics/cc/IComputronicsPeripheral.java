@@ -1,12 +1,12 @@
 package pl.asie.computronics.cc;
 
-import dan200.computercraft.api.peripheral.IPeripheral;
+import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
 
 /**
  * Only used to check whether a peripheral belongs to Computronics
  * @author Vexatos
  */
-public interface IComputronicsPeripheral extends IPeripheral {
+public interface IComputronicsPeripheral extends IMultiPeripheral {
 
 }
 

@@ -1,5 +1,6 @@
 package pl.asie.computronics;
 
+import com.google.common.collect.ImmutableList;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -27,6 +28,8 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import pl.asie.computronics.api.multiperipheral.IMultiPeripheralProvider;
+import pl.asie.computronics.api.multiperipheral.IMultiPeripheralRegistry;
 import pl.asie.computronics.audio.DFPWMPlaybackManager;
 import pl.asie.computronics.block.BlockCamera;
 import pl.asie.computronics.block.BlockChatBox;
@@ -41,6 +44,8 @@ import pl.asie.computronics.cc.MusicalTurtleUpgrade;
 import pl.asie.computronics.cc.ParticleTurtleUpgrade;
 import pl.asie.computronics.cc.RadarTurtleUpgrade;
 import pl.asie.computronics.cc.SpeakingTurtleUpgrade;
+import pl.asie.computronics.cc.multiperipheral.MultiPeripheralProvider;
+import pl.asie.computronics.cc.multiperipheral.MultiPeripheralRegistry;
 import pl.asie.computronics.integration.ModRecipes;
 import pl.asie.computronics.integration.appeng.DriverSpatialIOPort;
 import pl.asie.computronics.integration.betterstorage.DriverCrateStorageNew;
@@ -72,8 +77,6 @@ import pl.asie.computronics.integration.railcraft.DriverRoutingTrack;
 import pl.asie.computronics.integration.railcraft.RailcraftIntegration;
 import pl.asie.computronics.integration.redlogic.CCBundledRedstoneProviderRedLogic;
 import pl.asie.computronics.integration.redlogic.DriverLamp;
-import pl.asie.computronics.integration.util.CCMultiPeripheral;
-import pl.asie.computronics.integration.util.MultiPeripheral;
 import pl.asie.computronics.item.ItemBlockChatBox;
 import pl.asie.computronics.item.ItemOpenComputers;
 import pl.asie.computronics.item.ItemTape;
@@ -96,7 +99,7 @@ import pl.asie.lib.item.ItemMultiple;
 import pl.asie.lib.network.PacketHandler;
 import pl.asie.lib.util.EnergyConverter;
 
-import java.util.ArrayList;
+import java.lang.reflect.Method;
 import java.util.Random;
 
 @Mod(modid = Mods.Computronics, name = Mods.Computronics_NAME, version = "1.3.0", useMetadata = true, dependencies = "required-after:asielib@[0.3.3,);after:ComputerCraft;after:OpenComputers@[1.4.0,);after:OpenComputers|Core;after:MineFactoryReloaded;after:RedLogic;after:ProjRed|Core;after:nedocomputers;after:BuildCraft|Core@[6.1.5,);after:Railcraft@[9.3.3.4,);after:gregtech;after:EnderIO")
@@ -151,6 +154,8 @@ public class Computronics {
 
 	public static boolean MUST_UPDATE_TILE_ENTITIES = false;
 	public ComputronicsAchievements achievements;
+
+	public static MultiPeripheralRegistry peripheralRegistry;
 
 	public static CreativeTabs tab = new CreativeTabs("tabComputronics") {
 		public Item getTabIconItem() {
@@ -288,6 +293,10 @@ public class Computronics {
 			railcraft = new RailcraftIntegration(this);
 		}
 
+		if(Loader.isModLoaded(Mods.ComputerCraft)) {
+			peripheralRegistry = new MultiPeripheralRegistry();
+		}
+
 		if(Loader.isModLoaded(Mods.OpenComputers)) {
 			preInitOC();
 		}
@@ -336,11 +345,22 @@ public class Computronics {
 		proxy.registerRenderers();
 	}
 
+	/**
+	 * Registers a new {@link IMultiPeripheralProvider}.
+	 * If you want to hook into this, do it between Computronics' preInit and init phase
+	 */
+	@Optional.Method(modid = Mods.ComputerCraft)
+	public static void registerMultiPeripheralProvider(IMultiPeripheralProvider provider) {
+		if(peripheralRegistry != null) {
+			peripheralRegistry.registerPeripheralProvider(provider);
+		}
+	}
+
 	@Optional.Method(modid = Mods.ComputerCraft)
 	private void initCC() {
 		if(Loader.isModLoaded(Mods.RedLogic)) {
 			if(Config.isCompatEnabled(config, Config.RedLogic_Lamps)) {
-				ComputerCraftAPI.registerPeripheralProvider(new DriverLamp.CCDriver());
+				registerMultiPeripheralProvider(new DriverLamp.CCDriver());
 			}
 			if(Config.isCompatEnabled(config, Config.Bundled_Redstone)) {
 				ComputerCraftAPI.registerBundledRedstoneProvider(new CCBundledRedstoneProviderRedLogic());
@@ -348,55 +368,56 @@ public class Computronics {
 		}
 		if(Loader.isModLoaded(Mods.MFR) || Loader.isModLoaded(Mods.JABBA)) {
 			if(Config.isCompatEnabled(config, Config.MFR_DSU)) {
-				ComputerCraftAPI.registerPeripheralProvider(new DriverDeepStorageUnit.CCDriver());
+				registerMultiPeripheralProvider(new DriverDeepStorageUnit.CCDriver());
 			}
 		}
 		if(Loader.isModLoaded(Mods.FSP)) {
 			if(Config.isCompatEnabled(config, Config.FSP_Steam_Transporter)) {
-				ComputerCraftAPI.registerPeripheralProvider(new DriverSteamTransporter.CCDriver());
+				registerMultiPeripheralProvider(new DriverSteamTransporter.CCDriver());
 			}
 		}
 		if(Loader.isModLoaded(Mods.Factorization)) {
 			if(Config.isCompatEnabled(config, Config.FZ_ChargePeripheral)) {
-				ComputerCraftAPI.registerPeripheralProvider(new DriverChargeConductor.CCDriver());
+				registerMultiPeripheralProvider(new DriverChargeConductor.CCDriver());
 			}
 		}
 
 		if(Loader.isModLoaded(Mods.Railcraft)) {
 			if(Config.isCompatEnabled(config, Config.Railcraft_Routing)) {
-				ComputerCraftAPI.registerPeripheralProvider(new DriverRoutingTrack.CCDriver());
-				ComputerCraftAPI.registerPeripheralProvider(new DriverRoutingDetector.CCDriver());
-				ComputerCraftAPI.registerPeripheralProvider(new DriverRoutingSwitch.CCDriver());
-				ComputerCraftAPI.registerPeripheralProvider(new DriverElectricGrid.CCDriver());
-				ComputerCraftAPI.registerPeripheralProvider(new DriverLimiterTrack.CCDriver());
-				ComputerCraftAPI.registerPeripheralProvider(new DriverLocomotiveTrack.CCDriver());
+				registerMultiPeripheralProvider(new DriverRoutingTrack.CCDriver());
+				registerMultiPeripheralProvider(new DriverRoutingDetector.CCDriver());
+				registerMultiPeripheralProvider(new DriverRoutingSwitch.CCDriver());
+				registerMultiPeripheralProvider(new DriverElectricGrid.CCDriver());
+				registerMultiPeripheralProvider(new DriverLimiterTrack.CCDriver());
+				registerMultiPeripheralProvider(new DriverLocomotiveTrack.CCDriver());
 			}
 		}
 
 		if(Loader.isModLoaded(Mods.AE2)) {
 			if(Config.isCompatEnabled(config, Config.AE2_SpatialIO)) {
-				ComputerCraftAPI.registerPeripheralProvider(new DriverSpatialIOPort.CCDriver());
+				registerMultiPeripheralProvider(new DriverSpatialIOPort.CCDriver());
 			}
 		}
 
 		if(Loader.isModLoaded(Mods.EnderIO)) {
 			if(Config.isCompatEnabled(config, Config.EnderIO)) {
-				ArrayList<CCMultiPeripheral> peripherals = new ArrayList<CCMultiPeripheral>();
-				peripherals.add(new DriverEnergyHandler.CCDriver());
-				peripherals.add(new DriverRedstoneControllable.CCDriver());
-				peripherals.add(new DriverIOConfigurable.CCDriver());
-				peripherals.add(new DriverHasExperience.CCDriver());
-				peripherals.add(new DriverAbstractMachine.CCDriver());
-				peripherals.add(new DriverCapacitorBank.CCDriver());
-				peripherals.add(new DriverTransceiver.CCDriver());
-				ComputerCraftAPI.registerPeripheralProvider(new MultiPeripheral(peripherals));
+				registerMultiPeripheralProvider(new DriverEnergyHandler.CCDriver());
+				registerMultiPeripheralProvider(new DriverRedstoneControllable.CCDriver());
+				registerMultiPeripheralProvider(new DriverIOConfigurable.CCDriver());
+				registerMultiPeripheralProvider(new DriverHasExperience.CCDriver());
+				registerMultiPeripheralProvider(new DriverAbstractMachine.CCDriver());
+				registerMultiPeripheralProvider(new DriverCapacitorBank.CCDriver());
+				registerMultiPeripheralProvider(new DriverTransceiver.CCDriver());
 			}
 		} else if(ModAPIManager.INSTANCE.hasAPI(Mods.API.CoFHAPI_Energy)
 			&& Config.isCompatEnabled(config, Config.RedstoneFlux)) {
-			ComputerCraftAPI.registerPeripheralProvider(new DriverEnergyHandler.CCDriver());
+			registerMultiPeripheralProvider(new DriverEnergyHandler.CCDriver());
 		}
 
-		ComputerCraftAPI.registerPeripheralProvider(new CCPeripheralProvider());
+		registerMultiPeripheralProvider(new CCPeripheralProvider());
+
+		ComputerCraftAPI.registerPeripheralProvider(new MultiPeripheralProvider(peripheralRegistry.peripheralProviders));
+
 		if(itemTape != null) {
 			ComputerCraftAPI.registerMediaProvider(itemTape);
 		}
@@ -537,5 +558,48 @@ public class Computronics {
 	@EventHandler
 	public void serverStart(FMLServerAboutToStartEvent event) {
 		Computronics.storage = new StorageManager();
+	}
+
+	/**
+	 * You need to call this between Computronics' preInit and init phase
+	 * <p/>
+	 * using {@link FMLInterModComms#sendMessage}.
+	 * <p/>
+	 * Example:
+	 * FMLInterModComms.sendMessage("Computronics", "addmultiperipherals", "pl.asie.computronics.cc.multiperipheral.MultiPeripheralRegistry.register")
+	 */
+	@EventHandler
+	@SuppressWarnings("unchecked")
+	public void receiveIMC(FMLInterModComms.IMCEvent event) {
+		if(Loader.isModLoaded(Mods.ComputerCraft)) {
+			if(peripheralRegistry != null) {
+				ImmutableList<FMLInterModComms.IMCMessage> messages = event.getMessages();
+				for(FMLInterModComms.IMCMessage message : messages) {
+					if(message.isStringMessage()) {
+						if(message.key.equalsIgnoreCase("addmultiperipherals")) {
+							try {
+								String methodString = message.getStringValue();
+								String[] methodParts = methodString.split("\\.");
+								String methodName = methodParts[methodParts.length - 1];
+								String className = methodString.substring(0, methodString.length() - methodName.length() - 1);
+								try {
+									Class c = Class.forName(className);
+									Method method = c.getDeclaredMethod(methodName, IMultiPeripheralRegistry.class);
+									method.invoke(null, peripheralRegistry);
+								} catch(ClassNotFoundException e) {
+									log.warn("Could not find class " + className, e);
+								} catch(NoSuchMethodException e) {
+									log.warn("Could not find method " + methodString, e);
+								} catch(Exception e) {
+									log.warn("Exception while trying to call method " + methodString, e);
+								}
+							} catch(Exception e) {
+								log.warn("Exception while trying to register a MultiPeripheral", e);
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 }

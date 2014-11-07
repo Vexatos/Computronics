@@ -3,7 +3,6 @@ package pl.asie.computronics.integration.redlogic;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
-import dan200.computercraft.api.peripheral.IPeripheral;
 import li.cil.oc.api.Network;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
@@ -15,7 +14,8 @@ import mods.immibis.redlogic.api.misc.ILampBlock;
 import net.minecraft.block.Block;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import pl.asie.computronics.integration.CCTilePeripheral;
+import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
+import pl.asie.computronics.integration.CCMultiPeripheral;
 import pl.asie.computronics.reference.Names;
 
 public class DriverLamp {
@@ -66,7 +66,7 @@ public class DriverLamp {
 		}
 	}
 
-	public static class CCDriver extends CCTilePeripheral<ILampBlock> {
+	public static class CCDriver extends CCMultiPeripheral<ILampBlock> {
 
 		public CCDriver() {
 		}
@@ -76,7 +76,7 @@ public class DriverLamp {
 		}
 
 		@Override
-		public IPeripheral getPeripheral(World world, int x, int y, int z, int side) {
+		public IMultiPeripheral getPeripheral(World world, int x, int y, int z, int side) {
 			Block block = world.getBlock(x, y, z);
 			if(block instanceof ILampBlock) {
 				return new CCDriver((ILampBlock) block, world, x, y, z);

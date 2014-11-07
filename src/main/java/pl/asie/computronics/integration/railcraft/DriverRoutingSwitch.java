@@ -3,7 +3,6 @@ package pl.asie.computronics.integration.railcraft;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
-import dan200.computercraft.api.peripheral.IPeripheral;
 import li.cil.oc.api.driver.NamedBlock;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
@@ -14,8 +13,9 @@ import mods.railcraft.common.blocks.signals.TileSwitchRouting;
 import mods.railcraft.common.items.ItemRoutingTable;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import pl.asie.computronics.integration.CCTilePeripheral;
+import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
 import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
+import pl.asie.computronics.integration.CCMultiPeripheral;
 import pl.asie.computronics.integration.util.RoutingTableUtil;
 import pl.asie.computronics.reference.Names;
 
@@ -36,13 +36,15 @@ public class DriverRoutingSwitch {
 				List<List<String>> pages = ItemRoutingTable.getPages(tile.getInventory().getStackInSlot(0));
 				LinkedHashMap<Integer, String> pageMap = new LinkedHashMap<Integer, String>();
 				int i = 1;
-				for(List<String> currentPage : pages) {
-					for(String currentLine : currentPage) {
-						pageMap.put(i, currentLine);
+				if(pages != null) {
+					for(List<String> currentPage : pages) {
+						for(String currentLine : currentPage) {
+							pageMap.put(i, currentLine);
+							i++;
+						}
+						pageMap.put(i, "{newpage}");
 						i++;
 					}
-					pageMap.put(i, "{newpage}");
-					i++;
 				}
 				if(pageMap.get(i - 1).equals("{newpage}")) {
 					pageMap.remove(i - 1);
@@ -148,7 +150,7 @@ public class DriverRoutingSwitch {
 		}
 	}
 
-	public static class CCDriver extends CCTilePeripheral<TileSwitchRouting> {
+	public static class CCDriver extends CCMultiPeripheral<TileSwitchRouting> {
 
 		public CCDriver() {
 		}
@@ -158,7 +160,7 @@ public class DriverRoutingSwitch {
 		}
 
 		@Override
-		public IPeripheral getPeripheral(World world, int x, int y, int z, int side) {
+		public IMultiPeripheral getPeripheral(World world, int x, int y, int z, int side) {
 			TileEntity te = world.getTileEntity(x, y, z);
 			if(te != null && te instanceof TileSwitchRouting) {
 				return new CCDriver((TileSwitchRouting) te, world, x, y, z);

@@ -3,7 +3,6 @@ package pl.asie.computronics.integration.railcraft;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
-import dan200.computercraft.api.peripheral.IPeripheral;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
@@ -12,8 +11,9 @@ import li.cil.oc.api.prefab.DriverTileEntity;
 import mods.railcraft.api.electricity.GridTools;
 import mods.railcraft.api.electricity.IElectricGrid;
 import net.minecraft.world.World;
-import pl.asie.computronics.integration.CCTilePeripheral;
+import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
 import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
+import pl.asie.computronics.integration.CCMultiPeripheral;
 import pl.asie.computronics.reference.Names;
 
 /**
@@ -61,7 +61,7 @@ public class DriverElectricGrid {
 		}
 	}
 
-	public static class CCDriver extends CCTilePeripheral<IElectricGrid> {
+	public static class CCDriver extends CCMultiPeripheral<IElectricGrid> {
 
 		public CCDriver() {
 			super();
@@ -72,7 +72,7 @@ public class DriverElectricGrid {
 		}
 
 		@Override
-		public IPeripheral getPeripheral(World world, int x, int y, int z, int side) {
+		public IMultiPeripheral getPeripheral(World world, int x, int y, int z, int side) {
 			if(GridTools.getGridObjectAt(world, x, y, z) != null) {
 				return new CCDriver(GridTools.getGridObjectAt(world, x, y, z), world, x, y, z);
 			}

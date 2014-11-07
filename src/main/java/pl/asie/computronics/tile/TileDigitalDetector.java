@@ -288,6 +288,12 @@ public class TileDigitalDetector extends TileDetector
 	}
 
 	@Override
+	@Optional.Method(modid = Mods.ComputerCraft)
+	public int peripheralPriority() {
+		return 0;
+	}
+
+	@Override
 	public boolean canConnectPeripheralOnSide(int side) {
 		return ForgeDirection.getOrientation(side) == this.direction;
 	}

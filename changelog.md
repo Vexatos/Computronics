@@ -19,6 +19,9 @@
     - You can get/set send/receive channels of the Dimensional Transceiver
     - You can add/remove public channels to/from the Dimensional Transceiver channel list
     - You can get the (max) Experience (Levels) of any experience-storing EnderIO device
+  * ADDED: New MultiPeripheral system
+    - Like in OpenComputers, these peripherals are being merged into a single one in case a block has multiple Peripherals on it
+    - This also comes with a new MultiPeripheral API for other mods to hook into in case they want
   * REMOVED: Removed the Signal Receiver Box Driver in favour of the Digital Signal Receiver Box
   * CHANGED: setLampColor(0) now turns off the lamp.
   * CHANGED: Updated to AsieLib 0.3.3

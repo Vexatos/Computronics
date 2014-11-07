@@ -13,7 +13,7 @@ import li.cil.oc.api.prefab.DriverTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
-import pl.asie.computronics.integration.util.CCMultiPeripheral;
+import pl.asie.computronics.integration.CCMultiPeripheral;
 import pl.asie.computronics.reference.Names;
 
 import java.util.LinkedHashMap;
@@ -133,7 +133,7 @@ public class DriverCapacitorBank {
 		}
 
 		@Override
-		public int priority() {
+		public int peripheralPriority() {
 			return 3;
 		}
 

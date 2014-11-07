@@ -3,7 +3,6 @@ package pl.asie.computronics.integration.railcraft;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
-import dan200.computercraft.api.peripheral.IPeripheral;
 import li.cil.oc.api.driver.NamedBlock;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
@@ -16,8 +15,9 @@ import mods.railcraft.common.blocks.detector.types.DetectorRouting;
 import mods.railcraft.common.items.ItemRoutingTable;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import pl.asie.computronics.integration.CCTilePeripheral;
+import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
 import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
+import pl.asie.computronics.integration.CCMultiPeripheral;
 import pl.asie.computronics.integration.util.RoutingTableUtil;
 import pl.asie.computronics.reference.Names;
 
@@ -157,7 +157,7 @@ public class DriverRoutingDetector {
 		}
 	}
 
-	public static class CCDriver extends CCTilePeripheral<TileDetector> {
+	public static class CCDriver extends CCMultiPeripheral<TileDetector> {
 
 		public CCDriver() {
 		}
@@ -167,7 +167,7 @@ public class DriverRoutingDetector {
 		}
 
 		@Override
-		public IPeripheral getPeripheral(World world, int x, int y, int z, int side) {
+		public IMultiPeripheral getPeripheral(World world, int x, int y, int z, int side) {
 			TileEntity te = world.getTileEntity(x, y, z);
 			if(te != null && te instanceof TileDetector && ((TileDetector) te).getDetector().getType() == EnumDetector.ROUTING) {
 				return new CCDriver((TileDetector) te, world, x, y, z);

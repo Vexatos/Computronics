@@ -405,6 +405,12 @@ public class TileDigitalReceiverBox extends TileBoxBase
 	}
 
 	@Override
+	@Optional.Method(modid = Mods.ComputerCraft)
+	public int peripheralPriority() {
+		return 0;
+	}
+
+	@Override
 	public boolean canConnectPeripheralOnSide(int side) {
 		ForgeDirection forgeDirection = ForgeDirection.getOrientation(side);
 		return forgeDirection == ForgeDirection.DOWN || forgeDirection == ForgeDirection.UP;

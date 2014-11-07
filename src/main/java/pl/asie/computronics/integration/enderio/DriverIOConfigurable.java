@@ -14,7 +14,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
-import pl.asie.computronics.integration.util.CCMultiPeripheral;
+import pl.asie.computronics.integration.CCMultiPeripheral;
 import pl.asie.computronics.reference.Names;
 
 import java.util.LinkedHashMap;
@@ -32,7 +32,7 @@ public class DriverIOConfigurable {
 	private static Object[] setIOMode(IIoConfigurable tile, int side, String mode) {
 		try {
 			tile.setIoMode(ForgeDirection.getOrientation(side), IoMode.valueOf(mode.toUpperCase(Locale.ENGLISH)));
-		} catch(IllegalArgumentException e){
+		} catch(IllegalArgumentException e) {
 			throw new IllegalArgumentException("No valid IO mode given");
 		}
 		return new Object[] { };
@@ -98,7 +98,7 @@ public class DriverIOConfigurable {
 		}
 
 		@Override
-		public int priority() {
+		public int peripheralPriority() {
 			return 2;
 		}
 

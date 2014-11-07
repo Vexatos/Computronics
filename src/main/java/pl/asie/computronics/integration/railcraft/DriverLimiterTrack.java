@@ -3,7 +3,6 @@ package pl.asie.computronics.integration.railcraft;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
-import dan200.computercraft.api.peripheral.IPeripheral;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
@@ -14,8 +13,9 @@ import mods.railcraft.common.blocks.tracks.TrackLimiter;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import pl.asie.computronics.integration.CCTilePeripheral;
+import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
 import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
+import pl.asie.computronics.integration.CCMultiPeripheral;
 import pl.asie.computronics.reference.Names;
 
 /**
@@ -88,7 +88,7 @@ public class DriverLimiterTrack {
 		}
 	}
 
-	public static class CCDriver extends CCTilePeripheral<TileTrack> {
+	public static class CCDriver extends CCMultiPeripheral<TileTrack> {
 		public CCDriver() {
 		}
 
@@ -97,7 +97,7 @@ public class DriverLimiterTrack {
 		}
 
 		@Override
-		public IPeripheral getPeripheral(World world, int x, int y, int z, int side) {
+		public IMultiPeripheral getPeripheral(World world, int x, int y, int z, int side) {
 			TileEntity te = world.getTileEntity(x, y, z);
 			if(te != null && te instanceof TileTrack && ((TileTrack) te).getTrackInstance() instanceof TrackLimiter) {
 				return new CCDriver((TileTrack) te, world, x, y, z);

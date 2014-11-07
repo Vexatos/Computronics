@@ -172,6 +172,12 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 	}
 
 	@Override
+	@Optional.Method(modid = Mods.ComputerCraft)
+	public int peripheralPriority() {
+		return 1;
+	}
+
+	@Override
 	@Optional.Method(modid = Mods.NedoComputers)
 	public boolean Connectable(int side) {
 		return true;

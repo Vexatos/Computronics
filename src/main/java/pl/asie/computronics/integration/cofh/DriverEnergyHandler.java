@@ -7,7 +7,7 @@ import dan200.computercraft.api.peripheral.IComputerAccess;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import pl.asie.computronics.integration.util.CCMultiPeripheral;
+import pl.asie.computronics.integration.CCMultiPeripheral;
 import pl.asie.computronics.reference.Names;
 
 /**
@@ -22,6 +22,11 @@ public class DriverEnergyHandler {
 
 		public CCDriver(IEnergyHandler tile, World world, int x, int y, int z) {
 			super(tile, Names.EnderIO_PoweredTile, world, x, y, z);
+		}
+
+		@Override
+		public int peripheralPriority() {
+			return -1;
 		}
 
 		@Override
