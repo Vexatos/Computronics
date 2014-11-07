@@ -15,6 +15,7 @@ import java.util.ArrayList;
 
 public class ChatBoxHandler {
 	@SubscribeEvent
+	@SuppressWarnings("unchecked")
 	public void chatEvent(ServerChatEvent event) {
 		//System.out.println("event");
 		ArrayList<Object> tiles = new ArrayList<Object>(event.player.worldObj.loadedTileEntityList);
