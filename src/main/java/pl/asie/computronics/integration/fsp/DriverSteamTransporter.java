@@ -12,8 +12,8 @@ import li.cil.oc.api.prefab.DriverTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.world.World;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
-import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
 import pl.asie.computronics.integration.CCMultiPeripheral;
+import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
 import pl.asie.computronics.reference.Names;
 
 public class DriverSteamTransporter {

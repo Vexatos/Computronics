@@ -2,7 +2,6 @@ package pl.asie.computronics.integration;
 
 import net.minecraft.world.World;
 import pl.asie.computronics.api.multiperipheral.ICombinedMultiPeripheral;
-import pl.asie.computronics.integration.CCTilePeripheral;
 
 /**
  * @author Vexatos

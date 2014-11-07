@@ -290,7 +290,7 @@ public class TileDigitalDetector extends TileDetector
 	@Override
 	@Optional.Method(modid = Mods.ComputerCraft)
 	public int peripheralPriority() {
-		return 0;
+		return 1;
 	}
 
 	@Override

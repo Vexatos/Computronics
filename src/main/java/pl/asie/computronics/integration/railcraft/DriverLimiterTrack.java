@@ -14,8 +14,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
-import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
 import pl.asie.computronics.integration.CCMultiPeripheral;
+import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
 import pl.asie.computronics.reference.Names;
 
 /**

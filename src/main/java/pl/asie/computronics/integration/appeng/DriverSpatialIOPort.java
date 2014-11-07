@@ -24,8 +24,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
-import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
 import pl.asie.computronics.integration.CCMultiPeripheral;
+import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
 import pl.asie.computronics.integration.util.SpatialIOUtil;
 import pl.asie.computronics.reference.Names;
 

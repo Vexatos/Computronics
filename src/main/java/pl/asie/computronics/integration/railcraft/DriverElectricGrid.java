@@ -12,8 +12,8 @@ import mods.railcraft.api.electricity.GridTools;
 import mods.railcraft.api.electricity.IElectricGrid;
 import net.minecraft.world.World;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
-import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
 import pl.asie.computronics.integration.CCMultiPeripheral;
+import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
 import pl.asie.computronics.reference.Names;
 
 /**
