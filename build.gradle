@@ -103,7 +103,7 @@ task apiZip(type: Zip) {
 }
 
 task makeJars << {
-    description = 'Cleans the build directory and builds the compiled jar file, the deobfuscated jar file and the API source zip file'
+    description = 'Creates the mod files'
 }
 
 makeJars.dependsOn clean, build, deobfJar, apiZip
