@@ -1,4 +1,4 @@
-package pl.asie.computronics;
+package pl.asie.computronics.network;
 
 public class Packets {
 	public static final int PACKET_AUDIO_DATA = 0;

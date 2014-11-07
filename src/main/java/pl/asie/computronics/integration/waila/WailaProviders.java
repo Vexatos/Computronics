@@ -1,6 +1,5 @@
 package pl.asie.computronics.integration.waila;
 
-import pl.asie.computronics.block.BlockDigitalDetector;
 import pl.asie.computronics.block.BlockDigitalReceiverBox;
 import pl.asie.computronics.block.BlockLocomotiveRelay;
 import pl.asie.computronics.block.BlockPeripheral;

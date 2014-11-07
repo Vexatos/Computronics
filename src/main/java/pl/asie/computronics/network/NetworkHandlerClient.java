@@ -1,9 +1,10 @@
-package pl.asie.computronics;
+package pl.asie.computronics.network;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetHandler;
 import net.minecraft.tileentity.TileEntity;
+import pl.asie.computronics.Computronics;
 import pl.asie.computronics.tile.TapeDriveState.State;
 import pl.asie.computronics.tile.TileTapeDrive;
 import pl.asie.lib.audio.StreamingAudioPlayer;

@@ -2,8 +2,8 @@ package pl.asie.computronics.tile;
 
 import net.minecraft.world.World;
 import pl.asie.computronics.Computronics;
-import pl.asie.computronics.Packets;
 import pl.asie.computronics.api.tape.ITapeStorage;
+import pl.asie.computronics.network.Packets;
 import pl.asie.lib.network.Packet;
 
 public class TapeDriveState {

@@ -1,4 +1,4 @@
-package pl.asie.computronics;
+package pl.asie.computronics.network;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetHandler;

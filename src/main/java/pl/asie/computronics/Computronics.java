@@ -77,6 +77,8 @@ import pl.asie.computronics.integration.util.MultiPeripheral;
 import pl.asie.computronics.item.ItemBlockChatBox;
 import pl.asie.computronics.item.ItemOpenComputers;
 import pl.asie.computronics.item.ItemTape;
+import pl.asie.computronics.network.NetworkHandlerClient;
+import pl.asie.computronics.network.NetworkHandlerServer;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tape.StorageManager;
