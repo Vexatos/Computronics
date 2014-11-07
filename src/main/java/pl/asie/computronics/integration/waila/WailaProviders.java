@@ -1,22 +1,17 @@
 package pl.asie.computronics.integration.waila;
 
-import pl.asie.computronics.block.BlockDigitalReceiverBox;
-import pl.asie.computronics.block.BlockLocomotiveRelay;
-import pl.asie.computronics.block.BlockPeripheral;
 import pl.asie.computronics.block.BlockTapeReader;
 import pl.asie.computronics.integration.waila.providers.IComputronicsWailaProvider;
-import pl.asie.computronics.integration.waila.providers.WailaLocomotiveRelay;
-import pl.asie.computronics.integration.waila.providers.WailaPeripheral;
 import pl.asie.computronics.integration.waila.providers.WailaTapeDrive;
 
 /**
  * @author Vexatos
  */
 public enum WailaProviders {
-	Base(new WailaPeripheral(), BlockPeripheral.class),
-	DigitalBox(new WailaPeripheral(), BlockDigitalReceiverBox.class),
-	TapeDrive(new WailaTapeDrive(), BlockTapeReader.class),
-	LocoRelay(new WailaLocomotiveRelay(), BlockLocomotiveRelay.class);
+	//Base(new WailaPeripheral(), BlockPeripheral.class),
+	//DigitalBox(new WailaPeripheral(), BlockDigitalReceiverBox.class),
+	TapeDrive(new WailaTapeDrive(), BlockTapeReader.class);
+	//LocoRelay(new WailaLocomotiveRelay(), BlockLocomotiveRelay.class);
 
 	public static final WailaProviders[] VALUES = values();
 	private IComputronicsWailaProvider provider;
