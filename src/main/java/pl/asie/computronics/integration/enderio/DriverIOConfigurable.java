@@ -139,7 +139,11 @@ public class DriverIOConfigurable {
 					if(arguments.length < 2 || !(arguments[1] instanceof String)) {
 						throw new LuaException("second argument needs to be a string");
 					}
-					return DriverIOConfigurable.setIOMode(tile, side, (String) arguments[1]);
+					try {
+						return DriverIOConfigurable.setIOMode(tile, side, (String) arguments[1]);
+					} catch(IllegalArgumentException e) {
+						throw new LuaException(e.getMessage());
+					}
 				}
 				case 2:{
 					return DriverIOConfigurable.modes();

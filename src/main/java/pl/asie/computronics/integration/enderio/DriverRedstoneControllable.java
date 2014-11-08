@@ -125,7 +125,11 @@ public class DriverRedstoneControllable {
 					if(arguments.length < 1 || !(arguments[0] instanceof String)) {
 						throw new LuaException("first argument needs to be a string");
 					}
-					return DriverRedstoneControllable.setRedstoneMode(tile, (String) arguments[0]);
+					try {
+						return DriverRedstoneControllable.setRedstoneMode(tile, (String) arguments[0]);
+					} catch(IllegalArgumentException e) {
+						throw new LuaException(e.getMessage());
+					}
 				}
 				case 2:{
 					return DriverRedstoneControllable.modes();

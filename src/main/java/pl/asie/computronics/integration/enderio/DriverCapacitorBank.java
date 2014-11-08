@@ -184,13 +184,21 @@ public class DriverCapacitorBank {
 					if(arguments.length < 1 || !(arguments[0] instanceof String)) {
 						throw new LuaException("first argument needs to be a string");
 					}
-					return DriverCapacitorBank.setRedstoneMode(tile, (String) arguments[0], true);
+					try {
+						return DriverCapacitorBank.setRedstoneMode(tile, (String) arguments[0], true);
+					} catch(IllegalArgumentException e) {
+						throw new LuaException(e.getMessage());
+					}
 				}
 				case 7:{
 					if(arguments.length < 1 || !(arguments[0] instanceof String)) {
 						throw new LuaException("first argument needs to be a string");
 					}
-					return DriverCapacitorBank.setRedstoneMode(tile, (String) arguments[0], false);
+					try {
+						return DriverCapacitorBank.setRedstoneMode(tile, (String) arguments[0], false);
+					} catch(IllegalArgumentException e) {
+						throw new LuaException(e.getMessage());
+					}
 				}
 				case 8:{
 					return DriverCapacitorBank.modes();

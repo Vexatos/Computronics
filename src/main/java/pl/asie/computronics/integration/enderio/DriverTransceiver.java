@@ -354,68 +354,71 @@ public class DriverTransceiver {
 		public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
 			if(method != 10 && arguments.length < 1 || !(arguments[0] instanceof String)) {
 				throw new LuaException("first argument needs to be a string");
+			} else if(method == 10) {
+				return DriverTransceiver.types();
 			}
-			switch(method){
-				case 0:{
-					return DriverTransceiver.getSendChannels(tile, arguments);
-				}
-				case 1:{
-					if(arguments.length < 2 || !(arguments[1] instanceof String)) {
-						throw new LuaException("second argument needs to be a string");
+			try {
+				switch(method){
+					case 0:{
+						return DriverTransceiver.getSendChannels(tile, arguments);
 					}
-					if(arguments.length < 3 || !(arguments[2] instanceof Boolean)) {
-						throw new LuaException("third argument needs to be a boolean");
+					case 1:{
+						if(arguments.length < 2 || !(arguments[1] instanceof String)) {
+							throw new LuaException("second argument needs to be a string");
+						}
+						if(arguments.length < 3 || !(arguments[2] instanceof Boolean)) {
+							throw new LuaException("third argument needs to be a boolean");
+						}
+						return DriverTransceiver.setSendChannel(tile, arguments);
 					}
-					return DriverTransceiver.setSendChannel(tile, arguments);
-				}
-				case 2:{
-					return DriverTransceiver.getReceiveChannels(tile, arguments);
-				}
-				case 3:{
-					if(arguments.length < 2 || !(arguments[1] instanceof String)) {
-						throw new LuaException("second argument needs to be a string");
+					case 2:{
+						return DriverTransceiver.getReceiveChannels(tile, arguments);
 					}
-					if(arguments.length < 3 || !(arguments[2] instanceof Boolean)) {
-						throw new LuaException("third argument needs to be a boolean");
+					case 3:{
+						if(arguments.length < 2 || !(arguments[1] instanceof String)) {
+							throw new LuaException("second argument needs to be a string");
+						}
+						if(arguments.length < 3 || !(arguments[2] instanceof Boolean)) {
+							throw new LuaException("third argument needs to be a boolean");
+						}
+						return DriverTransceiver.setReceiveChannel(tile, arguments);
 					}
-					return DriverTransceiver.setReceiveChannel(tile, arguments);
-				}
-				case 4:{
-					if(arguments.length < 2 || !(arguments[1] instanceof String)) {
-						throw new LuaException("second argument needs to be a string");
+					case 4:{
+						if(arguments.length < 2 || !(arguments[1] instanceof String)) {
+							throw new LuaException("second argument needs to be a string");
+						}
+						return DriverTransceiver.addChannel(tile, arguments);
 					}
-					return DriverTransceiver.addChannel(tile, arguments);
-				}
-				case 5:{
-					if(arguments.length < 2 || !(arguments[1] instanceof String)) {
-						throw new LuaException("second argument needs to be a string");
+					case 5:{
+						if(arguments.length < 2 || !(arguments[1] instanceof String)) {
+							throw new LuaException("second argument needs to be a string");
+						}
+						return DriverTransceiver.removeChannel(tile, arguments);
 					}
-					return DriverTransceiver.removeChannel(tile, arguments);
-				}
-				case 6:{
-					if(arguments.length < 2 || !(arguments[1] instanceof String)) {
-						throw new LuaException("second argument needs to be a string");
+					case 6:{
+						if(arguments.length < 2 || !(arguments[1] instanceof String)) {
+							throw new LuaException("second argument needs to be a string");
+						}
+						return DriverTransceiver.isChannelExisting(tile, arguments);
 					}
-					return DriverTransceiver.isChannelExisting(tile, arguments);
-				}
-				case 7:{
-					return DriverTransceiver.getChannels(tile, arguments);
-				}
-				case 8:{
-					if(arguments.length < 2 || !(arguments[1] instanceof String)) {
-						throw new LuaException("second argument needs to be a string");
+					case 7:{
+						return DriverTransceiver.getChannels(tile, arguments);
 					}
-					return DriverTransceiver.isSendChannel(tile, arguments);
-				}
-				case 9:{
-					if(arguments.length < 2 || !(arguments[1] instanceof String)) {
-						throw new LuaException("second argument needs to be a string");
+					case 8:{
+						if(arguments.length < 2 || !(arguments[1] instanceof String)) {
+							throw new LuaException("second argument needs to be a string");
+						}
+						return DriverTransceiver.isSendChannel(tile, arguments);
 					}
-					return DriverTransceiver.isReceiveChannel(tile, arguments);
+					case 9:{
+						if(arguments.length < 2 || !(arguments[1] instanceof String)) {
+							throw new LuaException("second argument needs to be a string");
+						}
+						return DriverTransceiver.isReceiveChannel(tile, arguments);
+					}
 				}
-				case 10:{
-					return DriverTransceiver.types();
-				}
+			} catch(IllegalArgumentException e) {
+				throw new LuaException(e.getMessage());
 			}
 			return null;
 		}
