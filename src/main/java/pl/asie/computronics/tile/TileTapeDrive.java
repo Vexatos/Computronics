@@ -43,7 +43,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 
 	@Optional.Method(modid=Mods.OpenComputers)
 	private void initOCFilesystem() {
-		oc_fs = li.cil.oc.api.FileSystem.asManagedEnvironment(li.cil.oc.api.FileSystem.fromClass(Computronics.class, "computronics", "lua/component/tape_drive"),
+		oc_fs = li.cil.oc.api.FileSystem.asManagedEnvironment(li.cil.oc.api.FileSystem.fromClass(Computronics.class, Mods.Computronics, "lua/component/tape_drive"),
 				"tape_drive");
 	}
 

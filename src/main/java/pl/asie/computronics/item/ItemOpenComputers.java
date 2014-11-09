@@ -17,7 +17,7 @@ import pl.asie.lib.item.ItemMultiple;
 @Optional.Interface(iface="li.cil.oc.api.driver.Item", modid = Mods.OpenComputers)
 public class ItemOpenComputers extends ItemMultiple implements li.cil.oc.api.driver.Item {
 	public ItemOpenComputers() {
-		super("computronics", new String[]{"robot_upgrade_camera", "robot_upgrade_chatbox", "robot_upgrade_radar", "card_fx"});
+		super(Mods.Computronics, new String[]{"robot_upgrade_camera", "robot_upgrade_chatbox", "robot_upgrade_radar", "card_fx"});
 		this.setCreativeTab(Computronics.tab);
 	}
 

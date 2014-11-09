@@ -19,6 +19,9 @@
     - You can get/set send/receive channels of the Dimensional Transceiver
     - You can add/remove public channels to/from the Dimensional Transceiver channel list
     - You can get the (max) Experience (Levels) of any experience-storing EnderIO device
+  * ADDED: Advanced Cipher Block
+    - Allows you to encrypt and decrypt string messages using RSA
+    - Also includes a key generator (with the two prime numbers to start with as optional paramters).
   * ADDED: New MultiPeripheral system
     - Like in OpenComputers, these peripherals are being merged into a single one in case a block has multiple Peripherals on it
     - This also comes with a new MultiPeripheral API for other mods to hook into in case they want

@@ -13,7 +13,6 @@ import pl.asie.computronics.Computronics;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TileRadar;
 import pl.asie.computronics.util.RadarUtils;
-import pl.asie.lib.util.EnergyConverter;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -42,14 +41,14 @@ public class CCRadarProxy {
 			distance = ((Double)arguments[0]).intValue();
 			if(distance <= 0 || distance > Computronics.RADAR_RANGE) distance = Computronics.RADAR_RANGE;
 		}
-		double energyNeeded = (Computronics.RADAR_ENERGY_COST_RF * distance);
+		double energyNeeded = (Computronics.RADAR_ENERGY_COST_OC * distance);
 		if(method == 0) energyNeeded *= 1.75;
 
 		if(powerProvider instanceof TileRadar && !((TileRadar)powerProvider).extractFromBattery(energyNeeded)) return null;
 		else if(powerProvider instanceof ITurtleAccess
 			&& ((ITurtleAccess)powerProvider).isFuelNeeded()
 			&& !((ITurtleAccess)powerProvider).consumeFuel(
-				(int)Math.ceil(EnergyConverter.convertEnergy(energyNeeded, "RF", "COAL"))
+				(int)Math.ceil(energyNeeded)
 			)) return null;
 
 		AxisAlignedBB bounds = getBounds(xCoord, yCoord, zCoord, distance);

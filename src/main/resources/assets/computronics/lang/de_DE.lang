@@ -5,6 +5,7 @@ tile.computronics.chatBox.name=Chat-Box
 tile.computronics.chatBox.creative.name=Kreative Chat-Box
 tile.computronics.sorter.name=Sortierer
 tile.computronics.cipher.name=Chiffrierblock
+tile.computronics.cipher_advanced.name=Asymmetrischer Chiffrierblock
 tile.computronics.radar.name=Radarblock
 tile.computronics.colorfulLamp.name=Farbenfrohe Lampe
 tile.computronics.eepromReader.name=EEPROM-Lesegerät

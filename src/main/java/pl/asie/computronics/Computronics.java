@@ -34,6 +34,7 @@ import pl.asie.computronics.audio.DFPWMPlaybackManager;
 import pl.asie.computronics.block.BlockCamera;
 import pl.asie.computronics.block.BlockChatBox;
 import pl.asie.computronics.block.BlockCipher;
+import pl.asie.computronics.block.BlockCipherAdvanced;
 import pl.asie.computronics.block.BlockColorfulLamp;
 import pl.asie.computronics.block.BlockEEPROMReader;
 import pl.asie.computronics.block.BlockIronNote;
@@ -88,6 +89,7 @@ import pl.asie.computronics.tape.StorageManager;
 import pl.asie.computronics.tile.TileCamera;
 import pl.asie.computronics.tile.TileChatBox;
 import pl.asie.computronics.tile.TileCipherBlock;
+import pl.asie.computronics.tile.TileCipherBlockAdvanced;
 import pl.asie.computronics.tile.TileColorfulLamp;
 import pl.asie.computronics.tile.TileEEPROMReader;
 import pl.asie.computronics.tile.TileIronNote;
@@ -124,12 +126,16 @@ public class Computronics {
 	public static int RADAR_RANGE = 8;
 	public static boolean RADAR_ONLY_DISTANCE = false;
 	public static boolean CIPHER_CAN_LOCK = true;
-	public static double RADAR_ENERGY_COST_RF = 5.0;
+	public static double CIPHER_ENERGY_STORAGE = 1600.0;
+	public static double CIPHER_KEY_CONSUMPTION = 1600.0;
+	public static double CIPHER_WORK_CONSUMPTION = 16.0;
+	public static double RADAR_ENERGY_COST_OC = 5.0;
 	public static double RADAR_CC_TIME = 0.5;
-	public static double FX_ENERGY_COST = 0.5;
+	public static double FX_ENERGY_COST = 0.2;
 	public static String CHATBOX_PREFIX = "ChatBox";
 	public static double LOCOMOTIVE_RELAY_RANGE = 128.0;
 	public static boolean GREGTECH_RECIPES = false;
+	public static boolean NON_OC_RECIPES = false;
 
 	public static String TAPE_LENGTHS;
 	public static boolean REDSTONE_REFRESH, CHATBOX_CREATIVE;
@@ -142,6 +148,7 @@ public class Computronics {
 	public static BlockCamera camera;
 	public static BlockChatBox chatBox;
 	public static BlockCipher cipher;
+	public static BlockCipherAdvanced cipher_advanced;
 	public static BlockRadar radar;
 	public static BlockEEPROMReader nc_eepromreader;
 	public static BlockColorfulLamp colorfulLamp;
@@ -178,6 +185,10 @@ public class Computronics {
 		FMLInterModComms.sendMessage(Mods.AE2, "whitelist-spatial", tile.getCanonicalName());
 	}
 
+	private double convertRFtoOC(double v) {
+		return EnergyConverter.convertEnergy(v, "RF", "OC");
+	}
+
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		log = LogManager.getLogger(Mods.Computronics);
@@ -201,11 +212,18 @@ public class Computronics {
 		// Cipher Block
 		CIPHER_CAN_LOCK = config.getBoolean("canLock", "cipherblock", true, "Decides whether Cipher Blocks can or cannot be locked.");
 
-		// Particle Card
-		if(Loader.isModLoaded("OpenComputers")) {
-			FX_ENERGY_COST = EnergyConverter.convertEnergy(
-				config.getFloat("ocParticleCardCostPerParticle", "power", 0.5f, 0.0f, 10000.0f, "How much energy, in RF, 1 particle emission should take."),
-				"RF", "OC");
+		if(Loader.isModLoaded(Mods.OpenComputers)) {
+			//Advanced Cipher Block
+			CIPHER_ENERGY_STORAGE = convertRFtoOC(
+				config.getFloat("cipherEnergyStorage", "power", 16000.0f, 0.0f, 100000.0F, "How much energy the Advanced Chipher Block can store"));
+			CIPHER_KEY_CONSUMPTION = convertRFtoOC(
+				config.getFloat("cipherKeyConsumption", "power", 16000.0f, 0.0f, 100000.0F, "How much energy the Advanced Cipher Block should consume for creating a key set"));
+			CIPHER_WORK_CONSUMPTION = convertRFtoOC(
+				config.getFloat("cipherWorkConsumption", "power", 160.0f, 0.0f, 100000.0f, "How much base energy the Advanced Cipher Block should consume per encryption/decryption task. It will consume this value + 2*(number of characters in message)"));
+
+			// Particle Card
+			FX_ENERGY_COST = convertRFtoOC(
+				config.getFloat("ocParticleCardCostPerParticle", "power", 2.0f, 0.0f, 10000.0f, "How much energy 1 particle emission should take."));
 		}
 
 		// Radar
@@ -221,7 +239,8 @@ public class Computronics {
 		REDSTONE_REFRESH = config.getBoolean("enableTickingRedstoneSupport", "general", true, "Set whether some machines should stop being tickless in exchange for redstone output support.");
 
 		// Power
-		RADAR_ENERGY_COST_RF = config.getFloat("radarCostPerBlock", "power", 500.0f, 0.0f, 10000.0f, "How much energy, in RF, each 1-block distance takes by OpenComputers radars.");
+		RADAR_ENERGY_COST_OC = convertRFtoOC(
+			config.getFloat("radarCostPerBlock", "power", 50.0f, 0.0f, 10000.0f, "How much energy each 1-block distance takes by OpenComputers radars."));
 
 		// Railcraft integration
 		if(Loader.isModLoaded(Mods.Railcraft)) {
@@ -230,7 +249,11 @@ public class Computronics {
 
 		// GregTech recipe mode
 		if(Loader.isModLoaded(Mods.GregTech)) {
-			GREGTECH_RECIPES = config.getBoolean("gtRecipeMode", "gregtech", true, "Set this to true to enable GregTech-style recipes");
+			GREGTECH_RECIPES = config.getBoolean("gtRecipeMode", "recipes", true, "Set this to true to enable GregTech-style recipes");
+		}
+
+		if(Loader.isModLoaded(Mods.OpenComputers)){
+			NON_OC_RECIPES = config.getBoolean("easyRecipeMode", "recipes", false, "Set this to true to make some recipes not require OpenComputers blocks and items");
 		}
 
 		if(isEnabled("ironNoteBlock", true)) {
@@ -258,6 +281,11 @@ public class Computronics {
 			registerBlockWithTileEntity(cipher, TileCipherBlock.class, "computronics.cipher");
 		}
 
+		if(isEnabled("cipher_advanced", true)) {
+			cipher_advanced = new BlockCipherAdvanced();
+			registerBlockWithTileEntity(cipher_advanced, TileCipherBlockAdvanced.class, "computronics.cipher_advanced");
+		}
+
 		if(isEnabled("radar", true)) {
 			radar = new BlockRadar();
 			registerBlockWithTileEntity(radar, TileRadar.class, "computronics.radar");
@@ -283,11 +311,11 @@ public class Computronics {
 				GameRegistry.registerItem(itemPartsGreg, "computronics.gt_parts");
 				proxy.registerEntities();
 			}
-		}
 
-		itemParts = new ItemMultiple(Mods.Computronics, new String[] { "part_tape_track" });
-		itemParts.setCreativeTab(tab);
-		GameRegistry.registerItem(itemParts, "computronics.parts");
+			itemParts = new ItemMultiple(Mods.Computronics, new String[] { "part_tape_track" });
+			itemParts.setCreativeTab(tab);
+			GameRegistry.registerItem(itemParts, "computronics.parts");
+		}
 
 		if(Loader.isModLoaded(Mods.Railcraft)) {
 			railcraft = new RailcraftIntegration(this);
@@ -328,6 +356,8 @@ public class Computronics {
 		proxy.registerGuis(gui);
 
 		FMLInterModComms.sendMessage(Mods.Waila, "register", "pl.asie.computronics.integration.waila.IntegrationWaila.register");
+
+		config.setCategoryComment("power", "Every value related to energy in this section uses RF as the base power unit.");
 
 		if(Loader.isModLoaded(Mods.ComputerCraft)) {
 			config.setCategoryComment(Config.Compatility, "Set anything here to false to prevent Computronics from adding the respective Peripherals and Drivers");
