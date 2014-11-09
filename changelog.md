@@ -1,5 +1,6 @@
 ==== 1.3.0 ====
 
+  **Note: This update changed some config values, it is highly recommended to re-generate your config file!**
   * ADDED: Colored Lights support for the Colorful Lamp!
   * ADDED: More Railcraft Integration
     - Digital Signal Receiver Box: Same as the Receiver Box driver has been, but also fires an "aspect_changed" event whenever the box aspect changes

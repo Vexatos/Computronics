@@ -115,7 +115,7 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 		return new Object[] { new String(message.modPow(e, n).toByteArray()) };
 	}
 
-	@Callback(doc = "function([num1:number, num2:number]):table, table; Creates the public and the private RSA key from the two given or random prime numbers.")
+	@Callback(doc = "function([num1:number, num2:number]):table, table; Creates the public and the private RSA key from the two given or random prime numbers")
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] createKeySet(Context c, Arguments a) {
 		Object[] result;
@@ -126,10 +126,7 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 		} else {
 			result = this.createKeySet();
 		}
-		if(this.tryConsumeEnergy(Computronics.CIPHER_KEY_CONSUMPTION) < 0) {
-			return new Object[] { null, null, "not enough energy available to create key set" };
-		}
-		return result;
+		return this.tryConsumeEnergy(result, Computronics.CIPHER_KEY_CONSUMPTION, "createKeySet");
 	}
 
 	@Callback(doc = "function(message:string, publicKey:table):string; Encrypts the specified message using the specified public RSA key")
@@ -139,10 +136,7 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 		Object[] result = this.encrypt(
 			checkValidKey(a.checkTable(1), 1),
 			message);
-		if(this.tryConsumeEnergy(Computronics.CIPHER_WORK_CONSUMPTION + 0.2 * message.length()) < 0) {
-			return new Object[] { null, "not enough energy available to encrypt message" };
-		}
-		return result;
+		return this.tryConsumeEnergy(result, Computronics.CIPHER_WORK_CONSUMPTION + 0.2 * message.length(), "encrypt");
 	}
 
 	@Callback(doc = "function(message:string, privateKey:table):string; Decrypts the specified message using the specified RSA key")
@@ -152,18 +146,27 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 		Object[] result = this.decrypt(
 			checkValidKey(a.checkTable(1), 1),
 			message);
-		if(this.tryConsumeEnergy(Computronics.CIPHER_WORK_CONSUMPTION + 0.2 * message.length()) < 0) {
-			return new Object[] { null, "not enough energy available to decrypt message" };
+		return this.tryConsumeEnergy(result, Computronics.CIPHER_WORK_CONSUMPTION + 0.2 * message.length(), "decrypt");
+	}
+
+	@Optional.Method(modid = Mods.OpenComputers)
+	private Object[] tryConsumeEnergy(Object[] result, double v, String methodName) {
+		if(this.node instanceof Connector) {
+			int power = this.tryConsumeEnergy(v);
+			if(power < 0) {
+				return new Object[] { null, null, power + ": " + methodName + ": not enough energy available: required"
+					+ Computronics.CIPHER_KEY_CONSUMPTION + ", found " + ((Connector) node).globalBuffer() };
+			}
 		}
 		return result;
 	}
 
 	@Optional.Method(modid = Mods.OpenComputers)
 	private int tryConsumeEnergy(double v) {
-		v = -v;
 		if(v < 0) {
 			return -2;
 		}
+		v = -v;
 		if(this.node instanceof Connector) {
 			Connector connector = ((Connector) this.node);
 			return connector.tryChangeBuffer(v) ? 1 : -1;
