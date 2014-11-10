@@ -14,6 +14,7 @@ tile.computronics.digitalBox.name=Digital Signal Receiver Box
 tile.computronics.detector.name=Detector - Digital
 
 tooltip.computronics.chatBox.creative=NSA in a box!
+tooltip.computronics.cipher.advanced=For the Starchasers!
 tooltip.computronics.sensor.bound=Bound to [%1$s,%2$s,%3$s]
 tooltip.computronics.sensor.desc1=Right click on Locomotive Relay\nwhile sneaking to bind to it
 tooltip.computronics.sensor.desc2=Left click on Electric Locomotive\nwhile sneaking to attach it

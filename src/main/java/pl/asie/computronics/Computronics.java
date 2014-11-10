@@ -78,9 +78,9 @@ import pl.asie.computronics.integration.railcraft.DriverRoutingTrack;
 import pl.asie.computronics.integration.railcraft.RailcraftIntegration;
 import pl.asie.computronics.integration.redlogic.CCBundledRedstoneProviderRedLogic;
 import pl.asie.computronics.integration.redlogic.DriverLamp;
-import pl.asie.computronics.item.ItemBlockChatBox;
 import pl.asie.computronics.item.ItemOpenComputers;
 import pl.asie.computronics.item.ItemTape;
+import pl.asie.computronics.item.block.ItemBlockWithSpecialText;
 import pl.asie.computronics.network.NetworkHandlerClient;
 import pl.asie.computronics.network.NetworkHandlerServer;
 import pl.asie.computronics.reference.Config;
@@ -252,7 +252,7 @@ public class Computronics {
 			GREGTECH_RECIPES = config.getBoolean("gtRecipeMode", "recipes", true, "Set this to true to enable GregTech-style recipes");
 		}
 
-		if(Loader.isModLoaded(Mods.OpenComputers)){
+		if(Loader.isModLoaded(Mods.OpenComputers)) {
 			NON_OC_RECIPES = config.getBoolean("easyRecipeMode", "recipes", false, "Set this to true to make some recipes not require OpenComputers blocks and items");
 		}
 
@@ -273,7 +273,7 @@ public class Computronics {
 
 		if(isEnabled("chatBox", true)) {
 			chatBox = new BlockChatBox();
-			registerBlockWithTileEntity(chatBox, ItemBlockChatBox.class, TileChatBox.class, "computronics.chatBox");
+			registerBlockWithTileEntity(chatBox, ItemBlockWithSpecialText.class, TileChatBox.class, "computronics.chatBox");
 		}
 
 		if(isEnabled("cipher", true)) {
@@ -283,7 +283,7 @@ public class Computronics {
 
 		if(isEnabled("cipher_advanced", true)) {
 			cipher_advanced = new BlockCipherAdvanced();
-			registerBlockWithTileEntity(cipher_advanced, TileCipherBlockAdvanced.class, "computronics.cipher_advanced");
+			registerBlockWithTileEntity(cipher_advanced, ItemBlockWithSpecialText.class, TileCipherBlockAdvanced.class, "computronics.cipher_advanced");
 		}
 
 		if(isEnabled("radar", true)) {

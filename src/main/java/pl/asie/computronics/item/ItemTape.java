@@ -8,7 +8,6 @@ import dan200.computercraft.api.filesystem.IMount;
 import dan200.computercraft.api.media.IMedia;
 import dan200.computercraft.api.media.IMediaProvider;
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -119,7 +118,7 @@ public class ItemTape extends Item implements IItemTapeStorage, IMedia, IMediaPr
 			String label = getLabel(stack);
 			if(label.length() > 0) text.add(EnumChatFormatting.WHITE + "" + EnumChatFormatting.ITALIC + label);
 		}
-		text.add(EnumChatFormatting.GRAY + I18n.format("tooltip.computronics.tape.length", ""+len));
+		text.add(EnumChatFormatting.GRAY + StringUtil.localizeAndFormat("tooltip.computronics.tape.length", ""+len));
 
 		switch (stack.getItemDamage()){
 			case 7:{

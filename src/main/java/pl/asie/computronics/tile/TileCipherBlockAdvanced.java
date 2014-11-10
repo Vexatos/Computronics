@@ -86,7 +86,7 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 		BigInteger n = p.multiply(q);
 		BigInteger d = new BigInteger("3");
 		final BigInteger TWO = new BigInteger("2");
-		while(cat.gcd(d).intValue() > 1) {
+		while(cat.gcd(d).intValue() != 1) {
 			d = d.add(TWO);
 		}
 		BigInteger e = d.modInverse(cat);
@@ -105,7 +105,7 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 		BigInteger message = new BigInteger(messageString.getBytes());
 		BigInteger n = new BigInteger(publicKey.get(1));
 		BigInteger d = new BigInteger(publicKey.get(2));
-		return new Object[] { message.modPow(d, n).toString() };
+		return new Object[] { new String(message.modPow(d, n).toByteArray()) };
 	}
 
 	private Object[] decrypt(Map<Integer, String> privateKey, String messageString) {
