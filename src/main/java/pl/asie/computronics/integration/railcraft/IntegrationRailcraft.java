@@ -14,13 +14,13 @@ import pl.asie.computronics.tile.TileLocomotiveRelay;
 /**
  * @author Vexatos
  */
-public class RailcraftIntegration {
+public class IntegrationRailcraft {
 	public BlockLocomotiveRelay locomotiveRelay;
 	public BlockDigitalDetector detector;
 	public ItemRelaySensor relaySensor;
 	public Block digitalBox;
 
-	public RailcraftIntegration(Computronics computronics) {
+	public IntegrationRailcraft(Computronics computronics) {
 
 		if(computronics.isEnabled("railcraftLocomotiveRelay", true)) {
 			locomotiveRelay = new BlockLocomotiveRelay();

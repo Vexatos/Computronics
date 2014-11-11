@@ -14,6 +14,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.item.block.IBlockWithSpecialText;
+import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.tile.TileChatBox;
 import pl.asie.computronics.util.StringUtil;
 
@@ -50,7 +51,7 @@ public class BlockChatBox extends BlockMachineSidedIcon implements IBlockWithSpe
 	@Override
 	public void getSubBlocks(Item item, CreativeTabs creativeTabs, List blockList) {
 		blockList.add(new ItemStack(item, 1, 0));
-		if(Computronics.CHATBOX_CREATIVE) {
+		if(Config.CHATBOX_CREATIVE) {
 			blockList.add(new ItemStack(item, 1, 8));
 		}
 	}
@@ -70,7 +71,7 @@ public class BlockChatBox extends BlockMachineSidedIcon implements IBlockWithSpe
 
 	@Override
 	public boolean emitsRedstone(IBlockAccess world, int x, int y, int z, int side) {
-		return Computronics.REDSTONE_REFRESH;
+		return Config.REDSTONE_REFRESH;
 	}
 
 	@Override

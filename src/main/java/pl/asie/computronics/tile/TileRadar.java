@@ -11,8 +11,8 @@ import li.cil.oc.api.network.Connector;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.AxisAlignedBB;
-import pl.asie.computronics.Computronics;
 import pl.asie.computronics.cc.CCRadarProxy;
+import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.RadarUtils;
 import pl.asie.lib.api.tile.IBatteryProvider;
@@ -26,25 +26,25 @@ import java.util.Set;
 public class TileRadar extends TileEntityPeripheralBase implements IBatteryProvider {
 
 	public TileRadar() {
-		super("radar", Computronics.RADAR_ENERGY_COST_OC * Computronics.RADAR_RANGE * 3.5);
-		this.registerBattery(new BatteryBasic(EnergyConverter.convertEnergy(Computronics.RADAR_ENERGY_COST_OC * Computronics.RADAR_RANGE * 3.5, "OC", "RF")));
+		super("radar", Config.RADAR_ENERGY_COST_OC * Config.RADAR_RANGE * 3.5);
+		this.registerBattery(new BatteryBasic(EnergyConverter.convertEnergy(Config.RADAR_ENERGY_COST_OC * Config.RADAR_RANGE * 3.5, "OC", "RF")));
 	}
 
 	@Override
 	public boolean canUpdate() {
-		return Computronics.MUST_UPDATE_TILE_ENTITIES;
+		return Config.MUST_UPDATE_TILE_ENTITIES;
 	}
 
 	private int getDistance(Arguments args) {
 		if(args.isInteger(0)) {
 			return args.checkInteger(0);
 		} else {
-			return Computronics.RADAR_RANGE;
+			return Config.RADAR_RANGE;
 		}
 	}
 
 	private AxisAlignedBB getBounds(int d) {
-		int distance = Math.min(d, Computronics.RADAR_RANGE);
+		int distance = Math.min(d, Config.RADAR_RANGE);
 		if(distance < 1) {
 			distance = 1;
 		}
@@ -67,7 +67,7 @@ public class TileRadar extends TileEntityPeripheralBase implements IBatteryProvi
 	public Object[] getEntities(Context context, Arguments args) {
 		Set<Map> entities = new HashSet<Map>();
 		int distance = getDistance(args);
-		double energyNeeded = (Computronics.RADAR_ENERGY_COST_OC * distance * 1.75);
+		double energyNeeded = (Config.RADAR_ENERGY_COST_OC * distance * 1.75);
 		if(((Connector) node).tryChangeBuffer(0 - energyNeeded)
 			|| extractFromBattery(energyNeeded)) {
 			AxisAlignedBB bounds = getBounds(distance);
@@ -89,7 +89,7 @@ public class TileRadar extends TileEntityPeripheralBase implements IBatteryProvi
 	public Object[] getPlayers(Context context, Arguments args) {
 		Set<Map> entities = new HashSet<Map>();
 		int distance = getDistance(args);
-		double energyNeeded = (Computronics.RADAR_ENERGY_COST_OC * distance * 1.0);
+		double energyNeeded = (Config.RADAR_ENERGY_COST_OC * distance * 1.0);
 		if(((Connector) node).tryChangeBuffer(0 - energyNeeded)
 			|| extractFromBattery(energyNeeded)) {
 			AxisAlignedBB bounds = getBounds(distance);
@@ -104,7 +104,7 @@ public class TileRadar extends TileEntityPeripheralBase implements IBatteryProvi
 	public Object[] getMobs(Context context, Arguments args) {
 		Set<Map> entities = new HashSet<Map>();
 		int distance = getDistance(args);
-		double energyNeeded = (Computronics.RADAR_ENERGY_COST_OC * distance * 1.0);
+		double energyNeeded = (Config.RADAR_ENERGY_COST_OC * distance * 1.0);
 		if(((Connector) node).tryChangeBuffer(0 - energyNeeded)
 			|| extractFromBattery(energyNeeded)) {
 			AxisAlignedBB bounds = getBounds(distance);

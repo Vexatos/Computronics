@@ -17,6 +17,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.lib.util.color.RecipeColorizer;
 
@@ -61,7 +62,7 @@ public class ModRecipes {
 				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Computronics.colorfulLamp, 1, 0),
 					"igi", "glg", "ini", 'i', "plateIron", 'g', "plateGlass", 'l', Blocks.redstone_lamp, 'n', "circuitPrimitive"));
 			}
-			if(Loader.isModLoaded(Mods.OpenComputers) && !Computronics.NON_OC_RECIPES) {
+			if(Loader.isModLoaded(Mods.OpenComputers) && !Config.NON_OC_RECIPES) {
 				registerGregTechOCRecipes();
 			} else {
 				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Computronics.cipher_advanced, 1, 0),
@@ -211,7 +212,7 @@ public class ModRecipes {
 			GameRegistry.addShapedRecipe(new ItemStack(Computronics.colorfulLamp, 1, 0),
 				"igi", "glg", "igi", 'i', Items.iron_ingot, 'g', Blocks.glass, 'l', Items.glowstone_dust);
 		}
-		if(Loader.isModLoaded(Mods.OpenComputers) && !Computronics.NON_OC_RECIPES) {
+		if(Loader.isModLoaded(Mods.OpenComputers) && !Config.NON_OC_RECIPES) {
 			registerOCRecipes();
 		} else {
 			GameRegistry.addShapedRecipe(new ItemStack(Computronics.cipher_advanced, 1, 0),

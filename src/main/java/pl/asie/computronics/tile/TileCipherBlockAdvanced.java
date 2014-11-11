@@ -9,7 +9,7 @@ import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.Connector;
-import pl.asie.computronics.Computronics;
+import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.lib.util.Base64;
 
@@ -24,12 +24,12 @@ import java.util.Map;
 public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 
 	public TileCipherBlockAdvanced() {
-		super("advanced_cipher", Computronics.CIPHER_ENERGY_STORAGE);
+		super("advanced_cipher", Config.CIPHER_ENERGY_STORAGE);
 	}
 
 	@Override
 	public boolean canUpdate() {
-		return Computronics.MUST_UPDATE_TILE_ENTITIES;
+		return Config.MUST_UPDATE_TILE_ENTITIES;
 	}
 
 	/**
@@ -151,7 +151,7 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 		} else {
 			result = this.createKeySet();
 		}
-		return this.tryConsumeEnergy(result, Computronics.CIPHER_KEY_CONSUMPTION, "createRandomKeySet");
+		return this.tryConsumeEnergy(result, Config.CIPHER_KEY_CONSUMPTION, "createRandomKeySet");
 	}
 
 	@Callback(doc = "function(num1:number, num2:number):table, table; Creates the public and the private RSA key from the two given prime numbers")
@@ -160,7 +160,7 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 		Object[] result = this.createKeySet(
 			checkPrime(a.checkInteger(0), 0),
 			checkPrime(a.checkInteger(1), 1));
-		return this.tryConsumeEnergy(result, Computronics.CIPHER_KEY_CONSUMPTION, "createKeySet");
+		return this.tryConsumeEnergy(result, Config.CIPHER_KEY_CONSUMPTION, "createKeySet");
 	}
 
 	@Callback(doc = "function(message:string, publicKey:table):string; Encrypts the specified message using the specified public RSA key")
@@ -170,7 +170,7 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 		Object[] result = this.encrypt(
 			checkValidKey(a.checkTable(1), 1),
 			message);
-		return this.tryConsumeEnergy(result, Computronics.CIPHER_WORK_CONSUMPTION + 0.2 * message.length, "encrypt");
+		return this.tryConsumeEnergy(result, Config.CIPHER_WORK_CONSUMPTION + 0.2 * message.length, "encrypt");
 	}
 
 	@Callback(doc = "function(message:string, privateKey:table):string; Decrypts the specified message using the specified RSA key")
@@ -180,7 +180,7 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 		Object[] result = this.decrypt(
 			checkValidKey(a.checkTable(1), 1),
 			message);
-		return this.tryConsumeEnergy(result, Computronics.CIPHER_WORK_CONSUMPTION + 0.2 * message.length, "decrypt");
+		return this.tryConsumeEnergy(result, Config.CIPHER_WORK_CONSUMPTION + 0.2 * message.length, "decrypt");
 	}
 
 	@Optional.Method(modid = Mods.OpenComputers)
@@ -189,7 +189,7 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 			int power = this.tryConsumeEnergy(v);
 			if(power < 0) {
 				return new Object[] { null, null, power + ": " + methodName + ": not enough energy available: required"
-					+ Computronics.CIPHER_KEY_CONSUMPTION + ", found " + ((Connector) node).globalBuffer() };
+					+ Config.CIPHER_KEY_CONSUMPTION + ", found " + ((Connector) node).globalBuffer() };
 			}
 		}
 		return result;
