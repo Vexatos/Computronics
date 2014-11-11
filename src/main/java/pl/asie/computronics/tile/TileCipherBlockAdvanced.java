@@ -1,5 +1,6 @@
 package pl.asie.computronics.tile;
 
+import com.google.common.base.Charsets;
 import cpw.mods.fml.common.Optional;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
@@ -10,6 +11,7 @@ import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.Connector;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.reference.Mods;
+import pl.asie.lib.util.Base64;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
@@ -71,14 +73,33 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 	private Object[] createKeySet() {
 		SecureRandom r = new SecureRandom();
 		return this.createKeySet(
-			new BigInteger(64, 100, r),
-			new BigInteger(64 / 2, 100, r));
+			new BigInteger(1024, 100, r),
+			new BigInteger(1024, 100, r));
+	}
+
+	private Object[] createKeySet(int bitLength) {
+		SecureRandom r = new SecureRandom();
+		return this.createKeySet(
+			new BigInteger(bitLength, 100, r),
+			new BigInteger(bitLength, 100, r));
 	}
 
 	private Object[] createKeySet(int p, int q) {
 		return this.createKeySet(
 			BigInteger.valueOf(p),
 			BigInteger.valueOf(q));
+	}
+
+	private String encodeToString(byte[] bytes) {
+		return new String(bytes, Charsets.UTF_8);
+	}
+
+	private Object[] encrypt(Map<Integer, String> publicKey, String messageString) {
+		return this.encrypt(publicKey, messageString.getBytes(Charsets.UTF_8));
+	}
+
+	private Object[] decrypt(Map<Integer, String> privateKey, String messageString) throws Exception {
+		return this.decrypt(privateKey, messageString.getBytes(Charsets.UTF_8));
 	}
 
 	private Object[] createKeySet(BigInteger p, BigInteger q) {
@@ -101,52 +122,65 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 		return new Object[] { publicKey, privateKey };
 	}
 
-	private Object[] encrypt(Map<Integer, String> publicKey, String messageString) {
-		BigInteger message = new BigInteger(messageString.getBytes());
+	private Object[] encrypt(Map<Integer, String> publicKey, byte[] messageBytes) {
+		BigInteger message = new BigInteger(messageBytes);
 		BigInteger n = new BigInteger(publicKey.get(1));
 		BigInteger d = new BigInteger(publicKey.get(2));
-		return new Object[] { new String(message.modPow(d, n).toByteArray()) };
+		if(n.toByteArray().length < messageBytes.length) {
+			throw new IllegalArgumentException("key is too small, needs to have a bit length of at least " + n.toByteArray().length);
+		}
+		return new Object[] { Base64.encodeBytes(message.modPow(d, n).toByteArray()) };
 	}
 
-	private Object[] decrypt(Map<Integer, String> privateKey, String messageString) {
-		BigInteger message = new BigInteger(messageString.getBytes());
+	private Object[] decrypt(Map<Integer, String> privateKey, byte[] messageBytes) throws Exception {
+		BigInteger message = new BigInteger(Base64.decode(messageBytes));
 		BigInteger n = new BigInteger(privateKey.get(1));
 		BigInteger e = new BigInteger(privateKey.get(2));
-		return new Object[] { new String(message.modPow(e, n).toByteArray()) };
+		if(n.toByteArray().length < messageBytes.length) {
+			throw new IllegalArgumentException("key is too small, needs to have a bit length of at least " + n.toByteArray().length);
+		}
+		return new Object[] { encodeToString(message.modPow(e, n).toByteArray()) };
 	}
 
-	@Callback(doc = "function([num1:number, num2:number]):table, table; Creates the public and the private RSA key from the two given or random prime numbers")
+	@Callback(doc = "function([bitlength:number]):table, table; Creates the public and the private RSA key from two random prime numbers (optionally with given bit length)")
 	@Optional.Method(modid = Mods.OpenComputers)
-	public Object[] createKeySet(Context c, Arguments a) {
+	public Object[] createRandomKeySet(Context c, Arguments a) {
 		Object[] result;
 		if(a.count() > 0) {
-			result = this.createKeySet(
-				checkPrime(a.checkInteger(0), 0),
-				checkPrime(a.checkInteger(1), 1));
+			result = this.createKeySet(a.checkInteger(0));
 		} else {
 			result = this.createKeySet();
 		}
+		return this.tryConsumeEnergy(result, Computronics.CIPHER_KEY_CONSUMPTION, "createRandomKeySet");
+	}
+
+	@Callback(doc = "function(num1:number, num2:number):table, table; Creates the public and the private RSA key from the two given prime numbers")
+	@Optional.Method(modid = Mods.OpenComputers)
+	public Object[] createKeySet(Context c, Arguments a) {
+		Object[] result = this.createKeySet(
+			checkPrime(a.checkInteger(0), 0),
+			checkPrime(a.checkInteger(1), 1));
 		return this.tryConsumeEnergy(result, Computronics.CIPHER_KEY_CONSUMPTION, "createKeySet");
 	}
 
 	@Callback(doc = "function(message:string, publicKey:table):string; Encrypts the specified message using the specified public RSA key")
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] encrypt(Context c, Arguments a) {
-		String message = a.checkString(0);
+		byte[] message = a.checkByteArray(0);
 		Object[] result = this.encrypt(
 			checkValidKey(a.checkTable(1), 1),
 			message);
-		return this.tryConsumeEnergy(result, Computronics.CIPHER_WORK_CONSUMPTION + 0.2 * message.length(), "encrypt");
+		return this.tryConsumeEnergy(result, Computronics.CIPHER_WORK_CONSUMPTION + 0.2 * message.length, "encrypt");
 	}
 
 	@Callback(doc = "function(message:string, privateKey:table):string; Decrypts the specified message using the specified RSA key")
 	@Optional.Method(modid = Mods.OpenComputers)
-	public Object[] decrypt(Context c, Arguments a) {
-		String message = a.checkString(0);
+	public Object[] decrypt(Context c, Arguments a) throws Exception {
+		byte[] message = a.checkByteArray(0);
 		Object[] result = this.decrypt(
 			checkValidKey(a.checkTable(1), 1),
 			message);
-		return this.tryConsumeEnergy(result, Computronics.CIPHER_WORK_CONSUMPTION + 0.2 * message.length(), "decrypt");
+		return this.tryConsumeEnergy(result, Computronics.CIPHER_WORK_CONSUMPTION + 0.2 * message.length, "decrypt");
 	}
 
 	@Optional.Method(modid = Mods.OpenComputers)

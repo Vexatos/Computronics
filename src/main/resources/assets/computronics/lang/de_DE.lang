@@ -14,6 +14,7 @@ tile.computronics.digitalBox.name=Digitale Signalempfängerbox
 tile.computronics.detector.name=Detektor - Digital
 
 tooltip.computronics.chatBox.creative=Die NSA für zu Hause!
+tooltip.computronics.cipher.advanced=Für die Starchaser!
 tooltip.computronics.sensor.bound=Gebunden an [%1$s,%2$s,%3$s]
 tooltip.computronics.sensor.desc1=Rechtsklicke schleichend auf ein\nLokomotivenrelais, um ihn an dieses zu binden
 tooltip.computronics.sensor.desc2=Linksklicke schleichend auf eine\nElektrische Lokomotive, um ihn anzubringen
