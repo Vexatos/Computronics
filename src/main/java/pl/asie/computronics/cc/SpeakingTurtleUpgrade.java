@@ -10,6 +10,7 @@ import dan200.computercraft.api.turtle.TurtleSide;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.ChatBoxUtils;
 
@@ -37,12 +38,12 @@ public class SpeakingTurtleUpgrade extends TurtleUpgradeBase {
 				throws LuaException, InterruptedException {
 			if(arguments.length == 0 || !(arguments[0] instanceof String)) return null;
 			
-			int distance = Computronics.CHATBOX_DISTANCE;
+			int distance = Config.CHATBOX_DISTANCE;
 			if(arguments.length > 1 && arguments[1] instanceof Double) {
-				distance = Math.min(Computronics.CHATBOX_DISTANCE, ((Double)arguments[1]).intValue());
-				if(distance <= 0) distance = Computronics.CHATBOX_DISTANCE;
+				distance = Math.min(Config.CHATBOX_DISTANCE, ((Double)arguments[1]).intValue());
+				if(distance <= 0) distance = Config.CHATBOX_DISTANCE;
 			}
-			String prefix = Computronics.CHATBOX_PREFIX;
+			String prefix = Config.CHATBOX_PREFIX;
 			ChatBoxUtils.sendChatMessage(access.getWorld(), access.getPosition().posX, access.getPosition().posY, access.getPosition().posZ,
 					distance, prefix, ((String)arguments[0]));
 			return null;

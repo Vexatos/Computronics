@@ -21,6 +21,7 @@ import pl.asie.computronics.Computronics;
 import pl.asie.computronics.api.tape.IItemTapeStorage;
 import pl.asie.computronics.item.ItemTape;
 import pl.asie.computronics.network.Packets;
+import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TapeDriveState.State;
 import pl.asie.lib.api.tile.IInventoryProvider;
@@ -97,7 +98,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 		super.updateEntity();
 		Packet pkt = state.update(worldObj, xCoord, yCoord, zCoord);
 		if(pkt != null) {
-			Computronics.packet.sendToAllAround(pkt, this, Computronics.TAPEDRIVE_DISTANCE * 2);
+			Computronics.packet.sendToAllAround(pkt, this, Config.TAPEDRIVE_DISTANCE * 2);
 		}
 	}
 	

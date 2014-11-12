@@ -16,7 +16,7 @@ import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
-import pl.asie.computronics.Computronics;
+import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 
 import java.util.List;
@@ -115,7 +115,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 		if(this.locomotive.dimension != this.worldObj.provider.dimensionId) {
 			return "relay and locomotive are in different dimensions";
 		}
-		if(!(this.locomotive.getDistance(xCoord, yCoord, zCoord) <= Computronics.LOCOMOTIVE_RELAY_RANGE)) {
+		if(!(this.locomotive.getDistance(xCoord, yCoord, zCoord) <= Config.LOCOMOTIVE_RELAY_RANGE)) {
 			return "locomotive is too far away";
 		}
 		if(this.locomotive.isSecure()) {

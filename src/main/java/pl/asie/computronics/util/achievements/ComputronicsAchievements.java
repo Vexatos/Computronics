@@ -19,6 +19,7 @@ import net.minecraftforge.event.entity.item.ItemExpireEvent;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TileLocomotiveRelay;
 
@@ -242,7 +243,7 @@ public class ComputronicsAchievements {
 
 							TileLocomotiveRelay relay = (TileLocomotiveRelay) loco.worldObj.getTileEntity(x, y, z);
 							if(loco.dimension == relay.getWorldObj().provider.dimensionId
-								&& loco.getDistance(relay.xCoord, relay.yCoord, relay.zCoord) <= Computronics.LOCOMOTIVE_RELAY_RANGE) {
+								&& loco.getDistance(relay.xCoord, relay.yCoord, relay.zCoord) <= Config.LOCOMOTIVE_RELAY_RANGE) {
 
 								Computronics.instance.achievements.triggerAchievement(player, EnumAchievements.Relay);
 							}

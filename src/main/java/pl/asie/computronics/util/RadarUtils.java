@@ -5,7 +5,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
-import pl.asie.computronics.Computronics;
+import pl.asie.computronics.reference.Config;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -20,7 +20,7 @@ public class RadarUtils {
             double dx = entity.posX - (xCoord + 0.5);
 			double dy = entity.posY - (yCoord + 0.5);
             double dz = entity.posZ - (zCoord + 0.5);
-            if (Math.sqrt(dx * dx + dy * dy + dz * dz) < Computronics.RADAR_RANGE) {
+            if (Math.sqrt(dx * dx + dy * dy + dz * dz) < Config.RADAR_RANGE) {
                 // Maps are converted to tables on the Lua side.
                 Map<String, Object> entry = new HashMap<String, Object>();
                 if(entity instanceof EntityPlayer) {
@@ -30,7 +30,7 @@ public class RadarUtils {
                 } else {
                     entry.put("name", entity.getCommandSenderName());
                 }
-                if(!Computronics.RADAR_ONLY_DISTANCE) {
+                if(!Config.RADAR_ONLY_DISTANCE) {
                 	entry.put("x", (int) dx);
                 	entry.put("y", (int) dy);
                 	entry.put("z", (int) dz);

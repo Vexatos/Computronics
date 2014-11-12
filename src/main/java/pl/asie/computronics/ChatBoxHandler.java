@@ -8,6 +8,7 @@ import li.cil.oc.api.network.Environment;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.event.ServerChatEvent;
 import pl.asie.computronics.oc.RobotUpgradeChatBox;
+import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TileChatBox;
 
@@ -36,7 +37,7 @@ public class ChatBoxHandler {
 		if(o instanceof Robot) {
 			Robot r = (Robot) o;
 			TileEntity te = (TileEntity) o;
-			if(event.player.getDistance(te.xCoord, te.yCoord, te.zCoord) < Computronics.CHATBOX_DISTANCE) {
+			if(event.player.getDistance(te.xCoord, te.yCoord, te.zCoord) < Config.CHATBOX_DISTANCE) {
 				for(int i = 0; i < r.getSizeInventory(); i++) {
 					Environment e = r.getComponentInSlot(i);
 					if(e instanceof RobotUpgradeChatBox) {

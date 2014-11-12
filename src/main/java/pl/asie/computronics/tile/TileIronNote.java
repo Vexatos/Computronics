@@ -15,7 +15,7 @@ import mrtjp.projectred.api.IBundledTile;
 import mrtjp.projectred.api.ProjectRedAPI;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
-import pl.asie.computronics.Computronics;
+import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.NoteUtils;
 
@@ -30,7 +30,7 @@ public class TileIronNote extends TileEntityPeripheralBase implements IBundledTi
 	}
 
 	@Override
-	public boolean canUpdate() { return Computronics.MUST_UPDATE_TILE_ENTITIES; }
+	public boolean canUpdate() { return Config.MUST_UPDATE_TILE_ENTITIES; }
 	
 	// OpenComputers
 	

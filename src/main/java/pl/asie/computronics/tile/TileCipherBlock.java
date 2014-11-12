@@ -12,6 +12,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.lib.api.tile.IBundledRedstoneProvider;
 import pl.asie.lib.util.Base64;
@@ -41,7 +42,7 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements IBundle
 	public boolean isLocked() { return isLocked; }
 	
 	@Override
-	public boolean canUpdate() { return Computronics.MUST_UPDATE_TILE_ENTITIES; }
+	public boolean canUpdate() { return Config.MUST_UPDATE_TILE_ENTITIES; }
 	
 	public void updateKey() {
 		byte[] realKey = new byte[16];
@@ -281,7 +282,7 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements IBundle
 	@Override
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
-		if(tag.hasKey("cb_l") && Computronics.CIPHER_CAN_LOCK) isLocked = tag.getBoolean("cb_l");
+		if(tag.hasKey("cb_l") && Config.CIPHER_CAN_LOCK) isLocked = tag.getBoolean("cb_l");
 	}
 	
 	@Override

@@ -5,6 +5,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetHandler;
 import net.minecraft.tileentity.TileEntity;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.tile.TapeDriveState.State;
 import pl.asie.computronics.tile.TileTapeDrive;
 import pl.asie.lib.audio.StreamingAudioPlayer;
@@ -57,7 +58,7 @@ public class NetworkHandlerClient extends MessageHandlerBase {
 					codec.reset();
 				}
 				codec.setSampleRate(packetSize * 32);
-				codec.setDistance((float)Computronics.TAPEDRIVE_DISTANCE);
+				codec.setDistance((float) Config.TAPEDRIVE_DISTANCE);
 				codec.setVolume(volume/127.0F);
 				codec.playPacket(audio, x, y, z);
 				codec.lastPacketId = packetId;

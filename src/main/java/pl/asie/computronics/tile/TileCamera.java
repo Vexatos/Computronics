@@ -9,6 +9,7 @@ import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.Camera;
 
@@ -39,7 +40,7 @@ public class TileCamera extends TileEntityPeripheralBase {
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
-		if(tick % 20 == 0 && Computronics.REDSTONE_REFRESH) {
+		if(tick % 20 == 0 && Config.REDSTONE_REFRESH) {
 			cameraRedstone.ray(worldObj, xCoord, yCoord, zCoord, getFacingDirection(), 0.0f, 0.0f);
 			this.worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, this.blockType);
 		}
