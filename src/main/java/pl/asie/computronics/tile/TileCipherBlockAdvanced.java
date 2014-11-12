@@ -105,7 +105,7 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 	private Object[] createKeySet(BigInteger p, BigInteger q) {
 		BigInteger cat = p.subtract(BigInteger.ONE).multiply(q.subtract(BigInteger.ONE));
 		BigInteger n = p.multiply(q);
-		BigInteger d = new BigInteger("3");
+		BigInteger d = new BigInteger("17");
 		final BigInteger TWO = new BigInteger("2");
 		while(cat.gcd(d).intValue() != 1) {
 			d = d.add(TWO);
