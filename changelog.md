@@ -22,14 +22,18 @@
     - You can get the (max) Experience (Levels) of any experience-storing EnderIO device
   * ADDED: Advanced Cipher Block
     - Allows you to encrypt and decrypt string messages using RSA
-    - Also includes a key generator (with the two prime numbers to start with as optional paramters).
+    - Also includes a key generator (with the two prime numbers to start with as paramters)
+    - Also includes a random key generator (with the key's bit length as an optional paramter)
   * ADDED: New MultiPeripheral system
     - Like in OpenComputers, these peripherals are being merged into a single one in case a block has multiple Peripherals on it
     - This also comes with a new MultiPeripheral API for other mods to hook into in case they want
   * REMOVED: Removed the Signal Receiver Box Driver in favour of the Digital Signal Receiver Box
-  * CHANGED: setLampColor(0) now turns off the lamp.
+  * CHANGED: setLampColor(0) now turns off the Colorful Lamp.
   * CHANGED: Updated to AsieLib 0.3.3
   * FIXED: A strange error that can happen while chatting near a chat box.
+  * FIXED: Power values and power consumtion for OC. Re-generate your config file!
+  * FIXED: A problem in the Radar's table creation
+  * MISC: Lots of code cleanup done. It should be much more pretty now.
 
 ==== 1.2.0 ====
 
