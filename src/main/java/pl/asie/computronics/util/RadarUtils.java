@@ -44,7 +44,7 @@ public class RadarUtils {
 
 	public static Map<Integer, Map> convertSetToMap(Set<Map> set){
 		HashMap<Integer,Map> map = new HashMap<Integer,Map>();
-		int i = 0;
+		int i = 1;
 		for (Map m : set) {
 			map.put(i, m);
 			i++;
