@@ -24,7 +24,7 @@
     - Allows you to encrypt and decrypt string messages using RSA
     - Also includes a key generator (with the two prime numbers to start with as paramters)
     - Also includes a random key generator (with the key's bit length as an optional paramter)
-    - **Huge thanks to Kubuxu for helping me firgure out a good algorithm!**
+    - **Huge thanks to Kubuxu for helping me figure out a good algorithm!**
   * ADDED: New MultiPeripheral system
     - Like in OpenComputers, these peripherals are being merged into a single one in case a block has multiple Peripherals on it
     - This also comes with a new MultiPeripheral API for other mods to hook into in case they want
