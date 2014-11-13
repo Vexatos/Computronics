@@ -29,6 +29,11 @@ public class DriverElectricGrid {
 				super(tile, Names.Railcraft_ElectricGrid);
 			}
 
+			@Override
+			public int priority() {
+				return -1;
+			}
+
 			@Callback(doc = "function():number; Returns the current charge of the electric tile")
 			public Object[] getCharge(Context c, Arguments a) {
 				return new Object[] { tile.getChargeHandler().getCharge() };
@@ -69,6 +74,11 @@ public class DriverElectricGrid {
 
 		public CCDriver(IElectricGrid tile, World world, int x, int y, int z) {
 			super(tile, Names.Railcraft_ElectricGrid, world, x, y, z);
+		}
+
+		@Override
+		public int peripheralPriority() {
+			return -1;
 		}
 
 		@Override

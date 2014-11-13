@@ -16,6 +16,7 @@ public class Names {
 	public static final String FSP_SteamTransporter = "steam_transporter";
 	public static final String FZ_ChargeConductor = "charge_conductor";
 	public static final String MFR_DSU = "deep_storage_unit";
+	public static final String Railcraft_BoilerFirebox = "boiler_firebox";
 	public static final String Railcraft_DigitalDetector = "digital_detector";
 	public static final String Railcraft_DigitalReceiverBox = "digital_receiver_box";
 	public static final String Railcraft_ElectricGrid = "electric_tile";
@@ -27,5 +28,6 @@ public class Names {
 	public static final String Railcraft_RoutingDetector = "routing_detector";
 	public static final String Railcraft_RoutingSwitch = "routing_switch";
 	public static final String Railcraft_RoutingTrack = "routing_track";
+	public static final String Railcraft_SteamTurbine = "steam_turbine";
 	public static final String RedLogic_Lamp = "lamp";
 }

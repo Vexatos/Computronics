@@ -18,9 +18,11 @@ import pl.asie.computronics.integration.enderio.DriverTransceiver;
 import pl.asie.computronics.integration.factorization.DriverChargeConductor;
 import pl.asie.computronics.integration.fsp.DriverSteamTransporter;
 import pl.asie.computronics.integration.mfr.DriverDeepStorageUnit;
+import pl.asie.computronics.integration.railcraft.DriverBoilerFirebox;
 import pl.asie.computronics.integration.railcraft.DriverElectricGrid;
 import pl.asie.computronics.integration.railcraft.DriverRoutingDetector;
 import pl.asie.computronics.integration.railcraft.DriverRoutingSwitch;
+import pl.asie.computronics.integration.railcraft.DriverSteamTurbine;
 import pl.asie.computronics.integration.railcraft.track.DriverLauncherTrack;
 import pl.asie.computronics.integration.railcraft.track.DriverLimiterTrack;
 import pl.asie.computronics.integration.railcraft.track.DriverLocomotiveTrack;
@@ -88,6 +90,8 @@ public class IntegrationComputerCraft {
 				registerMultiPeripheralProvider(new DriverLocomotiveTrack.CCDriver());
 				registerMultiPeripheralProvider(new DriverLauncherTrack.CCDriver());
 				registerMultiPeripheralProvider(new DriverPrimingTrack.CCDriver());
+				registerMultiPeripheralProvider(new DriverBoilerFirebox.CCDriver());
+				registerMultiPeripheralProvider(new DriverSteamTurbine.CCDriver());
 			}
 		}
 

@@ -8,6 +8,7 @@
     - Now you can get and set the force of Launcher Tracks using ComputerCraft or OpenComputers!
     - Now you can get and set the fuse time of Priming Tracks using ComputerCraft or OpenComputers!
     - Now you can check isPowered() on every kind of track that can be powered by Redstone
+    - Replicated the Steam Turbine Driver and the Boiler Firebox Driver added by OpenComputers for ComputerCraft
   * ADDED: Buildcraft Integration (Gate Statements)
     - 2 Triggers (Computer Running/Stopped) for the OpenComputers Computer Case
     - 2 Actions (Start/Stop Computer) for the OpenComputers Computer Case
