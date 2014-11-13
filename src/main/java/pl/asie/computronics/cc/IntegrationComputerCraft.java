@@ -25,6 +25,7 @@ import pl.asie.computronics.integration.railcraft.track.DriverLauncherTrack;
 import pl.asie.computronics.integration.railcraft.track.DriverLimiterTrack;
 import pl.asie.computronics.integration.railcraft.track.DriverLocomotiveTrack;
 import pl.asie.computronics.integration.railcraft.track.DriverPoweredTrack;
+import pl.asie.computronics.integration.railcraft.track.DriverPrimingTrack;
 import pl.asie.computronics.integration.railcraft.track.DriverRoutingTrack;
 import pl.asie.computronics.integration.redlogic.CCBundledRedstoneProviderRedLogic;
 import pl.asie.computronics.integration.redlogic.DriverLamp;
@@ -86,6 +87,7 @@ public class IntegrationComputerCraft {
 				registerMultiPeripheralProvider(new DriverLimiterTrack.CCDriver());
 				registerMultiPeripheralProvider(new DriverLocomotiveTrack.CCDriver());
 				registerMultiPeripheralProvider(new DriverLauncherTrack.CCDriver());
+				registerMultiPeripheralProvider(new DriverPrimingTrack.CCDriver());
 			}
 		}
 

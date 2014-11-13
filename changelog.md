@@ -6,6 +6,7 @@
     - Digital Signal Receiver Box: Same as the Receiver Box driver has been, but also fires an "aspect_changed" event whenever the box aspect changes
     - Digital Detector: Fires a "minecart" event whenever a minecart passes, containing the type of cart as well as the name if the cart has got one
     - Now you can get and set the force of Launcher Tracks using ComputerCraft or OpenComputers!
+    - Now you can get and set the fuse time of Priming Tracks using ComputerCraft or OpenComputers!
     - Now you can check isPowered() on every kind of track that can be powered by Redstone
   * ADDED: Buildcraft Integration (Gate Statements)
     - 2 Triggers (Computer Running/Stopped) for the OpenComputers Computer Case

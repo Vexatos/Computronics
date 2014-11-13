@@ -127,17 +127,18 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 		BigInteger n = new BigInteger(publicKey.get(1));
 		BigInteger d = new BigInteger(publicKey.get(2));
 		if(n.toByteArray().length < messageBytes.length) {
-			throw new IllegalArgumentException("key is too small, needs to have a bit length of at least " + n.toByteArray().length);
+			throw new IllegalArgumentException("key is too small, needs to have a bit length of at least " + messageBytes.length + ", but only has " + n.toByteArray().length);
 		}
 		return new Object[] { Base64.encodeBytes(message.modPow(d, n).toByteArray()) };
 	}
 
 	private Object[] decrypt(Map<Integer, String> privateKey, byte[] messageBytes) throws Exception {
-		BigInteger message = new BigInteger(Base64.decode(messageBytes));
+		byte[] decodedBytes = Base64.decode(messageBytes);
+		BigInteger message = new BigInteger(decodedBytes);
 		BigInteger n = new BigInteger(privateKey.get(1));
 		BigInteger e = new BigInteger(privateKey.get(2));
-		if(n.toByteArray().length < messageBytes.length) {
-			throw new IllegalArgumentException("key is too small, needs to have a bit length of at least " + n.toByteArray().length);
+		if(n.toByteArray().length < decodedBytes.length) {
+			throw new IllegalArgumentException("key is too small, needs to have a bit length of at least " + decodedBytes.length + ", but only has " + n.toByteArray().length);
 		}
 		return new Object[] { encodeToString(message.modPow(e, n).toByteArray()) };
 	}

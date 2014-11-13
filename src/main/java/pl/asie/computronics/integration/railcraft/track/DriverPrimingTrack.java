@@ -9,8 +9,7 @@ import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.ManagedEnvironment;
 import li.cil.oc.api.prefab.DriverTileEntity;
 import mods.railcraft.common.blocks.tracks.TileTrack;
-import mods.railcraft.common.blocks.tracks.TrackLauncher;
-import mods.railcraft.common.core.RailcraftConfig;
+import mods.railcraft.common.blocks.tracks.TrackPriming;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
@@ -21,39 +20,39 @@ import pl.asie.computronics.reference.Names;
 /**
  * @author Vexatos
  */
-public class DriverLauncherTrack {
+public class DriverPrimingTrack {
 
-	private static Object[] getForce(TrackLauncher tile) {
-		return new Object[] { ((int) tile.getLaunchForce()) };
+	private static Object[] getFuse(TrackPriming tile) {
+		return new Object[] { tile.getFuse() };
 	}
 
-	private static Object[] setForce(TrackLauncher tile, Object[] arguments) {
-		int force = ((Double) arguments[0]).intValue();
-		if(force >= 5 && force <= RailcraftConfig.getLaunchRailMaxForce()) {
-			tile.setLaunchForce(force);
+	private static Object[] setFuse(TrackPriming tile, Object[] arguments) {
+		int fuse = ((Double) arguments[0]).intValue();
+		if(fuse >= 0 && fuse <= 500) {
+			tile.setFuse((short) fuse);
 			tile.sendUpdateToClient();
 			return new Object[] { true };
 		}
-		return new Object[] { false, "not a valid force value, needs to be between 5 and " + RailcraftConfig.getLaunchRailMaxForce() };
+		return new Object[] { false, "not a valid fuse time value, needs to be between 0 and 500" };
 	}
 
 	public static class OCDriver extends DriverTileEntity {
 
-		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TrackLauncher> {
+		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TrackPriming> {
 
-			public InternalManagedEnvironment(TrackLauncher tile) {
-				super(tile, Names.Railcraft_LauncherTrack);
+			public InternalManagedEnvironment(TrackPriming tile) {
+				super(tile, Names.Railcraft_PrimingTrack);
 			}
 
-			@Callback(doc = "function():number; returns the current force of the track")
-			public Object[] getForce(Context c, Arguments a) {
-				return DriverLauncherTrack.getForce(tile);
+			@Callback(doc = "function():number; returns the current fuse time, in ticks, of the track")
+			public Object[] getFuse(Context c, Arguments a) {
+				return DriverPrimingTrack.getFuse(tile);
 			}
 
-			@Callback(doc = "function():boolean; sets the force of the track; returns true on success")
-			public Object[] setForce(Context c, Arguments a) {
+			@Callback(doc = "function():boolean; sets the fuse time, in ticks,  of the track; returns true on success")
+			public Object[] setFuse(Context c, Arguments a) {
 				a.checkInteger(0);
-				return DriverLauncherTrack.setForce(tile, a.toArray());
+				return DriverPrimingTrack.setFuse(tile, a.toArray());
 			}
 		}
 
@@ -66,48 +65,48 @@ public class DriverLauncherTrack {
 		public boolean worksWith(World world, int x, int y, int z) {
 			TileEntity tileEntity = world.getTileEntity(x, y, z);
 			return (tileEntity != null) && tileEntity instanceof TileTrack
-				&& ((TileTrack) tileEntity).getTrackInstance() instanceof TrackLauncher;
+				&& ((TileTrack) tileEntity).getTrackInstance() instanceof TrackPriming;
 		}
 
 		@Override
 		public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
-			return new InternalManagedEnvironment((TrackLauncher) ((TileTrack) world.getTileEntity(x, y, z)).getTrackInstance());
+			return new InternalManagedEnvironment((TrackPriming) ((TileTrack) world.getTileEntity(x, y, z)).getTrackInstance());
 		}
 	}
 
-	public static class CCDriver extends CCMultiPeripheral<TrackLauncher> {
+	public static class CCDriver extends CCMultiPeripheral<TrackPriming> {
 		public CCDriver() {
 		}
 
-		public CCDriver(TrackLauncher track, World world, int x, int y, int z) {
-			super(track, Names.Railcraft_LauncherTrack, world, x, y, z);
+		public CCDriver(TrackPriming track, World world, int x, int y, int z) {
+			super(track, Names.Railcraft_PrimingTrack, world, x, y, z);
 		}
 
 		@Override
 		public IMultiPeripheral getPeripheral(World world, int x, int y, int z, int side) {
 			TileEntity te = world.getTileEntity(x, y, z);
-			if(te != null && te instanceof TileTrack && ((TileTrack) te).getTrackInstance() instanceof TrackLauncher) {
-				return new CCDriver((TrackLauncher) ((TileTrack) te).getTrackInstance(), world, x, y, z);
+			if(te != null && te instanceof TileTrack && ((TileTrack) te).getTrackInstance() instanceof TrackPriming) {
+				return new CCDriver((TrackPriming) ((TileTrack) te).getTrackInstance(), world, x, y, z);
 			}
 			return null;
 		}
 
 		@Override
 		public String[] getMethodNames() {
-			return new String[] { "getForce", "setForce" };
+			return new String[] { "getFuse", "setFuse" };
 		}
 
 		@Override
 		public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
 			switch(method){
 				case 0:{
-					return DriverLauncherTrack.getForce(tile);
+					return DriverPrimingTrack.getFuse(tile);
 				}
 				case 1:{
 					if(arguments.length < 1 || !(arguments[0] instanceof Double)) {
 						throw new LuaException("first argument needs to be a number");
 					}
-					return DriverLauncherTrack.setForce(tile, arguments);
+					return DriverPrimingTrack.setFuse(tile, arguments);
 				}
 			}
 			return null;

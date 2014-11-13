@@ -23,6 +23,7 @@ public class Names {
 	public static final String Railcraft_LimiterTrack = "limiter_track";
 	public static final String Railcraft_LocomotiveTrack = "locomotive_track";
 	public static final String Railcraft_PoweredTrack = "powered_track";
+	public static final String Railcraft_PrimingTrack = "priming_track";
 	public static final String Railcraft_RoutingDetector = "routing_detector";
 	public static final String Railcraft_RoutingSwitch = "routing_switch";
 	public static final String Railcraft_RoutingTrack = "routing_track";

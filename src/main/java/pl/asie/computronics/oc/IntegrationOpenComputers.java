@@ -34,6 +34,7 @@ import pl.asie.computronics.integration.railcraft.track.DriverLauncherTrack;
 import pl.asie.computronics.integration.railcraft.track.DriverLimiterTrack;
 import pl.asie.computronics.integration.railcraft.track.DriverLocomotiveTrack;
 import pl.asie.computronics.integration.railcraft.track.DriverPoweredTrack;
+import pl.asie.computronics.integration.railcraft.track.DriverPrimingTrack;
 import pl.asie.computronics.integration.railcraft.track.DriverRoutingTrack;
 import pl.asie.computronics.integration.redlogic.DriverLamp;
 import pl.asie.computronics.item.ItemOpenComputers;
@@ -129,6 +130,7 @@ public class IntegrationOpenComputers {
 				Driver.add(new DriverLimiterTrack.OCDriver());
 				Driver.add(new DriverLocomotiveTrack.OCDriver());
 				Driver.add(new DriverLauncherTrack.OCDriver());
+				Driver.add(new DriverPrimingTrack.OCDriver());
 			}
 		}
 		if(Loader.isModLoaded(Mods.GregTech)) {
