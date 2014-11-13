@@ -1,4 +1,4 @@
-package pl.asie.computronics.integration.railcraft;
+package pl.asie.computronics.integration.railcraft.track;
 
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
@@ -23,29 +23,25 @@ import pl.asie.computronics.reference.Names;
  */
 public class DriverLimiterTrack {
 
-	private static Object[] setLimit(TileTrack tile, Object[] arguments) {
+	private static Object[] setLimit(TrackLimiter tile, Object[] arguments) {
 		byte mode = ((Double) arguments[0]).byteValue();
 		NBTTagCompound data = new NBTTagCompound();
-		tile.getTrackInstance().writeToNBT(data);
+		tile.writeToNBT(data);
 		data.setByte("mode", (byte) Math.abs(mode - 4));
-		tile.getTrackInstance().readFromNBT(data);
-		((TrackLimiter) tile.getTrackInstance()).sendUpdateToClient();
+		tile.readFromNBT(data);
+		tile.sendUpdateToClient();
 		return new Object[] { true };
 	}
 
-	private static Object[] getLimit(TileTrack tile) {
+	private static Object[] getLimit(TrackLimiter tile) {
 		NBTTagCompound data = new NBTTagCompound();
-		tile.getTrackInstance().writeToNBT(data);
+		tile.writeToNBT(data);
 		return new Object[] { data.hasKey("mode") ? Math.abs(data.getByte("mode") % 4 - 4) : null };
 	}
 
-	private static Object[] isPowered(TileTrack tile) {
-		return new Object[] { ((TrackLimiter) tile.getTrackInstance()).isPowered() };
-	}
-
 	public static class OCDriver extends DriverTileEntity {
-		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TileTrack> {
-			public InternalManagedEnvironment(TileTrack tile) {
+		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TrackLimiter> {
+			public InternalManagedEnvironment(TrackLimiter tile) {
 				super(tile, Names.Railcraft_LimiterTrack);
 			}
 
@@ -63,11 +59,6 @@ public class DriverLimiterTrack {
 			public Object[] getLimit(Context c, Arguments a) {
 				return DriverLimiterTrack.getLimit(tile);
 			}
-
-			@Callback(doc = "function():boolean; returns whether the track is currently receiving a redstone signal")
-			public Object[] isPowered(Context c, Arguments a) {
-				return DriverLimiterTrack.isPowered(tile);
-			}
 		}
 
 		@Override
@@ -84,15 +75,15 @@ public class DriverLimiterTrack {
 
 		@Override
 		public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
-			return new InternalManagedEnvironment((TileTrack) world.getTileEntity(x, y, z));
+			return new InternalManagedEnvironment((TrackLimiter) ((TileTrack) world.getTileEntity(x, y, z)).getTrackInstance());
 		}
 	}
 
-	public static class CCDriver extends CCMultiPeripheral<TileTrack> {
+	public static class CCDriver extends CCMultiPeripheral<TrackLimiter> {
 		public CCDriver() {
 		}
 
-		public CCDriver(TileTrack track, World world, int x, int y, int z) {
+		public CCDriver(TrackLimiter track, World world, int x, int y, int z) {
 			super(track, Names.Railcraft_LimiterTrack, world, x, y, z);
 		}
 
@@ -100,14 +91,14 @@ public class DriverLimiterTrack {
 		public IMultiPeripheral getPeripheral(World world, int x, int y, int z, int side) {
 			TileEntity te = world.getTileEntity(x, y, z);
 			if(te != null && te instanceof TileTrack && ((TileTrack) te).getTrackInstance() instanceof TrackLimiter) {
-				return new CCDriver((TileTrack) te, world, x, y, z);
+				return new CCDriver((TrackLimiter) ((TileTrack) te).getTrackInstance(), world, x, y, z);
 			}
 			return null;
 		}
 
 		@Override
 		public String[] getMethodNames() {
-			return new String[] { "setLimit", "getLimit", "isPowered" };
+			return new String[] { "setLimit", "getLimit" };
 		}
 
 		@Override
@@ -126,9 +117,6 @@ public class DriverLimiterTrack {
 				}
 				case 1:{
 					return DriverLimiterTrack.getLimit(tile);
-				}
-				case 2:{
-					return DriverLimiterTrack.isPowered(tile);
 				}
 			}
 			return null;

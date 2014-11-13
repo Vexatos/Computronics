@@ -1,4 +1,4 @@
-package pl.asie.computronics.integration.railcraft;
+package pl.asie.computronics.integration.railcraft.track;
 
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
@@ -27,19 +27,19 @@ import java.util.Locale;
  */
 public class DriverLocomotiveTrack {
 
-	private static Object[] setMode(TileTrack tile, Object[] arguments) {
+	private static Object[] setMode(TrackLocomotive tile, Object[] arguments) {
 		byte mode = ((Double) arguments[0]).byteValue();
 		NBTTagCompound data = new NBTTagCompound();
-		tile.getTrackInstance().writeToNBT(data);
+		tile.writeToNBT(data);
 		data.setByte("mode", (byte) Math.abs(mode - 2));
-		tile.getTrackInstance().readFromNBT(data);
-		((TrackLocomotive) tile.getTrackInstance()).sendUpdateToClient();
+		tile.readFromNBT(data);
+		tile.sendUpdateToClient();
 		return new Object[] { true };
 	}
 
-	private static Object[] getMode(TileTrack tile) {
+	private static Object[] getMode(TrackLocomotive tile) {
 		NBTTagCompound data = new NBTTagCompound();
-		tile.getTrackInstance().writeToNBT(data);
+		tile.writeToNBT(data);
 		return new Object[] { data.hasKey("mode") ? Math.abs(data.getByte("mode") % EntityLocomotive.LocoMode.VALUES.length - 2) : null };
 	}
 
@@ -51,14 +51,10 @@ public class DriverLocomotiveTrack {
 		return new Object[] { modeMap };
 	}
 
-	private static Object[] isPowered(TileTrack tile) {
-		return new Object[] { ((TrackLocomotive) tile.getTrackInstance()).isPowered() };
-	}
-
 	public static class OCDriver extends DriverTileEntity {
-		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TileTrack> {
+		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TrackLocomotive> {
 
-			public InternalManagedEnvironment(TileTrack tile) {
+			public InternalManagedEnvironment(TrackLocomotive tile) {
 				super(tile, Names.Railcraft_LocomotiveTrack);
 			}
 
@@ -81,11 +77,6 @@ public class DriverLocomotiveTrack {
 			public Object[] modes(Context c, Arguments a) {
 				return DriverLocomotiveTrack.modes();
 			}
-
-			@Callback(doc = "function():boolean; returns whether the track is currently receiving a redstone signal")
-			public Object[] isPowered(Context c, Arguments a) {
-				return DriverLocomotiveTrack.isPowered(tile);
-			}
 		}
 
 		@Override
@@ -102,15 +93,15 @@ public class DriverLocomotiveTrack {
 
 		@Override
 		public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
-			return new InternalManagedEnvironment((TileTrack) world.getTileEntity(x, y, z));
+			return new InternalManagedEnvironment((TrackLocomotive) ((TileTrack) world.getTileEntity(x, y, z)).getTrackInstance());
 		}
 	}
 
-	public static class CCDriver extends CCMultiPeripheral<TileTrack> {
+	public static class CCDriver extends CCMultiPeripheral<TrackLocomotive> {
 		public CCDriver() {
 		}
 
-		public CCDriver(TileTrack track, World world, int x, int y, int z) {
+		public CCDriver(TrackLocomotive track, World world, int x, int y, int z) {
 			super(track, Names.Railcraft_LocomotiveTrack, world, x, y, z);
 		}
 
@@ -118,14 +109,14 @@ public class DriverLocomotiveTrack {
 		public IMultiPeripheral getPeripheral(World world, int x, int y, int z, int side) {
 			TileEntity te = world.getTileEntity(x, y, z);
 			if(te != null && te instanceof TileTrack && ((TileTrack) te).getTrackInstance() instanceof TrackLocomotive) {
-				return new CCDriver((TileTrack) te, world, x, y, z);
+				return new CCDriver((TrackLocomotive) ((TileTrack) te).getTrackInstance(), world, x, y, z);
 			}
 			return null;
 		}
 
 		@Override
 		public String[] getMethodNames() {
-			return new String[] { "setMode", "getMode", "modes", "isPowered" };
+			return new String[] { "setMode", "getMode", "modes" };
 		}
 
 		@Override
@@ -146,9 +137,6 @@ public class DriverLocomotiveTrack {
 					return DriverLocomotiveTrack.getMode(tile);
 				}
 				case 2:{
-					return DriverLocomotiveTrack.isPowered(tile);
-				}
-				case 3:{
 					return DriverLocomotiveTrack.modes();
 				}
 			}

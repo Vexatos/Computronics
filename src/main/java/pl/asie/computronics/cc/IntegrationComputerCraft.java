@@ -19,11 +19,13 @@ import pl.asie.computronics.integration.factorization.DriverChargeConductor;
 import pl.asie.computronics.integration.fsp.DriverSteamTransporter;
 import pl.asie.computronics.integration.mfr.DriverDeepStorageUnit;
 import pl.asie.computronics.integration.railcraft.DriverElectricGrid;
-import pl.asie.computronics.integration.railcraft.DriverLimiterTrack;
-import pl.asie.computronics.integration.railcraft.DriverLocomotiveTrack;
 import pl.asie.computronics.integration.railcraft.DriverRoutingDetector;
 import pl.asie.computronics.integration.railcraft.DriverRoutingSwitch;
-import pl.asie.computronics.integration.railcraft.DriverRoutingTrack;
+import pl.asie.computronics.integration.railcraft.track.DriverLauncherTrack;
+import pl.asie.computronics.integration.railcraft.track.DriverLimiterTrack;
+import pl.asie.computronics.integration.railcraft.track.DriverLocomotiveTrack;
+import pl.asie.computronics.integration.railcraft.track.DriverPoweredTrack;
+import pl.asie.computronics.integration.railcraft.track.DriverRoutingTrack;
 import pl.asie.computronics.integration.redlogic.CCBundledRedstoneProviderRedLogic;
 import pl.asie.computronics.integration.redlogic.DriverLamp;
 import pl.asie.computronics.reference.Compat;
@@ -76,12 +78,14 @@ public class IntegrationComputerCraft {
 
 		if(Loader.isModLoaded(Mods.Railcraft)) {
 			if(compat.isCompatEnabled(Compat.Railcraft_Routing)) {
+				registerMultiPeripheralProvider(new DriverPoweredTrack.CCDriver());
 				registerMultiPeripheralProvider(new DriverRoutingTrack.CCDriver());
 				registerMultiPeripheralProvider(new DriverRoutingDetector.CCDriver());
 				registerMultiPeripheralProvider(new DriverRoutingSwitch.CCDriver());
 				registerMultiPeripheralProvider(new DriverElectricGrid.CCDriver());
 				registerMultiPeripheralProvider(new DriverLimiterTrack.CCDriver());
 				registerMultiPeripheralProvider(new DriverLocomotiveTrack.CCDriver());
+				registerMultiPeripheralProvider(new DriverLauncherTrack.CCDriver());
 			}
 		}
 

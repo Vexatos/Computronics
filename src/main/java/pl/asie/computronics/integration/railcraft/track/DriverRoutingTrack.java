@@ -1,9 +1,8 @@
-package pl.asie.computronics.integration.railcraft;
+package pl.asie.computronics.integration.railcraft.track;
 
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
-import li.cil.oc.api.driver.NamedBlock;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
@@ -25,12 +24,12 @@ import pl.asie.computronics.reference.Names;
  */
 public class DriverRoutingTrack {
 
-	private static Object[] setDestination(TileTrack tile, Object[] arguments) {
-		ItemStack ticket = ((TrackRouting) tile.getTrackInstance()).getInventory().getStackInSlot(0);
+	private static Object[] setDestination(TrackRouting tile, Object[] arguments) {
+		ItemStack ticket = tile.getInventory().getStackInSlot(0);
 		if(ticket != null && ticket.getItem() instanceof ItemTicketGold) {
-			if(!((TrackRouting) tile.getTrackInstance()).isSecure()) {
+			if(!tile.isSecure()) {
 				String destination = (String) arguments[0];
-				((TrackRouting) tile.getTrackInstance()).setTicket(destination, destination, ItemTicketGold.getOwner(ticket));
+				tile.setTicket(destination, destination, ItemTicketGold.getOwner(ticket));
 				ItemTicketGold.setTicketData(ticket, destination, destination, ItemTicketGold.getOwner(ticket));
 				return new Object[] { true };
 			} else {
@@ -41,10 +40,10 @@ public class DriverRoutingTrack {
 		}
 	}
 
-	private static Object[] getDestination(TileTrack tile) {
-		ItemStack ticket = ((TrackRouting) tile.getTrackInstance()).getInventory().getStackInSlot(0);
+	private static Object[] getDestination(TrackRouting tile) {
+		ItemStack ticket = tile.getInventory().getStackInSlot(0);
 		if(ticket != null && ticket.getItem() instanceof ItemTicketGold) {
-			if(!((TrackRouting) tile.getTrackInstance()).isSecure()) {
+			if(!tile.isSecure()) {
 				return new Object[] { ItemTicketGold.getDestination(ticket) };
 			} else {
 				return new Object[] { false, "routing track is locked" };
@@ -54,19 +53,11 @@ public class DriverRoutingTrack {
 		}
 	}
 
-	private static Object[] isPowered(TileTrack tile) {
-		if(!((TrackRouting) tile.getTrackInstance()).isSecure()) {
-			return new Object[] { ((TrackRouting) tile.getTrackInstance()).isPowered() };
-		} else {
-			return new Object[] { null, "routing track is locked" };
-		}
-	}
-
 	public static class OCDriver extends DriverTileEntity {
 
-		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TileTrack> implements NamedBlock {
+		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TrackRouting> {
 
-			public InternalManagedEnvironment(TileTrack track) {
+			public InternalManagedEnvironment(TrackRouting track) {
 				super(track, Names.Railcraft_RoutingTrack);
 			}
 
@@ -94,11 +85,6 @@ public class DriverRoutingTrack {
                 return new Object[] { false, "there is no golden ticket inside the track" };
             }
         }*/
-
-			@Callback(doc = "function():boolean; returns whether the track is currently receiving a redstone signal, or nil if it cannot be accessed")
-			public Object[] isPowered(Context c, Arguments a) {
-				return DriverRoutingTrack.isPowered(tile);
-			}
 		}
 
 		@Override
@@ -115,16 +101,16 @@ public class DriverRoutingTrack {
 
 		@Override
 		public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
-			return new InternalManagedEnvironment((TileTrack) world.getTileEntity(x, y, z));
+			return new InternalManagedEnvironment((TrackRouting) ((TileTrack) world.getTileEntity(x, y, z)).getTrackInstance());
 		}
 	}
 
-	public static class CCDriver extends CCMultiPeripheral<TileTrack> {
+	public static class CCDriver extends CCMultiPeripheral<TrackRouting> {
 
 		public CCDriver() {
 		}
 
-		public CCDriver(TileTrack track, World world, int x, int y, int z) {
+		public CCDriver(TrackRouting track, World world, int x, int y, int z) {
 			super(track, Names.Railcraft_RoutingTrack, world, x, y, z);
 		}
 
@@ -132,14 +118,14 @@ public class DriverRoutingTrack {
 		public IMultiPeripheral getPeripheral(World world, int x, int y, int z, int side) {
 			TileEntity te = world.getTileEntity(x, y, z);
 			if(te != null && te instanceof TileTrack && ((TileTrack) te).getTrackInstance() instanceof TrackRouting) {
-				return new CCDriver((TileTrack) te, world, x, y, z);
+				return new CCDriver((TrackRouting) ((TileTrack) te).getTrackInstance(), world, x, y, z);
 			}
 			return null;
 		}
 
 		@Override
 		public String[] getMethodNames() {
-			return new String[] { "setDestination", "getDestination", "isPowered" };
+			return new String[] { "setDestination", "getDestination" };
 		}
 
 		@Override
@@ -155,9 +141,6 @@ public class DriverRoutingTrack {
 				}
 				case 1:{
 					return DriverRoutingTrack.getDestination(tile);
-				}
-				case 2:{
-					return DriverRoutingTrack.isPowered(tile);
 				}
 			}
 			return null;

@@ -19,8 +19,10 @@ public class Names {
 	public static final String Railcraft_DigitalDetector = "digital_detector";
 	public static final String Railcraft_DigitalReceiverBox = "digital_receiver_box";
 	public static final String Railcraft_ElectricGrid = "electric_tile";
+	public static final String Railcraft_LauncherTrack = "launcher_track";
 	public static final String Railcraft_LimiterTrack = "limiter_track";
 	public static final String Railcraft_LocomotiveTrack = "locomotive_track";
+	public static final String Railcraft_PoweredTrack = "powered_track";
 	public static final String Railcraft_RoutingDetector = "routing_detector";
 	public static final String Railcraft_RoutingSwitch = "routing_switch";
 	public static final String Railcraft_RoutingTrack = "routing_track";

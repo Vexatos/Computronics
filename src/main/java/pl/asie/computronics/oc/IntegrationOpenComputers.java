@@ -28,11 +28,13 @@ import pl.asie.computronics.integration.gregtech.DriverDigitalChest;
 import pl.asie.computronics.integration.gregtech.DriverMachine;
 import pl.asie.computronics.integration.mfr.DriverDeepStorageUnit;
 import pl.asie.computronics.integration.railcraft.DriverElectricGrid;
-import pl.asie.computronics.integration.railcraft.DriverLimiterTrack;
-import pl.asie.computronics.integration.railcraft.DriverLocomotiveTrack;
 import pl.asie.computronics.integration.railcraft.DriverRoutingDetector;
 import pl.asie.computronics.integration.railcraft.DriverRoutingSwitch;
-import pl.asie.computronics.integration.railcraft.DriverRoutingTrack;
+import pl.asie.computronics.integration.railcraft.track.DriverLauncherTrack;
+import pl.asie.computronics.integration.railcraft.track.DriverLimiterTrack;
+import pl.asie.computronics.integration.railcraft.track.DriverLocomotiveTrack;
+import pl.asie.computronics.integration.railcraft.track.DriverPoweredTrack;
+import pl.asie.computronics.integration.railcraft.track.DriverRoutingTrack;
 import pl.asie.computronics.integration.redlogic.DriverLamp;
 import pl.asie.computronics.item.ItemOpenComputers;
 import pl.asie.computronics.reference.Compat;
@@ -119,12 +121,14 @@ public class IntegrationOpenComputers {
 		}
 		if(Loader.isModLoaded(Mods.Railcraft)) {
 			if(compat.isCompatEnabled(Compat.Railcraft_Routing)) {
+				Driver.add(new DriverPoweredTrack.OCDriver());
 				Driver.add(new DriverRoutingTrack.OCDriver());
 				Driver.add(new DriverRoutingDetector.OCDriver());
 				Driver.add(new DriverRoutingSwitch.OCDriver());
 				Driver.add(new DriverElectricGrid.OCDriver());
 				Driver.add(new DriverLimiterTrack.OCDriver());
 				Driver.add(new DriverLocomotiveTrack.OCDriver());
+				Driver.add(new DriverLauncherTrack.OCDriver());
 			}
 		}
 		if(Loader.isModLoaded(Mods.GregTech)) {
