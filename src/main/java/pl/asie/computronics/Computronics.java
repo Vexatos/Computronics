@@ -68,6 +68,8 @@ import pl.asie.lib.network.PacketHandler;
 
 import java.lang.reflect.Method;
 import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Mod(modid = Mods.Computronics, name = Mods.Computronics_NAME, version = "@VERSION@", useMetadata = true, dependencies = "required-after:asielib@[0.3.3,);after:ComputerCraft;after:OpenComputers@[1.4.0,);after:OpenComputers|Core;after:MineFactoryReloaded;after:RedLogic;after:ProjRed|Core;after:nedocomputers;after:BuildCraft|Core@[6.1.5,);after:Railcraft@[9.3.3.4,);after:gregtech;after:EnderIO")
 public class Computronics {
@@ -84,6 +86,7 @@ public class Computronics {
 	public static GuiHandler gui;
 	public static PacketHandler packet;
 	public DFPWMPlaybackManager audio;
+	public static ExecutorService rsaThreads;
 
 	@SidedProxy(clientSide = "pl.asie.computronics.ClientProxy", serverSide = "pl.asie.computronics.CommonProxy")
 	public static CommonProxy proxy;
@@ -172,6 +175,7 @@ public class Computronics {
 		if(isEnabled("cipher_advanced", true)) {
 			cipher_advanced = new BlockCipherAdvanced();
 			registerBlockWithTileEntity(cipher_advanced, ItemBlockWithSpecialText.class, TileCipherBlockAdvanced.class, "computronics.cipher_advanced");
+			rsaThreads = Executors.newCachedThreadPool();
 		}
 
 		if(isEnabled("radar", true)) {

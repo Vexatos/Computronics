@@ -11,10 +11,10 @@ import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.Connector;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
+import pl.asie.computronics.util.cipher.RSAValue;
 import pl.asie.lib.util.Base64;
 
 import java.math.BigInteger;
-import java.security.SecureRandom;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -65,29 +65,15 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 			keyMap.put(1, (String) map.get(1));
 			keyMap.put(2, (String) map.get(2));
 			return keyMap;
+		} else if(map.get(1.0D) != null && map.get(1.0D) instanceof String
+			&& map.get(2.0D) != null && map.get(2.0D) instanceof String) {
+			Map<Integer, String> keyMap = new LinkedHashMap<Integer, String>();
+			keyMap.put(1, (String) map.get(1.0D));
+			keyMap.put(2, (String) map.get(2.0D));
+			return keyMap;
 		}
 		throw new IllegalArgumentException(
 			String.format("bad argument #%s (no valid RSA key)", index));
-	}
-
-	private Object[] createKeySet() {
-		SecureRandom r = new SecureRandom();
-		return this.createKeySet(
-			new BigInteger(1024, 100, r),
-			new BigInteger(1024, 100, r));
-	}
-
-	private Object[] createKeySet(int bitLength) {
-		SecureRandom r = new SecureRandom();
-		return this.createKeySet(
-			new BigInteger(bitLength, 100, r),
-			new BigInteger(bitLength, 100, r));
-	}
-
-	private Object[] createKeySet(int p, int q) {
-		return this.createKeySet(
-			BigInteger.valueOf(p),
-			BigInteger.valueOf(q));
 	}
 
 	private String encodeToString(byte[] bytes) {
@@ -100,26 +86,6 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 
 	private Object[] decrypt(Map<Integer, String> privateKey, String messageString) throws Exception {
 		return this.decrypt(privateKey, messageString.getBytes(Charsets.UTF_8));
-	}
-
-	private Object[] createKeySet(BigInteger p, BigInteger q) {
-		BigInteger cat = p.subtract(BigInteger.ONE).multiply(q.subtract(BigInteger.ONE));
-		BigInteger n = p.multiply(q);
-		BigInteger d = new BigInteger("17");
-		final BigInteger TWO = new BigInteger("2");
-		while(cat.gcd(d).intValue() != 1) {
-			d = d.add(TWO);
-		}
-		BigInteger e = d.modInverse(cat);
-
-		Map<Integer, String> publicKey = new LinkedHashMap<Integer, String>();
-		Map<Integer, String> privateKey = new LinkedHashMap<Integer, String>();
-		publicKey.put(1, n.toString());
-		publicKey.put(2, d.toString());
-		privateKey.put(1, n.toString());
-		privateKey.put(2, e.toString());
-
-		return new Object[] { publicKey, privateKey };
 	}
 
 	private Object[] encrypt(Map<Integer, String> publicKey, byte[] messageBytes) {
@@ -143,28 +109,32 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 		return new Object[] { encodeToString(message.modPow(e, n).toByteArray()) };
 	}
 
-	@Callback(doc = "function([bitlength:number]):table, table; Creates the public and the private RSA key from two random prime numbers (optionally with given bit length)")
+	@Callback(doc = "function([bitlength:number]):keygen; Creates the key generator from two random prime numbers (optionally with given bit length)", direct = true)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] createRandomKeySet(Context c, Arguments a) {
 		Object[] result;
+		RSAValue val = new RSAValue();
 		if(a.count() > 0) {
-			result = this.createKeySet(a.checkInteger(0));
+			val.startCalculation(a.checkInteger(0));
 		} else {
-			result = this.createKeySet();
+			val.startCalculation();
 		}
+		result = new Object[] { val };
 		return this.tryConsumeEnergy(result, Config.CIPHER_KEY_CONSUMPTION, "createRandomKeySet");
 	}
 
-	@Callback(doc = "function(num1:number, num2:number):table, table; Creates the public and the private RSA key from the two given prime numbers")
+	@Callback(doc = "function(num1:number, num2:number):keygen; Creates the key generator from the two given prime numbers", direct = true)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] createKeySet(Context c, Arguments a) {
-		Object[] result = this.createKeySet(
+		RSAValue val = new RSAValue();
+		val.startCalculation(
 			checkPrime(a.checkInteger(0), 0),
 			checkPrime(a.checkInteger(1), 1));
+		Object[] result = new Object[] { val };
 		return this.tryConsumeEnergy(result, Config.CIPHER_KEY_CONSUMPTION, "createKeySet");
 	}
 
-	@Callback(doc = "function(message:string, publicKey:table):string; Encrypts the specified message using the specified public RSA key")
+	@Callback(doc = "function(message:string, publicKey:table):string; Encrypts the specified message using the specified public RSA key", direct = true)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] encrypt(Context c, Arguments a) {
 		byte[] message = a.checkByteArray(0);
@@ -174,7 +144,7 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 		return this.tryConsumeEnergy(result, Config.CIPHER_WORK_CONSUMPTION + 0.2 * message.length, "encrypt");
 	}
 
-	@Callback(doc = "function(message:string, privateKey:table):string; Decrypts the specified message using the specified RSA key")
+	@Callback(doc = "function(message:string, privateKey:table):string; Decrypts the specified message using the specified RSA key", direct = true)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] decrypt(Context c, Arguments a) throws Exception {
 		byte[] message = a.checkByteArray(0);
@@ -213,7 +183,7 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 	@Override
 	@Optional.Method(modid = Mods.ComputerCraft)
 	public String[] getMethodNames() {
-		return new String[] { "createKeySet", "encrypt", "decrypt" };
+		return new String[] { "createRandomKeySet", "createKeySet", "encrypt", "decrypt" };
 	}
 
 	@Override
@@ -222,35 +192,43 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 		try {
 			switch(method){
 				case 0:{
-					Object[] result;
+					RSAValue val = new RSAValue();
 					if(arguments.length > 0) {
-						if(!(arguments[0] instanceof Double)) {
+						if(!(arguments[0] instanceof Number)) {
 							throw new LuaException("first argument needs to be a number, or there must not be any arguments");
-						} else if(!(arguments[1] instanceof Double)) {
-							throw new LuaException("second argument needs to be a number, or there must not be any arguments");
 						}
-						result = this.createKeySet(
-							checkPrime(((Double) arguments[0]).intValue(), 0),
-							checkPrime(((Double) arguments[1]).intValue(), 1));
+						val.startCalculation(((Number) arguments[1]).intValue());
+						return new Object[] { val };
 					} else {
-						result = this.createKeySet();
+						val.startCalculation();
+						return new Object[] { val };
 					}
-					return result;
 				}
 				case 1:{
-					if(!(arguments[0] instanceof String)) {
+					if(!(arguments.length >= 1 && arguments[0] instanceof Number)) {
+						throw new LuaException("first argument needs to be a number");
+					} else if(!(arguments.length >= 2 && arguments[1] instanceof Number)) {
+						throw new LuaException("second argument needs to be a number");
+					}
+					RSAValue val = new RSAValue();
+					val.startCalculation(checkPrime(((Number) arguments[0]).intValue(), 0),
+						checkPrime(((Number) arguments[1]).intValue(), 1));
+					return new Object[] { val };
+				}
+				case 2:{
+					if(!(arguments.length >= 1 && arguments[0] instanceof String)) {
 						throw new LuaException("first argument needs to be a string");
-					} else if(!(arguments[1] instanceof Map)) {
+					} else if(!(arguments.length >= 2 && arguments[1] instanceof Map)) {
 						throw new LuaException("second argument needs to be a table");
 					}
 					return this.encrypt(
 						checkValidKey((Map) arguments[1], 1),
 						(String) arguments[0]);
 				}
-				case 2:{
-					if(!(arguments[0] instanceof String)) {
+				case 3:{
+					if(!(arguments.length >= 1 && arguments[0] instanceof String)) {
 						throw new LuaException("first argument needs to be a string");
-					} else if(!(arguments[1] instanceof Map)) {
+					} else if(!(arguments.length >= 2 && arguments[1] instanceof Map)) {
 						throw new LuaException("second argument needs to be a table");
 					}
 					return this.decrypt(
@@ -259,6 +237,12 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 				}
 			}
 		} catch(Exception e) {
+			if(e instanceof InterruptedException) {
+				throw (InterruptedException) e;
+			}
+			if(e instanceof LuaException) {
+				throw (LuaException) e;
+			}
 			throw new LuaException(e.getMessage());
 		}
 		return null;
