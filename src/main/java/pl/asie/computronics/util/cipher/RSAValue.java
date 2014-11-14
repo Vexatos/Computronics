@@ -38,7 +38,7 @@ public class RSAValue implements Value, ILuaObject {
 		} else if(task != null && !task.isDone() && !task.isCancelled()) {
 			return new Object[] { null, null, "key is still being generated" };
 		}
-		return new Object[] { null, "an error occured during key generation" };
+		return new Object[] { null, null, "an error occured during key generation" };
 	}
 
 	public void setKeys(Map<Integer, String> publicKey, Map<Integer, String> privateKey) {
