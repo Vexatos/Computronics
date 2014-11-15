@@ -139,6 +139,12 @@ public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundl
 	}
 
 	@Override
+	public void writeToRemoteNBT(NBTTagCompound tag) {
+		super.writeToRemoteNBT(tag);
+		tag.setShort("clc", (short) (color & 32767));
+	}
+
+	@Override
 	public Packet getDescriptionPacket() {
 		NBTTagCompound tag = new NBTTagCompound();
 		tag.setShort("c", (short) (color & 32767));
