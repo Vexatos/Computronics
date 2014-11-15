@@ -54,12 +54,16 @@ tooltip.computronics.waila.tape.state.stopped=Stopped
 tooltip.computronics.waila.tape.state.playing=Playing
 tooltip.computronics.waila.tape.state.rewinding=Rewinding
 tooltip.computronics.waila.tape.state.forwarding=Forwarding
+tooltip.computronics.waila.lamp.red=Red: %s
+tooltip.computronics.waila.lamp.green=Green: %s
+tooltip.computronics.waila.lamp.blue=Blue: %s
 
-option.computronics.enableAddress=Show component address
-option.computronics.enableTape=Show inserted tape
-option.computronics.enableTapeName=Show tape name
-option.computronics.enableDriveState=Show tape drive state
-option.computronics.enableRelayBound=Show Relay binding
+option.computronics.enableAddress=Component address
+option.computronics.enableTape=Inserted tape
+option.computronics.enableTapeName=Tape name
+option.computronics.enableDriveState=Tape Drive state
+option.computronics.enableRelayBound=Relay binding
+option.computronics.enableLampColor=Lamp Color
 
 item.computronics.reelChromoxide.name=Chromium Dioxide Tape Reel
 item.computronics.robot_upgrade_camera.name=Camera Upgrade

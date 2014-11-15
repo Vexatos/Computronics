@@ -9,11 +9,12 @@ import pl.asie.computronics.reference.Mods;
  */
 public enum ConfigValues {
 
-	//Address(Mods.Computronics + ".enableAddress"),
+	Address(Mods.Computronics + ".enableAddress"),
 	Tape(Mods.Computronics + ".enableTape"),
 	TapeName(Mods.Computronics + ".enableTapeName"),
-	DriveState(Mods.Computronics + ".enableDriveState");
-	//RelayBound(Mods.Computronics + ".enableRelayBound");
+	DriveState(Mods.Computronics + ".enableDriveState"),
+	RelayBound(Mods.Computronics + ".enableRelayBound"),
+	LampColor(Mods.Computronics + ".enableLampColor");
 
 	private String key;
 	private boolean defvalue;
@@ -37,7 +38,7 @@ public enum ConfigValues {
 		}
 	}
 
-	public boolean getConfig(IWailaConfigHandler config) {
+	public boolean getValue(IWailaConfigHandler config) {
 		return config.getConfig(key, defvalue);
 	}
 }

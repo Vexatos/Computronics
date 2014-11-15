@@ -29,6 +29,10 @@
     - Also includes a key generator (with the two prime numbers to start with as paramters)
     - Also includes a random key generator (with the key's bit length as an optional paramter)
     - **Huge thanks to Kubuxu for helping me figure out a good algorithm!**
+  * ADDED: More Waila integration
+    - Now you can see the component address and bus ID of every block for OpenComputers and NedoComputers
+    - Now you can see whether a Digital Locomotive Relay is bound or not
+    - Now you can see the colour values of a Colorful Lamp
   * ADDED: New MultiPeripheral system
     - Like in OpenComputers, these peripherals are being merged into a single one in case a block has multiple Peripherals on it
     - This also comes with a new MultiPeripheral API for other mods to hook into in case they want
@@ -38,6 +42,7 @@
   * FIXED: A strange error that can happen while chatting near a chat box.
   * FIXED: Power values and power consumtion for OC. Re-generate your config file!
   * FIXED: A problem in the Radar's table creation
+  * FIXED: Some GregTech recipes not working
   * MISC: Lots of code cleanup done. It should be much more pretty now.
 
 ==== 1.2.0 ====

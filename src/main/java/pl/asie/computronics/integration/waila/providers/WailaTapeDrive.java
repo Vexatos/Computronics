@@ -19,7 +19,7 @@ public class WailaTapeDrive extends ComputronicsWailaProvider {
 	public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip,
 		IWailaDataAccessor accessor, IWailaConfigHandler config) {
 
-		if(!ConfigValues.Tape.getConfig(config)) {
+		if(!ConfigValues.Tape.getValue(config)) {
 			return currenttip;
 		}
 
@@ -27,13 +27,13 @@ public class WailaTapeDrive extends ComputronicsWailaProvider {
 		ItemStack is = drive.getStackInSlot(0);
 		if(is != null && is.getItem() instanceof IItemTapeStorage) {
 			String label = Computronics.itemTape.getLabel(is);
-			if(label.length() > 0 && ConfigValues.TapeName.getConfig(config)) {
+			if(label.length() > 0 && ConfigValues.TapeName.getValue(config)) {
 				currenttip.add(StringUtil.localizeAndFormat("tooltip.computronics.waila.tape.labeltapeinserted",
 					label + SpecialChars.RESET));
 			} else {
 				currenttip.add(StringUtil.localize("tooltip.computronics.waila.tape.tapeinserted"));
 			}
-			if(ConfigValues.DriveState.getConfig(config)) {
+			if(ConfigValues.DriveState.getValue(config)) {
 				currenttip.add(StringUtil.localizeAndFormat("tooltip.computronics.waila.tape.state",
 					StringUtil.localize("tooltip.computronics.waila.tape.state."
 						+ drive.getEnumState().toString().toLowerCase(Locale.ENGLISH))));
@@ -43,4 +43,43 @@ public class WailaTapeDrive extends ComputronicsWailaProvider {
 		}
 		return currenttip;
 	}
+
+	/*@Override
+	public void decorateBlock(ItemStack itemStack, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+		BlockTapeReader block = (BlockTapeReader) accessor.getBlock();
+		int front = block.getFrontSide(accessor.getMetadata());
+		String text = "ERROR";
+		float rot = 0F;
+		float offX = 0.5F;
+		float offZ = -0.01F;
+		switch(front){
+			case 3:{
+				rot = 180F;
+				offZ = 1.01F;
+				break;
+			}
+			case 4:{
+				rot = 90F;
+				offX = -0.01F;
+				offZ = 0.5F;
+				break;
+			}
+			case 5:{
+				rot = 270F;
+				offX = 1.01F;
+				offZ = 0.5F;
+				break;
+			}
+		}
+		TileTapeDrive drive = (TileTapeDrive) accessor.getTileEntity();
+		ItemStack is = drive.getStackInSlot(0);
+		if(is != null && is.getItem() instanceof IItemTapeStorage) {
+			if(ConfigValues.DriveState.getValue(config)) {
+				text = StringUtil.localize("tooltip.computronics.waila.tape.state."
+					+ drive.getEnumState().toString().toLowerCase(Locale.ENGLISH));
+				UIHelper.drawFloatingText(text, accessor.getRenderingPosition(), offX, 0.3F, offZ, 0F,
+					rot, 0F);
+			}
+		}
+	}*/
 }

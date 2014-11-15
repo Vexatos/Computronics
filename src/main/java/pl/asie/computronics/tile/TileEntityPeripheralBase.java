@@ -106,16 +106,18 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void onChunkUnload() {
 		super.onChunkUnload();
-		if(node != null)
+		if(node != null) {
 			node.remove();
+		}
 	}
 
 	@Override
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void invalidate() {
 		super.invalidate();
-		if(node != null)
+		if(node != null) {
 			node.remove();
+		}
 	}
 
 	@Optional.Method(modid = Mods.OpenComputers)
@@ -143,25 +145,29 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 	@Override
 	@Optional.Method(modid = Mods.ComputerCraft)
 	public void attach(IComputerAccess computer) {
-		if(attachedComputersCC == null)
+		if(attachedComputersCC == null) {
 			attachedComputersCC = new ArrayList<IComputerAccess>(2);
+		}
 		attachedComputersCC.add(computer);
 	}
 
 	@Override
 	@Optional.Method(modid = Mods.ComputerCraft)
 	public void detach(IComputerAccess computer) {
-		if(attachedComputersCC != null)
+		if(attachedComputersCC != null) {
 			attachedComputersCC.remove(computer);
+		}
 	}
 
 	@Override
 	@Optional.Method(modid = Mods.ComputerCraft)
 	public boolean equals(IPeripheral other) {
-		if(other == null)
+		if(other == null) {
 			return false;
-		if(this == other)
+		}
+		if(this == other) {
 			return true;
+		}
 		if(other instanceof TileEntity) {
 			TileEntity tother = (TileEntity) other;
 			return tother.getWorldObj().equals(worldObj)
@@ -199,31 +205,43 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 
 	@Optional.Method(modid = Mods.NedoComputers)
 	public void readFromNBT_NC(final NBTTagCompound nbt) {
-		if(nbt.hasKey("nc:bus"))
+		if(nbt.hasKey("nc:bus")) {
 			nedoBusID = nbt.getShort("nc:bus");
+		}
 	}
 
 	@Optional.Method(modid = Mods.NedoComputers)
 	public void writeToNBT_NC(final NBTTagCompound nbt) {
-		if(nedoBusID != 0)
+		if(nedoBusID != 0) {
 			nbt.setShort("nc:bus", (short) nedoBusID);
+		}
 	}
 
 	@Override
 	public void readFromNBT(final NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-		if(Loader.isModLoaded(Mods.OpenComputers))
+		if(Loader.isModLoaded(Mods.OpenComputers)) {
 			readFromNBT_OC(nbt);
-		if(Loader.isModLoaded(Mods.NedoComputers))
+		}
+		if(Loader.isModLoaded(Mods.NedoComputers)) {
 			readFromNBT_NC(nbt);
+		}
 	}
 
 	@Override
 	public void writeToNBT(final NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-		if(Loader.isModLoaded(Mods.OpenComputers))
+		if(Loader.isModLoaded(Mods.OpenComputers)) {
 			writeToNBT_OC(nbt);
-		if(Loader.isModLoaded(Mods.NedoComputers))
+		}
+		if(Loader.isModLoaded(Mods.NedoComputers)) {
 			writeToNBT_NC(nbt);
+		}
+	}
+
+	@Override
+	public void writeToRemoteNBT(NBTTagCompound tag) {
+		super.writeToRemoteNBT(tag);
+		this.writeToNBT(tag);
 	}
 }

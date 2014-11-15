@@ -62,11 +62,25 @@ dependencies {
 
 minecraft {
     version = "${config.minecraft.version}-${config.forge.version}"
-    assetDir = "eclipse/assets"
+    runDir = "eclipse/assets"
 
     replaceIn "pl/asie/computronics/Computronics.java"
     replace "@VERSION@", "${config.computronics.version}"
 }
+
+sourceSets{
+    main{
+        output.resourcesDir = 'build/classes/main'
+    }
+}
+
+apply plugin: 'idea'
+idea {
+    module {
+        outputDir = file('build/classes/main')
+    }
+}
+
 processResources
         {
             // replace stuff in mcmod.info, nothing else

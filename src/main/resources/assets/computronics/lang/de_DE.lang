@@ -54,12 +54,16 @@ tooltip.computronics.waila.tape.state.stopped=Gestoppt
 tooltip.computronics.waila.tape.state.playing=Laufend
 tooltip.computronics.waila.tape.state.rewinding=Zurückspulend
 tooltip.computronics.waila.tape.state.forwarding=Vorspulend
+tooltip.computronics.waila.lamp.red=Rot: %s
+tooltip.computronics.waila.lamp.green=Grün: %s
+tooltip.computronics.waila.lamp.blue=Blau: %s
 
-option.computronics.enableAddress=Zeige Komponentenaddresse
-option.computronics.enableTape=Zeige enthaltene Kassette
-option.computronics.enableTapeName=Zeige Kassettenname
-option.computronics.enableDriveState=Zeige Kassettenlaufwerkstatus
-option.computronics.enableRelayBound=Zeige Relaisbindung
+option.computronics.enableAddress=Komponentenaddresse
+option.computronics.enableTape=Enthaltene Kassette
+option.computronics.enableTapeName=Kassettenname
+option.computronics.enableDriveState=Kassettenspielerstatus
+option.computronics.enableRelayBound=Relaisbindung
+option.computronics.enableLampColor=Lampenfarbe
 
 item.computronics.reelChromoxide.name=Chromdioxidbandspur
 item.computronics.robot_upgrade_camera.name=Kamera-Upgrade

@@ -25,6 +25,9 @@ public abstract class ComputronicsWailaProvider implements IComputronicsWailaPro
 	}
 
 	@Override
+	public abstract List<String> getWailaBody(ItemStack stack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config);
+
+	@Override
 	public List<String> getWailaTail(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor,
 		IWailaConfigHandler config) {
 
