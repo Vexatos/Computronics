@@ -48,6 +48,11 @@ public class DriverElectricGrid {
 			public Object[] getLoss(Context c, Arguments a) {
 				return new Object[] { tile.getChargeHandler().getLosses() };
 			}
+
+			@Callback(doc = "function():number; Returns the draw per tick of the electric tile.")
+			public Object[] getDraw(Context c, Arguments a) {
+				return new Object[] { tile.getChargeHandler().getDraw() };
+			}
 		}
 
 		@Override
@@ -91,7 +96,7 @@ public class DriverElectricGrid {
 
 		@Override
 		public String[] getMethodNames() {
-			return new String[] { "getCharge", "getCapacity", "getLoss" };
+			return new String[] { "getCharge", "getCapacity", "getLoss", "getDraw" };
 		}
 
 		@Override
@@ -105,6 +110,9 @@ public class DriverElectricGrid {
 				}
 				case 2:{
 					return new Object[] { tile.getChargeHandler().getLosses() };
+				}
+				case 3:{
+					return new Object[] { tile.getChargeHandler().getDraw() };
 				}
 			}
 			return null;
