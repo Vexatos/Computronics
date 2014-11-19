@@ -9,7 +9,7 @@ import li.cil.oc.api.network.Environment;
 import li.cil.oc.api.network.Message;
 import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.Visibility;
-import nedocomputers.INedoPeripheral;
+import nedocomputers.api.INedoPeripheral;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import pl.asie.computronics.cc.IComputronicsPeripheral;
@@ -185,7 +185,7 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 
 	@Override
 	@Optional.Method(modid = Mods.NedoComputers)
-	public boolean Connectable(int side) {
+	public boolean connectable(int side) {
 		return true;
 	}
 

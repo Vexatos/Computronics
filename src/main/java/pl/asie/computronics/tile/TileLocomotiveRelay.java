@@ -232,7 +232,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 
 	@Override
 	@Optional.Method(modid = Mods.NedoComputers)
-	public boolean Connectable(int side) {
+	public boolean connectable(int side) {
 		return false;
 	}
 

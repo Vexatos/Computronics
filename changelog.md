@@ -1,3 +1,7 @@
+==== 1.3.1 ====
+
+  * FIXED: Updated to NedoComputers 0.5 API to fix a crash
+
 ==== 1.3.0 ====
 
   **Note: This update changed some config values, it is highly recommended to re-generate your config file!**
