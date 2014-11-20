@@ -1,6 +1,8 @@
 ==== 1.3.1 ====
 
+  *This is the mandatory hotfix release after a major relese*
   * FIXED: Updated to NedoComputers 0.5 API to fix a crash
+  * FIXED: A crash happening with recipes.
 
 ==== 1.3.0 ====
 

@@ -9,6 +9,7 @@ import gregtech.api.enums.ItemList;
 import gregtech.api.enums.Materials;
 import gregtech.api.enums.OrePrefixes;
 import gregtech.api.util.GT_OreDictUnificator;
+import li.cil.oc.api.detail.ItemInfo;
 import mods.railcraft.common.items.ItemElectricMeter;
 import mods.railcraft.common.items.ItemRail;
 import mods.railcraft.common.items.RailcraftItem;
@@ -62,9 +63,7 @@ public class ModRecipes {
 				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Computronics.colorfulLamp, 1, 0),
 					"igi", "glg", "ini", 'i', "plateIron", 'g', "plateGlass", 'l', Blocks.redstone_lamp, 'n', "circuitPrimitive"));
 			}
-			if(Loader.isModLoaded(Mods.OpenComputers) && !Config.NON_OC_RECIPES) {
-				registerGregTechOCRecipes();
-			} else {
+			if(!(Loader.isModLoaded(Mods.OpenComputers) && !Config.NON_OC_RECIPES && registerGregTechOCRecipes())) {
 				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Computronics.cipher_advanced, 1, 0),
 					"gdg", "ece", "gig", 'g', "screwStainlessSteel",
 					'c', Computronics.cipher != null ? Computronics.cipher : ItemList.Robot_Arm_HV.get(1), 'e', "wireGt01Gold", 'i', "circuitMaster",
@@ -120,14 +119,22 @@ public class ModRecipes {
 		}
 
 		@Optional.Method(modid = Mods.OpenComputers)
-		private static void registerGregTechOCRecipes() {
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Computronics.cipher_advanced, 1, 0),
-				"gdg", "ece", "gig",
-				'g', "screwStainlessSteel",
-				'c', Computronics.cipher != null ? Computronics.cipher : li.cil.oc.api.Items.get("cpu2").createItemStack(1),
-				'e', li.cil.oc.api.Items.get("chip2").createItemStack(1),
-				'i', li.cil.oc.api.Items.get("capacitor").block(),
-				'd', Computronics.cipher != null ? li.cil.oc.api.Items.get("cpu2").createItemStack(1) : ItemList.Robot_Arm_HV.get(1)));
+		private static boolean registerGregTechOCRecipes() {
+			ItemInfo cpu = li.cil.oc.api.Items.get("cpu2");
+			ItemInfo chip = li.cil.oc.api.Items.get("chip2");
+			ItemInfo capacitor = li.cil.oc.api.Items.get("capacitor");
+			if(cpu != null && chip != null && capacitor != null) {
+				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Computronics.cipher_advanced, 1, 0),
+					"gdg", "ece", "gig",
+					'g', "screwStainlessSteel",
+					'c', Computronics.cipher != null ? Computronics.cipher : cpu.createItemStack(1),
+					'e', chip.createItemStack(1),
+					'i', capacitor.block(),
+					'd', Computronics.cipher != null ? cpu.createItemStack(1) : ItemList.Robot_Arm_HV.get(1)));
+				return true;
+			}
+			Computronics.log.warn("An error happened during registering OpenComputers-style recipes, falling back to default ones");
+			return false;
 		}
 
 		@Optional.Method(modid = Mods.Railcraft)
@@ -212,9 +219,7 @@ public class ModRecipes {
 			GameRegistry.addShapedRecipe(new ItemStack(Computronics.colorfulLamp, 1, 0),
 				"igi", "glg", "igi", 'i', Items.iron_ingot, 'g', Blocks.glass, 'l', Items.glowstone_dust);
 		}
-		if(Loader.isModLoaded(Mods.OpenComputers) && !Config.NON_OC_RECIPES) {
-			registerOCRecipes();
-		} else {
+		if(!(Loader.isModLoaded(Mods.OpenComputers) && !Config.NON_OC_RECIPES && registerOCRecipes())) {
 			GameRegistry.addShapedRecipe(new ItemStack(Computronics.cipher_advanced, 1, 0),
 				"gdg", "gcg", "eie", 'g', Items.gold_ingot,
 				'c', Computronics.cipher != null ? Computronics.cipher : Items.diamond, 'e', Items.ender_pearl, 'i', Items.iron_ingot,
@@ -254,14 +259,22 @@ public class ModRecipes {
 	}
 
 	@Optional.Method(modid = Mods.OpenComputers)
-	private static void registerOCRecipes() {
-		GameRegistry.addShapedRecipe(new ItemStack(Computronics.cipher_advanced, 1, 0),
-			"gdg", "mcm", "gbg",
-			'g', Items.gold_ingot,
-			'd', Computronics.cipher != null ? li.cil.oc.api.Items.get("cpu2").createItemStack(1) : Items.diamond,
-			'm', li.cil.oc.api.Items.get("chip2").createItemStack(1),
-			'c', Computronics.cipher != null ? Computronics.cipher : li.cil.oc.api.Items.get("cpu2").createItemStack(1),
-			'b', li.cil.oc.api.Items.get("capacitor").block());
+	private static boolean registerOCRecipes() {
+		ItemInfo cpu = li.cil.oc.api.Items.get("cpu2");
+		ItemInfo chip = li.cil.oc.api.Items.get("chip2");
+		ItemInfo capacitor = li.cil.oc.api.Items.get("capacitor");
+		if(cpu != null && chip != null && capacitor != null) {
+			GameRegistry.addShapedRecipe(new ItemStack(Computronics.cipher_advanced, 1, 0),
+				"gdg", "mcm", "gbg",
+				'g', Items.gold_ingot,
+				'd', Computronics.cipher != null ? cpu.createItemStack(1) : Items.diamond,
+				'm', chip.createItemStack(1),
+				'c', Computronics.cipher != null ? Computronics.cipher : cpu.createItemStack(1),
+				'b', capacitor.block());
+			return true;
+		}
+		Computronics.log.warn("An error happened during registering OpenComputers-style recipes, falling back to default ones");
+		return false;
 	}
 
 	@Optional.Method(modid = Mods.Railcraft)
