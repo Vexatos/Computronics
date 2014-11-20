@@ -27,7 +27,7 @@ import java.util.ArrayList;
 @Optional.InterfaceList({
 	@Optional.Interface(iface = "li.cil.oc.api.network.Environment", modid = Mods.OpenComputers),
 	@Optional.Interface(iface = "pl.asie.computronics.cc.IComputronicsPeripheral", modid = Mods.ComputerCraft),
-	@Optional.Interface(iface = "nedocomputers.INedoPeripheral", modid = Mods.NedoComputers)
+	@Optional.Interface(iface = "nedocomputers.api.INedoPeripheral", modid = Mods.NedoComputers)
 })
 public abstract class TileEntityPeripheralBase extends TileMachine implements Environment, IComputronicsPeripheral, INedoPeripheral {
 	protected String peripheralName;
