@@ -15,11 +15,11 @@ tooltip.computronics.chatBox.creative=NSA v krabici!
 tooltip.computronics.sensor.bound=Zviazané s [%1$s,%2$s,%3$s]
 tooltip.computronics.sensor.desc1=Klikni pravým tlačítkom na lokomotivové relé\npři so SHIFTom pre zviazanie
 tooltip.computronics.sensor.desc2=Klikni ľavým tlačítkom na elektrickú lokomotívu\npři so SHIFTom pre zviazanie
-tooltip.computronics.tape.length=Délka: %s minut
-tooltip.computronics.tape.balanced=Vyrovnáno!
-tooltip.computronics.tape.unnamed=Nepojmenovaná kazeta
-tooltip.computronics.tape.none=Žádná kazeta
-tooltip.computronics.tape.ig=Standartní CDVR pro\nGregTech Intergalaktické lodě
+tooltip.computronics.tape.length=Dĺžka: %s minút
+tooltip.computronics.tape.balanced=Vyrovnané!
+tooltip.computronics.tape.unnamed=Kazeta bez mena
+tooltip.computronics.tape.none=Žiadna kazeta
+tooltip.computronics.tape.ig=Štandardné CDVR pre\nGregTech Intergalaktické lode
 
 tooltip.computronics.waila.base.bus=§aPřípojka ID§f: %s
 tooltip.computronics.waila.relay.bound=Svázáno
