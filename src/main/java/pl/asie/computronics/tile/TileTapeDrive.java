@@ -250,7 +250,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void readFromNBT_OC(NBTTagCompound nbt) {
 		super.readFromNBT_OC(nbt);
-		if(oc_fs != null && oc_fs.node() != null && oc_fs.node().host() == this) {
+		if(oc_fs != null && oc_fs.node() != null) {
 			oc_fs.node().load(nbt.getCompoundTag("oc:fs"));
 		}
 	}
@@ -259,7 +259,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void writeToNBT_OC(NBTTagCompound nbt) {
 		super.writeToNBT_OC(nbt);
-		if(oc_fs != null && oc_fs.node() != null && oc_fs.node().host() == this) {
+		if(oc_fs != null && oc_fs.node() != null) {
 			final NBTTagCompound fsNbt = new NBTTagCompound();
 			oc_fs.node().save(fsNbt);
 			nbt.setTag("oc:fs", fsNbt);

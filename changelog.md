@@ -1,6 +1,8 @@
 ==== 1.3.2 ====
 
   * FIXED: Tapes not retaining their data
+  * FIXED: Tape Drive File System not being persistent in OpenComputers
+  * FIXED: Waila integration for Tape Drives. Should be a lot better now.
   * FIXED: Recipe crash when GregTech is installed but Railcraft is not
 
 ==== 1.3.1 ====
