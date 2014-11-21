@@ -171,7 +171,7 @@ public class ItemTape extends Item implements IItemTapeStorage, IMedia, IMediaPr
 		// Doesn't exist, create new storage and write NBT data
 		TapeStorage storage = Computronics.storage.newStorage(size);
 		if(stack.getTagCompound() == null) stack.setTagCompound(new NBTTagCompound());
-		stack.getTagCompound().setString("storage", storage.getName());
+		stack.getTagCompound().setString("storage", storage.getUniqueId());
 		return storage;
 	}
 
@@ -215,15 +215,19 @@ public class ItemTape extends Item implements IItemTapeStorage, IMedia, IMediaPr
     }
 
 	@Override
+	@Optional.Method(modid = Mods.ComputerCraft)
 	public IMedia getMedia(ItemStack stack) {
 		if(stack != null && stack.stackSize > 0 && stack.getItem() != null && stack.getItem() instanceof ItemTape) return ((IMedia)stack.getItem());
 		return null;
 	}
 
 	@Override
+	@Optional.Method(modid = Mods.ComputerCraft)
 	public String getAudioTitle(ItemStack stack) { return null; }
 	@Override
+	@Optional.Method(modid = Mods.ComputerCraft)
 	public String getAudioRecordName(ItemStack stack) { return null; }
 	@Override
+	@Optional.Method(modid = Mods.ComputerCraft)
 	public IMount createDataMount(ItemStack stack, World world) { return null; }
 }
