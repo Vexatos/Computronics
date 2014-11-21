@@ -4,10 +4,11 @@ import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.SpecialChars;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.api.tape.IItemTapeStorage;
 import pl.asie.computronics.integration.waila.ConfigValues;
-import pl.asie.computronics.tile.TileTapeDrive;
+import pl.asie.computronics.tile.TapeDriveState;
 import pl.asie.computronics.util.StringUtil;
 
 import java.util.List;
@@ -23,8 +24,8 @@ public class WailaTapeDrive extends ComputronicsWailaProvider {
 			return currenttip;
 		}
 
-		TileTapeDrive drive = (TileTapeDrive) accessor.getTileEntity();
-		ItemStack is = drive.getStackInSlot(0);
+		NBTTagCompound data = accessor.getNBTData();
+		ItemStack is = ItemStack.loadItemStackFromNBT(data.getTagList("Inventory", 10).getCompoundTagAt(0));
 		if(is != null && is.getItem() instanceof IItemTapeStorage) {
 			String label = Computronics.itemTape.getLabel(is);
 			if(label.length() > 0 && ConfigValues.TapeName.getValue(config)) {
@@ -36,12 +37,22 @@ public class WailaTapeDrive extends ComputronicsWailaProvider {
 			if(ConfigValues.DriveState.getValue(config)) {
 				currenttip.add(StringUtil.localizeAndFormat("tooltip.computronics.waila.tape.state",
 					StringUtil.localize("tooltip.computronics.waila.tape.state."
-						+ drive.getEnumState().toString().toLowerCase(Locale.ENGLISH))));
+						+ TapeDriveState.State.values()[data.getByte("state")].name().toLowerCase(Locale.ENGLISH))));
 			}
 		} else {
 			currenttip.add(StringUtil.localize("tooltip.computronics.waila.tape.notapeinserted"));
 		}
 		return currenttip;
+	}
+
+	private String getLabel(NBTTagCompound data, ItemStack is) {
+		if(data.hasKey("Inventory")
+			&& data.getTagList("Inventory", 10).tagCount() > 0
+			&& data.getTagList("Inventory", 10).getCompoundTagAt(0).hasKey("tag")
+			&& data.getTagList("Inventory", 10).getCompoundTagAt(0).getCompoundTag("tag").hasKey("label")) {
+			return data.getTagList("Inventory", 10).getCompoundTagAt(0).getCompoundTag("tag").getString("label");
+		}
+		return Computronics.itemTape.getLabel(is);
 	}
 
 	/*@Override

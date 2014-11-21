@@ -42,31 +42,30 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 
 	private ManagedEnvironment oc_fs;
 
-	@Optional.Method(modid=Mods.OpenComputers)
+	@Optional.Method(modid = Mods.OpenComputers)
 	private void initOCFilesystem() {
 		oc_fs = li.cil.oc.api.FileSystem.asManagedEnvironment(li.cil.oc.api.FileSystem.fromClass(Computronics.class, Mods.Computronics, "lua/component/tape_drive"),
-				"tape_drive");
+			"tape_drive");
 	}
 
 	@Override
-	@Optional.Method(modid=Mods.OpenComputers)
-	public void onConnect(final Node node)
-	{
+	@Optional.Method(modid = Mods.OpenComputers)
+	public void onConnect(final Node node) {
 		if(node.host() instanceof Context) {
-			((Component)oc_fs.node()).setVisibility(Visibility.Network);
+			((Component) oc_fs.node()).setVisibility(Visibility.Network);
 			node.connect(oc_fs.node());
 		}
 	}
 	// GUI/State
 
 	@Override
-	@Optional.Method(modid=Mods.OpenComputers)
+	@Optional.Method(modid = Mods.OpenComputers)
 	public void onDisconnect(final Node node) {
-		if (node.host() instanceof Context) {
+		if(node.host() instanceof Context) {
 			// Remove our file systems when we get disconnected from a
 			// computer.
 			node.disconnect(oc_fs.node());
-		} else if (node == this.node) {
+		} else if(node == this.node) {
 			// Remove the file system if we are disconnected, because in that
 			// case this method is only called once.
 			oc_fs.node().remove();
@@ -74,25 +73,31 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 	}
 
 	protected void sendState() {
-		if(worldObj.isRemote) return;
+		if(worldObj.isRemote) {
+			return;
+		}
 		try {
 			Packet packet = Computronics.packet.create(Packets.PACKET_TAPE_GUI_STATE)
-					.writeTileLocation(this)
-					.writeByte((byte)state.getState().ordinal());
-					//.writeByte((byte)soundVolume);
+				.writeTileLocation(this)
+				.writeByte((byte) state.getState().ordinal());
+			//.writeByte((byte)soundVolume);
 			Computronics.packet.sendToAllAround(packet, this, 64.0D);
-		} catch(Exception e) { e.printStackTrace(); }
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
-	
+
 	// Logic
-	public State getEnumState() { return this.state.getState(); }
-	
+	public State getEnumState() {
+		return this.state.getState();
+	}
+
 	public void switchState(State s) {
 		//System.out.println("Switchy switch to " + s.name());
 		this.state.switchState(worldObj, xCoord, yCoord, zCoord, s);
 		this.sendState();
 	}
-	
+
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
@@ -101,10 +106,10 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 			Computronics.packet.sendToAllAround(pkt, this, Config.TAPEDRIVE_DISTANCE * 2);
 		}
 	}
-	
+
 	// Minecraft boilerplate
-	
-    private void setLabel(String label) {
+
+	private void setLabel(String label) {
 		ItemStack stack = this.getStackInSlot(0);
 		if(stack != null && stack.getTagCompound() != null) {
 			if(label.length() == 0 && stack.getTagCompound().hasKey("label")) {
@@ -115,65 +120,77 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 			storageName = label;
 		}
 	}
-	
+
 	@Override
-	public boolean canUpdate() { return true; }
-	
+	public boolean canUpdate() {
+		return true;
+	}
+
 	@Override
 	public void openInventory() {
 		super.openInventory();
 		sendState();
 	}
-	
+
 	@Override
 	public void onBlockDestroy() {
 		super.onBlockDestroy();
 		unloadStorage();
 	}
-	
+
 	@Override
 	public void invalidate() {
 		super.invalidate();
 		unloadStorage();
 	}
-	
+
 	@Override
 	public void onRedstoneSignal(int signal) {
 		this.switchState(signal > 0 ? State.PLAYING : State.STOPPED);
 	}
-	
+
 	// Storage handling
-	
+
 	private void loadStorage() {
-		if(worldObj != null && worldObj.isRemote) return;
-		
-		if(state.getStorage() != null) unloadStorage();
+		if(worldObj != null && worldObj.isRemote) {
+			return;
+		}
+
+		if(state.getStorage() != null) {
+			unloadStorage();
+		}
 		ItemStack stack = this.getStackInSlot(0);
 		if(stack != null) {
 			// Get Storage.
 			Item item = stack.getItem();
 			if(item instanceof IItemTapeStorage) {
-				state.setStorage(((IItemTapeStorage)item).getStorage(stack));
+				state.setStorage(((IItemTapeStorage) item).getStorage(stack));
 			}
-			
+
 			// Get possible label.
 			if(stack.getTagCompound() != null) {
 				NBTTagCompound tag = stack.getTagCompound();
 				storageName = tag.hasKey("label") ? tag.getString("label") : "";
-			} else storageName = "";
+			} else {
+				storageName = "";
+			}
 		}
 	}
-    
+
 	private void unloadStorage() {
-		if(worldObj.isRemote || state.getStorage() == null) return;
-		
+		if(worldObj.isRemote || state.getStorage() == null) {
+			return;
+		}
+
 		switchState(State.STOPPED);
 		try {
 			state.getStorage().onStorageUnload();
-		} catch(Exception e) { e.printStackTrace(); }
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 		state.setStorage(null);
 	}
-	
+
 	@Override
 	public void onSlotUpdate(int slot) {
 		if(this.getStackInSlot(0) == null) {
@@ -190,7 +207,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 			}
 		}
 	}
-	
+
 	@Override
 	public void onChunkUnload() {
 		super.onChunkUnload();
@@ -201,218 +218,319 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 	public int getSizeInventory() {
 		return 1;
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
-		if(tag.hasKey("state")) this.state.setState(State.values()[tag.getByte("state")]);
-		if(tag.hasKey("sp")) this.state.packetSize = tag.getShort("sp");
-		if(tag.hasKey("vo")) this.state.soundVolume = tag.getByte("vo"); else this.state.soundVolume = 127;
+		if(tag.hasKey("state")) {
+			this.state.setState(State.values()[tag.getByte("state")]);
+		}
+		if(tag.hasKey("sp")) {
+			this.state.packetSize = tag.getShort("sp");
+		}
+		if(tag.hasKey("vo")) {
+			this.state.soundVolume = tag.getByte("vo");
+		} else {
+			this.state.soundVolume = 127;
+		}
 		loadStorage();
 	}
-	
+
 	@Override
 	public void writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
-		tag.setShort("sp", (short)this.state.packetSize);
-		tag.setByte("state", (byte)this.state.getState().ordinal());
-		if(this.state.soundVolume != 127) tag.setByte("vo", (byte)this.state.soundVolume);
+		tag.setShort("sp", (short) this.state.packetSize);
+		tag.setByte("state", (byte) this.state.getState().ordinal());
+		if(this.state.soundVolume != 127) {
+			tag.setByte("vo", (byte) this.state.soundVolume);
+		}
 	}
-	
+
+	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
+	public void readFromNBT_OC(NBTTagCompound nbt) {
+		super.readFromNBT_OC(nbt);
+		if(oc_fs != null && oc_fs.node() != null && oc_fs.node().host() == this) {
+			oc_fs.node().load(nbt.getCompoundTag("oc:fs"));
+		}
+	}
+
+	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
+	public void writeToNBT_OC(NBTTagCompound nbt) {
+		super.writeToNBT_OC(nbt);
+		if(oc_fs != null && oc_fs.node() != null && oc_fs.node().host() == this) {
+			final NBTTagCompound fsNbt = new NBTTagCompound();
+			oc_fs.node().save(fsNbt);
+			nbt.setTag("oc:fs", fsNbt);
+		}
+	}
+
+	@Override
+	public void writeToRemoteNBT(NBTTagCompound nbt) {
+		super.writeToRemoteNBT(nbt);
+		nbt.setByte("state", (byte) this.state.getState().ordinal());
+	}
+
 	// OpenComputers
 
 	@Callback(direct = true)
-    @Optional.Method(modid=Mods.OpenComputers)
+	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] isEnd(Context context, Arguments args) {
-		if(state.getStorage() != null) return new Object[]{state.getStorage().getPosition() + state.packetSize <= state.getStorage().getSize()};
-		else return new Object[]{true};
+		if(state.getStorage() != null) {
+			return new Object[] { state.getStorage().getPosition() + state.packetSize <= state.getStorage().getSize() };
+		} else {
+			return new Object[] { true };
+		}
 	}
-	
-    @Callback(direct = true)
-    @Optional.Method(modid=Mods.OpenComputers)
-    public Object[] isReady(Context context, Arguments args) {
-    	return new Object[]{state.getStorage() != null};
-    }
-    
-    @Callback(direct = true)
-    @Optional.Method(modid=Mods.OpenComputers)
-    public Object[] getSize(Context context, Arguments args) {
-    	return new Object[]{(state.getStorage() != null ? state.getStorage().getSize() : 0)};
-    }
-    
-    @Callback
-    @Optional.Method(modid=Mods.OpenComputers)
-    public Object[] setLabel(Context context, Arguments args) {
-    	if(args.count() == 1) {
-    		if(args.isString(0)) setLabel(args.checkString(0));
-    	}
-    	return new Object[]{(state.getStorage() != null ? storageName : "")};
-    }
-    
-    @Callback
-    @Optional.Method(modid=Mods.OpenComputers)
-    public Object[] getLabel(Context context, Arguments args) {
-    	return new Object[]{(state.getStorage() != null ? storageName : "")};
-    }
+
+	@Callback(direct = true)
+	@Optional.Method(modid = Mods.OpenComputers)
+	public Object[] isReady(Context context, Arguments args) {
+		return new Object[] { state.getStorage() != null };
+	}
+
+	@Callback(direct = true)
+	@Optional.Method(modid = Mods.OpenComputers)
+	public Object[] getSize(Context context, Arguments args) {
+		return new Object[] { (state.getStorage() != null ? state.getStorage().getSize() : 0) };
+	}
 
 	@Callback
-    @Optional.Method(modid=Mods.OpenComputers)
-    public Object[] seek(Context context, Arguments args) {
-    	if(state.getStorage() != null && args.count() >= 1 && args.isInteger(0)) {
-    		return new Object[]{state.getStorage().seek(args.checkInteger(0))};
-    	}
-    	return null;
-    }
-    
-    @Callback
-    @Optional.Method(modid=Mods.OpenComputers)
-    public Object[] read(Context context, Arguments args) {
-    	if(state.getStorage() != null) {
-    		if(args.count() >= 1 && args.isInteger(0) && (args.checkInteger(0) >= 0)) {
-    			byte[] data = new byte[args.checkInteger(0)];
-    			state.getStorage().read(data, false);
-    			return new Object[]{data};
-    		} else return new Object[]{ state.getStorage().read(false) & 0xFF};
-    	} else return null;
-    }
-    
-    @Callback
-    @Optional.Method(modid=Mods.OpenComputers)
-    public Object[] write(Context context, Arguments args) {
-    	if(state.getStorage() != null && args.count() >= 1) {
-    		if(args.isInteger(0))
-    			state.getStorage().write((byte)args.checkInteger(0));
-    		else if(args.isByteArray(0))
-    			state.getStorage().write(args.checkByteArray(0));
-    	}
-    	return null;
-    }
-    
-    @Callback
-    @Optional.Method(modid=Mods.OpenComputers)
-    public Object[] play(Context context, Arguments args) {
-    	switchState(State.PLAYING);
-    	return new Object[]{state.getStorage() != null};
-    }
+	@Optional.Method(modid = Mods.OpenComputers)
+	public Object[] setLabel(Context context, Arguments args) {
+		if(args.count() == 1) {
+			if(args.isString(0)) {
+				setLabel(args.checkString(0));
+			}
+		}
+		return new Object[] { (state.getStorage() != null ? storageName : "") };
+	}
 
-    @Callback
-    @Optional.Method(modid=Mods.OpenComputers)
-    public Object[] stop(Context context, Arguments args) {
-    	switchState(State.STOPPED);
-    	return new Object[]{state.getStorage() != null};
-    }
-    
-    @Callback
-	@Optional.Method(modid=Mods.OpenComputers)
-    public Object[] setSpeed(Context context, Arguments args) {
-    	if(args.count() > 0 && args.isDouble(0)) return new Object[]{this.state.setSpeed((float)args.checkDouble(0))};
-    	else return null;
-    }
-    
-    @Callback
-	@Optional.Method(modid=Mods.OpenComputers)
-    public Object[] setVolume(Context context, Arguments args) {
-    	if(args.count() > 0 && args.isDouble(0)) this.state.setVolume((float)args.checkDouble(0));
-    	return null;
-    }
-    
-    @Callback
-    @Optional.Method(modid=Mods.OpenComputers)
-    public Object[] getState(Context context, Arguments args) {
-    	return new Object[]{state.getState().toString()};
-    }
-    
-	@Override
-    @Optional.Method(modid=Mods.ComputerCraft)
-	public String[] getMethodNames() {
-		return new String[]{"isEnd", "isReady", "getSize", "getLabel", "getState", "setLabel", "setSpeed", "setVolume", "seek", "read", "write", "play", "stop"};
+	@Callback
+	@Optional.Method(modid = Mods.OpenComputers)
+	public Object[] getLabel(Context context, Arguments args) {
+		return new Object[] { (state.getStorage() != null ? storageName : "") };
+	}
+
+	@Callback
+	@Optional.Method(modid = Mods.OpenComputers)
+	public Object[] seek(Context context, Arguments args) {
+		if(state.getStorage() != null && args.count() >= 1 && args.isInteger(0)) {
+			return new Object[] { state.getStorage().seek(args.checkInteger(0)) };
+		}
+		return null;
+	}
+
+	@Callback
+	@Optional.Method(modid = Mods.OpenComputers)
+	public Object[] read(Context context, Arguments args) {
+		if(state.getStorage() != null) {
+			if(args.count() >= 1 && args.isInteger(0) && (args.checkInteger(0) >= 0)) {
+				byte[] data = new byte[args.checkInteger(0)];
+				state.getStorage().read(data, false);
+				return new Object[] { data };
+			} else {
+				return new Object[] { state.getStorage().read(false) & 0xFF };
+			}
+		} else {
+			return null;
+		}
+	}
+
+	@Callback
+	@Optional.Method(modid = Mods.OpenComputers)
+	public Object[] write(Context context, Arguments args) {
+		if(state.getStorage() != null && args.count() >= 1) {
+			if(args.isInteger(0)) {
+				state.getStorage().write((byte) args.checkInteger(0));
+			} else if(args.isByteArray(0)) {
+				state.getStorage().write(args.checkByteArray(0));
+			}
+		}
+		return null;
+	}
+
+	@Callback
+	@Optional.Method(modid = Mods.OpenComputers)
+	public Object[] play(Context context, Arguments args) {
+		switchState(State.PLAYING);
+		return new Object[] { state.getStorage() != null };
+	}
+
+	@Callback
+	@Optional.Method(modid = Mods.OpenComputers)
+	public Object[] stop(Context context, Arguments args) {
+		switchState(State.STOPPED);
+		return new Object[] { state.getStorage() != null };
+	}
+
+	@Callback
+	@Optional.Method(modid = Mods.OpenComputers)
+	public Object[] setSpeed(Context context, Arguments args) {
+		if(args.count() > 0 && args.isDouble(0)) {
+			return new Object[] { this.state.setSpeed((float) args.checkDouble(0)) };
+		} else {
+			return null;
+		}
+	}
+
+	@Callback
+	@Optional.Method(modid = Mods.OpenComputers)
+	public Object[] setVolume(Context context, Arguments args) {
+		if(args.count() > 0 && args.isDouble(0)) {
+			this.state.setVolume((float) args.checkDouble(0));
+		}
+		return null;
+	}
+
+	@Callback
+	@Optional.Method(modid = Mods.OpenComputers)
+	public Object[] getState(Context context, Arguments args) {
+		return new Object[] { state.getState().toString() };
 	}
 
 	@Override
-    @Optional.Method(modid=Mods.ComputerCraft)
+	@Optional.Method(modid = Mods.ComputerCraft)
+	public String[] getMethodNames() {
+		return new String[] { "isEnd", "isReady", "getSize", "getLabel", "getState", "setLabel", "setSpeed", "setVolume", "seek", "read", "write", "play", "stop" };
+	}
+
+	@Override
+	@Optional.Method(modid = Mods.ComputerCraft)
 	public Object[] callMethod(IComputerAccess computer, ILuaContext context,
-			int method, Object[] arguments) throws LuaException,
-			InterruptedException {
+		int method, Object[] arguments) throws LuaException,
+		InterruptedException {
 		// methods which take strings and do something
 		if(arguments.length == 1 && (arguments[0] instanceof String)) {
-			switch(method) {
-			case 5: setLabel((String)arguments[0]); break;
-			case 10: if(state.getStorage() != null) return new Object[]{state.getStorage().write(((String)arguments[0]).getBytes())}; break;
+			switch(method){
+				case 5:
+					setLabel((String) arguments[0]);
+					break;
+				case 10:
+					if(state.getStorage() != null) {
+						return new Object[] { state.getStorage().write(((String) arguments[0]).getBytes()) };
+					}
+					break;
 			}
 		}
-		
+
 		// methods which take floats and do something
 		if(arguments.length == 1 && (arguments[0] instanceof Double)) {
-			float f = ((Double)arguments[0]).floatValue();
-			int i = ((Double)arguments[0]).intValue();
-			switch(method) {
-			case 6: return new Object[]{this.state.setSpeed(f)};
-			case 7: this.state.setVolume(f); return null;
-			case 8: if(state.getStorage() != null) return new Object[]{state.getStorage().seek(i)};
-			case 10: if(state.getStorage() != null) state.getStorage().write((byte)i); break;
-			case 9: if(state.getStorage() != null) {
-				if(i >= 256) i = 256;
-				byte[] data = new byte[i];
-				state.getStorage().read(data, false);
-				return new Object[]{new String(data)};
-			} break;
+			float f = ((Double) arguments[0]).floatValue();
+			int i = ((Double) arguments[0]).intValue();
+			switch(method){
+				case 6:
+					return new Object[] { this.state.setSpeed(f) };
+				case 7:
+					this.state.setVolume(f);
+					return null;
+				case 8:
+					if(state.getStorage() != null) {
+						return new Object[] { state.getStorage().seek(i) };
+					}
+				case 10:
+					if(state.getStorage() != null) {
+						state.getStorage().write((byte) i);
+					}
+					break;
+				case 9:
+					if(state.getStorage() != null) {
+						if(i >= 256) {
+							i = 256;
+						}
+						byte[] data = new byte[i];
+						state.getStorage().read(data, false);
+						return new Object[] { new String(data) };
+					}
+					break;
 			}
 		}
 
 		// methods which don't take any arguments and do something
-		switch(method) {
-		case 11: switchState(State.PLAYING);
-		case 12: switchState(State.STOPPED);
+		switch(method){
+			case 11:
+				switchState(State.PLAYING);
+			case 12:
+				switchState(State.STOPPED);
 		}
-		
+
 		// returns for the methods which didn't return something before
-		switch(method) {
-		case 0: if(state.getStorage() != null) return new Object[]{state.getStorage().getPosition() + state.packetSize <= state.getStorage().getSize()};
-		
-		case 1:  // isReady, play, stop
-		case 11:
-		case 12: return new Object[]{state.getStorage() != null};
-		
-		case 2: return new Object[]{(state.getStorage() != null ? state.getStorage().getSize() : 0)};
-		
-		case 3: // getLabel, setLabel
-		case 5: return new Object[]{(state.getStorage() != null ? storageName : "")};
-		
-		case 4: return new Object[]{state.getState().toString()};
-		
-		case 9: if(state.getStorage() != null) return new Object[]{ state.getStorage().read(false) & 0xFF};
+		switch(method){
+			case 0:
+				if(state.getStorage() != null) {
+					return new Object[] { state.getStorage().getPosition() + state.packetSize <= state.getStorage().getSize() };
+				}
+
+			case 1:  // isReady, play, stop
+			case 11:
+			case 12:
+				return new Object[] { state.getStorage() != null };
+
+			case 2:
+				return new Object[] { (state.getStorage() != null ? state.getStorage().getSize() : 0) };
+
+			case 3: // getLabel, setLabel
+			case 5:
+				return new Object[] { (state.getStorage() != null ? storageName : "") };
+
+			case 4:
+				return new Object[] { state.getState().toString() };
+
+			case 9:
+				if(state.getStorage() != null) {
+					return new Object[] { state.getStorage().read(false) & 0xFF };
+				}
 		}
-		
+
 		// catch all other methods
 		return null;
 	}
-	
+
 	private int _nedo_lastSeek = 0;
 
 	@Override
-    @Optional.Method(modid=Mods.NedoComputers)
+	@Optional.Method(modid = Mods.NedoComputers)
 	public short busRead(int addr) {
-		switch(addr & 0xFFFE) {
-		case 0: return (short)state.getState().ordinal();
-		case 2: return 0; // speed?
-		case 4: return (short)state.soundVolume;
-		case 6: return (state.getStorage() != null ? (short)(state.getStorage().getSize() / ItemTape.L_MINUTE) : 0);
-		case 8: return (short)_nedo_lastSeek;
-		case 10: return (state.getStorage() != null ? (short)state.getStorage().read(false) : 0);
+		switch(addr & 0xFFFE){
+			case 0:
+				return (short) state.getState().ordinal();
+			case 2:
+				return 0; // speed?
+			case 4:
+				return (short) state.soundVolume;
+			case 6:
+				return (state.getStorage() != null ? (short) (state.getStorage().getSize() / ItemTape.L_MINUTE) : 0);
+			case 8:
+				return (short) _nedo_lastSeek;
+			case 10:
+				return (state.getStorage() != null ? (short) state.getStorage().read(false) : 0);
 		}
 		return 0;
 	}
 
 	@Override
-    @Optional.Method(modid=Mods.NedoComputers)
+	@Optional.Method(modid = Mods.NedoComputers)
 	public void busWrite(int addr, short data) {
-		switch(addr & 0xFFFE) {
-		case 0: state.setState(State.values()[data % State.values().length]); break;
-		case 2: break; // speed?
-		case 4:state. soundVolume = Math.max(0, Math.min(data, 127)); break;
-		case 6: break; // tape size is read-only!
-		case 8: _nedo_lastSeek = state.getStorage().seek(data); break;
-		case 10: if(state.getStorage() != null) state.getStorage().write((byte)(data & 0xFF)); break;
+		switch(addr & 0xFFFE){
+			case 0:
+				state.setState(State.values()[data % State.values().length]);
+				break;
+			case 2:
+				break; // speed?
+			case 4:
+				state.soundVolume = Math.max(0, Math.min(data, 127));
+				break;
+			case 6:
+				break; // tape size is read-only!
+			case 8:
+				_nedo_lastSeek = state.getStorage().seek(data);
+				break;
+			case 10:
+				if(state.getStorage() != null) {
+					state.getStorage().write((byte) (data & 0xFF));
+				}
+				break;
 		}
 	}
 }
