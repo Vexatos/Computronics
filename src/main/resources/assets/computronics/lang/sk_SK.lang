@@ -1,0 +1,74 @@
+# Slovak translations by leSamo /twitter: @leSamo/
+tile.computronics.ironNoteBlock.name=Železný notový blok
+tile.computronics.tapeDrive.name=Kazetová jednotka
+tile.computronics.camera.name=Kamera
+tile.computronics.chatBox.name=Chatovací rámček
+tile.computronics.chatBox.creative.name=Tvorivý chatovací ramček
+tile.computronics.sorter.name=Triedič
+tile.computronics.cipher.name=Šifrovací blok
+tile.computronics.radar.name=Radar
+tile.computronics.colorfulLamp.name=Farebná lampa
+tile.computronics.eepromReader.name=EEPROM čítačka
+tile.computronics.locomotiveRelay.name=Digitálne lokomotivové relé
+
+tooltip.computronics.chatBox.creative=NSA v krabici!
+tooltip.computronics.sensor.bound=Zviazané s [%1$s,%2$s,%3$s]
+tooltip.computronics.sensor.desc1=Klikni pravým tlačítkom na lokomotivové relé\npři so SHIFTom pre zviazanie
+tooltip.computronics.sensor.desc2=Klikni ľavým tlačítkom na elektrickú lokomotívu\npři so SHIFTom pre zviazanie
+tooltip.computronics.tape.length=Délka: %s minut
+tooltip.computronics.tape.balanced=Vyrovnáno!
+tooltip.computronics.tape.unnamed=Nepojmenovaná kazeta
+tooltip.computronics.tape.none=Žádná kazeta
+tooltip.computronics.tape.ig=Standartní CDVR pro\nGregTech Intergalaktické lodě
+
+tooltip.computronics.waila.base.bus=§aPřípojka ID§f: %s
+tooltip.computronics.waila.relay.bound=Svázáno
+tooltip.computronics.waila.relay.notbound=Nesvázáno
+tooltip.computronics.waila.tape.tapeinserted=Kazeta vložena
+tooltip.computronics.waila.tape.labeltapeinserted=Kazeta "%s" vložena
+tooltip.computronics.waila.tape.notapeinserted=Není vložena žádná kazeta
+tooltip.computronics.waila.tape.state=Stav: %s
+tooltip.computronics.waila.tape.state.stopped=Zastaveno
+tooltip.computronics.waila.tape.state.playing=Přehrávám
+tooltip.computronics.waila.tape.state.rewinding=Přetáčím zpět
+tooltip.computronics.waila.tape.state.forwarding=Přetáčím dopředu
+
+option.computronics.enableAddress=Zobrazit adresu komponentu
+option.computronics.enableTape=Zobrazit vloženou kazetu
+option.computronics.enableTapeName=Zobrazit jméno kazety
+option.computronics.enableDriveState=Zobrazit etapu přehrávané kazety
+option.computronics.enableRelayBound=Zobrazit svázání přenosu
+
+item.computronics.reelChromoxide.name=Chromium Dioxidový kotouč kazety
+item.computronics.robot_upgrade_camera.name=Vylepšení kamery
+item.computronics.robot_upgrade_chatbox.name=Vylepšení chatu
+item.computronics.robot_upgrade_radar.name=Vylepšení radaru
+item.computronics.card_fx.name=Karta částicových efektů
+item.computronics.relaySensor.name=Senzor digitálního přenosu
+item.computronics.part_tape_track.name=Kazetová stopa
+item.computronics.tape.ig.name=Intergalaktické CDVR
+item.computronics.tape.name=Kazetová páska
+
+itemGroup.tabComputronics=Computronics
+
+entity.computronics.itemTape.name=Intergalaktické CDVR
+
+chat.computronics.cipher.locked=Tento šifrový blok je uzamčen! Nemáš k němu přístup.
+chat.computronics.sensor.bound=Přenos úspěšně svázán s lokomotivou!
+chat.computronics.sensor.noRelay=Na zadaných souřadnicích není žádný přenos!
+chat.computronics.sensor.tooFarAway=Přenos a lokomotiva jsou od sebe příliš daleko!
+chat.computronics.sensor.wrongLoco=Senzory mohou být připojeny pouze na elektrické lokomotivy!
+chat.computronics.sensor.wrongDim=Přenos a lokomotiva jsou v odlišných dimenzích!
+
+achievement.computronics.gotTape=Hudba pro všechny
+achievement.computronics.gotTape.desc=Rozhodně lepší jak trubková nahrávka
+achievement.computronics.gotStarTape=Za duhou
+achievement.computronics.gotStarTape.desc=Kde žije Nyan Cat
+achievement.computronics.gotIGTape=První část tvé vesmírné lodi
+achievement.computronics.gotIGTape.desc=Taková, kterou nemůžeš sestavit jen jednou
+achievement.computronics.droppedIGTape=MH370
+achievement.computronics.droppedIGTape.desc=Zmizelo to!?
+achievement.computronics.gotLoco=Elektrická revoluce
+achievement.computronics.gotLoco.desc=A takhle to začíná.
+achievement.computronics.gotRelay=Digitální revoluce
+achievement.computronics.gotRelay.desc=0100100001000101010011000101000000100001
