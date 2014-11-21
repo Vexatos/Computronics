@@ -140,8 +140,8 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 
 	@Override
 	public void invalidate() {
-		super.invalidate();
 		unloadStorage();
+		super.invalidate();
 	}
 
 	@Override
@@ -210,8 +210,8 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 
 	@Override
 	public void onChunkUnload() {
-		super.onChunkUnload();
 		unloadStorage();
+		super.onChunkUnload();
 	}
 
 	@Override

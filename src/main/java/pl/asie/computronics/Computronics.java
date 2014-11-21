@@ -53,6 +53,7 @@ import pl.asie.computronics.reference.Compat;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tape.StorageManager;
+import pl.asie.computronics.tape.TapeStorageEventHandler;
 import pl.asie.computronics.tile.TileCamera;
 import pl.asie.computronics.tile.TileChatBox;
 import pl.asie.computronics.tile.TileCipherBlock;
@@ -84,6 +85,7 @@ public class Computronics {
 	@Instance(value = Mods.Computronics)
 	public static Computronics instance;
 	public static StorageManager storage;
+	public static TapeStorageEventHandler storageEventHandler;
 	public static GuiHandler gui;
 	public static PacketHandler packet;
 	public DFPWMPlaybackManager audio;
@@ -232,6 +234,10 @@ public class Computronics {
 
 		if(chatBox != null) {
 			MinecraftForge.EVENT_BUS.register(new ChatBoxHandler());
+		}
+		if(tapeReader != null) {
+			storageEventHandler = new TapeStorageEventHandler();
+			MinecraftForge.EVENT_BUS.register(storageEventHandler);
 		}
 
 		proxy.registerGuis(gui);
