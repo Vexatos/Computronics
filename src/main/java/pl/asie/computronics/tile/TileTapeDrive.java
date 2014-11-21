@@ -177,6 +177,10 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 		}
 	}
 
+	public void saveStorage(){
+		unloadStorage();
+	}
+
 	private void unloadStorage() {
 		if(worldObj.isRemote || state.getStorage() == null) {
 			return;

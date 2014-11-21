@@ -16,7 +16,7 @@ public class TapeStorageEventHandler {
 
 		for(Object tile : event.world.loadedTileEntityList) {
 			if(tile instanceof TileTapeDrive && !((TileTapeDrive) tile).isInvalid()) {
-				((TileTapeDrive) tile).invalidate();
+				((TileTapeDrive) tile).saveStorage();
 			}
 		}
 	}
