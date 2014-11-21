@@ -46,13 +46,13 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 	private void initOCFilesystem() {
 		oc_fs = li.cil.oc.api.FileSystem.asManagedEnvironment(li.cil.oc.api.FileSystem.fromClass(Computronics.class, Mods.Computronics, "lua/component/tape_drive"),
 			"tape_drive");
+		((Component) oc_fs.node()).setVisibility(Visibility.Network);
 	}
 
 	@Override
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void onConnect(final Node node) {
 		if(node.host() instanceof Context) {
-			((Component) oc_fs.node()).setVisibility(Visibility.Network);
 			node.connect(oc_fs.node());
 		}
 	}
@@ -269,7 +269,9 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 	@Override
 	public void writeToRemoteNBT(NBTTagCompound nbt) {
 		super.writeToRemoteNBT(nbt);
-		nbt.setByte("state", (byte) this.state.getState().ordinal());
+		if(Loader.isModLoaded(Mods.Waila)) {
+			nbt.setByte("state", (byte) this.state.getState().ordinal());
+		}
 	}
 
 	// OpenComputers

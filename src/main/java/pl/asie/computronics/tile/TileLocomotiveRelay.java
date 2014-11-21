@@ -1,5 +1,6 @@
 package pl.asie.computronics.tile;
 
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
@@ -111,7 +112,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 	@Override
 	public void writeToRemoteNBT(NBTTagCompound nbt) {
 		super.writeToRemoteNBT(nbt);
-		if(this.locomotive != null) {
+		if(this.locomotive != null && Loader.isModLoaded(Mods.Waila)) {
 			nbt.setBoolean("bound", isBound);
 		}
 	}

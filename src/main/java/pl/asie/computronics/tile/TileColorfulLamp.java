@@ -1,5 +1,6 @@
 package pl.asie.computronics.tile;
 
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
@@ -141,7 +142,9 @@ public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundl
 	@Override
 	public void writeToRemoteNBT(NBTTagCompound tag) {
 		super.writeToRemoteNBT(tag);
-		tag.setShort("clc", (short) (color & 32767));
+		if(Loader.isModLoaded(Mods.Waila)) {
+			tag.setShort("clc", (short) (color & 32767));
+		}
 	}
 
 	@Override

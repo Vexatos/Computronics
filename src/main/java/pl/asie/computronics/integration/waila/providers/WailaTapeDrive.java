@@ -45,16 +45,6 @@ public class WailaTapeDrive extends ComputronicsWailaProvider {
 		return currenttip;
 	}
 
-	private String getLabel(NBTTagCompound data, ItemStack is) {
-		if(data.hasKey("Inventory")
-			&& data.getTagList("Inventory", 10).tagCount() > 0
-			&& data.getTagList("Inventory", 10).getCompoundTagAt(0).hasKey("tag")
-			&& data.getTagList("Inventory", 10).getCompoundTagAt(0).getCompoundTag("tag").hasKey("label")) {
-			return data.getTagList("Inventory", 10).getCompoundTagAt(0).getCompoundTag("tag").getString("label");
-		}
-		return Computronics.itemTape.getLabel(is);
-	}
-
 	/*@Override
 	public void decorateBlock(ItemStack itemStack, IWailaDataAccessor accessor, IWailaConfigHandler config) {
 		BlockTapeReader block = (BlockTapeReader) accessor.getBlock();
