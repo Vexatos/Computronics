@@ -1,3 +1,8 @@
+==== 1.3.2 ====
+
+  * FIXED: Tapes not retaining their data
+  * FIXED: Recipe crash when GregTech is installed but Railcraft is not
+
 ==== 1.3.1 ====
 
   *This is the mandatory hotfix release after a major relese*

@@ -42,6 +42,7 @@ import pl.asie.computronics.integration.ModRecipes;
 import pl.asie.computronics.integration.buildcraft.ActionProvider;
 import pl.asie.computronics.integration.buildcraft.StatementParameters;
 import pl.asie.computronics.integration.buildcraft.TriggerProvider;
+import pl.asie.computronics.integration.gregtech.GregTechRecipes;
 import pl.asie.computronics.integration.railcraft.IntegrationRailcraft;
 import pl.asie.computronics.item.ItemTape;
 import pl.asie.computronics.item.block.ItemBlockWithSpecialText;
@@ -71,7 +72,7 @@ import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Mod(modid = Mods.Computronics, name = Mods.Computronics_NAME, version = "@VERSION@", useMetadata = true, dependencies = "required-after:asielib@[0.3.3,);after:ComputerCraft;after:OpenComputers@[1.4.0,);after:OpenComputers|Core;after:MineFactoryReloaded;after:RedLogic;after:ProjRed|Core;after:nedocomputers;after:BuildCraft|Core@[6.1.5,);after:Railcraft@[9.4.0.0,);after:gregtech;after:EnderIO")
+@Mod(modid = Mods.Computronics, name = Mods.Computronics_NAME, version = "@VERSION@", useMetadata = true, dependencies = "required-after:asielib@[0.3.4,);after:ComputerCraft;after:OpenComputers@[1.4.0,);after:OpenComputers|Core;after:MineFactoryReloaded;after:RedLogic;after:ProjRed|Core;after:nedocomputers;after:BuildCraft|Core@[6.1.5,);after:Railcraft@[9.4.0.0,);after:gregtech;after:EnderIO")
 public class Computronics {
 	public Config config;
 	public Compat compat;
@@ -270,14 +271,19 @@ public class Computronics {
 	public void postInit(FMLPostInitializationEvent event) {
 
 		if(Loader.isModLoaded(Mods.GregTech) && Config.GREGTECH_RECIPES) {
-			ModRecipes.GregTechRecipes.registerGregTechRecipes();
+			ModRecipes.instance = new GregTechRecipes();
 		} else {
-			ModRecipes.registerRecipes();
+			ModRecipes.instance = new ModRecipes();
+		}
+		if(ModRecipes.instance != null) {
+			ModRecipes.instance.registerRecipes();
+		} else {
+			log.error("Could not register recipes, an error occured!");
 		}
 
 		// Mod compat - GregTech
 		if(itemTape != null && Loader.isModLoaded(Mods.GregTech) && itemPartsGreg != null) {
-			ModRecipes.GregTechRecipes.regsiterGregTechTapeRecipes();
+			GregTechRecipes.regsiterGregTechTapeRecipes();
 		}
 
 		if(Loader.isModLoaded(Mods.OpenComputers)) {
