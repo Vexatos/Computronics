@@ -181,7 +181,7 @@ public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundl
 	@Override
 	@Optional.Method(modid = Mods.ProjectRed)
 	public byte[] getBundledSignal(int side) {
-		return new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+		return null;
 	}
 
 	@Override
