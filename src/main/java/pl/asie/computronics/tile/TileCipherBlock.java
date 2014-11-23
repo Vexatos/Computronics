@@ -302,7 +302,7 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements IBundle
 		blockMetadata = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
 		if(side == (Computronics.cipher.relToAbs(5, blockMetadata))) {
 			return getBundledOutput();
-		} else return new byte[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+		} else return null;
 	}
 
 	@Override
