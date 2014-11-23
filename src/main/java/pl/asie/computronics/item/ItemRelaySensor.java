@@ -132,7 +132,7 @@ public class ItemRelaySensor extends Item {
 		} else {
 			descKey = "tooltip.computronics.sensor.desc1";
 		}
-		String[] local = StringUtil.localize(descKey).split("\\n");
+		String[] local = StringUtil.localize(descKey).split("\n");
 		for(String s : local) {
 			text.add(EnumChatFormatting.GRAY + s);
 		}

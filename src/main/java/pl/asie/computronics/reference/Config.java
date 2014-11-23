@@ -25,6 +25,7 @@ public class Config {
 	public static double RADAR_ENERGY_COST_OC = 5.0;
 	public static double RADAR_CC_TIME = 0.5;
 	public static double FX_ENERGY_COST = 0.2;
+	public static double SPOOFING_ENERGY_COST = 0.2;
 	public static String CHATBOX_PREFIX = "ChatBox";
 	public static double LOCOMOTIVE_RELAY_RANGE = 128.0;
 	public static boolean GREGTECH_RECIPES = false;
@@ -74,6 +75,9 @@ public class Config {
 			// Particle Card
 			FX_ENERGY_COST = convertRFtoOC(
 				config.getFloat("ocParticleCardCostPerParticle", "power", 2.0f, 0.0f, 10000.0f, "How much energy 1 particle emission should take."));
+			//Spoofing Card
+			SPOOFING_ENERGY_COST = convertRFtoOC(
+				config.getFloat("ocSpoofingCardCostPerMessage", "power", 2.0f, 0.0f, 10000.0f, "How much energy sending one spoofed message should take"));
 		}
 
 		// Radar

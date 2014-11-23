@@ -8,6 +8,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import openperipheral.api.ApiAccess;
 import openperipheral.api.IAdapterFactory;
+import openperipheral.api.IPeripheralBlacklist;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheralProvider;
 import pl.asie.computronics.reference.Mods;
@@ -48,9 +49,13 @@ public class MultiPeripheralProvider implements IPeripheralProvider {
 	@Optional.Method(modid = Mods.OpenPeripheral)
 	private IMultiPeripheral getOpenPeripheral(World world, int x, int y, int z) {
 		TileEntity tile = world.getTileEntity(x, y, z);
-		if(tile != null) {
+		if(tile != null && ApiAccess.isApiPresent(IAdapterFactory.class)) {
 			IPeripheral peripheral = ApiAccess.getApi(IAdapterFactory.class).createPeripheral(tile);
-			if(peripheral != null) {
+			boolean blacklisted = false;
+			if(ApiAccess.isApiPresent(IPeripheralBlacklist.class)) {
+				blacklisted = ApiAccess.getApi(IPeripheralBlacklist.class).isBlacklisted(tile.getClass());
+			}
+			if(peripheral != null && !blacklisted) {
 				return new OpenMultiPeripheral(peripheral);
 			}
 		}

@@ -56,7 +56,7 @@ public class IntegrationOpenComputers {
 	private final Computronics computronics;
 	private final Logger log;
 
-	public static ItemOpenComputers itemRobotUpgrade;
+	public static ItemOpenComputers itemOCParts;
 
 	public IntegrationOpenComputers(Computronics computronics) {
 		this.computronics = computronics;
@@ -68,9 +68,9 @@ public class IntegrationOpenComputers {
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void preInit() {
 		if(computronics.isEnabled("ocRobotUpgrades", true)) {
-			itemRobotUpgrade = new ItemOpenComputers();
-			GameRegistry.registerItem(itemRobotUpgrade, "computronics.robotUpgrade");
-			Driver.add(itemRobotUpgrade);
+			itemOCParts = new ItemOpenComputers();
+			GameRegistry.registerItem(itemOCParts, "computronics.robotUpgrade");
+			Driver.add(itemOCParts);
 		}
 
 		// OpenComputers needs a hook in updateEntity in order to proprly register peripherals.
@@ -168,14 +168,36 @@ public class IntegrationOpenComputers {
 			try {
 				for(int i = 0; i < b.length; i++) {
 					Block t = b[i];
-					GameRegistry.addShapedRecipe(new ItemStack(itemRobotUpgrade, 1, i), "mcm", 'c', new ItemStack(t, 1, 0), 'm', li.cil.oc.api.Items.get("chip2").createItemStack(1));
-					GameRegistry.addShapedRecipe(new ItemStack(itemRobotUpgrade, 1, i), "m", "c", "m", 'c', new ItemStack(t, 1, 0), 'm', li.cil.oc.api.Items.get("chip2").createItemStack(1));
+					GameRegistry.addShapedRecipe(new ItemStack(itemOCParts, 1, i),
+						"mcm", 'c',
+						new ItemStack(t, 1, 0),
+						'm', li.cil.oc.api.Items.get("chip2").createItemStack(1));
+					GameRegistry.addShapedRecipe(new ItemStack(itemOCParts, 1, i),
+						"m", "c", "m",
+						'c', new ItemStack(t, 1, 0),
+						'm', li.cil.oc.api.Items.get("chip2").createItemStack(1));
 				}
-				GameRegistry.addShapedRecipe(new ItemStack(itemRobotUpgrade, 1, 3), "mf", " b", 'm', li.cil.oc.api.Items.get("chip2").createItemStack(1), 'f', Items.firework_charge, 'b', li.cil.oc.api.Items.get("card").createItemStack(1));
 			} catch(Exception e) {
 				log.error("Could not create robot upgrade recipes! You are most likely using OpenComputers 1.2 - please upgrade to 1.3.0+!");
 				e.printStackTrace();
 			}
+		}
+		if(computronics.isEnabled("ocParticleCard", true)) {
+			GameRegistry.addShapedRecipe(new ItemStack(itemOCParts, 1, 3),
+				"mf", " b",
+				'm', li.cil.oc.api.Items.get("chip2").createItemStack(1),
+				'f', Items.firework_charge,
+				'b', li.cil.oc.api.Items.get("card").createItemStack(1));
+
+		}
+		if(computronics.isEnabled("ocSpoofingCard", true)) {
+			GameRegistry.addShapedRecipe(new ItemStack(itemOCParts, 1, 4),
+				"mfl", "pb ", "   ",
+				'm', li.cil.oc.api.Items.get("ram2").createItemStack(1),
+				'f', li.cil.oc.api.Items.get("chip2").createItemStack(1),
+				'b', li.cil.oc.api.Items.get("lanCard").createItemStack(1),
+				'p', li.cil.oc.api.Items.get("printedCircuitBoard").createItemStack(1),
+				'l', Items.brick);
 		}
 	}
 }
