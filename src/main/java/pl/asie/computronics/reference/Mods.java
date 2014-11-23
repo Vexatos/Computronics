@@ -5,28 +5,37 @@ package pl.asie.computronics.reference;
  * @author Vexatos
  */
 public class Mods {
-	public static final String Computronics = "computronics";
-	public static final String Computronics_NAME = "Computronics";
+	//The mod itself
+	public static final String
+		Computronics = "computronics",
+		Computronics_NAME = "Computronics";
 
-	public static final String OpenComputers = "OpenComputers";
-	public static final String ComputerCraft = "ComputerCraft";
-	public static final String NedoComputers = "nedocomputers";
+	//Computer mods
+	public static final String
+		OpenComputers = "OpenComputers",
+		ComputerCraft = "ComputerCraft",
+		NedoComputers = "nedocomputers";
 
-	public static final String AE2 = "appliedenergistics2";
-	public static final String BetterStorage = "betterstorage";
-	public static final String EnderIO = "EnderIO";
-	public static final String Factorization = "factorization";
-	public static final String FSP = "Steamcraft";
-	public static final String GregTech = "gregtech";
-	public static final String JABBA = "JABBA";
-	public static final String MFR = "MineFactoryReloaded";
-	public static final String RedLogic = "RedLogic";
-	public static final String ProjectRed = "ProjRed|Core";
-	public static final String Railcraft = "Railcraft";
-	public static final String Waila = "Waila";
+	//Other mods
+	public static final String
+		AE2 = "appliedenergistics2",
+		BetterStorage = "betterstorage",
+		EnderIO = "EnderIO",
+		Factorization = "factorization",
+		FSP = "Steamcraft",
+		GregTech = "gregtech",
+		JABBA = "JABBA",
+		MFR = "MineFactoryReloaded",
+		OpenPeripheral = "OpenPeripheralCore",
+		RedLogic = "RedLogic",
+		ProjectRed = "ProjRed|Core",
+		Railcraft = "Railcraft",
+		Waila = "Waila";
 
+	//APIs
 	public static class API {
-		public static final String BuildCraftStatements = "BuildCraftAPI|statements";
-		public static final String CoFHAPI_Energy = "CoFHAPI|energy";
+		public static final String
+			BuildCraftStatements = "BuildCraftAPI|statements",
+			CoFHAPI_Energy = "CoFHAPI|energy";
 	}
 }

@@ -1,3 +1,9 @@
+==== 1.3.3 ====
+
+  * ADDED: OpenPeripheral integration:
+    - Now OpenPeripheral peripherals aren't ignored anymore if Computronics is present
+  * FIXED: Lamps ignoring bundled redstone if placed adjacent to each other
+
 ==== 1.3.2 ====
 
   * FIXED: Tapes not retaining their data

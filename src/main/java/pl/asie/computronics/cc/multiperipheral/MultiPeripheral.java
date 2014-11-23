@@ -34,7 +34,7 @@ public class MultiPeripheral implements IPeripheral {
 			String[] names = peripheral.getMethodNames();
 			if(names != null) {
 				for(String name : names) {
-					if(!(methods.containsKey(name) && peripheral.peripheralPriority() < methods.get(name).peripheralPriority())) {
+					if(!methods.containsKey(name) || peripheral.peripheralPriority() > methods.get(name).peripheralPriority()) {
 						methods.put(name, peripheral);
 					}
 				}
