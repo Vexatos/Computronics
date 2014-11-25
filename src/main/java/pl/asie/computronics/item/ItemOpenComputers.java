@@ -15,6 +15,7 @@ import li.cil.oc.client.KeyBindings;
 import li.cil.oc.util.ItemCosts;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -26,6 +27,7 @@ import pl.asie.computronics.oc.DriverCardSpoof;
 import pl.asie.computronics.oc.RobotUpgradeCamera;
 import pl.asie.computronics.oc.RobotUpgradeChatBox;
 import pl.asie.computronics.oc.RobotUpgradeRadar;
+import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.StringUtil;
 import pl.asie.lib.item.ItemMultiple;
@@ -51,6 +53,7 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 	}
 
 	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
 	public boolean worksWith(ItemStack stack, Class<? extends EnvironmentHost> host) {
 		boolean works = worksWith(stack);
 		switch(stack.getItemDamage()){
@@ -152,6 +155,23 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 			nbt.setTag("oc:data", new NBTTagCompound());
 		}
 		return nbt.getCompoundTag("oc:data");
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	@SuppressWarnings("unchecked")
+	public void getSubItems(net.minecraft.item.Item item, CreativeTabs tabs, List list) {
+		if(Config.OC_ROBOT_UPGRADES) {
+			list.add(new ItemStack(item, 1, 0));
+			list.add(new ItemStack(item, 1, 1));
+			list.add(new ItemStack(item, 1, 2));
+		}
+		if(Config.OC_CARD_FX) {
+			list.add(new ItemStack(item, 1, 3));
+		}
+		if(Config.OC_CARD_SPOOF) {
+			list.add(new ItemStack(item, 1, 4));
+		}
 	}
 
 	private static final int maxWidth = 220;

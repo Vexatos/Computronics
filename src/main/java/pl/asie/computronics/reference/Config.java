@@ -31,6 +31,10 @@ public class Config {
 	public static boolean GREGTECH_RECIPES = false;
 	public static boolean NON_OC_RECIPES = false;
 
+	public static boolean OC_ROBOT_UPGRADES;
+	public static boolean OC_CARD_FX;
+	public static boolean OC_CARD_SPOOF;
+
 	public static String TAPE_LENGTHS;
 	public static boolean REDSTONE_REFRESH, CHATBOX_CREATIVE;
 
@@ -71,6 +75,10 @@ public class Config {
 				config.getFloat("cipherKeyConsumption", "power", 16000.0f, 0.0f, 100000.0F, "How much energy the Advanced Cipher Block should consume for creating a key set"));
 			CIPHER_WORK_CONSUMPTION = convertRFtoOC(
 				config.getFloat("cipherWorkConsumption", "power", 160.0f, 0.0f, 100000.0f, "How much base energy the Advanced Cipher Block should consume per encryption/decryption task. It will consume this value + 2*(number of characters in message)"));
+
+			OC_ROBOT_UPGRADES = config.get("enable.opencomputers", "robotUpgrades", true).getBoolean(true);
+			OC_CARD_FX = config.get("enable.opencomputers", "particleCard", true).getBoolean(true);
+			OC_CARD_SPOOF = config.get("enable.opencomputers", "spoofingCard", true).getBoolean(true);
 
 			// Particle Card
 			FX_ENERGY_COST = convertRFtoOC(

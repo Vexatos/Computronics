@@ -2,12 +2,12 @@ package pl.asie.computronics.oc;
 
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
+import cpw.mods.fml.common.event.FMLMissingMappingsEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import li.cil.oc.api.Driver;
 import net.minecraft.block.Block;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.config.Configuration;
 import org.apache.logging.log4j.Logger;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.integration.appeng.DriverSpatialIOPort;
@@ -51,7 +51,6 @@ import static pl.asie.computronics.Computronics.radar;
  */
 public class IntegrationOpenComputers {
 
-	private final Configuration config;
 	private final Compat compat;
 	private final Computronics computronics;
 	private final Logger log;
@@ -60,16 +59,16 @@ public class IntegrationOpenComputers {
 
 	public IntegrationOpenComputers(Computronics computronics) {
 		this.computronics = computronics;
-		this.config = computronics.config.config;
 		this.compat = computronics.compat;
 		this.log = Computronics.log;
 	}
 
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void preInit() {
-		if(computronics.isEnabled("ocRobotUpgrades", true)) {
+
+		if(Config.OC_ROBOT_UPGRADES || Config.OC_CARD_FX || Config.OC_CARD_SPOOF) {
 			itemOCParts = new ItemOpenComputers();
-			GameRegistry.registerItem(itemOCParts, "computronics.robotUpgrade");
+			GameRegistry.registerItem(itemOCParts, "computronics.ocParts");
 			Driver.add(itemOCParts);
 		}
 
@@ -163,7 +162,7 @@ public class IntegrationOpenComputers {
 
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void postInit() {
-		if(computronics.isEnabled("ocRobotUpgrades", true)) {
+		if(Config.OC_ROBOT_UPGRADES) {
 			Block[] b = { camera, chatBox, radar };
 			try {
 				for(int i = 0; i < b.length; i++) {
@@ -182,7 +181,7 @@ public class IntegrationOpenComputers {
 				e.printStackTrace();
 			}
 		}
-		if(computronics.isEnabled("ocParticleCard", true)) {
+		if(Config.OC_CARD_FX) {
 			GameRegistry.addShapedRecipe(new ItemStack(itemOCParts, 1, 3),
 				"mf", " b",
 				'm', li.cil.oc.api.Items.get("chip2").createItemStack(1),
@@ -190,7 +189,7 @@ public class IntegrationOpenComputers {
 				'b', li.cil.oc.api.Items.get("card").createItemStack(1));
 
 		}
-		if(computronics.isEnabled("ocSpoofingCard", true)) {
+		if(Config.OC_CARD_SPOOF) {
 			GameRegistry.addShapedRecipe(new ItemStack(itemOCParts, 1, 4),
 				"mfl", "pb ", "   ",
 				'm', li.cil.oc.api.Items.get("ram2").createItemStack(1),
@@ -198,6 +197,16 @@ public class IntegrationOpenComputers {
 				'b', li.cil.oc.api.Items.get("lanCard").createItemStack(1),
 				'p', li.cil.oc.api.Items.get("printedCircuitBoard").createItemStack(1),
 				'l', Items.brick);
+		}
+	}
+
+	public void remap(FMLMissingMappingsEvent event) {
+		for(FMLMissingMappingsEvent.MissingMapping mapping : event.get()) {
+			if(mapping.name.equals("computronics:computronics.robotUpgrade")) {
+				if(mapping.type == GameRegistry.Type.ITEM) {
+					mapping.remap(itemOCParts);
+				}
+			}
 		}
 	}
 }
