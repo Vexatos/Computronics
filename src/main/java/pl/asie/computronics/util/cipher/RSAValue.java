@@ -1,0 +1,179 @@
+package pl.asie.computronics.util.cipher;
+
+import cpw.mods.fml.common.Optional;
+import dan200.computercraft.api.lua.ILuaContext;
+import dan200.computercraft.api.lua.ILuaObject;
+import dan200.computercraft.api.lua.LuaException;
+import li.cil.oc.api.machine.Arguments;
+import li.cil.oc.api.machine.Callback;
+import li.cil.oc.api.machine.Context;
+import li.cil.oc.api.machine.Value;
+import net.minecraft.nbt.NBTTagCompound;
+import pl.asie.computronics.Computronics;
+import pl.asie.computronics.reference.Mods;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.concurrent.Future;
+
+/**
+ * @author Vexatos
+ */
+@Optional.InterfaceList({
+	@Optional.Interface(iface = "li.cil.oc.api.machine.Value", modid = Mods.OpenComputers),
+	@Optional.Interface(iface = "dan200.computercraft.api.lua.ILuaObject", modid = Mods.ComputerCraft)
+})
+public class RSAValue implements Value, ILuaObject {
+	protected Map<Integer, String> publicKey;
+	protected Map<Integer, String> privateKey;
+	protected Future<?> task;
+
+	protected int bitLength = 0;
+	protected int p = 0;
+	protected int q = 0;
+
+	private Object[] getKeys() {
+		if(publicKey != null && privateKey != null) {
+			return new Object[] { publicKey, privateKey };
+		} else if(task != null && !task.isDone() && !task.isCancelled()) {
+			return new Object[] { null, null, "key is still being generated" };
+		}
+		return new Object[] { null, null, "an error occured during key generation" };
+	}
+
+	public void setKeys(Map<Integer, String> publicKey, Map<Integer, String> privateKey) {
+		this.publicKey = publicKey;
+		this.privateKey = privateKey;
+	}
+
+	public void startCalculation() {
+		if(task == null) {
+			task = Computronics.rsaThreads.submit(new RSACalculationTask(this));
+		}
+	}
+
+	public void startCalculation(int bitLength) {
+		if(task == null) {
+			this.bitLength = bitLength;
+			task = Computronics.rsaThreads.submit(new RSACalculationTask(this, bitLength));
+		}
+	}
+
+	public void startCalculation(int p, int q) {
+		if(task == null) {
+			this.p = p;
+			this.q = q;
+			task = Computronics.rsaThreads.submit(new RSACalculationTask(this, p, q));
+		}
+	}
+
+	@Callback(doc = "function():table,table; Returns the two generated keys, or nil if they are still being generated", direct = true)
+	@Optional.Method(modid = Mods.OpenComputers)
+	public Object[] getKeys(Context c, Arguments a) {
+		return this.getKeys();
+	}
+
+	@Callback(doc = "function():boolean; Returns whether key generation has finished", direct = true)
+	@Optional.Method(modid = Mods.OpenComputers)
+	public Object[] finished(Context c, Arguments a) {
+		return new Object[] { publicKey != null && privateKey != null };
+	}
+
+	@Override
+	@Optional.Method(modid = Mods.ComputerCraft)
+	public String[] getMethodNames() {
+		return new String[] { "getKeys", "finished" };
+	}
+
+	@Override
+	@Optional.Method(modid = Mods.ComputerCraft)
+	public Object[] callMethod(ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
+		switch(method){
+			case 0:{
+				return getKeys();
+			}
+			case 1:{
+				return new Object[] { publicKey != null && privateKey != null };
+			}
+		}
+		return null;
+	}
+
+	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
+	public void load(NBTTagCompound nbt) {
+		if(nbt == null) {
+			nbt = new NBTTagCompound();
+		}
+		NBTTagCompound base = nbt.getCompoundTag("computronics:rsa");
+		if(publicKey == null && privateKey == null) {
+			if(base.hasKey("public") && base.hasKey("private")) {
+				NBTTagCompound pbKey = base.getCompoundTag("public");
+				NBTTagCompound pvKey = base.getCompoundTag("private");
+				publicKey = new LinkedHashMap<Integer, String>();
+				privateKey = new LinkedHashMap<Integer, String>();
+				publicKey.put(1, pbKey.getString("1"));
+				publicKey.put(2, pbKey.getString("2"));
+				privateKey.put(1, pvKey.getString("1"));
+				privateKey.put(2, pvKey.getString("2"));
+			} else if(base.hasKey("bitLength")) {
+				this.startCalculation(base.getInteger("bitLength"));
+			} else if(base.hasKey("p") && base.hasKey("q")) {
+				this.startCalculation(base.getInteger("p"), base.getInteger("q"));
+			} else {
+				this.startCalculation();
+			}
+		}
+	}
+
+	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
+	public void save(NBTTagCompound nbt) {
+		if(nbt == null) {
+			nbt = new NBTTagCompound();
+		}
+		NBTTagCompound base = nbt.getCompoundTag("computronics:rsa");
+		if(publicKey != null && privateKey != null) {
+			NBTTagCompound pbKey = new NBTTagCompound();
+			NBTTagCompound pvKey = new NBTTagCompound();
+			pbKey.setString("1", publicKey.get(1));
+			pbKey.setString("2", publicKey.get(2));
+			pvKey.setString("1", privateKey.get(1));
+			pvKey.setString("2", privateKey.get(2));
+			base.setTag("public", pbKey);
+			base.setTag("private", pvKey);
+		} else if(bitLength > 0) {
+			base.setInteger("bitLength", bitLength);
+		} else if(p > 0 && q > 0) {
+			base.setInteger("p", p);
+			base.setInteger("q", q);
+		}
+		nbt.setTag("computronics:rsa", base);
+	}
+
+	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
+	public Object apply(Context context, Arguments arguments) {
+		return null;
+	}
+
+	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
+	public void unapply(Context context, Arguments arguments) {
+
+	}
+
+	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
+	public Object[] call(Context context, Arguments arguments) {
+		throw new RuntimeException("trying to call a non-callable value");
+	}
+
+	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
+	public void dispose(Context context) {
+		if(this.task != null) {
+			task.cancel(true);
+		}
+	}
+}

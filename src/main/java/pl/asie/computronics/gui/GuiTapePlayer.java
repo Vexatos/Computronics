@@ -1,14 +1,14 @@
 package pl.asie.computronics.gui;
 
 import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import pl.asie.computronics.Computronics;
-import pl.asie.computronics.Packets;
 import pl.asie.computronics.item.ItemTape;
+import pl.asie.computronics.network.Packets;
 import pl.asie.computronics.tile.TapeDriveState.State;
 import pl.asie.computronics.tile.TileTapeDrive;
+import pl.asie.computronics.util.StringUtil;
 import pl.asie.lib.block.ContainerBase;
 import pl.asie.lib.gui.GuiBase;
 import pl.asie.lib.network.Packet;
@@ -22,7 +22,7 @@ public class GuiTapePlayer extends GuiBase {
 		PLAY,
 		STOP,
 		FAST_FORWARD
-	};
+	}
 	private Button buttonMouse = null;
 	
 	public GuiTapePlayer(ContainerBase container) {
@@ -106,7 +106,7 @@ public class GuiTapePlayer extends GuiBase {
 	private String getLabel() {
 		ItemStack stack = (ItemStack)this.container.getInventory().get(0);
 		if(stack != null && stack.getItem() instanceof ItemTape) {
-			String label = I18n.format("tooltip.computronics.tape.unnamed");
+			String label = StringUtil.localize("tooltip.computronics.tape.unnamed");
 			if(stack.getTagCompound() != null && stack.getTagCompound().hasKey("label")) label = stack.getTagCompound().getString("label");
 			return label;
 		} else return null;
@@ -132,7 +132,7 @@ public class GuiTapePlayer extends GuiBase {
 		
 		int labelColor = 0xFFFFFF;
 		if(label == null) {
-			label = I18n.format("tooltip.computronics.tape.none");
+			label = StringUtil.localize("tooltip.computronics.tape.none");
 			labelColor = 0xFF3333;
 		}
 		if(label.length() > 24) label = label.substring(0, 22) + "...";

@@ -8,7 +8,6 @@ import dan200.computercraft.api.filesystem.IMount;
 import dan200.computercraft.api.media.IMedia;
 import dan200.computercraft.api.media.IMediaProvider;
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,7 +16,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
-import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.api.tape.IItemTapeStorage;
@@ -25,6 +23,7 @@ import pl.asie.computronics.api.tape.ITapeStorage;
 import pl.asie.computronics.item.entity.EntityItemIndestructable;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tape.TapeStorage;
+import pl.asie.computronics.util.StringUtil;
 import pl.asie.lib.util.color.ItemColorizer;
 
 import java.util.List;
@@ -100,7 +99,8 @@ public class ItemTape extends Item implements IItemTapeStorage, IMedia, IMediaPr
 	}
 
 	public String getLabel(ItemStack stack) {
-		return stack.getTagCompound().hasKey("label") ? stack.getTagCompound().getString("label") : "";
+		return stack.hasTagCompound() && stack.getTagCompound().hasKey("label")
+			? stack.getTagCompound().getString("label") : "";
 	}
 
 	public boolean setLabel(ItemStack stack, String label) {
@@ -118,15 +118,15 @@ public class ItemTape extends Item implements IItemTapeStorage, IMedia, IMediaPr
 			String label = getLabel(stack);
 			if(label.length() > 0) text.add(EnumChatFormatting.WHITE + "" + EnumChatFormatting.ITALIC + label);
 		}
-		text.add(EnumChatFormatting.GRAY + I18n.format("tooltip.computronics.tape.length", ""+len));
+		text.add(EnumChatFormatting.GRAY + StringUtil.localizeAndFormat("tooltip.computronics.tape.length", ""+len));
 
 		switch (stack.getItemDamage()){
 			case 7:{
-				text.add(EnumChatFormatting.AQUA + StatCollector.translateToLocal("tooltip.computronics.tape.balanced"));
+				text.add(EnumChatFormatting.AQUA + StringUtil.localize("tooltip.computronics.tape.balanced"));
 				break;
 			}
 			case 9:{
-				String[] local = StatCollector.translateToLocal("tooltip.computronics.tape.ig")
+				String[] local = StringUtil.localize("tooltip.computronics.tape.ig")
 					.replace("\\n", "\n").split("\\n");
 				for(String s : local) {
 					text.add(EnumChatFormatting.AQUA + s);
@@ -171,7 +171,7 @@ public class ItemTape extends Item implements IItemTapeStorage, IMedia, IMediaPr
 		// Doesn't exist, create new storage and write NBT data
 		TapeStorage storage = Computronics.storage.newStorage(size);
 		if(stack.getTagCompound() == null) stack.setTagCompound(new NBTTagCompound());
-		stack.getTagCompound().setString("storage", storage.getName());
+		stack.getTagCompound().setString("storage", storage.getUniqueId());
 		return storage;
 	}
 
@@ -215,15 +215,19 @@ public class ItemTape extends Item implements IItemTapeStorage, IMedia, IMediaPr
     }
 
 	@Override
+	@Optional.Method(modid = Mods.ComputerCraft)
 	public IMedia getMedia(ItemStack stack) {
 		if(stack != null && stack.stackSize > 0 && stack.getItem() != null && stack.getItem() instanceof ItemTape) return ((IMedia)stack.getItem());
 		return null;
 	}
 
 	@Override
+	@Optional.Method(modid = Mods.ComputerCraft)
 	public String getAudioTitle(ItemStack stack) { return null; }
 	@Override
+	@Optional.Method(modid = Mods.ComputerCraft)
 	public String getAudioRecordName(ItemStack stack) { return null; }
 	@Override
+	@Optional.Method(modid = Mods.ComputerCraft)
 	public IMount createDataMount(ItemStack stack, World world) { return null; }
 }

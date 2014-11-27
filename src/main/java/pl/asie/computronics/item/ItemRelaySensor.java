@@ -11,10 +11,11 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
-import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.tile.TileLocomotiveRelay;
+import pl.asie.computronics.util.StringUtil;
 
 import java.util.List;
 
@@ -91,7 +92,7 @@ public class ItemRelaySensor extends Item {
 						TileLocomotiveRelay relay = (TileLocomotiveRelay) entity.worldObj.getTileEntity(x, y, z);
 						EntityLocomotiveElectric loco = (EntityLocomotiveElectric) entity;
 						if(loco.dimension == relay.getWorldObj().provider.dimensionId) {
-							if(loco.getDistance(relay.xCoord, relay.yCoord, relay.zCoord) <= Computronics.LOCOMOTIVE_RELAY_RANGE) {
+							if(loco.getDistance(relay.xCoord, relay.yCoord, relay.zCoord) <= Config.LOCOMOTIVE_RELAY_RANGE) {
 								relay.setLocomotive(loco);
 								player.addChatComponentMessage(new ChatComponentTranslation("chat.computronics.sensor.bound"));
 								player.swingItem();
@@ -124,15 +125,14 @@ public class ItemRelaySensor extends Item {
 			int x = data.getInteger("relayX");
 			int y = data.getInteger("relayY");
 			int z = data.getInteger("relayZ");
-			text.add(EnumChatFormatting.AQUA + StatCollector.translateToLocalFormatted("tooltip.computronics.sensor.bound",
+			text.add(EnumChatFormatting.AQUA + StringUtil.localizeAndFormat("tooltip.computronics.sensor.bound",
 				String.valueOf(x), String.valueOf(y), String.valueOf(z)));
 
 			descKey = "tooltip.computronics.sensor.desc2";
 		} else {
 			descKey = "tooltip.computronics.sensor.desc1";
 		}
-		String[] local = StatCollector.translateToLocal(descKey)
-			.replace("\\n", "\n").split("\\n");
+		String[] local = StringUtil.localize(descKey).split("\n");
 		for(String s : local) {
 			text.add(EnumChatFormatting.GRAY + s);
 		}

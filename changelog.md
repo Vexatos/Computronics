@@ -1,11 +1,90 @@
-==== 1.1.1 ====
+==== 1.3.3 ====
 
+  * ADDED: Spoofing Card for OpenComputers
+    - Works the same as a Network Card, but allows you to specify the source address
+  * ADDED: OpenPeripheral integration:
+    - Now OpenPeripheral peripherals aren't ignored anymore if Computronics is present
+  * ADDED: More BuildCraft integration
+    - Now you can get various things about the heat of any block which might overheat
+  * FIXED: Lamps ignoring bundled redstone if placed adjacent to each other
+  * MISC: Added a few more things to the config file
+
+==== 1.3.2 ====
+
+  * FIXED: Tapes not retaining their data
+  * FIXED: Tape Drive File System not being persistent in OpenComputers
+  * FIXED: Waila integration for Tape Drives. Should be a lot better now.
+  * FIXED: Recipe crash when GregTech is installed but Railcraft is not
+
+==== 1.3.1 ====
+
+  *This is the mandatory hotfix release after a major relese*
+  * FIXED: Updated to NedoComputers 0.5 API to fix a crash
+  * FIXED: A crash happening with recipes.
+
+==== 1.3.0 ====
+
+  **Note: This update changed some config values, it is highly recommended to re-generate your config file!**
+  * ADDED: Colored Lights support for the Colorful Lamp!
+  * ADDED: More Railcraft Integration (Requires Railcraft 9.4.x now)
+    - Digital Signal Receiver Box: Same as the Receiver Box driver has been, but also fires an "aspect_changed" event whenever the box aspect changes
+    - Digital Detector: Fires a "minecart" event whenever a minecart passes, containing the type of cart as well as the name if the cart has got one
+    - Now you can get and set the force of Launcher Tracks using ComputerCraft or OpenComputers!
+    - Now you can get and set the fuse time of Priming Tracks using ComputerCraft or OpenComputers!
+    - Now you can check isPowered() on every kind of track that can be powered by Redstone
+    - Replicated the Steam Turbine Driver and the Boiler Firebox Driver added by OpenComputers for ComputerCraft
+    - Added getDraw() for anything using Railcraft Charge
+  * ADDED: Buildcraft Integration (Gate Statements)
+    - 2 Triggers (Computer Running/Stopped) for the OpenComputers Computer Case
+    - 2 Actions (Start/Stop Computer) for the OpenComputers Computer Case
+    - 4 Triggers (Tape Drive Playing/Stopped/Rewinding/Forwarding) for the Tape Drive
+    - 4 Actions (Start/Stop/Rewind/Forward Tape) for the Tape Drive
+    - 2 Actions (Set/Reset Color) for the Colorful Lamp (Emerald Gate required for Set Color)
+  * ADDED: EnderIO Integration for OpenComputers and ComputerCraft
+    - You can get and set max Input/Output of Capacitor Banks
+    - You can get/set the IO mode of certain sides of blocks with configurable IO
+    - You can get the RF usage/production per tick of any machine
+    - You can check whether a machine is currently active
+    - You can get/set the redstone control mode of redstone-controllable devices
+    - You can get/set send/receive channels of the Dimensional Transceiver
+    - You can add/remove public channels to/from the Dimensional Transceiver channel list
+    - You can get the (max) Experience (Levels) of any experience-storing EnderIO device
+  * ADDED: Advanced Cipher Block
+    - Allows you to encrypt and decrypt string messages using RSA
+    - Also includes a key generator (with the two prime numbers to start with as paramters)
+    - Also includes a random key generator (with the key's bit length as an optional paramter)
+    - **Huge thanks to Kubuxu for helping me figure out a good algorithm!**
+  * ADDED: More Waila integration
+    - Now you can see the component address and bus ID of every block for OpenComputers and NedoComputers
+    - Now you can see whether a Digital Locomotive Relay is bound or not
+    - Now you can see the colour values of a Colorful Lamp
+  * ADDED: New MultiPeripheral system
+    - Like in OpenComputers, these peripherals are being merged into a single one in case a block has multiple Peripherals on it
+    - This also comes with a new MultiPeripheral API for other mods to hook into in case they want
+  * REMOVED: Removed the Signal Receiver Box Driver in favour of the Digital Signal Receiver Box
+  * CHANGED: setLampColor(0) now turns off the Colorful Lamp.
+  * CHANGED: Updated to AsieLib 0.3.3
+  * FIXED: A strange error that can happen while chatting near a chat box.
+  * FIXED: Power values and power consumtion for OC. Re-generate your config file!
+  * FIXED: A problem in the Radar's table creation
+  * FIXED: Some GregTech recipes not working
+  * MISC: Lots of code cleanup done. It should be much more pretty now.
+
+==== 1.2.0 ====
+
+  * ADDED: More Railcraft Integration
+    - You can now get/set the track mode in Locomotive Tracks using ComputerCraft/OpenComputers!
+      - You can access `modes` in OpenComputers or `modes()` in ComputerCraft to get a table containing all possible modes
+    - You can now get/set the speed limit of Limiter Tracks using ComputerCraft/OpenComputers!
+    - Receiver Boxes now have an `aspects` table containing every Signal Aspect in Railcraft
+      - You can access it from ComputerCraft using `aspects()`
   * ADDED: More Waila Integration
-            - Tape Drives now show their current state in Waila
-            - Locomotive Relays now show whether they are bound to a locomotive
+    - Tape Drives now show their current state in Waila
+  * CHANGED: Moved to OpenComputers 1.4
   * FIXED: A pretty serious bug with the Cipher Block
   * FIXED: Waila integration
   * FIXED: Tape Drive's getState not properly returning the current state.
+  * MISC: Major refactor of integration code.
 
 ==== 1.1.0 ====
 
@@ -30,7 +109,7 @@
 ==== 1.0.4 ====
 
   * ADDED: You can now read charge and loss of Railcraft's Electric Blocks using OpenComputers or ComputerCraft!  
-            - Note: Apparently the Electric Track can only be connected to using OpenComputers, the other electric blocks work fine with OpenComputers and ComputerCraft.
+    - Note: Apparently the Electric Track can only be connected to using OpenComputers, the other electric blocks work fine with OpenComputers and ComputerCraft.
   * FIXED: Forge log getting spammed with errors regarding Applied Energistics 2
   * FIXED: Radar not working when used with ComputerCraft (Thanks to Grovert11 for finding the bug)
 
@@ -53,18 +132,18 @@
   **Yes, this is what you should think it is, this is the version 1.0.0, so the first actual full release. Prepare for a lot of new stuff:**
 
   * ADDED: RailCraft integration, courtesy of Vexatos! Routing can now be fully controlled with computers!  
-            - Routing Tracks can now be accessed using the Adapter Block  
-            - Routing Detectors can now be accessed using the Adapter Block  
-            - Routing Switch Motors can now be accessed using the Adapter Block  
-            - Signal Receiver Boxes can now be accessed using the Adapter Block  
-            - Added the Digital Locomotive Relay to access Electric Locomotives remotely  
-            - Added the Digital Relay Sensor to bind a relay to a locomotive  
+    - Routing Tracks can now be accessed using the Adapter Block  
+    - Routing Detectors can now be accessed using the Adapter Block  
+    - Routing Switch Motors can now be accessed using the Adapter Block  
+    - Signal Receiver Boxes can now be accessed using the Adapter Block  
+    - Added the Digital Locomotive Relay to access Electric Locomotives remotely  
+    - Added the Digital Relay Sensor to bind a relay to a locomotive  
   * ADDED: GregTech integration  
-            - Machine monitoring  
-            - Digital Chests support  
-            - Battery Buffer support (make sure to place the adapter after you placed the battery buffer!)  
-            - Added a new virtually indestructable high-end tape using GregTech materials!  
-            - Added a GregTech recipe mode for all the Computronics blocks and items (Thanks to SpwnX for helping with this)  
+    - Machine monitoring  
+    - Digital Chests support  
+    - Battery Buffer support (make sure to place the adapter after you placed the battery buffer!)  
+    - Added a new virtually indestructable high-end tape using GregTech materials!  
+    - Added a GregTech recipe mode for all the Computronics blocks and items (Thanks to SpwnX for helping with this)  
   * ADDED: New fancy Achievements for Computronics and its GregTech and Railcraft integration
   * ADDED: New French (AegisLesha) and Chinese (crafteverywhere) translations.
   * ADDED: ITapeStorage API - developers can now create their own compatible tapes and tape devices.
@@ -72,8 +151,8 @@
   * ADDED: BetterStorage 0.10+ compatibility for Storage Crate drivers.
   * ADDED: Radars now use energy uniformly for OC, CC turtles (coal) and ComputerCraft itself (MJ, RF or EU).
   * ADDED: Changed Cipher Block behaviour:  
-            - Cipher Blocks can now be locked - their inventory is not accessible via automation or manually while they are locked. They can still be broken, though!  
-            - Each side of the Cipher Block now corresponds to one of its six slots.  
+    - Cipher Blocks can now be locked - their inventory is not accessible via automation or manually while they are locked. They can still be broken, though!  
+    - Each side of the Cipher Block now corresponds to one of its six slots.  
   * REMOVED: Project: Red CC redstone integration - it's now improved and inside P:Red itself!
   * FIXED: Disabling the Chat Box will now disable the (potentially lag-inducing on large server) Chat Box event code.
   * FIXED: OC 1.2 will now give an error message when used. (YES, USE OC 1.3, IT'S BETTER)

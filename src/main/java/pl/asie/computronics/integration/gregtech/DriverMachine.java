@@ -15,6 +15,11 @@ public class DriverMachine extends DriverTileEntity {
 			super(tile, name);
 		}
 
+		@Override
+		public int priority() {
+			return 1;
+		}
+
 		@Callback(direct = true)
 		public Object[] hasWork(Context c, Arguments a) {
 			return new Object[] { tile.hasThingsToDo() };

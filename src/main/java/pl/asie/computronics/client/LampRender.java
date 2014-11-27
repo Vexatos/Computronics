@@ -13,48 +13,47 @@ import pl.asie.computronics.tile.TileColorfulLamp;
 
 public class LampRender implements ISimpleBlockRenderingHandler {
 	private static int renderId;
-	
+
 	public LampRender() {
 		renderId = RenderingRegistry.getNextAvailableRenderId();
-		RenderingRegistry.registerBlockHandler(this);
 	}
-	
+
 	private void renderInventoryIcon(BlockColorfulLamp block, IIcon icon, RenderBlocks renderer) {
-        Tessellator tessellator = Tessellator.instance;
-        GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
-        tessellator.startDrawingQuads();
-        tessellator.setNormal(0.0F, -1.0F, 0.0F);
-        renderer.renderFaceYNeg(block, 0.0D, 0.0D, 0.0D, icon);
-        tessellator.draw();
-        tessellator.startDrawingQuads();
-        tessellator.setNormal(0.0F, 1.0F, 0.0F);
-        renderer.renderFaceYPos(block, 0.0D, 0.0D, 0.0D, icon);
-        tessellator.draw();
-        tessellator.startDrawingQuads();
-        tessellator.setNormal(0.0F, 0.0F, -1.0F);
-        renderer.renderFaceZNeg(block, 0.0D, 0.0D, 0.0D, icon);
-        tessellator.draw();
-        tessellator.startDrawingQuads();
-        tessellator.setNormal(0.0F, 0.0F, 1.0F);
-        renderer.renderFaceZPos(block, 0.0D, 0.0D, 0.0D, icon);
-        tessellator.draw();
-        tessellator.startDrawingQuads();
-        tessellator.setNormal(-1.0F, 0.0F, 0.0F);
-        renderer.renderFaceXNeg(block, 0.0D, 0.0D, 0.0D, icon);
-        tessellator.draw();
-        tessellator.startDrawingQuads();
-        tessellator.setNormal(1.0F, 0.0F, 0.0F);
-        renderer.renderFaceXPos(block, 0.0D, 0.0D, 0.0D, icon);
-        tessellator.draw();
-        GL11.glTranslatef(0.5F, 0.5F, 0.5F);
+		Tessellator tessellator = Tessellator.instance;
+		GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
+		tessellator.startDrawingQuads();
+		tessellator.setNormal(0.0F, -1.0F, 0.0F);
+		renderer.renderFaceYNeg(block, 0.0D, 0.0D, 0.0D, icon);
+		tessellator.draw();
+		tessellator.startDrawingQuads();
+		tessellator.setNormal(0.0F, 1.0F, 0.0F);
+		renderer.renderFaceYPos(block, 0.0D, 0.0D, 0.0D, icon);
+		tessellator.draw();
+		tessellator.startDrawingQuads();
+		tessellator.setNormal(0.0F, 0.0F, -1.0F);
+		renderer.renderFaceZNeg(block, 0.0D, 0.0D, 0.0D, icon);
+		tessellator.draw();
+		tessellator.startDrawingQuads();
+		tessellator.setNormal(0.0F, 0.0F, 1.0F);
+		renderer.renderFaceZPos(block, 0.0D, 0.0D, 0.0D, icon);
+		tessellator.draw();
+		tessellator.startDrawingQuads();
+		tessellator.setNormal(-1.0F, 0.0F, 0.0F);
+		renderer.renderFaceXNeg(block, 0.0D, 0.0D, 0.0D, icon);
+		tessellator.draw();
+		tessellator.startDrawingQuads();
+		tessellator.setNormal(1.0F, 0.0F, 0.0F);
+		renderer.renderFaceXPos(block, 0.0D, 0.0D, 0.0D, icon);
+		tessellator.draw();
+		GL11.glTranslatef(0.5F, 0.5F, 0.5F);
 	}
-	
+
 	@Override
 	public void renderInventoryBlock(Block block, int metadata, int modelId,
-			RenderBlocks renderer) {
-		BlockColorfulLamp lb = (BlockColorfulLamp)block;
+		RenderBlocks renderer) {
+		BlockColorfulLamp lb = (BlockColorfulLamp) block;
 		GL11.glPushMatrix();
-		GL11.glColor3f(0.25f, 0.25f, 0.25f);
+		GL11.glColor3f(0.75f, 0.75f, 0.75f);
 		GL11.glScalef(0.975f, 0.975f, 0.975f);
 		renderInventoryIcon(lb, lb.m0, renderer);
 		GL11.glPopMatrix();
@@ -63,17 +62,17 @@ public class LampRender implements ISimpleBlockRenderingHandler {
 
 	@Override
 	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z,
-			Block block, int modelId, RenderBlocks renderer) {
-		BlockColorfulLamp lb = (BlockColorfulLamp)block;
+		Block block, int modelId, RenderBlocks renderer) {
+		BlockColorfulLamp lb = (BlockColorfulLamp) block;
 		GL11.glPushMatrix();
-        Tessellator t = Tessellator.instance;
-        
-        // calculate colors
-        int color = ((TileColorfulLamp)world.getTileEntity(x,y,z)).getLampColor();
-        float b = 0.2f + (((color & 31) / 31.0f) * 0.8f);
-        float g = 0.2f + ((((color >> 5) & 31) / 31.0f) * 0.8f);
-        float r = 0.2f + ((((color >> 10) & 31) / 31.0f) * 0.8f);
-        
+		Tessellator t = Tessellator.instance;
+
+		// calculate colors
+		int color = ((TileColorfulLamp) world.getTileEntity(x, y, z)).getLampColor();
+		float b = 0.2f + (((color & 31) / 31.0f) * 0.8f);
+		float g = 0.2f + ((((color >> 5) & 31) / 31.0f) * 0.8f);
+		float r = 0.2f + ((((color >> 10) & 31) / 31.0f) * 0.8f);
+
 		// HACK! HACK! HACK! HACK! HACK!
 		lb.setRenderingPass(0);
 		renderer.renderStandardBlockWithColorMultiplier(lb, x, y, z, r, g, b);

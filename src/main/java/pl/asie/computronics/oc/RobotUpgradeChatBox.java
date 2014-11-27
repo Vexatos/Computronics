@@ -9,7 +9,7 @@ import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.Visibility;
 import li.cil.oc.api.prefab.ManagedEnvironment;
 import net.minecraftforge.event.ServerChatEvent;
-import pl.asie.computronics.Computronics;
+import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.ChatBoxUtils;
 
@@ -20,7 +20,7 @@ public class RobotUpgradeChatBox extends ManagedEnvironment {
 
 	public RobotUpgradeChatBox(EnvironmentHost container) {
 		this.container = container;
-		distance = Computronics.CHATBOX_DISTANCE;
+		distance = Config.CHATBOX_DISTANCE;
 		this.setNode(Network.newNode(this, Visibility.Network).withConnector().withComponent("chat", Visibility.Neighbors).create());
 	}
 
@@ -34,8 +34,8 @@ public class RobotUpgradeChatBox extends ManagedEnvironment {
 	public void setDistance(int dist) {
 		if(dist > 32767) dist = 32767;
 
-		this.distance = Math.min(Computronics.CHATBOX_DISTANCE, dist);
-		if(this.distance < 0) this.distance = Computronics.CHATBOX_DISTANCE;
+		this.distance = Math.min(Config.CHATBOX_DISTANCE, dist);
+		if(this.distance < 0) this.distance = Config.CHATBOX_DISTANCE;
 	}
 
 	@Callback(direct = true)
@@ -83,11 +83,11 @@ public class RobotUpgradeChatBox extends ManagedEnvironment {
 			int d = distance;
 			if(args.count() >= 1) {
 				if(args.isInteger(1)) {
-					d = Math.min(Computronics.CHATBOX_DISTANCE, args.checkInteger(1));
+					d = Math.min(Config.CHATBOX_DISTANCE, args.checkInteger(1));
 					if(d <= 0) d = distance;
 				}
 				if(args.isString(0)){
-					ChatBoxUtils.sendChatMessage(this.container, d, name.length() > 0 ? name : Computronics.CHATBOX_PREFIX, args.checkString(0));
+					ChatBoxUtils.sendChatMessage(this.container, d, name.length() > 0 ? name : Config.CHATBOX_PREFIX, args.checkString(0));
 					return new Object[] { true };
 				}
 			}

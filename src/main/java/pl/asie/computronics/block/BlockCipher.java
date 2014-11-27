@@ -12,7 +12,7 @@ import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import pl.asie.computronics.Computronics;
+import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TileCipherBlock;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetOmniNode;
@@ -38,7 +38,7 @@ public class BlockCipher extends BlockMachineSidedIcon implements IRedNetOmniNod
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9) {
 		boolean isLocked = false;
-		if(!world.isRemote && Computronics.CIPHER_CAN_LOCK) {
+		if(!world.isRemote && Config.CIPHER_CAN_LOCK) {
 			TileEntity tile = world.getTileEntity(x, y, z);
 			if(tile != null) {
 				isLocked = ((TileCipherBlock)tile).isLocked();

@@ -1,17 +1,21 @@
 package pl.asie.computronics.cc;
 
-import dan200.computercraft.api.peripheral.IPeripheral;
-import dan200.computercraft.api.peripheral.IPeripheralProvider;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import pl.asie.computronics.tile.TileEntityPeripheralBase;
+import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
+import pl.asie.computronics.api.multiperipheral.IMultiPeripheralProvider;
 
-public class CCPeripheralProvider implements IPeripheralProvider {
+public class CCPeripheralProvider implements IMultiPeripheralProvider {
 	@Override
-	public IPeripheral getPeripheral(World world, int x, int y, int z, int side) {
+	public IMultiPeripheral getPeripheral(World world, int x, int y, int z, int side) {
 		TileEntity t = world.getTileEntity(x, y, z);
-		if(t != null && t instanceof TileEntityPeripheralBase) {
-			return ((IPeripheral)t);
-		} else return null;
+		if(t != null && t instanceof IComputronicsPeripheral) {
+			if(t instanceof ISidedPeripheral) {
+				return ((ISidedPeripheral) t).canConnectPeripheralOnSide(side) ? ((IMultiPeripheral) t) : null;
+			}
+			return ((IMultiPeripheral) t);
+		} else {
+			return null;
+		}
 	}
 }

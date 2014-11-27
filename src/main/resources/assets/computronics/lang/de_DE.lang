@@ -1,16 +1,20 @@
 tile.computronics.ironNoteBlock.name=Eiserner Notenblock
-tile.computronics.tapeDrive.name=Bandlaufwerk
+tile.computronics.tapeDrive.name=Kassettenspieler
 tile.computronics.camera.name=Kamera
 tile.computronics.chatBox.name=Chat-Box
 tile.computronics.chatBox.creative.name=Kreative Chat-Box
 tile.computronics.sorter.name=Sortierer
 tile.computronics.cipher.name=Chiffrierblock
+tile.computronics.cipher_advanced.name=Asymmetrischer Chiffrierblock
 tile.computronics.radar.name=Radarblock
 tile.computronics.colorfulLamp.name=Farbenfrohe Lampe
 tile.computronics.eepromReader.name=EEPROM-Lesegerät
 tile.computronics.locomotiveRelay.name=Digitales Lokomotivenrelais
+tile.computronics.digitalBox.name=Digitale Signalempfängerbox
+tile.computronics.detector.name=Detektor - Digital
 
 tooltip.computronics.chatBox.creative=Die NSA für zu Hause!
+tooltip.computronics.cipher.advanced=Für die Starchaser!
 tooltip.computronics.sensor.bound=Gebunden an [%1$s,%2$s,%3$s]
 tooltip.computronics.sensor.desc1=Rechtsklicke schleichend auf ein\nLokomotivenrelais, um ihn an dieses zu binden
 tooltip.computronics.sensor.desc2=Linksklicke schleichend auf eine\nElektrische Lokomotive, um ihn anzubringen
@@ -19,6 +23,25 @@ tooltip.computronics.tape.balanced=Welch ein ausgewogener Preis!
 tooltip.computronics.tape.unnamed=Unbenanntes Band
 tooltip.computronics.tape.none=Kein Band
 tooltip.computronics.tape.ig=Der Standard-CDVR für\nSchiffe von GregTech Intergalactical
+
+tooltip.computronics.gate.action.computer_start=Computer starten
+tooltip.computronics.gate.action.computer_stop=Computer stoppen
+tooltip.computronics.gate.action.tape_drive_start=Kassettenspieler starten
+tooltip.computronics.gate.action.tape_drive_stop=Kassettenspieler stoppen
+tooltip.computronics.gate.action.tape_drive_rewind=Kassettenspieler zurückspulen
+tooltip.computronics.gate.action.tape_drive_forward=Kassettenspieler vorspulen
+tooltip.computronics.gate.action.lamp_color_set=Lampenfarbe einstellen
+tooltip.computronics.gate.action.lamp_color_reset=Lampenfarbe zurücksetzen
+tooltip.computronics.gate.action.lamp_color.red=Rot: %s
+tooltip.computronics.gate.action.lamp_color.green=Grün: %s
+tooltip.computronics.gate.action.lamp_color.blue=Blau: %s
+
+tooltip.computronics.gate.trigger.computer_running=Computer angeschaltet
+tooltip.computronics.gate.trigger.computer_stopped=Computer ausgeschaltet
+tooltip.computronics.gate.trigger.tape_drive_playing=Kassettenspieler läuft
+tooltip.computronics.gate.trigger.tape_drive_stopped=Kassettenspieler gestoppt
+tooltip.computronics.gate.trigger.tape_drive_rewinding=Kassettenspieler spult zurück
+tooltip.computronics.gate.trigger.tape_drive_forwarding=Kassettenspieler spult vor
 
 tooltip.computronics.waila.base.bus=§aBus ID§f: %s
 tooltip.computronics.waila.relay.bound=Gebunden
@@ -31,18 +54,24 @@ tooltip.computronics.waila.tape.state.stopped=Gestoppt
 tooltip.computronics.waila.tape.state.playing=Laufend
 tooltip.computronics.waila.tape.state.rewinding=Zurückspulend
 tooltip.computronics.waila.tape.state.forwarding=Vorspulend
+tooltip.computronics.waila.lamp.red=Rot: %s
+tooltip.computronics.waila.lamp.green=Grün: %s
+tooltip.computronics.waila.lamp.blue=Blau: %s
 
-option.computronics.enableAddress=Zeige Komponentenaddresse
-option.computronics.enableTape=Zeige enthaltene Kassette
-option.computronics.enableTapeName=Zeige Kassettenname
-option.computronics.enableDriveState=Zeige Kassettenlaufwerkstatus
-option.computronics.enableRelayBound=Zeige Relaisbindung
+option.computronics.enableAddress=Komponentenaddresse
+option.computronics.enableTape=Enthaltene Kassette
+option.computronics.enableTapeName=Kassettenname
+option.computronics.enableDriveState=Kassettenspielerstatus
+option.computronics.enableRelayBound=Relaisbindung
+option.computronics.enableLampColor=Lampenfarbe
 
 item.computronics.reelChromoxide.name=Chromdioxidbandspur
 item.computronics.robot_upgrade_camera.name=Kamera-Upgrade
 item.computronics.robot_upgrade_chatbox.name=Chat-Upgrade
 item.computronics.robot_upgrade_radar.name=Radar-Upgrade
 item.computronics.card_fx.name=Partikeleffektkarte
+item.computronics.card_spoof.name=Spoofing-Karte
+item.computronics.card_spoof.tip=Funktioniert wie eine Netzwerkkarte, aber erlaubt es, die Sendeaddresse festzulegen
 item.computronics.relaySensor.name=Digitaler Relaissensor
 item.computronics.part_tape_track.name=Bandspur
 item.computronics.tape.ig.name=Intergalaktischer CDVR

@@ -10,7 +10,7 @@ import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.event.ServerChatEvent;
-import pl.asie.computronics.Computronics;
+import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.ChatBoxUtils;
 
@@ -26,7 +26,7 @@ public class TileChatBox extends TileEntityPeripheralBase {
 
 	public TileChatBox() {
 		super("chat_box");
-		distance = Computronics.CHATBOX_DISTANCE;
+		distance = Config.CHATBOX_DISTANCE;
 	}
 
 	@Override
@@ -35,17 +35,17 @@ public class TileChatBox extends TileEntityPeripheralBase {
 	}
 
 	@Override
-	public boolean canUpdate() { return Computronics.MUST_UPDATE_TILE_ENTITIES || Computronics.REDSTONE_REFRESH; }
+	public boolean canUpdate() { return Config.MUST_UPDATE_TILE_ENTITIES || Config.REDSTONE_REFRESH; }
 
 	public boolean isCreative() {
-		return Computronics.CHATBOX_CREATIVE && worldObj != null
+		return Config.CHATBOX_CREATIVE && worldObj != null
 			&& worldObj.getBlockMetadata(xCoord, yCoord, zCoord) >= 8;
 	}
 
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
-		if(Computronics.REDSTONE_REFRESH && ticksUntilOff > 0) {
+		if(Config.REDSTONE_REFRESH && ticksUntilOff > 0) {
 			ticksUntilOff--;
 			if(ticksUntilOff == 0 || mustRefresh)
 				this.worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, this.blockType);
@@ -57,12 +57,12 @@ public class TileChatBox extends TileEntityPeripheralBase {
 	public void setDistance(int dist) {
 		if(dist > 32767) dist = 32767;
 
-		this.distance = Math.min(Computronics.CHATBOX_DISTANCE, dist);
-		if(this.distance < 0) this.distance = Computronics.CHATBOX_DISTANCE;
+		this.distance = Math.min(Config.CHATBOX_DISTANCE, dist);
+		if(this.distance < 0) this.distance = Config.CHATBOX_DISTANCE;
 	}
 
 	public void receiveChatMessage(ServerChatEvent event) {
-		if(Computronics.REDSTONE_REFRESH) {
+		if(Config.REDSTONE_REFRESH) {
 			ticksUntilOff = 5;
 			mustRefresh = true;
 		}
@@ -79,8 +79,12 @@ public class TileChatBox extends TileEntityPeripheralBase {
 
 	@Optional.Method(modid=Mods.ComputerCraft)
 	public void eventCC(ServerChatEvent event) {
+		if(attachedComputersCC != null)
 		for(IComputerAccess computer: attachedComputersCC) {
-			computer.queueEvent("chat_message", new Object[]{event.username, event.message});
+			computer.queueEvent("chat_message", new Object[] {
+				computer.getAttachmentName(),
+				event.username, event.message
+			});
 		}
 	}
 
@@ -92,11 +96,11 @@ public class TileChatBox extends TileEntityPeripheralBase {
 		int d = distance;
 		if(args.count() >= 1) {
 			if(args.isInteger(1)) {
-				d = Math.min(Computronics.CHATBOX_DISTANCE, args.checkInteger(1));
+				d = Math.min(Config.CHATBOX_DISTANCE, args.checkInteger(1));
 				if(d <= 0) d = distance;
 			}
 			if(args.isString(0)){
-				ChatBoxUtils.sendChatMessage(this, d, name.length() > 0 ? name : Computronics.CHATBOX_PREFIX, args.checkString(0));
+				ChatBoxUtils.sendChatMessage(this, d, name.length() > 0 ? name : Config.CHATBOX_PREFIX, args.checkString(0));
 				return new Object[] { true };
 			}
 		}
@@ -169,10 +173,10 @@ public class TileChatBox extends TileEntityPeripheralBase {
 			if(arguments.length >= 1 && arguments[0] instanceof String) {
 				int d = distance;
 				if(arguments.length >= 2 && arguments[1] instanceof Double) {
-					d = Math.min(Computronics.CHATBOX_DISTANCE, ((Double)arguments[1]).intValue());
+					d = Math.min(Config.CHATBOX_DISTANCE, ((Double)arguments[1]).intValue());
 					if(d <= 0) d = distance;
 				}
-				ChatBoxUtils.sendChatMessage(this, d, name.length() > 0 ? name : Computronics.CHATBOX_PREFIX, ((String)arguments[0]));
+				ChatBoxUtils.sendChatMessage(this, d, name.length() > 0 ? name : Config.CHATBOX_PREFIX, ((String)arguments[0]));
 				return new Object[]{ true };
 			}
 			return new Object[]{ false };

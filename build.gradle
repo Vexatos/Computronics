@@ -17,7 +17,13 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "1.7.10-1.1.1"
+file "build.properties" withReader {
+    def prop = new Properties()
+    prop.load(it)
+    ext.config = new ConfigSlurper().parse prop
+}
+
+version = "${config.minecraft.version}-${config.computronics.version}"
 group = "pl.asie.computronics" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "Computronics"
 
@@ -34,18 +40,47 @@ repositories {
         name 'CB Repo'
         url "http://chickenbones.net/maven/"
     }
+    maven {
+        name 'tterrag Repo'
+        url "http://maven.tterrag.com/"
+    }
 }
 
 dependencies {
-    compile "li.cil.oc:OpenComputers:MC1.7.10-1.4.0.173-dev:dev"
-    compile "com.gregoriust.gregtech:gregtech_1.7.10:5.05.06:dev"
-    compile "mcp.mobius.waila:Waila:1.5.5_1.7.10"
+    compile "li.cil.oc:OpenComputers:${config.oc.version}:dev"
+    compile "com.gregoriust.gregtech:${config.gregtech.version}:dev"
+    compile("mcp.mobius.waila:Waila:${config.waila.version}:dev") {
+        exclude module: "CodeChickenLib"
+        exclude module: "CodeChickenCore"
+        exclude module: "NotEnoughItems"
+    }
+    compile("com.enderio:EnderIO:${config.enderio.version}:dev") {
+        exclude module: "appliedenergistics2"
+        exclude module: "Waila"
+    }
 }
 
 minecraft {
-    version = "1.7.10-10.13.0.1206"
-    assetDir = "eclipse/assets"
+    version = "${config.minecraft.version}-${config.forge.version}"
+    runDir = "eclipse/assets"
+
+    replaceIn "pl/asie/computronics/Computronics.java"
+    replace "@VERSION@", "${config.computronics.version}"
 }
+
+sourceSets{
+    main{
+        output.resourcesDir = 'build/classes/main'
+    }
+}
+
+apply plugin: 'idea'
+idea {
+    module {
+        outputDir = file('build/classes/main')
+    }
+}
+
 processResources
         {
             // replace stuff in mcmod.info, nothing else
@@ -62,7 +97,30 @@ processResources
             }
         }
 
+//For Building
+
+def libDir = './build/libs'
+
 task deobfJar(type: Jar) {
-    from sourceSets.main.output
+    description = 'Creates a jar file containing the non-obfuscated class files'
     classifier = 'deobf'
+    destinationDir = file(libDir)
+    from sourceSets.main.output
 }
+
+task apiZip(type: Zip) {
+    description = 'Creates a zip file containing the API source files only'
+    classifier = 'api'
+    destinationDir = file(libDir)
+    from sourceSets.main.allSource
+    include 'pl/asie/**/api/**'
+}
+
+task makeJars << {
+    description = 'Creates the mod files'
+}
+
+makeJars.dependsOn clean, build, deobfJar, apiZip
+build.shouldRunAfter clean
+deobfJar.shouldRunAfter build
+apiZip.shouldRunAfter deobfJar

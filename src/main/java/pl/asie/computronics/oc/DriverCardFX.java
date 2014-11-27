@@ -4,11 +4,11 @@ import li.cil.oc.api.Network;
 import li.cil.oc.api.driver.EnvironmentHost;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
-import li.cil.oc.api.network.Connector;
 import li.cil.oc.api.machine.Context;
+import li.cil.oc.api.network.Connector;
 import li.cil.oc.api.network.Visibility;
 import li.cil.oc.api.prefab.ManagedEnvironment;
-import pl.asie.computronics.Computronics;
+import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.util.ParticleUtils;
 
 import java.util.Random;
@@ -21,7 +21,7 @@ public class DriverCardFX extends ManagedEnvironment {
         this.container = container;
         this.setNode(Network.newNode(this, Visibility.Neighbors).
                 withComponent("particle").
-                withConnector(Computronics.FX_ENERGY_COST * 32).
+                withConnector(Config.FX_ENERGY_COST * 32).
                 create());
     }
 
@@ -52,7 +52,7 @@ public class DriverCardFX extends ManagedEnvironment {
         	vz = args.checkDouble(6);
         }
         ParticleUtils.sendParticlePacket(name, container.world(), x, y, z, vx, vy, vz);
-		((Connector) this.node()).tryChangeBuffer(0 - Computronics.FX_ENERGY_COST);
+		((Connector) this.node()).tryChangeBuffer(0 - Config.FX_ENERGY_COST);
         return new Object[]{true};
     }
 }

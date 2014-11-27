@@ -7,7 +7,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import pl.asie.computronics.Computronics;
+import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.tile.TileCamera;
 
 public class BlockCamera extends BlockMachineSidedIcon {
@@ -39,6 +39,6 @@ public class BlockCamera extends BlockMachineSidedIcon {
 	
 	@Override
 	public boolean emitsRedstone(IBlockAccess world, int x, int y, int z, int side) {
-		return Computronics.REDSTONE_REFRESH;
+		return Config.REDSTONE_REFRESH;
 	}
 }

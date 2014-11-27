@@ -6,13 +6,14 @@ import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
-import li.cil.oc.api.network.Connector;
 import li.cil.oc.api.machine.Context;
+import li.cil.oc.api.network.Connector;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.AxisAlignedBB;
-import pl.asie.computronics.Computronics;
 import pl.asie.computronics.cc.CCRadarProxy;
+import pl.asie.computronics.reference.Config;
+import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.RadarUtils;
 import pl.asie.lib.api.tile.IBatteryProvider;
 import pl.asie.lib.tile.BatteryBasic;
@@ -23,43 +24,52 @@ import java.util.Map;
 import java.util.Set;
 
 public class TileRadar extends TileEntityPeripheralBase implements IBatteryProvider {
-	
-	public TileRadar() {
-		super("radar", EnergyConverter.convertEnergy(Computronics.RADAR_ENERGY_COST_RF * Computronics.RADAR_RANGE * 3.5, "OC", "RF"));
-		this.registerBattery(new BatteryBasic(Computronics.RADAR_ENERGY_COST_RF * Computronics.RADAR_RANGE * 3.5));
-	}
-   
-	@Override
-	public boolean canUpdate() { return Computronics.MUST_UPDATE_TILE_ENTITIES; }
-	
-    private int getDistance(Arguments args) {
-    	if(args.isInteger(0)) {
-    		return args.checkInteger(0);
-    	} else return Computronics.RADAR_RANGE;
-    }
-    
-    private AxisAlignedBB getBounds(int d) {
-    	int distance = Math.min(d, Computronics.RADAR_RANGE);
-    	if(distance < 1) distance = 1;
-    	return AxisAlignedBB.
-                getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 1, zCoord + 1).
-                expand(distance, distance, distance);
-    }
-    
-    public boolean extractFromBattery(double amount) {
-    	if(this.getBatteryProvider().getEnergyStored() < amount) return false;
-    	this.getBatteryProvider().extract(-1, amount, false);
-    	return true;
-    }
 
-    @Callback
-    @Optional.Method(modid="OpenComputers")
-    public Object[] getEntities(Context context, Arguments args) {
+	public TileRadar() {
+		super("radar", Config.RADAR_ENERGY_COST_OC * Config.RADAR_RANGE * 3.5);
+		this.registerBattery(new BatteryBasic(EnergyConverter.convertEnergy(Config.RADAR_ENERGY_COST_OC * Config.RADAR_RANGE * 3.5, "OC", "RF")));
+	}
+
+	@Override
+	public boolean canUpdate() {
+		return Config.MUST_UPDATE_TILE_ENTITIES;
+	}
+
+	private int getDistance(Arguments args) {
+		if(args.isInteger(0)) {
+			return args.checkInteger(0);
+		} else {
+			return Config.RADAR_RANGE;
+		}
+	}
+
+	private AxisAlignedBB getBounds(int d) {
+		int distance = Math.min(d, Config.RADAR_RANGE);
+		if(distance < 1) {
+			distance = 1;
+		}
+		return AxisAlignedBB.
+			getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 1, zCoord + 1).
+			expand(distance, distance, distance);
+	}
+
+	public boolean extractFromBattery(double amount) {
+		double amt = EnergyConverter.convertEnergy(amount, "OC", "RF");
+		if(this.getBatteryProvider().getEnergyStored() < amt) {
+			return false;
+		}
+		this.getBatteryProvider().extract(-1, amt, false);
+		return true;
+	}
+
+	@Callback
+	@Optional.Method(modid = Mods.OpenComputers)
+	public Object[] getEntities(Context context, Arguments args) {
 		Set<Map> entities = new HashSet<Map>();
 		int distance = getDistance(args);
-		double energyNeeded = (Computronics.RADAR_ENERGY_COST_RF * distance * 1.75);
-		if(((Connector) node).tryChangeBuffer(0 - EnergyConverter.convertEnergy(energyNeeded, "RF", "OC"))
-				|| extractFromBattery(energyNeeded)) {
+		double energyNeeded = (Config.RADAR_ENERGY_COST_OC * distance * 1.75);
+		if(((Connector) node).tryChangeBuffer(0 - energyNeeded)
+			|| extractFromBattery(energyNeeded)) {
 			AxisAlignedBB bounds = getBounds(distance);
 			entities.addAll(RadarUtils.getEntities(worldObj, xCoord, yCoord, zCoord, bounds, EntityPlayer.class));
 			entities.addAll(RadarUtils.getEntities(worldObj, xCoord, yCoord, zCoord, bounds, EntityLiving.class));
@@ -71,60 +81,61 @@ public class TileRadar extends TileEntityPeripheralBase implements IBatteryProvi
 		//   result = {radar.getEntities()}
 		// and we'd be limited in the number of entities, due to the limit of
 		// return values. So we wrap it in an array to return it as a list.
-		return new Object[]{ RadarUtils.convertSetToMap(entities) };
-    }
-	
+		return new Object[] { RadarUtils.convertSetToMap(entities) };
+	}
+
 	@Callback
-    @Optional.Method(modid="OpenComputers")
-    public Object[] getPlayers(Context context, Arguments args) {
+	@Optional.Method(modid = Mods.OpenComputers)
+	public Object[] getPlayers(Context context, Arguments args) {
 		Set<Map> entities = new HashSet<Map>();
 		int distance = getDistance(args);
-		double energyNeeded = (Computronics.RADAR_ENERGY_COST_RF * distance * 1.0);
-		if(((Connector) node).tryChangeBuffer(0 - EnergyConverter.convertEnergy(energyNeeded, "RF", "OC"))
-				|| extractFromBattery(energyNeeded)) {
+		double energyNeeded = (Config.RADAR_ENERGY_COST_OC * distance * 1.0);
+		if(((Connector) node).tryChangeBuffer(0 - energyNeeded)
+			|| extractFromBattery(energyNeeded)) {
 			AxisAlignedBB bounds = getBounds(distance);
 			entities.addAll(RadarUtils.getEntities(worldObj, xCoord, yCoord, zCoord, bounds, EntityPlayer.class));
 			context.pause(0.5);
 		}
-		return new Object[]{ RadarUtils.convertSetToMap(entities) };
-    }
-	
+		return new Object[] { RadarUtils.convertSetToMap(entities) };
+	}
+
 	@Callback
-    @Optional.Method(modid="OpenComputers")
-    public Object[] getMobs(Context context, Arguments args) {
+	@Optional.Method(modid = Mods.OpenComputers)
+	public Object[] getMobs(Context context, Arguments args) {
 		Set<Map> entities = new HashSet<Map>();
 		int distance = getDistance(args);
-		double energyNeeded = (Computronics.RADAR_ENERGY_COST_RF * distance * 1.0);
-		if(((Connector) node).tryChangeBuffer(0 - EnergyConverter.convertEnergy(energyNeeded, "RF", "OC"))
-				|| extractFromBattery(energyNeeded)) {
+		double energyNeeded = (Config.RADAR_ENERGY_COST_OC * distance * 1.0);
+		if(((Connector) node).tryChangeBuffer(0 - energyNeeded)
+			|| extractFromBattery(energyNeeded)) {
 			AxisAlignedBB bounds = getBounds(distance);
 			entities.addAll(RadarUtils.getEntities(worldObj, xCoord, yCoord, zCoord, bounds, EntityLiving.class));
 			context.pause(0.5);
 		}
-		return new Object[]{ RadarUtils.convertSetToMap(entities) };
-    }
+		return new Object[] { RadarUtils.convertSetToMap(entities) };
+	}
 
 	@Override
-    @Optional.Method(modid="nedocomputers")
+	@Optional.Method(modid = Mods.NedoComputers)
 	public short busRead(int addr) {
 		return 0;
 	}
 
 	@Override
-    @Optional.Method(modid="nedocomputers")
+	@Optional.Method(modid = Mods.NedoComputers)
 	public void busWrite(int addr, short data) {
 	}
 
 	@Override
+	@Optional.Method(modid = Mods.ComputerCraft)
 	public String[] getMethodNames() {
 		return CCRadarProxy.getMethodNames();
 	}
 
 	@Override
-	@Optional.Method(modid="ComputerCraft")
+	@Optional.Method(modid = Mods.ComputerCraft)
 	public Object[] callMethod(IComputerAccess computer, ILuaContext context,
-			int method, Object[] arguments) throws LuaException,
-			InterruptedException {
+		int method, Object[] arguments) throws LuaException,
+		InterruptedException {
 		return CCRadarProxy.callMethod(worldObj, xCoord, yCoord, zCoord, computer, context, method, arguments, this);
 	}
 }

@@ -8,14 +8,19 @@ import li.cil.oc.api.network.Environment;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.event.ServerChatEvent;
 import pl.asie.computronics.oc.RobotUpgradeChatBox;
+import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TileChatBox;
 
+import java.util.ArrayList;
+
 public class ChatBoxHandler {
 	@SubscribeEvent
+	@SuppressWarnings("unchecked")
 	public void chatEvent(ServerChatEvent event) {
 		//System.out.println("event");
-		for(Object o : event.player.worldObj.loadedTileEntityList) {
+		ArrayList<Object> tiles = new ArrayList<Object>(event.player.worldObj.loadedTileEntityList);
+		for(Object o : tiles) {
 			if(o instanceof TileChatBox) {
 				TileChatBox te = (TileChatBox) o;
 				if(te.isCreative() || event.player.getDistance(te.xCoord, te.yCoord, te.zCoord) < te.getDistance()) {
@@ -32,7 +37,7 @@ public class ChatBoxHandler {
 		if(o instanceof Robot) {
 			Robot r = (Robot) o;
 			TileEntity te = (TileEntity) o;
-			if(event.player.getDistance(te.xCoord, te.yCoord, te.zCoord) < Computronics.CHATBOX_DISTANCE) {
+			if(event.player.getDistance(te.xCoord, te.yCoord, te.zCoord) < Config.CHATBOX_DISTANCE) {
 				for(int i = 0; i < r.getSizeInventory(); i++) {
 					Environment e = r.getComponentInSlot(i);
 					if(e instanceof RobotUpgradeChatBox) {

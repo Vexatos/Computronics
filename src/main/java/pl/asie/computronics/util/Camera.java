@@ -4,7 +4,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import pl.asie.computronics.Computronics;
+import pl.asie.computronics.reference.Config;
 
 public class Camera {
 	private World world;
@@ -45,7 +45,7 @@ public class Camera {
 			}
 					
 			// shoot ray
-			float steps = Computronics.CAMERA_DISTANCE;
+			float steps = Config.CAMERA_DISTANCE;
 			Vec3 origin = Vec3.createVectorHelper(oxPos, oyPos, ozPos);
 			Vec3 target = Vec3.createVectorHelper(xPos + (xDirection * steps), yPos + (yDirection * steps), zPos + (zDirection * steps));
 			MovingObjectPosition mop = world.rayTraceBlocks(origin, target);
