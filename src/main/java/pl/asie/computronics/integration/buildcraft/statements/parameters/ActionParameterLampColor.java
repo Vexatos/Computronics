@@ -1,4 +1,4 @@
-package pl.asie.computronics.integration.buildcraft.parameters;
+package pl.asie.computronics.integration.buildcraft.statements.parameters;
 
 import buildcraft.api.statements.IStatement;
 import buildcraft.api.statements.IStatementContainer;
@@ -10,7 +10,7 @@ import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
-import pl.asie.computronics.integration.buildcraft.StatementParameters;
+import pl.asie.computronics.integration.buildcraft.statements.StatementParameters;
 import pl.asie.computronics.util.StringUtil;
 
 /**

@@ -1,4 +1,4 @@
-package pl.asie.computronics.integration.buildcraft;
+package pl.asie.computronics.integration.buildcraft.statements;
 
 import buildcraft.api.statements.IStatementContainer;
 import buildcraft.api.statements.ITriggerExternal;
@@ -9,7 +9,7 @@ import cpw.mods.fml.common.Loader;
 import li.cil.oc.api.internal.Case;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
-import pl.asie.computronics.integration.buildcraft.triggers.Triggers;
+import pl.asie.computronics.integration.buildcraft.statements.triggers.Triggers;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TileTapeDrive;
 

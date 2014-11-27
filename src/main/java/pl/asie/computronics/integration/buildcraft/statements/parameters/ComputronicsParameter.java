@@ -1,7 +1,7 @@
-package pl.asie.computronics.integration.buildcraft.parameters;
+package pl.asie.computronics.integration.buildcraft.statements.parameters;
 
 import buildcraft.api.statements.IStatementParameter;
-import pl.asie.computronics.integration.buildcraft.StatementParameters;
+import pl.asie.computronics.integration.buildcraft.statements.StatementParameters;
 
 /**
  * @author Vexatos

@@ -8,6 +8,7 @@ import net.minecraftforge.common.config.Configuration;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.cc.multiperipheral.MultiPeripheralProvider;
 import pl.asie.computronics.integration.appeng.DriverSpatialIOPort;
+import pl.asie.computronics.integration.buildcraft.DriverHeatable;
 import pl.asie.computronics.integration.cofh.DriverEnergyHandler;
 import pl.asie.computronics.integration.enderio.DriverAbstractMachine;
 import pl.asie.computronics.integration.enderio.DriverCapacitorBank;
@@ -114,6 +115,12 @@ public class IntegrationComputerCraft {
 		} else if(ModAPIManager.INSTANCE.hasAPI(Mods.API.CoFHAPI_Energy)
 			&& compat.isCompatEnabled(Compat.RedstoneFlux)) {
 			registerMultiPeripheralProvider(new DriverEnergyHandler.CCDriver());
+		}
+
+		if(Loader.isModLoaded(Mods.BuildCraft)) {
+			if(compat.isCompatEnabled(Compat.BuildCraft_Drivers)) {
+				registerMultiPeripheralProvider(new DriverHeatable.CCDriver());
+			}
 		}
 
 		registerMultiPeripheralProvider(new CCPeripheralProvider());

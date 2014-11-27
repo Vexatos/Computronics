@@ -13,6 +13,7 @@ import pl.asie.computronics.Computronics;
 import pl.asie.computronics.integration.appeng.DriverSpatialIOPort;
 import pl.asie.computronics.integration.betterstorage.DriverCrateStorageNew;
 import pl.asie.computronics.integration.betterstorage.DriverCrateStorageOld;
+import pl.asie.computronics.integration.buildcraft.DriverHeatable;
 import pl.asie.computronics.integration.enderio.DriverAbstractMachine;
 import pl.asie.computronics.integration.enderio.DriverCapacitorBank;
 import pl.asie.computronics.integration.enderio.DriverHasExperience;
@@ -156,6 +157,12 @@ public class IntegrationOpenComputers {
 				Driver.add(new DriverAbstractMachine.OCDriver());
 				Driver.add(new DriverCapacitorBank.OCDriver());
 				Driver.add(new DriverTransceiver.OCDriver());
+			}
+		}
+
+		if(Loader.isModLoaded(Mods.BuildCraft)) {
+			if(compat.isCompatEnabled(Compat.BuildCraft_Drivers)) {
+				Driver.add(new DriverHeatable.OCDriver());
 			}
 		}
 	}

@@ -3,7 +3,6 @@ package pl.asie.computronics.integration.railcraft;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
-import li.cil.oc.api.driver.NamedBlock;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
@@ -110,7 +109,7 @@ public class DriverRoutingDetector {
 	}
 
 	public static class OCDriver extends DriverTileEntity {
-		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TileDetector> implements NamedBlock {
+		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TileDetector> {
 
 			public InternalManagedEnvironment(TileDetector detector) {
 				super(detector, Names.Railcraft_RoutingDetector);

@@ -1,4 +1,4 @@
-package pl.asie.computronics.integration.buildcraft.actions;
+package pl.asie.computronics.integration.buildcraft.statements.actions;
 
 import buildcraft.api.statements.IStatementParameter;
 

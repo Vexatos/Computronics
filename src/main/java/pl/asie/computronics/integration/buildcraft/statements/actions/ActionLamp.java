@@ -1,11 +1,11 @@
-package pl.asie.computronics.integration.buildcraft.actions;
+package pl.asie.computronics.integration.buildcraft.statements.actions;
 
 import buildcraft.api.statements.IStatementContainer;
 import buildcraft.api.statements.IStatementParameter;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
-import pl.asie.computronics.integration.buildcraft.parameters.ActionParameterLampColor;
+import pl.asie.computronics.integration.buildcraft.statements.parameters.ActionParameterLampColor;
 import pl.asie.computronics.tile.TileColorfulLamp;
 
 /**

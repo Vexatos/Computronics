@@ -7,18 +7,20 @@ import net.minecraftforge.common.config.Configuration;
  */
 public class Compat {
 
-	public static final String RedLogic_Lamps = "enableRedLogicLamps";
-	public static final String Bundled_Redstone = "enableBundledRedstoneProviders";
-	public static final String MFR_DSU = "enableDeepStorageUnit";
-	public static final String FSP_Steam_Transporter = "enableFlaxbeardSteamTransporters";
-	public static final String FZ_ChargePeripheral = "enableFactorizationChargePeripheral";
-	public static final String Railcraft_Routing = "enableRailcraftRoutingComponents";
-	public static final String AE2_SpatialIO = "enableAE2SpatialIOComponent";
-	public static final String EnderIO = "enableEnderIOComponents";
-	public static final String RedstoneFlux = "enableRedstoneFluxPeripheral";
-	public static final String BetterStorage_Crates = "enableBetterStorageCrates";
-	public static final String GregTech_Machines = "enableGregTechMachines";
-	public static final String GregTech_DigitalChests = "enableGregTechDigitalChests";
+	public static final String
+		RedLogic_Lamps = "enableRedLogicLamps",
+		Bundled_Redstone = "enableBundledRedstoneProviders",
+		MFR_DSU = "enableDeepStorageUnit",
+		FSP_Steam_Transporter = "enableFlaxbeardSteamTransporters",
+		FZ_ChargePeripheral = "enableFactorizationChargePeripheral",
+		Railcraft_Routing = "enableRailcraftRoutingComponents",
+		AE2_SpatialIO = "enableAE2SpatialIOComponent",
+		EnderIO = "enableEnderIOComponents",
+		RedstoneFlux = "enableRedstoneFluxPeripheral",
+		BetterStorage_Crates = "enableBetterStorageCrates",
+		GregTech_Machines = "enableGregTechMachines",
+		GregTech_DigitalChests = "enableGregTechDigitalChests",
+		BuildCraft_Drivers = "enableBuildCraftDrivers";
 
 	public static final String Compatibility = "modCompatibility";
 

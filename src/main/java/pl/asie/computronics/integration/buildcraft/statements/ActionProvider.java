@@ -1,4 +1,4 @@
-package pl.asie.computronics.integration.buildcraft;
+package pl.asie.computronics.integration.buildcraft.statements;
 
 import buildcraft.api.statements.IActionExternal;
 import buildcraft.api.statements.IActionInternal;
@@ -9,7 +9,7 @@ import cpw.mods.fml.common.Loader;
 import li.cil.oc.api.internal.Case;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
-import pl.asie.computronics.integration.buildcraft.actions.Actions;
+import pl.asie.computronics.integration.buildcraft.statements.actions.Actions;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TileColorfulLamp;
 import pl.asie.computronics.tile.TileTapeDrive;

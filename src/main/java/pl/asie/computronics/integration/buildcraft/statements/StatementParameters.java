@@ -1,8 +1,8 @@
-package pl.asie.computronics.integration.buildcraft;
+package pl.asie.computronics.integration.buildcraft.statements;
 
 import buildcraft.api.statements.IStatementParameter;
 import buildcraft.api.statements.StatementManager;
-import pl.asie.computronics.integration.buildcraft.parameters.ActionParameterLampColor;
+import pl.asie.computronics.integration.buildcraft.statements.parameters.ActionParameterLampColor;
 
 /**
  * @author Vexatos

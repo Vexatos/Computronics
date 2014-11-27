@@ -4,6 +4,8 @@
     - Works the same as a Network Card, but allows you to specify the source address
   * ADDED: OpenPeripheral integration:
     - Now OpenPeripheral peripherals aren't ignored anymore if Computronics is present
+  * ADDED: More BuildCraft integration
+    - Now you can get various things about the heat of any block which might overheat
   * FIXED: Lamps ignoring bundled redstone if placed adjacent to each other
   * MISC: Added a few more things to the config file
 
