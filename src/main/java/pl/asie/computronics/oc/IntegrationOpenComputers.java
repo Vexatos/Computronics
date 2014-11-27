@@ -2,6 +2,7 @@ package pl.asie.computronics.oc;
 
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
+import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLMissingMappingsEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import li.cil.oc.api.Driver;
@@ -81,6 +82,9 @@ public class IntegrationOpenComputers {
 
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void init() {
+
+		FMLInterModComms.sendMessage(Mods.OpenComputers, "blacklistPeripheral", "pl.asie.computronics.cc.multiperipheral.MultiPeripheral");
+
 		if(Loader.isModLoaded(Mods.RedLogic)) {
 			if(compat.isCompatEnabled(Compat.RedLogic_Lamps)) {
 				Driver.add(new DriverLamp.OCDriver());
