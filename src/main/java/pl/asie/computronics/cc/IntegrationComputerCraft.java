@@ -117,7 +117,7 @@ public class IntegrationComputerCraft {
 			registerMultiPeripheralProvider(new DriverEnergyHandler.CCDriver());
 		}
 
-		if(Loader.isModLoaded(Mods.BuildCraft)) {
+		if(Mods.API.hasVersion(Mods.API.BuildCraftTiles, "[1.1,)")) {
 			if(compat.isCompatEnabled(Compat.BuildCraft_Drivers)) {
 				registerMultiPeripheralProvider(new DriverHeatable.CCDriver());
 			}
