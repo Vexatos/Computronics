@@ -7,6 +7,7 @@
   * ADDED: More BuildCraft integration
     - Now you can get various things about the heat of any block which might overheat
   * FIXED: Lamps ignoring bundled redstone if placed adjacent to each other
+  * MISC: Built-in tape program for OC now handles errors properly
   * MISC: Added a few more things to the config file
 
 ==== 1.3.2 ====

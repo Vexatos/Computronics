@@ -67,11 +67,11 @@ local function label(name)
       print("Tape is currently not labeled.")
       return
     end
-    print("Tape is currently labeled: "..tape.getLabel())
+    print("Tape is currently labeled: " .. tape.getLabel())
     return
   end
   tape.setLabel(name)
-  print("Tape label set to "..name)
+  print("Tape label set to " .. name)
 end
 
 local function rewind()
@@ -113,7 +113,7 @@ local function speed(sp)
     return
   end
   tape.setSpeed(tonumber(sp))
-  print("Playback speed set to "..sp)
+  print("Playback speed set to " .. sp)
 end
 
 local function volume(vol)
@@ -122,7 +122,7 @@ local function volume(vol)
     return
   end
   tape.setVolume(tonumber(vol))
-  print("Volume set to "..vol)
+  print("Volume set to " .. vol)
 end
 
 local function writeTape(path)
@@ -130,75 +130,103 @@ local function writeTape(path)
   tape.seek(-tape.getSize())
   tape.stop() --Just making sure
 
-  local file,msg,_,y
+  local file, msg, _, y, success
   local block = 1024 --How much to read at a time
   local bytery = 0 --For the progress indicator
   local filesize = tape.getSize()
 
-  if string.match(path,"https?://.+") then
-
-    local url = string.gsub(path,"https?://","",1)
-    local domain = string.gsub(url,"/.*","",1)
-    print("Domain: "..domain)
-    local path = string.gsub(url,".-/","/",1)
-    print("Path: "..path)
+  if string.match(path, "https?://.+") then
 
     if not component.isAvailable("internet") then
       io.stderr:write("This program requires an internet card to run.")
-      return
+      return false
     end
 
     local internet = require("internet")
-    file = internet.open(domain, 80)
-    file:setTimeout(10)
-    local start = false
+    local header = ""
 
-    print("Writing...")
-
-    _,y = term.getCursor()
-    file:write("GET "..path.." HTTP/1.1\r\nHost: "..domain.."\r\nConnection: close\r\n\r\n")
-
-    repeat
-      local bytes = file:read(block)
-      if string.match(bytes,"Content%-Length: (.-)\r\n") then
-        filesize = tonumber(string.match(bytes,"Content%-Length: (%d-)\r\n"))
+    local function setupConnection(addr)
+      if string.match(addr, "https://") then
+        io.stderr:write("unsupported URL (HTTPS is not supported, use HTTP)")
+        return false
       end
-      if string.find(bytes,"\r\n\r\n") then
-        bytes = string.gsub(bytes,".-\r\n\r\n","",1)
-        if not bytes then break end
-        term.setCursor(1,y)
-        bytery = bytery + #bytes
-        term.write("Read "..tostring(bytery).." bytes...")
-        tape.write(bytes)
-        start = true
-      elseif string.find(bytes,"\r\n?$") then
-        local old = bytes
-        bytes = file:read(block)
-        local match = old..bytes
-        if string.find(match,"\r\n\r\n") then
-          bytes = string.gsub(match,".-\r\n\r\n","",1)
-          if not bytes then break end
-          term.setCursor(1,y)
-          bytery = bytery + #bytes
-          term.write("Read "..tostring(bytery).." bytes...")
-          tape.write(bytes)
-          start = true
+      local url = string.gsub(addr, "http://", "", 1)
+      local domain = string.gsub(url, "/.*", "", 1)
+      local path = string.gsub(url, ".-/", "/", 1)
+      local header = ""
+
+      file = internet.open(domain, 80)
+      file:setTimeout(10)
+
+      file:write("GET " .. path .. " HTTP/1.1\r\nHost: " .. domain .. "\r\nConnection: close\r\n\r\n")
+
+      repeat
+        local hBlock = file:read(block)
+        if not hBlock or #hBlock <= 0 then
+          io.stderr:write("no valid HTTP response - malformed header")
+          return false
         end
+        header = header .. hBlock
+      until string.find(header, "\r\n\r\n")
+
+      if string.match(header, "HTTP/1.1 ([^\r\n]-)\r\n") then
+        local status = string.match(header, "HTTP/1.1 ([^\r\n]-)\r?\n")
+        local location = string.match(header, "[Ll]ocation: (.-)\r\n")
+        if string.match(status, "3%d%d") then
+          if location ~= addr then
+            file:close()
+            print("Redirecting to " .. location)
+            return setupConnection(location)
+          end
+        end
+        if string.match(status, "2%d%d") then
+          print("Status: " .. status)
+          print("Domain: " .. domain)
+          print("Path: " .. path)
+          return true, file, header
+        end
+        io.stderr:write(status)
+        return false
       end
-    until start == true
-  else
-    local path = shell.resolve(path)
-    filesize = fs.size(path)
-    print("Path: "..path)
-    file,msg = io.open(shell.resolve(path), "rb")
-    if not file then
-      io.stderr:write("Error: "..msg)
+      io.stderr:write("no valid HTTP response - no response")
+      return false
+    end
+
+    success, file, header = setupConnection(path)
+    if not success then
+      if file then
+        file:close()
+      end
       return
     end
 
     print("Writing...")
 
-    _,y = term.getCursor()
+    _, y = term.getCursor()
+
+    if string.match(header, "Content%-Length: (%d-)\r\n") then
+      filesize = tonumber(string.match(header, "Content%-Length: (%d-)\r\n"))
+    end
+    local bytes = string.gsub(header, ".-\r\n\r\n", "", 1)
+    if bytes and #bytes > 0 then
+      term.setCursor(1, y)
+      bytery = bytery + #bytes
+      term.write("Read " .. tostring(bytery) .. " bytes...")
+      tape.write(bytes)
+    end
+  else
+    local path = shell.resolve(path)
+    filesize = fs.size(path)
+    print("Path: " .. path)
+    file, msg = io.open(shell.resolve(path), "rb")
+    if not file then
+      io.stderr:write("Error: " .. msg)
+      return
+    end
+
+    print("Writing...")
+
+    _, y = term.getCursor()
   end
 
   if filesize > tape.getSize() then
@@ -207,11 +235,11 @@ local function writeTape(path)
   end
 
   while true do
-    local bytes = file:read(math.min(block,filesize-bytery))
+    local bytes = file:read(math.min(block, filesize - bytery))
     if (not bytes) or bytes == "" then break end
-    term.setCursor(1,y)
+    term.setCursor(1, y)
     bytery = bytery + #bytes
-    term.write("Read "..tostring(bytery).." of "..tostring(filesize).." bytes...")
+    term.write("Read " .. tostring(bytery) .. " of " .. tostring(filesize) .. " bytes...")
     tape.write(bytes)
   end
   file:close()
