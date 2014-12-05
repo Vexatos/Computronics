@@ -6,6 +6,8 @@
     - Now OpenPeripheral peripherals aren't ignored anymore if Computronics is present
   * ADDED: More BuildCraft integration
     - Now you can get various things about the heat of any block which might overheat
+  * ADDED: Forestry Bees:
+    - Now there is a new Bee producing Grog for OpenComputers. Have fun acquiring it!
   * FIXED: Lamps ignoring bundled redstone if placed adjacent to each other
   * MISC: Built-in tape program for OC now handles errors properly
   * MISC: Added a few more things to the config file

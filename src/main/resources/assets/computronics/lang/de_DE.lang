@@ -72,6 +72,8 @@ item.computronics.robot_upgrade_radar.name=Radar-Upgrade
 item.computronics.card_fx.name=Partikeleffektkarte
 item.computronics.card_spoof.name=Spoofing-Karte
 item.computronics.card_spoof.tip=Funktioniert wie eine Netzwerkkarte, aber erlaubt es, die Sendeaddresse festzulegen
+item.computronics.for.combAcid.name=Kaustische Wabe
+item.computronics.for.dropAcid.name=Kaustischer Tropfen
 item.computronics.relaySensor.name=Digitaler Relaissensor
 item.computronics.part_tape_track.name=Bandspur
 item.computronics.tape.ig.name=Intergalaktischer CDVR
@@ -80,6 +82,10 @@ item.computronics.tape.name=Kasettenband
 itemGroup.tabComputronics=Computronics
 
 entity.computronics.itemTape.name=Intergalaktischer CDVR
+
+for.computronics.flowers.sea=Meer
+for.computronics.bees.species.scummy=Schmutzig
+for.description.computronics.speciesScummy=Kerosin, Propylen-Glykol, künstliche Süßstoffe, Schwefelsäure, Rum, Aceton, Rote Farbe, Scumm, Schmierfett, Batteriesäure und/oder Pepperonis|Seltsame Leute in einer Bar
 
 chat.computronics.cipher.locked=Dieser Chiffrierblock ist versperrt! Du darfst nicht darauf zugreifen.
 chat.computronics.sensor.bound=Relais wurde erfolgreich mit der Lokomotive verbunden!

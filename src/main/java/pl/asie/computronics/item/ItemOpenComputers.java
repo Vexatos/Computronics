@@ -42,7 +42,13 @@ import java.util.List;
 public class ItemOpenComputers extends ItemMultiple implements Item, EnvironmentAware, HostAware {
 
 	public ItemOpenComputers() {
-		super(Mods.Computronics, new String[] { "robot_upgrade_camera", "robot_upgrade_chatbox", "robot_upgrade_radar", "card_fx", "card_spoof" });
+		super(Mods.Computronics, new String[] {
+			"robot_upgrade_camera",
+			"robot_upgrade_chatbox",
+			"robot_upgrade_radar",
+			"card_fx",
+			"card_spoof"
+		});
 		this.setCreativeTab(Computronics.tab);
 	}
 

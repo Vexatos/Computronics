@@ -44,6 +44,10 @@ repositories {
         name 'tterrag Repo'
         url "http://maven.tterrag.com/"
     }
+    maven {
+        name = "Forestry repo"
+        url = "http://maven.ic2.player.to/"
+    }
 }
 
 dependencies {
@@ -59,6 +63,7 @@ dependencies {
         exclude module: "buildcraft"
         exclude module: "Waila"
     }
+    compile "net.sengir.forestry:${config.forestry.version}:dev"
 }
 
 minecraft {

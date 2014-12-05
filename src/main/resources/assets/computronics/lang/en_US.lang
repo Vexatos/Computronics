@@ -72,6 +72,8 @@ item.computronics.robot_upgrade_radar.name=Radar Upgrade
 item.computronics.card_fx.name=Particle Effects Card
 item.computronics.card_spoof.name=Spoofing Card
 item.computronics.card_spoof.tip=Works just like a Network Card, but allows specifying the sending address
+item.computronics.for.combAcid.name=Caustic Comb
+item.computronics.for.dropAcid.name=Caustic Drop
 item.computronics.relaySensor.name=Digital Relay Sensor
 item.computronics.part_tape_track.name=Tape Track
 item.computronics.tape.ig.name=Intergalactical CDVR
@@ -80,6 +82,10 @@ item.computronics.tape.name=Cassette Tape
 itemGroup.tabComputronics=Computronics
 
 entity.computronics.itemTape.name=Intergalactical CDVR
+
+for.computronics.flowers.sea=Sea
+for.computronics.bees.species.scummy=Scummy
+for.description.computronics.speciesScummy=Kerosene, propylene glycol, artificial sweeteners, sulfuric acid, rum, acetone, red dye #2, scumm, axle grease, battery acid and/or pepperoni|Strange people in a bar
 
 chat.computronics.cipher.locked=This Cipher Block is locked! You may not access it.
 chat.computronics.sensor.bound=Relay successfully bound to locomotive!

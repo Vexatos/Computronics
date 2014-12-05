@@ -29,6 +29,7 @@ public class Mods {
 		BetterStorage = "betterstorage",
 		EnderIO = "EnderIO",
 		Factorization = "factorization",
+		Forestry = "Forestry",
 		FSP = "Steamcraft",
 		GregTech = "gregtech",
 		JABBA = "JABBA",

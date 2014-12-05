@@ -22,6 +22,7 @@ import pl.asie.computronics.integration.enderio.DriverIOConfigurable;
 import pl.asie.computronics.integration.enderio.DriverRedstoneControllable;
 import pl.asie.computronics.integration.enderio.DriverTransceiver;
 import pl.asie.computronics.integration.factorization.DriverChargeConductor;
+import pl.asie.computronics.integration.forestry.IntegrationForestry;
 import pl.asie.computronics.integration.fsp.DriverSteamTransporter;
 import pl.asie.computronics.integration.gregtech.DriverBaseMetaTileEntity;
 import pl.asie.computronics.integration.gregtech.DriverBatteryBuffer;
@@ -78,6 +79,11 @@ public class IntegrationOpenComputers {
 		// Fixes Iron Note Block, among others.
 		// To ensure less TE ticks for those who don't use OC, we keep this tidbit around.
 		Config.MUST_UPDATE_TILE_ENTITIES = true;
+
+		if(Loader.isModLoaded(Mods.Forestry)) {
+			Computronics.forestry = new IntegrationForestry();
+			Computronics.forestry.preInitOC();
+		}
 	}
 
 	@Optional.Method(modid = Mods.OpenComputers)
@@ -168,6 +174,10 @@ public class IntegrationOpenComputers {
 			if(compat.isCompatEnabled(Compat.BuildCraft_Drivers)) {
 				Driver.add(new DriverHeatable.OCDriver());
 			}
+		}
+
+		if(Loader.isModLoaded(Mods.Forestry) && Config.FORESTRY_BEES) {
+			Computronics.forestry.initOC();
 		}
 	}
 

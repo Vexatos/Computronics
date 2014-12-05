@@ -30,6 +30,7 @@ public class Config {
 	public static double LOCOMOTIVE_RELAY_RANGE = 128.0;
 	public static boolean GREGTECH_RECIPES = false;
 	public static boolean NON_OC_RECIPES = false;
+	public static boolean FORESTRY_BEES = true;
 
 	public static boolean OC_ROBOT_UPGRADES;
 	public static boolean OC_CARD_FX;
@@ -86,6 +87,12 @@ public class Config {
 			//Spoofing Card
 			SPOOFING_ENERGY_COST = convertRFtoOC(
 				config.getFloat("ocSpoofingCardCostPerMessage", "power", 2.0f, 0.0f, 10000.0f, "How much energy sending one spoofed message should take"));
+
+			NON_OC_RECIPES = config.getBoolean("easyRecipeMode", "recipes", false, "Set this to true to make some recipes not require OpenComputers blocks and items");
+
+			if(Loader.isModLoaded(Mods.Forestry)){
+				FORESTRY_BEES = config.getBoolean("opencomputersBees", "enable.forestry", true, "Set this to false to disable Forestry bee species for OpenComputers");
+			}
 		}
 
 		// Radar
@@ -112,10 +119,6 @@ public class Config {
 		// GregTech recipe mode
 		if(Loader.isModLoaded(Mods.GregTech)) {
 			GREGTECH_RECIPES = config.getBoolean("gtRecipeMode", "recipes", true, "Set this to true to enable GregTech-style recipes");
-		}
-
-		if(Loader.isModLoaded(Mods.OpenComputers)) {
-			NON_OC_RECIPES = config.getBoolean("easyRecipeMode", "recipes", false, "Set this to true to make some recipes not require OpenComputers blocks and items");
 		}
 	}
 
