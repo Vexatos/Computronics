@@ -47,6 +47,7 @@ import pl.asie.computronics.integration.forestry.IntegrationForestry;
 import pl.asie.computronics.integration.gregtech.GregTechRecipes;
 import pl.asie.computronics.integration.railcraft.IntegrationRailcraft;
 import pl.asie.computronics.item.ItemTape;
+import pl.asie.computronics.item.block.IBlockWithSpecialText;
 import pl.asie.computronics.item.block.ItemBlockWithSpecialText;
 import pl.asie.computronics.network.NetworkHandlerClient;
 import pl.asie.computronics.network.NetworkHandlerServer;
@@ -132,7 +133,11 @@ public class Computronics {
 	}
 
 	private void registerBlockWithTileEntity(Block block, Class<? extends TileEntity> tile, String name) {
-		registerBlockWithTileEntity(block, ItemBlock.class, tile, name);
+		if(block instanceof IBlockWithSpecialText) {
+			registerBlockWithTileEntity(block, ItemBlockWithSpecialText.class, tile, name);
+		} else {
+			registerBlockWithTileEntity(block, ItemBlock.class, tile, name);
+		}
 	}
 
 	private void registerBlockWithTileEntity(Block block, Class<? extends ItemBlock> itemBlock, Class<? extends TileEntity> tile, String name) {
@@ -172,7 +177,7 @@ public class Computronics {
 
 		if(isEnabled("chatBox", true)) {
 			chatBox = new BlockChatBox();
-			registerBlockWithTileEntity(chatBox, ItemBlockWithSpecialText.class, TileChatBox.class, "computronics.chatBox");
+			registerBlockWithTileEntity(chatBox, TileChatBox.class, "computronics.chatBox");
 		}
 
 		if(isEnabled("cipher", true)) {
@@ -182,7 +187,7 @@ public class Computronics {
 
 		if(isEnabled("cipher_advanced", true)) {
 			cipher_advanced = new BlockCipherAdvanced();
-			registerBlockWithTileEntity(cipher_advanced, ItemBlockWithSpecialText.class, TileCipherBlockAdvanced.class, "computronics.cipher_advanced");
+			registerBlockWithTileEntity(cipher_advanced, TileCipherBlockAdvanced.class, "computronics.cipher_advanced");
 			rsaThreads = Executors.newCachedThreadPool();
 		}
 
