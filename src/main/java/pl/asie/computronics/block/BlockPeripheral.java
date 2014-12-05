@@ -28,17 +28,17 @@ public abstract class BlockPeripheral extends BlockBase {
 		}
 		return super.onBlockActivated(world, x, y, z, player, a, _x, _y, _z);
 	}
-	
+
 	@Override
 	public boolean isOpaqueCube() {
 		return true;
 	}
-	
+
 	@Override
 	public boolean isNormalCube() {
 		return true;
 	}
-	
+
 	@Override
 	public boolean isNormalCube(IBlockAccess world, int x, int y, int z) {
 		return true;

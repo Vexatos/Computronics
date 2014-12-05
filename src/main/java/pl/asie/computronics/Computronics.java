@@ -66,6 +66,7 @@ import pl.asie.computronics.tile.TileIronNote;
 import pl.asie.computronics.tile.TileRadar;
 import pl.asie.computronics.tile.TileTapeDrive;
 import pl.asie.computronics.util.achievements.ComputronicsAchievements;
+import pl.asie.computronics.util.handlers.ChatBoxHandler;
 import pl.asie.lib.gui.GuiHandler;
 import pl.asie.lib.item.ItemMultiple;
 import pl.asie.lib.network.PacketHandler;

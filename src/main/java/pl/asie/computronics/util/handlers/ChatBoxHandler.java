@@ -1,4 +1,4 @@
-package pl.asie.computronics;
+package pl.asie.computronics.util.handlers;
 
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
