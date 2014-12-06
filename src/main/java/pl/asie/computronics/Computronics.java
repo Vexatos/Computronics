@@ -46,6 +46,7 @@ import pl.asie.computronics.integration.buildcraft.statements.TriggerProvider;
 import pl.asie.computronics.integration.forestry.IntegrationForestry;
 import pl.asie.computronics.integration.gregtech.GregTechRecipes;
 import pl.asie.computronics.integration.railcraft.IntegrationRailcraft;
+import pl.asie.computronics.item.ItemPortableTapeDrive;
 import pl.asie.computronics.item.ItemTape;
 import pl.asie.computronics.item.block.IBlockWithSpecialText;
 import pl.asie.computronics.item.block.ItemBlockWithSpecialText;
@@ -68,7 +69,7 @@ import pl.asie.computronics.tile.TileRadar;
 import pl.asie.computronics.tile.TileTapeDrive;
 import pl.asie.computronics.util.achievements.ComputronicsAchievements;
 import pl.asie.computronics.util.handlers.ChatBoxHandler;
-import pl.asie.lib.gui.GuiHandler;
+import pl.asie.lib.gui.inventory.GuiInventoryHandler;
 import pl.asie.lib.item.ItemMultiple;
 import pl.asie.lib.network.PacketHandler;
 
@@ -90,7 +91,7 @@ public class Computronics {
 	public static Computronics instance;
 	public static StorageManager storage;
 	public static TapeStorageEventHandler storageEventHandler;
-	public static GuiHandler gui;
+	public static GuiInventoryHandler gui;
 	public static PacketHandler packet;
 	public DFPWMPlaybackManager audio;
 	public static ExecutorService rsaThreads;
@@ -115,6 +116,7 @@ public class Computronics {
 	public static IntegrationForestry forestry;
 
 	public static ItemTape itemTape;
+	public static ItemPortableTapeDrive itemTapeDrive;
 	public static ItemMultiple itemParts;
 	public static ItemMultiple itemPartsGreg;
 
@@ -210,6 +212,9 @@ public class Computronics {
 			itemTape = new ItemTape(Config.TAPE_LENGTHS);
 			GameRegistry.registerItem(itemTape, "computronics.tape");
 
+			itemTapeDrive = new ItemPortableTapeDrive();
+			GameRegistry.registerItem(itemTapeDrive, "computronics.portable_tape_drive");
+
 			if(Loader.isModLoaded(Mods.GregTech)) {
 				itemPartsGreg = new ItemMultiple(Mods.Computronics, new String[] { "reelChromoxide" });
 				itemPartsGreg.setCreativeTab(tab);
@@ -239,7 +244,7 @@ public class Computronics {
 
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
-		gui = new GuiHandler();
+		gui = new GuiInventoryHandler();
 		NetworkRegistry.INSTANCE.registerGuiHandler(Computronics.instance, gui);
 
 		if(chatBox != null) {

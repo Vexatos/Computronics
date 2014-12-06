@@ -2,21 +2,23 @@ package pl.asie.computronics;
 
 import pl.asie.computronics.tile.ContainerCipherBlock;
 import pl.asie.computronics.tile.ContainerTapeReader;
-import pl.asie.lib.gui.GuiHandler;
+import pl.asie.lib.gui.inventory.GuiInventoryHandler;
 
 public class CommonProxy {
-	public boolean isClient() { return false; }
+	public boolean isClient() {
+		return false;
+	}
 
-	public void registerGuis(GuiHandler gui) {
+	public void registerGuis(GuiInventoryHandler gui) {
 		gui.registerGui(ContainerTapeReader.class, null);
 		gui.registerGui(ContainerCipherBlock.class, null);
 	}
 
-	public void registerEntities(){
+	public void registerEntities() {
 		//NO-OP
 	}
 
-	public void registerRenderers(){
+	public void registerRenderers() {
 		//NO-OP
 	}
 }

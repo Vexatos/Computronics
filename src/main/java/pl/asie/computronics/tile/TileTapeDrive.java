@@ -23,11 +23,12 @@ import pl.asie.computronics.item.ItemTape;
 import pl.asie.computronics.network.Packets;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
+import pl.asie.computronics.tape.ITapeDrive;
 import pl.asie.computronics.tile.TapeDriveState.State;
 import pl.asie.lib.api.tile.IInventoryProvider;
 import pl.asie.lib.network.Packet;
 
-public class TileTapeDrive extends TileEntityPeripheralBase implements IInventoryProvider {
+public class TileTapeDrive extends TileEntityPeripheralBase implements IInventoryProvider, ITapeDrive {
 	private String storageName = "";
 	private TapeDriveState state;
 
@@ -88,6 +89,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 	}
 
 	// Logic
+	@Override
 	public State getEnumState() {
 		return this.state.getState();
 	}

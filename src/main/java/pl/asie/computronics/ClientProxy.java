@@ -11,14 +11,14 @@ import pl.asie.computronics.gui.GuiTapePlayer;
 import pl.asie.computronics.item.entity.EntityItemIndestructable;
 import pl.asie.computronics.tile.ContainerCipherBlock;
 import pl.asie.computronics.tile.ContainerTapeReader;
-import pl.asie.lib.gui.GuiHandler;
+import pl.asie.lib.gui.inventory.GuiInventoryHandler;
 
 public class ClientProxy extends CommonProxy {
 	public boolean isClient() {
 		return true;
 	}
 
-	public void registerGuis(GuiHandler gui) {
+	public void registerGuis(GuiInventoryHandler gui) {
 		gui.registerGui(ContainerTapeReader.class, GuiTapePlayer.class);
 		gui.registerGui(ContainerCipherBlock.class, GuiCipherBlock.class);
 	}
