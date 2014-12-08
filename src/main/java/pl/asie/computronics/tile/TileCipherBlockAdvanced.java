@@ -160,7 +160,7 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 			int power = this.tryConsumeEnergy(v);
 			if(power < 0) {
 				return new Object[] { null, null, power + ": " + methodName + ": not enough energy available: required"
-					+ Config.CIPHER_KEY_CONSUMPTION + ", found " + ((Connector) node).globalBuffer() };
+					+ v + ", found " + ((Connector) node).globalBuffer() };
 			}
 		}
 		return result;

@@ -86,20 +86,19 @@ public class DriverCardSound extends ManagedEnvironment {
 			this.expirationList.add(host.world().getTotalWorldTime() + (long) (durationInMilliseconds / 1000 * 20));
 			freqMap.put(frequency, durationInMilliseconds);
 		}
-		Object[] result = tryConsumeEnergy(new Object[] { true }, Config.SOUND_ENERGY_COST * map.size() * longest, "beep");
-		sendSound(host.world(), host.xPosition(),
-			host.yPosition(), host.zPosition(), freqMap);
-		return result;
+		return trySendSound(freqMap, new Object[] { true }, Config.SOUND_ENERGY_COST * map.size() * longest, "beep");
 	}
 
-	private Object[] tryConsumeEnergy(Object[] result, double v, String methodName) {
+	private Object[] trySendSound(HashMap<Integer, Integer> freqMap, Object[] result, double v, String methodName) throws Exception {
 		if(this.node() instanceof Connector) {
 			int power = this.tryConsumeEnergy(v);
 			if(power < 0) {
-				return new Object[] { null, null, power + ": " + methodName + ": not enough energy available: required"
-					+ Config.CIPHER_KEY_CONSUMPTION + ", found " + ((Connector) node()).globalBuffer() };
+				return new Object[] { false, power + ": " + methodName + ": not enough energy available: required"
+					+ v + ", found " + ((Connector) node()).globalBuffer() };
 			}
 		}
+		sendSound(host.world(), host.xPosition(),
+			host.yPosition(), host.zPosition(), freqMap);
 		return result;
 	}
 
