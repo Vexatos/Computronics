@@ -76,16 +76,14 @@ public class DriverCardSound extends ManagedEnvironment {
 			if(!(durObj instanceof Number)) {
 				throw new IllegalArgumentException("duration '" + durObj.toString() + "'is not a number");
 			}
-			Number freq = (Number) o;
-			Number dur = (Number) durObj;
-			int frequency = optInt(freq, 440);
+			int frequency = optInt((Number) o, 440);
 			if(frequency < 20 || frequency > 2000) {
 				throw new IllegalArgumentException("invalid frequency, must be in [20, 2000]");
 			}
-			double duration = optDouble(dur, 0.1);
-			longest = Math.max(longest, duration);
-			this.expirationList.add(frequency, host.world().getTotalWorldTime() + (long) (duration / 20));
+			double duration = optDouble((Number) durObj, 0.1);
 			int durationInMilliseconds = Math.max(50, Math.min(5000, (int) (duration * 1000)));
+			longest = Math.max(longest, Math.max(50, Math.min(5000, (duration * 1000))));
+			this.expirationList.add(frequency, host.world().getTotalWorldTime() + (long) (durationInMilliseconds / 1000 * 20));
 			freqMap.put(frequency, durationInMilliseconds);
 		}
 		sendSound(host.world(), host.xPosition(),
