@@ -69,7 +69,7 @@ public class IntegrationOpenComputers {
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void preInit() {
 
-		if(Config.OC_ROBOT_UPGRADES || Config.OC_CARD_FX || Config.OC_CARD_SPOOF) {
+		if(Config.OC_ROBOT_UPGRADES || Config.OC_CARD_FX || Config.OC_CARD_SPOOF || Config.OC_CARD_SOUND) {
 			itemOCParts = new ItemOpenComputers();
 			GameRegistry.registerItem(itemOCParts, "computronics.ocParts");
 			Driver.add(itemOCParts);
@@ -218,6 +218,14 @@ public class IntegrationOpenComputers {
 				'b', li.cil.oc.api.Items.get("lanCard").createItemStack(1),
 				'p', li.cil.oc.api.Items.get("printedCircuitBoard").createItemStack(1),
 				'l', Items.brick);
+		}
+		if(Config.OC_CARD_SOUND) {
+			GameRegistry.addShapedRecipe(new ItemStack(itemOCParts, 1, 5),
+				" fl", "mb ", "   ",
+				'm', li.cil.oc.api.Items.get("chip2").createItemStack(1),
+				'f', Computronics.ironNote,
+				'b', li.cil.oc.api.Items.get("card").createItemStack(1),
+				'l', li.cil.oc.api.Items.get("materialCU").createItemStack(1));
 		}
 	}
 

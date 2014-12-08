@@ -25,6 +25,7 @@ public class Config {
 	public static double RADAR_ENERGY_COST_OC = 5.0;
 	public static double RADAR_CC_TIME = 0.5;
 	public static double FX_ENERGY_COST = 0.2;
+	public static double SOUND_ENERGY_COST = 1.0;
 	public static double SPOOFING_ENERGY_COST = 0.2;
 	public static String CHATBOX_PREFIX = "ChatBox";
 	public static double LOCOMOTIVE_RELAY_RANGE = 128.0;
@@ -35,6 +36,7 @@ public class Config {
 	public static boolean OC_ROBOT_UPGRADES;
 	public static boolean OC_CARD_FX;
 	public static boolean OC_CARD_SPOOF;
+	public static boolean OC_CARD_SOUND;
 
 	public static String TAPE_LENGTHS;
 	public static boolean REDSTONE_REFRESH, CHATBOX_CREATIVE;
@@ -80,6 +82,7 @@ public class Config {
 			OC_ROBOT_UPGRADES = config.get("enable.opencomputers", "robotUpgrades", true).getBoolean(true);
 			OC_CARD_FX = config.get("enable.opencomputers", "particleCard", true).getBoolean(true);
 			OC_CARD_SPOOF = config.get("enable.opencomputers", "spoofingCard", true).getBoolean(true);
+			OC_CARD_SOUND = config.get("enable.opencomputers", "soundCard", true).getBoolean(true);
 
 			// Particle Card
 			FX_ENERGY_COST = convertRFtoOC(
@@ -87,10 +90,13 @@ public class Config {
 			//Spoofing Card
 			SPOOFING_ENERGY_COST = convertRFtoOC(
 				config.getFloat("ocSpoofingCardCostPerMessage", "power", 2.0f, 0.0f, 10000.0f, "How much energy sending one spoofed message should take"));
+			// Beep Card
+			SOUND_ENERGY_COST = convertRFtoOC(
+				config.getFloat("ocBeepCardCostPerSound", "power", 10.0f, 0.0f, 10000.0f, "How much energy a single beep will cost for 1 second"));
 
 			NON_OC_RECIPES = config.getBoolean("easyRecipeMode", "recipes", false, "Set this to true to make some recipes not require OpenComputers blocks and items");
 
-			if(Loader.isModLoaded(Mods.Forestry)){
+			if(Loader.isModLoaded(Mods.Forestry)) {
 				FORESTRY_BEES = config.getBoolean("opencomputersBees", "enable.forestry", true, "Set this to false to disable Forestry bee species for OpenComputers");
 			}
 		}

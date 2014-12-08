@@ -1,7 +1,8 @@
 ==== 1.3.3 ====
 
-  * ADDED: Spoofing Card for OpenComputers
-    - Works the same as a Network Card, but allows you to specify the source address
+  * ADDED: New OpenComputers Cards:
+    - Spoofing Card: Works the same as a Network Card, but allows you to specify the source address
+    - Beep Card: Provides beep(); same as computer.beep(), just takes a table with frequency-duration pairs, allows playing up to 8 different sounds at once
   * ADDED: OpenPeripheral integration:
     - Now OpenPeripheral peripherals aren't ignored anymore if Computronics is present
   * ADDED: More BuildCraft integration

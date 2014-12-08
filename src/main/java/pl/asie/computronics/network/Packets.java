@@ -5,4 +5,5 @@ public class Packets {
 	public static final int PACKET_AUDIO_STOP = 1;
 	public static final int PACKET_TAPE_GUI_STATE = 2;
 	public static final int PACKET_PARTICLE_SPAWN = 3;
+	public static final int PACKET_COMPUTER_BEEP = 4;
 }

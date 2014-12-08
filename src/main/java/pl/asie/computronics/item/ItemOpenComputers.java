@@ -16,13 +16,16 @@ import li.cil.oc.util.ItemCosts;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.world.World;
 import org.lwjgl.input.Keyboard;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.oc.DriverCardFX;
+import pl.asie.computronics.oc.DriverCardSound;
 import pl.asie.computronics.oc.DriverCardSpoof;
 import pl.asie.computronics.oc.RobotUpgradeCamera;
 import pl.asie.computronics.oc.RobotUpgradeChatBox;
@@ -47,7 +50,8 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 			"robot_upgrade_chatbox",
 			"robot_upgrade_radar",
 			"card_fx",
-			"card_spoof"
+			"card_spoof",
+			"card_beep"
 		});
 		this.setCreativeTab(Computronics.tab);
 	}
@@ -85,6 +89,8 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 				return DriverCardFX.class;
 			case 4:
 				return DriverCardSpoof.class;
+			case 5:
+				return DriverCardSound.class;
 			default:
 				return null;
 		}
@@ -105,6 +111,8 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 				return new DriverCardFX(container);
 			case 4:
 				return new DriverCardSpoof(container);
+			case 5:
+				return new DriverCardSound(container);
 			default:
 				return null;
 		}
@@ -124,6 +132,8 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 				return Slot.Card;
 			case 4:
 				return Slot.Card;
+			case 5:
+				return Slot.Card;
 			default:
 				return Slot.None;
 		}
@@ -142,6 +152,8 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 			case 3:
 				return 1; // Tier 2
 			case 4:
+				return 1; // Tier 2
+			case 5:
 				return 1; // Tier 2
 			default:
 				return 0; // Tier 1 default
@@ -177,6 +189,9 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 		}
 		if(Config.OC_CARD_SPOOF) {
 			list.add(new ItemStack(item, 1, 4));
+		}
+		if(Config.OC_CARD_SOUND) {
+			list.add(new ItemStack(item, 1, 5));
 		}
 	}
 

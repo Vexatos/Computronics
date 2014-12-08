@@ -1,11 +1,14 @@
 package pl.asie.computronics.network;
 
+import cpw.mods.fml.common.Loader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetHandler;
 import net.minecraft.tileentity.TileEntity;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.oc.DriverCardSound;
 import pl.asie.computronics.reference.Config;
+import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TapeDriveState.State;
 import pl.asie.computronics.tile.TileTapeDrive;
 import pl.asie.lib.audio.StreamingAudioPlayer;
@@ -45,15 +48,15 @@ public class NetworkHandlerClient extends MessageHandlerBase {
 				byte[] audio = new byte[packetSize * 8];
 				String sourceName = "dfpwm_"+codecId;
 				StreamingAudioPlayer codec = Computronics.instance.audio.getPlayer(codecId);
-	
+
 				if(dimId != WorldUtils.getCurrentClientDimension()) return;
-				
+
 				codec.decompress(audio, data, 0, 0, packetSize);
 				for(int i = 0; i < (packetSize * 8); i++) {
 					// Convert signed to unsigned data
 					audio[i] = (byte)(((int)audio[i] & 0xFF) ^ 0x80);
 				}
-				
+
 				if((codec.lastPacketId + 1) != packetId) {
 					codec.reset();
 				}
@@ -76,6 +79,11 @@ public class NetworkHandlerClient extends MessageHandlerBase {
 		        double vz = packet.readFloat();
 		        String name = packet.readString();
 		        Minecraft.getMinecraft().thePlayer.getEntityWorld().spawnParticle(name, x, y, z, vx, vy, vz);
+			} break;
+			case Packets.PACKET_COMPUTER_BEEP: {
+				if(Loader.isModLoaded(Mods.OpenComputers)) {
+					DriverCardSound.onSound(packet, player);
+				}
 			} break;
 		}
 	}
