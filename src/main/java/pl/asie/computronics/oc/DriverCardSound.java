@@ -19,6 +19,7 @@ import pl.asie.lib.network.Packet;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,12 +50,19 @@ public class DriverCardSound extends ManagedEnvironment {
 		if(this.expirationList.isEmpty()) {
 			return;
 		}
-		for(int i = 0; i < Math.min(this.expirationList.size(), 8); i++) {
+		Collections.sort(expirationList);
+		while(expirationList.size() > 0 && expirationList.get(0) <= host.world().getTotalWorldTime()) {
+			expirationList.remove(0);
+		}
+
+		/*for(int i = 0; i < Math.min(list.length, 8);) {
 			long time = this.expirationList.get(i);
 			if(time <= host.world().getTotalWorldTime()) {
 				this.expirationList.remove(i);
+				continue;
 			}
-		}
+			i++;
+		}*/
 	}
 
 	@Callback(doc = "function(frequencyDurationTable:table):boolean; table needs to contain frequency-duration pairs; plays each frequency for the specified duration.")
