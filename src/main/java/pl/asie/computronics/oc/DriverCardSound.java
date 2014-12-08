@@ -73,22 +73,23 @@ public class DriverCardSound extends ManagedEnvironment {
 				throw new IllegalArgumentException("frequency " + o.toString() + "is not a number");
 			}
 			Object durObj = map.get(o);
-			if(!(durObj instanceof Number)) {
+			if(durObj != null && !(durObj instanceof Number)) {
 				throw new IllegalArgumentException("duration '" + durObj.toString() + "'is not a number");
 			}
-			int frequency = optInt((Number) o, 440);
+			int frequency = ((Number) o).intValue();
 			if(frequency < 20 || frequency > 2000) {
 				throw new IllegalArgumentException("invalid frequency, must be in [20, 2000]");
 			}
-			double duration = optDouble((Number) durObj, 0.1);
+			double duration = optDouble(durObj != null ? (Number) durObj : null, 0.1);
 			int durationInMilliseconds = Math.max(50, Math.min(5000, (int) (duration * 1000)));
 			longest = Math.max(longest, Math.max(50, Math.min(5000, (duration * 1000))));
-			this.expirationList.add(frequency, host.world().getTotalWorldTime() + (long) (durationInMilliseconds / 1000 * 20));
+			this.expirationList.add(host.world().getTotalWorldTime() + (long) (durationInMilliseconds / 1000 * 20));
 			freqMap.put(frequency, durationInMilliseconds);
 		}
+		Object[] result = tryConsumeEnergy(new Object[] { true }, Config.SOUND_ENERGY_COST * map.size() * longest, "beep");
 		sendSound(host.world(), host.xPosition(),
 			host.yPosition(), host.zPosition(), freqMap);
-		return tryConsumeEnergy(new Object[] { true }, Config.SOUND_ENERGY_COST * map.size() * longest, "beep");
+		return result;
 	}
 
 	private Object[] tryConsumeEnergy(Object[] result, double v, String methodName) {
@@ -119,13 +120,6 @@ public class DriverCardSound extends ManagedEnvironment {
 			return def;
 		}
 		return value.doubleValue();
-	}
-
-	private static int optInt(Number value, int def) {
-		if(value == null) {
-			return def;
-		}
-		return value.intValue();
 	}
 
 	private static void sendSound(World world, double x, double y, double z, HashMap<Integer, Integer> freqMap) throws Exception {
