@@ -50,19 +50,10 @@ public class DriverCardSound extends ManagedEnvironment {
 		if(this.expirationList.isEmpty()) {
 			return;
 		}
-		Collections.sort(expirationList);
+
 		while(expirationList.size() > 0 && expirationList.get(0) <= host.world().getTotalWorldTime()) {
 			expirationList.remove(0);
 		}
-
-		/*for(int i = 0; i < Math.min(list.length, 8);) {
-			long time = this.expirationList.get(i);
-			if(time <= host.world().getTotalWorldTime()) {
-				this.expirationList.remove(i);
-				continue;
-			}
-			i++;
-		}*/
 	}
 
 	@Callback(doc = "function(frequencyDurationTable:table):boolean; table needs to contain frequency-duration pairs; plays each frequency for the specified duration.")
@@ -92,6 +83,7 @@ public class DriverCardSound extends ManagedEnvironment {
 			int durationInMilliseconds = Math.max(50, Math.min(5000, (int) (duration * 1000)));
 			longest = Math.max(longest, Math.max(50, Math.min(5000, (duration * 1000))));
 			this.expirationList.add(host.world().getTotalWorldTime() + (long) (durationInMilliseconds / 1000 * 20));
+			Collections.sort(expirationList);
 			freqMap.put(frequency, durationInMilliseconds);
 		}
 		return trySendSound(freqMap, new Object[] { true }, Config.SOUND_ENERGY_COST * map.size() * longest, "beep");
