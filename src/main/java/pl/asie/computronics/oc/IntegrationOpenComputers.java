@@ -221,11 +221,11 @@ public class IntegrationOpenComputers {
 		}
 		if(Config.OC_CARD_SOUND) {
 			GameRegistry.addShapedRecipe(new ItemStack(itemOCParts, 1, 5),
-				" fl", "mb ", "   ",
+				" l ", "mb ", " f ",
 				'm', li.cil.oc.api.Items.get("chip2").createItemStack(1),
 				'f', Computronics.ironNote,
 				'b', li.cil.oc.api.Items.get("card").createItemStack(1),
-				'l', li.cil.oc.api.Items.get("materialCU").createItemStack(1));
+				'l', li.cil.oc.api.Items.get("cu").createItemStack(1));
 		}
 	}
 

@@ -56,6 +56,11 @@ public class DriverCardSound extends ManagedEnvironment {
 		}
 	}
 
+	@Callback(doc = "function():number; returns the current amount of beeps currently being played", direct = true, limit = 10)
+	public Object[] getBeepCount(Context context, Arguments args) {
+		return (new Object[] { this.expirationList.size() });
+	}
+
 	@Callback(doc = "function(frequencyDurationTable:table):boolean; table needs to contain frequency-duration pairs; plays each frequency for the specified duration.")
 	public Object[] beep(Context context, Arguments args) throws Exception {
 		Map map = args.checkTable(0);
@@ -86,7 +91,7 @@ public class DriverCardSound extends ManagedEnvironment {
 			Collections.sort(expirationList);
 			freqMap.put(frequency, durationInMilliseconds);
 		}
-		return trySendSound(freqMap, new Object[] { true }, Config.SOUND_ENERGY_COST * map.size() * longest, "beep");
+		return trySendSound(freqMap, new Object[] { true }, Config.SOUND_ENERGY_COST * map.size() * (longest / 1000d), "beep");
 	}
 
 	private Object[] trySendSound(HashMap<Integer, Integer> freqMap, Object[] result, double v, String methodName) throws Exception {
@@ -151,7 +156,7 @@ public class DriverCardSound extends ManagedEnvironment {
 			for(int i = 0; i < pairs; i++) {
 				short frequency = packet.readShort();
 				short duration = packet.readShort();
-				Audio.play(x + 0.5f, y + 0.5f, z + 0.5f, frequency, duration);
+				Audio.play(x + 0.5f, y + 0.5f, z + 0.5f, frequency & 0xFFFF, duration & 0xFFFF);
 			}
 		}
 	}
