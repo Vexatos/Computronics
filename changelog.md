@@ -10,6 +10,8 @@
   * ADDED: Forestry Bees:
     - Now there is a new Bee producing Grog for OpenComputers. Have fun acquiring it!
   * FIXED: Lamps ignoring bundled redstone if placed adjacent to each other
+  * FIXED: Tape Drive GUI. Now it actually, really works
+  * FIXED: Chat box messages not being consistently gray
   * MISC: Built-in tape program for OC now handles errors properly
   * MISC: Added a few more things to the config file
 

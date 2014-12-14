@@ -177,7 +177,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 		}
 	}
 
-	public void saveStorage(){
+	public void saveStorage() {
 		unloadStorage();
 	}
 
@@ -252,29 +252,35 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 
 	@Override
 	@Optional.Method(modid = Mods.OpenComputers)
-	public void readFromNBT_OC(NBTTagCompound nbt) {
-		super.readFromNBT_OC(nbt);
+	public void readFromNBT_OC(NBTTagCompound tag) {
+		super.readFromNBT_OC(tag);
 		if(oc_fs != null && oc_fs.node() != null) {
-			oc_fs.node().load(nbt.getCompoundTag("oc:fs"));
+			oc_fs.node().load(tag.getCompoundTag("oc:fs"));
 		}
 	}
 
 	@Override
 	@Optional.Method(modid = Mods.OpenComputers)
-	public void writeToNBT_OC(NBTTagCompound nbt) {
-		super.writeToNBT_OC(nbt);
+	public void writeToNBT_OC(NBTTagCompound tag) {
+		super.writeToNBT_OC(tag);
 		if(oc_fs != null && oc_fs.node() != null) {
 			final NBTTagCompound fsNbt = new NBTTagCompound();
 			oc_fs.node().save(fsNbt);
-			nbt.setTag("oc:fs", fsNbt);
+			tag.setTag("oc:fs", fsNbt);
 		}
 	}
 
 	@Override
-	public void writeToRemoteNBT(NBTTagCompound nbt) {
-		super.writeToRemoteNBT(nbt);
-		if(Loader.isModLoaded(Mods.Waila)) {
-			nbt.setByte("state", (byte) this.state.getState().ordinal());
+	public void writeToRemoteNBT(NBTTagCompound tag) {
+		super.writeToRemoteNBT(tag);
+		tag.setByte("state", (byte) this.state.getState().ordinal());
+	}
+
+	@Override
+	public void readFromRemoteNBT(NBTTagCompound tag) {
+		super.readFromRemoteNBT(tag);
+		if(tag.hasKey("state")) {
+			this.state.setState(State.values()[tag.getByte("state")]);
 		}
 	}
 

@@ -238,20 +238,4 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 			writeToNBT_NC(nbt);
 		}
 	}
-
-	@Override
-	public void writeToRemoteNBT(NBTTagCompound nbt) {
-		super.writeToRemoteNBT(nbt);
-		if(Loader.isModLoaded(Mods.Waila)) {
-			nbt.setInteger("x", this.xCoord);
-			nbt.setInteger("y", this.yCoord);
-			nbt.setInteger("z", this.zCoord);
-			if(Loader.isModLoaded(Mods.OpenComputers)) {
-				writeToNBT_OC(nbt);
-			}
-			if(Loader.isModLoaded(Mods.NedoComputers)) {
-				writeToNBT_NC(nbt);
-			}
-		}
-	}
 }

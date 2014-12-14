@@ -117,6 +117,14 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 		}
 	}
 
+	@Override
+	public void readFromRemoteNBT(NBTTagCompound nbt) {
+		super.readFromRemoteNBT(nbt);
+		if(nbt.hasKey("bound")) {
+			this.isBound = nbt.getBoolean("bound");
+		}
+	}
+
 	private String cannotAccessLocomotive() {
 		if(this.locomotive == null) {
 			return "relay is not bound to a locomotive";
