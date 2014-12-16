@@ -14,6 +14,11 @@
   * FIXED: Chat box messages not being consistently gray
   * MISC: Built-in tape program for OC now handles errors properly
   * MISC: Added a few more things to the config file
+  * MISC: Updated Waila intergation to 1.5.6
+  * MISC: Updated EnderIO integration to 2.2.4
+    - New Capacitor Banks can be properly accessed by CC and OC now!
+    - for CC, getEnergyStored()/getMaxEnergyStored() has been fixed
+    - for OC, you will temporarily have to use getEnergyStoredForNetwork() and getMaxEnergyStoredForNetwork() until a bug in OC gets fixed. Once that has been fixed, you will be able to use getEnergyStored() and getMaxEnergyStored() as well.
 
 ==== 1.3.2 ====
 

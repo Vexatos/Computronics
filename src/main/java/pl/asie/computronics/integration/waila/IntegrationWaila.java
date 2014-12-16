@@ -8,18 +8,16 @@ import pl.asie.computronics.reference.Mods;
 
 public class IntegrationWaila {
 	public static void register(IWailaRegistrar reg) {
-		reg.registerBodyProvider(new WailaComputronics(), BlockPeripheral.class);
-		registerKeys(reg, BlockPeripheral.class);
+		WailaComputronics provider = new WailaComputronics();
+		reg.registerBodyProvider(provider, BlockPeripheral.class);
+		reg.registerNBTProvider(provider, BlockPeripheral.class);
 
 		if(Loader.isModLoaded(Mods.Railcraft)) {
-			reg.registerBodyProvider(new WailaComputronics(), BlockDigitalReceiverBox.class);
-			registerKeys(reg, BlockDigitalReceiverBox.class);
+			reg.registerBodyProvider(provider, BlockDigitalReceiverBox.class);
+			reg.registerNBTProvider(provider, BlockDigitalReceiverBox.class);
 		}
 
 		ConfigValues.registerConfigs(reg);
 	}
 
-	private static void registerKeys(IWailaRegistrar reg, Class<?> clazz) {
-		reg.registerSyncedNBTKey("*", clazz);
-	}
 }

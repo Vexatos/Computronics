@@ -58,7 +58,8 @@ tooltip.computronics.waila.lamp.red=Red: %s
 tooltip.computronics.waila.lamp.green=Green: %s
 tooltip.computronics.waila.lamp.blue=Blue: %s
 
-option.computronics.enableAddress=Component address
+option.computronics.enableOCAddress=Component address
+option.computronics.enableNCAddress=NedoComputers Bus ID
 option.computronics.enableTape=Inserted tape
 option.computronics.enableTapeName=Tape name
 option.computronics.enableDriveState=Tape Drive state

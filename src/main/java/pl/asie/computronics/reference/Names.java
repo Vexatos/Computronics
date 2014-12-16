@@ -13,6 +13,7 @@ public class Names {
 		EnderIO_IOConfigurable = "io_config_tile",
 		EnderIO_MachineTile = "enderio_machine",
 		EnderIO_PoweredTile = "powered_tile",
+		EnderIO_PowerStorage = "power_storage",
 		EnderIO_RedstoneTile = "redstone_tile",
 		EnderIO_Transceiver = "dimensional_transceiver",
 		FSP_SteamTransporter = "steam_transporter",

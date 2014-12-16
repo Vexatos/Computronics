@@ -5,10 +5,13 @@ import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.SpecialChars;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.api.tape.IItemTapeStorage;
 import pl.asie.computronics.integration.waila.ConfigValues;
 import pl.asie.computronics.tile.TapeDriveState;
+import pl.asie.computronics.tile.TileTapeDrive;
 import pl.asie.computronics.util.StringUtil;
 
 import java.util.List;
@@ -43,6 +46,19 @@ public class WailaTapeDrive extends ComputronicsWailaProvider {
 			currenttip.add(StringUtil.localize("tooltip.computronics.waila.tape.notapeinserted"));
 		}
 		return currenttip;
+	}
+
+	@Override
+	public NBTTagCompound getNBTData(TileEntity te, NBTTagCompound tag, World world, int x, int y, int z) {
+		if(te instanceof TileTapeDrive) {
+			TileTapeDrive drive = (TileTapeDrive) te;
+			NBTTagCompound data = new NBTTagCompound();
+			//I have to do this, for the inventory
+			drive.writeToNBT(data);
+			tag.setByte("state", data.getByte("state"));
+			tag.setTag("Inventory", data.getTagList("Inventory", 10));
+		}
+		return tag;
 	}
 
 	/*@Override

@@ -11,9 +11,11 @@ import pl.asie.computronics.integration.appeng.DriverSpatialIOPort;
 import pl.asie.computronics.integration.buildcraft.DriverHeatable;
 import pl.asie.computronics.integration.cofh.DriverEnergyHandler;
 import pl.asie.computronics.integration.enderio.DriverAbstractMachine;
+import pl.asie.computronics.integration.enderio.DriverCapacitorBankOld;
 import pl.asie.computronics.integration.enderio.DriverCapacitorBank;
 import pl.asie.computronics.integration.enderio.DriverHasExperience;
 import pl.asie.computronics.integration.enderio.DriverIOConfigurable;
+import pl.asie.computronics.integration.enderio.DriverPowerStorage;
 import pl.asie.computronics.integration.enderio.DriverRedstoneControllable;
 import pl.asie.computronics.integration.enderio.DriverTransceiver;
 import pl.asie.computronics.integration.factorization.DriverChargeConductor;
@@ -108,8 +110,10 @@ public class IntegrationComputerCraft {
 				registerMultiPeripheralProvider(new DriverRedstoneControllable.CCDriver());
 				registerMultiPeripheralProvider(new DriverIOConfigurable.CCDriver());
 				registerMultiPeripheralProvider(new DriverHasExperience.CCDriver());
+				registerMultiPeripheralProvider(new DriverPowerStorage.CCDriver());
 				registerMultiPeripheralProvider(new DriverAbstractMachine.CCDriver());
 				registerMultiPeripheralProvider(new DriverCapacitorBank.CCDriver());
+				registerMultiPeripheralProvider(new DriverCapacitorBankOld.CCDriver());
 				registerMultiPeripheralProvider(new DriverTransceiver.CCDriver());
 			}
 		} else if(ModAPIManager.INSTANCE.hasAPI(Mods.API.CoFHAPI_Energy)

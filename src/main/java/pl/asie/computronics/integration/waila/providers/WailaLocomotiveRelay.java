@@ -1,10 +1,15 @@
 package pl.asie.computronics.integration.waila.providers;
 
+import cpw.mods.fml.common.Loader;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 import pl.asie.computronics.integration.waila.ConfigValues;
+import pl.asie.computronics.reference.Mods;
+import pl.asie.computronics.tile.TileLocomotiveRelay;
 import pl.asie.computronics.util.StringUtil;
 
 import java.util.List;
@@ -26,5 +31,16 @@ public class WailaLocomotiveRelay extends ComputronicsWailaProvider {
 		String boundKey = "tooltip.computronics.waila.relay." + (nbt.getBoolean("bound") ? "bound" : "notbound");
 		currenttip.add(StringUtil.localize(boundKey));
 		return currenttip;
+	}
+
+	@Override
+	public NBTTagCompound getNBTData(TileEntity te, NBTTagCompound tag, World world, int x, int y, int z) {
+		if(te instanceof TileLocomotiveRelay) {
+			TileLocomotiveRelay relay = (TileLocomotiveRelay) te;
+			if(relay.getLocomotive() != null) {
+				tag.setBoolean("bound", relay.isBound());
+			}
+		}
+		return tag;
 	}
 }

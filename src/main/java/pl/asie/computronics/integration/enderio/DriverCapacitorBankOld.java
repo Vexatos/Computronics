@@ -1,7 +1,7 @@
 package pl.asie.computronics.integration.enderio;
 
 import crazypants.enderio.machine.RedstoneControlMode;
-import crazypants.enderio.machine.capbank.TileCapBank;
+import crazypants.enderio.machine.power.TileCapacitorBank;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
@@ -22,16 +22,16 @@ import java.util.Locale;
 /**
  * @author Vexatos
  */
-public class DriverCapacitorBank {
+public class DriverCapacitorBankOld {
 
-	private static Object[] getRedstoneMode(TileCapBank tile, boolean input) {
+	private static Object[] getRedstoneMode(TileCapacitorBank tile, boolean input) {
 		if(input) {
 			return new Object[] { tile.getInputControlMode().name().toLowerCase(Locale.ENGLISH) };
 		}
 		return new Object[] { tile.getOutputControlMode().name().toLowerCase(Locale.ENGLISH) };
 	}
 
-	private static Object[] setRedstoneMode(TileCapBank tile, String mode, boolean input) {
+	private static Object[] setRedstoneMode(TileCapacitorBank tile, String mode, boolean input) {
 		try {
 			if(input) {
 				tile.setInputControlMode(RedstoneControlMode.valueOf(mode.toUpperCase(Locale.ENGLISH)));
@@ -54,8 +54,8 @@ public class DriverCapacitorBank {
 	}
 
 	public static class OCDriver extends DriverTileEntity {
-		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TileCapBank> {
-			public InternalManagedEnvironment(TileCapBank tile) {
+		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TileCapacitorBank> {
+			public InternalManagedEnvironment(TileCapacitorBank tile) {
 				super(tile, Names.EnderIO_CapacitorBank);
 			}
 
@@ -78,47 +78,47 @@ public class DriverCapacitorBank {
 
 			@Callback(doc = "function():string; Returns the current Redstone control mode for input")
 			public Object[] getInputMode(Context c, Arguments a) {
-				return DriverCapacitorBank.getRedstoneMode(tile, true);
+				return DriverCapacitorBankOld.getRedstoneMode(tile, true);
 			}
 
 			@Callback(doc = "function():string; Returns the current Redstone control mode for output")
 			public Object[] getOutputMode(Context c, Arguments a) {
-				return DriverCapacitorBank.getRedstoneMode(tile, false);
+				return DriverCapacitorBankOld.getRedstoneMode(tile, false);
 			}
 
 			@Callback(doc = "function(mode:string); Sets the Redstone control mode for input")
 			public Object[] setInputMode(Context c, Arguments a) {
-				return DriverCapacitorBank.setRedstoneMode(tile, a.checkString(0), true);
+				return DriverCapacitorBankOld.setRedstoneMode(tile, a.checkString(0), true);
 			}
 
 			@Callback(doc = "function(mode:string); Sets the Redstone control mode for output")
 			public Object[] setOutputMode(Context c, Arguments a) {
-				return DriverCapacitorBank.setRedstoneMode(tile, a.checkString(0), false);
+				return DriverCapacitorBankOld.setRedstoneMode(tile, a.checkString(0), false);
 			}
 
 			@Callback(doc = "This is a table of every Redstone control mode available", getter = true)
 			public Object[] redstone_modes(Context c, Arguments a) {
-				return DriverCapacitorBank.modes();
+				return DriverCapacitorBankOld.modes();
 			}
 		}
 
 		@Override
 		public Class<?> getTileEntityClass() {
-			return TileCapBank.class;
+			return TileCapacitorBank.class;
 		}
 
 		@Override
 		public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
-			return new InternalManagedEnvironment(((TileCapBank) world.getTileEntity(x, y, z)));
+			return new InternalManagedEnvironment(((TileCapacitorBank) world.getTileEntity(x, y, z)));
 		}
 	}
 
-	public static class CCDriver extends CCMultiPeripheral<TileCapBank> {
+	public static class CCDriver extends CCMultiPeripheral<TileCapacitorBank> {
 
 		public CCDriver() {
 		}
 
-		public CCDriver(TileCapBank tile, World world, int x, int y, int z) {
+		public CCDriver(TileCapacitorBank tile, World world, int x, int y, int z) {
 			super(tile, Names.EnderIO_CapacitorBank, world, x, y, z);
 		}
 
@@ -130,8 +130,8 @@ public class DriverCapacitorBank {
 		@Override
 		public CCMultiPeripheral getPeripheral(World world, int x, int y, int z, int side) {
 			TileEntity te = world.getTileEntity(x, y, z);
-			if(te != null && te instanceof TileCapBank) {
-				return new CCDriver((TileCapBank) te, world, x, y, z);
+			if(te != null && te instanceof TileCapacitorBank) {
+				return new CCDriver((TileCapacitorBank) te, world, x, y, z);
 			}
 			return null;
 		}
@@ -159,17 +159,17 @@ public class DriverCapacitorBank {
 					return new Object[] { };
 				}
 				case 2:{
-					return DriverCapacitorBank.getRedstoneMode(tile, true);
+					return DriverCapacitorBankOld.getRedstoneMode(tile, true);
 				}
 				case 3:{
-					return DriverCapacitorBank.getRedstoneMode(tile, false);
+					return DriverCapacitorBankOld.getRedstoneMode(tile, false);
 				}
 				case 4:{
 					if(arguments.length < 1 || !(arguments[0] instanceof String)) {
 						throw new LuaException("first argument needs to be a string");
 					}
 					try {
-						return DriverCapacitorBank.setRedstoneMode(tile, (String) arguments[0], true);
+						return DriverCapacitorBankOld.setRedstoneMode(tile, (String) arguments[0], true);
 					} catch(IllegalArgumentException e) {
 						throw new LuaException(e.getMessage());
 					}
@@ -179,13 +179,13 @@ public class DriverCapacitorBank {
 						throw new LuaException("first argument needs to be a string");
 					}
 					try {
-						return DriverCapacitorBank.setRedstoneMode(tile, (String) arguments[0], false);
+						return DriverCapacitorBankOld.setRedstoneMode(tile, (String) arguments[0], false);
 					} catch(IllegalArgumentException e) {
 						throw new LuaException(e.getMessage());
 					}
 				}
 				case 6:{
-					return DriverCapacitorBank.modes();
+					return DriverCapacitorBankOld.modes();
 				}
 			}
 			return null;

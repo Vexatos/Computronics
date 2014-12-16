@@ -16,9 +16,11 @@ import pl.asie.computronics.integration.betterstorage.DriverCrateStorageNew;
 import pl.asie.computronics.integration.betterstorage.DriverCrateStorageOld;
 import pl.asie.computronics.integration.buildcraft.DriverHeatable;
 import pl.asie.computronics.integration.enderio.DriverAbstractMachine;
+import pl.asie.computronics.integration.enderio.DriverCapacitorBankOld;
 import pl.asie.computronics.integration.enderio.DriverCapacitorBank;
 import pl.asie.computronics.integration.enderio.DriverHasExperience;
 import pl.asie.computronics.integration.enderio.DriverIOConfigurable;
+import pl.asie.computronics.integration.enderio.DriverPowerStorage;
 import pl.asie.computronics.integration.enderio.DriverRedstoneControllable;
 import pl.asie.computronics.integration.enderio.DriverTransceiver;
 import pl.asie.computronics.integration.factorization.DriverChargeConductor;
@@ -164,8 +166,10 @@ public class IntegrationOpenComputers {
 				Driver.add(new DriverRedstoneControllable.OCDriver());
 				Driver.add(new DriverIOConfigurable.OCDriver());
 				Driver.add(new DriverHasExperience.OCDriver());
+				Driver.add(new DriverPowerStorage.OCDriver());
 				Driver.add(new DriverAbstractMachine.OCDriver());
 				Driver.add(new DriverCapacitorBank.OCDriver());
+				Driver.add(new DriverCapacitorBankOld.OCDriver());
 				Driver.add(new DriverTransceiver.OCDriver());
 			}
 		}

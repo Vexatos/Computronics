@@ -50,6 +50,10 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 		return this.locomotive;
 	}
 
+	public boolean isBound() {
+		return this.isBound;
+	}
+
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
@@ -112,7 +116,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 	@Override
 	public void writeToRemoteNBT(NBTTagCompound nbt) {
 		super.writeToRemoteNBT(nbt);
-		if(this.locomotive != null && Loader.isModLoaded(Mods.Waila)) {
+		if(this.locomotive != null) {
 			nbt.setBoolean("bound", isBound);
 		}
 	}

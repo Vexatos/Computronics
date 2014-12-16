@@ -58,7 +58,8 @@ tooltip.computronics.waila.lamp.red=Rot: %s
 tooltip.computronics.waila.lamp.green=Grün: %s
 tooltip.computronics.waila.lamp.blue=Blau: %s
 
-option.computronics.enableAddress=Komponentenaddresse
+option.computronics.enableOCAddress=Komponentenaddresse
+option.computronics.enableNCAddress=NedoComputers Bus ID
 option.computronics.enableTape=Enthaltene Kassette
 option.computronics.enableTapeName=Kassettenname
 option.computronics.enableDriveState=Kassettenspielerstatus

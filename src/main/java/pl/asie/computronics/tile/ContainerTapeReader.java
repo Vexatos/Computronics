@@ -10,9 +10,9 @@ import pl.asie.lib.util.SlotTyped;
 public class ContainerTapeReader extends ContainerBase {
 
 	public ContainerTapeReader(TileEntityBase entity,
-			InventoryPlayer inventoryPlayer) {
+		InventoryPlayer inventoryPlayer) {
 		super(entity, inventoryPlayer);
-		this.addSlotToContainer(new SlotTyped((IInventory)entity, 0, 80, 34, new Object[]{ Computronics.itemTape }));
+		this.addSlotToContainer(new SlotTyped((IInventory) entity, 0, 80, 34, new Object[] { Computronics.itemTape }));
 		this.bindPlayerInventory(inventoryPlayer, 8, 84);
 	}
 
