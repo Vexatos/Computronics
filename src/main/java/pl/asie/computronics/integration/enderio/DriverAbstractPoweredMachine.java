@@ -1,6 +1,6 @@
 package pl.asie.computronics.integration.enderio;
 
-import crazypants.enderio.machine.AbstractMachineEntity;
+import crazypants.enderio.machine.AbstractPoweredMachineEntity;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
@@ -18,12 +18,12 @@ import pl.asie.computronics.reference.Names;
 /**
  * @author Vexatos
  */
-public class DriverAbstractMachine {
+public class DriverAbstractPoweredMachine {
 
 	public static class OCDriver extends DriverTileEntity {
 
-		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<AbstractMachineEntity> {
-			public InternalManagedEnvironment(AbstractMachineEntity tile) {
+		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<AbstractPoweredMachineEntity> {
+			public InternalManagedEnvironment(AbstractPoweredMachineEntity tile) {
 				super(tile, Names.EnderIO_MachineTile);
 			}
 
@@ -32,29 +32,29 @@ public class DriverAbstractMachine {
 				return 3;
 			}
 
-			@Callback(doc = "function():boolean; Returns whether the machine is currently active")
-			public Object[] isActive(Context c, Arguments a) {
-				return new Object[] { tile.isActive() };
+			@Callback(doc = "function():number; Returns the power use/production per tick")
+			public Object[] getPowerPerTick(Context c, Arguments a) {
+				return new Object[] { tile.getPowerUsePerTick() };
 			}
 		}
 
 		@Override
 		public Class<?> getTileEntityClass() {
-			return AbstractMachineEntity.class;
+			return AbstractPoweredMachineEntity.class;
 		}
 
 		@Override
 		public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
-			return new InternalManagedEnvironment(((AbstractMachineEntity) world.getTileEntity(x, y, z)));
+			return new InternalManagedEnvironment(((AbstractPoweredMachineEntity) world.getTileEntity(x, y, z)));
 		}
 	}
 
-	public static class CCDriver extends CCMultiPeripheral<AbstractMachineEntity> {
+	public static class CCDriver extends CCMultiPeripheral<AbstractPoweredMachineEntity> {
 
 		public CCDriver() {
 		}
 
-		public CCDriver(AbstractMachineEntity tile, World world, int x, int y, int z) {
+		public CCDriver(AbstractPoweredMachineEntity tile, World world, int x, int y, int z) {
 			super(tile, Names.EnderIO_MachineTile, world, x, y, z);
 		}
 
@@ -66,25 +66,27 @@ public class DriverAbstractMachine {
 		@Override
 		public CCMultiPeripheral getPeripheral(World world, int x, int y, int z, int side) {
 			TileEntity te = world.getTileEntity(x, y, z);
-			if(te != null && te instanceof AbstractMachineEntity) {
-				return new CCDriver((AbstractMachineEntity) te, world, x, y, z);
+			if(te != null && te instanceof AbstractPoweredMachineEntity) {
+				return new CCDriver((AbstractPoweredMachineEntity) te, world, x, y, z);
 			}
 			return null;
 		}
 
 		@Override
 		public String[] getMethodNames() {
-			return new String[] { "isActive" };
+			return new String[] { "getPowerPerTick" };
 		}
 
 		@Override
 		public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
 			switch(method){
 				case 0:{
-					return new Object[] { tile.isActive() };
+					return new Object[] { tile.getPowerUsePerTick() };
 				}
 			}
 			return null;
 		}
 	}
+
 }
+

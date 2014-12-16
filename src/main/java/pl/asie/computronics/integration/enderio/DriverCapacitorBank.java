@@ -64,6 +64,14 @@ public class DriverCapacitorBank {
 				return 4;
 			}
 
+			@Callback(doc = "function():number; Returns the average storage change per tick")
+			public Object[] getAverageChangePerTick(Context c, Arguments a) {
+				if(tile.getNetwork() != null) {
+					return new Object[] { tile.getNetwork().getAverageChangePerTick() };
+				}
+				return new Object[] { 0 };
+			}
+
 			@Callback(doc = "function(max:number); Sets the max input of the capacitor bank")
 			public Object[] setMaxInput(Context c, Arguments a) {
 				tile.setMaxInput(a.checkInteger(0));
@@ -138,33 +146,39 @@ public class DriverCapacitorBank {
 
 		@Override
 		public String[] getMethodNames() {
-			return new String[] { "setMaxInput", "setMaxOutput", "getInputMode", "getOutputMode", "setInputMode", "setOutputMode", "getRedstoneModeTable" };
+			return new String[] { "getAverageChangePerTick", "setMaxInput", "setMaxOutput", "getInputMode", "getOutputMode", "setInputMode", "setOutputMode", "getRedstoneModeTable" };
 		}
 
 		@Override
 		public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
 			switch(method){
 				case 0:{
+					if(tile.getNetwork() != null) {
+						return new Object[] { tile.getNetwork().getAverageChangePerTick() };
+					}
+					return new Object[] { 0 };
+				}
+				case 1:{
 					if(arguments.length < 1 || !(arguments[0] instanceof Double)) {
 						throw new LuaException("first argument needs to be a number");
 					}
 					tile.setMaxInput(((Double) arguments[0]).intValue());
 					return new Object[] { };
 				}
-				case 1:{
+				case 2:{
 					if(arguments.length < 1 || !(arguments[0] instanceof Double)) {
 						throw new LuaException("first argument needs to be a number");
 					}
 					tile.setMaxOutput(((Double) arguments[0]).intValue());
 					return new Object[] { };
 				}
-				case 2:{
+				case 3:{
 					return DriverCapacitorBank.getRedstoneMode(tile, true);
 				}
-				case 3:{
+				case 4:{
 					return DriverCapacitorBank.getRedstoneMode(tile, false);
 				}
-				case 4:{
+				case 5:{
 					if(arguments.length < 1 || !(arguments[0] instanceof String)) {
 						throw new LuaException("first argument needs to be a string");
 					}
@@ -174,7 +188,7 @@ public class DriverCapacitorBank {
 						throw new LuaException(e.getMessage());
 					}
 				}
-				case 5:{
+				case 6:{
 					if(arguments.length < 1 || !(arguments[0] instanceof String)) {
 						throw new LuaException("first argument needs to be a string");
 					}
@@ -184,7 +198,7 @@ public class DriverCapacitorBank {
 						throw new LuaException(e.getMessage());
 					}
 				}
-				case 6:{
+				case 7:{
 					return DriverCapacitorBank.modes();
 				}
 			}
