@@ -18,7 +18,7 @@
   * MISC: Updated EnderIO integration to 2.2.4
     - New Capacitor Banks can be properly accessed by CC and OC now!
     - for CC, getEnergyStored()/getMaxEnergyStored() has been fixed
-    - for OC, you will temporarily have to use getEnergyStoredForNetwork() and getMaxEnergyStoredForNetwork() until a bug in OC gets fixed. Once that has been fixed, you will be able to use getEnergyStored() and getMaxEnergyStored() as well.
+    - for OC, you will need to update to the 1.4.3.283-dev build or a later version for it to be fixed
     - Also fixed getPowerPerTick() for powerable EnderIO devices
 
 ==== 1.3.2 ====

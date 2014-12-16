@@ -76,7 +76,13 @@ public class GuiTapePlayer extends GuiBase {
 				break;
 		}
 	}
-	
+
+	@Override
+	public void updateScreen() {
+		super.updateScreen();
+		this.state = ((TileTapeDrive)this.container.getEntity()).getEnumState();
+	}
+
 	@Override
 	public void mouseClicked(int x, int y, int mb) {
 		super.mouseClicked(x, y, mb);
