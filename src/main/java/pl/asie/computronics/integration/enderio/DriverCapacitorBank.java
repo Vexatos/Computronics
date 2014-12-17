@@ -24,7 +24,7 @@ import java.util.Locale;
  */
 public class DriverCapacitorBank {
 
-	public static Object[] getAverageChangePerTick(TileCapBank tile) {
+	private static Object[] getAverageChangePerTick(TileCapBank tile) {
 		if(tile.getNetwork() != null) {
 			return new Object[] { tile.getNetwork().getAverageChangePerTick() };
 		}
