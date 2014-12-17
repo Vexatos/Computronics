@@ -24,19 +24,57 @@ import java.util.Locale;
  */
 public class DriverCapacitorBank {
 
+	public static Object[] getAverageChangePerTick(TileCapBank tile) {
+		if(tile.getNetwork() != null) {
+			return new Object[] { tile.getNetwork().getAverageChangePerTick() };
+		}
+		return new Object[] { 0 };
+	}
+
+	private static Object[] setMaxInput(TileCapBank tile, int input) {
+		if(tile.getNetwork() != null) {
+			tile.getNetwork().setMaxInput(input);
+		} else {
+			tile.setMaxInput(input);
+		}
+		return new Object[] { };
+	}
+
+	private static Object[] setMaxOutput(TileCapBank tile, int output) {
+		if(tile.getNetwork() != null) {
+			tile.getNetwork().setMaxOutput(output);
+		} else {
+			tile.setMaxOutput(output);
+		}
+		return new Object[] { };
+	}
+
 	private static Object[] getRedstoneMode(TileCapBank tile, boolean input) {
 		if(input) {
-			return new Object[] { tile.getInputControlMode().name().toLowerCase(Locale.ENGLISH) };
+			return new Object[] { tile.getNetwork() != null ?
+				tile.getNetwork().getInputControlMode().name().toLowerCase(Locale.ENGLISH) :
+				tile.getInputControlMode().name().toLowerCase(Locale.ENGLISH) };
 		}
-		return new Object[] { tile.getOutputControlMode().name().toLowerCase(Locale.ENGLISH) };
+		return new Object[] { tile.getNetwork() != null ?
+			tile.getNetwork().getOutputControlMode().name().toLowerCase(Locale.ENGLISH) :
+			tile.getOutputControlMode().name().toLowerCase(Locale.ENGLISH) };
 	}
 
 	private static Object[] setRedstoneMode(TileCapBank tile, String mode, boolean input) {
 		try {
 			if(input) {
-				tile.setInputControlMode(RedstoneControlMode.valueOf(mode.toUpperCase(Locale.ENGLISH)));
+				if(tile.getNetwork() != null) {
+					tile.getNetwork().setInputControlMode(RedstoneControlMode.valueOf(mode.toUpperCase(Locale.ENGLISH)));
+				} else {
+					tile.setInputControlMode(RedstoneControlMode.valueOf(mode.toUpperCase(Locale.ENGLISH)));
+				}
+			} else {
+				if(tile.getNetwork() != null) {
+					tile.getNetwork().setOutputControlMode(RedstoneControlMode.valueOf(mode.toUpperCase(Locale.ENGLISH)));
+				} else {
+					tile.setOutputControlMode(RedstoneControlMode.valueOf(mode.toUpperCase(Locale.ENGLISH)));
+				}
 			}
-			tile.setOutputControlMode(RedstoneControlMode.valueOf(mode.toUpperCase(Locale.ENGLISH)));
 		} catch(IllegalArgumentException e) {
 			throw new IllegalArgumentException("No valid Redstone mode given");
 		}
@@ -66,22 +104,17 @@ public class DriverCapacitorBank {
 
 			@Callback(doc = "function():number; Returns the average storage change per tick")
 			public Object[] getAverageChangePerTick(Context c, Arguments a) {
-				if(tile.getNetwork() != null) {
-					return new Object[] { tile.getNetwork().getAverageChangePerTick() };
-				}
-				return new Object[] { 0 };
+				return DriverCapacitorBank.getAverageChangePerTick(tile);
 			}
 
 			@Callback(doc = "function(max:number); Sets the max input of the capacitor bank")
 			public Object[] setMaxInput(Context c, Arguments a) {
-				tile.setMaxInput(a.checkInteger(0));
-				return new Object[] { };
+				return DriverCapacitorBank.setMaxInput(tile, a.checkInteger(0));
 			}
 
 			@Callback(doc = "function(max:number); Sets the max output of the capacitor bank")
 			public Object[] setMaxOutput(Context c, Arguments a) {
-				tile.setMaxOutput(a.checkInteger(0));
-				return new Object[] { };
+				return DriverCapacitorBank.setMaxOutput(tile, a.checkInteger(0));
 			}
 
 			@Callback(doc = "function():string; Returns the current Redstone control mode for input")
@@ -153,24 +186,19 @@ public class DriverCapacitorBank {
 		public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
 			switch(method){
 				case 0:{
-					if(tile.getNetwork() != null) {
-						return new Object[] { tile.getNetwork().getAverageChangePerTick() };
-					}
-					return new Object[] { 0 };
+					return DriverCapacitorBank.getAverageChangePerTick(tile);
 				}
 				case 1:{
 					if(arguments.length < 1 || !(arguments[0] instanceof Double)) {
 						throw new LuaException("first argument needs to be a number");
 					}
-					tile.setMaxInput(((Double) arguments[0]).intValue());
-					return new Object[] { };
+					return DriverCapacitorBank.setMaxInput(tile, ((Double) arguments[0]).intValue());
 				}
 				case 2:{
 					if(arguments.length < 1 || !(arguments[0] instanceof Double)) {
 						throw new LuaException("first argument needs to be a number");
 					}
-					tile.setMaxOutput(((Double) arguments[0]).intValue());
-					return new Object[] { };
+					return DriverCapacitorBank.setMaxOutput(tile, ((Double) arguments[0]).intValue());
 				}
 				case 3:{
 					return DriverCapacitorBank.getRedstoneMode(tile, true);

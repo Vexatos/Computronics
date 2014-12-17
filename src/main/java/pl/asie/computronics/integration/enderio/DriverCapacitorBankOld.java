@@ -35,8 +35,9 @@ public class DriverCapacitorBankOld {
 		try {
 			if(input) {
 				tile.setInputControlMode(RedstoneControlMode.valueOf(mode.toUpperCase(Locale.ENGLISH)));
+			} else {
+				tile.setOutputControlMode(RedstoneControlMode.valueOf(mode.toUpperCase(Locale.ENGLISH)));
 			}
-			tile.setOutputControlMode(RedstoneControlMode.valueOf(mode.toUpperCase(Locale.ENGLISH)));
 		} catch(IllegalArgumentException e) {
 			throw new IllegalArgumentException("No valid Redstone mode given");
 		}
