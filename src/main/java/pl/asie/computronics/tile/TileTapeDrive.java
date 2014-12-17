@@ -101,9 +101,13 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
+		State st = getEnumState();
 		Packet pkt = state.update(worldObj, xCoord, yCoord, zCoord);
 		if(pkt != null) {
 			Computronics.packet.sendToAllAround(pkt, this, Config.TAPEDRIVE_DISTANCE * 2);
+		}
+		if(!worldObj.isRemote && st != getEnumState()){
+			sendState();
 		}
 	}
 
