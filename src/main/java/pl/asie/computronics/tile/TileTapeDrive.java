@@ -467,8 +467,10 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 		switch(method){
 			case 11:
 				switchState(State.PLAYING);
+				break;
 			case 12:
 				switchState(State.STOPPED);
+				break;
 		}
 
 		// returns for the methods which didn't return something before
