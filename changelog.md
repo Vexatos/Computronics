@@ -1,3 +1,8 @@
+==== 1.3.4 ====
+
+  * FIXED: Tape Drive not being started when calling play() using ComputerCraft
+  * FIXED: Some more miscellaneous fixes
+
 ==== 1.3.3 ====
 
   * ADDED: New OpenComputers Cards:
