@@ -2,6 +2,7 @@ package pl.asie.computronics.integration.waila.providers;
 
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -32,7 +33,7 @@ public class WailaLocomotiveRelay extends ComputronicsWailaProvider {
 	}
 
 	@Override
-	public NBTTagCompound getNBTData(TileEntity te, NBTTagCompound tag, World world, int x, int y, int z) {
+	public NBTTagCompound getNBTData(EntityPlayerMP player, TileEntity te, NBTTagCompound tag, World world, int x, int y, int z) {
 		if(te instanceof TileLocomotiveRelay) {
 			TileLocomotiveRelay relay = (TileLocomotiveRelay) te;
 			if(relay.getLocomotive() != null) {

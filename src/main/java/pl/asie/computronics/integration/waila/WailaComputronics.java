@@ -3,6 +3,7 @@ package pl.asie.computronics.integration.waila;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.IWailaDataProvider;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -61,11 +62,11 @@ public class WailaComputronics implements IWailaDataProvider {
 	}
 
 	@Override
-	public NBTTagCompound getNBTData(TileEntity te, NBTTagCompound tag, World world, int x, int y, int z) {
+	public NBTTagCompound getNBTData(EntityPlayerMP player, TileEntity te, NBTTagCompound tag, World world, int x, int y, int z) {
 
 		for(WailaProviders p : WailaProviders.VALUES) {
 			if(p.isInstance(te.getBlockType())) {
-				tag = p.getProvider().getNBTData(te, tag, world, x, y, z);
+				tag = p.getProvider().getNBTData(player, te, tag, world, x, y, z);
 			}
 		}
 
