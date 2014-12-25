@@ -2,6 +2,7 @@
 
   * FIXED: Tape Drive not being started when calling play() using ComputerCraft
   * FIXED: Some more miscellaneous fixes
+  * MISC: Updated Waila integration to 1.5.7
 
 ==== 1.3.3 ====
 
@@ -19,7 +20,7 @@
   * FIXED: Chat box messages not being consistently gray
   * MISC: Built-in tape program for OC now handles errors properly
   * MISC: Added a few more things to the config file
-  * MISC: Updated Waila intergation to 1.5.6
+  * MISC: Updated Waila integration to 1.5.6
   * MISC: Updated EnderIO integration to 2.2.4
     - New Capacitor Banks can be properly accessed by CC and OC now!
     - for CC, getEnergyStored()/getMaxEnergyStored() has been fixed
