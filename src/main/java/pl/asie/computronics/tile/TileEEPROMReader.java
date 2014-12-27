@@ -8,6 +8,7 @@ import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.lib.api.tile.IInventoryProvider;
 
@@ -28,13 +29,19 @@ public class TileEEPROMReader extends TileEntityPeripheralBase implements IInven
 
 	public boolean isReady() {
     	ItemStack is = this.getStackInSlot(0);
-    	return is != null && is.stackSize > 0 && is.hasTagCompound() && is.getTagCompound().hasKey("ram");
+    	return is != null && is.stackSize > 0;
 	}
 	
 	public byte[] getData() {
     	ItemStack is = this.getStackInSlot(0);
-		if(!isReady()) return new byte[0];
-		else return is.getTagCompound().getByteArray("ram");
+		if(!isReady()) {
+			return new byte[0];
+		} else {
+			if(!is.hasTagCompound()){
+				is.setTagCompound(new NBTTagCompound());
+			}
+			return is.getTagCompound().getByteArray("ram");
+		}
 	}
 	
 	public int getSize() { return getData().length; }
@@ -42,6 +49,9 @@ public class TileEEPROMReader extends TileEntityPeripheralBase implements IInven
 	public void setData(byte[] data) {
     	ItemStack is = this.getStackInSlot(0);
 		if(!isReady()) return;
+		if(!is.hasTagCompound()){
+			is.setTagCompound(new NBTTagCompound());
+		}
 		is.getTagCompound().setByteArray("ram", data);
 	}
 	

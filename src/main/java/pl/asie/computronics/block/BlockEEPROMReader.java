@@ -39,10 +39,9 @@ public class BlockEEPROMReader extends BlockPeripheral {
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int a, float _x, float _y, float _z) {
 		if (!world.isRemote && !player.isSneaking()) {
 			ItemStack h = player.getHeldItem();
-			if(h != null && h.stackSize > 0 && h.getItem().equals(GameRegistry.findItem(Mods.NedoComputers, "EEPROM"))
-					&& h.hasTagCompound() && h.getTagCompound().hasKey("ram")) {
+			if(h != null && h.stackSize > 0 && h.getItem().equals(GameRegistry.findItem(Mods.NedoComputers, "EEPROM"))) {
 				TileEEPROMReader te = (TileEEPROMReader)world.getTileEntity(x, y, z);
-				if(te.getStackInSlot(0) == null) {
+				if(te.getStackInSlot(0) == null && h.stackSize == 1) {
 					te.setInventorySlotContents(0, h);
 					player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
 					return true;
