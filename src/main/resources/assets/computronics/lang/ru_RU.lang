@@ -4,13 +4,17 @@ tile.computronics.camera.name=Камера
 tile.computronics.chatBox.name=Чатблок
 tile.computronics.chatBox.creative.name=Творческий чатблок
 tile.computronics.sorter.name=Сортировщик
-tile.computronics.cipher.name=Блок-шифровщик
+tile.computronics.cipher.name=Шифровальный блок
+tile.computronics.cipher_advanced.name=Продвинутый шифровальный блок
 tile.computronics.radar.name=Радар
 tile.computronics.colorfulLamp.name=Цветной светильник
 tile.computronics.eepromReader.name=Считыватель EEPROM
 tile.computronics.locomotiveRelay.name=Цифровое локомотивное реле
+tile.computronics.digitalBox.name=Цифровой приёмник сигнала
+tile.computronics.detector.name=Детектор - Цифровой
 
 tooltip.computronics.chatBox.creative=АНБ в миниатюре!
+tooltip.computronics.cipher.advanced=За звёздных охотников!
 tooltip.computronics.sensor.bound=Связан с [%1$s,%2$s,%3$s]
 tooltip.computronics.sensor.desc1=ПКМ по локомотивному реле,\nсидя, чтобы привязать к нему
 tooltip.computronics.sensor.desc2=ЛКМ по электровозу,\nnсидя, что прикрепить к нему
@@ -20,11 +24,58 @@ tooltip.computronics.tape.unnamed=Безымянная лента
 tooltip.computronics.tape.none=Нет ленты
 tooltip.computronics.tape.ig=Обычный CDVR для\nмежгалактических кораблей GregTech
 
+tooltip.computronics.gate.action.computer_start=Запустить компьютер
+tooltip.computronics.gate.action.computer_stop=Выключить компьютер
+tooltip.computronics.gate.action.tape_drive_start=Запустить стример
+tooltip.computronics.gate.action.tape_drive_stop=Выключить стример
+tooltip.computronics.gate.action.tape_drive_rewind=Перемотать стример назад
+tooltip.computronics.gate.action.tape_drive_forward=Перемотать стример вперёд
+tooltip.computronics.gate.action.lamp_color_set=Установить цвет светильника
+tooltip.computronics.gate.action.lamp_color_reset=Сбросить цвет светильника
+tooltip.computronics.gate.action.lamp_color.red=Красный: %s
+tooltip.computronics.gate.action.lamp_color.green=Зелёный: %s
+tooltip.computronics.gate.action.lamp_color.blue=Синий: %s
+
+tooltip.computronics.gate.trigger.computer_running=Компьютер работает
+tooltip.computronics.gate.trigger.computer_stopped=Компьютер выключается
+tooltip.computronics.gate.trigger.tape_drive_playing=Стример проигрывается
+tooltip.computronics.gate.trigger.tape_drive_stopped=Стример останавливается
+tooltip.computronics.gate.trigger.tape_drive_rewinding=Стример перематывается назад
+tooltip.computronics.gate.trigger.tape_drive_forwarding=Стример перематывается вперёд
+
+tooltip.computronics.waila.base.bus=§aID шины§f: %s
+tooltip.computronics.waila.relay.bound=Привязано
+tooltip.computronics.waila.relay.notbound=Не привязано
+tooltip.computronics.waila.tape.tapeinserted=Стример вставлен
+tooltip.computronics.waila.tape.labeltapeinserted=Стример "%s" вставлен
+tooltip.computronics.waila.tape.notapeinserted=Стример не вставлен
+tooltip.computronics.waila.tape.state=Состояние: %s
+tooltip.computronics.waila.tape.state.stopped=Остановился
+tooltip.computronics.waila.tape.state.playing=Проигрывается
+tooltip.computronics.waila.tape.state.rewinding=Перематывается назад
+tooltip.computronics.waila.tape.state.forwarding=Перематывается вперёд
+tooltip.computronics.waila.lamp.red=Красный: %s
+tooltip.computronics.waila.lamp.green=Зелёный: %s
+tooltip.computronics.waila.lamp.blue=Синий: %s
+
+option.computronics.enableOCAddress=Адрес компонента
+option.computronics.enableNCAddress=ID шины NedoComputers
+option.computronics.enableTape=Вставленные стример
+option.computronics.enableTapeName=Название стримера
+option.computronics.enableDriveState=Состояние стримера
+option.computronics.enableRelayBound=Привязка реле
+option.computronics.enableLampColor=Цвет лампы
+
 item.computronics.reelChromoxide.name=Катушечная лента из диоксида хрома
 item.computronics.robot_upgrade_camera.name=Улучшение камеры
 item.computronics.robot_upgrade_chatbox.name=Улучшение чата
 item.computronics.robot_upgrade_radar.name=Улучшение радара
+item.computronics.card_beep.name=Карта сигнала
 item.computronics.card_fx.name=Карта эффектов частиц
+item.computronics.card_spoof.name=Имитирующая карта
+item.computronics.card_spoof.tip=Работает как сетевая карта, но позволяет указать адрес отправителя
+item.computronics.for.combAcid.name=Каустическая сота
+item.computronics.for.dropAcid.name=Каустическая капля
 item.computronics.relaySensor.name=Цифровой датчик реле
 item.computronics.part_tape_track.name=Направляющая лента
 item.computronics.tape.ig.name=Межгалактический CDVR
@@ -34,7 +85,11 @@ itemGroup.tabComputronics=Computronics
 
 entity.computronics.itemTape.name=Межгалактический CDVR
 
-chat.computronics.cipher.locked=Этот блок-шифровщик закрыт! Вы не можете получить доступ к нему.
+for.computronics.flowers.sea=Морские
+for.computronics.bees.species.scummy=Пенистая
+for.description.computronics.speciesScummy=Керосин, пропиленгликоль, искусственные подсластители, серная кислота, ром, ацетон, красный краситель #2, накипь, лубрикант, кислотная батарейка и/или пепперони|Странные люди в баре
+
+chat.computronics.cipher.locked=Этот шифровальный блок закрыт! Вы не можете получить доступ к нему.
 chat.computronics.sensor.bound=Реле успешно привязано к локомотиву!
 chat.computronics.sensor.noRelay=Реле, по указанным координатам, не обнаружено!
 chat.computronics.sensor.tooFarAway=Реле и локомотив слишком далеко друг от друга!
