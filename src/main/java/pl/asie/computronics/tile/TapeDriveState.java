@@ -86,6 +86,9 @@ public class TapeDriveState {
 		if(!worldObj.isRemote) {
 			switch(state) {
 				case PLAYING: {
+					if(storage.getPosition() >= storage.getSize() || storage.getPosition() < 0){
+						storage.setPosition(storage.getPosition());
+					}
 					if(codecTick % 5 == 0) {
 						codecTick++;
 						return createMusicPacket(worldObj, x, y, z);

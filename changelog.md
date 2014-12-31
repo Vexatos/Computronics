@@ -1,6 +1,6 @@
 ==== 1.3.5 ====
 
-  * FIXED: Rare ArrayIndexOutOfBoundsException when playing and writing to a tape at the same time
+  * FIXED: Extremely rare ArrayIndexOutOfBoundsException when playing and writing to a tape at the same time
 
 ==== 1.3.4 ====
 
