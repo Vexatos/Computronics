@@ -1,3 +1,7 @@
+==== 1.3.5 ====
+
+  * FIXED: Rare ArrayIndexOutOfBoundsException when playing and writing to a tape at the same time
+
 ==== 1.3.4 ====
 
   * FIXED: Tape Drive not being started when calling play() using ComputerCraft
