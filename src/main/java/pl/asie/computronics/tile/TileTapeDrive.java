@@ -358,6 +358,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] write(Context context, Arguments args) {
 		if(state.getStorage() != null && args.count() >= 1) {
+			switchState(State.STOPPED);
 			if(args.isInteger(0)) {
 				state.getStorage().write((byte) args.checkInteger(0));
 			} else if(args.isByteArray(0)) {
@@ -425,6 +426,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 					break;
 				case 10:
 					if(state.getStorage() != null) {
+						switchState(State.STOPPED);
 						return new Object[] { state.getStorage().write(((String) arguments[0]).getBytes()) };
 					}
 					break;
@@ -447,6 +449,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 					}
 				case 10:
 					if(state.getStorage() != null) {
+						switchState(State.STOPPED);
 						state.getStorage().write((byte) i);
 					}
 					break;
@@ -532,7 +535,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 	public void busWrite(int addr, short data) {
 		switch(addr & 0xFFFE){
 			case 0:
-				state.setState(State.values()[data % State.values().length]);
+				switchState(State.values()[data % State.values().length]);
 				break;
 			case 2:
 				break; // speed?
@@ -546,6 +549,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 				break;
 			case 10:
 				if(state.getStorage() != null) {
+					switchState(State.STOPPED);
 					state.getStorage().write((byte) (data & 0xFF));
 				}
 				break;
