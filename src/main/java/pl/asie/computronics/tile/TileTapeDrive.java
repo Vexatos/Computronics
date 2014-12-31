@@ -94,8 +94,10 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 
 	public void switchState(State s) {
 		//System.out.println("Switchy switch to " + s.name());
-		this.state.switchState(worldObj, xCoord, yCoord, zCoord, s);
-		this.sendState();
+		if(this.getEnumState() != s) {
+			this.state.switchState(worldObj, xCoord, yCoord, zCoord, s);
+			this.sendState();
+		}
 	}
 
 	@Override
@@ -106,7 +108,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 		if(pkt != null) {
 			Computronics.packet.sendToAllAround(pkt, this, Config.TAPEDRIVE_DISTANCE * 2);
 		}
-		if(!worldObj.isRemote && st != getEnumState()){
+		if(!worldObj.isRemote && st != getEnumState()) {
 			sendState();
 		}
 	}
