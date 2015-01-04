@@ -45,7 +45,6 @@ public class ItemDroneStation extends Item implements IPipePluggableItem {
 	public PipePluggable createPipePluggable(IPipe pipe, ForgeDirection side, ItemStack stack) {
 		switch(side){
 			case UP:
-			case DOWN:
 				return new DroneStationPluggable();
 			default:
 				return null;

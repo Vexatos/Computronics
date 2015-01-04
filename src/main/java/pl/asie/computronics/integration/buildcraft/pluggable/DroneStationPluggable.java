@@ -5,7 +5,7 @@ import buildcraft.api.transport.pluggable.IPipePluggableRenderer;
 import buildcraft.api.transport.pluggable.PipePluggable;
 import buildcraft.core.utils.MatrixTranformations;
 import io.netty.buffer.ByteBuf;
-import li.cil.oc.common.entity.Drone;
+import li.cil.oc.api.internal.Drone;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
@@ -19,7 +19,9 @@ public class DroneStationPluggable extends PipePluggable {
 
 	public static enum DroneStationState {
 		Available,
-		Used
+		Used;
+
+		public static final DroneStationState[] VALUES = values();
 	}
 
 	private DroneStationState state = DroneStationState.Available;
@@ -43,7 +45,7 @@ public class DroneStationPluggable extends PipePluggable {
 	}
 
 	public boolean isConnected(Drone drone, ForgeDirection side) {
-		return this.drone == drone || drone.getBoundingBox().intersectsWith(this.getBoundingBox(side));
+		return this.drone == drone;
 	}
 
 	@Override
@@ -59,6 +61,22 @@ public class DroneStationPluggable extends PipePluggable {
 	@Override
 	public void update(IPipeTile pipe, ForgeDirection direction) {
 		super.update(pipe, direction);
+		//TODO Charge Drone when able to
+		/*if(pipe.getPipeType() == IPipeTile.PipeType.POWER && drone != null) {
+			World world = pipe.getWorldObj();
+			if(!world.isRemote && world.getWorldInfo().getWorldTotalTime() % Settings.get().tickFrequency() == 0) {
+				double charge = Settings.get().chargeRateExternal() * Settings.get().tickFrequency();
+				((Connector) drone.machine().node()).changeBuffer(charge);
+			}
+			if(world.isRemote && world.getWorldInfo().getWorldTotalTime() % 10 == 0) {
+				double theta = world.rand.nextDouble() * Math.PI;
+				double phi = world.rand.nextDouble() * Math.PI * 2;
+				double dx = 0.45 * Math.sin(theta) * Math.cos(phi);
+				double dy = 0.45 * Math.sin(theta) * Math.sin(phi);
+				double dz = 0.45 * Math.cos(theta);
+				world.spawnParticle("happyVillager", drone.xPosition() + dx, drone.yPosition() + dz, drone.zPosition() + dy, 0, 0, 0);
+			}
+		}*/
 	}
 
 	@Override
@@ -68,7 +86,7 @@ public class DroneStationPluggable extends PipePluggable {
 		bounds[0][0] = 0.25F;
 		bounds[0][1] = 0.75F;
 		// Y START - END
-		bounds[1][0] = 0F;
+		bounds[1][0] = 0.125F;
 		bounds[1][1] = 0.251F;
 		// Z START - END
 		bounds[2][0] = 0.25F;
@@ -85,12 +103,12 @@ public class DroneStationPluggable extends PipePluggable {
 
 	@Override
 	public void readFromNBT(NBTTagCompound tag) {
-
+		state = DroneStationState.VALUES[tag.getInteger("drone:state") % DroneStationState.VALUES.length];
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound tag) {
-
+		tag.setInteger("drone:state", state.ordinal());
 	}
 
 	@Override
