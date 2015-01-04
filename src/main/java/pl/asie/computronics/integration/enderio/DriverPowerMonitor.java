@@ -96,7 +96,7 @@ public class DriverPowerMonitor {
 
 		@Override
 		public int peripheralPriority() {
-			return 3;
+			return 4;
 		}
 
 		@Override
