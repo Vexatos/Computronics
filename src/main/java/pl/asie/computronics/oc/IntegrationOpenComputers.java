@@ -15,6 +15,7 @@ import pl.asie.computronics.integration.appeng.DriverSpatialIOPort;
 import pl.asie.computronics.integration.betterstorage.DriverCrateStorageNew;
 import pl.asie.computronics.integration.betterstorage.DriverCrateStorageOld;
 import pl.asie.computronics.integration.buildcraft.DriverHeatable;
+import pl.asie.computronics.integration.buildcraft.pluggable.IntegrationBuildCraft;
 import pl.asie.computronics.integration.enderio.DriverAbstractMachine;
 import pl.asie.computronics.integration.enderio.DriverAbstractPoweredMachine;
 import pl.asie.computronics.integration.enderio.DriverCapacitorBank;
@@ -83,9 +84,14 @@ public class IntegrationOpenComputers {
 		// To ensure less TE ticks for those who don't use OC, we keep this tidbit around.
 		Config.MUST_UPDATE_TILE_ENTITIES = true;
 
-		if(Loader.isModLoaded(Mods.Forestry)) {
+		if(Loader.isModLoaded(Mods.Forestry) && Config.FORESTRY_BEES) {
 			Computronics.forestry = new IntegrationForestry();
 			Computronics.forestry.preInitOC();
+		}
+
+		if(Mods.API.hasVersion(Mods.API.BuildCraftTransport, "[3.0,)") && Config.BUILDCRAFT_STATION) {
+			Computronics.buildcraft = new IntegrationBuildCraft();
+			Computronics.buildcraft.preInit();
 		}
 	}
 
@@ -182,7 +188,7 @@ public class IntegrationOpenComputers {
 			}
 		}
 
-		if(Loader.isModLoaded(Mods.Forestry) && Config.FORESTRY_BEES) {
+		if(Computronics.forestry != null) {
 			Computronics.forestry.initOC();
 		}
 	}
@@ -232,6 +238,9 @@ public class IntegrationOpenComputers {
 				'f', Computronics.ironNote,
 				'b', li.cil.oc.api.Items.get("card").createItemStack(1),
 				'l', li.cil.oc.api.Items.get("cu").createItemStack(1));
+		}
+		if(Computronics.buildcraft != null){
+			Computronics.buildcraft.postInit();
 		}
 	}
 

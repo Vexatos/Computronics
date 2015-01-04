@@ -45,6 +45,7 @@ public class Mods {
 		public static final String
 			BuildCraftStatements = "BuildCraftAPI|statements",
 			BuildCraftTiles = "BuildCraftAPI|tiles",
+			BuildCraftTransport = "BuildCraftAPI|transport",
 			CoFHAPI_Energy = "CoFHAPI|energy";
 
 		private static HashMap<String, ArtifactVersion> apiList;

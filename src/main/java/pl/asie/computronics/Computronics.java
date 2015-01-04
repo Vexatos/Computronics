@@ -40,6 +40,7 @@ import pl.asie.computronics.block.BlockTapeReader;
 import pl.asie.computronics.cc.IntegrationComputerCraft;
 import pl.asie.computronics.cc.multiperipheral.MultiPeripheralRegistry;
 import pl.asie.computronics.integration.ModRecipes;
+import pl.asie.computronics.integration.buildcraft.pluggable.IntegrationBuildCraft;
 import pl.asie.computronics.integration.buildcraft.statements.ActionProvider;
 import pl.asie.computronics.integration.buildcraft.statements.StatementParameters;
 import pl.asie.computronics.integration.buildcraft.statements.TriggerProvider;
@@ -111,6 +112,7 @@ public class Computronics {
 	public static IntegrationOpenComputers opencomputers;
 	public static IntegrationComputerCraft computercraft;
 
+	public static IntegrationBuildCraft buildcraft;
 	public static IntegrationRailcraft railcraft;
 	public static IntegrationForestry forestry;
 

@@ -32,6 +32,7 @@ public class Config {
 	public static boolean GREGTECH_RECIPES = false;
 	public static boolean NON_OC_RECIPES = false;
 	public static boolean FORESTRY_BEES = true;
+	public static boolean BUILDCRAFT_STATION = true;
 
 	public static boolean OC_ROBOT_UPGRADES;
 	public static boolean OC_CARD_FX;
@@ -98,6 +99,9 @@ public class Config {
 
 			if(Loader.isModLoaded(Mods.Forestry)) {
 				FORESTRY_BEES = config.getBoolean("opencomputersBees", "enable.forestry", true, "Set this to false to disable Forestry bee species for OpenComputers");
+			}
+			if(Mods.API.hasVersion(Mods.API.BuildCraftTransport, "[3.0,)")){
+				BUILDCRAFT_STATION = config.getBoolean("droneDockingStation", "enable.buildcraft", true, "Set this to false to disable the Drone Docking Station for OpenComputers");
 			}
 		}
 

@@ -1,0 +1,47 @@
+package pl.asie.computronics.integration.buildcraft.pluggable;
+
+import buildcraft.api.transport.IPipe;
+import buildcraft.api.transport.pluggable.IPipePluggableItem;
+import buildcraft.api.transport.pluggable.PipePluggable;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
+
+/**
+ * @author Vexatos
+ */
+public class ItemDroneStation extends Item implements IPipePluggableItem {
+
+	@Override
+	public boolean doesSneakBypassUse(World world, int x, int y, int z, EntityPlayer player) {
+		return true;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerIcons(IIconRegister par1IconRegister) {
+		// NOOP
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public int getSpriteNumber() {
+		return 0;
+	}
+
+	@Override
+	public PipePluggable createPipePluggable(IPipe pipe, ForgeDirection side, ItemStack stack) {
+		switch(side){
+			case UP:
+			case DOWN:
+				return new DroneStationPluggable();
+			default:
+				return null;
+		}
+	}
+}
