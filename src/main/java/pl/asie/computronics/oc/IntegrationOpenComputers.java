@@ -91,7 +91,7 @@ public class IntegrationOpenComputers {
 
 		if(Mods.API.hasVersion(Mods.API.BuildCraftTransport, "[3.0,)") && Config.BUILDCRAFT_STATION) {
 			Computronics.buildcraft = new IntegrationBuildCraft();
-			Computronics.buildcraft.preInit();
+			Computronics.buildcraft.preInitOC();
 		}
 	}
 
@@ -240,7 +240,7 @@ public class IntegrationOpenComputers {
 				'l', li.cil.oc.api.Items.get("cu").createItemStack(1));
 		}
 		if(Computronics.buildcraft != null){
-			Computronics.buildcraft.postInit();
+			Computronics.buildcraft.postInitOC();
 		}
 	}
 

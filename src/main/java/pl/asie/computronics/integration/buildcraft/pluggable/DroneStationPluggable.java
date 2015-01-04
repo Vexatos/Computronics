@@ -57,13 +57,18 @@ public class DroneStationPluggable extends PipePluggable {
 	}
 
 	@Override
+	public void update(IPipeTile pipe, ForgeDirection direction) {
+		super.update(pipe, direction);
+	}
+
+	@Override
 	public AxisAlignedBB getBoundingBox(ForgeDirection side) {
 		float[][] bounds = new float[3][2];
 		// X START - END
 		bounds[0][0] = 0.25F;
 		bounds[0][1] = 0.75F;
 		// Y START - END
-		bounds[1][0] = 0.125F;
+		bounds[1][0] = 0F;
 		bounds[1][1] = 0.251F;
 		// Z START - END
 		bounds[2][0] = 0.25F;

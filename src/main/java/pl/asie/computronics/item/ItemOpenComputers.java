@@ -8,6 +8,8 @@ import li.cil.oc.api.driver.EnvironmentHost;
 import li.cil.oc.api.driver.Item;
 import li.cil.oc.api.driver.item.HostAware;
 import li.cil.oc.api.driver.item.Slot;
+import li.cil.oc.api.internal.Drone;
+import li.cil.oc.api.internal.Microcontroller;
 import li.cil.oc.api.internal.Tablet;
 import li.cil.oc.api.network.Environment;
 import li.cil.oc.api.network.ManagedEnvironment;
@@ -66,7 +68,10 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 		boolean works = worksWith(stack);
 		switch(stack.getItemDamage()){
 			case 4:{
-				works = works && !Tablet.class.isAssignableFrom(host);
+				works = works
+					&& !Tablet.class.isAssignableFrom(host)
+					&& !Drone.class.isAssignableFrom(host)
+					&& !Microcontroller.class.isAssignableFrom(host);
 				break;
 			}
 		}

@@ -11,11 +11,18 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import pl.asie.computronics.Computronics;
 
 /**
  * @author Vexatos
  */
 public class ItemDroneStation extends Item implements IPipePluggableItem {
+
+	public ItemDroneStation() {
+		super();
+		setCreativeTab(Computronics.tab);
+		setUnlocalizedName("computronics.dockingStation");
+	}
 
 	@Override
 	public boolean doesSneakBypassUse(World world, int x, int y, int z, EntityPlayer player) {
