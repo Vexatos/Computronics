@@ -63,7 +63,10 @@ dependencies {
         exclude module: "buildcraft"
         exclude module: "Waila"
     }
-    compile "net.sengir.forestry:${config.forestry.version}:dev"
+    compile ("net.sengir.forestry:${config.forestry.version}:dev"){
+        exclude module: "buildcraft"
+        exclude module: "industrialcraft-2"
+    }
 }
 
 minecraft {

@@ -9,10 +9,11 @@ import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.Visibility;
 import li.cil.oc.api.prefab.ManagedEnvironment;
-import net.minecraft.inventory.IInventory;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -28,6 +29,8 @@ public class DriverDroneStation extends ManagedEnvironment {
 	protected IPipeTile pipe;
 	protected ForgeDirection side = ForgeDirection.UNKNOWN;
 	private int[] pipevec;
+
+	private double targetX, targetY, targetZ;
 
 	public DriverDroneStation(Drone drone) {
 		this.drone = drone;
@@ -53,10 +56,20 @@ public class DriverDroneStation extends ManagedEnvironment {
 				side = null;
 			}
 		}
-		li.cil.oc.common.entity.Drone droneEntity = (li.cil.oc.common.entity.Drone) drone;
-		if(isDocking && droneEntity.motionX == 0 && droneEntity.motionY == 0 && droneEntity.motionZ == 0) {
+		Entity droneEntity = (Entity) drone;
+		Vec3 velocity = drone.getVelocity();
+		if(isDocking && velocity.xCoord == 0 || velocity.yCoord == 0 || velocity.zCoord == 0) {
 			isDocking = false;
 			isDocked = true;
+		}
+		if(isDocked) {
+			droneEntity.motionX = 0;
+			droneEntity.motionY = 0;
+			droneEntity.motionZ = 0;
+			drone.setTarget(Vec3.createVectorHelper(targetX, targetY, targetZ));
+			droneEntity.posX = targetX;
+			droneEntity.posY = targetY;
+			droneEntity.posZ = targetZ;
 		}
 	}
 
@@ -72,10 +85,9 @@ public class DriverDroneStation extends ManagedEnvironment {
 			return new Object[] { 0, "pipe is not an item pipe" };
 		}
 		int count = args.count() > 1 ? Math.max(0, Math.min(64, args.checkInteger(1))) : 64;
-		li.cil.oc.common.entity.Drone droneEntity = (li.cil.oc.common.entity.Drone) drone;
-		ItemStack stack = ((IInventory) droneEntity.inventory()).getStackInSlot(args.checkInteger(0));
+		ItemStack stack = drone.inventory().getStackInSlot(args.checkInteger(0));
 		if(stack != null && stack.getItem() != null) {
-			stack = ((IInventory) droneEntity.inventory()).decrStackSize(args.checkInteger(0), count);
+			stack = drone.inventory().decrStackSize(args.checkInteger(0), count);
 			pipe.injectItem(stack, true, side);
 			return new Object[] { stack.stackSize };
 		}
@@ -100,14 +112,20 @@ public class DriverDroneStation extends ManagedEnvironment {
 				targetY = y + 1 - station.getBoundingBox(side).minY;
 			}
 		}
-		if(station != null && drone instanceof li.cil.oc.common.entity.Drone) {
-			li.cil.oc.common.entity.Drone droneEntity = (li.cil.oc.common.entity.Drone) drone;
-			if(droneEntity.motionX != 0 || droneEntity.motionY != 0 || droneEntity.motionZ != 0) {
+		if(station != null) {
+			Vec3 velocity = drone.getVelocity();
+			if(velocity.xCoord != 0 || velocity.yCoord != 0 || velocity.zCoord != 0) {
 				return new Object[] { false, "drone is still moving" };
 			}
-			droneEntity.targetY_$eq((float) targetY);
+			Vec3 target = drone.getTarget();
+			target.yCoord = (float) targetY;
+			drone.setTarget(target);
+			target = drone.getTarget();
+			this.targetX = target.xCoord;
+			this.targetY = target.yCoord;
+			this.targetZ = target.zCoord;
 			this.side = side;
-			isDocking = true;
+			this.isDocking = true;
 			return new Object[] { true };
 		}
 		return new Object[] { false };
@@ -115,7 +133,7 @@ public class DriverDroneStation extends ManagedEnvironment {
 
 	@Callback(doc = "function():boolean; Releases the drone if docked")
 	public Object[] release(Context context, Arguments args) {
-		if(!isDocked || pipe == null) {
+		if(!isDocked || pipe == null || !(pipe.getPipePluggable(side) instanceof DroneStationPluggable)) {
 			if(isDocking) {
 				return new Object[] { 0, "drone is still docking" };
 			}
@@ -130,16 +148,14 @@ public class DriverDroneStation extends ManagedEnvironment {
 		} else {
 			targetY = y - 1 + station.getBoundingBox(ForgeDirection.DOWN).maxY;
 		}
-		if(drone instanceof li.cil.oc.common.entity.Drone) {
-			li.cil.oc.common.entity.Drone droneEntity = (li.cil.oc.common.entity.Drone) drone;
-			droneEntity.targetY_$eq((float) targetY);
-			isDocking = false;
-			isDocked = false;
-			pipe = null;
-			side = null;
-			return new Object[] { true };
-		}
-		return new Object[] { false };
+		Vec3 target = drone.getTarget();
+		target.yCoord = (float) targetY;
+		drone.setTarget(target);
+		isDocking = false;
+		isDocked = false;
+		pipe = null;
+		side = null;
+		return new Object[] { true };
 	}
 
 	private DroneStationPluggable tryGetStation(World world, int x, int y, int z, ForgeDirection side) {
@@ -163,6 +179,10 @@ public class DriverDroneStation extends ManagedEnvironment {
 			nbt.setInteger("drone:dockX", pipe.x());
 			nbt.setInteger("drone:dockY", pipe.y());
 			nbt.setInteger("drone:dockZ", pipe.z());
+			nbt.setFloat("drone:targetX", (float) targetX);
+			nbt.setFloat("drone:targetY", (float) targetY);
+			nbt.setFloat("drone:targetZ", (float) targetZ);
+
 			if(side != null) {
 				nbt.setInteger("drone:side", side.ordinal());
 			}
@@ -179,6 +199,9 @@ public class DriverDroneStation extends ManagedEnvironment {
 				nbt.getInteger("drone:dockX"),
 				nbt.getInteger("drone:dockY"),
 				nbt.getInteger("drone:dockZ") };
+			targetX = nbt.getFloat("drone:targetX");
+			targetY = nbt.getFloat("drone:targetY");
+			targetZ = nbt.getFloat("drone:targetZ");
 			side = ForgeDirection.getOrientation(nbt.getInteger("drone:side"));
 		}
 	}
