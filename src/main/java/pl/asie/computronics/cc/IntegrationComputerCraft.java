@@ -16,6 +16,7 @@ import pl.asie.computronics.integration.enderio.DriverCapacitorBank;
 import pl.asie.computronics.integration.enderio.DriverCapacitorBankOld;
 import pl.asie.computronics.integration.enderio.DriverHasExperience;
 import pl.asie.computronics.integration.enderio.DriverIOConfigurable;
+import pl.asie.computronics.integration.enderio.DriverPowerMonitor;
 import pl.asie.computronics.integration.enderio.DriverPowerStorage;
 import pl.asie.computronics.integration.enderio.DriverRedstoneControllable;
 import pl.asie.computronics.integration.enderio.DriverTransceiver;
@@ -114,6 +115,7 @@ public class IntegrationComputerCraft {
 				registerMultiPeripheralProvider(new DriverPowerStorage.CCDriver());
 				registerMultiPeripheralProvider(new DriverAbstractMachine.CCDriver());
 				registerMultiPeripheralProvider(new DriverAbstractPoweredMachine.CCDriver());
+				registerMultiPeripheralProvider(new DriverPowerMonitor.CCDriver());
 				registerMultiPeripheralProvider(new DriverCapacitorBank.CCDriver());
 				registerMultiPeripheralProvider(new DriverCapacitorBankOld.CCDriver());
 				registerMultiPeripheralProvider(new DriverTransceiver.CCDriver());

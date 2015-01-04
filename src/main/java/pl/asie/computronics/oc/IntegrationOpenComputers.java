@@ -22,6 +22,7 @@ import pl.asie.computronics.integration.enderio.DriverCapacitorBank;
 import pl.asie.computronics.integration.enderio.DriverCapacitorBankOld;
 import pl.asie.computronics.integration.enderio.DriverHasExperience;
 import pl.asie.computronics.integration.enderio.DriverIOConfigurable;
+import pl.asie.computronics.integration.enderio.DriverPowerMonitor;
 import pl.asie.computronics.integration.enderio.DriverPowerStorage;
 import pl.asie.computronics.integration.enderio.DriverRedstoneControllable;
 import pl.asie.computronics.integration.enderio.DriverTransceiver;
@@ -176,6 +177,7 @@ public class IntegrationOpenComputers {
 				Driver.add(new DriverPowerStorage.OCDriver());
 				Driver.add(new DriverAbstractMachine.OCDriver());
 				Driver.add(new DriverAbstractPoweredMachine.OCDriver());
+				Driver.add(new DriverPowerMonitor.OCDriver());
 				Driver.add(new DriverCapacitorBank.OCDriver());
 				Driver.add(new DriverCapacitorBankOld.OCDriver());
 				Driver.add(new DriverTransceiver.OCDriver());
