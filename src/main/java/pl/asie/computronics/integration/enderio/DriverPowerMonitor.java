@@ -58,7 +58,7 @@ public class DriverPowerMonitor {
 				return new Object[] { tile.getPowerInMachines() };
 			}
 
-			@Callback(doc="function():number;")
+			@Callback(doc="function():number; Returns the max energy that can be in connected Machines")
 			public Object[] getMaxPowerInMachines(Context c, Arguments a) {
 				return new Object[] { tile.getMaxPowerInMachines() };
 			}
