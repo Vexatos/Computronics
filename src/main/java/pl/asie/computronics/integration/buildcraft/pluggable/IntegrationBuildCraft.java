@@ -30,8 +30,8 @@ public class IntegrationBuildCraft {
 
 	@SubscribeEvent
 	public void textureHook(TextureStitchEvent.Pre event) {
-		for(Textures t : Textures.VALUES) {
-			if(event.map.getTextureType() == t.getType()) {
+		if(event.map.getTextureType() == 0) {
+			for(Textures t : Textures.VALUES) {
 				t.registerIcons(event.map);
 			}
 		}
@@ -45,33 +45,17 @@ public class IntegrationBuildCraft {
 
 	public static enum Textures {
 		DRONE_STATION_TOP("drone_station_top"),
-		DRONE_STATION_BOTTOM("drone_station_bottom");
-		//DRONE_STATION_SIDE("machine_top", 0, "computronics:"),
+		DRONE_STATION_BOTTOM("drone_station_bottom"),
+		DRONE_STATION_SIDE("drone_station_side");
 		//DRONE_STATION_NOOK_TOP("machine_top", 0, "computronics:"),
 		//DRONE_STATION_NOOK_SIDE("machine_top", 0, "computronics:");
 
 		private IIcon icon;
 		private final String location;
-		private final int type;
-		private final String path;
 		public static final Textures[] VALUES = values();
 
 		private Textures(String location) {
-			this(location, 1);
-		}
-
-		private Textures(String location, int type) {
-			this(location, type, "computronics:buildcraft/pluggable/");
-		}
-
-		private Textures(String location, int type, String path) {
 			this.location = location;
-			this.type = type;
-			this.path = path;
-		}
-
-		public int getType() {
-			return this.type;
 		}
 
 		public IIcon getIcon() {
@@ -79,7 +63,71 @@ public class IntegrationBuildCraft {
 		}
 
 		public void registerIcons(IIconRegister iconRegister) {
-			this.icon = iconRegister.registerIcon(path + location);
+			this.icon = new WrappedIcon(iconRegister.registerIcon("computronics:buildcraft/pluggable/" + location));
+		}
+	}
+
+	private static class WrappedIcon implements IIcon {
+
+		private IIcon icon;
+		private final int size;
+
+		private WrappedIcon(IIcon icon) {
+			this(icon, 2);
+		}
+
+		private WrappedIcon(IIcon icon, int size) {
+			this.icon = icon;
+			this.size = size;
+		}
+
+		@Override
+		public int getIconWidth() {
+			return icon.getIconWidth();
+		}
+
+		@Override
+		public int getIconHeight() {
+			return icon.getIconHeight();
+		}
+
+		@Override
+		public float getMinU() {
+			return size > 0 ? icon.getMinU() - (icon.getMaxU() - icon.getMinU()) * size / 4F : icon.getMinU();
+		}
+
+		@Override
+		public float getMaxU() {
+			return size > 0 ? icon.getMaxU() + (icon.getMaxU() - icon.getMinU()) * size / 4F : icon.getMaxU();
+		}
+
+		@Override
+		public float getInterpolatedU(double par1) {
+			float f = this.getMaxU() - this.getMinU();
+			return this.getMinU() + f * (float)par1 / 16.0F;
+		}
+
+		@Override
+		public float getMinV() {
+			float f = icon.getMaxV() - icon.getMinV();
+			return size > 0 ? icon.getMinV() - f * size / 4F : icon.getMinV();
+		}
+
+		@Override
+		public float getMaxV() {
+			float f = icon.getMaxV() - icon.getMinV();
+			return size > 0 ? icon.getMaxV() + f * size / 4F : icon.getMaxV();
+		}
+
+		@Override
+		public float getInterpolatedV(double par1) {
+			float f = this.getMaxV() - this.getMinV();
+			return this.getMinV() + f * ((float)par1 / 16.0F);
+		}
+
+		@Override
+		public String getIconName() {
+			return icon.getIconName();
 		}
 	}
 }

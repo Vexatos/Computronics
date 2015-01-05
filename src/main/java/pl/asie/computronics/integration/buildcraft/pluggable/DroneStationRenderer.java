@@ -35,15 +35,15 @@ public class DroneStationRenderer implements IPipePluggableRenderer {
 		zeroState[2][0] = zStart + zFightOffset;
 		zeroState[2][1] = zEnd - zFightOffset;
 
-		/*IIcon[] icons = ((TextureStateManager) blockStateMachine.getTextureState()).popArray();
-		icons[0] = Textures.DRONE_STATION_NOOK_TOP.getIcon();
-		icons[1] = Textures.DRONE_STATION_NOOK_TOP.getIcon();
+		IIcon[] icons = ((TextureStateManager) blockStateMachine.getTextureState()).popArray();
+		icons[0] = Textures.DRONE_STATION_BOTTOM.getIcon();
+		icons[1] = Textures.DRONE_STATION_BOTTOM.getIcon();
 		for(int i = 2; i < icons.length; i++) {
-			icons[i] = Textures.DRONE_STATION_NOOK_SIDE.getIcon();
+			icons[i] = Textures.DRONE_STATION_SIDE.getIcon();
 		}
-		((TextureStateManager) blockStateMachine.getTextureState()).popArray();*/
+		((TextureStateManager) blockStateMachine.getTextureState()).popArray();
 
-		blockStateMachine.getTextureState().set(Textures.DRONE_STATION_TOP.getIcon());
+		//blockStateMachine.getTextureState().set(Textures.DRONE_STATION_TOP.getIcon());
 
 		float[][] rotated = MatrixTranformations.deepClone(zeroState);
 		MatrixTranformations.transform(rotated, side);
@@ -52,7 +52,7 @@ public class DroneStationRenderer implements IPipePluggableRenderer {
 			rotated[2][0], rotated[0][1], rotated[1][1],
 			rotated[2][1]);
 		renderblocks.renderStandardBlock(blockStateMachine.getBlock(), x, y, z);
-		//((TextureStateManager) blockStateMachine.getTextureState()).pushArray();
+		((TextureStateManager) blockStateMachine.getTextureState()).pushArray();
 	}
 
 	@Override
@@ -62,24 +62,24 @@ public class DroneStationRenderer implements IPipePluggableRenderer {
 		}
 
 		droneStationPartRender(renderblocks, side, blockStateMachine, x, y, z,
-			0.60F, 0.70F,
+			0.56F, 0.625F,
 			0.0F, 0.224F,
-			0.30F, 0.40F);
+			0.375F, 0.44F);
 
 		droneStationPartRender(renderblocks, side, blockStateMachine, x, y, z,
-			0.60F, 0.70F,
+			0.56F, 0.625F,
 			0.0F, 0.224F,
-			0.60F, 0.70F);
+			0.56F, 0.625F);
 
 		droneStationPartRender(renderblocks, side, blockStateMachine, x, y, z,
-			0.30F, 0.40F,
+			0.375F, 0.44F,
 			0.0F, 0.224F,
-			0.30F, 0.40F);
+			0.375F, 0.44F);
 
 		droneStationPartRender(renderblocks, side, blockStateMachine, x, y, z,
-			0.30F, 0.40F,
+			0.375F, 0.44F,
 			0.0F, 0.224F,
-			0.60F, 0.70F);
+			0.56F, 0.625F);
 
 		float[][] zeroState = new float[3][2];
 
@@ -92,16 +92,16 @@ public class DroneStationRenderer implements IPipePluggableRenderer {
 		// Z START - END
 		zeroState[2][0] = 0.25F + zFightOffset;
 		zeroState[2][1] = 0.75F - zFightOffset;
-/*
+
 		IIcon[] icons = ((TextureStateManager) blockStateMachine.getTextureState()).popArray();
-		icons[0] = Textures.DRONE_STATION_BOTTOM.getIcon();
+		icons[0] = Textures.DRONE_STATION_SIDE.getIcon();
 		icons[1] = Textures.DRONE_STATION_TOP.getIcon();
 		for(int i = 2; i < icons.length; i++) {
 			icons[i] = Textures.DRONE_STATION_SIDE.getIcon();
 		}
 		((TextureStateManager) blockStateMachine.getTextureState()).popArray();
-*/
-		blockStateMachine.getTextureState().set(Textures.DRONE_STATION_TOP.getIcon());
+
+		//blockStateMachine.getTextureState().set(Textures.DRONE_STATION_TOP.getIcon());
 
 		float[][] rotated = MatrixTranformations.deepClone(zeroState);
 		MatrixTranformations.transform(rotated, side);
@@ -122,11 +122,18 @@ public class DroneStationRenderer implements IPipePluggableRenderer {
 
 		//((TextureStateManager) blockStateMachine.getTextureState()).pushArray();
 
-		blockStateMachine.getTextureState().set(Textures.DRONE_STATION_BOTTOM.getIcon());
+		icons[0] = Textures.DRONE_STATION_BOTTOM.getIcon();
+		icons[1] = Textures.DRONE_STATION_SIDE.getIcon();
+		for(int i = 2; i < icons.length; i++) {
+			icons[i] = Textures.DRONE_STATION_BOTTOM.getIcon();
+		}
+
+		//blockStateMachine.getTextureState().set(Textures.DRONE_STATION_BOTTOM.getIcon());
 		rotated = MatrixTranformations.deepClone(zeroState);
 		MatrixTranformations.transform(rotated, side);
 
 		renderblocks.setRenderBounds(rotated[0][0], rotated[1][0], rotated[2][0], rotated[0][1], rotated[1][1], rotated[2][1]);
 		renderblocks.renderStandardBlock(blockStateMachine.getBlock(), x, y, z);
+		((TextureStateManager) blockStateMachine.getTextureState()).pushArray();
 	}
 }
