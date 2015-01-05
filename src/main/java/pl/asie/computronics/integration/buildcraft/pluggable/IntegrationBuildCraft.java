@@ -56,9 +56,8 @@ public class IntegrationBuildCraft {
 	public static enum Textures {
 		DRONE_STATION_TOP("drone_station_top"),
 		DRONE_STATION_BOTTOM("drone_station_bottom"),
-		DRONE_STATION_SIDE("drone_station_side");
-		//DRONE_STATION_NOOK_TOP("machine_top", 0, "computronics:"),
-		//DRONE_STATION_NOOK_SIDE("machine_top", 0, "computronics:");
+		DRONE_STATION_SIDE("drone_station_side"),
+		DRONE_STATION_NOOK("drone_station_nook");
 
 		private IIcon icon;
 		private final String location;

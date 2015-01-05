@@ -45,7 +45,7 @@ public class DroneStationRenderer implements IPipePluggableRenderer {
 		icons[0] = Textures.DRONE_STATION_BOTTOM.getIcon();
 		icons[1] = Textures.DRONE_STATION_BOTTOM.getIcon();
 		for(int i = 2; i < icons.length; i++) {
-			icons[i] = Textures.DRONE_STATION_SIDE.getIcon();
+			icons[i] = Textures.DRONE_STATION_NOOK.getIcon();
 		}
 		((TextureStateManager) blockStateMachine.getTextureState()).popArray();
 
