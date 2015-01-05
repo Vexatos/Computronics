@@ -1,5 +1,12 @@
 ==== 1.3.5 ====
 
+  * ADDED: Tape Drives now output a comparator signal if they are currently playing
+  * ADDED: Drone docking station + Docking upgrade for OpenComputers Drones
+    - The Docking Station you put onto any BuildCraft pipe
+    - Drones with the Docking Upgrade can dock with Docking Stations
+    - If the Station is on an Item Transport pipe, the drone will be able to inject items into the pipe
+    - Drones being able to charge while on a docking station on a Kinesis pipe is planned, but currently not possible
+    - Requires Buildcraft 6.3
   * FIXED: Extremely rare ArrayIndexOutOfBoundsException when playing and writing to a tape at the same time
 
 ==== 1.3.4 ====
