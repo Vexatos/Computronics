@@ -6,6 +6,8 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import li.cil.oc.api.Driver;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.util.IIcon;
+import net.minecraftforge.client.IItemRenderer;
+import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
 import pl.asie.computronics.Computronics;
@@ -17,6 +19,7 @@ public class IntegrationBuildCraft {
 
 	public ItemDroneStation droneStationItem;
 	public ItemDockingUpgrade dockingUpgrade;
+	private IItemRenderer droneStationItemRenderer;
 
 	public void preInitOC() {
 		Computronics.log.info("Registering Drone Docking Station for OpenComputers");
@@ -28,12 +31,10 @@ public class IntegrationBuildCraft {
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 
-	@SubscribeEvent
-	public void textureHook(TextureStitchEvent.Pre event) {
-		if(event.map.getTextureType() == 0) {
-			for(Textures t : Textures.VALUES) {
-				t.registerIcons(event.map);
-			}
+	public void initOC() {
+		if(Computronics.proxy.isClient()) {
+			droneStationItemRenderer = new DroneStationRenderer.ItemRenderer();
+			MinecraftForgeClient.registerItemRenderer(this.droneStationItem, droneStationItemRenderer);
 		}
 	}
 
@@ -41,6 +42,15 @@ public class IntegrationBuildCraft {
 		PipeManager.registerPipePluggable(DroneStationPluggable.class, "computronics.droneStation");
 
 		//TODO Add recipes
+	}
+
+	@SubscribeEvent
+	public void textureHook(TextureStitchEvent.Pre event) {
+		if(event.map.getTextureType() == 0) {
+			for(Textures t : Textures.VALUES) {
+				t.registerIcons(event.map);
+			}
+		}
 	}
 
 	public static enum Textures {
@@ -104,7 +114,7 @@ public class IntegrationBuildCraft {
 		@Override
 		public float getInterpolatedU(double par1) {
 			float f = this.getMaxU() - this.getMinU();
-			return this.getMinU() + f * (float)par1 / 16.0F;
+			return this.getMinU() + f * (float) par1 / 16.0F;
 		}
 
 		@Override
@@ -122,7 +132,7 @@ public class IntegrationBuildCraft {
 		@Override
 		public float getInterpolatedV(double par1) {
 			float f = this.getMaxV() - this.getMinV();
-			return this.getMinV() + f * ((float)par1 / 16.0F);
+			return this.getMinV() + f * ((float) par1 / 16.0F);
 		}
 
 		@Override

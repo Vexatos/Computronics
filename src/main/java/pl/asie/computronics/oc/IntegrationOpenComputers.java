@@ -193,6 +193,10 @@ public class IntegrationOpenComputers {
 		if(Computronics.forestry != null) {
 			Computronics.forestry.initOC();
 		}
+
+		if(Computronics.buildcraft != null){
+			Computronics.buildcraft.initOC();
+		}
 	}
 
 	@Optional.Method(modid = Mods.OpenComputers)
