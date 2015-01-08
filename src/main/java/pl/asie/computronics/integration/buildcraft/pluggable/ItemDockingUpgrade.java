@@ -34,7 +34,7 @@ public class ItemDockingUpgrade extends ItemMultiple implements Item, Environmen
 
 	@Override
 	public Class<? extends Environment> providedEnvironment(ItemStack itemStack) {
-		return DriverDroneStation.class;
+		return DriverDockingUpgrade.class;
 	}
 
 	@Override
@@ -52,7 +52,7 @@ public class ItemDockingUpgrade extends ItemMultiple implements Item, Environmen
 		if(!(host instanceof Drone)) {
 			return null;
 		}
-		return new DriverDroneStation(((Drone) host));
+		return new DriverDockingUpgrade(((Drone) host));
 	}
 
 	@Override

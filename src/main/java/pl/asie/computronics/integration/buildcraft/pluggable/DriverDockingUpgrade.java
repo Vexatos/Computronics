@@ -1,5 +1,6 @@
 package pl.asie.computronics.integration.buildcraft.pluggable;
 
+import buildcraft.api.core.EnumColor;
 import buildcraft.api.transport.IPipeTile;
 import buildcraft.api.transport.pluggable.PipePluggable;
 import li.cil.oc.api.Network;
@@ -21,7 +22,7 @@ import pl.asie.computronics.integration.buildcraft.pluggable.DroneStationPluggab
 /**
  * @author Vexatos
  */
-public class DriverDroneStation extends ManagedEnvironment {
+public class DriverDockingUpgrade extends ManagedEnvironment {
 
 	protected final Drone drone;
 
@@ -33,7 +34,7 @@ public class DriverDroneStation extends ManagedEnvironment {
 
 	private float targetX, targetY, targetZ;
 
-	public DriverDroneStation(Drone drone) {
+	public DriverDockingUpgrade(Drone drone) {
 		this.drone = drone;
 		this.setNode(Network.newNode(this, Visibility.Neighbors).
 			withComponent("docking").
@@ -87,7 +88,7 @@ public class DriverDroneStation extends ManagedEnvironment {
 		}
 	}
 
-	@Callback(doc = "function(slot:number[,maxAmount:number]):number; drops an item into the attached pipe if docked; Returns the amount of items dropped on success, 0 and an error message otherwise")
+	@Callback(doc = "function(slot:number[,maxAmount:number[,color:number]]):number; drops an item into the attached pipe if docked; Returns the amount of items dropped on success; Allows coloring the item if the drone is tier 2")
 	public Object[] dropItem(Context context, Arguments args) {
 		if(!isDocked || pipe == null) {
 			if(isDocking) {
@@ -103,8 +104,7 @@ public class DriverDroneStation extends ManagedEnvironment {
 		ItemStack stack = drone.inventory().getStackInSlot(slot);
 		if(stack != null && stack.getItem() != null) {
 			stack = drone.inventory().decrStackSize(args.checkInteger(0), count);
-			//TODO Check for colour if Tier 2
-			pipe.injectItem(stack, true, side);
+			pipe.injectItem(stack, true, side, args.count() > 2 && drone.tier() > 0 ? EnumColor.fromId(args.checkInteger(2)) : null);
 			return new Object[] { stack.stackSize };
 		}
 		return new Object[] { 0, "invalid/empty slot" };

@@ -27,6 +27,7 @@ public class Mods {
 	public static final String
 		AE2 = "appliedenergistics2",
 		BetterStorage = "betterstorage",
+		BuildCraftTransport = "BuildCraft|Transport",
 		EnderIO = "EnderIO",
 		Factorization = "factorization",
 		Forestry = "Forestry",

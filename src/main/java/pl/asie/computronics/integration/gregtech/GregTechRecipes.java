@@ -158,6 +158,7 @@ public class GregTechRecipes extends ModRecipes {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	public static void regsiterGregTechTapeRecipes() {
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Computronics.itemTape, 1, 9),

@@ -123,7 +123,7 @@ public class DriverSpatialIOPort {
 				map.put("requiredEnergy", req);
 				map.put("availableEnergy", energy.getStoredPower());
 				map.put("maxEnergy", energy.getMaxStoredPower());
-				map.put("efficiency", spc.currentEffiency() / 100.0F);
+				map.put("efficiency", spc.currentEfficiency() / 100.0F);
 
 				map.put("canTrigger", SpatialIOUtil.isSpatialCell(cell)
 					&& tile.getStackInSlot(1) == null && Math.abs(pr - req) < req * 0.001D);

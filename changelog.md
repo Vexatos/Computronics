@@ -10,7 +10,7 @@
   * ADDED: Integration for the EnderIO Power Monitor
     - You can get literally everything shown in its GUI
     - You can also configure Engine Control using ComputerCraft/OpenComputers
-  * FIXED: Updated EnderIO integration to work properly again.
+  * FIXED: Updated EnderIO and Applied Energistics 2 integration to work properly again.
   * FIXED: Rightclicking EEPROMs onto the EEPROM reader not working
   * FIXED: Extremely rare ArrayIndexOutOfBoundsException when playing and writing to a tape at the same time
 

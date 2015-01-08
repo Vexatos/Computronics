@@ -45,7 +45,7 @@ public class DroneStationRenderer implements IPipePluggableRenderer {
 		icons[0] = Textures.DRONE_STATION_BOTTOM.getIcon();
 		icons[1] = Textures.DRONE_STATION_BOTTOM.getIcon();
 		for(int i = 2; i < icons.length; i++) {
-			icons[i] = Textures.DRONE_STATION_NOOK.getIcon();
+			icons[i] = Textures.DRONE_STATION_SIDE.getIcon();
 		}
 		((TextureStateManager) blockStateMachine.getTextureState()).popArray();
 
@@ -186,6 +186,8 @@ public class DroneStationRenderer implements IPipePluggableRenderer {
 				case EQUIPPED_FIRST_PERSON:
 					GL11.glRotatef(20, 1F, 0F, 1F);
 					GL11.glRotatef(50, 1F, 1F, 0F);
+					GL11.glRotatef(20, 1F, 1F, 1F);
+					GL11.glRotatef(-10, 0F, 1F, 0F);
 					GL11.glRotatef(-20, 0F, 1F, 0F);
 					GL11.glTranslatef(0.6F, 0F, -0.3F);
 				case EQUIPPED:
@@ -197,7 +199,7 @@ public class DroneStationRenderer implements IPipePluggableRenderer {
 					this.Base.render(1 / 16f);
 					break;
 				case INVENTORY:
-					GL11.glScalef(1.1F, 1.1F, 1.1F);
+					GL11.glScalef(2F, 2F, 2F);
 					GL11.glRotatef(-180, 1, 0, 0);
 					GL11.glRotatef(60, 0, 1, 0);
 					this.Base.render(1 / 16f);

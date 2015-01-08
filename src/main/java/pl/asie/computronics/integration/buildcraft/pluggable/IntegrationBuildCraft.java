@@ -5,12 +5,15 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import li.cil.oc.api.Driver;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.reference.Mods;
 
 /**
  * @author Vexatos
@@ -41,7 +44,22 @@ public class IntegrationBuildCraft {
 	public void postInitOC() {
 		PipeManager.registerPipePluggable(DroneStationPluggable.class, "computronics.droneStation");
 
-		//TODO Add recipes
+		ItemStack robotStation = GameRegistry.findItemStack(Mods.BuildCraftTransport, "robotStation", 1);
+		if(robotStation == null || robotStation.getItem() == null) {
+			robotStation = new ItemStack(Items.ender_pearl, 1, 0);
+		}
+		GameRegistry.addShapedRecipe(new ItemStack(droneStationItem, 1, 0),
+			" a ", "tst", " c ", 's', robotStation, 'a', li.cil.oc.api.Items.get("chip1").createItemStack(1),
+			'c', li.cil.oc.api.Items.get("cable").createItemStack(1), 't', li.cil.oc.api.Items.get("transistor").createItemStack(1)
+		);
+		ItemStack pipe = GameRegistry.findItemStack(Mods.BuildCraftTransport, "item.buildcraftPipe.pipeitemsquartz", 1);
+		if(pipe == null || pipe.getItem() == null) {
+			pipe = li.cil.oc.api.Items.get("cable").createItemStack(1);
+		}
+		GameRegistry.addShapedRecipe(new ItemStack(dockingUpgrade, 1, 0),
+			" a ", "tst", " c ", 's', new ItemStack(droneStationItem, 1, 0), 'a', li.cil.oc.api.Items.get("chip1").createItemStack(1),
+			'c', pipe, 't', li.cil.oc.api.Items.get("transistor").createItemStack(1)
+		);
 	}
 
 	@SubscribeEvent
@@ -56,8 +74,7 @@ public class IntegrationBuildCraft {
 	public static enum Textures {
 		DRONE_STATION_TOP("drone_station_top"),
 		DRONE_STATION_BOTTOM("drone_station_bottom"),
-		DRONE_STATION_SIDE("drone_station_side"),
-		DRONE_STATION_NOOK("drone_station_nook");
+		DRONE_STATION_SIDE("drone_station_side");
 
 		private IIcon icon;
 		private final String location;
