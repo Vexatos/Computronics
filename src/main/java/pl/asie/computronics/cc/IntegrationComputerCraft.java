@@ -23,6 +23,7 @@ import pl.asie.computronics.integration.enderio.DriverTransceiver;
 import pl.asie.computronics.integration.factorization.DriverChargeConductor;
 import pl.asie.computronics.integration.fsp.DriverSteamTransporter;
 import pl.asie.computronics.integration.mfr.DriverDeepStorageUnit;
+import pl.asie.computronics.integration.openblocks.DriverBuildingGuide;
 import pl.asie.computronics.integration.railcraft.DriverBoilerFirebox;
 import pl.asie.computronics.integration.railcraft.DriverElectricGrid;
 import pl.asie.computronics.integration.railcraft.DriverRoutingDetector;
@@ -123,6 +124,10 @@ public class IntegrationComputerCraft {
 		} else if(ModAPIManager.INSTANCE.hasAPI(Mods.API.CoFHAPI_Energy)
 			&& compat.isCompatEnabled(Compat.RedstoneFlux)) {
 			registerMultiPeripheralProvider(new DriverEnergyHandler.CCDriver());
+		}
+
+		if(Loader.isModLoaded(Mods.OpenBlocks)) {
+			registerMultiPeripheralProvider(new DriverBuildingGuide.CCDriver());
 		}
 
 		if(Mods.API.hasVersion(Mods.API.BuildCraftTiles, "[1.1,)")) {

@@ -35,6 +35,7 @@ import pl.asie.computronics.integration.gregtech.DriverDeviceInformation;
 import pl.asie.computronics.integration.gregtech.DriverDigitalChest;
 import pl.asie.computronics.integration.gregtech.DriverMachine;
 import pl.asie.computronics.integration.mfr.DriverDeepStorageUnit;
+import pl.asie.computronics.integration.openblocks.DriverBuildingGuide;
 import pl.asie.computronics.integration.railcraft.DriverElectricGrid;
 import pl.asie.computronics.integration.railcraft.DriverRoutingDetector;
 import pl.asie.computronics.integration.railcraft.DriverRoutingSwitch;
@@ -184,6 +185,10 @@ public class IntegrationOpenComputers {
 			}
 		}
 
+		if(Loader.isModLoaded(Mods.OpenBlocks)) {
+			Driver.add(new DriverBuildingGuide.OCDriver());
+		}
+
 		if(Mods.API.hasVersion(Mods.API.BuildCraftTiles, "[1.1,)")) {
 			if(compat.isCompatEnabled(Compat.BuildCraft_Drivers)) {
 				Driver.add(new DriverHeatable.OCDriver());
@@ -194,7 +199,7 @@ public class IntegrationOpenComputers {
 			Computronics.forestry.initOC();
 		}
 
-		if(Computronics.buildcraft != null){
+		if(Computronics.buildcraft != null) {
 			Computronics.buildcraft.initOC();
 		}
 	}
@@ -245,7 +250,7 @@ public class IntegrationOpenComputers {
 				'b', li.cil.oc.api.Items.get("card").createItemStack(1),
 				'l', li.cil.oc.api.Items.get("cu").createItemStack(1));
 		}
-		if(Computronics.buildcraft != null){
+		if(Computronics.buildcraft != null) {
 			Computronics.buildcraft.postInitOC();
 		}
 	}

@@ -35,6 +35,7 @@ public class Mods {
 		GregTech = "gregtech",
 		JABBA = "JABBA",
 		MFR = "MineFactoryReloaded",
+		OpenBlocks = "OpenBlocks",
 		OpenPeripheral = "OpenPeripheralCore",
 		RedLogic = "RedLogic",
 		ProjectRed = "ProjRed|Core",
