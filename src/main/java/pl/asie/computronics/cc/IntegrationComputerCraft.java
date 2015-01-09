@@ -127,7 +127,9 @@ public class IntegrationComputerCraft {
 		}
 
 		if(Loader.isModLoaded(Mods.OpenBlocks)) {
-			registerMultiPeripheralProvider(new DriverBuildingGuide.CCDriver());
+			if(compat.isCompatEnabled(Compat.OpenBlocks)) {
+				registerMultiPeripheralProvider(new DriverBuildingGuide.CCDriver());
+			}
 		}
 
 		if(Mods.API.hasVersion(Mods.API.BuildCraftTiles, "[1.1,)")) {

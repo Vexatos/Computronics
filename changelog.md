@@ -10,10 +10,12 @@
   * ADDED: Integration for the EnderIO Power Monitor
     - You can get literally everything shown in its GUI
     - You can also configure Engine Control using ComputerCraft/OpenComputers
+    - Requires EnderIO 2.2.6.321 or later
   * ADDED: Integration for the OpenBlocks Building Guide for ComputerCraft/OpenComputers
     - You can now set/get the shape as well as width, height, depth and colour of the building shape
     - You can also get the count of blocks
     - Note: OpenBlocks added ComputerCraft support to the Building Guide itself if you have OpenPeripheral installed
+    - Requires OpenBlocks 1.3-snapshot-537 or later
   * FIXED: Updated EnderIO and Applied Energistics 2 integration to work properly again.
   * FIXED: Rightclicking EEPROMs onto the EEPROM reader not working
   * FIXED: Extremely rare ArrayIndexOutOfBoundsException when playing and writing to a tape at the same time

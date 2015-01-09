@@ -186,7 +186,9 @@ public class IntegrationOpenComputers {
 		}
 
 		if(Loader.isModLoaded(Mods.OpenBlocks)) {
-			Driver.add(new DriverBuildingGuide.OCDriver());
+			if(compat.isCompatEnabled(Compat.OpenBlocks)) {
+				Driver.add(new DriverBuildingGuide.OCDriver());
+			}
 		}
 
 		if(Mods.API.hasVersion(Mods.API.BuildCraftTiles, "[1.1,)")) {
