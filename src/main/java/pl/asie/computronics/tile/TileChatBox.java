@@ -65,6 +65,10 @@ public class TileChatBox extends TileEntityPeripheralBase implements IChatListen
 	}
 
 	public void receiveChatMessage(ServerChatEvent event) {
+		if (!isCreative() && event.player.getDistanceSq(xCoord, yCoord, zCoord) > distance * distance) {
+			return;
+		}
+
 		if(Config.REDSTONE_REFRESH) {
 			ticksUntilOff = 5;
 			mustRefresh = true;

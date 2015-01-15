@@ -30,6 +30,10 @@ public class RobotUpgradeChatBox extends ManagedEnvironment implements IChatList
 	}
 
 	public void receiveChatMessage(ServerChatEvent event) {
+		if (event.player.getDistanceSq(container.xPosition(), container.yPosition(), container.zPosition()) > distance * distance) {
+			return;
+		}
+
 		if(this.node() != null)
 			this.node().sendToReachable("computer.signal", "chat_message", event.username, event.message);
 	}
@@ -55,6 +59,8 @@ public class RobotUpgradeChatBox extends ManagedEnvironment implements IChatList
 		this.distance = Math.min(Config.CHATBOX_DISTANCE, dist);
 		if(this.distance < 0) this.distance = Config.CHATBOX_DISTANCE;
 	}
+
+
 
 	@Callback(direct = true)
 	@Optional.Method(modid= Mods.OpenComputers)
