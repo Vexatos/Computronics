@@ -8,7 +8,8 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 
 public class ChatBoxUtils {
-	public static void sendChatMessage(World worldObj, int xCoord, int yCoord, int zCoord, int distance, String prefix, String string) {
+
+	public static void sendChatMessage(World worldObj, double xCoord, double yCoord, double zCoord, int distance, String prefix, String string) {
 		String text = EnumChatFormatting.GRAY + "" + EnumChatFormatting.ITALIC + "[" + prefix + "] ";
 		text += EnumChatFormatting.RESET + "" + EnumChatFormatting.GRAY + string;
 		for(Object o : worldObj.playerEntities) {
@@ -35,6 +36,6 @@ public class ChatBoxUtils {
 		if(c == null) {
 			return;
 		}
-		sendChatMessage(c.world(), (int) Math.round(c.xPosition()), (int) Math.round(c.yPosition()), (int) Math.round(c.zPosition()), d, prefix, string);
+		sendChatMessage(c.world(), c.xPosition(), c.yPosition(), c.zPosition(), d, prefix, string);
 	}
 }
