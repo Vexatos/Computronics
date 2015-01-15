@@ -30,7 +30,7 @@ public class RobotUpgradeChatBox extends ManagedEnvironment implements IChatList
 	}
 
 	public void receiveChatMessage(ServerChatEvent event) {
-		if (event.player.getDistanceSq(container.xPosition(), container.yPosition(), container.zPosition()) > distance * distance) {
+		if (event.player.worldObj != this.container.world() || event.player.getDistanceSq(container.xPosition(), container.yPosition(), container.zPosition()) > distance * distance) {
 			return;
 		}
 

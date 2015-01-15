@@ -65,7 +65,7 @@ public class TileChatBox extends TileEntityPeripheralBase implements IChatListen
 	}
 
 	public void receiveChatMessage(ServerChatEvent event) {
-		if (!isCreative() && event.player.getDistanceSq(xCoord, yCoord, zCoord) > distance * distance) {
+		if (!isCreative() && (event.player.worldObj != this.worldObj || event.player.getDistanceSq(xCoord, yCoord, zCoord) > distance * distance)) {
 			return;
 		}
 

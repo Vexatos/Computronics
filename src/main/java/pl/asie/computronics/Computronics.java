@@ -244,9 +244,8 @@ public class Computronics {
 		gui = new GuiHandler();
 		NetworkRegistry.INSTANCE.registerGuiHandler(Computronics.instance, gui);
 
-		if(chatBox != null) {
-			MinecraftForge.EVENT_BUS.register(new ChatHandler());
-		}
+		MinecraftForge.EVENT_BUS.register(new ChatHandler());
+
 		if(tapeReader != null) {
 			storageEventHandler = new TapeStorageEventHandler();
 			MinecraftForge.EVENT_BUS.register(storageEventHandler);
