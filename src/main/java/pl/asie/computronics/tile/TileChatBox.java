@@ -10,6 +10,9 @@ import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.event.ServerChatEvent;
+
+import pl.asie.computronics.api.chat.ChatAPI;
+import pl.asie.computronics.api.chat.IChatListener;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.ChatBoxUtils;
@@ -18,7 +21,7 @@ import pl.asie.computronics.util.ChatBoxUtils;
 //import dan200.computer.api.ILuaContext;
 //import dan200.computer.api.IPeripheral;
 
-public class TileChatBox extends TileEntityPeripheralBase {
+public class TileChatBox extends TileEntityPeripheralBase implements IChatListener {
 	private int distance;
 	private int ticksUntilOff = 0;
 	private boolean mustRefresh = false;
@@ -68,6 +71,18 @@ public class TileChatBox extends TileEntityPeripheralBase {
 		}
 		if(Loader.isModLoaded(Mods.OpenComputers)) eventOC(event);
 		if(Loader.isModLoaded(Mods.ComputerCraft)) eventCC(event);
+	}
+
+	@Override
+	public void validate() {
+		super.validate();
+		ChatAPI.registry.registerChatListener(this);
+	}
+
+	@Override
+	public void invalidate() {
+		super.invalidate();
+		ChatAPI.registry.unregisterChatListener(this);
 	}
 
 	@Optional.Method(modid=Mods.OpenComputers)

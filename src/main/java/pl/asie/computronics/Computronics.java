@@ -68,7 +68,7 @@ import pl.asie.computronics.tile.TileIronNote;
 import pl.asie.computronics.tile.TileRadar;
 import pl.asie.computronics.tile.TileTapeDrive;
 import pl.asie.computronics.util.achievements.ComputronicsAchievements;
-import pl.asie.computronics.util.handlers.ChatBoxHandler;
+import pl.asie.computronics.util.chat.ChatHandler;
 import pl.asie.lib.gui.GuiHandler;
 import pl.asie.lib.item.ItemMultiple;
 import pl.asie.lib.network.PacketHandler;
@@ -245,7 +245,7 @@ public class Computronics {
 		NetworkRegistry.INSTANCE.registerGuiHandler(Computronics.instance, gui);
 
 		if(chatBox != null) {
-			MinecraftForge.EVENT_BUS.register(new ChatBoxHandler());
+			MinecraftForge.EVENT_BUS.register(new ChatHandler());
 		}
 		if(tapeReader != null) {
 			storageEventHandler = new TapeStorageEventHandler();

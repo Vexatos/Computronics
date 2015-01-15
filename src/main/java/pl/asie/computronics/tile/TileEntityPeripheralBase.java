@@ -48,6 +48,10 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 		}
 	}
 
+	public boolean isValid() {
+		return !isInvalid();
+	}
+
 	@Optional.Method(modid = Mods.OpenComputers)
 	private void initOC(double s) {
 		node = Network.newNode(this, Visibility.Network).withComponent(this.peripheralName, Visibility.Network).withConnector(s).create();

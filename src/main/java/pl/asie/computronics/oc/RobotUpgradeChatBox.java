@@ -6,14 +6,18 @@ import li.cil.oc.api.driver.EnvironmentHost;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
+import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.Visibility;
 import li.cil.oc.api.prefab.ManagedEnvironment;
 import net.minecraftforge.event.ServerChatEvent;
+
+import pl.asie.computronics.api.chat.ChatAPI;
+import pl.asie.computronics.api.chat.IChatListener;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.ChatBoxUtils;
 
-public class RobotUpgradeChatBox extends ManagedEnvironment {
+public class RobotUpgradeChatBox extends ManagedEnvironment implements IChatListener {
 	private final EnvironmentHost container;
 	private int distance;
 	private String name = "";
@@ -22,11 +26,25 @@ public class RobotUpgradeChatBox extends ManagedEnvironment {
 		this.container = container;
 		distance = Config.CHATBOX_DISTANCE;
 		this.setNode(Network.newNode(this, Visibility.Network).withConnector().withComponent("chat", Visibility.Neighbors).create());
+		ChatAPI.registry.registerChatListener(this);
 	}
 
 	public void receiveChatMessage(ServerChatEvent event) {
 		if(this.node() != null)
 			this.node().sendToReachable("computer.signal", "chat_message", event.username, event.message);
+	}
+
+	@Override
+	public boolean isValid() {
+		return this.node() != null;
+	}
+
+	@Override
+	public void onDisconnect(final Node node) {
+		super.onDisconnect(node);
+		if (node == this.node()) {
+			ChatAPI.registry.unregisterChatListener(this);
+		}
 	}
 
 	public int getDistance() { return distance; }
