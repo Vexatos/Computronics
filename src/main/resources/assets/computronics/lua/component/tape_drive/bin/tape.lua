@@ -230,18 +230,21 @@ local function writeTape(path)
   end
 
   if filesize > tape.getSize() then
+    term.setCursor(1, y)
     io.stderr:write("Error: File is too large for tape, shortening file")
+    y = y + 1
     filesize = tape.getSize()
   end
-
-  while true do
+  
+  repeat
     local bytes = file:read(math.min(block, filesize - bytery))
-    if (not bytes) or bytes == "" then break end
-    term.setCursor(1, y)
-    bytery = bytery + #bytes
-    term.write("Read " .. tostring(bytery) .. " of " .. tostring(filesize) .. " bytes...")
-    tape.write(bytes)
-  end
+    if bytes and #bytes > 0 then
+      term.setCursor(1, y)
+      bytery = bytery + #bytes
+      term.write("Read " .. tostring(bytery) .. " of " .. tostring(filesize) .. " bytes...")
+      tape.write(bytes)
+    end
+  until not bytes
   file:close()
   tape.stop()
   tape.seek(-tape.getSize())
