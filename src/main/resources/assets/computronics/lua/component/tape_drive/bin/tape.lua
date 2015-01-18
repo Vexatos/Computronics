@@ -237,7 +237,7 @@ local function writeTape(path)
   end
   
   repeat
-    local bytes = file:read(math.min(block, filesize - bytery))
+    local bytes = file:read(block)
     if bytes and #bytes > 0 then
       term.setCursor(1, y)
       bytery = bytery + #bytes
