@@ -16,9 +16,14 @@
     - You can also get the count of blocks
     - Note: OpenBlocks added ComputerCraft support to the Building Guide itself if you have OpenPeripheral installed
     - Requires OpenBlocks 1.3-snapshot-537 or later
+  * ADDED: New chat API
+    - Other mods may hook into this to listen to chat messages and react accordingly
   * FIXED: Updated EnderIO and Applied Energistics 2 integration to work properly again.
   * FIXED: Rightclicking EEPROMs onto the EEPROM reader not working
   * FIXED: Extremely rare ArrayIndexOutOfBoundsException when playing and writing to a tape at the same time
+  * FIXED: Tape Drive's isEnd() returning the opposite of what it should return
+  * FIXED: Chat Box Upgrade not working in Tablets and Drones
+  * FIXED: Some issues with the built-in tape program
 
 ==== 1.3.4 ====
 
