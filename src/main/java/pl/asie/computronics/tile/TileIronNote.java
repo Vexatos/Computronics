@@ -34,7 +34,7 @@ public class TileIronNote extends TileEntityPeripheralBase implements IBundledTi
 	
 	// OpenComputers
 	
-    @Callback(direct = true)
+    @Callback(direct = true, limit = 10)
     @Optional.Method(modid=Mods.OpenComputers)
     public Object[] playNote(Context context, Arguments args) {
     	if(args.count() >= 1) {

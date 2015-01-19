@@ -16,6 +16,7 @@ local function inject(path)
     end
   end
 end
+
 inject("bin")
 
 -- Delete symlinks on removal.

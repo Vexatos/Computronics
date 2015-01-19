@@ -296,7 +296,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] isEnd(Context context, Arguments args) {
 		if(state.getStorage() != null) {
-			return new Object[] { state.getStorage().getPosition() + state.packetSize <= state.getStorage().getSize() };
+			return new Object[] { state.getStorage().getPosition() + state.packetSize > state.getStorage().getSize() };
 		} else {
 			return new Object[] { true };
 		}
@@ -360,7 +360,6 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] write(Context context, Arguments args) {
 		if(state.getStorage() != null && args.count() >= 1) {
-			switchState(State.STOPPED);
 			if(args.isInteger(0)) {
 				state.getStorage().write((byte) args.checkInteger(0));
 			} else if(args.isByteArray(0)) {
@@ -428,7 +427,6 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 					break;
 				case 10:
 					if(state.getStorage() != null) {
-						switchState(State.STOPPED);
 						return new Object[] { state.getStorage().write(((String) arguments[0]).getBytes()) };
 					}
 					break;
@@ -451,7 +449,6 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 					}
 				case 10:
 					if(state.getStorage() != null) {
-						switchState(State.STOPPED);
 						state.getStorage().write((byte) i);
 					}
 					break;
@@ -482,7 +479,9 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 		switch(method){
 			case 0:
 				if(state.getStorage() != null) {
-					return new Object[] { state.getStorage().getPosition() + state.packetSize <= state.getStorage().getSize() };
+					return new Object[] { state.getStorage().getPosition() + state.packetSize > state.getStorage().getSize() };
+				} else {
+					return new Object[] { true };
 				}
 
 			case 1:  // isReady, play, stop
@@ -551,7 +550,6 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 				break;
 			case 10:
 				if(state.getStorage() != null) {
-					switchState(State.STOPPED);
 					state.getStorage().write((byte) (data & 0xFF));
 				}
 				break;

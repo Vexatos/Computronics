@@ -235,7 +235,7 @@ local function writeTape(path)
     y = y + 1
     filesize = tape.getSize()
   end
-  
+
   repeat
     local bytes = file:read(block)
     if bytes and #bytes > 0 then
