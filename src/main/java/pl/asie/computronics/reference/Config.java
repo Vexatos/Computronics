@@ -39,6 +39,10 @@ public class Config {
 	public static boolean OC_CARD_SPOOF;
 	public static boolean OC_CARD_SOUND;
 
+	public static boolean CC_OPEN_MULTI_PERIPHERAL = true;
+	public static boolean CC_ALL_MULTI_PERIPHERALS = true;
+	public static boolean CC_ALWAYS_FIRST = true;
+
 	public static String TAPE_LENGTHS;
 	public static boolean REDSTONE_REFRESH, CHATBOX_CREATIVE;
 
@@ -100,9 +104,17 @@ public class Config {
 			if(Loader.isModLoaded(Mods.Forestry)) {
 				FORESTRY_BEES = config.getBoolean("opencomputersBees", "enable.forestry", true, "Set this to false to disable Forestry bee species for OpenComputers");
 			}
-			if(Mods.API.hasVersion(Mods.API.BuildCraftTransport, "[3.0,)")){
+			if(Mods.API.hasVersion(Mods.API.BuildCraftTransport, "[3.0,)")) {
 				BUILDCRAFT_STATION = config.getBoolean("droneDockingStation", "enable.buildcraft", true, "Set this to false to disable the Drone Docking Station for OpenComputers");
 			}
+		}
+
+		if(Loader.isModLoaded(Mods.ComputerCraft)) {
+			if(Loader.isModLoaded(Mods.OpenPeripheral)) {
+				CC_OPEN_MULTI_PERIPHERAL = config.getBoolean("openMultiPeripheral", "computercraft", true, "Set this to false to disable MultiPeripheral compatibility with OpenPeripheral peripherals");
+			}
+			CC_ALL_MULTI_PERIPHERALS = config.getBoolean("allMultiPeripherals", "computercraft", true, "Set this to false to disable MultiPeripheral compatibility with every not directly registered peripheral");
+			CC_ALWAYS_FIRST = config.getBoolean("alwaysFirstPeripheral", "computercraft", true, "If this is true, the Computronics MultiPeripheral system will almost always be recognized by ComputerCraft");
 		}
 
 		// Radar

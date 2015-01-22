@@ -38,6 +38,7 @@ import pl.asie.computronics.integration.railcraft.track.DriverRoutingTrack;
 import pl.asie.computronics.integration.redlogic.CCBundledRedstoneProviderRedLogic;
 import pl.asie.computronics.integration.redlogic.DriverLamp;
 import pl.asie.computronics.reference.Compat;
+import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 
 import static pl.asie.computronics.Computronics.itemTape;
@@ -52,6 +53,7 @@ public class IntegrationComputerCraft {
 	private final Configuration config;
 	private final Compat compat;
 	private final Computronics computronics;
+	private MultiPeripheralProvider multiPeripheralProvider;
 
 	public IntegrationComputerCraft(Computronics computronics) {
 		this.computronics = computronics;
@@ -140,7 +142,9 @@ public class IntegrationComputerCraft {
 
 		registerMultiPeripheralProvider(new CCPeripheralProvider());
 
-		ComputerCraftAPI.registerPeripheralProvider(new MultiPeripheralProvider(peripheralRegistry.peripheralProviders));
+		multiPeripheralProvider = new MultiPeripheralProvider(peripheralRegistry.peripheralProviders);
+
+		ComputerCraftAPI.registerPeripheralProvider(multiPeripheralProvider);
 
 		if(itemTape != null) {
 			ComputerCraftAPI.registerMediaProvider(itemTape);
@@ -155,6 +159,12 @@ public class IntegrationComputerCraft {
 				new MusicalTurtleUpgrade(config.get("turtleUpgradeIDs", "musical", 192).getInt()));
 			ComputerCraftAPI.registerTurtleUpgrade(
 				new ParticleTurtleUpgrade(config.get("turtleUpgradeIDs", "particle", 193).getInt()));
+		}
+	}
+
+	public void serverStart() {
+		if(multiPeripheralProvider != null && Config.CC_ALWAYS_FIRST) {
+			multiPeripheralProvider.sort();
 		}
 	}
 }

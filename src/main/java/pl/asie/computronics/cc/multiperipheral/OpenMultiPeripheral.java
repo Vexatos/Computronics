@@ -15,6 +15,11 @@ public class OpenMultiPeripheral extends WrappedMultiPeripheral {
 	}
 
 	@Override
+	public int peripheralPriority() {
+		return -15;
+	}
+
+	@Override
 	public String[] getMethodNames() {
 		return derped ? new String[] { "open_peripherals_derped" } : super.getMethodNames();
 	}
