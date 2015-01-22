@@ -4,11 +4,16 @@ import buildcraft.api.transport.IPipeTile;
 import buildcraft.api.transport.pluggable.IPipePluggableRenderer;
 import buildcraft.api.transport.pluggable.PipePluggable;
 import buildcraft.core.utils.MatrixTranformations;
+import buildcraft.transport.Pipe;
+import buildcraft.transport.PipeTransportPower;
 import io.netty.buffer.ByteBuf;
+import li.cil.oc.Settings;
 import li.cil.oc.api.internal.Drone;
+import li.cil.oc.api.network.Connector;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.Computronics;
 
@@ -61,12 +66,21 @@ public class DroneStationPluggable extends PipePluggable {
 	@Override
 	public void update(IPipeTile pipe, ForgeDirection direction) {
 		super.update(pipe, direction);
-		//TODO Charge Drone when able to
-		/*if(pipe.getPipeType() == IPipeTile.PipeType.POWER && drone != null) {
+
+		if(pipe != null && pipe.getPipe() != null && drone != null
+			&& pipe.getPipe() instanceof Pipe
+			&& ((Pipe) pipe.getPipe()).transport != null
+			&& ((Pipe) pipe.getPipe()).transport instanceof PipeTransportPower) {
+
+			PipeTransportPower powerPipe = (PipeTransportPower) ((Pipe) pipe.getPipe()).transport;
 			World world = pipe.getWorldObj();
 			if(!world.isRemote && world.getWorldInfo().getWorldTotalTime() % Settings.get().tickFrequency() == 0) {
+				Connector node = (Connector) drone.machine().node();
 				double charge = Settings.get().chargeRateExternal() * Settings.get().tickFrequency();
-				((Connector) drone.machine().node()).changeBuffer(charge);
+				double change = Math.min(charge, node.globalBufferSize() - node.globalBuffer());
+				int amount = (int) Math.floor(change * 10D);
+				powerPipe.requestEnergy(direction, amount);
+				node.changeBuffer(powerPipe.consumePower(direction, amount));
 			}
 			if(world.isRemote && world.getWorldInfo().getWorldTotalTime() % 10 == 0) {
 				double theta = world.rand.nextDouble() * Math.PI;
@@ -76,7 +90,7 @@ public class DroneStationPluggable extends PipePluggable {
 				double dz = 0.45 * Math.cos(theta);
 				world.spawnParticle("happyVillager", drone.xPosition() + dx, drone.yPosition() + dz, drone.zPosition() + dy, 0, 0, 0);
 			}
-		}*/
+		}
 	}
 
 	@Override

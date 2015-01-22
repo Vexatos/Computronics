@@ -149,6 +149,7 @@ public class DriverDockingUpgrade extends ManagedEnvironment {
 		Vec3 target = drone.getTarget();
 		target.yCoord = (float) targetY;
 		drone.setTarget(target);
+		((DroneStationPluggable) pipe.getPipePluggable(side)).setDrone(null);
 		isDocking = false;
 		isDocked = false;
 		pipe = null;

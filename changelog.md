@@ -5,7 +5,7 @@
     - The Docking Station you put onto any BuildCraft pipe
     - Drones with the Docking Upgrade can dock with Docking Stations
     - If the Station is on an Item Transport pipe, the drone will be able to inject items into the pipe
-    - Drones being able to charge while on a docking station on a Kinesis pipe is planned, but currently not possible
+    - Drones will also be charged while docked with a station, if the station is on a Kinesis pipe
     - Requires Buildcraft 6.3
   * ADDED: Integration for the EnderIO Power Monitor
     - You can get literally everything shown in its GUI
