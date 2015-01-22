@@ -111,10 +111,11 @@ public class Config {
 
 		if(Loader.isModLoaded(Mods.ComputerCraft)) {
 			if(Loader.isModLoaded(Mods.OpenPeripheral)) {
-				CC_OPEN_MULTI_PERIPHERAL = config.getBoolean("openMultiPeripheral", "computercraft", true, "Set this to false to disable MultiPeripheral compatibility with OpenPeripheral peripherals");
+				CC_OPEN_MULTI_PERIPHERAL = config.getBoolean("openMultiPeripheral", "computercraft.multiperipheral", true, "Set this to false to disable MultiPeripheral compatibility with OpenPeripheral peripherals");
 			}
-			CC_ALL_MULTI_PERIPHERALS = config.getBoolean("allMultiPeripherals", "computercraft", true, "Set this to false to disable MultiPeripheral compatibility with every not directly registered peripheral");
-			CC_ALWAYS_FIRST = config.getBoolean("alwaysFirstPeripheral", "computercraft", true, "If this is true, the Computronics MultiPeripheral system will almost always be recognized by ComputerCraft");
+			CC_ALL_MULTI_PERIPHERALS = config.getBoolean("allMultiPeripherals", "computercraft.multiperipheral", true, "Set this to true to fix multiple mods adding peripherals to the same block not working");
+			CC_ALWAYS_FIRST = config.getBoolean("alwaysFirstPeripheral", "computercraft.multiperipheral", true, "If this is true, the Computronics MultiPeripheral system will almost always be the one recognized by ComputerCraft");
+			config.setCategoryComment("computercraft.multiperipheral", "If all of these options are set to true, Computronics will fix almost every conflict with multiple mods adding peripherals to the same block");
 		}
 
 		// Radar

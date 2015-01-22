@@ -1,4 +1,4 @@
-==== 1.3.5 ====
+==== 1.4.0 ====
 
   * ADDED: Tape Drives now output a comparator signal if they are currently playing
   * ADDED: Drone docking station + Docking upgrade for OpenComputers Drones
@@ -18,6 +18,15 @@
     - Requires OpenBlocks 1.3-snapshot-537 or later
   * ADDED: New chat API
     - Other mods may hook into this to listen to chat messages and react accordingly
+  * CHANGED: Changes to MultiPeripheral system:
+    - MultiPeripheral system can now recognize every ComputerCraft peripheral!
+      - This can be disabled in the config
+    - MultiPeripheral system is now almost always being recognized by ComputerCraft
+      - This means that the basic behaviour of ComputerCraft changed:
+        - Previously ComputerCraft, when trying to access a peripheral and multiple mods are adding peripherals to the same block, would choose the peripheral that has been registered first
+        - Now all Peripherals on the same block are merged into a single one using the MultiPeripheral system, meaning that there won't be peripheral conflicts anymore
+      - This can be reverted to default behaviour in the config
+    - Added a config option to disable OpenPeripheral integration
   * FIXED: Updated EnderIO and Applied Energistics 2 integration to work properly again.
   * FIXED: Rightclicking EEPROMs onto the EEPROM reader not working
   * FIXED: Extremely rare ArrayIndexOutOfBoundsException when playing and writing to a tape at the same time
