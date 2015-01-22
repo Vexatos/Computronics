@@ -10,7 +10,6 @@ import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.Visibility;
 import li.cil.oc.api.prefab.ManagedEnvironment;
 import net.minecraftforge.event.ServerChatEvent;
-
 import pl.asie.computronics.api.chat.ChatAPI;
 import pl.asie.computronics.api.chat.IChatListener;
 import pl.asie.computronics.reference.Config;

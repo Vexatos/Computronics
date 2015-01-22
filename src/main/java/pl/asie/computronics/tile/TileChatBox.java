@@ -10,7 +10,6 @@ import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.event.ServerChatEvent;
-
 import pl.asie.computronics.api.chat.ChatAPI;
 import pl.asie.computronics.api.chat.IChatListener;
 import pl.asie.computronics.reference.Config;

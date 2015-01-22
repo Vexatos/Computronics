@@ -2,7 +2,6 @@ package pl.asie.computronics.util.chat;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.event.ServerChatEvent;
-
 import pl.asie.computronics.api.chat.ChatAPI;
 import pl.asie.computronics.api.chat.IChatListener;
 import pl.asie.computronics.api.chat.IChatListenerRegistry;
