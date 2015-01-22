@@ -27,15 +27,15 @@ public class ActionLamp {
 
 					if(parameters.length >= 1 && parameters[0] != null) {
 						ItemStack stackRed = parameters[0].getItemStack();
-						red = stackRed != null ? stackRed.stackSize : 0;
+						red = stackRed != null && stackRed.getItemDamage() == 1 ? stackRed.stackSize : 0;
 					}
 					if(parameters.length >= 2 && parameters[1] != null) {
 						ItemStack stackGreen = parameters[1].getItemStack();
-						green = stackGreen != null ? stackGreen.stackSize : 0;
+						green = stackGreen != null && stackGreen.getItemDamage() == 2 ? stackGreen.stackSize : 0;
 					}
 					if(parameters.length >= 3 && parameters[2] != null) {
 						ItemStack stackBlue = parameters[2].getItemStack();
-						blue = stackBlue != null ? stackBlue.stackSize : 0;
+						blue = stackBlue != null && stackBlue.getItemDamage() == 4 ? stackBlue.stackSize : 0;
 					}
 					color = (red << 10) | (green << 5) | blue;
 
