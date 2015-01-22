@@ -22,7 +22,7 @@
     - MultiPeripheral system can now recognize every ComputerCraft peripheral!
       - This can be disabled in the config
     - MultiPeripheral system is now almost always being recognized by ComputerCraft
-      - This means that the basic behaviour of ComputerCraft changed:
+      - This means that the basic behaviour of ComputerCraft's peripheral handling changed:
         - Previously ComputerCraft, when trying to access a peripheral and multiple mods are adding peripherals to the same block, would choose the peripheral that has been registered first
         - Now all Peripherals on the same block are merged into a single one using the MultiPeripheral system, meaning that there won't be peripheral conflicts anymore
       - This can be reverted to default behaviour in the config

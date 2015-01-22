@@ -38,14 +38,14 @@ public class MultiPeripheralProvider implements IPeripheralProvider {
 				periphs.add(p);
 			}
 		}
+		if(Config.CC_ALL_MULTI_PERIPHERALS) {
+			getAllPeripherals(periphs, world, x, y, z, side);
+		}
 		if(Loader.isModLoaded(Mods.OpenPeripheral) && Config.CC_OPEN_MULTI_PERIPHERAL) {
 			IMultiPeripheral peripheral = getOpenPeripheral(world, x, y, z);
 			if(peripheral != null) {
 				periphs.add(peripheral);
 			}
-		}
-		if(Config.CC_ALL_MULTI_PERIPHERALS) {
-			getAllPeripherals(periphs, world, x, y, z, side);
 		}
 		if(!periphs.isEmpty()) {
 			return new MultiPeripheral(periphs, world, x, y, z);
