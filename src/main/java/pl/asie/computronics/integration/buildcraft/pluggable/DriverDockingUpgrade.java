@@ -1,13 +1,19 @@
 package pl.asie.computronics.integration.buildcraft.pluggable;
 
 import buildcraft.api.core.EnumColor;
+import buildcraft.api.core.Position;
 import buildcraft.api.transport.IPipeTile;
 import buildcraft.api.transport.pluggable.PipePluggable;
+import buildcraft.transport.BlockGenericPipe;
+import buildcraft.transport.PipeTransportItems;
+import buildcraft.transport.TileGenericPipe;
+import buildcraft.transport.TravelingItem;
 import li.cil.oc.api.Network;
 import li.cil.oc.api.internal.Drone;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
+import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.Visibility;
 import li.cil.oc.api.prefab.ManagedEnvironment;
 import net.minecraft.entity.Entity;
@@ -48,19 +54,29 @@ public class DriverDockingUpgrade extends ManagedEnvironment {
 
 	@Override
 	public void update() {
-		if((isDocking || isDocked) && pipe == null && pipevec != null) {
+		if((isDocking || isDocked) && pipevec != null) {
 			TileEntity tile = drone.world().getTileEntity(pipevec[0], pipevec[1], pipevec[2]);
 			if(tile instanceof IPipeTile) {
 				pipe = (IPipeTile) tile;
-				if(pipe.getPipePluggable(side) instanceof DroneStationPluggable) {
+				if(pipe.getPipePluggable(side) != null && pipe.getPipePluggable(side) instanceof DroneStationPluggable) {
 					DroneStationPluggable station = (DroneStationPluggable) pipe.getPipePluggable(side);
-					station.setDrone(drone);
+					if(station.getState() != DroneStationState.Used && station.getDrone() != drone) {
+						station.setDrone(drone);
+					}
 				} else {
+					Vec3 target = drone.getTarget();
+					double targetY = pipe != null ? pipe.y() + 1.5 : pipevec != null ? pipevec[1] + 1.5 : target.yCoord + 0.5;
+					target.yCoord = (float) targetY;
+					drone.setTarget(target);
 					isDocked = false;
 					isDocking = false;
 					pipe = null;
 				}
 			} else {
+				Vec3 target = drone.getTarget();
+				double targetY = pipevec != null ? pipevec[1] + 1.5 : target.yCoord + 0.5;
+				target.yCoord = (float) targetY;
+				drone.setTarget(target);
 				isDocked = false;
 				isDocking = false;
 			}
@@ -88,6 +104,24 @@ public class DriverDockingUpgrade extends ManagedEnvironment {
 		}
 	}
 
+	//Re-implemented from BuildCraft to respect pluggables
+	private int injectItem(TileGenericPipe pipe, ItemStack stack, boolean doAdd, ForgeDirection from, EnumColor color) {
+		if(!pipe.pipe.inputOpen(from)) {
+			return 0;
+		} else if(BlockGenericPipe.isValid(pipe.pipe) && pipe.pipe.transport instanceof PipeTransportItems && pipe.getPipePluggable(from) != null) {
+			if(doAdd) {
+				Position position = new Position((double) pipe.xCoord + 0.5D, (double) pipe.yCoord + 0.02D, (double) pipe.zCoord + 0.5D, from.getOpposite());
+				position.moveBackwards(0.4D);
+				TravelingItem itemInPipe = TravelingItem.make(position.x, position.y, position.z, stack);
+				itemInPipe.color = color;
+				((PipeTransportItems) pipe.pipe.transport).injectItem(itemInPipe, position.orientation);
+			}
+			return stack.stackSize;
+		} else {
+			return 0;
+		}
+	}
+
 	@Callback(doc = "function(slot:number[,maxAmount:number[,color:number]]):number; drops an item into the attached pipe if docked; Returns the amount of items dropped on success; Allows coloring the item if the drone is tier 2")
 	public Object[] dropItem(Context context, Arguments args) {
 		if(!isDocked || pipe == null) {
@@ -99,12 +133,18 @@ public class DriverDockingUpgrade extends ManagedEnvironment {
 		if(!(pipe.getPipeType() == IPipeTile.PipeType.ITEM)) {
 			return new Object[] { 0, "pipe is not an item pipe" };
 		}
+		if(!(pipe instanceof TileGenericPipe)) {
+			return new Object[] { 0, "invalid pipe type" };
+		}
 		int count = args.count() > 1 ? Math.max(0, Math.min(64, args.checkInteger(1))) : 64;
 		int slot = Math.max(0, args.checkInteger(0) - 1);
 		ItemStack stack = drone.inventory().getStackInSlot(slot);
 		if(stack != null && stack.getItem() != null) {
 			stack = drone.inventory().decrStackSize(slot, count);
-			pipe.injectItem(stack, true, side, args.count() > 2 && drone.tier() > 0 ? EnumColor.fromId(args.checkInteger(2)) : null);
+			int rejected = stack.stackSize -
+				injectItem((TileGenericPipe) pipe, stack, true, side, args.count() > 2 && drone.tier() > 0 ? EnumColor.fromId(15 - args.checkInteger(2)) : null);
+			drone.inventory().getStackInSlot(slot).stackSize += rejected;
+			stack.stackSize -= rejected;
 			return new Object[] { stack.stackSize };
 		}
 		return new Object[] { 0, "invalid/empty slot" };
@@ -166,6 +206,25 @@ public class DriverDockingUpgrade extends ManagedEnvironment {
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public void onDisconnect(Node node) {
+		super.onDisconnect(node);
+		if(isDocked || isDocking) {
+			if(drone != null) {
+				Vec3 target = drone.getTarget();
+				double targetY = pipe != null ? pipe.y() + 1.5 : pipevec != null ? pipevec[1] + 1.5 : target.yCoord + 0.5;
+				target.yCoord = (float) targetY;
+				drone.setTarget(target);
+			}
+			if(pipe != null) {
+				((DroneStationPluggable) pipe.getPipePluggable(side)).setDrone(null);
+				isDocked = false;
+				isDocking = false;
+				pipe = null;
+			}
+		}
 	}
 
 	@Override

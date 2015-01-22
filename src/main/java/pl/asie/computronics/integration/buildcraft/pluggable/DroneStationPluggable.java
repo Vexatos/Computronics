@@ -71,7 +71,8 @@ public class DroneStationPluggable extends PipePluggable {
 		if(getState() == DroneStationState.Used && drone == null) {
 			state = DroneStationState.Available;
 		}
-		if(drone != null && drone instanceof Entity && ((Entity) drone).getDistanceSq(pipe.x(), pipe.y(), pipe.z()) >= 4) {
+		if(drone != null && (drone.world() != pipe.getWorldObj()
+			|| drone instanceof Entity && ((Entity) drone).getDistanceSq(pipe.x(), pipe.y(), pipe.z()) >= 4)) {
 			setDrone(null);
 		}
 		if(pipe != null && pipe.getPipe() != null && drone != null
@@ -90,7 +91,7 @@ public class DroneStationPluggable extends PipePluggable {
 				int newPower = powerPipe.consumePower(direction, amount);
 				node.changeBuffer(newPower);
 			}
-			if(world.getWorldInfo().getWorldTotalTime() % 10 == 0) {
+			if(!world.isRemote && world.getWorldInfo().getWorldTotalTime() % 10 == 0) {
 				double theta = world.rand.nextDouble() * Math.PI;
 				double phi = world.rand.nextDouble() * Math.PI * 2;
 				double dx = 0.45 * Math.sin(theta) * Math.cos(phi);
