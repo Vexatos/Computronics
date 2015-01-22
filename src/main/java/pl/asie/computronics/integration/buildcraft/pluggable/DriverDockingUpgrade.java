@@ -71,6 +71,7 @@ public class DriverDockingUpgrade extends ManagedEnvironment {
 					isDocked = false;
 					isDocking = false;
 					pipe = null;
+					return;
 				}
 			} else {
 				Vec3 target = drone.getTarget();
@@ -79,6 +80,7 @@ public class DriverDockingUpgrade extends ManagedEnvironment {
 				drone.setTarget(target);
 				isDocked = false;
 				isDocking = false;
+				return;
 			}
 		}
 		Vec3 velocity = drone.getVelocity();
@@ -219,7 +221,9 @@ public class DriverDockingUpgrade extends ManagedEnvironment {
 				drone.setTarget(target);
 			}
 			if(pipe != null) {
-				((DroneStationPluggable) pipe.getPipePluggable(side)).setDrone(null);
+				if(pipe.getPipePluggable(side) != null && pipe.getPipePluggable(side) instanceof DroneStationPluggable) {
+					((DroneStationPluggable) pipe.getPipePluggable(side)).setDrone(null);
+				}
 				isDocked = false;
 				isDocking = false;
 				pipe = null;
