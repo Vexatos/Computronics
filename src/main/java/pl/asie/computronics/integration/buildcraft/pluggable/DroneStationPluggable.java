@@ -10,6 +10,7 @@ import io.netty.buffer.ByteBuf;
 import li.cil.oc.Settings;
 import li.cil.oc.api.internal.Drone;
 import li.cil.oc.api.network.Connector;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
@@ -66,7 +67,9 @@ public class DroneStationPluggable extends PipePluggable {
 	@Override
 	public void update(IPipeTile pipe, ForgeDirection direction) {
 		super.update(pipe, direction);
-
+		if(drone != null && drone instanceof Entity && ((Entity) drone).getDistanceSq(pipe.x(), pipe.y(), pipe.z()) >= 4) {
+			setDrone(null);
+		}
 		if(pipe != null && pipe.getPipe() != null && drone != null
 			&& pipe.getPipe() instanceof Pipe
 			&& ((Pipe) pipe.getPipe()).transport != null
