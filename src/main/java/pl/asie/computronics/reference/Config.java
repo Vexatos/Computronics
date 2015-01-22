@@ -3,6 +3,9 @@ package pl.asie.computronics.reference;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.common.config.Configuration;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import pl.asie.computronics.Computronics;
 import pl.asie.lib.util.EnergyConverter;
 
 /**
@@ -116,6 +119,18 @@ public class Config {
 			CC_ALL_MULTI_PERIPHERALS = config.getBoolean("allMultiPeripherals", "computercraft.multiperipheral", true, "Set this to true to fix multiple mods adding peripherals to the same block not working");
 			CC_ALWAYS_FIRST = config.getBoolean("alwaysFirstPeripheral", "computercraft.multiperipheral", true, "If this is true, the Computronics MultiPeripheral system will almost always be the one recognized by ComputerCraft");
 			config.setCategoryComment("computercraft.multiperipheral", "If all of these options are set to true, Computronics will fix almost every conflict with multiple mods adding peripherals to the same block");
+			if(CC_OPEN_MULTI_PERIPHERAL && CC_ALL_MULTI_PERIPHERALS && CC_ALWAYS_FIRST){
+				Logger cpx = LogManager.getLogger(Mods.Computronics_NAME);
+				Logger cc = LogManager.getLogger(Mods.ComputerCraft);
+				cpx.info("Hey, ComputerCraft! Guess what!");
+				cc.info("What?");
+				cpx.info("I fixed your peripheral system!");
+				cc.info("You did WHAT?!");
+				cpx.info("Now peripherals are being properly handled in case multiple mods register peripherals for the same block, isn't that amazing?");
+				cc.info("Are you serious?");
+				cpx.info("Yes I am. Now be quiet and let Minecraft continue to load.");
+				cc.info("...");
+			}
 		}
 
 		// Radar
