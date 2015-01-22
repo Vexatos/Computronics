@@ -67,6 +67,9 @@ public class DroneStationPluggable extends PipePluggable {
 	@Override
 	public void update(IPipeTile pipe, ForgeDirection direction) {
 		super.update(pipe, direction);
+		if(getState() == DroneStationState.Used && drone == null) {
+			state = DroneStationState.Available;
+		}
 		if(drone != null && drone instanceof Entity && ((Entity) drone).getDistanceSq(pipe.x(), pipe.y(), pipe.z()) >= 4) {
 			setDrone(null);
 		}
@@ -120,21 +123,21 @@ public class DroneStationPluggable extends PipePluggable {
 
 	@Override
 	public void readFromNBT(NBTTagCompound tag) {
-		state = DroneStationState.VALUES[tag.getInteger("drone:state") % DroneStationState.VALUES.length];
+		//state = DroneStationState.VALUES[tag.getInteger("drone:state") % DroneStationState.VALUES.length];
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound tag) {
-		tag.setInteger("drone:state", state.ordinal());
+		//tag.setInteger("drone:state", state.ordinal());
 	}
 
 	@Override
 	public void writeData(ByteBuf data) {
-		data.writeByte(state.ordinal());
+		//data.writeByte(state.ordinal());
 	}
 
 	@Override
 	public void readData(ByteBuf data) {
-		this.state = DroneStationState.values()[data.readUnsignedByte()];
+		//this.state = DroneStationState.values()[data.readUnsignedByte()];
 	}
 }
