@@ -17,6 +17,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.util.ParticleUtils;
 
 /**
  * @author Vexatos
@@ -79,22 +80,23 @@ public class DroneStationPluggable extends PipePluggable {
 			&& ((Pipe) pipe.getPipe()).transport instanceof PipeTransportPower) {
 
 			PipeTransportPower powerPipe = (PipeTransportPower) ((Pipe) pipe.getPipe()).transport;
-			World world = pipe.getWorldObj();
+			World world = drone.world();
 			if(!world.isRemote && world.getWorldInfo().getWorldTotalTime() % Settings.get().tickFrequency() == 0) {
 				Connector node = (Connector) drone.machine().node();
 				double charge = Settings.get().chargeRateExternal() * Settings.get().tickFrequency();
 				double change = Math.min(charge, node.globalBufferSize() - node.globalBuffer());
 				int amount = (int) Math.floor(change * 10D);
 				powerPipe.requestEnergy(direction, amount);
-				node.changeBuffer(powerPipe.consumePower(direction, amount));
+				int newPower = powerPipe.consumePower(direction, amount);
+				node.changeBuffer(newPower);
 			}
-			if(world.isRemote && world.getWorldInfo().getWorldTotalTime() % 10 == 0) {
+			if(world.getWorldInfo().getWorldTotalTime() % 10 == 0) {
 				double theta = world.rand.nextDouble() * Math.PI;
 				double phi = world.rand.nextDouble() * Math.PI * 2;
 				double dx = 0.45 * Math.sin(theta) * Math.cos(phi);
 				double dy = 0.45 * Math.sin(theta) * Math.sin(phi);
 				double dz = 0.45 * Math.cos(theta);
-				world.spawnParticle("happyVillager", drone.xPosition() + dx, drone.yPosition() + dz, drone.zPosition() + dy, 0, 0, 0);
+				ParticleUtils.sendParticlePacket("happyVillager", drone.world(), drone.xPosition() + dx, drone.yPosition() + dz, drone.zPosition() + dy, 0, 0, 0);
 			}
 		}
 	}

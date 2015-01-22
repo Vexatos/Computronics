@@ -103,7 +103,7 @@ public class DriverDockingUpgrade extends ManagedEnvironment {
 		int slot = Math.max(0, args.checkInteger(0) - 1);
 		ItemStack stack = drone.inventory().getStackInSlot(slot);
 		if(stack != null && stack.getItem() != null) {
-			stack = drone.inventory().decrStackSize(args.checkInteger(0), count);
+			stack = drone.inventory().decrStackSize(slot, count);
 			pipe.injectItem(stack, true, side, args.count() > 2 && drone.tier() > 0 ? EnumColor.fromId(args.checkInteger(2)) : null);
 			return new Object[] { stack.stackSize };
 		}
