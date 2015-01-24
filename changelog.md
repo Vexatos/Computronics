@@ -11,11 +11,6 @@
     - You can get literally everything shown in its GUI
     - You can also configure Engine Control using ComputerCraft/OpenComputers
     - Requires EnderIO 2.2.6.321 or later
-  * ADDED: Integration for the OpenBlocks Building Guide for ComputerCraft/OpenComputers
-    - You can now set/get the shape as well as width, height, depth and colour of the building shape
-    - You can also get the count of blocks
-    - Note: OpenBlocks added ComputerCraft support to the Building Guide itself if you have OpenPeripheral installed
-    - Requires OpenBlocks 1.3-snapshot-537 or later
   * ADDED: New chat API
     - Other mods may hook into this to listen to chat messages and react accordingly
   * CHANGED: Changes to MultiPeripheral system:

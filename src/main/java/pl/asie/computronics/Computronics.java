@@ -78,7 +78,7 @@ import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Mod(modid = Mods.Computronics, name = Mods.Computronics_NAME, version = "@VERSION@", useMetadata = true, dependencies = "required-after:asielib@[0.3.8,);required-after:Forge@[10.13.2.1230,);after:ComputerCraft;after:OpenComputers@[1.4.4,);after:OpenComputersAPI|Internal@[4.2.0,);after:OpenComputers|Core;after:MineFactoryReloaded;after:RedLogic;after:ProjRed|Core;after:nedocomputers;after:BuildCraft|Core@[6.3.0,);after:Railcraft@[9.4.0.0,);after:gregtech;after:EnderIO@[1.7.10_2.2.6,);before:OpenPeripheralCore@[0.5.0,);before:OpenPeripheralApi@[2.2,);after:Forestry;after:Waila@[1.5.7,)")
+@Mod(modid = Mods.Computronics, name = Mods.Computronics_NAME, version = "@VERSION@", useMetadata = true, dependencies = "required-after:asielib@[0.3.9,);required-after:Forge@[10.13.2.1230,);after:ComputerCraft;after:OpenComputers@[1.4.4,);after:OpenComputersAPI|Internal@[4.2.0,);after:OpenComputers|Core;after:MineFactoryReloaded;after:RedLogic;after:ProjRed|Core;after:nedocomputers;after:BuildCraft|Core@[6.3.3,);after:Railcraft@[9.4.0.0,);after:gregtech;after:EnderIO@[1.7.10_2.2.7,);before:OpenPeripheralCore@[0.5.0,);before:OpenPeripheralApi@[2.2,);after:Forestry;after:Waila@[1.5.7,)")
 public class Computronics {
 	public Config config;
 	public Compat compat;

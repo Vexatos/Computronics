@@ -80,6 +80,7 @@ public class MultiPeripheralProvider implements IPeripheralProvider {
 		ccPeripheralProviders = new ArrayList<IPeripheralProvider>();
 		List ccperiphs;
 		try {
+			//I am sorry I have to do this
 			Class<?> cclass = Class.forName("dan200.computercraft.ComputerCraft");
 			Field cfield = cclass.getDeclaredField("peripheralProviders");
 			cfield.setAccessible(true);
@@ -150,19 +151,9 @@ public class MultiPeripheralProvider implements IPeripheralProvider {
 		}
 	}
 
-	private Class<?> openpClass;
-
+	@Optional.Method(modid = Mods.OpenPeripheral)
 	private boolean isOpenPeripheral(Object ccperiph) {
-		if(ccperiph == null) {
-			return false;
-		}
-		try {
-			if(openpClass == null) {
-				openpClass = Class.forName("openperipheral.adapter.PeripheralHandlers");
-			}
-			return openpClass.isInstance(ccperiph);
-		} catch(Exception e) {
-			return false;
-		}
+		// I guess I have to do it this way
+		return ccperiph != null && ccperiph.getClass().getName().startsWith("openperipheral");
 	}
 }

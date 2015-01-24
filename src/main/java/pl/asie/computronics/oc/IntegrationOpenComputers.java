@@ -35,7 +35,6 @@ import pl.asie.computronics.integration.gregtech.DriverDeviceInformation;
 import pl.asie.computronics.integration.gregtech.DriverDigitalChest;
 import pl.asie.computronics.integration.gregtech.DriverMachine;
 import pl.asie.computronics.integration.mfr.DriverDeepStorageUnit;
-import pl.asie.computronics.integration.openblocks.DriverBuildingGuide;
 import pl.asie.computronics.integration.railcraft.DriverElectricGrid;
 import pl.asie.computronics.integration.railcraft.DriverRoutingDetector;
 import pl.asie.computronics.integration.railcraft.DriverRoutingSwitch;
@@ -182,12 +181,6 @@ public class IntegrationOpenComputers {
 				Driver.add(new DriverCapacitorBank.OCDriver());
 				Driver.add(new DriverCapacitorBankOld.OCDriver());
 				Driver.add(new DriverTransceiver.OCDriver());
-			}
-		}
-
-		if(Loader.isModLoaded(Mods.OpenBlocks)) {
-			if(compat.isCompatEnabled(Compat.OpenBlocks)) {
-				Driver.add(new DriverBuildingGuide.OCDriver());
 			}
 		}
 

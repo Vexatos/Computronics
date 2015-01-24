@@ -20,8 +20,7 @@ public class Compat {
 		BetterStorage_Crates = "enableBetterStorageCrates",
 		GregTech_Machines = "enableGregTechMachines",
 		GregTech_DigitalChests = "enableGregTechDigitalChests",
-		BuildCraft_Drivers = "enableBuildCraftDrivers",
-		OpenBlocks = "enableOpenBlocksComponents";
+		BuildCraft_Drivers = "enableBuildCraftDrivers";
 
 	public static final String Compatibility = "modCompatibility";
 
