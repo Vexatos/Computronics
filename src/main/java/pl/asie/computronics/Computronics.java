@@ -239,7 +239,7 @@ public class Computronics {
 			opencomputers.preInit();
 		}
 
-		if(ModAPIManager.INSTANCE.hasAPI("computronics|marytts")){
+		if(Mods.API.hasClass("marytts.LocalMaryInterface")){
 			tts = new TextToSpeech();
 			tts.preInit(this);
 		}

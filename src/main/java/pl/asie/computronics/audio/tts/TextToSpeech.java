@@ -1,6 +1,5 @@
 package pl.asie.computronics.audio.tts;
 
-import cpw.mods.fml.common.ModAPIManager;
 import cpw.mods.fml.common.registry.GameRegistry;
 import marytts.LocalMaryInterface;
 import marytts.MaryInterface;
@@ -10,6 +9,7 @@ import marytts.server.Mary;
 import marytts.util.data.audio.AudioPlayer;
 import net.minecraft.block.Block;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.reference.Mods;
 
 import javax.sound.sampled.AudioInputStream;
 import java.util.Locale;
@@ -42,7 +42,7 @@ public class TextToSpeech {
 	public Block ttsBox;
 
 	public void preInit(Computronics computronics) {
-		if(computronics.isEnabled("ttsBox", ModAPIManager.INSTANCE.hasAPI("computronics|marytts"))) {
+		if(computronics.isEnabled("ttsBox", Mods.API.hasClass("marytts.LocalMaryInterface"))) {
 			Computronics.log.info("Initializing Text To Speech");
 			try {
 				marytts = new LocalMaryInterface();
@@ -81,16 +81,12 @@ public class TextToSpeech {
 			e.printStackTrace();
 			e.getCause().printStackTrace();
 			e.getCause().getCause().printStackTrace();
-			Mary.shutdown();
 		} catch(SynthesisException e) {
 			e.printStackTrace();
-			Mary.shutdown();
 		} catch(InterruptedException e) {
 			e.printStackTrace();
-			Mary.shutdown();
 		} catch(ExecutionException e) {
 			e.printStackTrace();
-			Mary.shutdown();
 		}
 	}
 }

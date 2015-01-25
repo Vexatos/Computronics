@@ -76,5 +76,21 @@ public class Mods {
 			}
 			return false;
 		}
+
+		private static HashMap<String, Boolean> classesSearched = new HashMap<String, Boolean>();
+
+		public static boolean hasClass(String name) {
+			if(classesSearched.containsKey(name)) {
+				return classesSearched.get(name);
+			}
+			try {
+				Class.forName(name);
+				classesSearched.put(name, true);
+				return true;
+			} catch(ClassNotFoundException e) {
+				classesSearched.put(name, false);
+				return false;
+			}
+		}
 	}
 }

@@ -48,6 +48,10 @@ repositories {
         name = "Forestry repo"
         url = "http://maven.ic2.player.to/"
     }
+    maven {
+        name 'MaryTTS repo'
+        url 'http://dl.bintray.com/marytts/marytts'
+    }
 }
 
 dependencies {
@@ -67,6 +71,9 @@ dependencies {
         exclude module: "buildcraft"
         exclude module: "industrialcraft-2"
     }
+    compile "de.dfki.mary:marytts-runtime:5.1.2:jar-with-dependencies"
+    compile "de.dfki.mary:marytts-lang-en:5.1.2"
+    compile "de.dfki.mary:voice-cmu-slt-hsmm:5.1.2"
 }
 
 minecraft {

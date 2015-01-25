@@ -87,7 +87,7 @@ public class NetworkHandlerClient extends MessageHandlerBase {
 				}
 			} break;
 			case 5: {
-				if(ModAPIManager.INSTANCE.hasAPI("computronics|marytts")){
+				if(Mods.API.hasClass("marytts.LocalMaryInterface")){
 					Computronics.tts.say(packet.readString());
 				}
 			}break;
