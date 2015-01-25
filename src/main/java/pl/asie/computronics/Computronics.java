@@ -28,6 +28,7 @@ import org.apache.logging.log4j.Logger;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheralProvider;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheralRegistry;
 import pl.asie.computronics.audio.DFPWMPlaybackManager;
+import pl.asie.computronics.audio.tts.TextToSpeech;
 import pl.asie.computronics.block.BlockCamera;
 import pl.asie.computronics.block.BlockChatBox;
 import pl.asie.computronics.block.BlockCipher;
@@ -237,7 +238,14 @@ public class Computronics {
 			opencomputers = new IntegrationOpenComputers(this);
 			opencomputers.preInit();
 		}
+
+		if(ModAPIManager.INSTANCE.hasAPI("computronics|marytts")){
+			tts = new TextToSpeech();
+			tts.preInit(this);
+		}
 	}
+
+	public static TextToSpeech tts;
 
 	@EventHandler
 	public void init(FMLInitializationEvent event) {

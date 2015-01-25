@@ -1,6 +1,7 @@
 package pl.asie.computronics.network;
 
 import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.ModAPIManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetHandler;
@@ -85,6 +86,11 @@ public class NetworkHandlerClient extends MessageHandlerBase {
 					DriverCardSound.onSound(packet, player);
 				}
 			} break;
+			case 5: {
+				if(ModAPIManager.INSTANCE.hasAPI("computronics|marytts")){
+					Computronics.tts.say(packet.readString());
+				}
+			}break;
 		}
 	}
 }
