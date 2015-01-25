@@ -46,9 +46,8 @@ public class TextToSpeech {
 			Computronics.log.info("Initializing Text To Speech");
 			try {
 				marytts = new LocalMaryInterface();
-				Set<String> voices = marytts.getAvailableVoices(Locale.US);
+				Set<String> voices = marytts.getAvailableVoices();
 				marytts.setVoice(voices.iterator().next());
-				marytts.setLocale(Locale.US);
 				ttsThreads = Executors.newCachedThreadPool();
 			} catch(MaryConfigurationException e) {
 				Computronics.log.error("Text To Speech initialization failed, you will not be able to hear anything");
