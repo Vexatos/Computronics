@@ -4,20 +4,14 @@ import buildcraft.api.transport.IPipeTile;
 import buildcraft.api.transport.pluggable.IPipePluggableRenderer;
 import buildcraft.api.transport.pluggable.PipePluggable;
 import buildcraft.core.utils.MatrixTranformations;
-import buildcraft.transport.Pipe;
-import buildcraft.transport.PipeTransportPower;
 import io.netty.buffer.ByteBuf;
-import li.cil.oc.Settings;
 import li.cil.oc.api.internal.Drone;
-import li.cil.oc.api.network.Connector;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.Computronics;
-import pl.asie.computronics.util.ParticleUtils;
 
 /**
  * @author Vexatos
@@ -40,7 +34,7 @@ public class DroneStationPluggable extends PipePluggable {
 
 	public void setDrone(Drone drone) {
 		this.drone = drone;
-		if(this.drone == null) {
+		if (this.drone == null) {
 			this.state = DroneStationState.Available;
 		} else {
 			this.state = DroneStationState.Used;
@@ -68,14 +62,14 @@ public class DroneStationPluggable extends PipePluggable {
 	@Override
 	public void update(IPipeTile pipe, ForgeDirection direction) {
 		super.update(pipe, direction);
-		if(getState() == DroneStationState.Used && drone == null) {
+		if (getState() == DroneStationState.Used && drone == null) {
 			state = DroneStationState.Available;
 		}
-		if(drone != null && (drone.world() != pipe.getWorldObj()
+		if (drone != null && (drone.world() != pipe.getWorldObj()
 			|| drone instanceof Entity && ((Entity) drone).getDistanceSq(pipe.x(), pipe.y(), pipe.z()) >= 4)) {
 			setDrone(null);
 		}
-		if(pipe != null && pipe.getPipe() != null && drone != null
+		/*if(pipe != null && pipe.getPipe() != null && drone != null
 			&& pipe.getPipe() instanceof Pipe
 			&& ((Pipe) pipe.getPipe()).transport != null
 			&& ((Pipe) pipe.getPipe()).transport instanceof PipeTransportPower) {
@@ -99,7 +93,7 @@ public class DroneStationPluggable extends PipePluggable {
 				double dz = 0.45 * Math.cos(theta);
 				ParticleUtils.sendParticlePacket("happyVillager", drone.world(), drone.xPosition() + dx, drone.yPosition() + dz, drone.zPosition() + dy, 0, 0, 0);
 			}
-		}
+		}*/
 	}
 
 	@Override
