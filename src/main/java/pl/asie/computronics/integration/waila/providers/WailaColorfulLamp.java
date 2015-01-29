@@ -22,7 +22,7 @@ public class WailaColorfulLamp extends ComputronicsWailaProvider {
 	public List<String> getWailaBody(ItemStack stack, List<String> currenttip,
 		IWailaDataAccessor accessor, IWailaConfigHandler config) {
 
-		if(!ConfigValues.LampColor.getValue(config)) {
+		if (!ConfigValues.LampColor.getValue(config)) {
 			return currenttip;
 		}
 
@@ -39,7 +39,7 @@ public class WailaColorfulLamp extends ComputronicsWailaProvider {
 
 	@Override
 	public NBTTagCompound getNBTData(EntityPlayerMP player, TileEntity te, NBTTagCompound tag, World world, int x, int y, int z) {
-		if(te != null && te instanceof TileColorfulLamp) {
+		if (te != null && te instanceof TileColorfulLamp) {
 			tag.setShort("clc", (short) (((TileColorfulLamp) te).getLampColor() & 32767));
 		}
 		return tag;

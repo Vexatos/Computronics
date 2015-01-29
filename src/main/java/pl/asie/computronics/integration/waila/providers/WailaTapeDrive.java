@@ -24,21 +24,21 @@ public class WailaTapeDrive extends ComputronicsWailaProvider {
 	public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip,
 		IWailaDataAccessor accessor, IWailaConfigHandler config) {
 
-		if(!ConfigValues.Tape.getValue(config)) {
+		if (!ConfigValues.Tape.getValue(config)) {
 			return currenttip;
 		}
 
 		NBTTagCompound data = accessor.getNBTData();
 		ItemStack is = ItemStack.loadItemStackFromNBT(data.getTagList("Inventory", 10).getCompoundTagAt(0));
-		if(is != null && is.getItem() instanceof IItemTapeStorage) {
+		if (is != null && is.getItem() instanceof IItemTapeStorage) {
 			String label = Computronics.itemTape.getLabel(is);
-			if(label.length() > 0 && ConfigValues.TapeName.getValue(config)) {
+			if (label.length() > 0 && ConfigValues.TapeName.getValue(config)) {
 				currenttip.add(StringUtil.localizeAndFormat("tooltip.computronics.waila.tape.labeltapeinserted",
 					label + SpecialChars.RESET));
 			} else {
 				currenttip.add(StringUtil.localize("tooltip.computronics.waila.tape.tapeinserted"));
 			}
-			if(ConfigValues.DriveState.getValue(config)) {
+			if (ConfigValues.DriveState.getValue(config)) {
 				currenttip.add(StringUtil.localizeAndFormat("tooltip.computronics.waila.tape.state",
 					StringUtil.localize("tooltip.computronics.waila.tape.state."
 						+ TapeDriveState.State.values()[data.getByte("state")].name().toLowerCase(Locale.ENGLISH))));
@@ -51,7 +51,7 @@ public class WailaTapeDrive extends ComputronicsWailaProvider {
 
 	@Override
 	public NBTTagCompound getNBTData(EntityPlayerMP player, TileEntity te, NBTTagCompound tag, World world, int x, int y, int z) {
-		if(te instanceof TileTapeDrive) {
+		if (te instanceof TileTapeDrive) {
 			TileTapeDrive drive = (TileTapeDrive) te;
 			NBTTagCompound data = new NBTTagCompound();
 			//I have to do this, for the inventory

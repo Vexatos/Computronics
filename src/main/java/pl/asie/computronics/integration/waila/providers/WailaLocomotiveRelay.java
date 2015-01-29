@@ -22,7 +22,7 @@ public class WailaLocomotiveRelay extends ComputronicsWailaProvider {
 	public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor,
 		IWailaConfigHandler config) {
 
-		if(!ConfigValues.RelayBound.getValue(config)) {
+		if (!ConfigValues.RelayBound.getValue(config)) {
 			return currenttip;
 		}
 
@@ -34,9 +34,9 @@ public class WailaLocomotiveRelay extends ComputronicsWailaProvider {
 
 	@Override
 	public NBTTagCompound getNBTData(EntityPlayerMP player, TileEntity te, NBTTagCompound tag, World world, int x, int y, int z) {
-		if(te instanceof TileLocomotiveRelay) {
+		if (te instanceof TileLocomotiveRelay) {
 			TileLocomotiveRelay relay = (TileLocomotiveRelay) te;
-			if(relay.getLocomotive() != null) {
+			if (relay.getLocomotive() != null) {
 				tag.setBoolean("bound", relay.isBound());
 			}
 		}

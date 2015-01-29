@@ -12,7 +12,7 @@ public class IntegrationWaila {
 		reg.registerBodyProvider(provider, BlockPeripheral.class);
 		reg.registerNBTProvider(provider, BlockPeripheral.class);
 
-		if(Loader.isModLoaded(Mods.Railcraft)) {
+		if (Loader.isModLoaded(Mods.Railcraft)) {
 			reg.registerBodyProvider(provider, BlockDigitalReceiverBox.class);
 			reg.registerNBTProvider(provider, BlockDigitalReceiverBox.class);
 		}

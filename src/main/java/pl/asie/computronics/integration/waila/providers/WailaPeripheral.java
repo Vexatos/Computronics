@@ -27,10 +27,10 @@ public class WailaPeripheral extends ComputronicsWailaProvider {
 		IWailaConfigHandler config) {
 
 		NBTTagCompound nbt = accessor.getNBTData();
-		if(Loader.isModLoaded(Mods.OpenComputers) && ConfigValues.OCAddress.getValue(config)) {
+		if (Loader.isModLoaded(Mods.OpenComputers) && ConfigValues.OCAddress.getValue(config)) {
 			currenttip = getWailaOCBody(nbt, currenttip);
 		}
-		if(Loader.isModLoaded(Mods.NedoComputers) && ConfigValues.NCAddress.getValue(config)) {
+		if (Loader.isModLoaded(Mods.NedoComputers) && ConfigValues.NCAddress.getValue(config)) {
 			currenttip = getWailaNCBody(nbt, currenttip);
 		}
 		return currenttip;
@@ -39,7 +39,7 @@ public class WailaPeripheral extends ComputronicsWailaProvider {
 	@Optional.Method(modid = Mods.OpenComputers)
 	private List<String> getWailaOCBody(NBTTagCompound nbt, List<String> currenttip) {
 		NBTTagCompound node = nbt.getCompoundTag("oc:node");
-		if(node.hasKey("address")) {
+		if (node.hasKey("address")) {
 			currenttip.add(StringUtil.localizeAndFormat("oc:gui.Analyzer.Address", node.getString("address")));
 		}
 		return currenttip;
@@ -47,7 +47,7 @@ public class WailaPeripheral extends ComputronicsWailaProvider {
 
 	@Optional.Method(modid = Mods.NedoComputers)
 	private List<String> getWailaNCBody(NBTTagCompound nbt, List<String> currenttip) {
-		if(nbt.hasKey("nc:bus")) {
+		if (nbt.hasKey("nc:bus")) {
 			currenttip.add(StringUtil.localizeAndFormat(
 				"tooltip.computronics.waila.base.bus", nbt.getShort("nc:bus")));
 		}
@@ -56,12 +56,12 @@ public class WailaPeripheral extends ComputronicsWailaProvider {
 
 	@Override
 	public NBTTagCompound getNBTData(EntityPlayerMP player, TileEntity te, NBTTagCompound tag, World world, int x, int y, int z) {
-		if(te != null && te instanceof TileEntityPeripheralBase) {
+		if (te != null && te instanceof TileEntityPeripheralBase) {
 			TileEntityPeripheralBase tile = (TileEntityPeripheralBase) te;
-			if(Loader.isModLoaded(Mods.OpenComputers)) {
+			if (Loader.isModLoaded(Mods.OpenComputers)) {
 				tag = getNBTData_OC(tile, tag);
 			}
-			if(Loader.isModLoaded(Mods.NedoComputers)) {
+			if (Loader.isModLoaded(Mods.NedoComputers)) {
 				tag = getNBTData_NC(tile, tag);
 			}
 		}
@@ -71,7 +71,7 @@ public class WailaPeripheral extends ComputronicsWailaProvider {
 	@Optional.Method(modid = Mods.OpenComputers)
 	public NBTTagCompound getNBTData_OC(TileEntityPeripheralBase tile, NBTTagCompound tag) {
 		Node node = tile.node();
-		if(node != null && node.host() == tile) {
+		if (node != null && node.host() == tile) {
 			final NBTTagCompound nodeNbt = new NBTTagCompound();
 			node.save(nodeNbt);
 			tag.setTag("oc:node", nodeNbt);
@@ -81,7 +81,7 @@ public class WailaPeripheral extends ComputronicsWailaProvider {
 
 	@Optional.Method(modid = Mods.NedoComputers)
 	private NBTTagCompound getNBTData_NC(TileEntityPeripheralBase tile, NBTTagCompound tag) {
-		if(tile.getBusId() != 0) {
+		if (tile.getBusId() != 0) {
 			tag.setShort("nc:bus", (short) tile.getBusId());
 		}
 		return tag;
