@@ -23,11 +23,12 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.Computronics;
-import pl.asie.computronics.cc.IComputronicsPeripheral;
+import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
 import pl.asie.computronics.cc.ISidedPeripheral;
 import pl.asie.computronics.integration.railcraft.DetectorDigital;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.reference.Names;
+import pl.asie.computronics.util.tile.IComputronicsPeripheral;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -38,10 +39,10 @@ import java.util.Locale;
 @Optional.InterfaceList({
 	@Optional.Interface(iface = "li.cil.oc.api.network.Environment", modid = Mods.OpenComputers),
 	@Optional.Interface(iface = "li.cil.oc.api.network.SidedEnvironment", modid = Mods.OpenComputers),
-	@Optional.Interface(iface = "pl.asie.computronics.cc.IComputronicsPeripheral", modid = Mods.ComputerCraft)
+	@Optional.Interface(iface = "pl.asie.computronics.api.multiperipheral.IMultiPeripheral", modid = Mods.ComputerCraft)
 })
 public class TileDigitalDetector extends TileDetector
-	implements Environment, SidedEnvironment, IComputronicsPeripheral, ISidedPeripheral {
+	implements Environment, SidedEnvironment, IMultiPeripheral, IComputronicsPeripheral, ISidedPeripheral {
 
 	private boolean tested;
 	public DetectorDigital detector;

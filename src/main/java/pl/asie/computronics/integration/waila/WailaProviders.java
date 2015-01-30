@@ -24,9 +24,9 @@ public class WailaProviders {
 	private IComputronicsWailaProvider provider;
 	private Class<?> block;
 
-	static {
+	static void initialize() {
 		newProvider(new WailaPeripheral(), BlockPeripheral.class);
-		if (Loader.isModLoaded(Mods.Railcraft)) {
+		if(Loader.isModLoaded(Mods.Railcraft)) {
 			newProvider(new WailaPeripheral(), BlockDigitalReceiverBox.class);
 			newProvider(new WailaLocomotiveRelay(), BlockLocomotiveRelay.class);
 		}

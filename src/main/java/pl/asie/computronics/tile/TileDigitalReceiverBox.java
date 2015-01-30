@@ -31,11 +31,12 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
-import pl.asie.computronics.cc.IComputronicsPeripheral;
+import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
 import pl.asie.computronics.cc.ISidedPeripheral;
 import pl.asie.computronics.integration.railcraft.SignalTypes;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.reference.Names;
+import pl.asie.computronics.util.tile.IComputronicsPeripheral;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -50,12 +51,12 @@ import java.util.Locale;
 @Optional.InterfaceList({
 	@Optional.Interface(iface = "li.cil.oc.api.network.Environment", modid = Mods.OpenComputers),
 	@Optional.Interface(iface = "li.cil.oc.api.network.SidedEnvironment", modid = Mods.OpenComputers),
-	@Optional.Interface(iface = "pl.asie.computronics.cc.IComputronicsPeripheral", modid = Mods.ComputerCraft),
+	@Optional.Interface(iface = "pl.asie.computronics.api.multiperipheral.IMultiPeripheral", modid = Mods.ComputerCraft),
 	@Optional.Interface(iface = "mods.railcraft.api.signals.IReceiverTile", modid = Mods.Railcraft),
 	@Optional.Interface(iface = "mods.railcraft.common.plugins.buildcraft.triggers.IAspectProvider", modid = Mods.Railcraft)
 })
 public class TileDigitalReceiverBox extends TileBoxBase
-	implements IReceiverTile, IAspectProvider, Environment, SidedEnvironment, IComputronicsPeripheral, ISidedPeripheral {
+	implements IReceiverTile, IAspectProvider, Environment, SidedEnvironment, IMultiPeripheral, IComputronicsPeripheral, ISidedPeripheral {
 
 	private boolean prevBlinkState;
 	private final SimpleSignalReceiver receiver = new SimpleSignalReceiver(getName(), this);

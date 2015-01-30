@@ -47,8 +47,8 @@ public enum ConfigValues {
 	}
 
 	static void registerConfigs(IWailaRegistrar reg) {
-		for (ConfigValues value : ConfigValues.values()) {
-			if (value.modID == null || Loader.isModLoaded(value.modID) || ModAPIManager.INSTANCE.hasAPI(value.modID)) {
+		for(ConfigValues value : ConfigValues.values()) {
+			if(value.modID == null || Loader.isModLoaded(value.modID) || ModAPIManager.INSTANCE.hasAPI(value.modID)) {
 				value.registerConfigRemote(reg);
 			}
 		}

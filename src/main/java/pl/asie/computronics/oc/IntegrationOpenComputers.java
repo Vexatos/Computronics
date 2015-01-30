@@ -90,7 +90,7 @@ public class IntegrationOpenComputers {
 			Computronics.forestry.preInitOC();
 		}
 
-		if(Mods.API.hasVersion(Mods.API.BuildCraftTransport, "[3.0,)") && Config.BUILDCRAFT_STATION) {
+		if(Loader.isModLoaded(Mods.BuildCraftTransport) && Loader.isModLoaded(Mods.BuildCraftCore) && Config.BUILDCRAFT_STATION) {
 			Computronics.buildcraft = new IntegrationBuildCraft();
 			Computronics.buildcraft.preInitOC();
 		}
