@@ -20,7 +20,7 @@ import pl.asie.computronics.integration.CCMultiPeripheral;
 import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
 import pl.asie.computronics.reference.Names;
 
-import java.util.LinkedHashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -30,12 +30,10 @@ import java.util.Locale;
 public class DriverTransceiver {
 
 	private static Object[] parseChannels(List<Channel> channelList) {
-		LinkedHashMap<Integer, String> channelMap = new LinkedHashMap<Integer, String>();
+		ArrayList<String> channelMap = new ArrayList<String>();
 		if(channelList != null) {
-			int i = 1;
 			for(Channel channel : channelList) {
-				channelMap.put(i, channel.getName());
-				i++;
+				channelMap.add(channel.getName());
 			}
 			return new Object[] { channelMap };
 		}
@@ -214,11 +212,9 @@ public class DriverTransceiver {
 	}
 
 	private static Object[] types() {
-		LinkedHashMap<Integer, String> types = new LinkedHashMap<Integer, String>();
-		int i = 1;
+		ArrayList<String> types = new ArrayList<String>();
 		for(ChannelType type : ChannelType.values()) {
-			types.put(i, type.name().toLowerCase(Locale.ENGLISH));
-			i++;
+			types.add(type.name().toLowerCase(Locale.ENGLISH));
 		}
 		return new Object[] { types };
 	}

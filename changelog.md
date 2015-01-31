@@ -29,6 +29,8 @@
   * FIXED: Tape Drive's isEnd() returning the opposite of what it should return
   * FIXED: Chat Box Upgrade not working in Tablets and Drones
   * FIXED: Some issues with the built-in tape program
+  * MISC: Cleaned up some Driver code
+    - Also got rid of the DSU driver for OpenComputers because it is inside OC natively now (the ComputerCraft peripheral is still there)
 
 ==== 1.3.4 ====
 

@@ -7,6 +7,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 import pl.asie.computronics.reference.Config;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -42,12 +43,10 @@ public class RadarUtils {
 		return entities;
 	}
 
-	public static Map<Integer, Map> convertSetToMap(Set<Map> set){
-		HashMap<Integer,Map> map = new HashMap<Integer,Map>();
-		int i = 1;
+	public static ArrayList<Map> convertSetToMap(Set<Map> set){
+		ArrayList<Map> map = new ArrayList<Map>();
 		for (Map m : set) {
-			map.put(i, m);
-			i++;
+			map.add(m);
 		}
 		return map;
 	}

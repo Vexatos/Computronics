@@ -19,7 +19,6 @@ import pl.asie.computronics.integration.util.RoutingTableUtil;
 import pl.asie.computronics.reference.Names;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,17 +32,18 @@ public class DriverRoutingSwitch {
 			&& tile.getInventory().getStackInSlot(0).getItem() instanceof ItemRoutingTable) {
 			if(!tile.isSecure()) {
 				List<List<String>> pages = ItemRoutingTable.getPages(tile.getInventory().getStackInSlot(0));
-				LinkedHashMap<Integer, String> pageMap = new LinkedHashMap<Integer, String>();
-				int i = 1;
-				if(pages != null) {
-					for(List<String> currentPage : pages) {
-						for(String currentLine : currentPage) {
-							pageMap.put(i, currentLine);
-							i++;
-						}
-						pageMap.put(i, "{newpage}");
+				if(pages == null) {
+					return new Object[] { false, "no valid routing table found" };
+				}
+				ArrayList<String> pageMap = new ArrayList<String>();
+				int i = 0;
+				for(List<String> currentPage : pages) {
+					for(String currentLine : currentPage) {
+						pageMap.add(i, currentLine);
 						i++;
 					}
+					pageMap.add(i, "{newpage}");
+					i++;
 				}
 				if(pageMap.get(i - 1).equals("{newpage}")) {
 					pageMap.remove(i - 1);
@@ -176,20 +176,20 @@ public class DriverRoutingSwitch {
 		public Object[] callMethod(IComputerAccess computer, ILuaContext context,
 			int method, Object[] arguments) throws LuaException,
 			InterruptedException {
-			switch(method){
-				case 0:{
+			switch(method) {
+				case 0: {
 					return DriverRoutingSwitch.getRoutingTable(tile);
 				}
-				case 1:{
+				case 1: {
 					if(arguments.length < 1 || !(arguments[0] instanceof Map)) {
 						throw new LuaException("first argument needs to be a table");
 					}
 					return DriverRoutingSwitch.setRoutingTable(tile, arguments);
 				}
-				case 2:{
+				case 2: {
 					return DriverRoutingSwitch.getRoutingTableTitle(tile);
 				}
-				case 3:{
+				case 3: {
 					if(arguments.length < 1 || !(arguments[0] instanceof String)) {
 						throw new LuaException("first argument needs to be a string");
 					}
