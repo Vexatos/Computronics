@@ -7,6 +7,7 @@ import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import li.cil.oc.api.Network;
+import li.cil.oc.api.network.BlacklistedPeripheral;
 import li.cil.oc.api.network.Environment;
 import li.cil.oc.api.network.Message;
 import li.cil.oc.api.network.Node;
@@ -39,10 +40,11 @@ import java.util.Locale;
 @Optional.InterfaceList({
 	@Optional.Interface(iface = "li.cil.oc.api.network.Environment", modid = Mods.OpenComputers),
 	@Optional.Interface(iface = "li.cil.oc.api.network.SidedEnvironment", modid = Mods.OpenComputers),
+	@Optional.Interface(iface = "li.cil.oc.api.network.BlacklistedPeripheral", modid = Mods.OpenComputers),
 	@Optional.Interface(iface = "pl.asie.computronics.api.multiperipheral.IMultiPeripheral", modid = Mods.ComputerCraft)
 })
 public class TileDigitalDetector extends TileDetector
-	implements Environment, SidedEnvironment, IMultiPeripheral, IComputronicsPeripheral, ISidedPeripheral {
+	implements Environment, SidedEnvironment, IMultiPeripheral, IComputronicsPeripheral, ISidedPeripheral, BlacklistedPeripheral {
 
 	private boolean tested;
 	public DetectorDigital detector;
@@ -186,6 +188,12 @@ public class TileDigitalDetector extends TileDetector
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void onMessage(Message message) {
 
+	}
+
+	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
+	public boolean isPeripheralBlacklisted() {
+		return true;
 	}
 
 	@Override

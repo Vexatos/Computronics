@@ -12,6 +12,7 @@ import li.cil.oc.api.Network;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
+import li.cil.oc.api.network.BlacklistedPeripheral;
 import li.cil.oc.api.network.Environment;
 import li.cil.oc.api.network.Message;
 import li.cil.oc.api.network.Node;
@@ -51,12 +52,14 @@ import java.util.Locale;
 @Optional.InterfaceList({
 	@Optional.Interface(iface = "li.cil.oc.api.network.Environment", modid = Mods.OpenComputers),
 	@Optional.Interface(iface = "li.cil.oc.api.network.SidedEnvironment", modid = Mods.OpenComputers),
+	@Optional.Interface(iface = "li.cil.oc.api.network.BlacklistedPeripheral", modid = Mods.OpenComputers),
 	@Optional.Interface(iface = "pl.asie.computronics.api.multiperipheral.IMultiPeripheral", modid = Mods.ComputerCraft),
 	@Optional.Interface(iface = "mods.railcraft.api.signals.IReceiverTile", modid = Mods.Railcraft),
 	@Optional.Interface(iface = "mods.railcraft.common.plugins.buildcraft.triggers.IAspectProvider", modid = Mods.Railcraft)
 })
 public class TileDigitalReceiverBox extends TileBoxBase
-	implements IReceiverTile, IAspectProvider, Environment, SidedEnvironment, IMultiPeripheral, IComputronicsPeripheral, ISidedPeripheral {
+	implements IReceiverTile, IAspectProvider, Environment, SidedEnvironment,
+	IMultiPeripheral, IComputronicsPeripheral, ISidedPeripheral, BlacklistedPeripheral {
 
 	private boolean prevBlinkState;
 	private final SimpleSignalReceiver receiver = new SimpleSignalReceiver(getName(), this);
@@ -256,6 +259,12 @@ public class TileDigitalReceiverBox extends TileBoxBase
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void onMessage(Message message) {
 
+	}
+
+	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
+	public boolean isPeripheralBlacklisted() {
+		return true;
 	}
 
 	private Object[] getSignal() {

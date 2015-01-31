@@ -1,15 +1,19 @@
 package pl.asie.computronics.integration;
 
+import cpw.mods.fml.common.Optional;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheralProvider;
+import li.cil.oc.api.network.BlacklistedPeripheral;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import pl.asie.computronics.reference.Mods;
 
 /**
  * @author Vexatos
  */
-public abstract class CCTilePeripheral<T> implements IPeripheral, IPeripheralProvider {
+@Optional.Interface(iface = "li.cil.oc.api.network.BlacklistedPeripheral", modid = Mods.OpenComputers)
+public abstract class CCTilePeripheral<T> implements IPeripheral, IPeripheralProvider, BlacklistedPeripheral {
 	protected T tile;
 	protected IBlockAccess w;
 	protected int x, y, z;
@@ -59,5 +63,11 @@ public abstract class CCTilePeripheral<T> implements IPeripheral, IPeripheralPro
 		}
 
 		return false;
+	}
+
+	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
+	public boolean isPeripheralBlacklisted() {
+		return true;
 	}
 }

@@ -99,8 +99,6 @@ public class IntegrationOpenComputers {
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void init() {
 
-		FMLInterModComms.sendMessage(Mods.OpenComputers, "blacklistPeripheral", "pl.asie.computronics.cc.multiperipheral.MultiPeripheral");
-
 		if(Loader.isModLoaded(Mods.RedLogic)) {
 			if(compat.isCompatEnabled(Compat.RedLogic_Lamps)) {
 				Driver.add(new DriverLamp.OCDriver());

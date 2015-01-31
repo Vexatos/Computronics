@@ -1,20 +1,28 @@
 package pl.asie.computronics.cc.multiperipheral;
 
+import cpw.mods.fml.common.Optional;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
+import li.cil.oc.Settings;
+import li.cil.oc.api.network.BlacklistedPeripheral;
 import net.minecraft.world.World;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
+import pl.asie.computronics.reference.Config;
+import pl.asie.computronics.reference.Mods;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
- * Allows having Multiple peripherals merged into a single one.
+ * Allows having multiple peripherals merged into a single one.
  * @author Vexatos
  */
-public class MultiPeripheral implements IPeripheral {
+@Optional.Interface(iface = "li.cil.oc.api.network.BlacklistedPeripheral", modid = Mods.OpenComputers)
+public class MultiPeripheral implements IPeripheral, BlacklistedPeripheral {
 
 	private ArrayList<IMultiPeripheral> peripherals;
 	private IMultiPeripheral highest;
@@ -25,6 +33,10 @@ public class MultiPeripheral implements IPeripheral {
 	private int x, y, z;
 
 	public MultiPeripheral(ArrayList<IMultiPeripheral> peripherals) {
+		this.initialize(peripherals);
+	}
+
+	private void initialize(ArrayList<IMultiPeripheral> peripherals) {
 		this.peripherals = peripherals;
 		HashMap<String, IMultiPeripheral> methods = new HashMap<String, IMultiPeripheral>();
 		for(IMultiPeripheral peripheral : this.peripherals) {
@@ -120,6 +132,61 @@ public class MultiPeripheral implements IPeripheral {
 		}
 		for(IMultiPeripheral peripheral : peripherals) {
 			if(peripheral.equals(other)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
+	public boolean isPeripheralBlacklisted() {
+		if(!Config.CC_ALL_MULTI_PERIPHERALS) {
+			return true;
+		}
+		boolean blacklisted = true;
+		ArrayList<IMultiPeripheral> newPeriphs = new ArrayList<IMultiPeripheral>();
+		for(IMultiPeripheral peripheral : peripherals) {
+			if(!isBlacklisted(peripheral)) {
+				blacklisted = false;
+				newPeriphs.add(peripheral);
+			}
+		}
+		if(!blacklisted) {
+			this.initialize(newPeriphs);
+		}
+		return blacklisted;
+	}
+
+	private static Set<Class<?>> blacklist;
+
+	//Re-implemented from OpenComputers code
+	@Optional.Method(modid = Mods.OpenComputers)
+	private boolean isBlacklisted(final Object o) {
+		if(o instanceof BlacklistedPeripheral) {
+			return ((BlacklistedPeripheral) o).isPeripheralBlacklisted();
+		}
+
+		try {
+			if(blacklist == null) {
+				blacklist = new HashSet<Class<?>>();
+				for(String name : Settings.get().peripheralBlacklist()) {
+					Class<?> clazz;
+					try {
+						clazz = Class.forName(name);
+					} catch(ClassNotFoundException e) {
+						clazz = null;
+					}
+					if(clazz != null) {
+						blacklist.add(clazz);
+					}
+				}
+			}
+		} catch(Exception e) {
+			blacklist = new HashSet<Class<?>>();
+		}
+		for(Class<?> clazz : blacklist) {
+			if(clazz.isInstance(o)) {
 				return true;
 			}
 		}
