@@ -27,6 +27,14 @@ version = "${config.minecraft.version}-${config.computronics.version}"
 group = "pl.asie.computronics" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "Computronics"
 
+if (JavaVersion.current().isJava8Compatible()) {
+	allprojects {
+		tasks.withType(Javadoc) {
+			options.addStringOption('Xdoclint:none', '-quiet')
+		}
+	}
+}
+
 repositories {
 	maven {
 		name = "OC repo"
@@ -50,9 +58,15 @@ repositories {
 	}
 }
 
+configurations {
+	provided
+	embedded
+	compile.extendsFrom provided, embedded
+}
+
 dependencies {
 	compile "li.cil.oc:OpenComputers:${config.oc.version}:dev"
-	compile "com.gregoriust.gregtech:${config.gregtech.version}:dev"
+	provided "com.gregoriust.gregtech:${config.gregtech.version}:dev"
 	compile("mcp.mobius.waila:Waila:${config.waila.version}:dev") {
 		exclude module: "CodeChickenLib"
 		exclude module: "CodeChickenCore"
@@ -90,6 +104,7 @@ jar {
 apply plugin: 'idea'
 idea {
 	module {
+		scopes.PROVIDED.plus += [configurations.provided]
 		outputDir = file('build/classes/main')
 	}
 }
