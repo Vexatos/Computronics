@@ -83,6 +83,10 @@ sourceSets{
     }
 }
 
+jar{
+	exclude 'cofh/**'
+}
+
 apply plugin: 'idea'
 idea {
     module {
@@ -115,6 +119,7 @@ task deobfJar(type: Jar) {
     classifier = 'deobf'
     destinationDir = file(libDir)
     from sourceSets.main.output.classesDir
+	exclude 'cofh/**'
 }
 
 task apiZip(type: Zip) {
