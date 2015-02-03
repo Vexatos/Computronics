@@ -17,6 +17,7 @@ import forestry.apiculture.genetics.AlleleFlowers;
 import forestry.apiculture.genetics.BeeMutation;
 import forestry.apiculture.genetics.BranchBees;
 import li.cil.oc.api.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.BiomeDictionary;
 import pl.asie.computronics.Computronics;
@@ -67,10 +68,13 @@ public class IntegrationForestry {
 			new ItemStack(itemPartsForestry, 1, 0),
 			new ItemStack(itemPartsForestry, 1, 1),
 			new ItemStack(itemPartsForestry, 1, 1), 30);
+		Item bottleItem = GameRegistry.findItem(Mods.Forestry, "beverage");
+		ItemStack bottle = bottleItem != null ? new ItemStack(bottleItem, 1, 0)
+			: new ItemStack(net.minecraft.init.Items.potionitem, 1, 32);
 		GameRegistry.addShapelessRecipe(Items.get("acid").createItemStack(1),
 			new ItemStack(itemPartsForestry, 1, 1),
 			new ItemStack(itemPartsForestry, 1, 1),
-			net.minecraft.init.Items.glass_bottle);
+			bottle);
 	}
 
 	public static IAllele[] getScummyTemplate() {

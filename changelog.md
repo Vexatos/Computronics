@@ -5,7 +5,8 @@
     - The Docking Station you put onto any BuildCraft pipe
     - Drones with the Docking Upgrade can dock with Docking Stations
     - If the Station is on an Item Transport pipe, the drone will be able to inject items into the pipe
-    - Drones will also be charged while docked with a station, if the station is on a Kinesis pipe
+    - Drones should have been able to be charged while docked with a station, if the station is on a Kinesis pipe,
+      but that feature could not be added due to a bug in the BuildCraft power system
     - Requires Buildcraft 6.3
   * ADDED: Integration for the EnderIO Power Monitor
     - You can get literally everything shown in its GUI
@@ -28,6 +29,8 @@
   * FIXED: Tape Drive's isEnd() returning the opposite of what it should return
   * FIXED: Chat Box Upgrade not working in Tablets and Drones
   * FIXED: Some issues with the built-in tape program
+  * MISC: Cleaned up some Driver code
+    - Also got rid of the DSU driver for OpenComputers because it is inside OC natively now (the ComputerCraft peripheral is still there)
 
 ==== 1.3.4 ====
 

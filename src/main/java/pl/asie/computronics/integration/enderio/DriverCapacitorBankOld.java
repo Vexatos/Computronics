@@ -16,7 +16,7 @@ import pl.asie.computronics.integration.CCMultiPeripheral;
 import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
 import pl.asie.computronics.reference.Names;
 
-import java.util.LinkedHashMap;
+import java.util.ArrayList;
 import java.util.Locale;
 
 /**
@@ -45,11 +45,9 @@ public class DriverCapacitorBankOld {
 	}
 
 	private static Object[] modes() {
-		LinkedHashMap<Integer, String> modes = new LinkedHashMap<Integer, String>();
-		int i = 1;
+		ArrayList<String> modes = new ArrayList<String>();
 		for(RedstoneControlMode mode : RedstoneControlMode.values()) {
-			modes.put(i, mode.name().toLowerCase(Locale.ENGLISH));
-			i++;
+			modes.add(mode.name().toLowerCase(Locale.ENGLISH));
 		}
 		return new Object[] { modes };
 	}

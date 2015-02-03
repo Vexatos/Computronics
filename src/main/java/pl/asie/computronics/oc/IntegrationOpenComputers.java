@@ -2,7 +2,6 @@ package pl.asie.computronics.oc;
 
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
-import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLMissingMappingsEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import li.cil.oc.api.Driver;
@@ -34,7 +33,6 @@ import pl.asie.computronics.integration.gregtech.DriverBatteryBuffer;
 import pl.asie.computronics.integration.gregtech.DriverDeviceInformation;
 import pl.asie.computronics.integration.gregtech.DriverDigitalChest;
 import pl.asie.computronics.integration.gregtech.DriverMachine;
-import pl.asie.computronics.integration.mfr.DriverDeepStorageUnit;
 import pl.asie.computronics.integration.railcraft.DriverElectricGrid;
 import pl.asie.computronics.integration.railcraft.DriverRoutingDetector;
 import pl.asie.computronics.integration.railcraft.DriverRoutingSwitch;
@@ -90,7 +88,7 @@ public class IntegrationOpenComputers {
 			Computronics.forestry.preInitOC();
 		}
 
-		if(Mods.API.hasVersion(Mods.API.BuildCraftTransport, "[3.0,)") && Config.BUILDCRAFT_STATION) {
+		if(Loader.isModLoaded(Mods.BuildCraftTransport) && Loader.isModLoaded(Mods.BuildCraftCore) && Config.BUILDCRAFT_STATION) {
 			Computronics.buildcraft = new IntegrationBuildCraft();
 			Computronics.buildcraft.preInitOC();
 		}
@@ -98,8 +96,6 @@ public class IntegrationOpenComputers {
 
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void init() {
-
-		FMLInterModComms.sendMessage(Mods.OpenComputers, "blacklistPeripheral", "pl.asie.computronics.cc.multiperipheral.MultiPeripheral");
 
 		if(Loader.isModLoaded(Mods.RedLogic)) {
 			if(compat.isCompatEnabled(Compat.RedLogic_Lamps)) {
@@ -123,11 +119,6 @@ public class IntegrationOpenComputers {
 				} catch(Exception e) {
 					//NO-OP
 				}
-			}
-		}
-		if(Loader.isModLoaded(Mods.MFR) || Loader.isModLoaded(Mods.JABBA)) {
-			if(compat.isCompatEnabled(Compat.MFR_DSU)) {
-				Driver.add(new DriverDeepStorageUnit.OCDriver());
 			}
 		}
 		if(Loader.isModLoaded(Mods.FSP)) {

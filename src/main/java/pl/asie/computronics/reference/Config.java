@@ -106,7 +106,7 @@ public class Config {
 			if(Loader.isModLoaded(Mods.Forestry)) {
 				FORESTRY_BEES = config.getBoolean("opencomputersBees", "enable.forestry", true, "Set this to false to disable Forestry bee species for OpenComputers");
 			}
-			if(Mods.API.hasVersion(Mods.API.BuildCraftTransport, "[3.0,)")) {
+			if(Loader.isModLoaded(Mods.BuildCraftTransport) && Loader.isModLoaded(Mods.BuildCraftCore)) {
 				BUILDCRAFT_STATION = config.getBoolean("droneDockingStation", "enable.buildcraft", true, "Set this to false to disable the Drone Docking Station for OpenComputers");
 			}
 		}

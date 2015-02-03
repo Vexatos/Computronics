@@ -40,7 +40,7 @@ public class DriverSpatialIOPort {
 		if(Platform.isServer()) {
 			ItemStack cell = tile.getStackInSlot(0);
 			if(SpatialIOUtil.isSpatialCell(cell)) {
-				TickHandler.instance.addCallable(null, tile);
+				TickHandler.INSTANCE.addCallable(null, tile);
 			}
 		}
 		return new Object[] { };

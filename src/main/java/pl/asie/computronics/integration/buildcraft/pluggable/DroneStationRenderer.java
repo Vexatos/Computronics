@@ -6,17 +6,20 @@ import buildcraft.api.transport.pluggable.IPipePluggableRenderer;
 import buildcraft.api.transport.pluggable.PipePluggable;
 import buildcraft.core.utils.MatrixTranformations;
 import buildcraft.transport.render.TextureStateManager;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.IItemRenderer;
+import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
-import pl.asie.computronics.integration.buildcraft.pluggable.IntegrationBuildCraft.Textures;
+import pl.asie.computronics.integration.buildcraft.pluggable.DroneStationRenderer.TextureHandler.Textures;
 
 /**
  * @author Vexatos
@@ -44,7 +47,7 @@ public class DroneStationRenderer implements IPipePluggableRenderer {
 		IIcon[] icons = ((TextureStateManager) blockStateMachine.getTextureState()).popArray();
 		icons[0] = Textures.DRONE_STATION_BOTTOM.getIcon();
 		icons[1] = Textures.DRONE_STATION_BOTTOM.getIcon();
-		for(int i = 2; i < icons.length; i++) {
+		for (int i = 2; i < icons.length; i++) {
 			icons[i] = Textures.DRONE_STATION_SIDE.getIcon();
 		}
 		((TextureStateManager) blockStateMachine.getTextureState()).popArray();
@@ -63,7 +66,7 @@ public class DroneStationRenderer implements IPipePluggableRenderer {
 
 	@Override
 	public void renderPluggable(RenderBlocks renderblocks, IPipe pipe, ForgeDirection side, PipePluggable pipePluggable, ITextureStates blockStateMachine, int renderPass, int x, int y, int z) {
-		if(renderPass != 0) {
+		if (renderPass != 0) {
 			return;
 		}
 
@@ -102,7 +105,7 @@ public class DroneStationRenderer implements IPipePluggableRenderer {
 		IIcon[] icons = ((TextureStateManager) blockStateMachine.getTextureState()).popArray();
 		icons[0] = Textures.DRONE_STATION_SIDE.getIcon();
 		icons[1] = Textures.DRONE_STATION_TOP.getIcon();
-		for(int i = 2; i < icons.length; i++) {
+		for (int i = 2; i < icons.length; i++) {
 			icons[i] = Textures.DRONE_STATION_SIDE.getIcon();
 		}
 		((TextureStateManager) blockStateMachine.getTextureState()).popArray();
@@ -130,7 +133,7 @@ public class DroneStationRenderer implements IPipePluggableRenderer {
 
 		icons[0] = Textures.DRONE_STATION_BOTTOM.getIcon();
 		icons[1] = Textures.DRONE_STATION_SIDE.getIcon();
-		for(int i = 2; i < icons.length; i++) {
+		for (int i = 2; i < icons.length; i++) {
 			icons[i] = Textures.DRONE_STATION_BOTTOM.getIcon();
 		}
 
@@ -149,7 +152,7 @@ public class DroneStationRenderer implements IPipePluggableRenderer {
 
 		@Override
 		public boolean handleRenderType(ItemStack item, ItemRenderType type) {
-			switch(type){
+			switch (type) {
 				case ENTITY:
 					return true;
 				case EQUIPPED:
@@ -178,7 +181,7 @@ public class DroneStationRenderer implements IPipePluggableRenderer {
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			GL11.glDepthFunc(GL11.GL_LEQUAL);
 			GL11.glDisable(GL11.GL_CULL_FACE);
-			switch(type){
+			switch (type) {
 				case ENTITY:
 					GL11.glRotatef(-180, 1, 0, 0);
 					this.Base.render(1 / 16f);
@@ -239,6 +242,104 @@ public class DroneStationRenderer implements IPipePluggableRenderer {
 			this.Base.addChild(this.Nook4);
 			this.Base.addChild(this.Nook1);
 			this.Base.addChild(this.Nook2);
+		}
+	}
+
+	public static class TextureHandler {
+
+		@SubscribeEvent
+		public void textureHook(TextureStitchEvent.Pre event) {
+			if (event.map.getTextureType() == 0) {
+				for (Textures t : Textures.VALUES) {
+					t.registerIcons(event.map);
+				}
+			}
+		}
+
+		static enum Textures {
+			DRONE_STATION_TOP("drone_station_top"),
+			DRONE_STATION_BOTTOM("drone_station_bottom"),
+			DRONE_STATION_SIDE("drone_station_side");
+
+			private IIcon icon;
+			private final String location;
+			public static final Textures[] VALUES = values();
+
+			private Textures(String location) {
+				this.location = location;
+			}
+
+			public IIcon getIcon() {
+				return icon;
+			}
+
+			public void registerIcons(IIconRegister iconRegister) {
+				this.icon = new WrappedIcon(iconRegister.registerIcon("computronics:buildcraft/pluggable/" + location));
+			}
+		}
+
+		private static class WrappedIcon implements IIcon {
+
+			private IIcon icon;
+			private final int size;
+
+			private WrappedIcon(IIcon icon) {
+				this(icon, 2);
+			}
+
+			private WrappedIcon(IIcon icon, int size) {
+				this.icon = icon;
+				this.size = size;
+			}
+
+			@Override
+			public int getIconWidth() {
+				return icon.getIconWidth();
+			}
+
+			@Override
+			public int getIconHeight() {
+				return icon.getIconHeight();
+			}
+
+			@Override
+			public float getMinU() {
+				return size > 0 ? icon.getMinU() - (icon.getMaxU() - icon.getMinU()) * size / 4F : icon.getMinU();
+			}
+
+			@Override
+			public float getMaxU() {
+				return size > 0 ? icon.getMaxU() + (icon.getMaxU() - icon.getMinU()) * size / 4F : icon.getMaxU();
+			}
+
+			@Override
+			public float getInterpolatedU(double par1) {
+				float f = this.getMaxU() - this.getMinU();
+				return this.getMinU() + f * (float) par1 / 16.0F;
+			}
+
+			@Override
+			public float getMinV() {
+				float f = icon.getMaxV() - icon.getMinV();
+				return size > 0 ? icon.getMinV() - f * size / 4F : icon.getMinV();
+			}
+
+			@Override
+			public float getMaxV() {
+				float f = icon.getMaxV() - icon.getMinV();
+				return size > 0 ? icon.getMaxV() + f * size / 4F : icon.getMaxV();
+			}
+
+			@Override
+			public float getInterpolatedV(double par1) {
+				float f = this.getMaxV() - this.getMinV();
+				return this.getMinV() + f * ((float) par1 / 16.0F);
+			}
+
+			@Override
+			public String getIconName() {
+				return icon.getIconName();
+			}
 		}
 	}
 }

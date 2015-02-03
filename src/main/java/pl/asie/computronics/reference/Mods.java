@@ -27,6 +27,7 @@ public class Mods {
 	public static final String
 		AE2 = "appliedenergistics2",
 		BetterStorage = "betterstorage",
+		BuildCraftCore = "BuildCraft|Core",
 		BuildCraftTransport = "BuildCraft|Transport",
 		EnderIO = "EnderIO",
 		Factorization = "factorization",
@@ -47,7 +48,6 @@ public class Mods {
 		public static final String
 			BuildCraftStatements = "BuildCraftAPI|statements",
 			BuildCraftTiles = "BuildCraftAPI|tiles",
-			BuildCraftTransport = "BuildCraftAPI|transport",
 			CoFHAPI_Energy = "CoFHAPI|energy";
 
 		private static HashMap<String, ArtifactVersion> apiList;

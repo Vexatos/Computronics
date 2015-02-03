@@ -17,7 +17,7 @@ import pl.asie.computronics.integration.CCMultiPeripheral;
 import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
 import pl.asie.computronics.reference.Names;
 
-import java.util.LinkedHashMap;
+import java.util.ArrayList;
 import java.util.Locale;
 
 /**
@@ -39,11 +39,9 @@ public class DriverIOConfigurable {
 	}
 
 	private static Object[] modes() {
-		LinkedHashMap<Integer, String> modes = new LinkedHashMap<Integer, String>();
-		int i = 1;
+		ArrayList<String> modes = new ArrayList<String>();
 		for(IoMode mode : IoMode.values()) {
-			modes.put(i, mode.name().toLowerCase(Locale.ENGLISH));
-			i++;
+			modes.add(mode.name().toLowerCase(Locale.ENGLISH));
 		}
 		return new Object[] { modes };
 	}
@@ -129,12 +127,12 @@ public class DriverIOConfigurable {
 
 		@Override
 		public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
-			switch(method){
-				case 0:{
+			switch(method) {
+				case 0: {
 					int side = this.checkSide(arguments);
 					return DriverIOConfigurable.getIOMode(tile, side);
 				}
-				case 1:{
+				case 1: {
 					int side = this.checkSide(arguments);
 					if(arguments.length < 2 || !(arguments[1] instanceof String)) {
 						throw new LuaException("second argument needs to be a string");
@@ -145,7 +143,7 @@ public class DriverIOConfigurable {
 						throw new LuaException(e.getMessage());
 					}
 				}
-				case 2:{
+				case 2: {
 					return DriverIOConfigurable.modes();
 				}
 			}
