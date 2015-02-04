@@ -231,7 +231,7 @@ public class Computronics {
 		}
 
 		if(Loader.isModLoaded(Mods.Railcraft)) {
-			railcraft = new IntegrationRailcraft(this);
+			railcraft = new IntegrationRailcraft(config.config);
 		}
 
 		if(Loader.isModLoaded(Mods.ComputerCraft)) {
