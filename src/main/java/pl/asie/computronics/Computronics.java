@@ -78,7 +78,13 @@ import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Mod(modid = Mods.Computronics, name = Mods.Computronics_NAME, version = "@VERSION@", useMetadata = true, dependencies = "required-after:asielib@[0.3.9,);required-after:Forge@[10.13.2.1230,);after:ComputerCraft;after:OpenComputers@[1.4.7,);after:OpenComputersAPI|Internal@[4.2.0,);after:OpenComputers|Core;after:MineFactoryReloaded;after:RedLogic;after:ProjRed|Core;after:nedocomputers;after:BuildCraft|Core@[6.3.3,);after:Railcraft@[9.4.0.0,);after:gregtech;after:EnderIO@[1.7.10_2.2.7,);before:OpenPeripheralCore@[0.5.0,);before:OpenPeripheralApi@[2.2,);after:Forestry@[3.4.0,);after:Waila@[1.5.7,);after:appliedenergistics2")
+@Mod(modid = Mods.Computronics, name = Mods.Computronics_NAME, version = "@VERSION@", useMetadata = true,
+	dependencies = "required-after:asielib@[0.3.9,);required-after:Forge@[10.13.2.1230,);"
+		+ "after:ComputerCraft;after:OpenComputers@[1.4.7,);after:OpenComputersAPI|Internal@[4.2.0,);"
+		+ "after:OpenComputers|Core;after:MineFactoryReloaded;after:RedLogic;after:ProjRed|Core;"
+		+ "after:nedocomputers;after:BuildCraft|Core@[6.3.3,);after:Railcraft@[9.4.0.3,);"
+		+ "after:gregtech;after:EnderIO@[1.7.10_2.2.7,);before:OpenPeripheralCore@[0.5.0,);"
+		+ "before:OpenPeripheralApi@[2.2,);after:Forestry@[3.4.0,);after:Waila@[1.5.7,);after:appliedenergistics2")
 public class Computronics {
 	public Config config;
 	public Compat compat;
@@ -317,7 +323,7 @@ public class Computronics {
 	@EventHandler
 	public void serverStart(FMLServerAboutToStartEvent event) {
 		Computronics.storage = new StorageManager();
-		if(Loader.isModLoaded(Mods.ComputerCraft)){
+		if(Loader.isModLoaded(Mods.ComputerCraft)) {
 			computercraft.serverStart();
 		}
 	}

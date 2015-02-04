@@ -1,3 +1,8 @@
+==== 1.4.1 ====
+
+  * FIXED: Updated Railcraft integration (requires Railcraft 9.5 now)
+  * CHANGED: Some changes regarding railcraft integration to the config file
+
 ==== 1.4.0 ====
 
   * ADDED: Tape Drives now output a comparator signal if they are currently playing

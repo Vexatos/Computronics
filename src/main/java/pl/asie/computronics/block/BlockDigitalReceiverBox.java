@@ -7,6 +7,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import li.cil.oc.api.network.Environment;
 import mods.railcraft.client.util.textures.TextureAtlasSheet;
 import mods.railcraft.common.blocks.signals.BlockSignalBase;
+import mods.railcraft.common.blocks.signals.ISignalTileDefinition;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.tileentity.TileEntity;
@@ -15,6 +16,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.integration.railcraft.SignalTypes;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TileDigitalReceiverBox;
 
@@ -37,6 +39,11 @@ public class BlockDigitalReceiverBox extends BlockSignalBase {
 	public void registerBlockIcons(IIconRegister iconRegister) {
 		texturesBox = TextureAtlasSheet.unstitchIcons(iconRegister, "railcraft:signal.box", 6);
 		texturesBoxTop = iconRegister.registerIcon("computronics:signal_box_receiver");
+	}
+
+	@Override
+	public ISignalTileDefinition getSignalType(int meta) {
+		return SignalTypes.Digital;
 	}
 
 	@Override

@@ -60,7 +60,7 @@ public class BlockDigitalDetector extends BlockPeripheral {
 		if((tile instanceof TileDigitalDetector)) {
 			((TileDigitalDetector) tile).direction = MiscTools.getSideClosestToPlayer(world, i, j, k, entityliving);
 			world.notifyBlocksOfNeighborChange(i, j, k, this);
-			((TileDigitalDetector) tile).onBlockPlacedBy(entityliving);
+			((TileDigitalDetector) tile).onBlockPlacedBy(entityliving, stack);
 		}
 	}
 

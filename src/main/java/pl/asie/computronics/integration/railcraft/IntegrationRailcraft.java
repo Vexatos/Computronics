@@ -22,7 +22,7 @@ public class IntegrationRailcraft {
 
 	public IntegrationRailcraft(Computronics computronics) {
 
-		if(computronics.isEnabled("railcraftLocomotiveRelay", true)) {
+		if(computronics.isEnabled("railcraft.locomotiveRelay", true)) {
 			locomotiveRelay = new BlockLocomotiveRelay();
 			GameRegistry.registerBlock(locomotiveRelay, "computronics.locomotiveRelay");
 			GameRegistry.registerTileEntity(TileLocomotiveRelay.class, "computronics.locomotiveRelay");
@@ -30,12 +30,12 @@ public class IntegrationRailcraft {
 			relaySensor = new ItemRelaySensor();
 			GameRegistry.registerItem(relaySensor, "computronics.relaySensor");
 		}
-		if(computronics.isEnabled("railcraftDigitalReceiverBox", true)) {
+		if(computronics.isEnabled("railcraft.digitalReceiverBox", true)) {
 			this.digitalBox = new BlockDigitalReceiverBox();
 			GameRegistry.registerBlock(digitalBox, "computronics.digitalBox");
 			GameRegistry.registerTileEntity(TileDigitalReceiverBox.class, "computronics.digitalBox");
 		}
-		if(computronics.isEnabled("railcraftDigitalDetector", true)) {
+		if(computronics.isEnabled("railcraft.digitalDetector", true)) {
 			detector = new BlockDigitalDetector();
 			GameRegistry.registerBlock(detector, "computronics.detector");
 			GameRegistry.registerTileEntity(TileDigitalDetector.class, "computronics.detector");
