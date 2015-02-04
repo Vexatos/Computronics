@@ -2,6 +2,7 @@
 
   * FIXED: Updated Railcraft integration (requires Railcraft 9.5 now)
   * CHANGED: Some changes regarding railcraft integration to the config file
+    - It is recommended to remove anything with "railcraft" in it from the config and let those entries regenerate
 
 ==== 1.4.0 ====
 
