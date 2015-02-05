@@ -50,16 +50,6 @@ public class DriverPowerStorage {
 			public Object[] getMaxEnergyStored(final Context context, final Arguments args) {
 				return new Object[]{tile.getMaxEnergyStoredL()};
 			}
-
-			@Callback(doc = "function():number;  Returns the total amount of stored energy.")
-			public Object[] getEnergyStoredForNetwork(final Context context, final Arguments args) {
-				return getEnergyStored(context, args);
-			}
-
-			@Callback(doc = "function():number;  Returns the maximum amount of stored energy.")
-			public Object[] getMaxEnergyStoredForNetwork(final Context context, final Arguments args) {
-				return getMaxEnergyStored(context, args);
-			}
 		}
 
 		@Override
