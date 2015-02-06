@@ -85,9 +85,9 @@ dependencies {
 		exclude module: "buildcraft"
 		exclude module: "industrialcraft-2"
 	}
-	compile "de.dfki.mary:marytts-runtime:5.1.2:jar-with-dependencies"
-	compile "de.dfki.mary:marytts-lang-en:5.1.2"
-	compile "de.dfki.mary:voice-cmu-slt-hsmm:5.1.2"
+	provided "de.dfki.mary:marytts-runtime:5.1.2:jar-with-dependencies"
+	provided "de.dfki.mary:marytts-lang-en:5.1.2"
+	provided "de.dfki.mary:voice-cmu-slt-hsmm:5.1.2"
 }
 
 minecraft {

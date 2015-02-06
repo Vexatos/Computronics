@@ -28,7 +28,8 @@ import org.apache.logging.log4j.Logger;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheralProvider;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheralRegistry;
 import pl.asie.computronics.audio.DFPWMPlaybackManager;
-import pl.asie.computronics.audio.tts.TextToSpeech;
+import pl.asie.computronics.audio.tts.core.TextToSpeech;
+import pl.asie.computronics.audio.tts.core.TextToSpeedLoader;
 import pl.asie.computronics.block.BlockCamera;
 import pl.asie.computronics.block.BlockChatBox;
 import pl.asie.computronics.block.BlockCipher;
@@ -245,7 +246,7 @@ public class Computronics {
 			opencomputers.preInit();
 		}
 
-		if(Mods.API.hasClass("marytts.LocalMaryInterface")){
+		if(config.config.get("enable.tts", "textToSpeech", TextToSpeedLoader.INSTANCE.preInit()).getBoolean()) {
 			tts = new TextToSpeech();
 			tts.preInit(this);
 		}

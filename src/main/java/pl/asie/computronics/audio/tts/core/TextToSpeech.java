@@ -1,4 +1,4 @@
-package pl.asie.computronics.audio.tts;
+package pl.asie.computronics.audio.tts.core;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import marytts.LocalMaryInterface;
@@ -9,6 +9,8 @@ import marytts.server.Mary;
 import marytts.util.data.audio.AudioPlayer;
 import net.minecraft.block.Block;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.audio.tts.BlockTTSBox;
+import pl.asie.computronics.audio.tts.TileTTSBox;
 import pl.asie.computronics.reference.Mods;
 
 import javax.sound.sampled.AudioInputStream;
@@ -49,7 +51,7 @@ public class TextToSpeech {
 				Set<String> voices = marytts.getAvailableVoices();
 				marytts.setVoice(voices.iterator().next());
 				ttsThreads = Executors.newCachedThreadPool();
-			} catch(MaryConfigurationException e) {
+			} catch(Exception e) {
 				Computronics.log.error("Text To Speech initialization failed, you will not be able to hear anything");
 				if(Mary.currentState() == 2) {
 					Mary.shutdown();
@@ -57,7 +59,6 @@ public class TextToSpeech {
 				}
 				e.printStackTrace();
 				e.getCause().printStackTrace();
-				e.getCause().getCause().printStackTrace();
 				return;
 			}
 			ttsBox = new BlockTTSBox();
