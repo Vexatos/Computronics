@@ -1,139 +1,159 @@
 buildscript {
-    repositories {
-        mavenCentral()
-        maven {
-            name = "forge"
-            url = "http://files.minecraftforge.net/maven"
-        }
-        maven {
-            name = "sonatype"
-            url = "https://oss.sonatype.org/content/repositories/snapshots/"
-        }
-    }
-    dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
-    }
+	repositories {
+		mavenCentral()
+		maven {
+			name = "forge"
+			url = "http://files.minecraftforge.net/maven"
+		}
+		maven {
+			name = "sonatype"
+			url = "https://oss.sonatype.org/content/repositories/snapshots/"
+		}
+	}
+	dependencies {
+		classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+	}
 }
 
 apply plugin: 'forge'
 
 file "build.properties" withReader {
-    def prop = new Properties()
-    prop.load(it)
-    ext.config = new ConfigSlurper().parse prop
+	def prop = new Properties()
+	prop.load(it)
+	ext.config = new ConfigSlurper().parse prop
 }
 
 version = "${config.minecraft.version}-${config.computronics.version}"
 group = "pl.asie.computronics" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "Computronics"
 
+if (JavaVersion.current().isJava8Compatible()) {
+	allprojects {
+		tasks.withType(Javadoc) {
+			options.addStringOption('Xdoclint:none', '-quiet')
+		}
+	}
+}
+
 repositories {
-    maven {
-        name = "OC repo"
-        url = "http://maven.cil.li/"
-    }
-    maven {
-        name "Mobius Repo"
-        url "http://mobiusstrip.eu/maven"
-    }
-    maven {
-        name 'CB Repo'
-        url "http://chickenbones.net/maven/"
-    }
-    maven {
-        name 'tterrag Repo'
-        url "http://maven.tterrag.com/"
-    }
-    maven {
-        name = "Forestry repo"
-        url = "http://maven.ic2.player.to/"
-    }
-    maven {
-        name 'MaryTTS repo'
-        url 'http://dl.bintray.com/marytts/marytts'
-    }
+	maven {
+		name = "OC repo"
+		url = "http://maven.cil.li/"
+	}
+	maven {
+		name "Mobius Repo"
+		url "http://mobiusstrip.eu/maven"
+	}
+	maven {
+		name 'CB Repo'
+		url "http://chickenbones.net/maven/"
+	}
+	maven {
+		name 'tterrag Repo'
+		url "http://maven.tterrag.com/"
+	}
+	maven {
+		name = "Forestry repo"
+		url = "http://maven.ic2.player.to/"
+	}
+	maven {
+		name 'MaryTTS repo'
+		url 'http://dl.bintray.com/marytts/marytts'
+	}
+}
+
+configurations {
+	provided
+	embedded
+	compile.extendsFrom provided, embedded
 }
 
 dependencies {
-    compile "li.cil.oc:OpenComputers:${config.oc.version}:dev"
-    compile "com.gregoriust.gregtech:${config.gregtech.version}:dev"
-    compile("mcp.mobius.waila:Waila:${config.waila.version}:dev") {
-        exclude module: "CodeChickenLib"
-        exclude module: "CodeChickenCore"
-        exclude module: "NotEnoughItems"
-    }
-    compile("com.enderio:EnderIO:${config.enderio.version}:dev") {
-        exclude module: "appliedenergistics2"
-        exclude module: "buildcraft"
-        exclude module: "Waila"
-    }
-    compile ("net.sengir.forestry:${config.forestry.version}:dev"){
-        exclude module: "buildcraft"
-        exclude module: "industrialcraft-2"
-    }
-    compile "de.dfki.mary:marytts-runtime:5.1.2:jar-with-dependencies"
-    compile "de.dfki.mary:marytts-lang-en:5.1.2"
-    compile "de.dfki.mary:voice-cmu-slt-hsmm:5.1.2"
+	compile "li.cil.oc:OpenComputers:${config.oc.version}:dev"
+	provided "com.gregoriust.gregtech:${config.gregtech.version}:dev"
+	compile("mcp.mobius.waila:Waila:${config.waila.version}:dev") {
+		exclude module: "CodeChickenLib"
+		exclude module: "CodeChickenCore"
+		exclude module: "NotEnoughItems"
+	}
+	compile("com.enderio:EnderIO:${config.enderio.version}:dev") {
+		exclude module: "appliedenergistics2"
+		exclude module: "buildcraft"
+		exclude module: "Waila"
+	}
+	compile("net.sengir.forestry:${config.forestry.version}:dev") {
+		exclude module: "buildcraft"
+		exclude module: "industrialcraft-2"
+	}
+	compile "de.dfki.mary:marytts-runtime:5.1.2:jar-with-dependencies"
+	compile "de.dfki.mary:marytts-lang-en:5.1.2"
+	compile "de.dfki.mary:voice-cmu-slt-hsmm:5.1.2"
 }
 
 minecraft {
-    version = "${config.minecraft.version}-${config.forge.version}"
-    runDir = "eclipse/assets"
+	version = "${config.minecraft.version}-${config.forge.version}"
+	runDir = "eclipse/assets"
 
-    replaceIn "pl/asie/computronics/Computronics.java"
-    replace "@VERSION@", "${config.computronics.version}"
+	replaceIn "pl/asie/computronics/Computronics.java"
+	replace "@VERSION@", "${config.computronics.version}"
 }
 
-sourceSets{
-    main{
-        output.resourcesDir = 'build/classes/main'
-    }
+sourceSets {
+	main {
+		output.resourcesDir = 'build/classes/main'
+	}
+}
+
+jar {
+	exclude 'cofh/**'
 }
 
 apply plugin: 'idea'
 idea {
-    module {
-        outputDir = file('build/classes/main')
-    }
+	module {
+		scopes.PROVIDED.plus += [configurations.provided]
+		outputDir = file('build/classes/main')
+	}
 }
 
 processResources
-        {
-            // replace stuff in mcmod.info, nothing else
-            from(sourceSets.main.resources.srcDirs) {
-                include 'mcmod.info'
+	{
+		// replace stuff in mcmod.info, nothing else
+		from(sourceSets.main.resources.srcDirs) {
+			include 'mcmod.info'
 
-                // replace version and mcversion
-                expand 'version': project.version, 'mcversion': project.minecraft.version
-            }
+			// replace version and mcversion
+			expand 'version': project.version, 'mcversion': project.minecraft.version
+		}
 
-            // copy everything else, thats not the mcmod.info
-            from(sourceSets.main.resources.srcDirs) {
-                exclude 'mcmod.info'
-            }
-        }
+		// copy everything else, thats not the mcmod.info
+		from(sourceSets.main.resources.srcDirs) {
+			exclude 'mcmod.info'
+		}
+	}
 
 //For Building
 
 def libDir = './build/libs'
 
 task deobfJar(type: Jar) {
-    description = 'Creates a jar file containing the non-obfuscated class files'
-    classifier = 'deobf'
-    destinationDir = file(libDir)
-    from sourceSets.main.output.classesDir
+	description = 'Creates a jar file containing the non-obfuscated class files'
+	classifier = 'deobf'
+	destinationDir = file(libDir)
+	from sourceSets.main.output.classesDir
+	exclude 'cofh/**'
 }
 
 task apiZip(type: Zip) {
-    description = 'Creates a zip file containing the API source files only'
-    classifier = 'api'
-    destinationDir = file(libDir)
-    from sourceSets.main.allSource
-    include 'pl/asie/**/api/**'
+	description = 'Creates a zip file containing the API source files only'
+	classifier = 'api'
+	destinationDir = file(libDir)
+	from sourceSets.main.allSource
+	include 'pl/asie/**/api/**'
 }
 
 task makeJars << {
-    description = 'Creates the mod files'
+	description = 'Creates the mod files'
 }
 
 makeJars.dependsOn clean, build, deobfJar, apiZip

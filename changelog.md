@@ -1,3 +1,11 @@
+==== 1.4.1 ====
+
+  * FIXED: Updated Railcraft integration (requires Railcraft 9.5 now)
+  * CHANGED: Some changes to the config file
+    - It is recommended to regenerate the config file
+  * CHANGED: Got rid of the EnderIO CapacitorBank's getEnergyStoredForNetwork and getMaxEnergyStoredForNetwork functions
+    - Their behaviour was the same is getEnergyStored/getMaxEnergyStored, so use those functions instead
+
 ==== 1.4.0 ====
 
   * ADDED: Tape Drives now output a comparator signal if they are currently playing

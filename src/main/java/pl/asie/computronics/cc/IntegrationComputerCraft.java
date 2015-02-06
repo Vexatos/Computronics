@@ -108,9 +108,13 @@ public class IntegrationComputerCraft {
 			}
 		}
 
+		if(ModAPIManager.INSTANCE.hasAPI(Mods.API.CoFHAPI_Energy)
+			&& compat.isCompatEnabled(Compat.RedstoneFlux)) {
+			registerMultiPeripheralProvider(new DriverEnergyHandler.CCDriver());
+		}
+
 		if(Loader.isModLoaded(Mods.EnderIO)) {
 			if(compat.isCompatEnabled(Compat.EnderIO)) {
-				registerMultiPeripheralProvider(new DriverEnergyHandler.CCDriver());
 				registerMultiPeripheralProvider(new DriverRedstoneControllable.CCDriver());
 				registerMultiPeripheralProvider(new DriverIOConfigurable.CCDriver());
 				registerMultiPeripheralProvider(new DriverHasExperience.CCDriver());
@@ -122,9 +126,6 @@ public class IntegrationComputerCraft {
 				registerMultiPeripheralProvider(new DriverCapacitorBankOld.CCDriver());
 				registerMultiPeripheralProvider(new DriverTransceiver.CCDriver());
 			}
-		} else if(ModAPIManager.INSTANCE.hasAPI(Mods.API.CoFHAPI_Energy)
-			&& compat.isCompatEnabled(Compat.RedstoneFlux)) {
-			registerMultiPeripheralProvider(new DriverEnergyHandler.CCDriver());
 		}
 
 		if(Mods.API.hasVersion(Mods.API.BuildCraftTiles, "[1.1,)")) {
