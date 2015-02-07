@@ -9,7 +9,7 @@
   "mcversion": "${mcversion}",
   "url": "",
   "updateUrl": "",
-  "authors": [ "asiekierka", "Techokami", "Vexatos" ],
+  "authorList": [ "asiekierka", "Techokami", "Vexatos" ],
   "parent":"",
   "screenshots": [],
   "dependencies": []
