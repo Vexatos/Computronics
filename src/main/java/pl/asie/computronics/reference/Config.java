@@ -40,6 +40,7 @@ public class Config {
 	public static boolean OC_CARD_FX;
 	public static boolean OC_CARD_SPOOF;
 	public static boolean OC_CARD_SOUND;
+	public static boolean OC_CARD_BOOM;
 
 	public static boolean CC_OPEN_MULTI_PERIPHERAL = true;
 	public static boolean CC_ALL_MULTI_PERIPHERALS = true;
@@ -90,6 +91,7 @@ public class Config {
 			OC_CARD_FX = config.get("enable.opencomputers", "particleCard", true).getBoolean(true);
 			OC_CARD_SPOOF = config.get("enable.opencomputers", "spoofingCard", true).getBoolean(true);
 			OC_CARD_SOUND = config.get("enable.opencomputers", "soundCard", true).getBoolean(true);
+			OC_CARD_BOOM = config.get("enable.opencomputers", "boomCard", true).getBoolean(true);
 
 			// Particle Card
 			FX_ENERGY_COST = convertRFtoOC(

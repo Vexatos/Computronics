@@ -1,5 +1,9 @@
 ==== 1.4.2 ====
 
+  * ADDED: Self-Destructing card
+    - Does exactly what you think it does
+    - Also comes with a built-in program for convenient self-destruction
+  * FIXED: FX Card emitting particles when it doesn't have enough energy for that
   * FIXED: Crash happening when Tape length configuration entry has been misconfigured. Now it will print errors to the log instead
 
 ==== 1.4.1 ====
