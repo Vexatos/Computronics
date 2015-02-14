@@ -6,6 +6,7 @@ import cpw.mods.fml.common.event.FMLMissingMappingsEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import li.cil.oc.api.Driver;
 import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import org.apache.logging.log4j.Logger;
@@ -72,7 +73,11 @@ public class IntegrationOpenComputers {
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void preInit() {
 
-		if(Config.OC_ROBOT_UPGRADES || Config.OC_CARD_FX || Config.OC_CARD_SPOOF || Config.OC_CARD_SOUND) {
+		if(Config.OC_ROBOT_UPGRADES
+			|| Config.OC_CARD_FX
+			|| Config.OC_CARD_SPOOF
+			|| Config.OC_CARD_SOUND
+			|| Config.OC_CARD_BOOM) {
 			itemOCParts = new ItemOpenComputers();
 			GameRegistry.registerItem(itemOCParts, "computronics.ocParts");
 			Driver.add(itemOCParts);
@@ -235,6 +240,14 @@ public class IntegrationOpenComputers {
 				'f', Computronics.ironNote,
 				'b', li.cil.oc.api.Items.get("card").createItemStack(1),
 				'l', li.cil.oc.api.Items.get("cu").createItemStack(1));
+		}
+		if(Config.OC_CARD_BOOM) {
+			GameRegistry.addShapedRecipe(new ItemStack(itemOCParts, 1, 6),
+				"mf", "fb",
+				'm', li.cil.oc.api.Items.get("chip1").createItemStack(1),
+				'f', Blocks.tnt,
+				'b', li.cil.oc.api.Items.get("redstoneCard1").createItemStack(1));
+
 		}
 		if(Computronics.buildcraft != null) {
 			Computronics.buildcraft.postInitOC();

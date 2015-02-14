@@ -6,6 +6,7 @@ import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.Component;
+import li.cil.oc.api.network.Message;
 import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.Visibility;
 import li.cil.oc.api.prefab.ManagedEnvironment;
@@ -14,7 +15,10 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.ChunkPosition;
@@ -31,6 +35,7 @@ import java.util.ArrayList;
  * @author Vexatos
  */
 public class DriverCardBoom extends ManagedEnvironment {
+
 	protected final EnvironmentHost container;
 
 	public DriverCardBoom(EnvironmentHost container) {
@@ -57,7 +62,6 @@ public class DriverCardBoom extends ManagedEnvironment {
 			node.connect(oc_fs.node());
 		}
 	}
-	// GUI/State
 
 	@Override
 	public void onDisconnect(final Node node) {
@@ -66,9 +70,20 @@ public class DriverCardBoom extends ManagedEnvironment {
 			// computer.
 			node.disconnect(oc_fs.node());
 		} else if(node == this.node()) {
+			this.time = -1;
 			// Remove the file system if we are disconnected, because in that
 			// case this method is only called once.
 			oc_fs.node().remove();
+		}
+	}
+
+	@Override
+	public void onMessage(final Message message) {
+		super.onMessage(message);
+		if((message.name().equals("computer.stopped")
+			|| message.name().equals("computer.started"))
+			&& node().isNeighborOf(message.source())) {
+			this.time = -1;
 		}
 	}
 	// Boom code
@@ -81,6 +96,9 @@ public class DriverCardBoom extends ManagedEnvironment {
 			return new Object[] { -1, "fuse has already been set" };
 		}
 		double fuse = args.optDouble(0, 5);
+		if(fuse > 100000) {
+			throw new IllegalArgumentException("time may not be greater than 100000");
+		}
 		this.time = (int) Math.round(Math.floor(fuse * 20));
 		return new Object[] { fuse };
 	}
@@ -135,7 +153,7 @@ public class DriverCardBoom extends ManagedEnvironment {
 		if(this.time <= 0) {
 			//Bye bye.
 			this.time = -1;
-			//TODO goBoom();
+			goBoom();
 		}
 	}
 
@@ -285,10 +303,19 @@ public class DriverCardBoom extends ManagedEnvironment {
 							&& j == Math.round(Math.floor(explosionY))
 							&& k == Math.round(Math.floor(explosionZ))) {
 							//This is the case.
-							this.worldObj.setBlockToAir(i, j, k);
-						} else {
-							block.onBlockExploded(this.worldObj, i, j, k, this);
+							TileEntity tile = this.worldObj.getTileEntity(i, j, k);
+							if( //!this.worldObj.isRemote &&
+								tile != null && tile instanceof IInventory) {
+								IInventory inv = (IInventory) tile;
+								for(int slot = 0; i < inv.getSizeInventory(); i++) {
+									ItemStack stack = inv.getStackInSlot(slot);
+									if(stack != null) {
+										inv.setInventorySlotContents(slot, null);
+									}
+								}
+							}
 						}
+						block.onBlockExploded(this.worldObj, i, j, k, this);
 					}
 				}
 			}

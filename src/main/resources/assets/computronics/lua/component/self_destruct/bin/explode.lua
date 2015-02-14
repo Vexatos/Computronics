@@ -28,11 +28,26 @@ local function printUsage()
   return
 end
 
+local function pretty(text)
+  if not text:find(".", 1, true) then
+    text = text .. "."
+  end
+  local leftSide = text:sub(1, text:find(".", 1, true) - 1, nil)
+  local rightSide = text:sub(text:find(".", 1, true) + 1, nil)
+  while #rightSide < 2 do
+    rightSide = rightSide .. "0"
+  end
+  return leftSide .. "." .. rightSide, leftSide
+end
+
 local function explode(fuse)
   local sd = component.self_destruct
 
   if fuse <= 0 then
     io.stderr:write("Invalid number. Needs to be greater than 0.\n")
+    return
+  elseif fuse > 100000 then
+    io.stderr:write("Invalid number. Needs to be smaller than 100000.\n")
     return
   end
 
@@ -65,16 +80,25 @@ local function explode(fuse)
 
   sd.start(fuse)
 
+  if not term.isAvailable() then
+    io.stderr:write("no primary screen found\n")
+    return
+  end
+
   if options.t then
     local _, y = term.getCursor()
+    local resX = gpu.getResolution()
     repeat
       local timeLeft = sd.time()
+      if timeLeft < 0 then
+        timeLeft = 0
+      end
+      local timeText = "Time left: " .. pretty(tostring(timeLeft))
+      gpu.fill(#timeText + 1, y, resX - #timeText, 1, " ")
       term.setCursor(1, y)
-      term.write("Time left: " .. tostring(timeLeft))
-      os.sleep(0.1)
+      term.write(timeText)
+      os.sleep(0)
     until timeLeft <= 0
-    term.setCursor(1, y)
-    term.write("Time left: 0.00\n")
   else
     term.clear()
     local prevX, prevY = gpu.getResolution()
@@ -83,21 +107,22 @@ local function explode(fuse)
     local resX = math.min(#leftText, maxX)
     local resY = math.min(5, maxY)
     gpu.setResolution(resX, resY)
+    term.setCursor(math.max(1, math.ceil((resX / 2)) - math.ceil((#leftText / 2))), 2)
+    term.write(leftText)
 
     local dotPlace = math.ceil((resX / 2))
     repeat
       local timeLeft = sd.time()
-      local timeText = tostring(timeLeft)
-      term.setCursor(math.max(1, math.ceil((resX / 2)) - math.ceil((#leftText / 2))), 2)
-      term.write("Time left:")
-      local xPos
-      if timeText:find(".", 1, true) then
-        xPos = dotPlace - #(timeText:sub(1, timeText:find(".", 1, true) - 1, nil))
-      else
-        xPos = dotPlace - #timeText
+      if timeLeft < 0 then
+        timeLeft = 0
       end
+      local timeText, leftSide = pretty(tostring(timeLeft))
+
+      local xPos = dotPlace - #leftSide
+      gpu.fill(1, 3, xPos - 1, 1, " ")
+      gpu.fill(xPos + #timeText, 3, resX - xPos - #timeText, 1, " ")
       term.setCursor(xPos, 3)
-      term.write(tostring(timeLeft))
+      term.write(timeText)
       os.sleep(0)
     until timeLeft <= 0
     gpu.setResolution(prevX, prevY)
