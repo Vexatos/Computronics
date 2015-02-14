@@ -244,7 +244,7 @@ public class IntegrationOpenComputers {
 		if(Config.OC_CARD_BOOM) {
 			GameRegistry.addShapedRecipe(new ItemStack(itemOCParts, 1, 6),
 				"mf", "fb",
-				'm', li.cil.oc.api.Items.get("chip1").createItemStack(1),
+				'm', li.cil.oc.api.Items.get("cu").createItemStack(1),
 				'f', Blocks.tnt,
 				'b', li.cil.oc.api.Items.get("redstoneCard1").createItemStack(1));
 

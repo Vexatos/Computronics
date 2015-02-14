@@ -299,17 +299,17 @@ public class DriverCardBoom extends ManagedEnvironment {
 					}
 
 					if(block.getMaterial() != Material.air) {
-						if(i == Math.round(Math.floor(explosionX))
+						if(!this.worldObj.isRemote
+							&& i == Math.round(Math.floor(explosionX))
 							&& j == Math.round(Math.floor(explosionY))
 							&& k == Math.round(Math.floor(explosionZ))) {
 							//This is the case.
 							TileEntity tile = this.worldObj.getTileEntity(i, j, k);
-							if( //!this.worldObj.isRemote &&
-								tile != null && tile instanceof IInventory) {
+							if(tile != null && tile instanceof IInventory) {
 								IInventory inv = (IInventory) tile;
-								for(int slot = 0; i < inv.getSizeInventory(); i++) {
+								for(int slot = 0; slot < inv.getSizeInventory(); slot++) {
 									ItemStack stack = inv.getStackInSlot(slot);
-									if(stack != null) {
+									if(stack != null && stack.stackSize > 0) {
 										inv.setInventorySlotContents(slot, null);
 									}
 								}
