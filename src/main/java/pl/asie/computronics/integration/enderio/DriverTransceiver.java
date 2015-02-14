@@ -20,7 +20,7 @@ import pl.asie.computronics.integration.CCMultiPeripheral;
 import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
 import pl.asie.computronics.reference.Names;
 
-import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -30,10 +30,11 @@ import java.util.Locale;
 public class DriverTransceiver {
 
 	private static Object[] parseChannels(List<Channel> channelList) {
-		ArrayList<String> channelMap = new ArrayList<String>();
+		LinkedHashMap<Integer, String> channelMap = new LinkedHashMap<Integer, String>();
 		if(channelList != null) {
+			int i = 1;
 			for(Channel channel : channelList) {
-				channelMap.add(channel.getName());
+				channelMap.put(i++, channel.getName());
 			}
 			return new Object[] { channelMap };
 		}
@@ -212,9 +213,10 @@ public class DriverTransceiver {
 	}
 
 	private static Object[] types() {
-		ArrayList<String> types = new ArrayList<String>();
+		LinkedHashMap<Integer, String> types = new LinkedHashMap<Integer, String>();
+		int i = 1;
 		for(ChannelType type : ChannelType.values()) {
-			types.add(type.name().toLowerCase(Locale.ENGLISH));
+			types.put(i++, type.name().toLowerCase(Locale.ENGLISH));
 		}
 		return new Object[] { types };
 	}
@@ -354,11 +356,11 @@ public class DriverTransceiver {
 				return DriverTransceiver.types();
 			}
 			try {
-				switch(method){
-					case 0:{
+				switch(method) {
+					case 0: {
 						return DriverTransceiver.getSendChannels(tile, arguments);
 					}
-					case 1:{
+					case 1: {
 						if(arguments.length < 2 || !(arguments[1] instanceof String)) {
 							throw new LuaException("second argument needs to be a string");
 						}
@@ -367,10 +369,10 @@ public class DriverTransceiver {
 						}
 						return DriverTransceiver.setSendChannel(tile, arguments);
 					}
-					case 2:{
+					case 2: {
 						return DriverTransceiver.getReceiveChannels(tile, arguments);
 					}
-					case 3:{
+					case 3: {
 						if(arguments.length < 2 || !(arguments[1] instanceof String)) {
 							throw new LuaException("second argument needs to be a string");
 						}
@@ -379,34 +381,34 @@ public class DriverTransceiver {
 						}
 						return DriverTransceiver.setReceiveChannel(tile, arguments);
 					}
-					case 4:{
+					case 4: {
 						if(arguments.length < 2 || !(arguments[1] instanceof String)) {
 							throw new LuaException("second argument needs to be a string");
 						}
 						return DriverTransceiver.addChannel(tile, arguments);
 					}
-					case 5:{
+					case 5: {
 						if(arguments.length < 2 || !(arguments[1] instanceof String)) {
 							throw new LuaException("second argument needs to be a string");
 						}
 						return DriverTransceiver.removeChannel(tile, arguments);
 					}
-					case 6:{
+					case 6: {
 						if(arguments.length < 2 || !(arguments[1] instanceof String)) {
 							throw new LuaException("second argument needs to be a string");
 						}
 						return DriverTransceiver.isChannelExisting(tile, arguments);
 					}
-					case 7:{
+					case 7: {
 						return DriverTransceiver.getChannels(tile, arguments);
 					}
-					case 8:{
+					case 8: {
 						if(arguments.length < 2 || !(arguments[1] instanceof String)) {
 							throw new LuaException("second argument needs to be a string");
 						}
 						return DriverTransceiver.isSendChannel(tile, arguments);
 					}
-					case 9:{
+					case 9: {
 						if(arguments.length < 2 || !(arguments[1] instanceof String)) {
 							throw new LuaException("second argument needs to be a string");
 						}
