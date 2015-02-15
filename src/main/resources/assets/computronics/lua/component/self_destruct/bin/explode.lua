@@ -8,15 +8,9 @@ local term = require("term")
 local args, options = shell.parse(...)
 
 if not component.isAvailable("self_destruct") then
-  io.stderr:write("This program requires a self-destructing card to run.")
+  io.stderr:write("This program requires a self-destructing card to run.\n")
   return
 end
-
-if not component.isAvailable("gpu") then
-  io.stderr:write("This program requires a graphics card to run.")
-  return
-end
-local gpu = component.gpu
 
 local function printUsage()
   print("Usage:")
@@ -81,9 +75,10 @@ local function explode(fuse)
   sd.start(fuse)
 
   if not term.isAvailable() then
-    io.stderr:write("no primary screen found\n")
+    io.stderr:write("no primary gpu/screen found\nUse -s to run this program without\n")
     return
   end
+  local gpu = component.gpu
 
   if options.t then
     local _, y = term.getCursor()

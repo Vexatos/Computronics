@@ -38,7 +38,7 @@ Deobfuscated code gives you many benefits, including but not limited to:
 | GregTech* | 5.07.07 | GregoriousT | [IC2 Forums](http://forum.industrial-craft.net/index.php?page=Thread&threadID=7156&) |
 | IndustrialCraft 2 | 2.2.643 | Player | [Wiki](http://wiki.industrial-craft.net/) |
 | OpenBlocks | 1.3-snapshot-544 | OpenMods Team | [Website](http://www.openmods.info/) |
-| OpenComputers* | 1.4.8.33 | Sangar (don't confuse with Sengir) | [Website](http://oc.cil.li/) |
+| OpenComputers* | 1.4.9.38 | Sangar (don't confuse with Sengir) | [Website](http://oc.cil.li/) |
 | OpenModsLib | 0.6-snapshot-295 | OpenMods Team | [Website](http://www.openmods.info/) |
 | OpenPeripheralCore | 0.5.0-snapshot-188 | OpenMods Team | [Website](http://www.openmods.info/) |
 | RailCraft | 9.5.0.0 | CovertJaguar | [Website](http://railcraft.info/) |
