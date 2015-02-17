@@ -234,6 +234,7 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 				boolean shouldShorten = (font.getStringWidth(tip) > maxWidth) && !KeyBindings.showExtendedTooltips();
 				if(shouldShorten) {
 					tooltip.add(StringUtil.localizeAndFormat("oc:tooltip.TooLong",
+						//TODO change to Keyboard.getKeybindName for OC 1.5 update
 						Keyboard.getKeyName(KeyBindings.extendedTooltip().getKeyCode())));
 				} else {
 					for(String line : lines) {

@@ -6,6 +6,7 @@
   * ADDED: Optional argument to the Iron Note Block's / Musical Turtle's `playNote()` to specify the volume
     - Its definition is now `function([instrument:number or string,] note:number [, volume:number])`
     - `volume` may be a number between 0 and 1 (1 being default and the volume it was before)
+  * ADDED: The Drone Docking Station now is able to charge docked drones when plugged onto a Kinesis Pipe!
   * FIXED: Particle Effects Card emitting particles when it doesn't have enough energy for that
   * FIXED: Crash happening when Tape length configuration entry has been misconfigured. Now it will print errors to the log instead
   * FIXED: A lot of Lua functions returning nil in ComputerCraft when they should return tables
