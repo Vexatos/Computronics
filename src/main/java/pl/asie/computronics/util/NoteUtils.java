@@ -7,6 +7,8 @@ import net.minecraftforge.event.world.NoteBlockEvent;
 
 public class NoteUtils {
 
+	private static String[] instruments = new String[] { "harp", "bd", "snare", "hat", "bassattack", "pling", "bass" };
+
 	public static void playNote(World worldObj, int xCoord, int yCoord, int zCoord, String instrument, int note, float volume) {
 		float f = (float) Math.pow(2.0D, (double) (note - 12) / 12.0D);
 
@@ -53,19 +55,9 @@ public class NoteUtils {
 			note = e.getVanillaNoteId();
 		}
 
-		String s = "harp";
-		if(instrument == 1) {
-			s = "bd";
-		} else if(instrument == 2) {
-			s = "snare";
-		} else if(instrument == 3) {
-			s = "hat";
-		} else if(instrument == 4) {
-			s = "bassattack";
-		} else if(instrument == 5) {
-			s = "pling";
-		} else if(instrument == 6) {
-			s = "bass";
+		String s = instruments[0];
+		if(instrument > 0 && instrument < instruments.length) {
+			s = instruments[instrument];
 		}
 
 		playNote(worldObj, xCoord, yCoord, zCoord, s, note, volume);

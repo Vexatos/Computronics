@@ -57,6 +57,11 @@ public class BlockChatBox extends BlockMachineSidedIcon implements IBlockWithSpe
 	}
 
 	@Override
+	public int damageDropped(int metadata) {
+		return metadata;
+	}
+
+	@Override
 	@SideOnly(Side.CLIENT)
 	public IIcon getAbsoluteSideIcon(int sideNumber, int metadata) {
 		return mSide;
