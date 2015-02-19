@@ -7,7 +7,7 @@ import net.minecraftforge.event.world.NoteBlockEvent;
 
 public class NoteUtils {
 
-	private static String[] instruments = new String[] { "harp", "bd", "snare", "hat", "bassattack", "pling", "bass" };
+	private static final String[] instruments = new String[] { "harp", "bd", "snare", "hat", "bassattack", "pling", "bass" };
 
 	public static void playNote(World worldObj, int xCoord, int yCoord, int zCoord, String instrument, int note, float volume) {
 		float f = (float) Math.pow(2.0D, (double) (note - 12) / 12.0D);

@@ -10,6 +10,7 @@
   * FIXED: Particle Effects Card emitting particles when it doesn't have enough energy for that
   * FIXED: Crash happening when Tape length configuration entry has been misconfigured. Now it will print errors to the log instead
   * FIXED: A lot of Lua functions returning nil in ComputerCraft when they should return tables
+  * FIXED: The Creative Chat Box dropping a normal Chat Box when broken. Now it will drop a creative one.
 
 ==== 1.4.1 ====
 
