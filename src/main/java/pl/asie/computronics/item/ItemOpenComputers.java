@@ -22,7 +22,6 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import org.lwjgl.input.Keyboard;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.oc.DriverCardBoom;
 import pl.asie.computronics.oc.DriverCardFX;
@@ -234,8 +233,7 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 				boolean shouldShorten = (font.getStringWidth(tip) > maxWidth) && !KeyBindings.showExtendedTooltips();
 				if(shouldShorten) {
 					tooltip.add(StringUtil.localizeAndFormat("oc:tooltip.TooLong",
-						//TODO change to Keyboard.getKeybindName for OC 1.5 update
-						Keyboard.getKeyName(KeyBindings.extendedTooltip().getKeyCode())));
+						KeyBindings.getKeybindName(KeyBindings.extendedTooltip())));
 				} else {
 					for(String line : lines) {
 						List list = font.listFormattedStringToWidth(line, maxWidth);
@@ -250,7 +248,7 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 			} else {
 				tooltip.add(StringUtil.localizeAndFormat(
 					"oc:tooltip.MaterialCosts",
-					Keyboard.getKeyName(KeyBindings.materialCosts().getKeyCode())));
+					KeyBindings.getKeybindName(KeyBindings.materialCosts())));
 			}
 		}
 		if(stack.hasTagCompound() && stack.getTagCompound().hasKey("oc:data")) {
