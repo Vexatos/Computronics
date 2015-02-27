@@ -4,8 +4,7 @@ import buildcraft.api.transport.IPipeTile;
 import buildcraft.api.transport.pluggable.IPipePluggableRenderer;
 import buildcraft.api.transport.pluggable.PipePluggable;
 import buildcraft.core.utils.MatrixTranformations;
-import buildcraft.transport.Pipe;
-import buildcraft.transport.PipeTransportPower;
+import cofh.api.energy.IEnergyReceiver;
 import io.netty.buffer.ByteBuf;
 import li.cil.oc.Settings;
 import li.cil.oc.api.internal.Drone;
@@ -23,7 +22,7 @@ import pl.asie.lib.util.EnergyConverter;
 /**
  * @author Vexatos
  */
-public class DroneStationPluggable extends PipePluggable {
+public class DroneStationPluggable extends PipePluggable implements IEnergyReceiver {
 
 	public static enum DroneStationState {
 		Available,
@@ -72,39 +71,9 @@ public class DroneStationPluggable extends PipePluggable {
 		if(getState() == DroneStationState.Used && drone == null) {
 			state = DroneStationState.Available;
 		}
-		if(drone != null && (drone.world() != pipe.getWorldObj()
+		if(drone != null && (drone.world() != pipe.getWorld()
 			|| drone instanceof Entity && ((Entity) drone).getDistanceSq(pipe.x(), pipe.y(), pipe.z()) >= 4)) {
 			setDrone(null);
-		}
-		if(pipe != null && pipe.getPipe() != null && drone != null
-			&& pipe.getPipe() instanceof Pipe
-			&& ((Pipe) pipe.getPipe()).transport != null
-			&& ((Pipe) pipe.getPipe()).transport instanceof PipeTransportPower) {
-
-			World world = drone.world();
-			if(!world.isRemote) {
-				PipeTransportPower powerPipe = (PipeTransportPower) ((Pipe) pipe.getPipe()).transport;
-				Connector node = (Connector) drone.machine().node();
-				double charge = Settings.get().chargeRateExternal();
-				double change = Math.min(charge, node.globalBufferSize() - node.globalBuffer());
-				if(change > 10) {
-					int amount = (int) Math.floor(EnergyConverter.convertEnergy(change, "OC", "RF"));
-					powerPipe.requestEnergy(direction, amount);
-					int newPower = powerPipe.consumePower(direction, amount);
-					if(newPower > 0) {
-						double remainingPower = node.changeBuffer(newPower);
-						if(Math.round(remainingPower) < newPower
-							&& world.getWorldInfo().getWorldTotalTime() % 10 == 0) {
-							double theta = world.rand.nextDouble() * Math.PI;
-							double phi = world.rand.nextDouble() * Math.PI * 2;
-							double dx = 0.45 * Math.sin(theta) * Math.cos(phi);
-							double dy = 0.45 * Math.sin(theta) * Math.sin(phi);
-							double dz = 0.45 * Math.cos(theta);
-							ParticleUtils.sendParticlePacket("happyVillager", drone.world(), drone.xPosition() + dx, drone.yPosition() + dz, drone.zPosition() + dy, 0, 0, 0);
-						}
-					}
-				}
-			}
 		}
 	}
 
@@ -148,5 +117,54 @@ public class DroneStationPluggable extends PipePluggable {
 	@Override
 	public void readData(ByteBuf data) {
 		//this.state = DroneStationState.values()[data.readUnsignedByte()];
+	}
+
+	@Override
+	public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate) {
+		if(drone == null || state == DroneStationState.Available) {
+			return 0;
+		}
+		World world = drone.world();
+		if(!world.isRemote) {
+			Connector node = (Connector) drone.machine().node();
+			double charge = Settings.get().chargeRateExternal();
+			double change = Math.min(charge, node.globalBufferSize() - node.globalBuffer());
+			if(change > 10) {
+				double newPower = Math.min(EnergyConverter.convertEnergy(maxReceive, "RF", "OC"), change);
+				if(newPower > 0) {
+					if(simulate) {
+						// We cannot simulate node buffer changes
+						return (int) Math.ceil(EnergyConverter.convertEnergy(newPower, "OC", "RF"));
+					}
+					double remainingPower = node.changeBuffer(newPower);
+					if(remainingPower < newPower
+						&& world.getWorldInfo().getWorldTotalTime() % 10 == 0) {
+						double theta = world.rand.nextDouble() * Math.PI;
+						double phi = world.rand.nextDouble() * Math.PI * 2;
+						double dx = 0.45 * Math.sin(theta) * Math.cos(phi);
+						double dy = 0.45 * Math.sin(theta) * Math.sin(phi);
+						double dz = 0.45 * Math.cos(theta);
+						ParticleUtils.sendParticlePacket("happyVillager", drone.world(), drone.xPosition() + dx, drone.yPosition() + dz, drone.zPosition() + dy, 0, 0, 0);
+					}
+					return (int) Math.ceil(EnergyConverter.convertEnergy(newPower - remainingPower, "OC", "RF"));
+				}
+			}
+		}
+		return 0;
+	}
+
+	@Override
+	public int getEnergyStored(ForgeDirection from) {
+		return 0;
+	}
+
+	@Override
+	public int getMaxEnergyStored(ForgeDirection from) {
+		return 0;
+	}
+
+	@Override
+	public boolean canConnectEnergy(ForgeDirection from) {
+		return true;
 	}
 }
