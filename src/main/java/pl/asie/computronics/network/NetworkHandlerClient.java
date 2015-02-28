@@ -95,7 +95,7 @@ public class NetworkHandlerClient extends MessageHandlerBase {
 			break;
 			case Packets.PACKET_COMPUTER_BOOM: {
 				if(Loader.isModLoaded(Mods.OpenComputers)) {
-					DriverCardBoom.clientBoom(packet);
+					Computronics.proxy.goBoom(packet);
 				}
 			}
 			break;

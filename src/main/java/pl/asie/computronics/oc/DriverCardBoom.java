@@ -10,26 +10,16 @@ import li.cil.oc.api.network.Message;
 import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.Visibility;
 import li.cil.oc.api.prefab.ManagedEnvironment;
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.ChunkPosition;
-import net.minecraft.world.Explosion;
-import net.minecraft.world.World;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.reference.Mods;
+import pl.asie.computronics.util.boom.SelfDestruct;
 import pl.asie.lib.network.Packet;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 /**
  * @author Vexatos
@@ -157,39 +147,6 @@ public class DriverCardBoom extends ManagedEnvironment {
 		}
 	}
 
-	public static void clientBoom(Packet p) throws IOException {
-		double
-			x = p.readDouble(),
-			y = p.readDouble(),
-			z = p.readDouble();
-		float force = p.readFloat();
-		Minecraft minecraft = Minecraft.getMinecraft();
-		SelfDestruct explosion = new SelfDestruct(minecraft.theWorld,
-			null, x,
-			y,
-			z,
-			force);
-		int size = p.readInt();
-		ArrayList<ChunkPosition> list = new ArrayList<ChunkPosition>(size);
-		int i = (int) x;
-		int j = (int) y;
-		int k = (int) z;
-		{
-			int j1, k1, l1;
-			for(int i1 = 0; i1 < size; ++i1) {
-				j1 = p.readByte() + i;
-				k1 = p.readByte() + j;
-				l1 = p.readByte() + k;
-				list.add(new ChunkPosition(j1, k1, l1));
-			}
-		}
-		explosion.affectedBlockPositions = list;
-		explosion.doExplosionB(true);
-		minecraft.thePlayer.motionX += (double) p.readFloat();
-		minecraft.thePlayer.motionY += (double) p.readFloat();
-		minecraft.thePlayer.motionZ += (double) p.readFloat();
-	}
-
 	private void goBoom() {
 		SelfDestruct explosion = new SelfDestruct(container.world(), null, container.xPosition(), container.yPosition(), container.zPosition(), 4.0F);
 		explosion.isSmoking = true;
@@ -243,79 +200,6 @@ public class DriverCardBoom extends ManagedEnvironment {
 						Computronics.packet.sendTo(p, entityplayer);
 					} catch(IOException e) {
 						e.printStackTrace();
-					}
-				}
-			}
-		}
-	}
-
-	private static class SelfDestruct extends Explosion {
-
-		private World worldObj;
-
-		public SelfDestruct(World world, Entity exploder, double x, double y, double z, float size) {
-			super(world, exploder, x, y, z, size);
-			this.worldObj = world;
-		}
-
-		//Unfortunately I had to copy a lot of code for this one.
-		@Override
-		public void doExplosionB(boolean client) {
-			this.worldObj.playSoundEffect(this.explosionX, this.explosionY, this.explosionZ, "random.explode", 4.0F, (1.0F + (this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) * 0.2F) * 0.7F);
-
-			if(this.explosionSize >= 2.0F && this.isSmoking) {
-				this.worldObj.spawnParticle("hugeexplosion", this.explosionX, this.explosionY, this.explosionZ, 1.0D, 0.0D, 0.0D);
-			} else {
-				this.worldObj.spawnParticle("largeexplode", this.explosionX, this.explosionY, this.explosionZ, 1.0D, 0.0D, 0.0D);
-			}
-
-			if(this.isSmoking) {
-
-				for(Object affectedBlockPosition : this.affectedBlockPositions) {
-					ChunkPosition chunkposition = (ChunkPosition) affectedBlockPosition;
-					int i = chunkposition.chunkPosX;
-					int j = chunkposition.chunkPosY;
-					int k = chunkposition.chunkPosZ;
-					Block block = this.worldObj.getBlock(i, j, k);
-
-					if(client) {
-						double d0 = (double) ((float) i + this.worldObj.rand.nextFloat());
-						double d1 = (double) ((float) j + this.worldObj.rand.nextFloat());
-						double d2 = (double) ((float) k + this.worldObj.rand.nextFloat());
-						double d3 = d0 - this.explosionX;
-						double d4 = d1 - this.explosionY;
-						double d5 = d2 - this.explosionZ;
-						double d6 = (double) MathHelper.sqrt_double(d3 * d3 + d4 * d4 + d5 * d5);
-						d3 /= d6;
-						d4 /= d6;
-						d5 /= d6;
-						double d7 = 0.5D / (d6 / (double) this.explosionSize + 0.1D);
-						d7 *= (double) (this.worldObj.rand.nextFloat() * this.worldObj.rand.nextFloat() + 0.3F);
-						d3 *= d7;
-						d4 *= d7;
-						d5 *= d7;
-						this.worldObj.spawnParticle("explode", (d0 + this.explosionX * 1.0D) / 2.0D, (d1 + this.explosionY * 1.0D) / 2.0D, (d2 + this.explosionZ * 1.0D) / 2.0D, d3, d4, d5);
-						this.worldObj.spawnParticle("smoke", d0, d1, d2, d3, d4, d5);
-					}
-
-					if(block.getMaterial() != Material.air) {
-						if(!this.worldObj.isRemote
-							&& i == Math.round(Math.floor(explosionX))
-							&& j == Math.round(Math.floor(explosionY))
-							&& k == Math.round(Math.floor(explosionZ))) {
-							//This is the case.
-							TileEntity tile = this.worldObj.getTileEntity(i, j, k);
-							if(tile != null && tile instanceof IInventory) {
-								IInventory inv = (IInventory) tile;
-								for(int slot = 0; slot < inv.getSizeInventory(); slot++) {
-									ItemStack stack = inv.getStackInSlot(slot);
-									if(stack != null && stack.stackSize > 0) {
-										inv.setInventorySlotContents(slot, null);
-									}
-								}
-							}
-						}
-						block.onBlockExploded(this.worldObj, i, j, k, this);
 					}
 				}
 			}

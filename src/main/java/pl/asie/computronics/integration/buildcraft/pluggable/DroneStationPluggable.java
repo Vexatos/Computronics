@@ -121,7 +121,7 @@ public class DroneStationPluggable extends PipePluggable implements IEnergyRecei
 
 	@Override
 	public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate) {
-		if(drone == null || state == DroneStationState.Available) {
+		if(drone == null || state == DroneStationState.Available || drone.world() == null) {
 			return 0;
 		}
 		World world = drone.world();
