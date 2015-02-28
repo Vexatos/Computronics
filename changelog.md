@@ -2,6 +2,9 @@
 
   * FIXED: Updated BuildCraft integration (requires BuildCraft 6.4.1 now)
     - This will make the Drone Docking station not crash anymore
+  * FIXED: Server-side crash with Self-Destructing Card
+  * FIXED: Some tooltips not being displayed properly
+
 
 ==== 1.4.2 ====
 

@@ -22,6 +22,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumChatFormatting;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.oc.DriverCardBoom;
 import pl.asie.computronics.oc.DriverCardFX;
@@ -254,7 +255,9 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 		if(stack.hasTagCompound() && stack.getTagCompound().hasKey("oc:data")) {
 			NBTTagCompound data = stack.getTagCompound().getCompoundTag("oc:data");
 			if(data.hasKey("node") && data.getCompoundTag("node").hasKey("address")) {
-				tooltip.add("§8" + data.getCompoundTag("node").getString("address").substring(0, 13) + "...§7");
+				tooltip.add(EnumChatFormatting.DARK_GRAY
+					+ data.getCompoundTag("node").getString("address").substring(0, 13) + "..."
+					+ EnumChatFormatting.GRAY);
 			}
 		}
 	}
