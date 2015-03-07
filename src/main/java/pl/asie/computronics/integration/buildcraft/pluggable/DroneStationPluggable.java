@@ -127,8 +127,7 @@ public class DroneStationPluggable extends PipePluggable implements IEnergyRecei
 		World world = drone.world();
 		if(!world.isRemote) {
 			Connector node = (Connector) drone.machine().node();
-			double charge = Settings.get().chargeRateExternal();
-			double change = Math.min(charge, node.globalBufferSize() - node.globalBuffer());
+			double change = Math.min(Settings.get().chargeRateExternal(), node.globalBufferSize() - node.globalBuffer());
 			if(change > 10) {
 				double newPower = Math.min(EnergyConverter.convertEnergy(maxReceive, "RF", "OC"), change);
 				if(newPower > 0) {
