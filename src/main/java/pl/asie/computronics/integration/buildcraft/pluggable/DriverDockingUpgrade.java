@@ -132,7 +132,7 @@ public class DriverDockingUpgrade extends ManagedEnvironment {
 			}
 			return new Object[] { 0, "drone is not docked" };
 		}
-		if(!(pipe.canInjectItems(side))) {
+		if(pipe.getPipeType() != IPipeTile.PipeType.ITEM) {
 			return new Object[] { 0, "cannot inject items into pipe" };
 		}
 		if(!(pipe instanceof TileGenericPipe)) {
