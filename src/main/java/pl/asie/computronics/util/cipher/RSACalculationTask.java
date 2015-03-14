@@ -11,6 +11,8 @@ import java.util.Map;
  */
 public class RSACalculationTask implements Runnable {
 
+	private static final BigInteger TWO = new BigInteger("2");
+
 	private final RSAValue val;
 	private int bitLength = 0;
 	private int p = 0;
@@ -75,7 +77,6 @@ public class RSACalculationTask implements Runnable {
 		BigInteger cat = p.subtract(BigInteger.ONE).multiply(q.subtract(BigInteger.ONE));
 		BigInteger n = p.multiply(q);
 		BigInteger d = new BigInteger("17");
-		final BigInteger TWO = new BigInteger("2");
 		while(cat.gcd(d).intValue() != 1) {
 			d = d.add(TWO);
 		}

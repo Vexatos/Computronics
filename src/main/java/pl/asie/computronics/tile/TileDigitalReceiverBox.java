@@ -279,13 +279,13 @@ public class TileDigitalReceiverBox extends TileBoxBase
 		return new Object[] { aspectMap };
 	}
 
-	@Callback(doc = "function():number; Returns the currently received aspect that triggers the receiver box")
+	@Callback(doc = "function():number; Returns the currently received aspect that triggers the receiver box", direct = true, limit = 16)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] getSignal(Context context, Arguments args) {
 		return getSignal();
 	}
 
-	@Callback(doc = "This is a list of every available Signal Aspect in Railcraft", getter = true)
+	@Callback(doc = "This is a list of every available Signal Aspect in Railcraft", getter = true, direct = true, limit = 16)
 	public Object[] aspects(Context c, Arguments a) {
 		return aspects();
 	}
@@ -363,11 +363,11 @@ public class TileDigitalReceiverBox extends TileBoxBase
 	@Optional.Method(modid = Mods.ComputerCraft)
 	public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
 		if(method < getMethodNames().length) {
-			switch(method){
-				case 0:{
+			switch(method) {
+				case 0: {
 					return getSignal();
 				}
-				case 1:{
+				case 1: {
 					return aspects();
 				}
 			}

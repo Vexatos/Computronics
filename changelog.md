@@ -1,3 +1,7 @@
+==== 1.4.4 ====
+
+  * CHANGED: Digital Signal Reciver Box functions are now direct (thus they can be accessed much faster now)
+
 ==== 1.4.3 ====
 
   * FIXED: Updated BuildCraft integration (requires BuildCraft 6.4.1 now)
