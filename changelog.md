@@ -2,6 +2,7 @@
 
   * ADDED: Draconic Evolution integration!
     - You can now properly get the (max) energy stored from Energy Pylons, the values can be so huge it needed a special handler
+    - You will need at least version v1.0.1-snapshot_6 of the mod for this to work
   * CHANGED: Digital Signal Reciver Box functions are now direct (thus they can be accessed much faster now)
   * CHANGED: Added getEnergyStored() / getMaxEnergyStored functions to blocks that only receive or provide RF and not do both
   * FIXED: Digital Locomotive Relay's getDestination() and setDestination() actually work properly again now!
