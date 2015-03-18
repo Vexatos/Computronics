@@ -1,6 +1,7 @@
 ==== 1.4.4 ====
 
   * CHANGED: Digital Signal Reciver Box functions are now direct (thus they can be accessed much faster now)
+  * FIXED: Digital Locomotive Relay's getDestination() and setDestination() actually work properly again now!
 
 ==== 1.4.3 ====
 
