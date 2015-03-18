@@ -9,7 +9,8 @@ import pl.asie.computronics.Computronics;
 import pl.asie.computronics.cc.multiperipheral.MultiPeripheralProvider;
 import pl.asie.computronics.integration.appeng.DriverSpatialIOPort;
 import pl.asie.computronics.integration.buildcraft.DriverHeatable;
-import pl.asie.computronics.integration.cofh.DriverEnergyHandler;
+import pl.asie.computronics.integration.cofh.DriverEnergyProvider;
+import pl.asie.computronics.integration.cofh.DriverEnergyReceiver;
 import pl.asie.computronics.integration.enderio.DriverAbstractMachine;
 import pl.asie.computronics.integration.enderio.DriverAbstractPoweredMachine;
 import pl.asie.computronics.integration.enderio.DriverCapacitorBank;
@@ -110,8 +111,8 @@ public class IntegrationComputerCraft {
 
 		if(ModAPIManager.INSTANCE.hasAPI(Mods.API.CoFHAPI_Energy)
 			&& compat.isCompatEnabled(Compat.RedstoneFlux)) {
-			registerMultiPeripheralProvider(new DriverEnergyHandler.CCDriver_Receiver());
-			registerMultiPeripheralProvider(new DriverEnergyHandler.CCDriver_Provider());
+			registerMultiPeripheralProvider(new DriverEnergyReceiver.CCDriver());
+			registerMultiPeripheralProvider(new DriverEnergyProvider.CCDriver());
 		}
 
 		if(Loader.isModLoaded(Mods.EnderIO)) {
