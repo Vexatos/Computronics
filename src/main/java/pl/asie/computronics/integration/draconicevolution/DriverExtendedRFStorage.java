@@ -85,9 +85,6 @@ public class DriverExtendedRFStorage {
 
 		@Override
 		public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
-			if(arguments.length > 0 && !(arguments[0] instanceof Integer)) {
-				throw new LuaException("first argument needs to be a number or nil");
-			}
 			switch(method) {
 				case 0: {
 					return new Object[] { tile.getEnergyStored() };
