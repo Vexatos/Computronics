@@ -157,7 +157,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 		}
 	}
 
-	@Callback(doc = "function():String; gets the destination the locomotive is currently set to")
+	@Callback(doc = "function():string; gets the destination the locomotive is currently set to")
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] getDestination(Context context, Arguments args) {
 		if(cannotAccessLocomotive() != null) {
@@ -166,7 +166,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 		return new Object[] { this.locomotive.getDestination() };
 	}
 
-	@Callback(doc = "function(destination:String):boolean; Sets the locomotive's destination; there needs to be a golden ticket inside the locomotive")
+	@Callback(doc = "function(destination:string):boolean; Sets the locomotive's destination; there needs to be a golden ticket inside the locomotive")
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] setDestination(Context c, Arguments a) {
 		if(cannotAccessLocomotive() != null) {
