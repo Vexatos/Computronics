@@ -206,7 +206,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 	@Override
 	@Optional.Method(modid = Mods.ComputerCraft)
 	public String[] getMethodNames() {
-		return new String[] { "setDestination", "setDestination", "getCharge", "getMode", "getName" };
+		return new String[] { "getDestination", "setDestination", "getCharge", "getMode", "getName" };
 	}
 
 	@Override
