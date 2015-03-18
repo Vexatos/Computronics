@@ -110,7 +110,8 @@ public class IntegrationComputerCraft {
 
 		if(ModAPIManager.INSTANCE.hasAPI(Mods.API.CoFHAPI_Energy)
 			&& compat.isCompatEnabled(Compat.RedstoneFlux)) {
-			registerMultiPeripheralProvider(new DriverEnergyHandler.CCDriver());
+			registerMultiPeripheralProvider(new DriverEnergyHandler.CCDriver_Receiver());
+			registerMultiPeripheralProvider(new DriverEnergyHandler.CCDriver_Provider());
 		}
 
 		if(Loader.isModLoaded(Mods.EnderIO)) {

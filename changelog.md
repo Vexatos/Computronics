@@ -1,6 +1,7 @@
 ==== 1.4.4 ====
 
   * CHANGED: Digital Signal Reciver Box functions are now direct (thus they can be accessed much faster now)
+  * CHANGED: Added getEnergyStored() / getMaxEnergyStored functions to blocks that only receive or provide RF and not do both
   * FIXED: Digital Locomotive Relay's getDestination() and setDestination() actually work properly again now!
 
 ==== 1.4.3 ====
