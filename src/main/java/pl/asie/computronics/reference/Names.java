@@ -9,6 +9,7 @@ public class Names {
 		AE2_SpatialIO = "spatial_io",
 		BuildCraft_Heatable = "heatable_tile",
 		CoFH_PoweredTile = "powered_tile",
+		DraconicEvolution_Storage = "draconic_storage",
 		EnderIO_CapacitorBank = "capacitor_bank",
 		EnderIO_ExperienceTile = "experience_tile",
 		EnderIO_IOConfigurable = "io_config_tile",

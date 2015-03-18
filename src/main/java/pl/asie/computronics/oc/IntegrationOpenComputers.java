@@ -16,6 +16,7 @@ import pl.asie.computronics.integration.betterstorage.DriverCrateStorageNew;
 import pl.asie.computronics.integration.betterstorage.DriverCrateStorageOld;
 import pl.asie.computronics.integration.buildcraft.DriverHeatable;
 import pl.asie.computronics.integration.buildcraft.pluggable.IntegrationBuildCraft;
+import pl.asie.computronics.integration.draconicevolution.DriverExtendedRFStorage;
 import pl.asie.computronics.integration.enderio.DriverAbstractMachine;
 import pl.asie.computronics.integration.enderio.DriverAbstractPoweredMachine;
 import pl.asie.computronics.integration.enderio.DriverCapacitorBank;
@@ -178,6 +179,11 @@ public class IntegrationOpenComputers {
 				Driver.add(new DriverCapacitorBankOld.OCDriver());
 				Driver.add(new DriverTransceiver.OCDriver());
 			}
+		}
+
+		if(Loader.isModLoaded(Mods.API.DraconicEvolution)
+			&& compat.isCompatEnabled(Compat.DraconicEvolution)) {
+			Driver.add(new DriverExtendedRFStorage.OCDriver());
 		}
 
 		if(Mods.API.hasVersion(Mods.API.BuildCraftTiles, "[1.1,)")) {
