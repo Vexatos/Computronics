@@ -1,6 +1,6 @@
 package pl.asie.computronics.integration.enderio;
 
-import crazypants.enderio.machine.AbstractMachineEntity;
+import crazypants.util.IProgressTile;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
@@ -18,23 +18,17 @@ import pl.asie.computronics.reference.Names;
 /**
  * @author Vexatos
  */
-public class DriverAbstractMachine {
-
+public class DriverProgressTile {
 	public static class OCDriver extends DriverTileEntity {
 
-		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<AbstractMachineEntity> {
-			public InternalManagedEnvironment(AbstractMachineEntity tile) {
+		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<IProgressTile> {
+			public InternalManagedEnvironment(IProgressTile tile) {
 				super(tile, Names.EnderIO_MachineTile);
 			}
 
 			@Override
 			public int priority() {
-				return 3;
-			}
-
-			@Callback(doc = "function():boolean; Returns whether the machine is currently active")
-			public Object[] isActive(Context c, Arguments a) {
-				return new Object[] { tile.isActive() };
+				return 2;
 			}
 
 			@Callback(doc = "function():boolean; Returns the progress of the machine")
@@ -45,50 +39,47 @@ public class DriverAbstractMachine {
 
 		@Override
 		public Class<?> getTileEntityClass() {
-			return AbstractMachineEntity.class;
+			return IProgressTile.class;
 		}
 
 		@Override
 		public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
-			return new InternalManagedEnvironment(((AbstractMachineEntity) world.getTileEntity(x, y, z)));
+			return new InternalManagedEnvironment(((IProgressTile) world.getTileEntity(x, y, z)));
 		}
 	}
 
-	public static class CCDriver extends CCMultiPeripheral<AbstractMachineEntity> {
+	public static class CCDriver extends CCMultiPeripheral<IProgressTile> {
 
 		public CCDriver() {
 		}
 
-		public CCDriver(AbstractMachineEntity tile, World world, int x, int y, int z) {
+		public CCDriver(IProgressTile tile, World world, int x, int y, int z) {
 			super(tile, Names.EnderIO_MachineTile, world, x, y, z);
 		}
 
 		@Override
 		public int peripheralPriority() {
-			return 3;
+			return 2;
 		}
 
 		@Override
 		public CCMultiPeripheral getPeripheral(World world, int x, int y, int z, int side) {
 			TileEntity te = world.getTileEntity(x, y, z);
-			if(te != null && te instanceof AbstractMachineEntity) {
-				return new CCDriver((AbstractMachineEntity) te, world, x, y, z);
+			if(te != null && te instanceof IProgressTile) {
+				return new CCDriver((IProgressTile) te, world, x, y, z);
 			}
 			return null;
 		}
 
 		@Override
 		public String[] getMethodNames() {
-			return new String[] { "isActive", "getProgress" };
+			return new String[] { "getProgress" };
 		}
 
 		@Override
 		public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
 			switch(method) {
 				case 0: {
-					return new Object[] { tile.isActive() };
-				}
-				case 1: {
 					return new Object[] { tile.getProgress() };
 				}
 			}

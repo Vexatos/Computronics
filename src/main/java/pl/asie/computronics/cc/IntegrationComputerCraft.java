@@ -20,8 +20,12 @@ import pl.asie.computronics.integration.enderio.DriverHasExperience;
 import pl.asie.computronics.integration.enderio.DriverIOConfigurable;
 import pl.asie.computronics.integration.enderio.DriverPowerMonitor;
 import pl.asie.computronics.integration.enderio.DriverPowerStorage;
+import pl.asie.computronics.integration.enderio.DriverProgressTile;
 import pl.asie.computronics.integration.enderio.DriverRedstoneControllable;
+import pl.asie.computronics.integration.enderio.DriverTelepad;
 import pl.asie.computronics.integration.enderio.DriverTransceiver;
+import pl.asie.computronics.integration.enderio.DriverVacuumChest;
+import pl.asie.computronics.integration.enderio.DriverWeatherObelisk;
 import pl.asie.computronics.integration.factorization.DriverChargeConductor;
 import pl.asie.computronics.integration.fsp.DriverSteamTransporter;
 import pl.asie.computronics.integration.mfr.DriverDeepStorageUnit;
@@ -122,12 +126,16 @@ public class IntegrationComputerCraft {
 				registerMultiPeripheralProvider(new DriverIOConfigurable.CCDriver());
 				registerMultiPeripheralProvider(new DriverHasExperience.CCDriver());
 				registerMultiPeripheralProvider(new DriverPowerStorage.CCDriver());
+				registerMultiPeripheralProvider(new DriverProgressTile.CCDriver());
 				registerMultiPeripheralProvider(new DriverAbstractMachine.CCDriver());
 				registerMultiPeripheralProvider(new DriverAbstractPoweredMachine.CCDriver());
 				registerMultiPeripheralProvider(new DriverPowerMonitor.CCDriver());
 				registerMultiPeripheralProvider(new DriverCapacitorBank.CCDriver());
 				registerMultiPeripheralProvider(new DriverCapacitorBankOld.CCDriver());
 				registerMultiPeripheralProvider(new DriverTransceiver.CCDriver());
+				registerMultiPeripheralProvider(new DriverVacuumChest.CCDriver());
+				registerMultiPeripheralProvider(new DriverWeatherObelisk.CCDriver());
+				registerMultiPeripheralProvider(new DriverTelepad.CCDriver());
 			}
 		}
 
