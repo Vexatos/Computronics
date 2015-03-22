@@ -1,8 +1,6 @@
 package pl.asie.computronics.integration.enderio;
 
-import crazypants.enderio.network.PacketHandler;
-import crazypants.enderio.teleport.telepad.PacketUpdateCoords;
-import crazypants.enderio.teleport.telepad.TileTelePad;
+import crazypants.enderio.api.teleport.ITelePad;
 import crazypants.util.BlockCoord;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
@@ -23,20 +21,16 @@ import pl.asie.computronics.reference.Names;
  */
 public class DriverTelepad {
 
-	private static void checkTelepad(TileTelePad tile) {
+	private static void checkTelepad(ITelePad tile) {
 		if(tile == null || !tile.inNetwork()) {
 			throw new IllegalArgumentException("telepad is not a valid structure");
 		}
 	}
 
-	private static void updateClients(TileTelePad tile) {
-		PacketHandler.sendToAllAround(new PacketUpdateCoords(tile, tile.getX(), tile.getY(), tile.getZ(), tile.getTargetDim()), tile, 256);
-	}
-
 	public static class OCDriver extends DriverTileEntity {
 
-		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TileTelePad> {
-			public InternalManagedEnvironment(TileTelePad tile) {
+		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<ITelePad> {
+			public InternalManagedEnvironment(ITelePad tile) {
 				super(tile, Names.EnderIO_Telepad);
 			}
 
@@ -79,7 +73,6 @@ public class DriverTelepad {
 			public Object[] setX(Context c, Arguments a) {
 				checkTelepad(tile);
 				tile.setX(a.checkInteger(0));
-				updateClients(tile);
 				return new Object[] { tile.getX() };
 			}
 
@@ -87,7 +80,6 @@ public class DriverTelepad {
 			public Object[] setY(Context c, Arguments a) {
 				checkTelepad(tile);
 				tile.setY(a.checkInteger(0));
-				updateClients(tile);
 				return new Object[] { tile.getY() };
 			}
 
@@ -95,7 +87,6 @@ public class DriverTelepad {
 			public Object[] setZ(Context c, Arguments a) {
 				checkTelepad(tile);
 				tile.setZ(a.checkInteger(0));
-				updateClients(tile);
 				return new Object[] { tile.getZ() };
 			}
 
@@ -103,7 +94,6 @@ public class DriverTelepad {
 			public Object[] setCoords(Context c, Arguments a) {
 				checkTelepad(tile);
 				tile.setCoords(new BlockCoord(a.checkInteger(0), a.checkInteger(1), a.checkInteger(2)));
-				updateClients(tile);
 				return new Object[] { tile.getX(), tile.getY(), tile.getZ() };
 			}
 
@@ -117,21 +107,21 @@ public class DriverTelepad {
 
 		@Override
 		public Class<?> getTileEntityClass() {
-			return TileTelePad.class;
+			return ITelePad.class;
 		}
 
 		@Override
 		public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
-			return new InternalManagedEnvironment(((TileTelePad) world.getTileEntity(x, y, z)));
+			return new InternalManagedEnvironment(((ITelePad) world.getTileEntity(x, y, z)));
 		}
 	}
 
-	public static class CCDriver extends CCMultiPeripheral<TileTelePad> {
+	public static class CCDriver extends CCMultiPeripheral<ITelePad> {
 
 		public CCDriver() {
 		}
 
-		public CCDriver(TileTelePad tile, World world, int x, int y, int z) {
+		public CCDriver(ITelePad tile, World world, int x, int y, int z) {
 			super(tile, Names.EnderIO_Telepad, world, x, y, z);
 		}
 
@@ -143,8 +133,8 @@ public class DriverTelepad {
 		@Override
 		public CCMultiPeripheral getPeripheral(World world, int x, int y, int z, int side) {
 			TileEntity te = world.getTileEntity(x, y, z);
-			if(te != null && te instanceof TileTelePad) {
-				return new CCDriver((TileTelePad) te, world, x, y, z);
+			if(te != null && te instanceof ITelePad) {
+				return new CCDriver((ITelePad) te, world, x, y, z);
 			}
 			return null;
 		}
@@ -180,7 +170,6 @@ public class DriverTelepad {
 							throw new LuaException("first argument needs to be a number");
 						}
 						tile.setX(((Double) arguments[0]).intValue());
-						updateClients(tile);
 						return new Object[] { tile.getX() };
 					}
 					case 6: {
@@ -188,7 +177,6 @@ public class DriverTelepad {
 							throw new LuaException("first argument needs to be a number");
 						}
 						tile.setY(((Double) arguments[0]).intValue());
-						updateClients(tile);
 						return new Object[] { tile.getY() };
 					}
 					case 7: {
@@ -196,7 +184,6 @@ public class DriverTelepad {
 							throw new LuaException("first argument needs to be a number");
 						}
 						tile.setZ(((Double) arguments[0]).intValue());
-						updateClients(tile);
 						return new Object[] { tile.getZ() };
 					}
 					case 8: {
@@ -211,7 +198,6 @@ public class DriverTelepad {
 							((Double) arguments[0]).intValue(),
 							((Double) arguments[1]).intValue(),
 							((Double) arguments[2]).intValue()));
-						updateClients(tile);
 						return new Object[] { tile.getX(), tile.getY(), tile.getZ() };
 					}
 					case 9: {
