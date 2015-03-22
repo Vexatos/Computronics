@@ -103,6 +103,11 @@ public class DriverTelepad {
 				tile.teleportAll();
 				return new Object[] { };
 			}
+
+			@Callback(doc = "function():boolean; Returns true if the telepad is a valid multiblock")
+			public Object[] isValid(Context c, Arguments a) {
+				return new Object[] { tile.inNetwork() };
+			}
 		}
 
 		@Override
@@ -142,7 +147,7 @@ public class DriverTelepad {
 		@Override
 		public String[] getMethodNames() {
 			return new String[] { "getX", "getY", "getZ", "getCoords", "getDimension",
-				"setX", "setY", "setZ", "setCoords", "teleport" };
+				"setX", "setY", "setZ", "setCoords", "teleport", "isValid" };
 		}
 
 		@Override
@@ -203,6 +208,9 @@ public class DriverTelepad {
 					case 9: {
 						tile.teleportAll();
 						return new Object[] { };
+					}
+					case 10: {
+						return new Object[] { tile.inNetwork() };
 					}
 				}
 			} catch(Exception e) {
