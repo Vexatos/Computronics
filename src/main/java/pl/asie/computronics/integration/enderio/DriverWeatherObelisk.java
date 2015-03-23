@@ -26,12 +26,19 @@ public class DriverWeatherObelisk {
 	private static Object[] activate(TileWeatherObelisk tile, int taskID) {
 		final WeatherTask[] VALUES = WeatherTask.values();
 		taskID--;
-		if(taskID < 0 || taskID >= VALUES.length) {
+		if(taskID != -1 && (taskID < 0 || taskID >= VALUES.length)) {
 			return new Object[] { false, "invalid weather mode. needs to be between 1 and " + String.valueOf(VALUES.length) };
 		}
-		//TODO Add more checks as soon as more checks are available
-		tile.startTask(taskID);
-		return new Object[] { true };
+		return new Object[] { tile.startTask(taskID) };
+	}
+
+	private static Object[] canActivate(TileWeatherObelisk tile, int taskID) {
+		final WeatherTask[] VALUES = WeatherTask.values();
+		taskID--;
+		if(taskID != -1 && (taskID < 0 || taskID >= VALUES.length)) {
+			return new Object[] { false, "invalid weather mode. needs to be -1 or between 1 and " + String.valueOf(VALUES.length) };
+		}
+		return new Object[] { tile.canStartTask(VALUES[taskID]) };
 	}
 
 	private static Object[] weather_modes() {
@@ -53,6 +60,11 @@ public class DriverWeatherObelisk {
 			@Override
 			public int priority() {
 				return 3;
+			}
+
+			@Callback(doc = "function(task:number):boolean; Returns true if the specified mode can currently be activated.")
+			public Object[] canActivate(Context c, Arguments a) {
+				return DriverWeatherObelisk.canActivate(tile, a.checkInteger(0));
 			}
 
 			@Callback(doc = "function(task:number):boolean; Tries to change the weather to the specified mode; Returns true on success")
@@ -102,7 +114,7 @@ public class DriverWeatherObelisk {
 
 		@Override
 		public String[] getMethodNames() {
-			return new String[] { "activate", "weather_modes" };
+			return new String[] { "canActivate", "activate", "weather_modes" };
 		}
 
 		@Override
@@ -112,9 +124,15 @@ public class DriverWeatherObelisk {
 					if(arguments.length < 1 || !(arguments[0] instanceof Double)) {
 						throw new LuaException("first argument needs to be a number");
 					}
-					return DriverWeatherObelisk.activate(tile, ((Double) arguments[0]).intValue());
+					return DriverWeatherObelisk.canActivate(tile, ((Double) arguments[0]).intValue());
 				}
 				case 1: {
+					if(arguments.length < 1 || !(arguments[0] instanceof Double)) {
+						throw new LuaException("first argument needs to be a number");
+					}
+					return DriverWeatherObelisk.activate(tile, ((Double) arguments[0]).intValue());
+				}
+				case 2: {
 					return DriverWeatherObelisk.weather_modes();
 				}
 			}
