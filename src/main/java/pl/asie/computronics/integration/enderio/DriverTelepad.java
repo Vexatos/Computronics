@@ -101,7 +101,7 @@ public class DriverTelepad {
 			public Object[] teleport(Context c, Arguments a) {
 				checkTelepad(tile);
 				tile.teleportAll();
-				return new Object[] { };
+				return new Object[] {};
 			}
 
 			@Callback(doc = "function():boolean; Returns true if the telepad is a valid multiblock")
@@ -207,7 +207,7 @@ public class DriverTelepad {
 					}
 					case 9: {
 						tile.teleportAll();
-						return new Object[] { };
+						return new Object[] {};
 					}
 					case 10: {
 						return new Object[] { tile.inNetwork() };

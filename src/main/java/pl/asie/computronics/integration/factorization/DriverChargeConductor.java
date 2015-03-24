@@ -75,8 +75,8 @@ public class DriverChargeConductor {
 		public Object[] callMethod(IComputerAccess computer, ILuaContext context,
 			int method, Object[] arguments) throws LuaException,
 			InterruptedException {
-			switch(method){
-				case 0:{
+			switch(method) {
+				case 0: {
 					return DriverChargeConductor.getCharge(tile);
 				}
 			}

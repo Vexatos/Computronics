@@ -20,7 +20,7 @@ import pl.asie.computronics.reference.Names;
  */
 public class DriverPowerStorage {
 
-	public static class OCDriver extends DriverTileEntity{
+	public static class OCDriver extends DriverTileEntity {
 		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<IPowerStorage> {
 			public InternalManagedEnvironment(IPowerStorage tile) {
 				super(tile, Names.EnderIO_CapacitorBank);
@@ -43,12 +43,12 @@ public class DriverPowerStorage {
 
 			@Callback(doc = "function():number;  Returns the total amount of stored energy.")
 			public Object[] getEnergyStored(final Context context, final Arguments args) {
-				return new Object[]{tile.getEnergyStoredL()};
+				return new Object[] { tile.getEnergyStoredL() };
 			}
 
 			@Callback(doc = "function():number;  Returns the maximum amount of stored energy.")
 			public Object[] getMaxEnergyStored(final Context context, final Arguments args) {
-				return new Object[]{tile.getMaxEnergyStoredL()};
+				return new Object[] { tile.getMaxEnergyStoredL() };
 			}
 		}
 
@@ -93,17 +93,17 @@ public class DriverPowerStorage {
 
 		@Override
 		public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
-			switch(method){
-				case 0:{
+			switch(method) {
+				case 0: {
 					return new Object[] { tile.getMaxInput() };
 				}
-				case 1:{
+				case 1: {
 					return new Object[] { tile.getMaxOutput() };
 				}
-				case 2:{
+				case 2: {
 					return new Object[] { tile.getEnergyStoredL() };
 				}
-				case 3:{
+				case 3: {
 					return new Object[] { tile.getMaxEnergyStoredL() };
 				}
 			}

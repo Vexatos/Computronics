@@ -42,11 +42,11 @@ public class DriverSteamTurbine {
 		//Yes, this is mostly stolen from Sangar's Steam Turbine Driver.
 		@Override
 		public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
-			switch(method){
-				case 0:{
+			switch(method) {
+				case 0: {
 					return new Object[] { tile.getOutput() };
 				}
-				case 1:{
+				case 1: {
 					final IInventory inventory = tile.getInventory();
 					if(inventory != null && inventory.getSizeInventory() > 0) {
 						final ItemStack itemStack = inventory.getStackInSlot(0);

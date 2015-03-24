@@ -101,17 +101,17 @@ public class DriverElectricGrid {
 
 		@Override
 		public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
-			switch(method){
-				case 0:{
+			switch(method) {
+				case 0: {
 					return new Object[] { tile.getChargeHandler().getCharge() };
 				}
-				case 1:{
+				case 1: {
 					return new Object[] { tile.getChargeHandler().getCapacity() };
 				}
-				case 2:{
+				case 2: {
 					return new Object[] { tile.getChargeHandler().getLosses() };
 				}
-				case 3:{
+				case 3: {
 					return new Object[] { tile.getChargeHandler().getDraw() };
 				}
 			}

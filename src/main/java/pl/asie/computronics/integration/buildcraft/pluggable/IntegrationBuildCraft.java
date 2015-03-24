@@ -25,13 +25,13 @@ public class IntegrationBuildCraft {
 		dockingUpgrade = new ItemDockingUpgrade();
 		GameRegistry.registerItem(dockingUpgrade, "computronics.dockingUpgrade");
 		Driver.add(dockingUpgrade);
-		if (Computronics.proxy.isClient()) {
+		if(Computronics.proxy.isClient()) {
 			MinecraftForge.EVENT_BUS.register(new DroneStationRenderer.TextureHandler());
 		}
 	}
 
 	public void initOC() {
-		if (Computronics.proxy.isClient()) {
+		if(Computronics.proxy.isClient()) {
 			MinecraftForgeClient.registerItemRenderer(this.droneStationItem, new DroneStationRenderer.ItemRenderer());
 		}
 	}
@@ -40,7 +40,7 @@ public class IntegrationBuildCraft {
 		PipeManager.registerPipePluggable(DroneStationPluggable.class, "computronics.droneStation");
 
 		ItemStack robotStation = GameRegistry.findItemStack(Mods.BuildCraftTransport, "robotStation", 1);
-		if (robotStation == null || robotStation.getItem() == null) {
+		if(robotStation == null || robotStation.getItem() == null) {
 			robotStation = new ItemStack(Items.ender_pearl, 1, 0);
 		}
 		GameRegistry.addShapedRecipe(new ItemStack(droneStationItem, 1, 0),
@@ -48,7 +48,7 @@ public class IntegrationBuildCraft {
 			'c', li.cil.oc.api.Items.get("cable").createItemStack(1), 't', li.cil.oc.api.Items.get("transistor").createItemStack(1)
 		);
 		ItemStack pipe = GameRegistry.findItemStack(Mods.BuildCraftTransport, "item.buildcraftPipe.pipeitemsquartz", 1);
-		if (pipe == null || pipe.getItem() == null) {
+		if(pipe == null || pipe.getItem() == null) {
 			pipe = li.cil.oc.api.Items.get("cable").createItemStack(1);
 		}
 		GameRegistry.addShapedRecipe(new ItemStack(dockingUpgrade, 1, 0),

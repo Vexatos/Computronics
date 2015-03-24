@@ -39,7 +39,7 @@ public class DriverVacuumChest {
 			@Callback(doc = "function(range:number); Sets the range of the vacuum chest")
 			public Object[] setRange(Context c, Arguments a) {
 				tile.setRange(a.checkInteger(0));
-				return new Object[] { };
+				return new Object[] {};
 			}
 		}
 
@@ -93,7 +93,7 @@ public class DriverVacuumChest {
 						throw new LuaException("first argument needs to be a number");
 					}
 					tile.setRange(((Double) arguments[0]).intValue());
-					return new Object[] { };
+					return new Object[] {};
 				}
 			}
 			return null;

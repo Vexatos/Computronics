@@ -34,7 +34,7 @@ public class DriverRedstoneControllable {
 		} catch(IllegalArgumentException e) {
 			throw new IllegalArgumentException("No valid Redstone mode given");
 		}
-		return new Object[] { };
+		return new Object[] {};
 	}
 
 	private static Object[] modes() {

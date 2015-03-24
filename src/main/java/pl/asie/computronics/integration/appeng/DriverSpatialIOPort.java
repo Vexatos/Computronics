@@ -43,7 +43,7 @@ public class DriverSpatialIOPort {
 				TickHandler.INSTANCE.addCallable(null, tile);
 			}
 		}
-		return new Object[] { };
+		return new Object[] {};
 	}
 
 	/**
@@ -229,30 +229,30 @@ public class DriverSpatialIOPort {
 		public Object[] callMethod(IComputerAccess computer, ILuaContext context,
 			int method, Object[] arguments) throws LuaException,
 			InterruptedException {
-			switch(method){
-				case 0:{
+			switch(method) {
+				case 0: {
 					return DriverSpatialIOPort.trigger(tile);
 				}
-				case 1:{
+				case 1: {
 					return DriverSpatialIOPort.canTrigger(tile);
 				}
-				case 2:{
+				case 2: {
 					return DriverSpatialIOPort.swapCell(tile);
 				}
-				case 3:{
+				case 3: {
 					return DriverSpatialIOPort.canSwapCell(tile);
 				}
-				case 4:{
+				case 4: {
 					return DriverSpatialIOPort.getCellSize(tile);
 				}
-				case 5:{
+				case 5: {
 					return DriverSpatialIOPort.getMaxCellSize(tile);
 				}
-				case 6:{
+				case 6: {
 					return DriverSpatialIOPort.getInformation(tile);
 				}
 			}
-			return new Object[] { };
+			return new Object[] {};
 		}
 	}
 

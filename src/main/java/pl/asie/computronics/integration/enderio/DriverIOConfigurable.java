@@ -35,7 +35,7 @@ public class DriverIOConfigurable {
 		} catch(IllegalArgumentException e) {
 			throw new IllegalArgumentException("No valid IO mode given");
 		}
-		return new Object[] { };
+		return new Object[] {};
 	}
 
 	private static Object[] modes() {

@@ -26,7 +26,7 @@ public class DriverWeatherObelisk {
 	private static Object[] activate(TileWeatherObelisk tile, int taskID) {
 		final WeatherTask[] VALUES = WeatherTask.values();
 		taskID--;
-		if(taskID != -1 && (taskID < 0 || taskID >= VALUES.length)) {
+		if(taskID < 0 || taskID >= VALUES.length) {
 			return new Object[] { false, "invalid weather mode. needs to be between 1 and " + String.valueOf(VALUES.length) };
 		}
 		return new Object[] { tile.startTask(taskID) };
@@ -35,8 +35,8 @@ public class DriverWeatherObelisk {
 	private static Object[] canActivate(TileWeatherObelisk tile, int taskID) {
 		final WeatherTask[] VALUES = WeatherTask.values();
 		taskID--;
-		if(taskID != -1 && (taskID < 0 || taskID >= VALUES.length)) {
-			return new Object[] { false, "invalid weather mode. needs to be -1 or between 1 and " + String.valueOf(VALUES.length) };
+		if(taskID < 0 || taskID >= VALUES.length) {
+			return new Object[] { false, "invalid weather mode. needs to be between 1 and " + String.valueOf(VALUES.length) };
 		}
 		return new Object[] { tile.canStartTask(VALUES[taskID]) };
 	}

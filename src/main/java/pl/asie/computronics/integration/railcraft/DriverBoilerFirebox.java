@@ -40,14 +40,14 @@ public class DriverBoilerFirebox {
 		//Yes, this is mostly stolen from Sangar's Steam Turbine Driver.
 		@Override
 		public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
-			switch(method){
-				case 0:{
+			switch(method) {
+				case 0: {
 					return new Object[] { tile.isBurning() };
 				}
-				case 1:{
+				case 1: {
 					return new Object[] { tile.getTemperature() };
 				}
-				case 2:{
+				case 2: {
 					return new Object[] { tile.getMaxHeat() };
 				}
 			}

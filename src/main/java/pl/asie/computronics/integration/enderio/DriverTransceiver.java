@@ -38,7 +38,7 @@ public class DriverTransceiver {
 			}
 			return new Object[] { channelMap };
 		}
-		return new Object[] { };
+		return new Object[] {};
 	}
 
 	private static Object[] getSendChannels(TileTransceiver tile, Object[] arguments) {

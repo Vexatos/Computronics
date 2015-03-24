@@ -132,14 +132,14 @@ public class DriverRoutingTrack {
 		public Object[] callMethod(IComputerAccess computer, ILuaContext context,
 			int method, Object[] arguments) throws LuaException,
 			InterruptedException {
-			switch(method){
-				case 0:{
+			switch(method) {
+				case 0: {
 					if(arguments.length < 1 || !(arguments[0] instanceof String)) {
 						throw new LuaException("first argument needs to be a string");
 					}
 					return DriverRoutingTrack.setDestination(tile, arguments);
 				}
-				case 1:{
+				case 1: {
 					return DriverRoutingTrack.getDestination(tile);
 				}
 			}

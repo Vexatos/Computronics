@@ -47,7 +47,7 @@ public class DroneStationRenderer implements IPipePluggableRenderer {
 		IIcon[] icons = ((TextureStateManager) blockStateMachine.getTextureState()).popArray();
 		icons[0] = Textures.DRONE_STATION_BOTTOM.getIcon();
 		icons[1] = Textures.DRONE_STATION_BOTTOM.getIcon();
-		for (int i = 2; i < icons.length; i++) {
+		for(int i = 2; i < icons.length; i++) {
 			icons[i] = Textures.DRONE_STATION_SIDE.getIcon();
 		}
 		((TextureStateManager) blockStateMachine.getTextureState()).popArray();
@@ -66,7 +66,7 @@ public class DroneStationRenderer implements IPipePluggableRenderer {
 
 	@Override
 	public void renderPluggable(RenderBlocks renderblocks, IPipe pipe, ForgeDirection side, PipePluggable pipePluggable, ITextureStates blockStateMachine, int renderPass, int x, int y, int z) {
-		if (renderPass != 0) {
+		if(renderPass != 0) {
 			return;
 		}
 
@@ -105,7 +105,7 @@ public class DroneStationRenderer implements IPipePluggableRenderer {
 		IIcon[] icons = ((TextureStateManager) blockStateMachine.getTextureState()).popArray();
 		icons[0] = Textures.DRONE_STATION_SIDE.getIcon();
 		icons[1] = Textures.DRONE_STATION_TOP.getIcon();
-		for (int i = 2; i < icons.length; i++) {
+		for(int i = 2; i < icons.length; i++) {
 			icons[i] = Textures.DRONE_STATION_SIDE.getIcon();
 		}
 		((TextureStateManager) blockStateMachine.getTextureState()).popArray();
@@ -133,7 +133,7 @@ public class DroneStationRenderer implements IPipePluggableRenderer {
 
 		icons[0] = Textures.DRONE_STATION_BOTTOM.getIcon();
 		icons[1] = Textures.DRONE_STATION_SIDE.getIcon();
-		for (int i = 2; i < icons.length; i++) {
+		for(int i = 2; i < icons.length; i++) {
 			icons[i] = Textures.DRONE_STATION_BOTTOM.getIcon();
 		}
 
@@ -152,7 +152,7 @@ public class DroneStationRenderer implements IPipePluggableRenderer {
 
 		@Override
 		public boolean handleRenderType(ItemStack item, ItemRenderType type) {
-			switch (type) {
+			switch(type) {
 				case ENTITY:
 					return true;
 				case EQUIPPED:
@@ -181,7 +181,7 @@ public class DroneStationRenderer implements IPipePluggableRenderer {
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			GL11.glDepthFunc(GL11.GL_LEQUAL);
 			GL11.glDisable(GL11.GL_CULL_FACE);
-			switch (type) {
+			switch(type) {
 				case ENTITY:
 					GL11.glRotatef(-180, 1, 0, 0);
 					this.Base.render(1 / 16f);
@@ -249,8 +249,8 @@ public class DroneStationRenderer implements IPipePluggableRenderer {
 
 		@SubscribeEvent
 		public void textureHook(TextureStitchEvent.Pre event) {
-			if (event.map.getTextureType() == 0) {
-				for (Textures t : Textures.VALUES) {
+			if(event.map.getTextureType() == 0) {
+				for(Textures t : Textures.VALUES) {
 					t.registerIcons(event.map);
 				}
 			}

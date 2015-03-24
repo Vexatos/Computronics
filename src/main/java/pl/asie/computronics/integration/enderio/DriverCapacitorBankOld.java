@@ -41,7 +41,7 @@ public class DriverCapacitorBankOld {
 		} catch(IllegalArgumentException e) {
 			throw new IllegalArgumentException("No valid Redstone mode given");
 		}
-		return new Object[] { };
+		return new Object[] {};
 	}
 
 	private static Object[] modes() {
@@ -67,13 +67,13 @@ public class DriverCapacitorBankOld {
 			@Callback(doc = "function(max:number); Sets the max input of the capacitor bank")
 			public Object[] setMaxInput(Context c, Arguments a) {
 				tile.setMaxInput(a.checkInteger(0));
-				return new Object[] { };
+				return new Object[] {};
 			}
 
 			@Callback(doc = "function(max:number); Sets the max output of the capacitor bank")
 			public Object[] setMaxOutput(Context c, Arguments a) {
 				tile.setMaxOutput(a.checkInteger(0));
-				return new Object[] { };
+				return new Object[] {};
 			}
 
 			@Callback(doc = "function():string; Returns the current Redstone control mode for input")
@@ -149,14 +149,14 @@ public class DriverCapacitorBankOld {
 						throw new LuaException("first argument needs to be a number");
 					}
 					tile.setMaxInput(((Double) arguments[0]).intValue());
-					return new Object[] { };
+					return new Object[] {};
 				}
 				case 1: {
 					if(arguments.length < 1 || !(arguments[0] instanceof Double)) {
 						throw new LuaException("first argument needs to be a number");
 					}
 					tile.setMaxOutput(((Double) arguments[0]).intValue());
-					return new Object[] { };
+					return new Object[] {};
 				}
 				case 2: {
 					return DriverCapacitorBankOld.getRedstoneMode(tile, true);

@@ -51,7 +51,7 @@ public class DriverCapacitorBank {
 		} else {
 			tile.setMaxInput(input);
 		}
-		return new Object[] { };
+		return new Object[] {};
 	}
 
 	private static Object[] setMaxOutput(TileCapBank tile, int output) {
@@ -60,7 +60,7 @@ public class DriverCapacitorBank {
 		} else {
 			tile.setMaxOutput(output);
 		}
-		return new Object[] { };
+		return new Object[] {};
 	}
 
 	private static Object[] getRedstoneMode(TileCapBank tile, boolean input) {
@@ -92,7 +92,7 @@ public class DriverCapacitorBank {
 		} catch(IllegalArgumentException e) {
 			throw new IllegalArgumentException("No valid Redstone mode given");
 		}
-		return new Object[] { };
+		return new Object[] {};
 	}
 
 	private static Object[] modes() {

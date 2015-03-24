@@ -93,7 +93,7 @@ public class DriverLamp {
 		public Object[] callMethod(IComputerAccess computer, ILuaContext context,
 			int method, Object[] arguments) throws LuaException,
 			InterruptedException {
-			switch(method){
+			switch(method) {
 				case 0:
 					return new Object[] { tile.getColourRGB(w, x, y, z) };
 				case 1:

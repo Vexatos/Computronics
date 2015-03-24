@@ -6,23 +6,27 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
 public class CCBundledRedstoneProviderRedLogic implements
-		IBundledRedstoneProvider {
+	IBundledRedstoneProvider {
 	@Override
 	public int getBundledRedstoneOutput(World world, int x, int y, int z,
-			int side) {
+		int side) {
 		TileEntity inputTE = world.getTileEntity(x, y, z);
 		if(inputTE instanceof IBundledEmitter) {
-			IBundledEmitter inputWire = (IBundledEmitter)inputTE;
+			IBundledEmitter inputWire = (IBundledEmitter) inputTE;
 			for(int i = -1; i < 6; i++) {
 				byte[] data = inputWire.getBundledCableStrength(i, side);
 				if(data != null) {
 					int out = 0;
 					for(int j = 0; j < 16; j++)
-						if(data[j] != 0) out |= (1<<j);
+						if(data[j] != 0) {
+							out |= (1 << j);
+						}
 					return out;
 				}
 			}
 			return 0;
-		} else return -1;
+		} else {
+			return -1;
+		}
 	}
 }

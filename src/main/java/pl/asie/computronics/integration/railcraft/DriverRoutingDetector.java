@@ -36,7 +36,7 @@ public class DriverRoutingDetector {
 			if(!((DetectorRouting) tile.getDetector()).isSecure()) {
 				List<List<String>> pages = ItemRoutingTable.getPages(((DetectorRouting) tile.getDetector()).getInventory().getStackInSlot(0));
 				if(pages == null) {
-					return new Object[] { false, "no valid routing table found"};
+					return new Object[] { false, "no valid routing table found" };
 				}
 				LinkedHashMap<Integer, String> pageMap = new LinkedHashMap<Integer, String>();
 				int i = 1;
