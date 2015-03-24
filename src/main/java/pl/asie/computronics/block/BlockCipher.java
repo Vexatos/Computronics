@@ -41,14 +41,13 @@ public class BlockCipher extends BlockMachineSidedIcon implements IRedNetOmniNod
 		if(!world.isRemote && Config.CIPHER_CAN_LOCK) {
 			TileEntity tile = world.getTileEntity(x, y, z);
 			if(tile != null) {
-				isLocked = ((TileCipherBlock)tile).isLocked();
+				isLocked = ((TileCipherBlock) tile).isLocked();
 			}
 			if(isLocked) {
-				player.addChatMessage(new ChatComponentTranslation("chat.computronics.cipher.locked"));	
+				player.addChatMessage(new ChatComponentTranslation("chat.computronics.cipher.locked"));
 			}
 		}
-		if(!isLocked) return super.onBlockActivated(world, x, y, z, player, par6, par7, par8, par9);
-		else return true;
+		return isLocked || super.onBlockActivated(world, x, y, z, player, par6, par7, par8, par9);
 	}
 	
 	@Override
