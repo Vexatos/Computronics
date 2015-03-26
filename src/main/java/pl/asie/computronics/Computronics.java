@@ -79,11 +79,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Mod(modid = Mods.Computronics, name = Mods.Computronics_NAME, version = "@VERSION@", useMetadata = true,
-	dependencies = "required-after:asielib@[0.3.11,);required-after:Forge@[10.13.2.1291,);"
+	dependencies = "required-after:asielib@[0.3.11,);required-after:Forge@[10.13.2.1236,);"
 		+ "after:ComputerCraft;after:OpenComputers@[1.5.0,);after:OpenComputersAPI|Internal@[5.0.0,);"
 		+ "after:OpenComputers|Core;after:MineFactoryReloaded;after:RedLogic;after:ProjRed|Core;"
 		+ "after:nedocomputers;after:BuildCraft|Core@[6.4.1,);after:Railcraft@[9.5.0.0,);"
-		+ "after:gregtech;after:EnderIO@[1.7.10_2.2.7,);before:OpenPeripheralCore@[0.5.0,0.6.0);"
+		+ "after:gregtech@MC1710;after:EnderIO@[1.7.10_2.2.7,);before:OpenPeripheralCore@[0.5.0,0.6.0);"
 		+ "before:OpenPeripheralApi@[2.2,);after:Forestry@[3.4.0,);after:Waila@[1.5.7,)")
 public class Computronics {
 	public Config config;

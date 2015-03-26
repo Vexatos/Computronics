@@ -17,6 +17,7 @@ import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
 import pl.asie.computronics.reference.Names;
 
 import java.util.LinkedHashMap;
+import java.util.Locale;
 
 /**
  * @author Vexatos
@@ -45,7 +46,7 @@ public class DriverWeatherObelisk {
 		LinkedHashMap<String, Integer> weatherModes = new LinkedHashMap<String, Integer>();
 		final WeatherTask[] VALUES = WeatherTask.values();
 		for(int i = 0; i < VALUES.length; i++) {
-			weatherModes.put(VALUES[i].name(), i + 1);
+			weatherModes.put(VALUES[i].name().toLowerCase(Locale.ENGLISH), i + 1);
 		}
 		return new Object[] { weatherModes };
 	}
