@@ -35,7 +35,7 @@ public class TextToSpeechLoader {
 		classLoader.addClassLoaderExclusion("marytts.");
 		classLoader.addClassLoaderExclusion("jtok.");
 		classLoader.addClassLoaderExclusion("de.dfki.");
-		classLoader.addClassLoaderExclusion("pl.asie.computronics.audio.tts.core.");
+		//classLoader.addClassLoaderExclusion("pl.asie.computronics.audio.tts.core.");
 		//classLoader.addClassLoaderExclusion("com.sun.org.apache.xalan.internal.xsltc.");
 		try {
 			Class.forName("marytts.MaryInterface");
@@ -76,11 +76,11 @@ public class TextToSpeechLoader {
 			classLoader.findClass("marytts.MaryInterface");
 			classLoader.findClass("marytts.LocalMaryInterface");
 			classLoader.findClass("marytts.server.Mary");
-			classLoader.findClass("pl.asie.computronics.audio.tts.core.TextToSpeech");
+			//classLoader.findClass("pl.asie.computronics.audio.tts.core.TextToSpeech");
 			Class.forName("marytts.MaryInterface");
 			Class.forName("marytts.LocalMaryInterface");
 			Class.forName("marytts.server.Mary");
-			Class.forName("pl.asie.computronics.audio.tts.core.TextToSpeech");
+			//Class.forName("pl.asie.computronics.audio.tts.core.TextToSpeech");
 			return true;
 		} catch(Exception e) {
 			Computronics.log.error("Text To Speech folder initialization failed, you will not be able to hear anything");

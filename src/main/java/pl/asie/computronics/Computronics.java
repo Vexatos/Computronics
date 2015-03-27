@@ -247,7 +247,7 @@ public class Computronics {
 		}
 
 		if(config.config.get("enable.tts", "textToSpeech", TextToSpeechLoader.INSTANCE.preInit()).getBoolean()) {
-			tts = new TextToSpeech();
+			tts = new TextToSpeech(proxy.isClient());
 			tts.preInit(this);
 		}
 	}

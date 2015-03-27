@@ -11,7 +11,10 @@ import net.minecraft.block.Block;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.audio.tts.BlockTTSBox;
 import pl.asie.computronics.audio.tts.TileTTSBox;
+import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
+import pl.asie.lib.audio.StreamingAudioPlayer;
+import pl.asie.lib.audio.StreamingPlaybackManager;
 
 import javax.sound.sampled.AudioInputStream;
 import java.util.Locale;
@@ -23,22 +26,46 @@ import java.util.concurrent.Executors;
 /**
  * @author Vexatos
  */
-public class TextToSpeech {
+public class TextToSpeech extends StreamingPlaybackManager {
 	private MaryInterface marytts;
-	private ExecutorService ttsThreads;
 
-	public void say(String text) {
-		if(marytts == null || ttsThreads == null) {
-			return;
+	//private ExecutorService ttsThreads;
+
+	public TextToSpeech(boolean isClient) {
+		super(isClient);
+	}
+
+	@Override
+	public StreamingAudioPlayer create() {
+		return new StreamingAudioPlayer(32768, false, false, Math.round(Config.TAPEDRIVE_BUFFER_MS / 250));
+	}
+
+	public byte[] say(int x, int y, int z, String text) {
+		if(marytts == null /*|| ttsThreads == null*/) {
+			return new byte[0];
 		}
 		try {
 			AudioInputStream audio = marytts.generateAudio(text);
-			AudioPlayer player = new AudioPlayer(audio);
-			ttsThreads.submit(player);
+			//TODO Turn this into an OpenAL-compatible byte array
+			/*WaveData data = WaveData.create(audio);
+			ArrayList<Byte> byteData = new ArrayList<Byte>();
+			while(data.data.hasRemaining()) {
+				byteData.add(data.data.get());
+			}
+			Byte[] array = byteData.toArray(new Byte[byteData.size()]);
+			byte[] result = new byte[array.length];
+			for(int i = 0; i < array.length; i++) {
+				result[i] = array[i];
+			}
+			return result;*/
+			return new byte[0];
+			//AudioPlayer player = new AudioPlayer(audio);
+			//ttsThreads.submit(player);
 		} catch(SynthesisException e) {
 			Computronics.log.error("Text To Speech synthesis failed");
 			e.printStackTrace();
 		}
+		return null;
 	}
 
 	public Block ttsBox;
@@ -50,7 +77,7 @@ public class TextToSpeech {
 				marytts = new LocalMaryInterface();
 				Set<String> voices = marytts.getAvailableVoices();
 				marytts.setVoice(voices.iterator().next());
-				ttsThreads = Executors.newCachedThreadPool();
+				//ttsThreads = Executors.newCachedThreadPool();
 			} catch(Exception e) {
 				Computronics.log.error("Text To Speech initialization failed, you will not be able to hear anything");
 				if(Mary.currentState() == 2) {

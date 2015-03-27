@@ -101,9 +101,18 @@ public class NetworkHandlerClient extends MessageHandlerBase {
 			}
 			break;
 			case 6: {
-				if(Mods.API.hasClass("marytts.LocalMaryInterface")){
-					Computronics.tts.say(packet.readString());
-				}
+				/*if(Mods.API.hasClass("marytts.LocalMaryInterface")){
+					int dimId = packet.readInt();
+					int x = packet.readInt();
+					int y = packet.readInt();
+					int z = packet.readInt();
+					int codecId = packet.readInt();
+					StreamingAudioPlayer codec = Computronics.tts.getPlayer(codecId);
+					if(dimId != WorldUtils.getCurrentClientDimension()) {
+						return;
+					}
+					//Computronics.tts.say(x, y, z, packet.readString());
+				}*/
 			}break;
 		}
 	}
