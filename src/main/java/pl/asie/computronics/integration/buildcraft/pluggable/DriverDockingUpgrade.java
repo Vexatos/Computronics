@@ -132,20 +132,20 @@ public class DriverDockingUpgrade extends ManagedEnvironment {
 			}
 			return new Object[] { 0, "drone is not docked" };
 		}
-		if(!(pipe.getPipeType() == IPipeTile.PipeType.ITEM)) {
-			return new Object[] { 0, "pipe is not an item pipe" };
+		if(pipe.getPipeType() != IPipeTile.PipeType.ITEM) {
+			return new Object[] { 0, "cannot inject items into pipe" };
 		}
 		if(!(pipe instanceof TileGenericPipe)) {
 			return new Object[] { 0, "invalid pipe type" };
 		}
 		int count = args.count() > 1 ? Math.max(0, Math.min(64, args.checkInteger(1))) : 64;
 		int slot = Math.max(0, args.checkInteger(0) - 1);
-		ItemStack stack = drone.inventory().getStackInSlot(slot);
+		ItemStack stack = drone.mainInventory().getStackInSlot(slot);
 		if(stack != null && stack.getItem() != null) {
-			stack = drone.inventory().decrStackSize(slot, count);
+			stack = drone.mainInventory().decrStackSize(slot, count);
 			int rejected = stack.stackSize -
 				injectItem((TileGenericPipe) pipe, stack, true, side, args.count() > 2 && drone.tier() > 0 ? EnumColor.fromId(15 - args.checkInteger(2)) : null);
-			drone.inventory().getStackInSlot(slot).stackSize += rejected;
+			drone.mainInventory().getStackInSlot(slot).stackSize += rejected;
 			stack.stackSize -= rejected;
 			return new Object[] { stack.stackSize };
 		}

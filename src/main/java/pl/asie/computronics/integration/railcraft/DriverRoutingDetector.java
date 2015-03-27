@@ -21,6 +21,7 @@ import pl.asie.computronics.integration.util.RoutingTableUtil;
 import pl.asie.computronics.reference.Names;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -37,15 +38,13 @@ public class DriverRoutingDetector {
 				if(pages == null) {
 					return new Object[] { false, "no valid routing table found"};
 				}
-				ArrayList<String> pageMap = new ArrayList<String>();
-				int i = 0;
+				LinkedHashMap<Integer, String> pageMap = new LinkedHashMap<Integer, String>();
+				int i = 1;
 				for(List<String> currentPage : pages) {
 					for(String currentLine : currentPage) {
-						pageMap.add(i, currentLine);
-						i++;
+						pageMap.put(i++, currentLine);
 					}
-					pageMap.add(i, "{newpage}");
-					i++;
+					pageMap.put(i++, "{newpage}");
 				}
 				if(pageMap.get(i - 1).equals("{newpage}")) {
 					pageMap.remove(i - 1);

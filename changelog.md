@@ -1,9 +1,41 @@
+==== 1.4.4 ====
+
+  * ADDED: Draconic Evolution integration!
+    - You can now properly get the (max) energy stored from Energy Pylons, the values can be so huge it needed a special handler
+    - You will need at least version v1.0.1-snapshot_6 of the mod for this to work
+  * CHANGED: Digital Signal Reciver Box functions are now direct (thus they can be accessed much faster now)
+  * CHANGED: Added getEnergyStored() / getMaxEnergyStored functions to blocks that only receive or provide RF and not do both
+  * FIXED: Digital Locomotive Relay's getDestination() and setDestination() actually work properly again now!
+
+==== 1.4.3 ====
+
+  * FIXED: Updated BuildCraft integration (requires BuildCraft 6.4.1 now)
+    - This will make the Drone Docking station not crash anymore
+  * FIXED: Server-side crash with Self-Destructing Card
+  * FIXED: Some tooltips not being displayed properly
+
+
+==== 1.4.2 ====
+
+  * ADDED: Self-Destructing card
+    - Does exactly what you think it does
+    - Also comes with a built-in program for convenient self-destruction
+  * ADDED: Optional argument to the Iron Note Block's / Musical Turtle's `playNote()` to specify the volume
+    - Its definition is now `function([instrument:number or string,] note:number [, volume:number])`
+    - `volume` may be a number between 0 and 1 (1 being default and the volume it was before)
+  * ADDED: The Drone Docking Station now is able to charge docked drones when plugged onto a Kinesis Pipe!
+  * FIXED: Particle Effects Card emitting particles when it doesn't have enough energy for that
+  * FIXED: Crash happening when Tape length configuration entry has been misconfigured. Now it will print errors to the log instead
+  * FIXED: A lot of Lua functions returning nil in ComputerCraft when they should return tables
+  * FIXED: The Creative Chat Box dropping a normal Chat Box when broken. Now it will drop a creative one.
+  * FIXED: Updated OpenComputers integration (requires OpenComputers 1.5 now)
+
 ==== 1.4.1 ====
 
   * FIXED: Updated Railcraft integration (requires Railcraft 9.5 now)
   * CHANGED: Some changes to the config file
     - It is recommended to regenerate the config file
-  * CHANGED: Got rid of the EnderIO CapacitorBank's getEnergyStoredForNetwork and getMaxEnergyStoredForNetwork functions
+  * CHANGED: Got rid of the EnderIO Capacitor Bank's getEnergyStoredForNetwork and getMaxEnergyStoredForNetwork functions
     - Their behaviour was the same is getEnergyStored/getMaxEnergyStored, so use those functions instead
 
 ==== 1.4.0 ====

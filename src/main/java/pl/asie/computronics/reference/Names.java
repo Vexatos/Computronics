@@ -8,11 +8,12 @@ public class Names {
 	public static final String
 		AE2_SpatialIO = "spatial_io",
 		BuildCraft_Heatable = "heatable_tile",
+		CoFH_PoweredTile = "powered_tile",
+		DraconicEvolution_Storage = "draconic_storage",
 		EnderIO_CapacitorBank = "capacitor_bank",
 		EnderIO_ExperienceTile = "experience_tile",
 		EnderIO_IOConfigurable = "io_config_tile",
 		EnderIO_MachineTile = "enderio_machine",
-		EnderIO_PoweredTile = "powered_tile",
 		EnderIO_PowerMonitor = "power_monitor",
 		EnderIO_PowerStorage = "power_storage",
 		EnderIO_RedstoneTile = "redstone_tile",

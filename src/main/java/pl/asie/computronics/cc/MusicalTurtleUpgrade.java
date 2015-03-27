@@ -25,28 +25,39 @@ public class MusicalTurtleUpgrade extends TurtleUpgradeBase {
 		}
 
 		@Override
-	    @Optional.Method(modid=Mods.ComputerCraft)
+		@Optional.Method(modid = Mods.ComputerCraft)
 		public String[] getMethodNames() {
-			return new String[]{"playNote"};
+			return new String[] { "playNote" };
 		}
 
 		@Override
-	    @Optional.Method(modid=Mods.ComputerCraft)
+		@Optional.Method(modid = Mods.ComputerCraft)
 		public Object[] callMethod(IComputerAccess computer, ILuaContext context,
-				int method, Object[] arguments) throws LuaException,
-				InterruptedException {
-			if(arguments.length == 1 && (arguments[0] instanceof Double)) {
-				NoteUtils.playNote(access.getWorld(), access.getPosition().posX, access.getPosition().posY, access.getPosition().posZ, -1, ((Double)arguments[0]).intValue());
-			} else if(arguments.length == 2 && (arguments[1] instanceof Double)) {
-				if(arguments[0] instanceof Double) {
-					NoteUtils.playNote(access.getWorld(), access.getPosition().posX, access.getPosition().posY, access.getPosition().posZ, ((Double)arguments[0]).intValue(), ((Double)arguments[1]).intValue());
-				} else if(arguments[0] instanceof String) {
-					NoteUtils.playNote(access.getWorld(), access.getPosition().posX, access.getPosition().posY, access.getPosition().posZ, (String)arguments[0], ((Double)arguments[1]).intValue());
+			int method, Object[] arguments) throws LuaException,
+			InterruptedException {
+			try {
+				if(arguments.length >= 1) {
+					if(arguments.length >= 2 && (arguments[1] instanceof Double)) {
+						if(arguments[0] != null) {
+							if(arguments[0] instanceof Double) {
+								NoteUtils.playNote(access.getWorld(), access.getPosition().posX, access.getPosition().posY, access.getPosition().posZ, ((Double) arguments[0]).intValue(), ((Double) arguments[1]).intValue(), NoteUtils.toVolume(arguments, 2));
+							} else if(arguments[0] instanceof String) {
+								NoteUtils.playNote(access.getWorld(), access.getPosition().posX, access.getPosition().posY, access.getPosition().posZ, (String) arguments[0], ((Double) arguments[1]).intValue(), NoteUtils.toVolume(arguments, 2));
+							}
+						} else {
+							NoteUtils.playNote(access.getWorld(), access.getPosition().posX, access.getPosition().posY, access.getPosition().posZ, -1, ((Double) arguments[1]).intValue(), NoteUtils.toVolume(arguments, 2));
+						}
+					} else if((arguments[0] instanceof Double)) {
+						NoteUtils.playNote(access.getWorld(), access.getPosition().posX, access.getPosition().posY, access.getPosition().posZ, -1, ((Double) arguments[0]).intValue(), NoteUtils.toVolume(arguments, 1));
+					}
 				}
+			} catch(IllegalArgumentException e) {
+				throw new LuaException(e.getMessage());
 			}
 			return null;
 		}
 	}
+
 	public MusicalTurtleUpgrade(int id) {
 		super(id);
 	}

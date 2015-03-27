@@ -4,19 +4,25 @@ import buildcraft.api.transport.IPipeTile;
 import buildcraft.api.transport.pluggable.IPipePluggableRenderer;
 import buildcraft.api.transport.pluggable.PipePluggable;
 import buildcraft.core.utils.MatrixTranformations;
+import cofh.api.energy.IEnergyReceiver;
 import io.netty.buffer.ByteBuf;
+import li.cil.oc.Settings;
 import li.cil.oc.api.internal.Drone;
+import li.cil.oc.api.network.Connector;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.util.ParticleUtils;
+import pl.asie.lib.util.EnergyConverter;
 
 /**
  * @author Vexatos
  */
-public class DroneStationPluggable extends PipePluggable {
+public class DroneStationPluggable extends PipePluggable implements IEnergyReceiver {
 
 	public static enum DroneStationState {
 		Available,
@@ -34,7 +40,7 @@ public class DroneStationPluggable extends PipePluggable {
 
 	public void setDrone(Drone drone) {
 		this.drone = drone;
-		if (this.drone == null) {
+		if(this.drone == null) {
 			this.state = DroneStationState.Available;
 		} else {
 			this.state = DroneStationState.Used;
@@ -62,38 +68,13 @@ public class DroneStationPluggable extends PipePluggable {
 	@Override
 	public void update(IPipeTile pipe, ForgeDirection direction) {
 		super.update(pipe, direction);
-		if (getState() == DroneStationState.Used && drone == null) {
+		if(getState() == DroneStationState.Used && drone == null) {
 			state = DroneStationState.Available;
 		}
-		if (drone != null && (drone.world() != pipe.getWorldObj()
+		if(drone != null && (drone.world() != pipe.getWorld()
 			|| drone instanceof Entity && ((Entity) drone).getDistanceSq(pipe.x(), pipe.y(), pipe.z()) >= 4)) {
 			setDrone(null);
 		}
-		/*if(pipe != null && pipe.getPipe() != null && drone != null
-			&& pipe.getPipe() instanceof Pipe
-			&& ((Pipe) pipe.getPipe()).transport != null
-			&& ((Pipe) pipe.getPipe()).transport instanceof PipeTransportPower) {
-
-			PipeTransportPower powerPipe = (PipeTransportPower) ((Pipe) pipe.getPipe()).transport;
-			World world = drone.world();
-			if(!world.isRemote && world.getWorldInfo().getWorldTotalTime() % Settings.get().tickFrequency() == 0) {
-				Connector node = (Connector) drone.machine().node();
-				double charge = Settings.get().chargeRateExternal() * Settings.get().tickFrequency();
-				double change = Math.min(charge, node.globalBufferSize() - node.globalBuffer());
-				int amount = (int) Math.floor(change * 10D);
-				powerPipe.requestEnergy(direction, amount);
-				int newPower = powerPipe.consumePower(direction, amount);
-				node.changeBuffer(newPower);
-			}
-			if(!world.isRemote && world.getWorldInfo().getWorldTotalTime() % 10 == 0) {
-				double theta = world.rand.nextDouble() * Math.PI;
-				double phi = world.rand.nextDouble() * Math.PI * 2;
-				double dx = 0.45 * Math.sin(theta) * Math.cos(phi);
-				double dy = 0.45 * Math.sin(theta) * Math.sin(phi);
-				double dz = 0.45 * Math.cos(theta);
-				ParticleUtils.sendParticlePacket("happyVillager", drone.world(), drone.xPosition() + dx, drone.yPosition() + dz, drone.zPosition() + dy, 0, 0, 0);
-			}
-		}*/
 	}
 
 	@Override
@@ -136,5 +117,53 @@ public class DroneStationPluggable extends PipePluggable {
 	@Override
 	public void readData(ByteBuf data) {
 		//this.state = DroneStationState.values()[data.readUnsignedByte()];
+	}
+
+	@Override
+	public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate) {
+		if(drone == null || state == DroneStationState.Available || drone.world() == null) {
+			return 0;
+		}
+		World world = drone.world();
+		if(!world.isRemote) {
+			Connector node = (Connector) drone.machine().node();
+			double change = Math.min(Settings.get().chargeRateExternal(), node.globalBufferSize() - node.globalBuffer());
+			if(change > 10) {
+				double newPower = Math.min(EnergyConverter.convertEnergy(maxReceive, "RF", "OC"), change);
+				if(newPower > 0) {
+					if(simulate) {
+						// We cannot simulate node buffer changes
+						return (int) Math.ceil(EnergyConverter.convertEnergy(newPower, "OC", "RF"));
+					}
+					double remainingPower = node.changeBuffer(newPower);
+					if(remainingPower < newPower
+						&& world.getWorldInfo().getWorldTotalTime() % 10 == 0) {
+						double theta = world.rand.nextDouble() * Math.PI;
+						double phi = world.rand.nextDouble() * Math.PI * 2;
+						double dx = 0.45 * Math.sin(theta) * Math.cos(phi);
+						double dy = 0.45 * Math.sin(theta) * Math.sin(phi);
+						double dz = 0.45 * Math.cos(theta);
+						ParticleUtils.sendParticlePacket("happyVillager", drone.world(), drone.xPosition() + dx, drone.yPosition() + dz, drone.zPosition() + dy, 0, 0, 0);
+					}
+					return (int) Math.ceil(EnergyConverter.convertEnergy(newPower - remainingPower, "OC", "RF"));
+				}
+			}
+		}
+		return 0;
+	}
+
+	@Override
+	public int getEnergyStored(ForgeDirection from) {
+		return 0;
+	}
+
+	@Override
+	public int getMaxEnergyStored(ForgeDirection from) {
+		return 0;
+	}
+
+	@Override
+	public boolean canConnectEnergy(ForgeDirection from) {
+		return true;
 	}
 }

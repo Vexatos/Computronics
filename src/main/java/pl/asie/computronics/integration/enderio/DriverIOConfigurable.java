@@ -17,7 +17,7 @@ import pl.asie.computronics.integration.CCMultiPeripheral;
 import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
 import pl.asie.computronics.reference.Names;
 
-import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.Locale;
 
 /**
@@ -39,9 +39,10 @@ public class DriverIOConfigurable {
 	}
 
 	private static Object[] modes() {
-		ArrayList<String> modes = new ArrayList<String>();
+		LinkedHashMap<Integer, String> modes = new LinkedHashMap<Integer, String>();
+		int i = 1;
 		for(IoMode mode : IoMode.values()) {
-			modes.add(mode.name().toLowerCase(Locale.ENGLISH));
+			modes.put(i++, mode.name().toLowerCase(Locale.ENGLISH));
 		}
 		return new Object[] { modes };
 	}

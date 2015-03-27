@@ -16,7 +16,7 @@ import pl.asie.computronics.integration.CCMultiPeripheral;
 import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
 import pl.asie.computronics.reference.Names;
 
-import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.Locale;
 
 /**
@@ -45,9 +45,10 @@ public class DriverCapacitorBankOld {
 	}
 
 	private static Object[] modes() {
-		ArrayList<String> modes = new ArrayList<String>();
+		LinkedHashMap<Integer, String> modes = new LinkedHashMap<Integer, String>();
+		int i = 1;
 		for(RedstoneControlMode mode : RedstoneControlMode.values()) {
-			modes.add(mode.name().toLowerCase(Locale.ENGLISH));
+			modes.put(i++, mode.name().toLowerCase(Locale.ENGLISH));
 		}
 		return new Object[] { modes };
 	}
@@ -142,28 +143,28 @@ public class DriverCapacitorBankOld {
 
 		@Override
 		public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
-			switch(method){
-				case 0:{
+			switch(method) {
+				case 0: {
 					if(arguments.length < 1 || !(arguments[0] instanceof Double)) {
 						throw new LuaException("first argument needs to be a number");
 					}
 					tile.setMaxInput(((Double) arguments[0]).intValue());
 					return new Object[] { };
 				}
-				case 1:{
+				case 1: {
 					if(arguments.length < 1 || !(arguments[0] instanceof Double)) {
 						throw new LuaException("first argument needs to be a number");
 					}
 					tile.setMaxOutput(((Double) arguments[0]).intValue());
 					return new Object[] { };
 				}
-				case 2:{
+				case 2: {
 					return DriverCapacitorBankOld.getRedstoneMode(tile, true);
 				}
-				case 3:{
+				case 3: {
 					return DriverCapacitorBankOld.getRedstoneMode(tile, false);
 				}
-				case 4:{
+				case 4: {
 					if(arguments.length < 1 || !(arguments[0] instanceof String)) {
 						throw new LuaException("first argument needs to be a string");
 					}
@@ -173,7 +174,7 @@ public class DriverCapacitorBankOld {
 						throw new LuaException(e.getMessage());
 					}
 				}
-				case 5:{
+				case 5: {
 					if(arguments.length < 1 || !(arguments[0] instanceof String)) {
 						throw new LuaException("first argument needs to be a string");
 					}
@@ -183,7 +184,7 @@ public class DriverCapacitorBankOld {
 						throw new LuaException(e.getMessage());
 					}
 				}
-				case 6:{
+				case 6: {
 					return DriverCapacitorBankOld.modes();
 				}
 			}

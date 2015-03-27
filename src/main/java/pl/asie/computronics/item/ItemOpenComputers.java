@@ -8,6 +8,7 @@ import li.cil.oc.api.driver.EnvironmentHost;
 import li.cil.oc.api.driver.Item;
 import li.cil.oc.api.driver.item.HostAware;
 import li.cil.oc.api.driver.item.Slot;
+import li.cil.oc.api.internal.Adapter;
 import li.cil.oc.api.internal.Drone;
 import li.cil.oc.api.internal.Microcontroller;
 import li.cil.oc.api.internal.Tablet;
@@ -22,8 +23,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
-import org.lwjgl.input.Keyboard;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.oc.DriverCardBoom;
 import pl.asie.computronics.oc.DriverCardFX;
 import pl.asie.computronics.oc.DriverCardSound;
 import pl.asie.computronics.oc.DriverCardSpoof;
@@ -51,7 +52,8 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 			"robot_upgrade_radar",
 			"card_fx",
 			"card_spoof",
-			"card_beep"
+			"card_beep",
+			"card_boom"
 		});
 		this.setCreativeTab(Computronics.tab);
 	}
@@ -66,12 +68,19 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 	@Optional.Method(modid = Mods.OpenComputers)
 	public boolean worksWith(ItemStack stack, Class<? extends EnvironmentHost> host) {
 		boolean works = worksWith(stack);
-		switch(stack.getItemDamage()){
-			case 4:{
+		works = works && !Adapter.class.isAssignableFrom(host);
+		switch(stack.getItemDamage()) {
+			case 4: {
 				works = works
 					&& !Tablet.class.isAssignableFrom(host)
 					&& !Drone.class.isAssignableFrom(host)
 					&& !Microcontroller.class.isAssignableFrom(host);
+				break;
+			}
+			case 6: {
+				works = works
+					&& !Tablet.class.isAssignableFrom(host)
+					&& !Drone.class.isAssignableFrom(host);
 				break;
 			}
 		}
@@ -81,7 +90,7 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 	@Override
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Class<? extends Environment> providedEnvironment(ItemStack stack) {
-		switch(stack.getItemDamage()){
+		switch(stack.getItemDamage()) {
 			case 0:
 				return RobotUpgradeCamera.class;
 			case 1:
@@ -94,6 +103,8 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 				return DriverCardSpoof.class;
 			case 5:
 				return DriverCardSound.class;
+			case 6:
+				return DriverCardBoom.class;
 			default:
 				return null;
 		}
@@ -103,7 +114,7 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 	@Optional.Method(modid = Mods.OpenComputers)
 	public ManagedEnvironment createEnvironment(ItemStack stack,
 		EnvironmentHost container) {
-		switch(stack.getItemDamage()){
+		switch(stack.getItemDamage()) {
 			case 0:
 				return new RobotUpgradeCamera(container);
 			case 1:
@@ -116,6 +127,8 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 				return new DriverCardSpoof(container);
 			case 5:
 				return new DriverCardSound(container);
+			case 6:
+				return new DriverCardBoom(container);
 			default:
 				return null;
 		}
@@ -124,7 +137,7 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 	@Override
 	@Optional.Method(modid = Mods.OpenComputers)
 	public String slot(ItemStack stack) {
-		switch(stack.getItemDamage()){
+		switch(stack.getItemDamage()) {
 			case 0:
 				return Slot.Upgrade;
 			case 1:
@@ -137,6 +150,8 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 				return Slot.Card;
 			case 5:
 				return Slot.Card;
+			case 6:
+				return Slot.Card;
 			default:
 				return Slot.None;
 		}
@@ -145,7 +160,7 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 	@Override
 	@Optional.Method(modid = Mods.OpenComputers)
 	public int tier(ItemStack stack) {
-		switch(stack.getItemDamage()){
+		switch(stack.getItemDamage()) {
 			case 0:
 				return 1; // Tier 2
 			case 1:
@@ -158,6 +173,8 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 				return 1; // Tier 2
 			case 5:
 				return 1; // Tier 2
+			case 6:
+				return 0; // Tier 1
 			default:
 				return 0; // Tier 1 default
 		}
@@ -196,6 +213,9 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 		if(Config.OC_CARD_SOUND) {
 			list.add(new ItemStack(item, 1, 5));
 		}
+		if(Config.OC_CARD_BOOM) {
+			list.add(new ItemStack(item, 1, 6));
+		}
 	}
 
 	private static final int maxWidth = 220;
@@ -214,7 +234,7 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 				boolean shouldShorten = (font.getStringWidth(tip) > maxWidth) && !KeyBindings.showExtendedTooltips();
 				if(shouldShorten) {
 					tooltip.add(StringUtil.localizeAndFormat("oc:tooltip.TooLong",
-						Keyboard.getKeyName(KeyBindings.extendedTooltip().getKeyCode())));
+						KeyBindings.getKeybindName(KeyBindings.extendedTooltip())));
 				} else {
 					for(String line : lines) {
 						List list = font.listFormattedStringToWidth(line, maxWidth);
@@ -229,14 +249,15 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 			} else {
 				tooltip.add(StringUtil.localizeAndFormat(
 					"oc:tooltip.MaterialCosts",
-					Keyboard.getKeyName(KeyBindings.materialCosts().getKeyCode())));
+					KeyBindings.getKeybindName(KeyBindings.materialCosts())));
 			}
 		}
 		if(stack.hasTagCompound() && stack.getTagCompound().hasKey("oc:data")) {
 			NBTTagCompound data = stack.getTagCompound().getCompoundTag("oc:data");
 			if(data.hasKey("node") && data.getCompoundTag("node").hasKey("address")) {
 				tooltip.add(EnumChatFormatting.DARK_GRAY
-					+ data.getCompoundTag("node").getString("address").substring(0, 13) + "...§7");
+					+ data.getCompoundTag("node").getString("address").substring(0, 13) + "..."
+					+ EnumChatFormatting.GRAY);
 			}
 		}
 	}

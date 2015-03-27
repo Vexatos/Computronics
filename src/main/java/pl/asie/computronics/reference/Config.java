@@ -40,6 +40,7 @@ public class Config {
 	public static boolean OC_CARD_FX;
 	public static boolean OC_CARD_SPOOF;
 	public static boolean OC_CARD_SOUND;
+	public static boolean OC_CARD_BOOM;
 
 	public static boolean CC_OPEN_MULTI_PERIPHERAL = true;
 	public static boolean CC_ALL_MULTI_PERIPHERALS = true;
@@ -90,6 +91,7 @@ public class Config {
 			OC_CARD_FX = config.get("enable.opencomputers", "particleCard", true).getBoolean(true);
 			OC_CARD_SPOOF = config.get("enable.opencomputers", "spoofingCard", true).getBoolean(true);
 			OC_CARD_SOUND = config.get("enable.opencomputers", "soundCard", true).getBoolean(true);
+			OC_CARD_BOOM = config.get("enable.opencomputers", "boomCard", true).getBoolean(true);
 
 			// Particle Card
 			FX_ENERGY_COST = convertRFtoOC(
@@ -139,7 +141,7 @@ public class Config {
 		// Tape Drive
 		TAPEDRIVE_BUFFER_MS = config.getInt("audioPreloadMs", "tapedrive", 750, 500, 10000, "The amount of time (in milliseconds) used for pre-buffering the tape for audio playback. If you get audio playback glitches in SMP/your TPS is under 20, RAISE THIS VALUE!");
 		TAPEDRIVE_DISTANCE = config.getInt("hearingDistance", "tapedrive", 24, 0, 64, "The distance up to which Tape Drives can be heard.");
-		TAPE_LENGTHS = config.getString("tapeLengths", "tapedrive", "4,8,16,32,64,2,6,16,128,128", "The lengths of the computronics tapes.");
+		TAPE_LENGTHS = config.getString("tapeLengths", "tapedrive", "4,8,16,32,64,2,6,16,128,128", "The lengths of the computronics tapes. Should be 10 numbers separated by commas");
 
 		// General
 		REDSTONE_REFRESH = config.getBoolean("enableTickingRedstoneSupport", "general", true, "Set whether some machines should stop being tickless in exchange for redstone output support.");

@@ -9,7 +9,9 @@ import pl.asie.computronics.Computronics;
 import pl.asie.computronics.cc.multiperipheral.MultiPeripheralProvider;
 import pl.asie.computronics.integration.appeng.DriverSpatialIOPort;
 import pl.asie.computronics.integration.buildcraft.DriverHeatable;
-import pl.asie.computronics.integration.cofh.DriverEnergyHandler;
+import pl.asie.computronics.integration.cofh.DriverEnergyProvider;
+import pl.asie.computronics.integration.cofh.DriverEnergyReceiver;
+import pl.asie.computronics.integration.draconicevolution.DriverExtendedRFStorage;
 import pl.asie.computronics.integration.enderio.DriverAbstractMachine;
 import pl.asie.computronics.integration.enderio.DriverAbstractPoweredMachine;
 import pl.asie.computronics.integration.enderio.DriverCapacitorBank;
@@ -110,7 +112,8 @@ public class IntegrationComputerCraft {
 
 		if(ModAPIManager.INSTANCE.hasAPI(Mods.API.CoFHAPI_Energy)
 			&& compat.isCompatEnabled(Compat.RedstoneFlux)) {
-			registerMultiPeripheralProvider(new DriverEnergyHandler.CCDriver());
+			registerMultiPeripheralProvider(new DriverEnergyReceiver.CCDriver());
+			registerMultiPeripheralProvider(new DriverEnergyProvider.CCDriver());
 		}
 
 		if(Loader.isModLoaded(Mods.EnderIO)) {
@@ -126,6 +129,11 @@ public class IntegrationComputerCraft {
 				registerMultiPeripheralProvider(new DriverCapacitorBankOld.CCDriver());
 				registerMultiPeripheralProvider(new DriverTransceiver.CCDriver());
 			}
+		}
+
+		if(Loader.isModLoaded(Mods.API.DraconicEvolution)
+			&& compat.isCompatEnabled(Compat.DraconicEvolution)) {
+			registerMultiPeripheralProvider(new DriverExtendedRFStorage.CCDriver());
 		}
 
 		if(Mods.API.hasVersion(Mods.API.BuildCraftTiles, "[1.1,)")) {
