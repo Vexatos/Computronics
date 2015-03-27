@@ -49,13 +49,13 @@ public class TileTTSBox extends TileEntityPeripheralBase {
 	@Override
 	@Optional.Method(modid = Mods.ComputerCraft)
 	public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
-		switch(method){
-			case 0:{
+		switch(method) {
+			case 0: {
 				if(arguments.length < 1 || !(arguments[0] instanceof String)) {
 					throw new LuaException("first argument needs to be a string");
 				}
 				try {
-					Computronics.packet.sendToAllAround(Computronics.packet.create(5).writeString((String) arguments[0]),
+					Computronics.packet.sendToAllAround(Computronics.packet.create(6).writeString((String) arguments[0]),
 						this, Config.CHATBOX_DISTANCE);
 					return new Object[] { true };
 				} catch(IOException e) {
