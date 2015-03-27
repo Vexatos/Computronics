@@ -20,7 +20,7 @@ import java.io.IOException;
 public class TileTTSBox extends TileEntityPeripheralBase {
 
 	public TileTTSBox() {
-		super("speak");
+		super("speech_box");
 	}
 
 	@Override
@@ -32,7 +32,7 @@ public class TileTTSBox extends TileEntityPeripheralBase {
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] say(Context context, Arguments args) {
 		try {
-			Computronics.packet.sendToAllAround(Computronics.packet.create(5).writeString(args.checkString(0)),
+			Computronics.packet.sendToAllAround(Computronics.packet.create(6).writeString(args.checkString(0)),
 				this, Config.CHATBOX_DISTANCE);
 			return new Object[] { true };
 		} catch(IOException e) {

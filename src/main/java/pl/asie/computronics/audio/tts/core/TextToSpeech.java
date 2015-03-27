@@ -77,7 +77,6 @@ public class TextToSpeech {
 			AudioPlayer player = new AudioPlayer(audio);
 			ExecutorService service = Executors.newCachedThreadPool();
 			service.submit(player).get();
-			System.exit(0);
 		} catch(MaryConfigurationException e) {
 			e.printStackTrace();
 			e.getCause().printStackTrace();
@@ -90,4 +89,9 @@ public class TextToSpeech {
 			e.printStackTrace();
 		}
 	}
+
+	/*static{
+		ClassLoader classLoader = TextToSpeech.class.getClassLoader();
+		System.out.println("Classloader: " + classLoader.toString());
+	}*/
 }

@@ -15,22 +15,28 @@ import java.net.URLClassLoader;
  * MaryTTS cannot load in FML's class loader, this is why we have to add it ourselves.
  * @author Vexatos
  */
-public class TextToSpeedLoader {
-	public static final TextToSpeedLoader INSTANCE = new TextToSpeedLoader();
+public class TextToSpeechLoader {
+	public static final TextToSpeechLoader INSTANCE = new TextToSpeechLoader();
 
 	private ClasspathAdder classpathAdder;
+
+	/*static {
+		ClassLoader classLoader = TextToSpeech.class.getClassLoader();
+		System.out.println("Classloader: " + classLoader.toString());
+	}*/
 
 	public boolean preInit() {
 		LaunchClassLoader classLoader = Launch.classLoader;
 		ClassLoader ownClassLoader = getClass().getClassLoader();
-		classpathAdder = new ClasspathAdder();
 		if(ownClassLoader instanceof LaunchClassLoader) {
 			classLoader = (LaunchClassLoader) ownClassLoader;
 		}
+		classpathAdder = new ClasspathAdder(classLoader);
 		classLoader.addClassLoaderExclusion("marytts.");
 		classLoader.addClassLoaderExclusion("jtok.");
 		classLoader.addClassLoaderExclusion("de.dfki.");
 		classLoader.addClassLoaderExclusion("pl.asie.computronics.audio.tts.core.");
+		//classLoader.addClassLoaderExclusion("com.sun.org.apache.xalan.internal.xsltc.");
 		try {
 			Class.forName("marytts.MaryInterface");
 			Class.forName("marytts.LocalMaryInterface");
@@ -50,6 +56,10 @@ public class TextToSpeedLoader {
 			return false;
 		}
 		File[] files = ttsDir.listFiles(new JarFilter());
+		if(files == null || files.length <= 0) {
+			Computronics.log.error("Found an empty or invalid marytts directory, Text To Speech will not be initialized");
+			return false;
+		}
 		for(File file : files) {
 			if(file.isDirectory() || !file.exists()) {
 				continue;
@@ -63,9 +73,14 @@ public class TextToSpeedLoader {
 		}
 		//Check for marytts to be present
 		try {
+			classLoader.findClass("marytts.MaryInterface");
+			classLoader.findClass("marytts.LocalMaryInterface");
+			classLoader.findClass("marytts.server.Mary");
+			classLoader.findClass("pl.asie.computronics.audio.tts.core.TextToSpeech");
 			Class.forName("marytts.MaryInterface");
 			Class.forName("marytts.LocalMaryInterface");
 			Class.forName("marytts.server.Mary");
+			Class.forName("pl.asie.computronics.audio.tts.core.TextToSpeech");
 			return true;
 		} catch(Exception e) {
 			Computronics.log.error("Text To Speech folder initialization failed, you will not be able to hear anything");
@@ -78,6 +93,12 @@ public class TextToSpeedLoader {
 	 * Useful class for dynamically changing the classpath, adding classes during runtime.
 	 */
 	private static class ClasspathAdder {
+
+		private final ClassLoader classLoader;
+
+		private ClasspathAdder(ClassLoader classLoader) {
+			this.classLoader = classLoader;
+		}
 
 		/**
 		 * Adds a file to the classpath.
@@ -105,7 +126,9 @@ public class TextToSpeedLoader {
 		 */
 		private void addURL(URL url) throws IOException {
 			try {
-				URLClassLoader sysloader = (URLClassLoader) ClassLoader.getSystemClassLoader();
+				ClassLoader parent = this.classLoader.getParent();
+				URLClassLoader sysloader = parent != null && parent instanceof URLClassLoader ?
+					((URLClassLoader) parent) : (URLClassLoader) ClassLoader.getSystemClassLoader();
 				Class<?> sysclass = URLClassLoader.class;
 				Method method = sysclass.getDeclaredMethod("addURL", URL.class);
 				method.setAccessible(true);

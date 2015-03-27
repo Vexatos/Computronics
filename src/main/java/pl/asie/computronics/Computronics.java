@@ -29,7 +29,7 @@ import pl.asie.computronics.api.multiperipheral.IMultiPeripheralProvider;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheralRegistry;
 import pl.asie.computronics.audio.DFPWMPlaybackManager;
 import pl.asie.computronics.audio.tts.core.TextToSpeech;
-import pl.asie.computronics.audio.tts.core.TextToSpeedLoader;
+import pl.asie.computronics.audio.tts.core.TextToSpeechLoader;
 import pl.asie.computronics.block.BlockCamera;
 import pl.asie.computronics.block.BlockChatBox;
 import pl.asie.computronics.block.BlockCipher;
@@ -81,7 +81,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Mod(modid = Mods.Computronics, name = Mods.Computronics_NAME, version = "@VERSION@", useMetadata = true,
-	dependencies = "required-after:asielib@[0.3.11,);required-after:Forge@[10.13.2.1291,);"
+	dependencies = "required-after:asielib@[0.3.11,);required-after:Forge@[10.13.2.1236,);"
 		+ "after:ComputerCraft;after:OpenComputers@[1.5.0,);after:OpenComputersAPI|Internal@[5.0.0,);"
 		+ "after:OpenComputers|Core;after:MineFactoryReloaded;after:RedLogic;after:ProjRed|Core;"
 		+ "after:nedocomputers;after:BuildCraft|Core@[6.4.1,);after:Railcraft@[9.5.0.0,);"
@@ -246,7 +246,7 @@ public class Computronics {
 			opencomputers.preInit();
 		}
 
-		if(config.config.get("enable.tts", "textToSpeech", TextToSpeedLoader.INSTANCE.preInit()).getBoolean()) {
+		if(config.config.get("enable.tts", "textToSpeech", TextToSpeechLoader.INSTANCE.preInit()).getBoolean()) {
 			tts = new TextToSpeech();
 			tts.preInit(this);
 		}
