@@ -1,5 +1,13 @@
 ==== 1.4.4 ====
 
+  * ADDED: EnderIO 2.3 integration  for OpenComputers and ComputerCraft!
+    - Added support for the new Telepad
+      - Allows full control over the coordinates set as well as telepad activation
+    - Added support for the new Weather Obelisk
+      - Allows control over the weather, provided the Obelisk has the correct items.
+    - The Capacitor Bank now provides two additional functions, `getAverageInputPerTick()` and `getAverageOutputPerTick()`
+      - This allows you to monitor input and output of your energy network separately
+    - Now you can get and set the range of Vacuum Chests
   * ADDED: Draconic Evolution integration!
     - You can now properly get the (max) energy stored from Energy Pylons, the values can be so huge it needed a special handler
     - You will need at least version v1.0.1-RC-1 of the mod for this to work
