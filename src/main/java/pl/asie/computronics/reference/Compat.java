@@ -21,7 +21,8 @@ public class Compat {
 		GregTech_Machines = "enableGregTechMachines",
 		GregTech_DigitalChests = "enableGregTechDigitalChests",
 		BuildCraft_Drivers = "enableBuildCraftDrivers",
-		DraconicEvolution = "enableDraconicEvolutionEnergyStoragePeripheral";
+		DraconicEvolution = "enableDraconicEvolutionEnergyStoragePeripheral",
+		MekanismEnergy = "enableMekanismEnergyStoragePeripheral";
 
 	public static final String Compatibility = "modCompatibility";
 

@@ -28,6 +28,7 @@ import pl.asie.computronics.integration.enderio.DriverVacuumChest;
 import pl.asie.computronics.integration.enderio.DriverWeatherObelisk;
 import pl.asie.computronics.integration.factorization.DriverChargeConductor;
 import pl.asie.computronics.integration.fsp.DriverSteamTransporter;
+import pl.asie.computronics.integration.mekanism.DriverStrictEnergyStorage;
 import pl.asie.computronics.integration.mfr.DriverDeepStorageUnit;
 import pl.asie.computronics.integration.railcraft.DriverBoilerFirebox;
 import pl.asie.computronics.integration.railcraft.DriverElectricGrid;
@@ -142,6 +143,11 @@ public class IntegrationComputerCraft {
 		if(Loader.isModLoaded(Mods.API.DraconicEvolution)
 			&& compat.isCompatEnabled(Compat.DraconicEvolution)) {
 			registerMultiPeripheralProvider(new DriverExtendedRFStorage.CCDriver());
+		}
+
+		if(Loader.isModLoaded(Mods.API.Mekanism_Energy)
+			&& compat.isCompatEnabled(Compat.MekanismEnergy)) {
+			registerMultiPeripheralProvider(new DriverStrictEnergyStorage.CCDriver());
 		}
 
 		if(Mods.API.hasVersion(Mods.API.BuildCraftTiles, "[1.1,)")) {

@@ -9,6 +9,7 @@ import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.Connector;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.AxisAlignedBB;
 import pl.asie.computronics.cc.CCRadarProxy;
@@ -109,6 +110,21 @@ public class TileRadar extends TileEntityPeripheralBase implements IBatteryProvi
 			|| extractFromBattery(energyNeeded)) {
 			AxisAlignedBB bounds = getBounds(distance);
 			entities.addAll(RadarUtils.getEntities(worldObj, xCoord, yCoord, zCoord, bounds, EntityLiving.class));
+			context.pause(0.5);
+		}
+		return new Object[] { RadarUtils.convertSetToMap(entities) };
+	}
+
+	@Callback
+	@Optional.Method(modid = Mods.OpenComputers)
+	public Object[] getItems(Context context, Arguments args) {
+		Set<Map> entities = new HashSet<Map>();
+		int distance = getDistance(args);
+		double energyNeeded = (Config.RADAR_ENERGY_COST_OC * distance * 2.0);
+		if(((Connector) node).tryChangeBuffer(0 - energyNeeded)
+			|| extractFromBattery(energyNeeded)) {
+			AxisAlignedBB bounds = getBounds(distance);
+			entities.addAll(RadarUtils.getItems(worldObj, xCoord, yCoord, zCoord, bounds, EntityItem.class));
 			context.pause(0.5);
 		}
 		return new Object[] { RadarUtils.convertSetToMap(entities) };

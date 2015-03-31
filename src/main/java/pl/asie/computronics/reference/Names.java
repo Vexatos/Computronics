@@ -23,6 +23,7 @@ public class Names {
 		EnderIO_WeatherObelisk = "weather_obelisk",
 		FSP_SteamTransporter = "steam_transporter",
 		FZ_ChargeConductor = "charge_conductor",
+		Mekanism_EnergyStorage = "mekanism_machine",
 		MFR_DSU = "deep_storage_unit",
 		Railcraft_BoilerFirebox = "boiler_firebox",
 		Railcraft_DigitalDetector = "digital_detector",
