@@ -20,6 +20,7 @@ public class Names {
 		EnderIO_Transceiver = "dimensional_transceiver",
 		FSP_SteamTransporter = "steam_transporter",
 		FZ_ChargeConductor = "charge_conductor",
+		Mekanism_EnergyStorage = "mekanism_machine",
 		MFR_DSU = "deep_storage_unit",
 		OpenBlocks_BuildingGuide = "building_guide",
 		Railcraft_BoilerFirebox = "boiler_firebox",

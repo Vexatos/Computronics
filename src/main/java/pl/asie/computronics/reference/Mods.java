@@ -49,7 +49,8 @@ public class Mods {
 			BuildCraftStatements = "BuildCraftAPI|statements",
 			BuildCraftTiles = "BuildCraftAPI|tiles",
 			CoFHAPI_Energy = "CoFHAPI|energy",
-			DraconicEvolution = "DraconicEvolution|API";
+			DraconicEvolution = "DraconicEvolution|API",
+			Mekanism_Energy = "MekanismAPI|energy";
 
 		private static HashMap<String, ArtifactVersion> apiList;
 

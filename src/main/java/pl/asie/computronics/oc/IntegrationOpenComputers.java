@@ -35,6 +35,7 @@ import pl.asie.computronics.integration.gregtech.DriverBatteryBuffer;
 import pl.asie.computronics.integration.gregtech.DriverDeviceInformation;
 import pl.asie.computronics.integration.gregtech.DriverDigitalChest;
 import pl.asie.computronics.integration.gregtech.DriverMachine;
+import pl.asie.computronics.integration.mekanism.DriverStrictEnergyStorage;
 import pl.asie.computronics.integration.railcraft.DriverElectricGrid;
 import pl.asie.computronics.integration.railcraft.DriverRoutingDetector;
 import pl.asie.computronics.integration.railcraft.DriverRoutingSwitch;
@@ -184,6 +185,11 @@ public class IntegrationOpenComputers {
 		if(Loader.isModLoaded(Mods.API.DraconicEvolution)
 			&& compat.isCompatEnabled(Compat.DraconicEvolution)) {
 			Driver.add(new DriverExtendedRFStorage.OCDriver());
+		}
+
+		if(Loader.isModLoaded(Mods.API.Mekanism_Energy)
+			&& compat.isCompatEnabled(Compat.MekanismEnergy)) {
+			Driver.add(new DriverStrictEnergyStorage.OCDriver());
 		}
 
 		if(Mods.API.hasVersion(Mods.API.BuildCraftTiles, "[1.1,)")) {
