@@ -38,7 +38,7 @@ public class ParticleTurtleUpgrade extends TurtleUpgradeBase {
 				ILuaContext context, int method, Object[] arguments)
 				throws LuaException, InterruptedException {
 			// check argument type validity
-			if(arguments.length < 5 || !(arguments[0] instanceof String)) return new Object[]{false, "invalid arguments"};
+			if(arguments.length < 4 || !(arguments[0] instanceof String)) return new Object[]{false, "invalid arguments"};
 			for(int i = 1; i < arguments.length; i++)
 				if(!(arguments[i] instanceof Double)) return new Object[]{false, "invalid argument "+i};
 			

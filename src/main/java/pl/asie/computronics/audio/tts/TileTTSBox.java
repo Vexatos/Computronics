@@ -75,7 +75,9 @@ public class TileTTSBox extends TileEntityPeripheralBase {
 			return 0;
 		}
 		int len = Math.min(buffer.length, v.length);
-
+		if(position + len > buffer.length) {
+			len = buffer.length - position;
+		}
 		System.arraycopy(buffer, position, v, 0, len);
 		if(!simulate) {
 			position += len;
@@ -105,6 +107,10 @@ public class TileTTSBox extends TileEntityPeripheralBase {
 			return new Object[] { false, "there is already something being said" };
 		}
 		buffer = Computronics.tts.say(xCoord, yCoord, zCoord, text);
+		if(buffer == null || buffer.length <= 0) {
+			buffer = null;
+			return new Object[] { false, "an unknown error occured" };
+		}
 		codecId = Computronics.tts.newPlayer();
 		codecTick = 0;
 		packetId = 0;

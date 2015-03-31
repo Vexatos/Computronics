@@ -16,7 +16,11 @@ import pl.asie.computronics.reference.Mods;
 import pl.asie.lib.audio.StreamingAudioPlayer;
 import pl.asie.lib.audio.StreamingPlaybackManager;
 
+import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
@@ -46,22 +50,35 @@ public class TextToSpeech extends StreamingPlaybackManager {
 		}
 		try {
 			AudioInputStream audio = marytts.generateAudio(text);
+			AudioFormat audioFormat = audio.getFormat();
+			AudioFormat e = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, audioFormat.getSampleRate(), audioFormat.getSampleSizeInBits(), 2, audioFormat.getFrameSize(), audioFormat.getSampleRate(), audioFormat.isBigEndian());
+			audio = AudioSystem.getAudioInputStream(e, audio);
 			//TODO Turn this into an OpenAL-compatible byte array
-			/*WaveData data = WaveData.create(audio);
+			/*WaveData data = WaveData.create(audio);*/
 			ArrayList<Byte> byteData = new ArrayList<Byte>();
-			while(data.data.hasRemaining()) {
-				byteData.add(data.data.get());
+			do {
+				byte[] bytes = new byte[audio.available()];
+				int read = audio.read(bytes, 0, bytes.length);
+				if(read <= 0) {
+					audio.close();
+					break;
+				}
+				for(byte aByte : bytes) {
+					byteData.add(aByte);
+				}
+			} while(true);
+			byte[] result = new byte[byteData.size()];
+			for(int i = 0; i < byteData.size(); i++) {
+				result[i] = byteData.get(i);
 			}
-			Byte[] array = byteData.toArray(new Byte[byteData.size()]);
-			byte[] result = new byte[array.length];
-			for(int i = 0; i < array.length; i++) {
-				result[i] = array[i];
-			}
-			return result;*/
-			return new byte[0];
+
+			return result;
 			//AudioPlayer player = new AudioPlayer(audio);
 			//ttsThreads.submit(player);
 		} catch(SynthesisException e) {
+			Computronics.log.error("Text To Speech synthesis failed");
+			e.printStackTrace();
+		} catch(IOException e) {
 			Computronics.log.error("Text To Speech synthesis failed");
 			e.printStackTrace();
 		}
@@ -77,6 +94,8 @@ public class TextToSpeech extends StreamingPlaybackManager {
 				marytts = new LocalMaryInterface();
 				Set<String> voices = marytts.getAvailableVoices();
 				marytts.setVoice(voices.iterator().next());
+				marytts.setStreamingAudio(true);
+				marytts.setOutputType("AUDIO");
 				//ttsThreads = Executors.newCachedThreadPool();
 			} catch(Exception e) {
 				Computronics.log.error("Text To Speech initialization failed, you will not be able to hear anything");
