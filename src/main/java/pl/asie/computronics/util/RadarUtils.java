@@ -58,10 +58,8 @@ public class RadarUtils {
 				ItemStack stack = entity.getEntityItem();
 				entry.put("name", Item.itemRegistry.getNameForObject(stack));
 				entry.put("damage", stack.getItemDamage());
-				entry.put("maxDamage", stack.getMaxDamage());
 				entry.put("hasTag", stack.hasTagCompound());
 				entry.put("size", stack.stackSize);
-				entry.put("maxSize", stack.getMaxStackSize());
 				entry.put("label", stack.getDisplayName());
 
 				if(!Config.RADAR_ONLY_DISTANCE) {
