@@ -8,6 +8,7 @@
     - The Capacitor Bank now provides two additional functions, `getAverageInputPerTick()` and `getAverageOutputPerTick()`
       - This allows you to monitor input and output of your energy network separately
     - Now you can get and set the range of Vacuum Chests
+    - Added `getProgress()` to most machines
   * ADDED: Draconic Evolution integration!
     - You can now properly get the (max) energy stored from Energy Pylons, the values can be so huge it needed a special handler
     - You will need at least version v1.0.1-RC-1 of the mod for this to work
