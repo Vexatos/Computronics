@@ -11,6 +11,7 @@
   * CHANGED: Added getEnergyStored() / getMaxEnergyStored functions to blocks that only receive or provide RF and not do both
   * FIXED: Digital Locomotive Relay's getDestination() and setDestination() actually work properly again now!
   * FIXED: Bees now don't run on oil anymore
+  * FIXED: A couple of issues that may have been appearing with Locomotive Relays
 
 ==== 1.4.3 ====
 

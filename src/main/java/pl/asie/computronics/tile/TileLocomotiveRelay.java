@@ -16,10 +16,12 @@ import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
+import pl.asie.computronics.Computronics;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 /**
@@ -56,15 +58,19 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
-		if(locomotive == null && !isInitialized && !worldObj.isRemote) {
+		if(worldObj.isRemote) {
+			return;
+		}
+		if(locomotive == null && !isInitialized && isBound) {
 			this.tryFindLocomotive(this.uuid);
 			if(locomotive == null) {
-				List locos = worldObj.getEntitiesWithinAABB(EntityLocomotiveElectric.class, AxisAlignedBB.getBoundingBox(locomotiveX, locomotiveY, locomotiveZ,
-					locomotiveX, locomotiveY, locomotiveZ));
-
-				for(Object loco : locos) {
-					if(loco instanceof EntityLocomotiveElectric) {
-						this.setLocomotive((EntityLocomotiveElectric) loco);
+				this.tryFindLocomotiveExpensively();
+				if(locomotive == null) {
+					Computronics.log.error(String.format(Locale.ENGLISH,
+						"Unable to find Electric Locomotive at (%s,%s,%s) bound to Locomotive Relay at (%s,%s,%s). It will not be bound anymore.",
+						locomotiveX, locomotiveY, locomotiveZ, xCoord, yCoord, zCoord));
+					if(uuid != null) {
+						Computronics.log.error("The Locomotive's UUID was: " + this.uuid);
 					}
 				}
 			}
@@ -80,11 +86,40 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 	}
 
 	private void tryFindLocomotive(UUID uuid) {
+		if(locomotive == null) {
+			return;
+		}
 		if(uuid != null) {
 			EntityMinecart cart = CartTools.getLinkageManager(worldObj).getCartFromUUID(uuid);
 			if(cart != null && cart instanceof EntityLocomotiveElectric) {
 				this.setLocomotive((EntityLocomotiveElectric) cart);
 			}
+		}
+	}
+
+	private void tryFindLocomotiveExpensively() {
+		if(locomotive == null) {
+			return;
+		}
+		List locos = worldObj.getEntitiesWithinAABB(EntityLocomotiveElectric.class, AxisAlignedBB.getBoundingBox(locomotiveX - 0.5, locomotiveY - 0.5, locomotiveZ - 0.5,
+			locomotiveX + 0.5, locomotiveY + 0.5, locomotiveZ + 0.5));
+
+		EntityLocomotiveElectric checkLoco = null;
+		for(Object loco : locos) {
+			if(loco instanceof EntityLocomotiveElectric) {
+				if(checkLoco == null) {
+					checkLoco = (EntityLocomotiveElectric) loco;
+					continue;
+				}
+				EntityLocomotiveElectric newLoco = (EntityLocomotiveElectric) loco;
+				if(newLoco.getDistanceSq(locomotiveX, locomotiveY, locomotiveZ)
+					< checkLoco.getDistanceSq(locomotiveX, locomotiveY, locomotiveZ)) {
+					checkLoco = newLoco;
+				}
+			}
+		}
+		if(checkLoco != null) {
+			this.setLocomotive(checkLoco);
 		}
 	}
 
@@ -107,9 +142,9 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 			nbt.setDouble("locomotiveX", this.locomotive.posX);
 			nbt.setDouble("locomotiveY", this.locomotive.posY);
 			nbt.setDouble("locomotiveZ", this.locomotive.posZ);
-			nbt.setBoolean("bound", isBound);
 			MiscTools.writeUUID(nbt, "locomotive", this.locomotive.getPersistentID());
 		}
+		nbt.setBoolean("bound", isBound);
 	}
 
 	@Override
@@ -217,24 +252,24 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 			if(cannotAccessLocomotive() != null) {
 				return new Object[] { null, cannotAccessLocomotive() };
 			}
-			switch(method){
-				case 0:{
+			switch(method) {
+				case 0: {
 					return new Object[] { this.locomotive.getDestination() };
 				}
-				case 1:{
+				case 1: {
 					if(arguments.length < 1 || !(arguments[0] instanceof String)) {
 						throw new LuaException("first argument needs to be a string");
 					}
 
 					return TileLocomotiveRelay.setDestination(this.locomotive, arguments);
 				}
-				case 2:{
+				case 2: {
 					return new Object[] { this.locomotive.getChargeHandler().getCharge() };
 				}
-				case 3:{
+				case 3: {
 					return new Object[] { this.locomotive.getMode().toString() };
 				}
-				case 4:{
+				case 4: {
 					return new Object[] { this.locomotive.func_95999_t() != null ? this.locomotive.func_95999_t() : "" };
 				}
 			}
