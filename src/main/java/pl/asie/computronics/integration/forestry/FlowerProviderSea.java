@@ -4,21 +4,57 @@ import forestry.api.genetics.IFlowerProvider;
 import forestry.api.genetics.IIndividual;
 import forestry.api.genetics.IPollinatable;
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.IFluidBlock;
 import pl.asie.computronics.util.StringUtil;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author Vexatos
  */
 public class FlowerProviderSea implements IFlowerProvider {
 
+	private static List<String> waterTypes = Arrays.asList("water");
+	private static final List<String> saltwaterTypes = Arrays.asList("saltwater", "saltWater", "Saltwater", "SaltWater");
+	private static boolean hasCheckedSaltwater = false;
+
+	private static void checkSaltwater() {
+		if(hasCheckedSaltwater) {
+			return;
+		}
+		for(String saltwaterType : saltwaterTypes) {
+			if(FluidRegistry.isFluidRegistered(saltwaterType)) {
+				waterTypes = saltwaterTypes;
+				break;
+			}
+		}
+		hasCheckedSaltwater = true;
+	}
+
 	@Override
 	public boolean isAcceptedFlower(World world, IIndividual individual, int x, int y, int z) {
 		Block block = world.getBlock(x, y, z);
-		int meta = world.getBlockMetadata(x, y, z);
-		return block.getMaterial() == Material.water && meta == 0;
+		if(block != null) {
+			Fluid fluid = FluidRegistry.lookupFluidForBlock(block);
+			if(fluid != null && FluidRegistry.isFluidRegistered(fluid)) {
+				if(!hasCheckedSaltwater) {
+					checkSaltwater();
+				}
+				if(waterTypes.contains(fluid.getName())) {
+					if(block instanceof IFluidBlock) {
+						return ((IFluidBlock) block).canDrain(world, x, y, z);
+					} else {
+						return world.getBlockMetadata(x, y, z) == 0;
+					}
+				}
+			}
+		}
+		return false;
 	}
 
 	@Override
