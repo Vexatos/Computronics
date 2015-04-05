@@ -9,6 +9,7 @@
     - Gives you information about all the items floating in the world around the Radar.
   * CHANGED: Digital Signal Reciver Box functions are now direct (thus they can be accessed much faster now)
   * CHANGED: Added getEnergyStored() / getMaxEnergyStored functions to blocks that only receive or provide RF and not do both
+  * FIXED: Updated OpenPeripheral integration to version 1.0 of OpenPeripheralCore (Requires version 1.0 now)
   * FIXED: Digital Locomotive Relay's getDestination() and setDestination() actually work properly again now!
   * FIXED: Bees now don't run on oil anymore
   * FIXED: A couple of issues that may have been appearing with Locomotive Relays
