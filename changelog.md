@@ -1,6 +1,7 @@
 ==== 1.4.5 ====
 
   * FIXED: The Creative Chat Box respecting the max range of the normal Chat Box
+  * FIXED: Draconic Evolution and Mekanism Energy integration not working at all. Oops.
 
 ==== 1.4.4 ====
 
