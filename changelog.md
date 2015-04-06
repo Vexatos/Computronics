@@ -1,7 +1,8 @@
 ==== 1.4.5 ====
 
+This is semi-officially known as "The Kodos Update".
   * FIXED: The Creative Chat Box respecting the max range of the normal Chat Box
-  * FIXED: Draconic Evolution and Mekanism Energy integration not working at all. Oops.
+  * FIXED: Draconic Evolution and Mekanism Energy integration not working at all. Woops.
 
 ==== 1.4.4 ====
 
