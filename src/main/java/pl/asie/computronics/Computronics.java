@@ -81,10 +81,10 @@ import java.util.concurrent.Executors;
 @Mod(modid = Mods.Computronics, name = Mods.Computronics_NAME, version = "@VERSION@", useMetadata = true,
 	dependencies = "required-after:asielib@[0.3.11,);required-after:Forge@[10.13.2.1236,);"
 		+ "after:ComputerCraft;after:OpenComputers@[1.5.0,);after:OpenComputersAPI|Internal@[5.0.0,);"
-		+ "after:OpenComputers|Core;after:MineFactoryReloaded;after:RedLogic;after:ProjRed|Core;"
+		+ "after:OpenComputers|Core;after:MineFactoryReloaded;after:RedLogic@[59.1.9,);after:ProjRed|Core;"
 		+ "after:nedocomputers;after:BuildCraft|Core@[6.4.1,);after:Railcraft@[9.5.0.0,);"
-		+ "after:gregtech@MC1710;after:EnderIO@[1.7.10_2.3,);before:OpenPeripheralCore@[0.5.0,0.6.0);"
-		+ "before:OpenPeripheralApi@[2.2,);after:Forestry@[3.4.0,);after:Waila@[1.5.7,);after:MekanismAPI|energy@[8.0.0,)")
+		+ "after:gregtech@MC1710;after:EnderIO@[1.7.10_2.3,);before:OpenPeripheralCore@[1.0,);"
+		+ "before:OpenPeripheralApi@[3.1,);after:Forestry@[3.4.0,);after:Waila@[1.5.7,);after:MekanismAPI|energy@[8.0.0,)")
 public class Computronics {
 	public Config config;
 	public Compat compat;

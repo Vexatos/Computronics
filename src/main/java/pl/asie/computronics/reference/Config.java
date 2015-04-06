@@ -72,7 +72,7 @@ public class Config {
 
 		// Chat Box
 		CHATBOX_CREATIVE = config.getBoolean("enableCreative", "chatbox", true, "Enable Creative Chat Boxes.");
-		CHATBOX_DISTANCE = config.getInt("maxDistance", "chatbox", 40, 4, Integer.MAX_VALUE, "The maximum chat box distance, in blocks.");
+		CHATBOX_DISTANCE = config.getInt("maxDistance", "chatbox", 40, 4, 32767, "The maximum chat box distance, in blocks.");
 		CHATBOX_PREFIX = config.getString("prefix", "chatbox", "ChatBox", "The Chat Box's default prefix.");
 
 		// Cipher Block

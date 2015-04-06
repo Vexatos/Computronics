@@ -7,8 +7,9 @@ import dan200.computercraft.api.peripheral.IPeripheralProvider;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import openperipheral.api.ApiAccess;
-import openperipheral.api.IAdapterFactory;
-import openperipheral.api.IPeripheralBlacklist;
+import openperipheral.api.architecture.cc.IComputerCraftObjectsFactory;
+import openperipheral.api.peripheral.IOpenPeripheral;
+import openperipheral.api.peripheral.IPeripheralBlacklist;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheralProvider;
@@ -56,8 +57,8 @@ public class MultiPeripheralProvider implements IPeripheralProvider {
 	@Optional.Method(modid = Mods.OpenPeripheral)
 	private IMultiPeripheral getOpenPeripheral(World world, int x, int y, int z) {
 		TileEntity tile = world.getTileEntity(x, y, z);
-		if(tile != null && ApiAccess.isApiPresent(IAdapterFactory.class)) {
-			IPeripheral peripheral = ApiAccess.getApi(IAdapterFactory.class).createPeripheral(tile);
+		if(tile != null && ApiAccess.isApiPresent(IComputerCraftObjectsFactory.class)) {
+			IPeripheral peripheral = ApiAccess.getApi(IComputerCraftObjectsFactory.class).createPeripheral(tile);
 			boolean blacklisted = false;
 			if(ApiAccess.isApiPresent(IPeripheralBlacklist.class)) {
 				blacklisted = ApiAccess.getApi(IPeripheralBlacklist.class).isBlacklisted(tile.getClass());
@@ -154,6 +155,7 @@ public class MultiPeripheralProvider implements IPeripheralProvider {
 	@Optional.Method(modid = Mods.OpenPeripheral)
 	private boolean isOpenPeripheral(Object ccperiph) {
 		// I guess I have to do it this way
-		return ccperiph != null && ccperiph.getClass().getName().startsWith("openperipheral");
+		return ccperiph != null
+			&& (ccperiph instanceof IOpenPeripheral || ccperiph.getClass().getName().startsWith("openperipheral"));
 	}
 }
