@@ -1,9 +1,5 @@
 ==== 1.4.5 ====
 
-  * FIXED: The Creative Chat Box respecting the max range of the normal Chat Box
-
-==== 1.4.4 ====
-
   * ADDED: EnderIO 2.3 integration  for OpenComputers and ComputerCraft!
     - Added support for the new Telepad
       - Allows full control over the coordinates set as well as telepad activation
@@ -13,6 +9,10 @@
       - This allows you to monitor input and output of your energy network separately
     - Now you can get and set the range of Vacuum Chests
     - Added `getProgress()` to most machines
+  * FIXED: The Creative Chat Box respecting the max range of the normal Chat Box
+
+==== 1.4.4 ====
+
   * ADDED: Draconic Evolution integration!
     - You can now properly get the (max) energy stored from Energy Pylons, the values can be so huge it needed a special handler
     - You will need at least version v1.0.1-RC-1 of the mod for this to work
