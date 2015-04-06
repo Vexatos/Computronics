@@ -10,6 +10,7 @@ import net.minecraft.world.World;
 public class ChatBoxUtils {
 
 	public static void sendChatMessage(World worldObj, double xCoord, double yCoord, double zCoord, int distance, String prefix, String string) {
+		distance = Math.min(distance, 32767);
 		String text = EnumChatFormatting.GRAY + "" + EnumChatFormatting.ITALIC + "[" + prefix + "] ";
 		text += EnumChatFormatting.RESET + "" + EnumChatFormatting.GRAY + string;
 		for(Object o : worldObj.playerEntities) {
@@ -17,7 +18,7 @@ public class ChatBoxUtils {
 				continue;
 			}
 			EntityPlayer player = (EntityPlayer) o;
-			if(player.getDistance(xCoord, yCoord, zCoord) < distance) {
+			if(player.getDistanceSq(xCoord, yCoord, zCoord) < distance * distance) {
 				ChatComponentText component = new ChatComponentText(text);
 				component.setChatStyle(component.getChatStyle().setColor(EnumChatFormatting.GRAY));
 				player.addChatMessage(component);

@@ -16,10 +16,6 @@ import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.ChatBoxUtils;
 
-//import dan200.computer.api.IComputerAccess;
-//import dan200.computer.api.ILuaContext;
-//import dan200.computer.api.IPeripheral;
-
 public class TileChatBox extends TileEntityPeripheralBase implements IChatListener {
 	private int distance;
 	private int ticksUntilOff = 0;
@@ -37,7 +33,9 @@ public class TileChatBox extends TileEntityPeripheralBase implements IChatListen
 	}
 
 	@Override
-	public boolean canUpdate() { return Config.MUST_UPDATE_TILE_ENTITIES || Config.REDSTONE_REFRESH; }
+	public boolean canUpdate() {
+		return Config.MUST_UPDATE_TILE_ENTITIES || Config.REDSTONE_REFRESH;
+	}
 
 	public boolean isCreative() {
 		return Config.CHATBOX_CREATIVE && worldObj != null
@@ -49,22 +47,31 @@ public class TileChatBox extends TileEntityPeripheralBase implements IChatListen
 		super.updateEntity();
 		if(Config.REDSTONE_REFRESH && ticksUntilOff > 0) {
 			ticksUntilOff--;
-			if(ticksUntilOff == 0 || mustRefresh)
+			if(ticksUntilOff == 0 || mustRefresh) {
 				this.worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, this.blockType);
+			}
 		}
 	}
 
-	public int getDistance() { return distance; }
+	public int getDistance() {
+		return distance;
+	}
 
 	public void setDistance(int dist) {
-		if(dist > 32767) dist = 32767;
+		if(dist > 32767) {
+			dist = 32767;
+		}
 
-		this.distance = Math.min(Config.CHATBOX_DISTANCE, dist);
-		if(this.distance < 0) this.distance = Config.CHATBOX_DISTANCE;
+		if(!isCreative()) {
+			this.distance = Math.min(Config.CHATBOX_DISTANCE, dist);
+		}
+		if(this.distance < 0) {
+			this.distance = Config.CHATBOX_DISTANCE;
+		}
 	}
 
 	public void receiveChatMessage(ServerChatEvent event) {
-		if (!isCreative() && (event.player.worldObj != this.worldObj || event.player.getDistanceSq(xCoord, yCoord, zCoord) > distance * distance)) {
+		if(!isCreative() && (event.player.worldObj != this.worldObj || event.player.getDistanceSq(xCoord, yCoord, zCoord) > distance * distance)) {
 			return;
 		}
 
@@ -72,8 +79,12 @@ public class TileChatBox extends TileEntityPeripheralBase implements IChatListen
 			ticksUntilOff = 5;
 			mustRefresh = true;
 		}
-		if(Loader.isModLoaded(Mods.OpenComputers)) eventOC(event);
-		if(Loader.isModLoaded(Mods.ComputerCraft)) eventCC(event);
+		if(Loader.isModLoaded(Mods.OpenComputers)) {
+			eventOC(event);
+		}
+		if(Loader.isModLoaded(Mods.ComputerCraft)) {
+			eventCC(event);
+		}
 	}
 
 	@Override
@@ -88,36 +99,39 @@ public class TileChatBox extends TileEntityPeripheralBase implements IChatListen
 		ChatAPI.registry.unregisterChatListener(this);
 	}
 
-	@Optional.Method(modid=Mods.OpenComputers)
+	@Optional.Method(modid = Mods.OpenComputers)
 	public void eventOC(ServerChatEvent event) {
 		if(node != null) {
 			node.sendToReachable("computer.signal", "chat_message", event.username, event.message);
 		}
 	}
 
-	@Optional.Method(modid=Mods.ComputerCraft)
+	@Optional.Method(modid = Mods.ComputerCraft)
 	public void eventCC(ServerChatEvent event) {
-		if(attachedComputersCC != null)
-		for(IComputerAccess computer: attachedComputersCC) {
-			computer.queueEvent("chat_message", new Object[] {
-				computer.getAttachmentName(),
-				event.username, event.message
-			});
+		if(attachedComputersCC != null) {
+			for(IComputerAccess computer : attachedComputersCC) {
+				computer.queueEvent("chat_message", new Object[] {
+					computer.getAttachmentName(),
+					event.username, event.message
+				});
+			}
 		}
 	}
 
 	// OpenComputers API
 
 	@Callback
-	@Optional.Method(modid=Mods.OpenComputers)
+	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] say(Context context, Arguments args) {
 		int d = distance;
 		if(args.count() >= 1) {
 			if(args.isInteger(1)) {
-				d = Math.min(Config.CHATBOX_DISTANCE, args.checkInteger(1));
-				if(d <= 0) d = distance;
+				d = isCreative() ? args.checkInteger(1) : Math.min(Config.CHATBOX_DISTANCE, args.checkInteger(1));
+				if(d <= 0) {
+					d = distance;
+				}
 			}
-			if(args.isString(0)){
+			if(args.isString(0)) {
 				ChatBoxUtils.sendChatMessage(this, d, name.length() > 0 ? name : Config.CHATBOX_PREFIX, args.checkString(0));
 				return new Object[] { true };
 			}
@@ -126,114 +140,126 @@ public class TileChatBox extends TileEntityPeripheralBase implements IChatListen
 	}
 
 	@Callback(direct = true)
-	@Optional.Method(modid=Mods.OpenComputers)
+	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] getDistance(Context context, Arguments args) {
-		return new Object[]{ distance };
+		return new Object[] { distance };
 	}
 
 	@Callback(direct = true)
-	@Optional.Method(modid=Mods.OpenComputers)
+	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] setDistance(Context context, Arguments args) {
 		if(args.count() == 1) {
 			if(args.isInteger(0)) {
 				setDistance(args.checkInteger(0));
-				return new Object[]{ true };
+				return new Object[] { true };
 			}
 		}
 		return new Object[] { false };
 	}
 
 	@Callback(direct = true)
-	@Optional.Method(modid=Mods.OpenComputers)
+	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] getName(Context context, Arguments args) {
-		return new Object[]{name};
+		return new Object[] { name };
 	}
 
 	@Callback(direct = true)
-	@Optional.Method(modid=Mods.OpenComputers)
+	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] setName(Context context, Arguments args) {
 		if(args.count() == 1) {
-			if(args.isString(0)){
+			if(args.isString(0)) {
 				this.name = args.checkString(0);
-				return new Object[]{ true };
+				return new Object[] { true };
 			}
 		}
-		return new Object[]{ false };
+		return new Object[] { false };
 	}
 
-    @Override
-    public void readFromNBT(final NBTTagCompound nbt) {
-        super.readFromNBT(nbt);
-        if(nbt.hasKey("d")) this.distance = nbt.getShort("d");
-        if(nbt.hasKey("n")) this.name = nbt.getString("n");
-    }
-
-    @Override
-    public void writeToNBT(final NBTTagCompound nbt) {
-        super.writeToNBT(nbt);
-        nbt.setShort("d", (short)this.distance);
-        if(name.length() > 0) nbt.setString("n", this.name);
-    }
+	@Override
+	public void readFromNBT(final NBTTagCompound nbt) {
+		super.readFromNBT(nbt);
+		if(nbt.hasKey("d")) {
+			this.distance = nbt.getShort("d");
+		}
+		if(nbt.hasKey("n")) {
+			this.name = nbt.getString("n");
+		}
+	}
 
 	@Override
-    @Optional.Method(modid=Mods.ComputerCraft)
+	public void writeToNBT(final NBTTagCompound nbt) {
+		super.writeToNBT(nbt);
+		nbt.setShort("d", (short) this.distance);
+		if(name.length() > 0) {
+			nbt.setString("n", this.name);
+		}
+	}
+
+	@Override
+	@Optional.Method(modid = Mods.ComputerCraft)
 	public String[] getMethodNames() {
-		return new String[]{"say", "getDistance", "setDistance", "getName", "setName"};
+		return new String[] { "say", "getDistance", "setDistance", "getName", "setName" };
 	}
 
 	@Override
-    @Optional.Method(modid=Mods.ComputerCraft)
+	@Optional.Method(modid = Mods.ComputerCraft)
 	public Object[] callMethod(IComputerAccess computer, ILuaContext context,
-			int method, Object[] arguments) throws LuaException,
-			InterruptedException {
+		int method, Object[] arguments) throws LuaException,
+		InterruptedException {
 		switch(method) {
-		case 0: { // say
-			if(arguments.length >= 1 && arguments[0] instanceof String) {
-				int d = distance;
-				if(arguments.length >= 2 && arguments[1] instanceof Double) {
-					d = Math.min(Config.CHATBOX_DISTANCE, ((Double)arguments[1]).intValue());
-					if(d <= 0) d = distance;
+			case 0: { // say
+				if(arguments.length >= 1 && arguments[0] instanceof String) {
+					int d = distance;
+					if(arguments.length >= 2 && arguments[1] instanceof Double) {
+						d = isCreative() ? ((Double) arguments[1]).intValue() : Math.min(Config.CHATBOX_DISTANCE, ((Double) arguments[1]).intValue());
+						if(d <= 0) {
+							d = distance;
+						}
+					}
+					ChatBoxUtils.sendChatMessage(this, d, name.length() > 0 ? name : Config.CHATBOX_PREFIX, ((String) arguments[0]));
+					return new Object[] { true };
 				}
-				ChatBoxUtils.sendChatMessage(this, d, name.length() > 0 ? name : Config.CHATBOX_PREFIX, ((String)arguments[0]));
-				return new Object[]{ true };
+				return new Object[] { false };
 			}
-			return new Object[]{ false };
-		}
-		case 1: { // getDistance
-			return new Object[]{distance};
-		}
-		case 2: { // setDistance
-			if(arguments.length == 1 && arguments[0] instanceof Double) {
-				setDistance(((Double)arguments[0]).intValue());
-				return new Object[]{ true };
+			case 1: { // getDistance
+				return new Object[] { distance };
 			}
-			return new Object[] { false };
-		}
-		case 3: { // getName
-			return new Object[]{ name };
-		}
-		case 4: { // setName
-			if(arguments.length == 1 && arguments[0] instanceof String) {
-				this.name = (String)arguments[0];
-				return new Object[]{ true };
+			case 2: { // setDistance
+				if(arguments.length == 1 && arguments[0] instanceof Double) {
+					setDistance(((Double) arguments[0]).intValue());
+					return new Object[] { true };
+				}
+				return new Object[] { false };
 			}
-			return new Object[] { false };
-		}
+			case 3: { // getName
+				return new Object[] { name };
+			}
+			case 4: { // setName
+				if(arguments.length == 1 && arguments[0] instanceof String) {
+					this.name = (String) arguments[0];
+					return new Object[] { true };
+				}
+				return new Object[] { false };
+			}
 		}
 		return null;
 	}
 
 	@Override
-    @Optional.Method(modid=Mods.NedoComputers)
+	@Optional.Method(modid = Mods.NedoComputers)
 	public short busRead(int addr) {
 		return 0;
 	}
 
 	@Override
-    @Optional.Method(modid=Mods.NedoComputers)
+	@Optional.Method(modid = Mods.NedoComputers)
 	public void busWrite(int addr, short data) {
 		switch((addr & 0xFFFE)) {
-		case 0: if(data > 0) distance = data; break;
+			case 0:
+				if(data > 0) {
+					distance = data;
+				}
+				break;
 		}
 	}
 }
