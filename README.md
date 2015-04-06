@@ -1,3 +1,11 @@
+# Mod
+
+Computronics is an addon for ComputerCraft and OpenComputers, also adding integration to a lot of other mods.
+###Downloads
+The mod's downloads can be found at http://wiki.vex.tty.sh/wiki:computronics.
+
+# Mod Pack
+
       _____                            _                   _          
      / ____|                          | |                 (_)         
     | |     ___  _ __ ___  _ __  _   _| |_ _ __ ___  _ __  _  ___ ___ 
