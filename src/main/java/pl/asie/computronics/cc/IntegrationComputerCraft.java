@@ -140,12 +140,12 @@ public class IntegrationComputerCraft {
 			}
 		}
 
-		if(Loader.isModLoaded(Mods.API.DraconicEvolution)
+		if(ModAPIManager.INSTANCE.hasAPI(Mods.API.DraconicEvolution)
 			&& compat.isCompatEnabled(Compat.DraconicEvolution)) {
 			registerMultiPeripheralProvider(new DriverExtendedRFStorage.CCDriver());
 		}
 
-		if(Loader.isModLoaded(Mods.API.Mekanism_Energy)
+		if(ModAPIManager.INSTANCE.hasAPI(Mods.API.Mekanism_Energy)
 			&& compat.isCompatEnabled(Compat.MekanismEnergy)) {
 			registerMultiPeripheralProvider(new DriverStrictEnergyStorage.CCDriver());
 		}

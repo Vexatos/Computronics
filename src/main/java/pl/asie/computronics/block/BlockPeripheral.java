@@ -6,10 +6,14 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.oc.block.IComputronicsEnvironmentBlock;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.lib.block.BlockBase;
 
-public abstract class BlockPeripheral extends BlockBase {
+@Optional.InterfaceList({
+	@Optional.Interface(iface = "pl.asie.computronics.oc.block.IComputronicsEnvironmentBlock", modid = Mods.OpenComputers)
+})
+public abstract class BlockPeripheral extends BlockBase implements IComputronicsEnvironmentBlock {
 
 	public BlockPeripheral() {
 		super(Material.iron, Computronics.instance);

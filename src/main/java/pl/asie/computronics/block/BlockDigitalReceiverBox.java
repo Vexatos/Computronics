@@ -2,6 +2,7 @@ package pl.asie.computronics.block;
 
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import li.cil.oc.api.network.Environment;
@@ -17,13 +18,17 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.integration.railcraft.SignalTypes;
+import pl.asie.computronics.oc.block.IComputronicsEnvironmentBlock;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TileDigitalReceiverBox;
 
 /**
  * @author CovertJaguar, Vexatos
  */
-public class BlockDigitalReceiverBox extends BlockSignalBase {
+@Optional.InterfaceList({
+	@Optional.Interface(iface = "pl.asie.computronics.oc.block.IComputronicsEnvironmentBlock", modid = Mods.OpenComputers)
+})
+public class BlockDigitalReceiverBox extends BlockSignalBase implements IComputronicsEnvironmentBlock {
 
 	public static IIcon[] texturesBox;
 	public static IIcon texturesBoxTop;
@@ -49,7 +54,7 @@ public class BlockDigitalReceiverBox extends BlockSignalBase {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public IIcon getIcon(int side, int meta) {
-		switch(side){
+		switch(side) {
 			case 0:
 				return texturesBox[2];
 			case 1:
@@ -103,4 +108,9 @@ public class BlockDigitalReceiverBox extends BlockSignalBase {
 		return 0;
 	}
 
+	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
+	public Class<? extends Environment> getTileEntityClass(int meta) {
+		return TileDigitalReceiverBox.class;
+	}
 }

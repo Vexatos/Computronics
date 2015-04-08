@@ -1,6 +1,7 @@
 package pl.asie.computronics.oc;
 
 import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.ModAPIManager;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.event.FMLMissingMappingsEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -51,6 +52,7 @@ import pl.asie.computronics.integration.railcraft.track.DriverPrimingTrack;
 import pl.asie.computronics.integration.railcraft.track.DriverRoutingTrack;
 import pl.asie.computronics.integration.redlogic.DriverLamp;
 import pl.asie.computronics.item.ItemOpenComputers;
+import pl.asie.computronics.oc.block.DriverBlockEnvironments;
 import pl.asie.computronics.reference.Compat;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
@@ -107,6 +109,8 @@ public class IntegrationOpenComputers {
 
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void init() {
+
+		Driver.add(new DriverBlockEnvironments());
 
 		if(Loader.isModLoaded(Mods.RedLogic)) {
 			if(compat.isCompatEnabled(Compat.RedLogic_Lamps)) {
@@ -190,12 +194,12 @@ public class IntegrationOpenComputers {
 			}
 		}
 
-		if(Loader.isModLoaded(Mods.API.DraconicEvolution)
+		if(ModAPIManager.INSTANCE.hasAPI(Mods.API.DraconicEvolution)
 			&& compat.isCompatEnabled(Compat.DraconicEvolution)) {
 			Driver.add(new DriverExtendedRFStorage.OCDriver());
 		}
 
-		if(Loader.isModLoaded(Mods.API.Mekanism_Energy)
+		if(ModAPIManager.INSTANCE.hasAPI(Mods.API.Mekanism_Energy)
 			&& compat.isCompatEnabled(Compat.MekanismEnergy)) {
 			Driver.add(new DriverStrictEnergyStorage.OCDriver());
 		}

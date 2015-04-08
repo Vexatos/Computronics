@@ -29,7 +29,7 @@ public class GregTechRecipes extends ModRecipes {
 
 	@Override
 	public void registerRecipes() {
-		Computronics.log.info("Registering GregTech-style recipes for Computronics. Turn it off in the configs if you don't want it.");
+		Computronics.log.info("Registering GregTech-style recipes for Computronics. Turn it off in the configs if you don't want them.");
 
 		if(Computronics.camera != null) {
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Computronics.camera, 1, 0),
@@ -45,7 +45,9 @@ public class GregTechRecipes extends ModRecipes {
 		}
 		if(Computronics.tapeReader != null) {
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Computronics.tapeReader, 1, 0),
-				"tit", "mrm", "cac", 'i', ItemList.Hull_LV.get(1), 'r', "circuitBasic", 'a', Computronics.ironNote, 'm', ItemList.Electric_Motor_LV.get(1), 't', "cableGt01Tin", 'c', "plateIronMagnetic"));
+				"tit", "mrm", "cac", 'i', ItemList.Hull_LV.get(1), 'r', "circuitBasic",
+				'a', Computronics.ironNote != null ? Computronics.ironNote : Blocks.noteblock,
+				'm', ItemList.Electric_Motor_LV.get(1), 't', "cableGt01Tin", 'c', "plateIronMagnetic"));
 		}
 		if(Computronics.cipher != null) {
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Computronics.cipher, 1, 0),

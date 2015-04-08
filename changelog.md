@@ -1,4 +1,4 @@
-==== 1.4.5 ====
+==== 1.4.7 ====
 
   * ADDED: EnderIO 2.3 integration  for OpenComputers and ComputerCraft!
     - Added support for the new Telepad
@@ -9,7 +9,19 @@
       - This allows you to monitor input and output of your energy network separately
     - Now you can get and set the range of Vacuum Chests
     - Added `getProgress()` to most machines
+  * ADDED: All Computronics blocks now support the OpenComputers API documentation in NotEnoughItems.
+
+==== 1.4.6 ====
+
+This one is semi-officially known as "The Cyther Update".
+  * FIXED: A crash when the Iron Note Block has been disabled in the config.
+  * FIXED: A crash with GregTech 6; depending on GregTech 5 for now until GregTech 6 is out of alpha.
+
+==== 1.4.5 ====
+
+This is semi-officially known as "The Kodos Update".
   * FIXED: The Creative Chat Box respecting the max range of the normal Chat Box
+  * FIXED: Draconic Evolution and Mekanism Energy integration not working at all. Woops.
 
 ==== 1.4.4 ====
 
