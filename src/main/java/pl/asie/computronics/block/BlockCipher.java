@@ -4,6 +4,7 @@ import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import li.cil.oc.api.network.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
@@ -105,5 +106,11 @@ public class BlockCipher extends BlockMachineSidedIcon implements IRedNetOmniNod
 	public int getOutputValue(World world, int x, int y, int z,
 			ForgeDirection side, int subnet) {
 		return ((TileCipherBlock)world.getTileEntity(x, y, z)).redNetSingleOutput;
+	}
+
+	@Override
+	@Optional.Method(modid= Mods.OpenComputers)
+	public Class<? extends Environment> getTileEntityClass(int meta) {
+		return TileCipherBlock.class;
 	}
 }

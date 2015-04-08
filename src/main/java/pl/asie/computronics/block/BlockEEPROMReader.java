@@ -1,8 +1,10 @@
 package pl.asie.computronics.block;
 
+import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import li.cil.oc.api.network.Environment;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -67,5 +69,11 @@ public class BlockEEPROMReader extends BlockPeripheral {
 		mTopOn = r.registerIcon("computronics:eepromreader_top_chip");
 		mSide = r.registerIcon("computronics:machine_side");
 		mBottom = r.registerIcon("computronics:machine_bottom");
+	}
+
+	@Override
+	@Optional.Method(modid= Mods.OpenComputers)
+	public Class<? extends Environment> getTileEntityClass(int meta) {
+		return TileEEPROMReader.class;
 	}
 }

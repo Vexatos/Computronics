@@ -4,6 +4,7 @@ import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import li.cil.oc.api.network.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.tileentity.TileEntity;
@@ -103,5 +104,11 @@ public class BlockColorfulLamp extends BlockPeripheral implements IRedNetInputNo
 	public void onInputChanged(World world, int x, int y, int z,
 		ForgeDirection side, int inputValue) {
 		((TileColorfulLamp) world.getTileEntity(x, y, z)).setLampColor(inputValue & 0x7FFF);
+	}
+
+	@Override
+	@Optional.Method(modid= Mods.OpenComputers)
+	public Class<? extends Environment> getTileEntityClass(int meta) {
+		return TileColorfulLamp.class;
 	}
 }

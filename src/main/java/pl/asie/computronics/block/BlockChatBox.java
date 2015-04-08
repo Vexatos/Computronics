@@ -1,7 +1,9 @@
 package pl.asie.computronics.block;
 
+import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import li.cil.oc.api.network.Environment;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,6 +17,7 @@ import net.minecraft.world.World;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.item.block.IBlockWithSpecialText;
 import pl.asie.computronics.reference.Config;
+import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TileChatBox;
 import pl.asie.computronics.util.StringUtil;
 
@@ -95,5 +98,11 @@ public class BlockChatBox extends BlockMachineSidedIcon implements IBlockWithSpe
 	@Override
 	public String getUnlocalizedName(ItemStack stack) {
 		return (stack.getItemDamage() >= 8 ? "tile.computronics.chatBox.creative" : this.getUnlocalizedName());
+	}
+
+	@Override
+	@Optional.Method(modid= Mods.OpenComputers)
+	public Class<? extends Environment> getTileEntityClass(int meta) {
+		return TileChatBox.class;
 	}
 }

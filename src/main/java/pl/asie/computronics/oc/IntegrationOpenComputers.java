@@ -48,6 +48,7 @@ import pl.asie.computronics.integration.railcraft.track.DriverPrimingTrack;
 import pl.asie.computronics.integration.railcraft.track.DriverRoutingTrack;
 import pl.asie.computronics.integration.redlogic.DriverLamp;
 import pl.asie.computronics.item.ItemOpenComputers;
+import pl.asie.computronics.oc.block.DriverBlockEnvironments;
 import pl.asie.computronics.reference.Compat;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
@@ -104,6 +105,8 @@ public class IntegrationOpenComputers {
 
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void init() {
+
+		Driver.add(new DriverBlockEnvironments());
 
 		if(Loader.isModLoaded(Mods.RedLogic)) {
 			if(compat.isCompatEnabled(Compat.RedLogic_Lamps)) {
