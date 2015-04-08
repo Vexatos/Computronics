@@ -1,3 +1,9 @@
+==== 1.4.6 ====
+
+This one is semi-officially known as "The Cyther Update".
+  * FIXED: A crash when the Iron Note Block has been disabled in the config.
+  * FIXED: A crash with GregTech 6; depending on GregTech 5 for now until GregTech 6 is out of alpha.
+
 ==== 1.4.5 ====
 
 This is semi-officially known as "The Kodos Update".

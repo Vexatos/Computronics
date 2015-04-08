@@ -38,7 +38,8 @@ public class ModRecipes {
 		}
 		if(Computronics.tapeReader != null) {
 			GameRegistry.addShapedRecipe(new ItemStack(Computronics.tapeReader, 1, 0),
-				"iii", "iri", "iai", 'i', Items.iron_ingot, 'r', Items.redstone, 'a', Computronics.ironNote);
+				"iii", "iri", "iai", 'i', Items.iron_ingot, 'r', Items.redstone,
+				'a', Computronics.ironNote != null ? Computronics.ironNote : Blocks.noteblock);
 		}
 		if(Computronics.cipher != null) {
 			GameRegistry.addShapedRecipe(new ItemStack(Computronics.cipher, 1, 0),
