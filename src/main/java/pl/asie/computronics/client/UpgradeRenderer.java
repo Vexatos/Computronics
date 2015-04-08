@@ -16,6 +16,8 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
+ * Mostly stolen from Sangar.
+ * Stolen with permission.
  * @author Sangar, Vexatos
  */
 public class UpgradeRenderer implements IItemRenderer {
