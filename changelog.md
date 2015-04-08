@@ -1,3 +1,7 @@
+==== 1.4.7 ====
+
+  * ADDED: All Computronics blocks now support the OpenComputers API documentation in NotEnoughItems.
+
 ==== 1.4.6 ====
 
 This one is semi-officially known as "The Cyther Update".
