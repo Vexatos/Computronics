@@ -22,8 +22,10 @@ import java.util.List;
  */
 public class UpgradeRenderer implements IItemRenderer {
 
-	private final ResourceLocation upgradeRadar = new ResourceLocation("computronics", "textures/models/UpgradeRadar.png");
-	private final ResourceLocation upgradeChatBox = new ResourceLocation("computronics", "textures/models/UpgradeChatBox.png");
+	private final ResourceLocation
+		upgradeRadar = new ResourceLocation("computronics", "textures/models/UpgradeRadar.png"),
+		upgradeChatBox = new ResourceLocation("computronics", "textures/models/UpgradeChatBox.png"),
+		beepCard = new ResourceLocation("computronics", "textures/models/BeepCard.png");
 
 	AxisAlignedBB bounds = AxisAlignedBB.getBoundingBox(-0.1, -0.1, -0.1, 0.1, 0.1, 0.1);
 
@@ -71,6 +73,12 @@ public class UpgradeRenderer implements IItemRenderer {
 				tm.bindTexture(upgradeRadar);
 				drawSimpleBlock(0, true);
 				RenderState.checkError(getClass().getName() + ".renderItem: radar upgrade");
+				break;
+			}
+			case 5: {
+				tm.bindTexture(beepCard);
+				drawSimpleBlock(0, true);
+				RenderState.checkError(getClass().getName() + ".renderItem: beep card");
 				break;
 			}
 		}
