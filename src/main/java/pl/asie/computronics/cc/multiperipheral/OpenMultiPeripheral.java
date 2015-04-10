@@ -1,8 +1,10 @@
 package pl.asie.computronics.cc.multiperipheral;
 
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import li.cil.oc.api.network.BlacklistedPeripheral;
+import openperipheral.api.peripheral.IBrokenOpenPeripheral;
 import pl.asie.computronics.api.multiperipheral.WrappedMultiPeripheral;
 import pl.asie.computronics.reference.Mods;
 
@@ -15,7 +17,11 @@ public class OpenMultiPeripheral extends WrappedMultiPeripheral implements Black
 
 	public OpenMultiPeripheral(IPeripheral peripheral) {
 		super(peripheral);
-		this.derped = peripheral.getType().equals("broken_peripheral");
+		if(Loader.isModLoaded(Mods.OpenPeripheral)) {
+			this.derped = peripheral instanceof IBrokenOpenPeripheral || peripheral.getType().equals("broken_peripheral");
+		} else {
+			this.derped = peripheral.getType().equals("broken_peripheral");
+		}
 	}
 
 	@Override
