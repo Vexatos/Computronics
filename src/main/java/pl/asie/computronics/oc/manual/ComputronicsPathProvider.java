@@ -22,11 +22,11 @@ public class ComputronicsPathProvider implements PathProvider {
 
 	public static void initialize() {
 		Manual.addProvider(new ComputronicsPathProvider());
-		Manual.addProvider(new ResourceContentProvider("computronics", "doc/computronics/"));
+		Manual.addProvider(new ResourceContentProvider("computronics", "doc/"));
 		Manual.addTab(findTabIconRenderer(),
-			"tooltip.computronics.manual.tab.blocks", "%LANGUAGE%/block/index.md");
-		Manual.addTab(new TextureTabIconRenderer(new ResourceLocation("computronics", "textures/items/tape_greg.png")),
-			"tooltip.computronics.manual.tab.items", "%LANGUAGE%/item/index.md");
+			"tooltip.computronics.manual.tab.blocks", "computronics/%LANGUAGE%/block/index.md");
+		Manual.addTab(new TextureTabIconRenderer(new ResourceLocation("computronics", "textures/items/tape_steel.png")),
+			"tooltip.computronics.manual.tab.items", "computronics/%LANGUAGE%/item/index.md");
 	}
 
 	private static TabIconRenderer findTabIconRenderer() {
@@ -81,6 +81,6 @@ public class ComputronicsPathProvider implements PathProvider {
 	}
 
 	private String makePath(String type, String documentationName) {
-		return "%LANGUAGE%/" + type + "/" + documentationName + ".md";
+		return "computronics/%LANGUAGE%/" + type + "/" + documentationName + ".md";
 	}
 }
