@@ -21,6 +21,7 @@ import pl.asie.computronics.Computronics;
 import pl.asie.computronics.api.tape.IItemTapeStorage;
 import pl.asie.computronics.api.tape.ITapeStorage;
 import pl.asie.computronics.item.entity.EntityItemIndestructable;
+import pl.asie.computronics.oc.manual.IItemWithDocumentation;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tape.TapeStorage;
 import pl.asie.computronics.util.StringUtil;
@@ -32,7 +33,7 @@ import java.util.List;
 	@Optional.Interface(iface = "dan200.computercraft.api.media.IMediaProvider", modid = Mods.ComputerCraft),
 	@Optional.Interface(iface = "dan200.computercraft.api.media.IMedia", modid = Mods.ComputerCraft)
 })
-public class ItemTape extends Item implements IItemTapeStorage, IMedia, IMediaProvider {
+public class ItemTape extends Item implements IItemTapeStorage, IMedia, IMediaProvider, IItemWithDocumentation {
 	public static final int L_SECOND = 4096;
 	public static final int L_MINUTE = 4096 * 60;
 
@@ -283,5 +284,10 @@ public class ItemTape extends Item implements IItemTapeStorage, IMedia, IMediaPr
 	@Optional.Method(modid = Mods.ComputerCraft)
 	public IMount createDataMount(ItemStack stack, World world) {
 		return null;
+	}
+
+	@Override
+	public String getDocumentationName(ItemStack stack) {
+		return "tape";
 	}
 }

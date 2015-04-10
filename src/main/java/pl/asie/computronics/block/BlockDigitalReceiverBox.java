@@ -19,6 +19,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.integration.railcraft.SignalTypes;
 import pl.asie.computronics.oc.block.IComputronicsEnvironmentBlock;
+import pl.asie.computronics.oc.manual.IBlockWithPrefix;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TileDigitalReceiverBox;
 
@@ -28,7 +29,7 @@ import pl.asie.computronics.tile.TileDigitalReceiverBox;
 @Optional.InterfaceList({
 	@Optional.Interface(iface = "pl.asie.computronics.oc.block.IComputronicsEnvironmentBlock", modid = Mods.OpenComputers)
 })
-public class BlockDigitalReceiverBox extends BlockSignalBase implements IComputronicsEnvironmentBlock {
+public class BlockDigitalReceiverBox extends BlockSignalBase implements IComputronicsEnvironmentBlock, IBlockWithPrefix {
 
 	public static IIcon[] texturesBox;
 	public static IIcon texturesBoxTop;
@@ -112,5 +113,15 @@ public class BlockDigitalReceiverBox extends BlockSignalBase implements IComputr
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Class<? extends Environment> getTileEntityClass(int meta) {
 		return TileDigitalReceiverBox.class;
+	}
+
+	@Override
+	public String getDocumentationName(World world, int x, int y, int z) {
+		return "digital_receiver_box";
+	}
+
+	@Override
+	public String getPrefix(World world, int x, int y, int z) {
+		return "railcraft/";
 	}
 }

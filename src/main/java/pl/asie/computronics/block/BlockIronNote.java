@@ -18,7 +18,7 @@ import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectio
 })
 public class BlockIronNote extends BlockPeripheral implements IRedNetInputNode {
 	public BlockIronNote() {
-		super();
+		super("iron_noteblock");
 		this.setIconName("computronics:noteblock");
 		this.setBlockName("computronics.ironNoteBlock");
 	}

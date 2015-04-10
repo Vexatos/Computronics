@@ -26,7 +26,7 @@ public class BlockColorfulLamp extends BlockPeripheral implements IRedNetInputNo
 	public IIcon m0, m1;
 
 	public BlockColorfulLamp() {
-		super();
+		super("colorful_lamp");
 		this.setCreativeTab(Computronics.tab);
 		this.setBlockName("computronics.colorfulLamp");
 		this.lightValue = 15;

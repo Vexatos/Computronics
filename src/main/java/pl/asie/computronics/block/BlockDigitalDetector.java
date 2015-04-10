@@ -22,16 +22,17 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.oc.manual.IBlockWithPrefix;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TileDigitalDetector;
 
 /**
  * @author CovertJaguar, Vexatos
  */
-public class BlockDigitalDetector extends BlockPeripheral {
+public class BlockDigitalDetector extends BlockPeripheral implements IBlockWithPrefix {
 
 	public BlockDigitalDetector() {
-		super();
+		super("digital_detector");
 		this.setBlockName("computronics.detector");
 		this.setRotation(Rotation.NONE);
 		this.setResistance(4.5F);
@@ -219,5 +220,10 @@ public class BlockDigitalDetector extends BlockPeripheral {
 	@Optional.Method(modid= Mods.OpenComputers)
 	public Class<? extends Environment> getTileEntityClass(int meta) {
 		return TileDigitalDetector.class;
+	}
+
+	@Override
+	public String getPrefix(World world, int x, int y, int z) {
+		return "railcraft/";
 	}
 }

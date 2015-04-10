@@ -26,7 +26,7 @@ public class BlockCipherAdvanced extends BlockMachineSidedIcon implements IBlock
 	private IIcon mFront;
 
 	public BlockCipherAdvanced() {
-		super();
+		super("cipher_advanced");
 		this.setBlockName("computronics.cipher_advanced");
 	}
 

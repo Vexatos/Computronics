@@ -7,17 +7,19 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.oc.block.IComputronicsEnvironmentBlock;
+import pl.asie.computronics.oc.manual.IBlockWithDocumentation;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.lib.block.BlockBase;
 
 @Optional.InterfaceList({
 	@Optional.Interface(iface = "pl.asie.computronics.oc.block.IComputronicsEnvironmentBlock", modid = Mods.OpenComputers)
 })
-public abstract class BlockPeripheral extends BlockBase implements IComputronicsEnvironmentBlock {
+public abstract class BlockPeripheral extends BlockBase implements IComputronicsEnvironmentBlock, IBlockWithDocumentation {
 
-	public BlockPeripheral() {
+	public BlockPeripheral(String documentationName) {
 		super(Material.iron, Computronics.instance);
 		this.setCreativeTab(Computronics.tab);
+		this.documentationName = documentationName;
 	}
 
 	@Override
@@ -46,5 +48,12 @@ public abstract class BlockPeripheral extends BlockBase implements IComputronics
 	@Override
 	public boolean isNormalCube(IBlockAccess world, int x, int y, int z) {
 		return true;
+	}
+
+	protected String documentationName;
+
+	@Override
+	public String getDocumentationName(World world, int x, int y, int z) {
+		return this.documentationName;
 	}
 }

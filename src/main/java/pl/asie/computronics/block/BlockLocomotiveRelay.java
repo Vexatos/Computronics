@@ -8,17 +8,18 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+import pl.asie.computronics.oc.manual.IBlockWithPrefix;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TileLocomotiveRelay;
 
 /**
  * @author Vexatos
  */
-public class BlockLocomotiveRelay extends BlockPeripheral {
+public class BlockLocomotiveRelay extends BlockPeripheral implements IBlockWithPrefix {
 	private IIcon mTop, mSide, mBottom;
 
 	public BlockLocomotiveRelay() {
-		super();
+		super("locomotive_relay");
 		this.setIconName("computronics:machine_top");
 		this.setBlockName("computronics.locomotiveRelay");
 		this.setRotation(Rotation.NONE);
@@ -54,5 +55,10 @@ public class BlockLocomotiveRelay extends BlockPeripheral {
 	@Optional.Method(modid= Mods.OpenComputers)
 	public Class<? extends Environment> getTileEntityClass(int meta) {
 		return TileLocomotiveRelay.class;
+	}
+
+	@Override
+	public String getPrefix(World world, int x, int y, int z) {
+		return "railcraft/";
 	}
 }

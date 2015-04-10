@@ -26,7 +26,7 @@ public class BlockCipher extends BlockMachineSidedIcon implements IRedNetOmniNod
 	private IIcon mFront;
 	
 	public BlockCipher() {
-		super("bundled");
+		super("bundled", "cipher");
 		this.setBlockName("computronics.cipher");
 		this.setGuiID(1);
 	}

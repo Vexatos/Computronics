@@ -11,16 +11,16 @@ public abstract class BlockMachineSidedIcon extends BlockPeripheral {
 	protected IIcon mSide, mSideBI, mSideBO, mTop, mBottom;
 	private String sidingType;
 	
-	public BlockMachineSidedIcon(String sidingType) {
-		super();
+	public BlockMachineSidedIcon(String sidingType, String documentationName) {
+		super(documentationName);
 		this.sidingType = sidingType;
 		if(sidingType.equals("bundled") && !Loader.isModLoaded(Mods.RedLogic) && !Loader.isModLoaded(Mods.ProjectRed))
 			this.sidingType = "";
 		this.setRotation(Rotation.FOUR);
 	}
 
-	public BlockMachineSidedIcon() {
-		this("");
+	public BlockMachineSidedIcon(String documentationName) {
+		this("", documentationName);
 	}
 	
 	@SideOnly(Side.CLIENT)

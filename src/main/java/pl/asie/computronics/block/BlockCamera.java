@@ -17,7 +17,7 @@ public class BlockCamera extends BlockMachineSidedIcon {
 	private IIcon mFront;
 	
 	public BlockCamera() {
-		super();
+		super("camera");
 		this.setBlockName("computronics.camera");
 		this.setRotation(Rotation.SIX);
 	}

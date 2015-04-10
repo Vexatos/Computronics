@@ -17,7 +17,7 @@ public class BlockTapeReader extends BlockMachineSidedIcon {
 	private IIcon mFront;
 
 	public BlockTapeReader() {
-		super();
+		super("tape_drive");
 		this.setBlockName("computronics.tapeDrive");
 		this.setGuiID(0);
 	}
