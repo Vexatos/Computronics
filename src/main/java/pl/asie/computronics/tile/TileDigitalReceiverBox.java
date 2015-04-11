@@ -37,7 +37,7 @@ import pl.asie.computronics.cc.ISidedPeripheral;
 import pl.asie.computronics.integration.railcraft.SignalTypes;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.reference.Names;
-import pl.asie.computronics.util.tile.IComputronicsPeripheral;
+import pl.asie.computronics.util.internal.IComputronicsPeripheral;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
