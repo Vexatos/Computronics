@@ -53,15 +53,20 @@ public class TileCamera extends TileEntityPeripheralBase {
 	}
 
 	// OpenComputers
-	@Callback(direct = true, limit = CALL_LIMIT)
-	@Optional.Method(modid = Mods.OpenComputers)
-	public Object[] distance(Context context, Arguments args) {
-		if(args.count() == 2) {
-			camera.ray(worldObj, xCoord, yCoord, zCoord, getFacingDirection(),
-				(float) args.checkDouble(0), (float) args.checkDouble(1));
-		}
-		return new Object[] { camera.getDistance() };
-	}
+    @Callback(doc = "function([x:number, y:number]):number; "
+		+ "Returns the distance to the block the ray is shot at with the specified x-y offset, "
+		+ "or of the block directly in front", direct = true, limit = CALL_LIMIT)
+    @Optional.Method(modid= Mods.OpenComputers)
+    public Object[] distance(Context context, Arguments args) {
+		float x = 0.0f;
+		float y = 0.0f;
+    	if(args.count() == 2) {
+			x = (float)args.checkDouble(0);
+			y = (float)args.checkDouble(1);
+    	}
+		camera.ray(worldObj, xCoord, yCoord, zCoord, getFacingDirection(), x, y);
+    	return new Object[]{camera.getDistance()};
+    }
 
 	@Override
 	@Optional.Method(modid = Mods.ComputerCraft)
@@ -72,21 +77,22 @@ public class TileCamera extends TileEntityPeripheralBase {
 	@Override
 	@Optional.Method(modid = Mods.ComputerCraft)
 	public Object[] callMethod(IComputerAccess computer, ILuaContext context,
-		int method, Object[] arguments) throws LuaException,
-		InterruptedException {
-		if(camera == null) {
-			return null;
-		}
+			int method, Object[] arguments) throws LuaException,
+			InterruptedException {
+		if(camera == null) return null;
 		//Object[] rayDir = null;
-		if(arguments.length == 2 && arguments[0] instanceof Double && arguments[1] instanceof Double) {
-			//rayDir = new Object[]{
-			camera.ray(worldObj, xCoord, yCoord, zCoord, getFacingDirection(),
-				((Double) arguments[0]).floatValue(), ((Double) arguments[1]).floatValue());
-			//};
-		}
 		switch(method) {
 			case 0: { // distance
-				return new Object[] { camera.getDistance() };
+				float x = 0.0f;
+				float y = 0.0f;
+				if(arguments.length == 2 && arguments[0] instanceof Double && arguments[1] instanceof Double) {
+					//rayDir = new Object[]{
+					x = ((Double)arguments[0]).floatValue();
+					y = ((Double)arguments[1]).floatValue();
+					//};
+				}
+				camera.ray(worldObj, xCoord, yCoord, zCoord, getFacingDirection(), x, y);
+				return new Object[]{ camera.getDistance() };
 			}
 		}
 		return null;

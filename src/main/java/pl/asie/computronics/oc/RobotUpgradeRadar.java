@@ -46,7 +46,7 @@ public class RobotUpgradeRadar extends ManagedEnvironment {
 			expand(distance, distance, distance);
 	}
 
-	@Callback(direct = true, limit = CALL_LIMIT)
+	@Callback(doc = "function([distance:number]):table; Returns a list of all entities detected within the specified or the maximum range", direct = true, limit = CALL_LIMIT)
 	public Object[] getEntities(Context context, Arguments args) {
 		List<Map> entities = new ArrayList<Map>();
 		int distance = getDistance(args);
@@ -65,7 +65,7 @@ public class RobotUpgradeRadar extends ManagedEnvironment {
 		return new Object[] { entities.toArray() };
 	}
 
-	@Callback(direct = true, limit = CALL_LIMIT)
+	@Callback(doc = "function([distance:number]):table; Returns a list of all players detected within the specified or the maximum range", direct = true, limit = CALL_LIMIT)
 	public Object[] getPlayers(Context context, Arguments args) {
 		List<Map> entities = new ArrayList<Map>();
 		int distance = getDistance(args);
@@ -77,7 +77,7 @@ public class RobotUpgradeRadar extends ManagedEnvironment {
 		return new Object[] { entities.toArray() };
 	}
 
-	@Callback(direct = true, limit = CALL_LIMIT)
+	@Callback(doc = "function([distance:number]):table; Returns a list of all mobs detected within the specified or the maximum range", direct = true, limit = CALL_LIMIT)
 	public Object[] getMobs(Context context, Arguments args) {
 		List<Map> entities = new ArrayList<Map>();
 		int distance = getDistance(args);
@@ -89,7 +89,7 @@ public class RobotUpgradeRadar extends ManagedEnvironment {
 		return new Object[] { entities.toArray() };
 	}
 
-	@Callback(direct = true, limit = CALL_LIMIT)
+	@Callback(doc = "function([distance:number]):table; Returns a list of all items detected within the specified or the maximum range", direct = true, limit = CALL_LIMIT)
 	public Object[] getItems(Context context, Arguments args) {
 		List<Map> entities = new ArrayList<Map>();
 		int distance = getDistance(args);

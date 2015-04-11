@@ -4,7 +4,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheralProvider;
-import pl.asie.computronics.util.tile.IComputronicsPeripheral;
+import pl.asie.computronics.util.internal.IComputronicsPeripheral;
 
 public class CCPeripheralProvider implements IMultiPeripheralProvider {
 	@Override

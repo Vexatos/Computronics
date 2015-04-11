@@ -15,7 +15,7 @@ import net.minecraft.world.World;
 import pl.asie.computronics.integration.waila.ConfigValues;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.StringUtil;
-import pl.asie.computronics.util.tile.IComputronicsPeripheral;
+import pl.asie.computronics.util.internal.IComputronicsPeripheral;
 
 import java.util.List;
 

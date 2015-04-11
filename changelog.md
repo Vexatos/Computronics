@@ -10,6 +10,8 @@
     - Now you can get and set the range of Vacuum Chests
     - Added `getProgress()` to most machines
   * ADDED: All Computronics blocks now support the OpenComputers API documentation in NotEnoughItems.
+  * ADDED: Documentation for every function any Computronics block provides
+  * CHANGED: Made Camera, Chat Box and Tape Drive functions more consistent in behaviour (The ComputerCraft and OpenComputers functions should do the exact same now)
 
 ==== 1.4.6 ====
 

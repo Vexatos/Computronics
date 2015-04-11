@@ -96,7 +96,7 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements IBundle
 		return new String(cipher.doFinal(Base64.decode(data)), "UTF8");
 	}
 	
-	@Callback(direct = true)
+	@Callback(doc = "function(message:string):string; Encrypts the specified message", direct = true)
     @Optional.Method(modid=Mods.OpenComputers)
 	public Object[] encrypt(Context context, Arguments args) throws Exception {
 		if(args.count() >= 1) {
@@ -108,7 +108,7 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements IBundle
 		return null;
 	}
 	
-	@Callback(direct = true)
+	@Callback(doc = "function(message:string):string; Decrypts the specified message", direct = true)
     @Optional.Method(modid=Mods.OpenComputers)
 	public Object[] decrypt(Context context, Arguments args) throws Exception {
 		if(args.count() >= 1 && args.isString(0)) {
@@ -117,13 +117,13 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements IBundle
 		return null;
 	}
 	
-	@Callback(direct = true)
+	@Callback(doc = "function():boolean; Returns whether the block is currently locked", direct = true)
     @Optional.Method(modid=Mods.OpenComputers)
 	public Object[] isLocked(Context context, Arguments args) throws Exception {
 		return new Object[]{isLocked};
 	}
 
-	@Callback()
+	@Callback(doc = "function(locked:boolean); Sets whether the block is currently locked")
     @Optional.Method(modid=Mods.OpenComputers)
 	public Object[] setLocked(Context context, Arguments args) throws Exception {
 		if(args.count() == 1 && args.isBoolean(0))

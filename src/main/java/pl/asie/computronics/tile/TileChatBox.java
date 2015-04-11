@@ -120,7 +120,8 @@ public class TileChatBox extends TileEntityPeripheralBase implements IChatListen
 
 	// OpenComputers API
 
-	@Callback
+	@Callback(doc = "function(text:string [, distance:number]):boolean;"
+		+ "Makes the chat box say some text with the currently set or the specified distance. Returns true on success")
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] say(Context context, Arguments args) {
 		int d = distance;
@@ -139,40 +140,30 @@ public class TileChatBox extends TileEntityPeripheralBase implements IChatListen
 		return new Object[] { false };
 	}
 
-	@Callback(direct = true)
+	@Callback(doc = "function():number; Returns the chat distance the chat box is currently set to", direct = true)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] getDistance(Context context, Arguments args) {
 		return new Object[] { distance };
 	}
 
-	@Callback(direct = true)
+	@Callback(doc = "function(distance:number):number; Sets the distance of the chat box. Returns the new distance", direct = true)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] setDistance(Context context, Arguments args) {
-		if(args.count() == 1) {
-			if(args.isInteger(0)) {
-				setDistance(args.checkInteger(0));
-				return new Object[] { true };
-			}
-		}
-		return new Object[] { false };
+		setDistance(args.checkInteger(0));
+		return new Object[] { distance };
 	}
 
-	@Callback(direct = true)
+	@Callback(doc = "function():string; Returns the name of the chat box", direct = true)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] getName(Context context, Arguments args) {
 		return new Object[] { name };
 	}
 
-	@Callback(direct = true)
+	@Callback(doc = "function(name:string):string; Sets the name of the chat box. Returns the new name", direct = true)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] setName(Context context, Arguments args) {
-		if(args.count() == 1) {
-			if(args.isString(0)) {
-				this.name = args.checkString(0);
-				return new Object[] { true };
-			}
-		}
-		return new Object[] { false };
+		this.name = args.checkString(0);
+		return new Object[] { this.name };
 	}
 
 	@Override
@@ -227,9 +218,9 @@ public class TileChatBox extends TileEntityPeripheralBase implements IChatListen
 			case 2: { // setDistance
 				if(arguments.length == 1 && arguments[0] instanceof Double) {
 					setDistance(((Double) arguments[0]).intValue());
-					return new Object[] { true };
+					return new Object[] { distance };
 				}
-				return new Object[] { false };
+				throw new LuaException("first argument needs to be a number");
 			}
 			case 3: { // getName
 				return new Object[] { name };
@@ -237,9 +228,9 @@ public class TileChatBox extends TileEntityPeripheralBase implements IChatListen
 			case 4: { // setName
 				if(arguments.length == 1 && arguments[0] instanceof String) {
 					this.name = (String) arguments[0];
-					return new Object[] { true };
+					return new Object[] { this.name };
 				}
-				return new Object[] { false };
+				throw new LuaException("first argument needs to be a string");
 			}
 		}
 		return null;

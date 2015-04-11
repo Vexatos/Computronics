@@ -20,27 +20,27 @@ public class DriverMachine extends DriverTileEntity {
 			return 1;
 		}
 
-		@Callback(direct = true)
+		@Callback(doc = "function():boolean; Returns true if the machine currently has work to do", direct = true)
 		public Object[] hasWork(Context c, Arguments a) {
 			return new Object[] { tile.hasThingsToDo() };
 		}
 
-		@Callback(direct = true)
+		@Callback(doc = "function():number; Returns the current progress of this block", direct = true)
 		public Object[] getWorkProgress(Context c, Arguments a) {
 			return new Object[] { tile.getProgress() };
 		}
 
-		@Callback(direct = true)
+		@Callback(doc = "function():number; Returns the max progress of this block", direct = true)
 		public Object[] getWorkMaxProgress(Context c, Arguments a) {
 			return new Object[] { tile.getMaxProgress() };
 		}
 
-		@Callback(direct = true)
+		@Callback(doc = "function():boolean; Returns whether this block is currently allowed to work", direct = true)
 		public Object[] isWorkAllowed(Context c, Arguments a) {
 			return new Object[] { tile.isAllowedToWork() };
 		}
 
-		@Callback(direct = true)
+		@Callback(doc = "function(work:boolean); Sets whether this block is currently allowed to work", direct = true)
 		public Object[] setWorkAllowed(Context c, Arguments a) {
 			if(a.count() == 1 && a.isBoolean(0)) {
 				if(a.checkBoolean(0)) {
@@ -52,7 +52,7 @@ public class DriverMachine extends DriverTileEntity {
 			return null;
 		}
 
-		@Callback(direct = true)
+		@Callback(doc = "function():boolean; Returns whether the machine is currently active", direct = true)
 		public Object[] isMachineActive(Context c, Arguments a) {
 			return new Object[] { tile.isActive() };
 		}

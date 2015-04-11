@@ -63,7 +63,7 @@ public class TileRadar extends TileEntityPeripheralBase implements IBatteryProvi
 		return true;
 	}
 
-	@Callback
+	@Callback(doc = "function([distance:number]):table; Returns a list of all entities detected within the specified or the maximum range")
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] getEntities(Context context, Arguments args) {
 		Set<Map> entities = new HashSet<Map>();
@@ -85,7 +85,7 @@ public class TileRadar extends TileEntityPeripheralBase implements IBatteryProvi
 		return new Object[] { RadarUtils.convertSetToMap(entities) };
 	}
 
-	@Callback
+	@Callback(doc = "function([distance:number]):table; Returns a list of all players detected within the specified or the maximum range")
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] getPlayers(Context context, Arguments args) {
 		Set<Map> entities = new HashSet<Map>();
@@ -100,7 +100,7 @@ public class TileRadar extends TileEntityPeripheralBase implements IBatteryProvi
 		return new Object[] { RadarUtils.convertSetToMap(entities) };
 	}
 
-	@Callback
+	@Callback(doc = "function([distance:number]):table; Returns a list of all mobs detected within the specified or the maximum range")
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] getMobs(Context context, Arguments args) {
 		Set<Map> entities = new HashSet<Map>();
@@ -115,7 +115,7 @@ public class TileRadar extends TileEntityPeripheralBase implements IBatteryProvi
 		return new Object[] { RadarUtils.convertSetToMap(entities) };
 	}
 
-	@Callback
+	@Callback(doc = "function([distance:number]):table; Returns a list of all items detected within the specified or the maximum range")
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] getItems(Context context, Arguments args) {
 		Set<Map> entities = new HashSet<Map>();

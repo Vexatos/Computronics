@@ -1,4 +1,4 @@
-package pl.asie.computronics.util.tile;
+package pl.asie.computronics.util.internal;
 
 /**
  * Only used to check whether a peripheral belongs to Computronics
