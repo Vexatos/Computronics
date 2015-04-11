@@ -467,10 +467,15 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 			}
 			case 6:
 			case 7:
-			case 8:
-			case 9: { // setSpeed, setVolume, seek, read
+			case 8: { // setSpeed, setVolume, seek
 				if(arguments.length < 1 || !(arguments[0] instanceof Number)) {
 					throw new LuaException("first argument needs to be a number");
+				}
+				break;
+			}
+			case 9: { // read
+				if(arguments.length < 1 || !(arguments[0] instanceof Number)) {
+					throw new LuaException("first argument needs to be a number or non-existant");
 				}
 				break;
 			}
