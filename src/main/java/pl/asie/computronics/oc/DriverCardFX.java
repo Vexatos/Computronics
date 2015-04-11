@@ -29,18 +29,23 @@ public class DriverCardFX extends ManagedEnvironment {
 	// name, the position relative to the block the card is in to spawn
 	// the particle at, as well as - optionally - the initial velocity.
 
-	@Callback(direct = true, limit = 16)
+	@Callback(doc = "function(name:string, xCoord:number, yCoord:number, zCoord:number [, defaultVelo:number]):boolean;"
+		+ "function(name:string, xCoord:number, yCoord:number, zCoord:number [, xVelo:number, yVelo:number, zVelo:number]):boolean;"
+		+ "Spawns a particle effect at the specified relative coordinates optionally with the specified velocity", direct = true, limit = 16)
 	public Object[] spawn(Context context, Arguments args) {
 		String name = args.checkString(0);
 
 		if(name.length() > Short.MAX_VALUE) {
 			return new Object[] { false, "name too long" };
 		}
+		double xOffset = args.checkDouble(1);
+		double yOffset = args.checkDouble(2);
+		double zOffset = args.checkDouble(3);
 		if(((Connector) this.node()).tryChangeBuffer(0 - Config.FX_ENERGY_COST)) {
 			Random rng = container.world().rand;
-			double x = container.xPosition() + 0.5 + args.checkDouble(1);
-			double y = container.yPosition() + 0.5 + args.checkDouble(2);
-			double z = container.zPosition() + 0.5 + args.checkDouble(3);
+			double x = container.xPosition() + 0.5 + xOffset;
+			double y = container.yPosition() + 0.5 + yOffset;
+			double z = container.zPosition() + 0.5 + zOffset;
 			double defaultv = (rng.nextDouble() * 0.1);
 			if(args.count() >= 5) {
 				defaultv = args.checkDouble(4);

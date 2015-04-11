@@ -292,7 +292,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 
 	// OpenComputers
 
-	@Callback(direct = true)
+	@Callback(doc = "function():boolean; Returns true if the tape drive is empty or the inserted tape has reached its end", direct = true)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] isEnd(Context context, Arguments args) {
 		if(state.getStorage() != null) {
@@ -302,19 +302,20 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 		}
 	}
 
-	@Callback(direct = true)
+	@Callback(doc = "function():boolean; Returns true if there is a tape inserted", direct = true)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] isReady(Context context, Arguments args) {
 		return new Object[] { state.getStorage() != null };
 	}
 
-	@Callback(direct = true)
+	@Callback(doc = "function():number; Returns the size of the tape, in bytes", direct = true)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] getSize(Context context, Arguments args) {
 		return new Object[] { (state.getStorage() != null ? state.getStorage().getSize() : 0) };
 	}
 
-	@Callback
+	@Callback(doc = "function(label:string):string; Sets the label of the tape. "
+		+ "Returns the new label, or nil if there is no tape inserted")
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] setLabel(Context context, Arguments args) {
 		if(args.count() == 1) {
@@ -322,25 +323,28 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 				setLabel(args.checkString(0));
 			}
 		}
-		return new Object[] { (state.getStorage() != null ? storageName : "") };
+		return new Object[] { (state.getStorage() != null ? storageName : null) };
 	}
 
-	@Callback
+	@Callback(doc = "function():string; Returns the current label of the tape, or nil if there is no tape inserted")
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] getLabel(Context context, Arguments args) {
-		return new Object[] { (state.getStorage() != null ? storageName : "") };
+		return new Object[] { (state.getStorage() != null ? storageName : null) };
 	}
 
-	@Callback
+	@Callback(doc = "function(length:number):number; Seeks the specified amount of bytes on the tape. "
+		+ "Negative values for rewinding. Returns the amount of bytes sought, or nil if there is no tape inserted")
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] seek(Context context, Arguments args) {
-		if(state.getStorage() != null && args.count() >= 1 && args.isInteger(0)) {
+		if(state.getStorage() != null) {
 			return new Object[] { state.getStorage().seek(args.checkInteger(0)) };
 		}
 		return null;
 	}
 
-	@Callback
+	@Callback(doc = "function([length:number]):string; "
+		+ "Reads and returns the specified amount of bytes or a single byte from the tape. "
+		+ "Returns nil if there is no tape inserted")
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] read(Context context, Arguments args) {
 		if(state.getStorage() != null) {
@@ -356,7 +360,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 		}
 	}
 
-	@Callback
+	@Callback(doc = "function(data:number or string); Writes the specified data to the tape if there is one inserted")
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] write(Context context, Arguments args) {
 		if(state.getStorage() != null && args.count() >= 1) {
@@ -369,40 +373,34 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 		return null;
 	}
 
-	@Callback
+	@Callback(doc = "function():boolean; Make the Tape Drive start playing the tape. Returns true on success")
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] play(Context context, Arguments args) {
 		switchState(State.PLAYING);
-		return new Object[] { state.getStorage() != null };
+		return new Object[] { state.getStorage() != null && this.getEnumState() == State.PLAYING };
 	}
 
-	@Callback
+	@Callback(doc = "function():boolean; Make the Tape Drive stop playing the tape. Returns true on success")
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] stop(Context context, Arguments args) {
 		switchState(State.STOPPED);
 		return new Object[] { state.getStorage() != null };
 	}
 
-	@Callback
+	@Callback(doc = "function(speed:number):boolean; Sets the speed of the tape drive. Needs to be beween 0.25 and 2. Returns true on success")
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] setSpeed(Context context, Arguments args) {
-		if(args.count() > 0 && args.isDouble(0)) {
-			return new Object[] { this.state.setSpeed((float) args.checkDouble(0)) };
-		} else {
-			return null;
-		}
+		return new Object[] { this.state.setSpeed((float) args.checkDouble(0)) };
 	}
 
-	@Callback
+	@Callback(doc = "function(speed:number); Sets the volume of the tape drive. Needs to be beween 0 and 1")
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] setVolume(Context context, Arguments args) {
-		if(args.count() > 0 && args.isDouble(0)) {
-			this.state.setVolume((float) args.checkDouble(0));
-		}
+		this.state.setVolume((float) args.checkDouble(0));
 		return null;
 	}
 
-	@Callback
+	@Callback(doc = "function():string; Returns the current state of the tape drive", direct = true)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] getState(Context context, Arguments args) {
 		return new Object[] { state.getState().toString() };

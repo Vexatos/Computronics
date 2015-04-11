@@ -19,7 +19,7 @@ public class DriverCrateStorageOld extends DriverTileEntity {
 			super(tile, name);
 		}
 
-		@Callback()
+		@Callback(doc = "function():table; Returns a table of the crate's contents")
 		public Object[] getContents(Context c, Arguments a) {
 			List<ItemStack> l = tile.getContents(ForgeDirection.UNKNOWN);
 			return new Object[] { l.toArray(new ItemStack[l.size()]) };

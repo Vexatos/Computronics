@@ -16,7 +16,7 @@ public class DriverDigitalChest extends DriverTileEntity {
 			super(tile, name);
 		}
 
-		@Callback(direct = true)
+		@Callback(doc = "function():table; Returns a table of items stored in this block", direct = true)
 		public Object[] getContents(Context c, Arguments a) {
 			return new Object[] { tile.getStoredItemData() };
 		}

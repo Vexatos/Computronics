@@ -23,17 +23,17 @@ public class DriverSteamTransporter {
 				super(tile, Names.FSP_SteamTransporter);
 			}
 
-			@Callback(direct = true)
+			@Callback(doc = "function():number; Returns the steam pressure of the block", direct = true)
 			public Object[] getSteamPressure(Context c, Arguments a) {
 				return new Object[] { tile.getPressure() };
 			}
 
-			@Callback(direct = true)
+			@Callback(doc = "function():number; Returns the steam capacity of the block", direct = true)
 			public Object[] getSteamCapacity(Context c, Arguments a) {
 				return new Object[] { tile.getCapacity() };
 			}
 
-			@Callback(direct = true)
+			@Callback(doc = "function():number; Returns the steam amount in the block", direct = true)
 			public Object[] getSteamAmount(Context c, Arguments a) {
 				return new Object[] { tile.getSteam() };
 			}
