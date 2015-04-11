@@ -29,8 +29,8 @@ public class DriverCardFX extends ManagedEnvironment {
 	// name, the position relative to the block the card is in to spawn
 	// the particle at, as well as - optionally - the initial velocity.
 
-	@Callback(doc = "function(name:string, xCoord:number, yCoord:number, zCoord:number [, defaultVelo:number]):boolean;"
-		+ "function(name:string, xCoord:number, yCoord:number, zCoord:number [, xVelo:number, yVelo:number, zVelo:number]):boolean;"
+	@Callback(doc = "function(name:string, xCoord:number, yCoord:number, zCoord:number [, defaultVelo:number]):boolean; "
+		+ "function(name:string, xCoord:number, yCoord:number, zCoord:number [, xVelo:number, yVelo:number, zVelo:number]):boolean; "
 		+ "Spawns a particle effect at the specified relative coordinates optionally with the specified velocity", direct = true, limit = 16)
 	public Object[] spawn(Context context, Arguments args) {
 		String name = args.checkString(0);

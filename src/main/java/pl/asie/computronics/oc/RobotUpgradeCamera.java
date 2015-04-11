@@ -28,8 +28,8 @@ public class RobotUpgradeCamera extends ManagedEnvironment {
 		return l;
 	}
 	
-    @Callback(doc = "function([x:number, y:number]):number;"
-			+ "Returns the distance to the block the ray is shot at with the specified x-y offset,"
+    @Callback(doc = "function([x:number, y:number]):number; "
+			+ "Returns the distance to the block the ray is shot at with the specified x-y offset, "
 			+ "or of the block directly in front", direct = true, limit = CALL_LIMIT)
     public Object[] distance(Context context, Arguments args) {
     	float x = 0.0f;
@@ -43,8 +43,8 @@ public class RobotUpgradeCamera extends ManagedEnvironment {
 		return new Object[]{camera.getDistance()};
     }
     
-    @Callback(doc = "function([x:number, y:number]):number;"
-		+ "Returns the distance to the block the ray is shot at with the specified x-y offset facing upwards,"
+    @Callback(doc = "function([x:number, y:number]):number; "
+		+ "Returns the distance to the block the ray is shot at with the specified x-y offset facing upwards, "
 		+ "or of the block directly above", direct = true, limit = CALL_LIMIT)
     public Object[] distanceUp(Context context, Arguments args) {
     	float x = 0.0f;
@@ -58,8 +58,8 @@ public class RobotUpgradeCamera extends ManagedEnvironment {
 		return new Object[]{camera.getDistance()};
     }
     
-    @Callback(doc = "function([x:number, y:number]):number;"
-		+ "Returns the distance to the block the ray is shot at with the specified x-y offset facing downwards,"
+    @Callback(doc = "function([x:number, y:number]):number; "
+		+ "Returns the distance to the block the ray is shot at with the specified x-y offset facing downwards, "
 		+ "or of the block directly below", direct = true, limit = CALL_LIMIT)
     public Object[] distanceDown(Context context, Arguments args) {
     	float x = 0.0f;

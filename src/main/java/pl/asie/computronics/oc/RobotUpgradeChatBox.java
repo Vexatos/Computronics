@@ -87,7 +87,7 @@ public class RobotUpgradeChatBox extends ManagedEnvironment implements IChatList
 		return new Object[]{ this.name };
 	}
 
-	@Callback(doc = "function(text:string [, distance:number]):boolean;"
+	@Callback(doc = "function(text:string [, distance:number]):boolean; "
 		+ "Makes the robot say some text with the currently set or the specified distance. Returns true on success", direct = true, limit = 3)
 	public Object[] say(Context context, Arguments args) {
 		if(args.count() >= 1) {
