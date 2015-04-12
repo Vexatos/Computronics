@@ -4,6 +4,7 @@
   * ADDED: Documentation for every function any Computronics block provides
   * CHANGED: Made Camera, Chat Box and Tape Drive functions more consistent in behaviour (The ComputerCraft and OpenComputers functions should do the exact same now)
   * FIXED: Updated OpenPeripheral integration to version 1.1 of OpenPeripheralCore (Requires version 1.1 now)
+  * FIXED: Updated Forestry integration to version 3.5.3 (Requires version 3.5.3 now)
 
 ==== 1.4.6 ====
 

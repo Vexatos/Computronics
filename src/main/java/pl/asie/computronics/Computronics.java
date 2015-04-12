@@ -84,7 +84,7 @@ import java.util.concurrent.Executors;
 		+ "after:OpenComputers|Core;after:MineFactoryReloaded;after:RedLogic@[59.1.9,);after:ProjRed|Core;"
 		+ "after:nedocomputers;after:BuildCraft|Core@[6.4.1,);after:Railcraft@[9.5.0.0,);"
 		+ "after:gregtech@[MC1710];after:EnderIO@[1.7.10_2.2.7,);before:OpenPeripheralCore@[1.1,);"
-		+ "before:OpenPeripheralApi@[3.2,);after:Forestry@[3.4.0,);after:Waila@[1.5.7,);after:MekanismAPI|energy@[8.0.0,)")
+		+ "before:OpenPeripheralApi@[3.2,);after:Forestry@[3.5.3,);after:Waila@[1.5.7,);after:MekanismAPI|energy@[8.0.0,)")
 public class Computronics {
 	public Config config;
 	public Compat compat;
