@@ -1,6 +1,7 @@
 ==== 1.4.7 ====
 
   * ADDED: All Computronics blocks now support the OpenComputers API documentation in NotEnoughItems.
+  * FIXED: Updated OpenPeripheral integration to version 1.1 of OpenPeripheralCore (Requires version 1.1 now)
 
 ==== 1.4.6 ====
 

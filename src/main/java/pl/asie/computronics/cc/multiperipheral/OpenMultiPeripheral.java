@@ -17,11 +17,8 @@ public class OpenMultiPeripheral extends WrappedMultiPeripheral implements Black
 
 	public OpenMultiPeripheral(IPeripheral peripheral) {
 		super(peripheral);
-		if(Loader.isModLoaded(Mods.OpenPeripheral)) {
-			this.derped = peripheral instanceof IBrokenOpenPeripheral || peripheral.getType().equals("broken_peripheral");
-		} else {
-			this.derped = peripheral.getType().equals("broken_peripheral");
-		}
+		this.derped = Loader.isModLoaded(Mods.OpenPeripheral)
+			&& (peripheral instanceof IBrokenOpenPeripheral || peripheral.getType().equals("broken_peripheral"));
 	}
 
 	@Override
