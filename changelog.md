@@ -5,6 +5,8 @@
   * CHANGED: Made Camera, Chat Box and Tape Drive functions more consistent in behaviour (The ComputerCraft and OpenComputers functions should do the exact same now)
   * FIXED: Updated OpenPeripheral integration to version 1.1 of OpenPeripheralCore (Requires version 1.1 now)
   * FIXED: Updated Forestry integration to version 3.5.3 (Requires version 3.5.3 now)
+  * FIXED: Reworked the Locomotive Relay to properly work now and hopefully not randomly get unbound anymore.
+    - Now you can clear a locomotive relay's bond by shift-rightclicking with an empty hand
 
 ==== 1.4.6 ====
 

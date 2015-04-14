@@ -5,7 +5,9 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import li.cil.oc.api.network.Environment;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import pl.asie.computronics.reference.Mods;
@@ -40,7 +42,7 @@ public class BlockLocomotiveRelay extends BlockPeripheral {
 
 	@SideOnly(Side.CLIENT)
 	public IIcon getAbsoluteIcon(int side, int metadata) {
-		switch(side){
+		switch(side) {
 			case 0:
 				return mBottom;
 			case 1:
@@ -51,8 +53,27 @@ public class BlockLocomotiveRelay extends BlockPeripheral {
 	}
 
 	@Override
-	@Optional.Method(modid= Mods.OpenComputers)
+	@Optional.Method(modid = Mods.OpenComputers)
 	public Class<? extends Environment> getTileEntityClass(int meta) {
 		return TileLocomotiveRelay.class;
+	}
+
+	@Override
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int a, float _x, float _y, float _z) {
+		if(!world.isRemote && player.isSneaking() && player.getCurrentEquippedItem() == null) {
+			TileEntity tile = world.getTileEntity(x, y, z);
+			if(tile instanceof TileLocomotiveRelay) {
+				String msg;
+				if(((TileLocomotiveRelay) tile).unbind()) {
+					msg = "chat.computronics.relay.unbound";
+				} else {
+					msg = "chat.computronics.relay.notbound";
+				}
+				player.addChatComponentMessage(new ChatComponentTranslation(msg));
+				return true;
+			}
+		}
+
+		return super.onBlockActivated(world, x, y, z, player, a, _x, _y, _z);
 	}
 }

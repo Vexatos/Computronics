@@ -26,8 +26,8 @@ import java.util.UUID;
 public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 
 	private EntityLocomotiveElectric locomotive;
-	private double locomotiveX, locomotiveY, locomotiveZ;
-	private boolean isInitialized = false, isBound = false;
+	private boolean isBound = false;
+	//isInitialized = false,
 	private UUID uuid;
 
 	public TileLocomotiveRelay() {
@@ -36,9 +36,6 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 
 	public void setLocomotive(EntityLocomotiveElectric loco) {
 		this.locomotive = loco;
-		this.locomotiveX = this.locomotive.posX;
-		this.locomotiveY = this.locomotive.posY;
-		this.locomotiveZ = this.locomotive.posZ;
 		this.isBound = true;
 		this.uuid = this.locomotive.getUniqueID();
 	}
@@ -51,27 +48,31 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 		return this.isBound;
 	}
 
+	public boolean unbind() {
+		if(isBound) {
+			isBound = false;
+			locomotive = null;
+			uuid = null;
+			return true;
+		}
+		return false;
+	}
+
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
 		if(worldObj.isRemote) {
 			return;
 		}
-		if(locomotive == null && !isInitialized && isBound) {
-			this.tryFindLocomotive(this.uuid);
-			/*if(locomotive == null) {
-				this.tryFindLocomotiveExpensively();
-				if(locomotive == null) {
-					Computronics.log.error(String.format(Locale.ENGLISH,
-						"Unable to find Electric Locomotive at (%s,%s,%s) bound to Locomotive Relay at (%s,%s,%s). It will not be bound anymore.",
-						locomotiveX, locomotiveY, locomotiveZ, xCoord, yCoord, zCoord));
-					if(uuid != null) {
-						Computronics.log.error("The Locomotive's UUID was: " + this.uuid);
-					}
-				}
-			}*/
-			isInitialized = true;
+		if(locomotive != null && (locomotive.isDead || !isBound)) {
+			locomotive = null;
+			uuid = null;
 		}
+
+		if(isBound && uuid == null) {
+			isBound = false;
+		}
+
 		if(locomotive != null || !isBound) {
 			return;
 		}
@@ -93,51 +94,19 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 		}
 	}
 
-	/*private void tryFindLocomotiveExpensively() {
-		if(locomotive == null) {
-			return;
-		}
-		List locos = worldObj.getEntitiesWithinAABB(EntityLocomotiveElectric.class, AxisAlignedBB.getBoundingBox(locomotiveX - 0.5, locomotiveY - 0.5, locomotiveZ - 0.5,
-			locomotiveX + 0.5, locomotiveY + 0.5, locomotiveZ + 0.5));
-
-		EntityLocomotiveElectric checkLoco = null;
-		for(Object loco : locos) {
-			if(loco instanceof EntityLocomotiveElectric) {
-				if(checkLoco == null) {
-					checkLoco = (EntityLocomotiveElectric) loco;
-					continue;
-				}
-				EntityLocomotiveElectric newLoco = (EntityLocomotiveElectric) loco;
-				if(newLoco.getDistanceSq(locomotiveX, locomotiveY, locomotiveZ)
-					< checkLoco.getDistanceSq(locomotiveX, locomotiveY, locomotiveZ)) {
-					checkLoco = newLoco;
-				}
-			}
-		}
-		if(checkLoco != null) {
-			this.setLocomotive(checkLoco);
-		}
-	}*/
-
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-		if(this.locomotive == null) {
-			this.locomotiveX = nbt.getDouble("locomotiveX");
-			this.locomotiveY = nbt.getDouble("locomotiveY");
-			this.locomotiveZ = nbt.getDouble("locomotiveZ");
+		this.isBound = nbt.getBoolean("bound");
+		if(isBound) {
 			this.uuid = MiscTools.readUUID(nbt, "locomotive");
-			this.isBound = nbt.getBoolean("bound");
 		}
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-		if(this.locomotive != null) {
-			nbt.setDouble("locomotiveX", this.locomotive.posX);
-			nbt.setDouble("locomotiveY", this.locomotive.posY);
-			nbt.setDouble("locomotiveZ", this.locomotive.posZ);
+		if(isBound) {
 			MiscTools.writeUUID(nbt, "locomotive", this.locomotive.getPersistentID());
 		}
 		nbt.setBoolean("bound", isBound);
@@ -146,9 +115,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 	@Override
 	public void writeToRemoteNBT(NBTTagCompound nbt) {
 		super.writeToRemoteNBT(nbt);
-		if(this.locomotive != null) {
-			nbt.setBoolean("bound", isBound);
-		}
+		nbt.setBoolean("bound", isBound);
 	}
 
 	@Override
@@ -160,9 +127,10 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 	}
 
 	private String cannotAccessLocomotive() {
-		if(!isBound() && this.locomotive == null) {
+		if(!isBound) {
 			return "relay is not bound to a locomotive";
-		} else if(this.locomotive == null) {
+		}
+		if(this.locomotive == null) {
 			return "locomotive is currently not detectable";
 		}
 		if(this.locomotive.dimension != this.worldObj.provider.dimensionId) {
