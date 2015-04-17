@@ -1,5 +1,6 @@
 package pl.asie.computronics.integration.forestry;
 
+import forestry.api.genetics.IFlower;
 import forestry.api.genetics.IFlowerProvider;
 import forestry.api.genetics.IIndividual;
 import forestry.api.genetics.IPollinatable;
@@ -11,6 +12,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.IFluidBlock;
 import pl.asie.computronics.util.StringUtil;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -77,8 +79,10 @@ public class FlowerProviderSea implements IFlowerProvider {
 		return products;
 	}
 
+	private static final ArrayList<IFlower> flowerList = new ArrayList<IFlower>();
+
 	@Override
-	public ItemStack[] getItemStacks() {
-		return null;
+	public List<IFlower> getFlowers() {
+		return flowerList;
 	}
 }

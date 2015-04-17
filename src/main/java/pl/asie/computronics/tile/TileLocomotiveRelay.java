@@ -15,13 +15,9 @@ import mods.railcraft.common.util.misc.MiscTools;
 import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.AxisAlignedBB;
-import pl.asie.computronics.Computronics;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 
-import java.util.List;
-import java.util.Locale;
 import java.util.UUID;
 
 /**
@@ -63,7 +59,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 		}
 		if(locomotive == null && !isInitialized && isBound) {
 			this.tryFindLocomotive(this.uuid);
-			if(locomotive == null) {
+			/*if(locomotive == null) {
 				this.tryFindLocomotiveExpensively();
 				if(locomotive == null) {
 					Computronics.log.error(String.format(Locale.ENGLISH,
@@ -73,7 +69,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 						Computronics.log.error("The Locomotive's UUID was: " + this.uuid);
 					}
 				}
-			}
+			}*/
 			isInitialized = true;
 		}
 		if(locomotive != null || !isBound) {
@@ -97,7 +93,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 		}
 	}
 
-	private void tryFindLocomotiveExpensively() {
+	/*private void tryFindLocomotiveExpensively() {
 		if(locomotive == null) {
 			return;
 		}
@@ -121,7 +117,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 		if(checkLoco != null) {
 			this.setLocomotive(checkLoco);
 		}
-	}
+	}*/
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
@@ -164,8 +160,10 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 	}
 
 	private String cannotAccessLocomotive() {
-		if(this.locomotive == null) {
+		if(!isBound() && this.locomotive == null) {
 			return "relay is not bound to a locomotive";
+		} else if(this.locomotive == null) {
+			return "locomotive is currently not detectable";
 		}
 		if(this.locomotive.dimension != this.worldObj.provider.dimensionId) {
 			return "relay and locomotive are in different dimensions";
