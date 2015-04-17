@@ -1,7 +1,7 @@
 package pl.asie.computronics.integration.enderio;
 
-import crazypants.enderio.machine.weather.TileWeatherObelisk;
-import crazypants.enderio.machine.weather.TileWeatherObelisk.WeatherTask;
+import crazypants.enderio.machine.obelisk.weather.TileWeatherObelisk;
+import crazypants.enderio.machine.obelisk.weather.TileWeatherObelisk.WeatherTask;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;

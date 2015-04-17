@@ -36,11 +36,6 @@ public class DriverAbstractMachine {
 			public Object[] isActive(Context c, Arguments a) {
 				return new Object[] { tile.isActive() };
 			}
-
-			@Callback(doc = "function():boolean; Returns the progress of the machine")
-			public Object[] getProgress(Context c, Arguments a) {
-				return new Object[] { tile.getProgress() };
-			}
 		}
 
 		@Override
@@ -79,7 +74,7 @@ public class DriverAbstractMachine {
 
 		@Override
 		public String[] getMethodNames() {
-			return new String[] { "isActive", "getProgress" };
+			return new String[] { "isActive" };
 		}
 
 		@Override
@@ -87,9 +82,6 @@ public class DriverAbstractMachine {
 			switch(method) {
 				case 0: {
 					return new Object[] { tile.isActive() };
-				}
-				case 1: {
-					return new Object[] { tile.getProgress() };
 				}
 			}
 			return null;
