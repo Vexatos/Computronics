@@ -81,8 +81,8 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 
 		EntityLocomotiveElectric locomotive = getLocomotive();
 		boolean b = true;
-		if(locomotive != null) {
-			b = MinecraftServer.getServer().worldServerForDimension(locomotive.worldObj.provider.dimensionId).getChunkProvider().chunkExists(locomotive.chunkCoordX, locomotive.chunkCoordZ);
+		if(locomotive != null && locomotive.dimension == worldObj.provider.dimensionId) {
+			b = locomotive.worldObj.getChunkProvider().chunkExists(locomotive.chunkCoordX, locomotive.chunkCoordZ);
 			if(!b) {
 				return;
 			}
