@@ -12,6 +12,7 @@ import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+import net.minecraftforge.common.DimensionManager;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.tile.TileLocomotiveRelay;
@@ -87,6 +88,10 @@ public class ItemRelaySensor extends Item {
 				int y = data.getInteger("relayY");
 				int z = data.getInteger("relayZ");
 				if(entity instanceof EntityLocomotiveElectric) {
+					if(!player.worldObj.blockExists(x, y, z)) {
+						player.addChatComponentMessage(new ChatComponentTranslation("chat.computronics.sensor.noRelayDetected"));
+						return true;
+					}
 					if(entity.worldObj.getTileEntity(x, y, z) != null
 						&& entity.worldObj.getTileEntity(x, y, z) instanceof TileLocomotiveRelay) {
 						TileLocomotiveRelay relay = (TileLocomotiveRelay) entity.worldObj.getTileEntity(x, y, z);

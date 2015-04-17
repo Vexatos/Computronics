@@ -98,6 +98,7 @@ chat.computronics.relay.notbound=Relay is currently not bound to any locomotive!
 chat.computronics.relay.unbound=Relay successfully unbound from locomotive!
 chat.computronics.sensor.bound=Relay successfully bound to locomotive!
 chat.computronics.sensor.noRelay=There is no relay at the specified coordinates!
+chat.computronics.sensor.noRelayDetected=Could not detect relay at the specified coordinates!
 chat.computronics.sensor.tooFarAway=Relay and locomotive are too far away from each other!
 chat.computronics.sensor.wrongLoco=Sensor can only be attached to electric locomotives!
 chat.computronics.sensor.wrongDim=Relay and locomotive are in different dimensions!

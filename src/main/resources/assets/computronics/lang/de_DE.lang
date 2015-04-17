@@ -98,6 +98,7 @@ chat.computronics.relay.notbound=Relais ist momentan mit keiner Lokomotive verbu
 chat.computronics.relay.unbound=Relais wurde erfolgreich von der Lokomotive entbunden!
 chat.computronics.sensor.bound=Relais wurde erfolgreich mit der Lokomotive verbunden!
 chat.computronics.sensor.noRelay=Es gibt kein Relais an diesen Koordinaten!
+chat.computronics.sensor.noRelayDetected=Relais an diesen Koordinaten konnte nicht erkannt werden!
 chat.computronics.sensor.tooFarAway=Relais und Lokomotive sind zu weit voneinander entfernt!
 chat.computronics.sensor.wrongLoco=Sensor kann nur an Elektrische Lokomotiven angebracht werden!
 chat.computronics.sensor.wrongDim=Relais und Lokomotive sind in unterschiedlichen Dimensionen!
