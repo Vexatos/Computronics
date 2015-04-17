@@ -11,11 +11,12 @@ import mods.railcraft.api.carts.CartTools;
 import mods.railcraft.common.carts.EntityLocomotiveElectric;
 import mods.railcraft.common.items.ItemTicket;
 import mods.railcraft.common.items.ItemTicketGold;
+import mods.railcraft.common.util.misc.ChunkManager;
 import mods.railcraft.common.util.misc.MiscTools;
 import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.ChunkCache;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 
@@ -29,7 +30,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 
 	private WeakReference<EntityLocomotiveElectric> locomotive;
 	private boolean isInitialized = false, isBound = false;
-	private int prevLocoticksExisted;
+	//private int prevLocoticksExisted;
 
 	private UUID uuid;
 
@@ -80,16 +81,20 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 		}
 
 		EntityLocomotiveElectric locomotive = getLocomotive();
-		boolean b = true;
+
+		boolean b = true, c = true;
+
 		if(locomotive != null && locomotive.dimension == worldObj.provider.dimensionId) {
 			b = locomotive.worldObj.getChunkProvider().chunkExists(locomotive.chunkCoordX, locomotive.chunkCoordZ);
 			if(!b) {
 				return;
 			}
+			c = locomotive.worldObj.getChunkFromChunkCoords(locomotive.chunkCoordX, locomotive.chunkCoordZ).isChunkLoaded;
 		}
-		if(locomotive != null && (locomotive.isDead || !isBound)) {
+		if(locomotive != null && (locomotive.isDead || !isBound
+			|| !locomotive.worldObj.getChunkProvider().chunkExists(locomotive.chunkCoordX, locomotive.chunkCoordZ))) {
 			this.locomotive = null;
-			locomotive = null;
+			//locomotive = null;
 			return;
 		}
 
@@ -97,9 +102,13 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 			isBound = false;
 		}
 
-		if(locomotive != null) {
-			prevLocoticksExisted = locomotive.ticksExisted;
+		if(locomotive != null && locomotive.dimension != worldObj.provider.dimensionId) {
+			return;
 		}
+
+		/*if(locomotive != null) {
+			prevLocoticksExisted = locomotive.ticksExisted;
+		}*/
 
 		if(locomotive != null || !isBound) {
 			return;

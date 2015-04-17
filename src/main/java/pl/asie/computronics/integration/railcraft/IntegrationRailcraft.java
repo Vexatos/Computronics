@@ -33,6 +33,8 @@ public class IntegrationRailcraft {
 
 			relaySensor = new ItemRelaySensor();
 			GameRegistry.registerItem(relaySensor, "computronics.relaySensor");
+
+			//MinecraftForge.EVENT_BUS.register(this);
 		}
 		if(isEnabled(config, "digitalReceiverBox", true)) {
 			this.digitalBox = new BlockDigitalReceiverBox();
@@ -45,4 +47,15 @@ public class IntegrationRailcraft {
 			GameRegistry.registerTileEntity(TileDigitalDetector.class, "computronics.detector");
 		}
 	}
+
+	/*@SubscribeEvent
+	public void onChunkUnload(ChunkEvent.Unload e) {
+		for(List entityList : e.getChunk().entityLists) {
+			for(Object o : entityList) {
+				if(o instanceof EntityLocomotiveElectric) {
+					LinkageManager.instance().removeLinkageId((EntityLocomotiveElectric) o);
+				}
+			}
+		}
+	}*/
 }
