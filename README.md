@@ -3,6 +3,8 @@
 Computronics is an addon for ComputerCraft and OpenComputers, also adding integration to a lot of other mods.
 ###Downloads
 The mod's downloads can be found at http://wiki.vex.tty.sh/wiki:computronics.
+###License
+The mod's license can be found [here](http://wiki.vex.tty.sh/wiki:licensing).
 
 # Mod Pack
 
