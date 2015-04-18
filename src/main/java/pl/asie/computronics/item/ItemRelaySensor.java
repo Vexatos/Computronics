@@ -97,7 +97,7 @@ public class ItemRelaySensor extends Item {
 						TileLocomotiveRelay relay = (TileLocomotiveRelay) entity.worldObj.getTileEntity(x, y, z);
 						EntityLocomotiveElectric loco = (EntityLocomotiveElectric) entity;
 						if(loco.dimension == relay.getWorldObj().provider.dimensionId) {
-							if(loco.getDistance(relay.xCoord, relay.yCoord, relay.zCoord) <= Config.LOCOMOTIVE_RELAY_RANGE) {
+							if(loco.getDistanceSq(relay.xCoord, relay.yCoord, relay.zCoord) <= Config.LOCOMOTIVE_RELAY_RANGE * Config.LOCOMOTIVE_RELAY_RANGE) {
 								relay.setLocomotive(loco);
 								player.addChatComponentMessage(new ChatComponentTranslation("chat.computronics.sensor.bound"));
 								player.swingItem();

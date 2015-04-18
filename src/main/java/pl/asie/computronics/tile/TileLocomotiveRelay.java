@@ -7,16 +7,13 @@ import dan200.computercraft.api.peripheral.IComputerAccess;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
-import mods.railcraft.api.carts.CartTools;
 import mods.railcraft.common.carts.EntityLocomotiveElectric;
 import mods.railcraft.common.items.ItemTicket;
 import mods.railcraft.common.items.ItemTicketGold;
-import mods.railcraft.common.util.misc.ChunkManager;
 import mods.railcraft.common.util.misc.MiscTools;
-import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.ChunkCache;
+import pl.asie.computronics.integration.railcraft.LocomotiveManager;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 
@@ -29,8 +26,8 @@ import java.util.UUID;
 public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 
 	private WeakReference<EntityLocomotiveElectric> locomotive;
-	private boolean isInitialized = false, isBound = false;
-	//private int prevLocoticksExisted;
+	//private boolean isInitialized = false;
+	private boolean isBound = false;
 
 	private UUID uuid;
 
@@ -39,20 +36,13 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 	}
 
 	public void setLocomotive(EntityLocomotiveElectric loco) {
-		//this.locomotive = new WeakReference<EntityLocomotiveElectric>(loco);
+		this.locomotive = new WeakReference<EntityLocomotiveElectric>(loco);
 		this.isBound = true;
-		this.uuid = loco.getUniqueID();
+		this.uuid = loco.getPersistentID();
 	}
 
 	public EntityLocomotiveElectric getLocomotive() {
-		//return this.locomotive != null ? this.locomotive.get() : null;
-		if(uuid != null) {
-			EntityMinecart cart = CartTools.getLinkageManager(worldObj).getCartFromUUID(uuid);
-			if(cart != null && cart instanceof EntityLocomotiveElectric) {
-				return (EntityLocomotiveElectric) cart;
-			}
-		}
-		return null;
+		return this.locomotive != null ? this.locomotive.get() : null;
 	}
 
 	public boolean isBound() {
@@ -72,61 +62,34 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
+
 		if(worldObj.isRemote) {
 			return;
 		}
-		if(!isInitialized && isBound && uuid != null) {
-			this.tryFindLocomotive(this.uuid);
-			isInitialized = true;
-		}
 
-		EntityLocomotiveElectric locomotive = getLocomotive();
-
-		boolean b = true, c = true;
-
-		if(locomotive != null && locomotive.dimension == worldObj.provider.dimensionId) {
-			b = locomotive.worldObj.getChunkProvider().chunkExists(locomotive.chunkCoordX, locomotive.chunkCoordZ);
-			if(!b) {
-				return;
-			}
-			c = locomotive.worldObj.getChunkFromChunkCoords(locomotive.chunkCoordX, locomotive.chunkCoordZ).isChunkLoaded;
-		}
-		if(locomotive != null && (locomotive.isDead || !isBound
-			|| !locomotive.worldObj.getChunkProvider().chunkExists(locomotive.chunkCoordX, locomotive.chunkCoordZ))) {
-			this.locomotive = null;
-			//locomotive = null;
+		if(!isBound) {
 			return;
 		}
 
-		if(isBound && uuid == null) {
+		if(uuid == null) {
 			isBound = false;
 		}
 
-		if(locomotive != null && locomotive.dimension != worldObj.provider.dimensionId) {
-			return;
-		}
-
-		/*if(locomotive != null) {
-			prevLocoticksExisted = locomotive.ticksExisted;
-		}*/
-
-		if(locomotive != null || !isBound) {
-			return;
-		}
-		// Only check every second
-		if(worldObj.getTotalWorldTime() % 20 == 0) {
+		if(uuid != null) {
 			this.tryFindLocomotive(this.uuid);
 		}
 	}
 
 	private void tryFindLocomotive(UUID uuid) {
-		if(getLocomotive() != null) {
-			return;
-		}
 		if(uuid != null) {
-			EntityMinecart cart = CartTools.getLinkageManager(worldObj).getCartFromUUID(uuid);
-			if(cart != null && cart instanceof EntityLocomotiveElectric) {
-				this.setLocomotive((EntityLocomotiveElectric) cart);
+			EntityLocomotiveElectric cart = LocomotiveManager.instance().getCartFromUUID(uuid);
+			if(cart != null) {
+				EntityLocomotiveElectric oldLoco = getLocomotive();
+				if(oldLoco == null || cart != oldLoco) {
+					this.setLocomotive(cart);
+				}
+			} else {
+				this.locomotive = null;
 			}
 		}
 	}
@@ -143,9 +106,8 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-		EntityLocomotiveElectric locomotive = getLocomotive();
-		if(isBound && locomotive != null) {
-			MiscTools.writeUUID(nbt, "locomotive", locomotive.getPersistentID());
+		if(isBound && this.uuid != null) {
+			MiscTools.writeUUID(nbt, "locomotive", this.uuid);
 		}
 		nbt.setBoolean("bound", isBound);
 	}
@@ -175,7 +137,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 		if(locomotive.dimension != this.worldObj.provider.dimensionId) {
 			return "relay and locomotive are in different dimensions";
 		}
-		if(!(locomotive.getDistance(xCoord, yCoord, zCoord) <= Config.LOCOMOTIVE_RELAY_RANGE)) {
+		if(locomotive.getDistanceSq(xCoord, yCoord, zCoord) > Config.LOCOMOTIVE_RELAY_RANGE * Config.LOCOMOTIVE_RELAY_RANGE) {
 			return "locomotive is too far away";
 		}
 		if(locomotive.isSecure()) {

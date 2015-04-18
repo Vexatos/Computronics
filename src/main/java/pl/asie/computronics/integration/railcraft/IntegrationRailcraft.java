@@ -2,6 +2,7 @@ package pl.asie.computronics.integration.railcraft;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import pl.asie.computronics.block.BlockDigitalDetector;
 import pl.asie.computronics.block.BlockDigitalReceiverBox;
@@ -20,6 +21,8 @@ public class IntegrationRailcraft {
 	public ItemRelaySensor relaySensor;
 	public Block digitalBox;
 
+	LocomotiveManager manager;
+
 	private static boolean isEnabled(Configuration config, String name, boolean def) {
 		return config.get("enable.railcraft", name, def).getBoolean(def);
 	}
@@ -34,7 +37,8 @@ public class IntegrationRailcraft {
 			relaySensor = new ItemRelaySensor();
 			GameRegistry.registerItem(relaySensor, "computronics.relaySensor");
 
-			//MinecraftForge.EVENT_BUS.register(this);
+			manager = new LocomotiveManager();
+			MinecraftForge.EVENT_BUS.register(manager);
 		}
 		if(isEnabled(config, "digitalReceiverBox", true)) {
 			this.digitalBox = new BlockDigitalReceiverBox();
@@ -47,15 +51,4 @@ public class IntegrationRailcraft {
 			GameRegistry.registerTileEntity(TileDigitalDetector.class, "computronics.detector");
 		}
 	}
-
-	/*@SubscribeEvent
-	public void onChunkUnload(ChunkEvent.Unload e) {
-		for(List entityList : e.getChunk().entityLists) {
-			for(Object o : entityList) {
-				if(o instanceof EntityLocomotiveElectric) {
-					LinkageManager.instance().removeLinkageId((EntityLocomotiveElectric) o);
-				}
-			}
-		}
-	}*/
 }
