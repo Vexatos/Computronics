@@ -36,9 +36,7 @@ public class WailaLocomotiveRelay extends ComputronicsWailaProvider {
 	public NBTTagCompound getNBTData(EntityPlayerMP player, TileEntity te, NBTTagCompound tag, World world, int x, int y, int z) {
 		if(te instanceof TileLocomotiveRelay) {
 			TileLocomotiveRelay relay = (TileLocomotiveRelay) te;
-			if(relay.getLocomotive() != null) {
-				tag.setBoolean("bound", relay.isBound());
-			}
+			tag.setBoolean("bound", relay.isBound());
 		}
 		return tag;
 	}

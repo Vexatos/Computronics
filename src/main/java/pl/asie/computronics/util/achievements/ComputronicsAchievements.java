@@ -242,12 +242,15 @@ public class ComputronicsAchievements {
 						int x = data.getInteger("relayX");
 						int y = data.getInteger("relayY");
 						int z = data.getInteger("relayZ");
+						if(!player.worldObj.blockExists(x, y, z)) {
+							return;
+						}
 						if(loco.worldObj.getTileEntity(x, y, z) != null
 							&& loco.worldObj.getTileEntity(x, y, z) instanceof TileLocomotiveRelay) {
 
 							TileLocomotiveRelay relay = (TileLocomotiveRelay) loco.worldObj.getTileEntity(x, y, z);
 							if(loco.dimension == relay.getWorldObj().provider.dimensionId
-								&& loco.getDistance(relay.xCoord, relay.yCoord, relay.zCoord) <= Config.LOCOMOTIVE_RELAY_RANGE) {
+								&& loco.getDistanceSq(relay.xCoord, relay.yCoord, relay.zCoord) <= Config.LOCOMOTIVE_RELAY_RANGE * Config.LOCOMOTIVE_RELAY_RANGE) {
 
 								Computronics.instance.achievements.triggerAchievement(player, EnumAchievements.Relay);
 							}
