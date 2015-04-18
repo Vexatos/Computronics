@@ -5,7 +5,6 @@ import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.ModAPIManager;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -80,7 +79,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Mod(modid = Mods.Computronics, name = Mods.Computronics_NAME, version = "@VERSION@",
-	dependencies = "required-after:asielib@[0.3.12,);required-after:Forge@[10.13.2.1236,);"
+	dependencies = "required-after:asielib@[0.4.0,);required-after:Forge@[10.13.2.1236,);"
 		+ "after:ComputerCraft;after:OpenComputers@[1.5.0,);after:OpenComputersAPI|Internal@[5.0.0,);"
 		+ "after:OpenComputers|Core;after:MineFactoryReloaded;after:RedLogic@[59.1.9,);after:ProjRed|Core;"
 		+ "after:nedocomputers;after:BuildCraft|Core@[6.4.1,);after:Railcraft@[9.5.0.0,);"
@@ -314,7 +313,7 @@ public class Computronics {
 			opencomputers.postInit();
 		}
 
-		if(ModAPIManager.INSTANCE.hasAPI(Mods.API.BuildCraftStatements)) {
+		if(Mods.API.hasAPI(Mods.API.BuildCraftStatements)) {
 			TriggerProvider.initialize();
 			ActionProvider.initialize();
 			StatementParameters.initialize();
