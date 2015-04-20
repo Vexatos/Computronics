@@ -68,7 +68,7 @@ public class BlockLocomotiveRelay extends BlockPeripheral implements IBlockWithP
 				if(((TileLocomotiveRelay) tile).unbind()) {
 					msg = "chat.computronics.relay.unbound";
 				} else {
-					msg = "chat.computronics.relay.notbound";
+					msg = "chat.computronics.relay.notBound";
 				}
 				player.addChatComponentMessage(new ChatComponentTranslation(msg));
 				return true;
