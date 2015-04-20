@@ -5,7 +5,6 @@ import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.ModAPIManager;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -74,12 +73,13 @@ import pl.asie.lib.item.ItemMultiple;
 import pl.asie.lib.network.PacketHandler;
 
 import java.lang.reflect.Method;
+import java.util.Locale;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Mod(modid = Mods.Computronics, name = Mods.Computronics_NAME, version = "@VERSION@",
-	dependencies = "required-after:asielib@[0.3.12,);required-after:Forge@[10.13.2.1236,);"
+	dependencies = "required-after:asielib@[0.4.0,);required-after:Forge@[10.13.2.1236,);"
 		+ "after:ComputerCraft;after:OpenComputers@[1.5.0,);after:OpenComputersAPI|Internal@[5.0.0,);"
 		+ "after:OpenComputers|Core;after:MineFactoryReloaded;after:RedLogic@[59.1.9,);after:ProjRed|Core;"
 		+ "after:nedocomputers;after:BuildCraft|Core@[6.4.1,);after:Railcraft@[9.5.0.0,);"
@@ -313,7 +313,7 @@ public class Computronics {
 			opencomputers.postInit();
 		}
 
-		if(ModAPIManager.INSTANCE.hasAPI(Mods.API.BuildCraftStatements)) {
+		if(Mods.API.hasAPI(Mods.API.BuildCraftStatements)) {
 			TriggerProvider.initialize();
 			ActionProvider.initialize();
 			StatementParameters.initialize();
@@ -342,36 +342,37 @@ public class Computronics {
 	 * <p/>
 	 * Example:
 	 * FMLInterModComms.sendMessage("Computronics", "addmultiperipherals", "pl.asie.computronics.cc.multiperipheral.MultiPeripheralRegistry.register")
+	 * @see IMultiPeripheralRegistry
 	 */
 	@EventHandler
 	@SuppressWarnings("unchecked")
 	public void receiveIMC(FMLInterModComms.IMCEvent event) {
 		if(Loader.isModLoaded(Mods.ComputerCraft)) {
-			if(peripheralRegistry != null) {
-				ImmutableList<FMLInterModComms.IMCMessage> messages = event.getMessages();
-				for(FMLInterModComms.IMCMessage message : messages) {
-					if(message.isStringMessage()) {
-						if(message.key.equalsIgnoreCase("addmultiperipherals")) {
+			ImmutableList<FMLInterModComms.IMCMessage> messages = event.getMessages();
+			for(FMLInterModComms.IMCMessage message : messages) {
+				if(message.key.equalsIgnoreCase("addmultiperipherals") && message.isStringMessage()) {
+					if(peripheralRegistry != null) {
+						try {
+							String methodString = message.getStringValue();
+							String[] methodParts = methodString.split("\\.");
+							String methodName = methodParts[methodParts.length - 1];
+							String className = methodString.substring(0, methodString.length() - methodName.length() - 1);
 							try {
-								String methodString = message.getStringValue();
-								String[] methodParts = methodString.split("\\.");
-								String methodName = methodParts[methodParts.length - 1];
-								String className = methodString.substring(0, methodString.length() - methodName.length() - 1);
-								try {
-									Class c = Class.forName(className);
-									Method method = c.getDeclaredMethod(methodName, IMultiPeripheralRegistry.class);
-									method.invoke(null, peripheralRegistry);
-								} catch(ClassNotFoundException e) {
-									log.warn("Could not find class " + className, e);
-								} catch(NoSuchMethodException e) {
-									log.warn("Could not find method " + methodString, e);
-								} catch(Exception e) {
-									log.warn("Exception while trying to call method " + methodString, e);
-								}
+								Class c = Class.forName(className);
+								Method method = c.getDeclaredMethod(methodName, IMultiPeripheralRegistry.class);
+								method.invoke(null, peripheralRegistry);
+							} catch(ClassNotFoundException e) {
+								log.warn("Could not find class " + className, e);
+							} catch(NoSuchMethodException e) {
+								log.warn("Could not find method " + methodString, e);
 							} catch(Exception e) {
-								log.warn("Exception while trying to register a MultiPeripheral", e);
+								log.warn("Exception while trying to call method " + methodString, e);
 							}
+						} catch(Exception e) {
+							log.warn("Exception while trying to register a MultiPeripheral", e);
 						}
+					} else {
+						log.warn(String.format(Locale.ENGLISH, "Mod (%s) tried to register MultiPeripheral before Computronics' preInit!", message.getSender()));
 					}
 				}
 			}

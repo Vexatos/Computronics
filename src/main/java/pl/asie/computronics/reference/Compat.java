@@ -9,7 +9,6 @@ public class Compat {
 
 	public static final String
 		RedLogic_Lamps = "enableRedLogicLamps",
-		Bundled_Redstone = "enableBundledRedstoneProviders",
 		MFR_DSU = "enableDeepStorageUnit",
 		FSP_Steam_Transporter = "enableFlaxbeardSteamTransporters",
 		FZ_ChargePeripheral = "enableFactorizationChargePeripheral",

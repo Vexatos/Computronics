@@ -63,7 +63,7 @@ option.computronics.enableNCAddress=NedoComputers Bus ID
 option.computronics.enableTape=Inserted tape
 option.computronics.enableTapeName=Tape name
 option.computronics.enableDriveState=Tape Drive state
-option.computronics.enableRelayBound=Relay binding
+option.computronics.enableRelayBound=Relay bound
 option.computronics.enableLampColor=Lamp Color
 
 item.computronics.reelChromoxide.name=Chromium Dioxide Tape Reel
@@ -94,8 +94,11 @@ for.computronics.bees.species.scummy=Scummy
 for.description.computronics.speciesScummy=Kerosene, propylene glycol, artificial sweeteners, sulfuric acid, rum, acetone, red dye #2, scumm, axle grease, battery acid and/or pepperoni|Strange people in a bar
 
 chat.computronics.cipher.locked=This Cipher Block is locked! You may not access it.
+chat.computronics.relay.notBound=Relay is currently not bound to any locomotive!
+chat.computronics.relay.unbound=Relay successfully unbound from locomotive!
 chat.computronics.sensor.bound=Relay successfully bound to locomotive!
 chat.computronics.sensor.noRelay=There is no relay at the specified coordinates!
+chat.computronics.sensor.noRelayDetected=Could not detect relay at the specified coordinates!
 chat.computronics.sensor.tooFarAway=Relay and locomotive are too far away from each other!
 chat.computronics.sensor.wrongLoco=Sensor can only be attached to electric locomotives!
 chat.computronics.sensor.wrongDim=Relay and locomotive are in different dimensions!

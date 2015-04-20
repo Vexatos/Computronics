@@ -1,7 +1,6 @@
 package pl.asie.computronics.cc;
 
 import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.ModAPIManager;
 import cpw.mods.fml.common.Optional;
 import dan200.computercraft.api.ComputerCraftAPI;
 import net.minecraftforge.common.config.Configuration;
@@ -41,7 +40,6 @@ import pl.asie.computronics.integration.railcraft.track.DriverLocomotiveTrack;
 import pl.asie.computronics.integration.railcraft.track.DriverPoweredTrack;
 import pl.asie.computronics.integration.railcraft.track.DriverPrimingTrack;
 import pl.asie.computronics.integration.railcraft.track.DriverRoutingTrack;
-import pl.asie.computronics.integration.redlogic.CCBundledRedstoneProviderRedLogic;
 import pl.asie.computronics.integration.redlogic.DriverLamp;
 import pl.asie.computronics.reference.Compat;
 import pl.asie.computronics.reference.Config;
@@ -72,9 +70,6 @@ public class IntegrationComputerCraft {
 		if(Loader.isModLoaded(Mods.RedLogic)) {
 			if(compat.isCompatEnabled(Compat.RedLogic_Lamps)) {
 				registerMultiPeripheralProvider(new DriverLamp.CCDriver());
-			}
-			if(compat.isCompatEnabled(Compat.Bundled_Redstone)) {
-				ComputerCraftAPI.registerBundledRedstoneProvider(new CCBundledRedstoneProviderRedLogic());
 			}
 		}
 		if(Loader.isModLoaded(Mods.MFR) || Loader.isModLoaded(Mods.JABBA)) {
@@ -115,7 +110,7 @@ public class IntegrationComputerCraft {
 			}
 		}
 
-		if(ModAPIManager.INSTANCE.hasAPI(Mods.API.CoFHAPI_Energy)
+		if(Mods.API.hasAPI(Mods.API.CoFHAPI_Energy)
 			&& compat.isCompatEnabled(Compat.RedstoneFlux)) {
 			registerMultiPeripheralProvider(new DriverEnergyReceiver.CCDriver());
 			registerMultiPeripheralProvider(new DriverEnergyProvider.CCDriver());
@@ -140,12 +135,12 @@ public class IntegrationComputerCraft {
 			}
 		}
 
-		if(ModAPIManager.INSTANCE.hasAPI(Mods.API.DraconicEvolution)
+		if(Mods.API.hasAPI(Mods.API.DraconicEvolution)
 			&& compat.isCompatEnabled(Compat.DraconicEvolution)) {
 			registerMultiPeripheralProvider(new DriverExtendedRFStorage.CCDriver());
 		}
 
-		if(ModAPIManager.INSTANCE.hasAPI(Mods.API.Mekanism_Energy)
+		if(Mods.API.hasAPI(Mods.API.Mekanism_Energy)
 			&& compat.isCompatEnabled(Compat.MekanismEnergy)) {
 			registerMultiPeripheralProvider(new DriverStrictEnergyStorage.CCDriver());
 		}

@@ -1,9 +1,6 @@
 package pl.asie.computronics.reference;
 
-import cpw.mods.fml.common.ModAPIManager;
-import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.versioning.ArtifactVersion;
-import cpw.mods.fml.common.versioning.VersionParser;
 
 import java.util.HashMap;
 
@@ -55,28 +52,15 @@ public class Mods {
 		private static HashMap<String, ArtifactVersion> apiList;
 
 		public static ArtifactVersion getVersion(String name) {
-			if(apiList == null) {
-				apiList = new HashMap<String, ArtifactVersion>();
-				Iterable<? extends ModContainer> apis = ModAPIManager.INSTANCE.getAPIList();
-
-				for(ModContainer api : apis) {
-					apiList.put(api.getModId(), api.getProcessedVersion());
-				}
-			}
-
-			if(apiList.containsKey(name)) {
-				return apiList.get(name);
-			}
-			throw new IllegalArgumentException("API '" + name + "' does not exist!");
+			return pl.asie.lib.reference.Mods.API.getVersion(name);
 		}
 
 		public static boolean hasVersion(String name, String version) {
-			if(ModAPIManager.INSTANCE.hasAPI(name)) {
-				ArtifactVersion v1 = VersionParser.parseVersionReference(name + "@" + version);
-				ArtifactVersion v2 = getVersion(name);
-				return v1.containsVersion(v2);
-			}
-			return false;
+			return pl.asie.lib.reference.Mods.API.hasVersion(name, version);
+		}
+
+		public static boolean hasAPI(String name) {
+			return pl.asie.lib.reference.Mods.API.hasAPI(name);
 		}
 	}
 }

@@ -7,17 +7,17 @@ import dan200.computercraft.api.peripheral.IComputerAccess;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
-import mods.railcraft.api.carts.CartTools;
 import mods.railcraft.common.carts.EntityLocomotiveElectric;
 import mods.railcraft.common.items.ItemTicket;
 import mods.railcraft.common.items.ItemTicketGold;
 import mods.railcraft.common.util.misc.MiscTools;
-import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import pl.asie.computronics.integration.railcraft.LocomotiveManager;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 
+import java.lang.ref.WeakReference;
 import java.util.UUID;
 
 /**
@@ -25,9 +25,10 @@ import java.util.UUID;
  */
 public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 
-	private EntityLocomotiveElectric locomotive;
-	private double locomotiveX, locomotiveY, locomotiveZ;
-	private boolean isInitialized = false, isBound = false;
+	private WeakReference<EntityLocomotiveElectric> locomotive;
+	//private boolean isInitialized = false;
+	private boolean isBound = false;
+
 	private UUID uuid;
 
 	public TileLocomotiveRelay() {
@@ -35,110 +36,78 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 	}
 
 	public void setLocomotive(EntityLocomotiveElectric loco) {
-		this.locomotive = loco;
-		this.locomotiveX = this.locomotive.posX;
-		this.locomotiveY = this.locomotive.posY;
-		this.locomotiveZ = this.locomotive.posZ;
+		this.locomotive = new WeakReference<EntityLocomotiveElectric>(loco);
 		this.isBound = true;
-		this.uuid = this.locomotive.getUniqueID();
+		this.uuid = loco.getPersistentID();
 	}
 
 	public EntityLocomotiveElectric getLocomotive() {
-		return this.locomotive;
+		return this.locomotive != null ? this.locomotive.get() : null;
 	}
 
 	public boolean isBound() {
 		return this.isBound;
 	}
 
+	public boolean unbind() {
+		if(this.isBound) {
+			this.isBound = false;
+			this.locomotive = null;
+			this.uuid = null;
+			return true;
+		}
+		return false;
+	}
+
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
+
 		if(worldObj.isRemote) {
 			return;
 		}
-		if(locomotive == null && !isInitialized && isBound) {
-			this.tryFindLocomotive(this.uuid);
-			/*if(locomotive == null) {
-				this.tryFindLocomotiveExpensively();
-				if(locomotive == null) {
-					Computronics.log.error(String.format(Locale.ENGLISH,
-						"Unable to find Electric Locomotive at (%s,%s,%s) bound to Locomotive Relay at (%s,%s,%s). It will not be bound anymore.",
-						locomotiveX, locomotiveY, locomotiveZ, xCoord, yCoord, zCoord));
-					if(uuid != null) {
-						Computronics.log.error("The Locomotive's UUID was: " + this.uuid);
-					}
-				}
-			}*/
-			isInitialized = true;
-		}
-		if(locomotive != null || !isBound) {
+
+		if(!isBound) {
 			return;
 		}
-		// Only check every second
-		if(worldObj.getTotalWorldTime() % 20 == 0) {
+
+		if(uuid == null) {
+			isBound = false;
+		}
+
+		if(uuid != null) {
 			this.tryFindLocomotive(this.uuid);
 		}
 	}
 
 	private void tryFindLocomotive(UUID uuid) {
-		if(locomotive == null) {
-			return;
-		}
 		if(uuid != null) {
-			EntityMinecart cart = CartTools.getLinkageManager(worldObj).getCartFromUUID(uuid);
-			if(cart != null && cart instanceof EntityLocomotiveElectric) {
-				this.setLocomotive((EntityLocomotiveElectric) cart);
+			EntityLocomotiveElectric cart = LocomotiveManager.instance().getCartFromUUID(uuid);
+			if(cart != null) {
+				EntityLocomotiveElectric oldLoco = getLocomotive();
+				if(oldLoco == null || cart != oldLoco) {
+					this.setLocomotive(cart);
+				}
+			} else {
+				this.locomotive = null;
 			}
 		}
 	}
 
-	/*private void tryFindLocomotiveExpensively() {
-		if(locomotive == null) {
-			return;
-		}
-		List locos = worldObj.getEntitiesWithinAABB(EntityLocomotiveElectric.class, AxisAlignedBB.getBoundingBox(locomotiveX - 0.5, locomotiveY - 0.5, locomotiveZ - 0.5,
-			locomotiveX + 0.5, locomotiveY + 0.5, locomotiveZ + 0.5));
-
-		EntityLocomotiveElectric checkLoco = null;
-		for(Object loco : locos) {
-			if(loco instanceof EntityLocomotiveElectric) {
-				if(checkLoco == null) {
-					checkLoco = (EntityLocomotiveElectric) loco;
-					continue;
-				}
-				EntityLocomotiveElectric newLoco = (EntityLocomotiveElectric) loco;
-				if(newLoco.getDistanceSq(locomotiveX, locomotiveY, locomotiveZ)
-					< checkLoco.getDistanceSq(locomotiveX, locomotiveY, locomotiveZ)) {
-					checkLoco = newLoco;
-				}
-			}
-		}
-		if(checkLoco != null) {
-			this.setLocomotive(checkLoco);
-		}
-	}*/
-
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-		if(this.locomotive == null) {
-			this.locomotiveX = nbt.getDouble("locomotiveX");
-			this.locomotiveY = nbt.getDouble("locomotiveY");
-			this.locomotiveZ = nbt.getDouble("locomotiveZ");
+		this.isBound = nbt.getBoolean("bound");
+		if(isBound) {
 			this.uuid = MiscTools.readUUID(nbt, "locomotive");
-			this.isBound = nbt.getBoolean("bound");
 		}
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-		if(this.locomotive != null) {
-			nbt.setDouble("locomotiveX", this.locomotive.posX);
-			nbt.setDouble("locomotiveY", this.locomotive.posY);
-			nbt.setDouble("locomotiveZ", this.locomotive.posZ);
-			MiscTools.writeUUID(nbt, "locomotive", this.locomotive.getPersistentID());
+		if(isBound && this.uuid != null) {
+			MiscTools.writeUUID(nbt, "locomotive", this.uuid);
 		}
 		nbt.setBoolean("bound", isBound);
 	}
@@ -146,9 +115,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 	@Override
 	public void writeToRemoteNBT(NBTTagCompound nbt) {
 		super.writeToRemoteNBT(nbt);
-		if(this.locomotive != null) {
-			nbt.setBoolean("bound", isBound);
-		}
+		nbt.setBoolean("bound", isBound);
 	}
 
 	@Override
@@ -160,18 +127,20 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 	}
 
 	private String cannotAccessLocomotive() {
-		if(!isBound() && this.locomotive == null) {
+		EntityLocomotiveElectric locomotive = getLocomotive();
+		if(!isBound) {
 			return "relay is not bound to a locomotive";
-		} else if(this.locomotive == null) {
+		}
+		if(locomotive == null) {
 			return "locomotive is currently not detectable";
 		}
-		if(this.locomotive.dimension != this.worldObj.provider.dimensionId) {
+		if(locomotive.dimension != this.worldObj.provider.dimensionId) {
 			return "relay and locomotive are in different dimensions";
 		}
-		if(!(this.locomotive.getDistance(xCoord, yCoord, zCoord) <= Config.LOCOMOTIVE_RELAY_RANGE)) {
+		if(locomotive.getDistanceSq(xCoord, yCoord, zCoord) > Config.LOCOMOTIVE_RELAY_RANGE * Config.LOCOMOTIVE_RELAY_RANGE) {
 			return "locomotive is too far away";
 		}
-		if(this.locomotive.isSecure()) {
+		if(locomotive.isSecure()) {
 			return "locomotive is locked";
 		}
 		return null;
@@ -196,7 +165,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 		if(cannotAccessLocomotive() != null) {
 			return new Object[] { null, cannotAccessLocomotive() };
 		}
-		return new Object[] { this.locomotive.getDestination() };
+		return new Object[] { getLocomotive().getDestination() };
 	}
 
 	@Callback(doc = "function(destination:string):boolean; Sets the locomotive's destination; there needs to be a golden ticket inside the locomotive")
@@ -206,7 +175,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 			return new Object[] { null, cannotAccessLocomotive() };
 		}
 		a.checkString(0);
-		return TileLocomotiveRelay.setDestination(this.locomotive, a.toArray());
+		return TileLocomotiveRelay.setDestination(getLocomotive(), a.toArray());
 	}
 
 	@Callback(doc = "function():number; gets the current charge of the locomotive")
@@ -215,7 +184,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 		if(cannotAccessLocomotive() != null) {
 			return new Object[] { null, cannotAccessLocomotive() };
 		}
-		return new Object[] { this.locomotive.getChargeHandler().getCharge() };
+		return new Object[] { getLocomotive().getChargeHandler().getCharge() };
 	}
 
 	@Callback(doc = "function():string; returns the current mode of the locomotive; can be RUNNING, IDLE or SHUTDOWN")
@@ -224,7 +193,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 		if(cannotAccessLocomotive() != null) {
 			return new Object[] { null, cannotAccessLocomotive() };
 		}
-		return new Object[] { this.locomotive.getMode().toString() };
+		return new Object[] { getLocomotive().getMode().toString() };
 	}
 
 	@Callback(doc = "function():string; returns the current name of the locomotive")
@@ -233,7 +202,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 		if(cannotAccessLocomotive() != null) {
 			return new Object[] { null, cannotAccessLocomotive() };
 		}
-		return new Object[] { this.locomotive.func_95999_t() != null ? this.locomotive.func_95999_t() : "" };
+		return new Object[] { getLocomotive().func_95999_t() != null ? getLocomotive().func_95999_t() : "" };
 	}
 
 	@Override
@@ -252,23 +221,23 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 			}
 			switch(method) {
 				case 0: {
-					return new Object[] { this.locomotive.getDestination() };
+					return new Object[] { getLocomotive().getDestination() };
 				}
 				case 1: {
 					if(arguments.length < 1 || !(arguments[0] instanceof String)) {
 						throw new LuaException("first argument needs to be a string");
 					}
 
-					return TileLocomotiveRelay.setDestination(this.locomotive, arguments);
+					return TileLocomotiveRelay.setDestination(getLocomotive(), arguments);
 				}
 				case 2: {
-					return new Object[] { this.locomotive.getChargeHandler().getCharge() };
+					return new Object[] { getLocomotive().getChargeHandler().getCharge() };
 				}
 				case 3: {
-					return new Object[] { this.locomotive.getMode().toString() };
+					return new Object[] { getLocomotive().getMode().toString() };
 				}
 				case 4: {
-					return new Object[] { this.locomotive.func_95999_t() != null ? this.locomotive.func_95999_t() : "" };
+					return new Object[] { getLocomotive().func_95999_t() != null ? getLocomotive().func_95999_t() : "" };
 				}
 			}
 		}

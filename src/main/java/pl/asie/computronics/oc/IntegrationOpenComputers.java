@@ -1,7 +1,6 @@
 package pl.asie.computronics.oc;
 
 import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.ModAPIManager;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.event.FMLMissingMappingsEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -194,12 +193,12 @@ public class IntegrationOpenComputers {
 			}
 		}
 
-		if(ModAPIManager.INSTANCE.hasAPI(Mods.API.DraconicEvolution)
+		if(Mods.API.hasAPI(Mods.API.DraconicEvolution)
 			&& compat.isCompatEnabled(Compat.DraconicEvolution)) {
 			Driver.add(new DriverExtendedRFStorage.OCDriver());
 		}
 
-		if(ModAPIManager.INSTANCE.hasAPI(Mods.API.Mekanism_Energy)
+		if(Mods.API.hasAPI(Mods.API.Mekanism_Energy)
 			&& compat.isCompatEnabled(Compat.MekanismEnergy)) {
 			Driver.add(new DriverStrictEnergyStorage.OCDriver());
 		}
