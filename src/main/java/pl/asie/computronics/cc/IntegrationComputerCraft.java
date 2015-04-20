@@ -36,7 +36,6 @@ import pl.asie.computronics.integration.railcraft.track.DriverLocomotiveTrack;
 import pl.asie.computronics.integration.railcraft.track.DriverPoweredTrack;
 import pl.asie.computronics.integration.railcraft.track.DriverPrimingTrack;
 import pl.asie.computronics.integration.railcraft.track.DriverRoutingTrack;
-import pl.asie.computronics.integration.redlogic.CCBundledRedstoneProviderRedLogic;
 import pl.asie.computronics.integration.redlogic.DriverLamp;
 import pl.asie.computronics.reference.Compat;
 import pl.asie.computronics.reference.Config;
@@ -67,9 +66,6 @@ public class IntegrationComputerCraft {
 		if(Loader.isModLoaded(Mods.RedLogic)) {
 			if(compat.isCompatEnabled(Compat.RedLogic_Lamps)) {
 				registerMultiPeripheralProvider(new DriverLamp.CCDriver());
-			}
-			if(compat.isCompatEnabled(Compat.Bundled_Redstone)) {
-				ComputerCraftAPI.registerBundledRedstoneProvider(new CCBundledRedstoneProviderRedLogic());
 			}
 		}
 		if(Loader.isModLoaded(Mods.MFR) || Loader.isModLoaded(Mods.JABBA)) {
