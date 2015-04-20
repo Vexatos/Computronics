@@ -1,6 +1,7 @@
 package pl.asie.computronics.integration.enderio;
 
 import crazypants.enderio.api.teleport.ITelePad;
+import crazypants.enderio.config.Config;
 import crazypants.util.BlockCoord;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
@@ -8,6 +9,7 @@ import dan200.computercraft.api.peripheral.IComputerAccess;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
+import li.cil.oc.api.network.FilteredEnvironment;
 import li.cil.oc.api.network.ManagedEnvironment;
 import li.cil.oc.api.prefab.DriverTileEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -15,6 +17,9 @@ import net.minecraft.world.World;
 import pl.asie.computronics.integration.CCMultiPeripheral;
 import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
 import pl.asie.computronics.reference.Names;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author Vexatos
@@ -29,7 +34,7 @@ public class DriverTelepad {
 
 	public static class OCDriver extends DriverTileEntity {
 
-		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<ITelePad> {
+		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<ITelePad> implements FilteredEnvironment {
 			public InternalManagedEnvironment(ITelePad tile) {
 				super(tile, Names.EnderIO_Telepad);
 			}
@@ -37,6 +42,11 @@ public class DriverTelepad {
 			@Override
 			public int priority() {
 				return 4;
+			}
+
+			@Override
+			public boolean isCallbackEnabled(String name) {
+				return !name.equalsIgnoreCase("setdimension") || !Config.telepadLockDimension;
 			}
 
 			@Callback(doc = "function():number; Returns the x coordinate the telepad is set to")
@@ -97,6 +107,13 @@ public class DriverTelepad {
 				return new Object[] { tile.getX(), tile.getY(), tile.getZ() };
 			}
 
+			@Callback(doc = "function(dimension:number):number; Changes the dimension the telepad is set to; Returns the new dimension")
+			public Object[] setDimension(Context c, Arguments a) {
+				checkTelepad(tile);
+				tile.setTargetDim(a.checkInteger(0));
+				return new Object[] { tile.getTargetDim() };
+			}
+
 			@Callback(doc = "function(); Activates the telepad")
 			public Object[] teleport(Context c, Arguments a) {
 				checkTelepad(tile);
@@ -144,16 +161,27 @@ public class DriverTelepad {
 			return null;
 		}
 
+		private static String[] methodNames = null;
+
 		@Override
 		public String[] getMethodNames() {
-			return new String[] { "getX", "getY", "getZ", "getCoords", "getDimension",
-				"setX", "setY", "setZ", "setCoords", "teleport", "isValid" };
+			if(methodNames == null) {
+				List<String> methodList = Arrays.asList("getX", "getY", "getZ", "getCoords", "getDimension",
+					"setX", "setY", "setZ", "setCoords", "teleport", "isValid");
+				if(!Config.telepadLockDimension) {
+					methodList.add("setDimension");
+				}
+				methodNames = methodList.toArray(new String[methodList.size()]);
+			}
+			return methodNames;
 		}
 
 		@Override
 		public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
 			try {
-				checkTelepad(tile);
+				if(method != 10) {
+					checkTelepad(tile);
+				}
 				switch(method) {
 					case 0: {
 						return new Object[] { tile.getX() };
@@ -211,6 +239,13 @@ public class DriverTelepad {
 					}
 					case 10: {
 						return new Object[] { tile.inNetwork() };
+					}
+					case 11: {
+						if(arguments.length < 1 || !(arguments[0] instanceof Double)) {
+							throw new LuaException("first argument needs to be a number");
+						}
+						tile.setTargetDim(((Double) arguments[0]).intValue());
+						return new Object[] { tile.getTargetDim() };
 					}
 				}
 			} catch(Exception e) {
