@@ -8,7 +8,7 @@
     - The Capacitor Bank now provides two additional functions, `getAverageInputPerTick()` and `getAverageOutputPerTick()`
       - This allows you to monitor input and output of your energy network separately
     - Now you can get and set the range of Vacuum Chests
-    - Added `getProgress()` to most machines
+    - Added `getProgress()` to most machines with progress
   * ADDED: All Computronics blocks now support the OpenComputers API documentation in NotEnoughItems.
   * ADDED: Documentation for every function any Computronics block provides
   * CHANGED: Made Camera, Chat Box and Tape Drive functions more consistent in behaviour (The ComputerCraft and OpenComputers functions should do the exact same now)
