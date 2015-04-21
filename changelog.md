@@ -9,6 +9,9 @@
   * FIXED: Updated Forestry integration to version 3.5.3 (Requires version 3.5.3 now)
   * FIXED: Reworked the Locomotive Relay to properly work now and hopefully not randomly get unbound anymore.
     - Now you can clear a locomotive relay's bond by shift-rightclicking with an empty hand
+  * FIXED: Reworked the Digital Detector to only send an event once for each passing minecart instead of sending one once per tick and minecart
+    - The event will also now ship additional information if the minecart is a locomotive (primary colour, secondary colour and destination)
+    - Thanks to marcin212 and Kubuxu for this!
 
 ==== 1.4.6 ====
 
