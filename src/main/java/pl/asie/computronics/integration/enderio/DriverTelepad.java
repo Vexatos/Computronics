@@ -9,7 +9,6 @@ import dan200.computercraft.api.peripheral.IComputerAccess;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
-import li.cil.oc.api.network.FilteredEnvironment;
 import li.cil.oc.api.network.ManagedEnvironment;
 import li.cil.oc.api.prefab.DriverTileEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -17,9 +16,6 @@ import net.minecraft.world.World;
 import pl.asie.computronics.integration.CCMultiPeripheral;
 import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
 import pl.asie.computronics.reference.Names;
-
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * @author Vexatos
@@ -32,9 +28,13 @@ public class DriverTelepad {
 		}
 	}
 
+	private static Object[] notEnabled() {
+		return new Object[] { null, "not enabled in config" };
+	}
+
 	public static class OCDriver extends DriverTileEntity {
 
-		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<ITelePad> implements FilteredEnvironment {
+		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<ITelePad> {
 			public InternalManagedEnvironment(ITelePad tile) {
 				super(tile, Names.EnderIO_Telepad);
 			}
@@ -42,11 +42,6 @@ public class DriverTelepad {
 			@Override
 			public int priority() {
 				return 4;
-			}
-
-			@Override
-			public boolean isCallbackEnabled(String name) {
-				return !name.equalsIgnoreCase("setdimension") || !Config.telepadLockDimension;
 			}
 
 			@Callback(doc = "function():number; Returns the x coordinate the telepad is set to")
@@ -82,6 +77,9 @@ public class DriverTelepad {
 			@Callback(doc = "function(xCoord:number):number; Changes the x coordinate the telepad is set to; Returns the new x coordinate")
 			public Object[] setX(Context c, Arguments a) {
 				checkTelepad(tile);
+				if(Config.telepadLockCoords) {
+					return notEnabled();
+				}
 				tile.setX(a.checkInteger(0));
 				return new Object[] { tile.getX() };
 			}
@@ -89,6 +87,9 @@ public class DriverTelepad {
 			@Callback(doc = "function(yCoord:number):number; Changes the y coordinate the telepad is set to; Returns the new y coordinate")
 			public Object[] setY(Context c, Arguments a) {
 				checkTelepad(tile);
+				if(Config.telepadLockCoords) {
+					return notEnabled();
+				}
 				tile.setY(a.checkInteger(0));
 				return new Object[] { tile.getY() };
 			}
@@ -96,6 +97,9 @@ public class DriverTelepad {
 			@Callback(doc = "function(zCoord:number):number; Changes the z coordinate the telepad is set to; Returns the new z coordinate")
 			public Object[] setZ(Context c, Arguments a) {
 				checkTelepad(tile);
+				if(Config.telepadLockCoords) {
+					return notEnabled();
+				}
 				tile.setZ(a.checkInteger(0));
 				return new Object[] { tile.getZ() };
 			}
@@ -103,6 +107,9 @@ public class DriverTelepad {
 			@Callback(doc = "function(xCoord:number, yCoord:number, zCoord:number):number, number, number; Changes the coordinates the telepad is set to; Returns the new coordinates")
 			public Object[] setCoords(Context c, Arguments a) {
 				checkTelepad(tile);
+				if(Config.telepadLockCoords) {
+					return notEnabled();
+				}
 				tile.setCoords(new BlockCoord(a.checkInteger(0), a.checkInteger(1), a.checkInteger(2)));
 				return new Object[] { tile.getX(), tile.getY(), tile.getZ() };
 			}
@@ -110,6 +117,9 @@ public class DriverTelepad {
 			@Callback(doc = "function(dimension:number):number; Changes the dimension the telepad is set to; Returns the new dimension")
 			public Object[] setDimension(Context c, Arguments a) {
 				checkTelepad(tile);
+				if(Config.telepadLockDimension) {
+					return notEnabled();
+				}
 				tile.setTargetDim(a.checkInteger(0));
 				return new Object[] { tile.getTargetDim() };
 			}
@@ -161,19 +171,10 @@ public class DriverTelepad {
 			return null;
 		}
 
-		private static String[] methodNames = null;
-
 		@Override
 		public String[] getMethodNames() {
-			if(methodNames == null) {
-				List<String> methodList = Arrays.asList("getX", "getY", "getZ", "getCoords", "getDimension",
-					"setX", "setY", "setZ", "setCoords", "teleport", "isValid");
-				if(!Config.telepadLockDimension) {
-					methodList.add("setDimension");
-				}
-				methodNames = methodList.toArray(new String[methodList.size()]);
-			}
-			return methodNames;
+			return new String[] { "getX", "getY", "getZ", "getCoords", "getDimension",
+				"setX", "setY", "setZ", "setCoords", "setDimension", "teleport", "isValid" };
 		}
 
 		@Override
@@ -202,6 +203,9 @@ public class DriverTelepad {
 						if(arguments.length < 1 || !(arguments[0] instanceof Double)) {
 							throw new LuaException("first argument needs to be a number");
 						}
+						if(Config.telepadLockCoords) {
+							return notEnabled();
+						}
 						tile.setX(((Double) arguments[0]).intValue());
 						return new Object[] { tile.getX() };
 					}
@@ -209,12 +213,18 @@ public class DriverTelepad {
 						if(arguments.length < 1 || !(arguments[0] instanceof Double)) {
 							throw new LuaException("first argument needs to be a number");
 						}
+						if(Config.telepadLockCoords) {
+							return notEnabled();
+						}
 						tile.setY(((Double) arguments[0]).intValue());
 						return new Object[] { tile.getY() };
 					}
 					case 7: {
 						if(arguments.length < 1 || !(arguments[0] instanceof Double)) {
 							throw new LuaException("first argument needs to be a number");
+						}
+						if(Config.telepadLockCoords) {
+							return notEnabled();
 						}
 						tile.setZ(((Double) arguments[0]).intValue());
 						return new Object[] { tile.getZ() };
@@ -227,6 +237,9 @@ public class DriverTelepad {
 						} else if(arguments.length < 3 || !(arguments[2] instanceof Double)) {
 							throw new LuaException("third argument needs to be a number");
 						}
+						if(Config.telepadLockCoords) {
+							return notEnabled();
+						}
 						tile.setCoords(new BlockCoord(
 							((Double) arguments[0]).intValue(),
 							((Double) arguments[1]).intValue(),
@@ -234,18 +247,21 @@ public class DriverTelepad {
 						return new Object[] { tile.getX(), tile.getY(), tile.getZ() };
 					}
 					case 9: {
-						tile.teleportAll();
-						return new Object[] {};
-					}
-					case 10: {
-						return new Object[] { tile.inNetwork() };
-					}
-					case 11: {
 						if(arguments.length < 1 || !(arguments[0] instanceof Double)) {
 							throw new LuaException("first argument needs to be a number");
 						}
+						if(Config.telepadLockDimension) {
+							return notEnabled();
+						}
 						tile.setTargetDim(((Double) arguments[0]).intValue());
 						return new Object[] { tile.getTargetDim() };
+					}
+					case 10: {
+						tile.teleportAll();
+						return new Object[] {};
+					}
+					case 11: {
+						return new Object[] { tile.inNetwork() };
 					}
 				}
 			} catch(Exception e) {
