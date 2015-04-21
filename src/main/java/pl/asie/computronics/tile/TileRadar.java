@@ -131,6 +131,11 @@ public class TileRadar extends TileEntityPeripheralBase implements IBatteryProvi
 	}
 
 	@Override
+	public boolean connectable(int side) {
+		return false;
+	}
+
+	@Override
 	@Optional.Method(modid = Mods.NedoComputers)
 	public short busRead(int addr) {
 		return 0;
