@@ -88,7 +88,7 @@ public class TileDigitalDetector extends TileEntityPeripheralBase
 	@Override
 	public void readFromNBT(NBTTagCompound data) {
 		super.readFromNBT(data);
-		direction = data.hasKey("direction") ? ForgeDirection.getOrientation(data.getByte("direction")) : ForgeDirection.UNKNOWN;
+		direction = data.hasKey("direction") ? ForgeDirection.getOrientation(data.getByte("direction")) : ForgeDirection.UP;
 	}
 
 	@Override
@@ -98,7 +98,8 @@ public class TileDigitalDetector extends TileEntityPeripheralBase
 
 	@Override
 	public void readFromRemoteNBT(NBTTagCompound tag) {
-		direction = tag.hasKey("direction") ? ForgeDirection.getOrientation(tag.getByte("direction")) : ForgeDirection.UNKNOWN;
+		direction = tag.hasKey("direction") ? ForgeDirection.getOrientation(tag.getByte("direction")) : ForgeDirection.UP;
+		this.worldObj.markBlockRangeForRenderUpdate(xCoord, yCoord, zCoord, xCoord, yCoord, zCoord);
 	}
 
 	private void appendCartType(ArrayList<Object> info, EntityMinecart cart) {
