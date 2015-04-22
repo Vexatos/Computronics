@@ -1,5 +1,6 @@
 package pl.asie.computronics.tile;
 
+import com.mojang.authlib.GameProfile;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
 import dan200.computercraft.api.lua.ILuaContext;
@@ -115,9 +116,12 @@ public class TileDigitalDetector extends TileEntityPeripheralBase
 	private void appendLocomotiveInformation(ArrayList<Object> info, EntityMinecart cart) {
 		if(cart instanceof EntityLocomotive) {
 			EntityLocomotive locomotive = (EntityLocomotive) cart;
+
+			GameProfile owner = locomotive.getOwner();
 			info.add(locomotive.getPrimaryColor());
 			info.add(locomotive.getSecondaryColor());
 			info.add(locomotive.getDestination());
+			info.add(owner!=null?owner.getName():"");
 		}
 	}
 
