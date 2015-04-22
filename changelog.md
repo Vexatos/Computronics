@@ -5,6 +5,8 @@
   * CHANGED: Made Camera, Chat Box and Tape Drive functions more consistent in behaviour (The ComputerCraft and OpenComputers functions should do the exact same now)
   * CHANGED: Got rid of the ComputerCraft bundled redstone support for RedLogic as it was not working anyway. Full ComputerCraft support in RedLogic has been proposed to immibis.
   * CHANGED: Radars now only output relative distance by default. This can of course be changed in the config.
+  * CHANGED: The Locomotive Relay not consumes a little OpenComputers energy if used by OpenComputers
+    - This can be disabled in the config
   * FIXED: Updated OpenPeripheral integration to version 1.1 of OpenPeripheralCore (Requires version 1.1 now)
   * FIXED: Updated Forestry integration to version 3.5.3 (Requires version 3.5.3 now)
   * FIXED: Reworked the Locomotive Relay to properly work now and hopefully not randomly get unbound anymore.
