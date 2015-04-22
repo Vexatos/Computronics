@@ -121,7 +121,7 @@ public class TileDigitalDetector extends TileEntityPeripheralBase
 			info.add(locomotive.getPrimaryColor());
 			info.add(locomotive.getSecondaryColor());
 			info.add(locomotive.getDestination());
-			info.add(owner!=null?owner.getName():"");
+			info.add(owner != null ? owner.getName() : "");
 		}
 	}
 
