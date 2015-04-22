@@ -92,11 +92,11 @@ public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundl
 	public Object[] callMethod(IComputerAccess computer, ILuaContext context,
 		int method, Object[] arguments) throws LuaException,
 		InterruptedException {
-		switch(method){
+		switch(method) {
 			case 0:
 			default:
 				return new Object[] { this.color };
-			case 1:{
+			case 1: {
 				if(arguments.length > 0 && (arguments[0] instanceof Double)) {
 					this.setLampColor(((Double) arguments[0]).intValue());
 				}
@@ -144,13 +144,16 @@ public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundl
 	@Override
 	public void readFromRemoteNBT(NBTTagCompound tag) {
 		super.readFromRemoteNBT(tag);
+		int oldColor = this.color;
 		if(tag.hasKey("clc")) {
-			color = tag.getShort("clc");
+			this.color = tag.getShort("clc");
 		}
-		if(color < 0) {
-			color = 0;
+		if(this.color < 0) {
+			this.color = 0;
 		}
-		this.worldObj.markBlockRangeForRenderUpdate(xCoord, yCoord, zCoord, xCoord, yCoord, zCoord);
+		if(oldColor != this.color) {
+			this.worldObj.markBlockRangeForRenderUpdate(xCoord, yCoord, zCoord, xCoord, yCoord, zCoord);
+		}
 	}
 
 	private boolean parseBundledInput(byte[] data) {

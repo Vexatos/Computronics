@@ -98,8 +98,11 @@ public class TileDigitalDetector extends TileEntityPeripheralBase
 
 	@Override
 	public void readFromRemoteNBT(NBTTagCompound tag) {
+		ForgeDirection oldDir = this.direction;
 		direction = tag.hasKey("direction") ? ForgeDirection.getOrientation(tag.getByte("direction")) : ForgeDirection.UP;
-		this.worldObj.markBlockRangeForRenderUpdate(xCoord, yCoord, zCoord, xCoord, yCoord, zCoord);
+		if(oldDir != direction) {
+			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		}
 	}
 
 	private void appendCartType(ArrayList<Object> info, EntityMinecart cart) {
