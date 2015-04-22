@@ -7,6 +7,7 @@ import dan200.computercraft.api.peripheral.IComputerAccess;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
+import li.cil.oc.api.network.Connector;
 import mods.railcraft.common.carts.EntityLocomotiveElectric;
 import mods.railcraft.common.items.ItemTicket;
 import mods.railcraft.common.items.ItemTicketGold;
@@ -32,7 +33,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 	private UUID uuid;
 
 	public TileLocomotiveRelay() {
-		super("locomotive_relay");
+		super("locomotive_relay", Config.LOCOMOTIVE_RELAY_BASE_POWER * 10);
 	}
 
 	public void setLocomotive(EntityLocomotiveElectric loco) {
@@ -146,6 +147,23 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 		return null;
 	}
 
+	@Optional.Method(modid = Mods.OpenComputers)
+	private boolean tryConsumeEnergy(double energy) {
+		return node() instanceof Connector && ((Connector) node()).tryChangeBuffer(-(Config.LOCOMOTIVE_RELAY_BASE_POWER * energy));
+	}
+
+	@Optional.Method(modid = Mods.OpenComputers)
+	private String cannotAccessLocomotive(boolean consumeEnergy, double amount) {
+		String s = cannotAccessLocomotive();
+		if(s != null) {
+			return s;
+		}
+		if(consumeEnergy && !tryConsumeEnergy(amount)) {
+			return "not enough energy";
+		}
+		return null;
+	}
+
 	//Computer stuff
 
 	private static Object[] setDestination(EntityLocomotiveElectric locomotive, Object[] arguments) {
@@ -162,8 +180,9 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 	@Callback(doc = "function():string; gets the destination the locomotive is currently set to")
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] getDestination(Context context, Arguments args) {
-		if(cannotAccessLocomotive() != null) {
-			return new Object[] { null, cannotAccessLocomotive() };
+		String error = cannotAccessLocomotive(true, 1.0);
+		if(error != null) {
+			return new Object[] { null, error };
 		}
 		return new Object[] { getLocomotive().getDestination() };
 	}
@@ -171,8 +190,9 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 	@Callback(doc = "function(destination:string):boolean; Sets the locomotive's destination; there needs to be a golden ticket inside the locomotive")
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] setDestination(Context c, Arguments a) {
-		if(cannotAccessLocomotive() != null) {
-			return new Object[] { null, cannotAccessLocomotive() };
+		String error = cannotAccessLocomotive(true, 3.0);
+		if(error != null) {
+			return new Object[] { null, error };
 		}
 		a.checkString(0);
 		return TileLocomotiveRelay.setDestination(getLocomotive(), a.toArray());
@@ -181,8 +201,9 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 	@Callback(doc = "function():number; gets the current charge of the locomotive")
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] getCharge(Context context, Arguments args) {
-		if(cannotAccessLocomotive() != null) {
-			return new Object[] { null, cannotAccessLocomotive() };
+		String error = cannotAccessLocomotive(true, 1.0);
+		if(error != null) {
+			return new Object[] { null, error };
 		}
 		return new Object[] { getLocomotive().getChargeHandler().getCharge() };
 	}
@@ -190,8 +211,9 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 	@Callback(doc = "function():string; returns the current mode of the locomotive; can be RUNNING, IDLE or SHUTDOWN")
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] getMode(Context context, Arguments args) {
-		if(cannotAccessLocomotive() != null) {
-			return new Object[] { null, cannotAccessLocomotive() };
+		String error = cannotAccessLocomotive(true, 1.0);
+		if(error != null) {
+			return new Object[] { null, error };
 		}
 		return new Object[] { getLocomotive().getMode().toString() };
 	}
@@ -199,8 +221,9 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 	@Callback(doc = "function():string; returns the current name of the locomotive")
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] getName(Context context, Arguments args) {
-		if(cannotAccessLocomotive() != null) {
-			return new Object[] { null, cannotAccessLocomotive() };
+		String error = cannotAccessLocomotive(true, 1.0);
+		if(error != null) {
+			return new Object[] { null, error };
 		}
 		return new Object[] { getLocomotive().func_95999_t() != null ? getLocomotive().func_95999_t() : "" };
 	}

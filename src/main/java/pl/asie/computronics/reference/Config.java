@@ -31,6 +31,7 @@ public class Config {
 	public static double SPOOFING_ENERGY_COST = 0.2;
 	public static String CHATBOX_PREFIX = "ChatBox";
 	public static double LOCOMOTIVE_RELAY_RANGE = 128.0;
+	public static double LOCOMOTIVE_RELAY_BASE_POWER = 20.0;
 	public static boolean GREGTECH_RECIPES = false;
 	public static boolean NON_OC_RECIPES = false;
 	public static boolean FORESTRY_BEES = true;
@@ -102,6 +103,11 @@ public class Config {
 			// Beep Card
 			SOUND_ENERGY_COST = convertRFtoOC(
 				config.getFloat("ocBeepCardCostPerSound", "power", 10.0f, 0.0f, 10000.0f, "How much energy a single beep will cost for 1 second"));
+
+			if(Loader.isModLoaded(Mods.Railcraft)) {
+				LOCOMOTIVE_RELAY_BASE_POWER = convertRFtoOC(
+					config.getFloat("locomotiveRelayBasePower", "power.railcraft", 20.0f, 0.0f, 10000.0f, "How much base energy the Locomotive Relay consumes per operation"));
+			}
 
 			NON_OC_RECIPES = config.getBoolean("easyRecipeMode", "recipes", false, "Set this to true to make some recipes not require OpenComputers blocks and items");
 
