@@ -149,16 +149,16 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 
 	@Optional.Method(modid = Mods.OpenComputers)
 	private boolean tryConsumeEnergy(double energy) {
-		return node() instanceof Connector && ((Connector) node()).tryChangeBuffer(-(Config.LOCOMOTIVE_RELAY_BASE_POWER * energy));
+		return node() instanceof Connector && ((Connector) node()).tryChangeBuffer(-energy);
 	}
 
 	@Optional.Method(modid = Mods.OpenComputers)
-	private String cannotAccessLocomotive(boolean consumeEnergy, double amount) {
+	private String cannotAccessLocomotive(double amount) {
 		String s = cannotAccessLocomotive();
 		if(s != null) {
 			return s;
 		}
-		if(consumeEnergy && !tryConsumeEnergy(amount)) {
+		if(!tryConsumeEnergy(Config.LOCOMOTIVE_RELAY_BASE_POWER * amount)) {
 			return "not enough energy";
 		}
 		return null;
@@ -180,7 +180,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 	@Callback(doc = "function():string; gets the destination the locomotive is currently set to")
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] getDestination(Context context, Arguments args) {
-		String error = cannotAccessLocomotive(true, 1.0);
+		String error = cannotAccessLocomotive(1.0);
 		if(error != null) {
 			return new Object[] { null, error };
 		}
@@ -190,7 +190,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 	@Callback(doc = "function(destination:string):boolean; Sets the locomotive's destination; there needs to be a golden ticket inside the locomotive")
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] setDestination(Context c, Arguments a) {
-		String error = cannotAccessLocomotive(true, 3.0);
+		String error = cannotAccessLocomotive(3.0);
 		if(error != null) {
 			return new Object[] { null, error };
 		}
@@ -201,7 +201,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 	@Callback(doc = "function():number; gets the current charge of the locomotive")
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] getCharge(Context context, Arguments args) {
-		String error = cannotAccessLocomotive(true, 1.0);
+		String error = cannotAccessLocomotive(1.0);
 		if(error != null) {
 			return new Object[] { null, error };
 		}
@@ -211,7 +211,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 	@Callback(doc = "function():string; returns the current mode of the locomotive; can be RUNNING, IDLE or SHUTDOWN")
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] getMode(Context context, Arguments args) {
-		String error = cannotAccessLocomotive(true, 1.0);
+		String error = cannotAccessLocomotive(1.0);
 		if(error != null) {
 			return new Object[] { null, error };
 		}
@@ -221,7 +221,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 	@Callback(doc = "function():string; returns the current name of the locomotive")
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] getName(Context context, Arguments args) {
-		String error = cannotAccessLocomotive(true, 1.0);
+		String error = cannotAccessLocomotive(1.0);
 		if(error != null) {
 			return new Object[] { null, error };
 		}
