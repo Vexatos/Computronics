@@ -1,57 +1,51 @@
 package pl.asie.computronics.tile;
 
+import com.mojang.authlib.GameProfile;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
-import dan200.computercraft.api.peripheral.IPeripheral;
-import li.cil.oc.api.Network;
-import li.cil.oc.api.network.BlacklistedPeripheral;
-import li.cil.oc.api.network.Environment;
-import li.cil.oc.api.network.Message;
 import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.SidedEnvironment;
-import li.cil.oc.api.network.Visibility;
-import mods.railcraft.common.blocks.detector.TileDetector;
+import mods.railcraft.api.carts.CartTools;
+import mods.railcraft.common.carts.EntityLocomotive;
 import mods.railcraft.common.carts.EnumCart;
-import mods.railcraft.common.plugins.forge.WorldPlugin;
 import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.Computronics;
-import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
 import pl.asie.computronics.cc.ISidedPeripheral;
-import pl.asie.computronics.integration.railcraft.DetectorDigital;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.reference.Names;
-import pl.asie.computronics.util.tile.IComputronicsPeripheral;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 /**
- * @author CovertJaguar, Vexatos
+ * @author CovertJaguar, Vexatos, marcin212, Kubuxu
  */
 @Optional.InterfaceList({
-	@Optional.Interface(iface = "li.cil.oc.api.network.Environment", modid = Mods.OpenComputers),
-	@Optional.Interface(iface = "li.cil.oc.api.network.SidedEnvironment", modid = Mods.OpenComputers),
-	@Optional.Interface(iface = "li.cil.oc.api.network.BlacklistedPeripheral", modid = Mods.OpenComputers),
-	@Optional.Interface(iface = "pl.asie.computronics.api.multiperipheral.IMultiPeripheral", modid = Mods.ComputerCraft)
+	@Optional.Interface(iface = "li.cil.oc.api.network.SidedEnvironment", modid = Mods.OpenComputers)
 })
-public class TileDigitalDetector extends TileDetector
-	implements Environment, SidedEnvironment, IMultiPeripheral, IComputronicsPeripheral, ISidedPeripheral, BlacklistedPeripheral {
+public class TileDigitalDetector extends TileEntityPeripheralBase
+	implements SidedEnvironment, ISidedPeripheral {
 
+	public ForgeDirection direction;
 	private boolean tested;
-	public DetectorDigital detector;
+	private List<EntityMinecart> currentCarts = new ArrayList<EntityMinecart>();
+
+	public TileDigitalDetector() {
+		super(Names.Railcraft_DigitalDetector);
+		this.direction = ForgeDirection.UP;
+	}
 
 	@Override
 	public void updateEntity() {
-		if(getWorld().isRemote) {
+		super.updateEntity();
+		if(getWorldObj().isRemote) {
 			return;
 		}
 		if(!this.tested) {
@@ -65,101 +59,92 @@ public class TileDigitalDetector extends TileDetector
 				}
 			}
 		}
-		int newPowerState = this.detector.testCarts(getCarts());
-		if(newPowerState != this.powerState) {
-			this.powerState = newPowerState;
-			sendUpdateToClient();
-			this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord, this.zCoord, Computronics.railcraft.detector);
-			WorldPlugin.notifyBlocksOfNeighborChangeOnSide(this.worldObj, this.xCoord, this.yCoord, this.zCoord, Computronics.railcraft.detector, this.direction);
+
+		List<EntityMinecart> carts = CartTools.getMinecartsOnAllSides(this.worldObj, this.xCoord, this.yCoord, this.zCoord, 0.2F);
+
+		for(EntityMinecart cart : carts) {
+			if(!this.currentCarts.contains(cart)) {
+				ArrayList<Object> info = new ArrayList<Object>();
+				appendCartType(info, cart);
+				appendLocomotiveInformation(info, cart);
+				if(Loader.isModLoaded(Mods.OpenComputers) && this.node() != null) {
+					this.eventOC(info);
+				}
+				if(Loader.isModLoaded(Mods.ComputerCraft)) {
+					this.eventCC(info);
+				}
+			}
 		}
 
-		if(!addedToNetwork && Loader.isModLoaded(Mods.OpenComputers)) {
-			addedToNetwork = true;
-			Network.joinOrCreateNetwork(this);
-		}
+		currentCarts.clear();
+		currentCarts = carts;
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound data) {
 		super.writeToNBT(data);
-		if(Loader.isModLoaded(Mods.OpenComputers)) {
-			writeToNBT_OC(data);
-		}
+		data.setByte("direction", (byte) direction.ordinal());
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound data) {
 		super.readFromNBT(data);
-		if(Loader.isModLoaded(Mods.OpenComputers)) {
-			readFromNBT_OC(data);
-		}
+		direction = data.hasKey("direction") ? ForgeDirection.getOrientation(data.getByte("direction")) : ForgeDirection.UP;
 	}
 
 	@Override
-	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
-		NBTTagCompound tag = pkt.func_148857_g();
-		if(tag != null) {
-			readFromNBT(tag);
+	public void writeToRemoteNBT(NBTTagCompound tag) {
+		tag.setByte("direction", (byte) direction.ordinal());
+	}
+
+	@Override
+	public void readFromRemoteNBT(NBTTagCompound tag) {
+		ForgeDirection oldDir = this.direction;
+		direction = tag.hasKey("direction") ? ForgeDirection.getOrientation(tag.getByte("direction")) : ForgeDirection.UP;
+		if(oldDir != direction) {
+			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		}
+	}
+
+	private void appendCartType(ArrayList<Object> info, EntityMinecart cart) {
+		EnumCart type = EnumCart.fromCart(cart);
+		info.add(type != null ? type.name().toLowerCase(Locale.ENGLISH) : "unknown");
+		String entityName = cart.func_95999_t();
+		info.add(entityName != null ? entityName : "");
+	}
+
+	private void appendLocomotiveInformation(ArrayList<Object> info, EntityMinecart cart) {
+		if(cart instanceof EntityLocomotive) {
+			EntityLocomotive locomotive = (EntityLocomotive) cart;
+
+			GameProfile owner = locomotive.getOwner();
+			info.add(locomotive.getPrimaryColor());
+			info.add(locomotive.getSecondaryColor());
+			info.add(locomotive.getDestination());
+			info.add(owner != null ? owner.getName() : "");
 		}
 	}
 
 	// Computer Stuff //
 
-	protected String peripheralName;
-	protected Node node;
-	protected ArrayList<IComputerAccess> attachedComputersCC;
-	protected boolean addedToNetwork = false;
-
-	public TileDigitalDetector() {
-		this(Names.Railcraft_DigitalDetector);
-	}
-
-	public TileDigitalDetector(String name) {
-		super();
-		this.detector = new DetectorDigital();
-		this.detector.setTile(this);
-		this.peripheralName = name;
-		this.direction = ForgeDirection.UNKNOWN;
-		if(Loader.isModLoaded(Mods.OpenComputers)) {
-			initOC();
-		}
-	}
-
-	public TileDigitalDetector(String name, double bufferSize) {
-		super();
-		this.detector = new DetectorDigital();
-		this.detector.setTile(this);
-		this.peripheralName = name;
-		this.direction = ForgeDirection.UNKNOWN;
-		if(Loader.isModLoaded(Mods.OpenComputers)) {
-			initOC(bufferSize);
-		}
-	}
-
 	@Optional.Method(modid = Mods.OpenComputers)
-	public void eventOC(EntityMinecart cart, EnumCart type) {
-		node().sendToReachable("computer.signal", "minecart",
-			type != null ? type.name().toLowerCase(Locale.ENGLISH) : null,
-			cart.func_95999_t());
+	public void eventOC(ArrayList<Object> info) {
+		ArrayList<Object> extendedInfo = new ArrayList<Object>();
+		extendedInfo.add("minecart");
+		extendedInfo.addAll(info);
+		node().sendToReachable("computer.signal", extendedInfo.toArray());
 	}
 
 	@Optional.Method(modid = Mods.ComputerCraft)
-	public void eventCC(EntityMinecart cart, EnumCart type) {
+	public void eventCC(ArrayList<Object> info) {
 		if(attachedComputersCC != null) {
 			for(IComputerAccess computer : attachedComputersCC) {
-				computer.queueEvent("minecart", new Object[] {
-					computer.getAttachmentName(),
-					type != null ? type.name().toLowerCase(Locale.ENGLISH) : null,
-					cart.func_95999_t()
-				});
+				ArrayList<Object> extendedInfo = new ArrayList<Object>();
+				extendedInfo.add(computer.getAttachmentName());
+				extendedInfo.addAll(info);
+				computer.queueEvent("minecart", extendedInfo.toArray());
 			}
 		}
-	}
-
-	@Override
-	@Optional.Method(modid = Mods.OpenComputers)
-	public Node node() {
-		return node;
 	}
 
 	@Override
@@ -173,82 +158,9 @@ public class TileDigitalDetector extends TileDetector
 	}
 
 	@Override
-	@Optional.Method(modid = Mods.OpenComputers)
-	public void onConnect(Node node) {
-
-	}
-
-	@Override
-	@Optional.Method(modid = Mods.OpenComputers)
-	public void onDisconnect(Node node) {
-
-	}
-
-	@Override
-	@Optional.Method(modid = Mods.OpenComputers)
-	public void onMessage(Message message) {
-
-	}
-
-	@Override
-	@Optional.Method(modid = Mods.OpenComputers)
-	public boolean isPeripheralBlacklisted() {
-		return true;
-	}
-
-	@Override
-	@Optional.Method(modid = Mods.OpenComputers)
-	public void onChunkUnload() {
-		super.onChunkUnload();
-		if(node != null) {
-			node.remove();
-		}
-	}
-
-	@Override
-	public void invalidate() {
-		super.invalidate();
-		if(Loader.isModLoaded(Mods.OpenComputers) && node != null) {
-			node.remove();
-		}
-	}
-
-	@Optional.Method(modid = Mods.OpenComputers)
-	private void initOC(double s) {
-		node = Network.newNode(this, Visibility.Network).withComponent(this.peripheralName, Visibility.Network).withConnector(s).create();
-	}
-
-	@Optional.Method(modid = Mods.OpenComputers)
-	private void initOC() {
-		node = Network.newNode(this, Visibility.Network).withComponent(this.peripheralName, Visibility.Network).create();
-	}
-
-	@Optional.Method(modid = Mods.OpenComputers)
-	public void readFromNBT_OC(final NBTTagCompound nbt) {
-		if(node != null && node.host() == this) {
-			node.load(nbt.getCompoundTag("oc:node"));
-		}
-	}
-
-	@Optional.Method(modid = Mods.OpenComputers)
-	public void writeToNBT_OC(final NBTTagCompound nbt) {
-		if(node != null && node.host() == this) {
-			final NBTTagCompound nodeNbt = new NBTTagCompound();
-			node.save(nodeNbt);
-			nbt.setTag("oc:node", nodeNbt);
-		}
-	}
-
-	@Override
-	@Optional.Method(modid = Mods.ComputerCraft)
-	public String getType() {
-		return peripheralName;
-	}
-
-	@Override
 	@Optional.Method(modid = Mods.ComputerCraft)
 	public String[] getMethodNames() {
-		return new String[] { };
+		return new String[] {};
 	}
 
 	@Override
@@ -258,52 +170,22 @@ public class TileDigitalDetector extends TileDetector
 	}
 
 	@Override
-	@Optional.Method(modid = Mods.ComputerCraft)
-	public void attach(IComputerAccess computer) {
-		if(attachedComputersCC == null) {
-			attachedComputersCC = new ArrayList<IComputerAccess>(2);
-		}
-		attachedComputersCC.add(computer);
-	}
-
-	@Override
-	@Optional.Method(modid = Mods.ComputerCraft)
-	public void detach(IComputerAccess computer) {
-		if(attachedComputersCC != null) {
-			attachedComputersCC.remove(computer);
-		}
-	}
-
-	@Override
-	@Optional.Method(modid = Mods.ComputerCraft)
-	public boolean equals(IPeripheral other) {
-		if(other == null) {
-			return false;
-		}
-		if(this == other) {
-			return true;
-		}
-		if(other instanceof TileEntity) {
-			TileEntity tother = (TileEntity) other;
-			if(!tother.getWorldObj().equals(worldObj)) {
-				return false;
-			}
-			if(tother.xCoord != this.xCoord || tother.yCoord != this.yCoord || tother.zCoord != this.zCoord) {
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-	@Override
-	@Optional.Method(modid = Mods.ComputerCraft)
-	public int peripheralPriority() {
-		return 1;
-	}
-
-	@Override
 	public boolean canConnectPeripheralOnSide(int side) {
 		return ForgeDirection.getOrientation(side) == this.direction;
+	}
+
+	@Override
+	public boolean connectable(int side) {
+		return false;
+	}
+
+	@Override
+	public short busRead(int addr) {
+		return 0;
+	}
+
+	@Override
+	public void busWrite(int addr, short data) {
+
 	}
 }

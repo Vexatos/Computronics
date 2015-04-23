@@ -1,6 +1,19 @@
 ==== 1.4.7 ====
 
   * ADDED: All Computronics blocks now support the OpenComputers API documentation in NotEnoughItems.
+  * ADDED: OpenComputers Component Documentation for every function any Computronics block provides
+  * CHANGED: Made Camera, Chat Box and Tape Drive functions more consistent in behaviour (The ComputerCraft and OpenComputers functions should do the exact same now)
+  * CHANGED: Got rid of the ComputerCraft bundled redstone support for RedLogic as it was not working anyway. Full ComputerCraft support in RedLogic has been proposed to immibis.
+  * CHANGED: Radars now only output relative distance by default. This can of course be changed in the config.
+  * CHANGED: The Locomotive Relay now consumes a little Charge in the Electric Locomotive as well as a little OpenComputers energy if used by OpenComputers
+    - This can be disabled in the config
+  * FIXED: Updated OpenPeripheral integration to version 1.1 of OpenPeripheralCore (Requires version 1.1 now)
+  * FIXED: Updated Forestry integration to version 3.5.3 (Requires version 3.5.3 now)
+  * FIXED: Reworked the Locomotive Relay to properly work now and hopefully not randomly get unbound anymore.
+    - Now you can clear a locomotive relay's bond by shift-rightclicking with an empty hand
+  * FIXED: Reworked the Digital Detector to only send an event once for each passing minecart instead of sending one once per tick and minecart
+    - The event will also now ship additional information if the minecart is a locomotive (primary colour, secondary colour and destination)
+    - Thanks to marcin212 and Kubuxu for this!
 
 ==== 1.4.6 ====
 

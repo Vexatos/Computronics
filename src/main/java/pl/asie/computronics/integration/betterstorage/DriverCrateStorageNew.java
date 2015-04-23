@@ -19,7 +19,7 @@ public class DriverCrateStorageNew extends DriverTileEntity {
 			super(tile, name);
 		}
 
-		@Callback()
+		@Callback(doc = "function():table; Returns a table of the crate's contents")
 		public Object[] getContents(Context c, Arguments a) {
 			List<ItemStack> l = new ArrayList<ItemStack>();
 			for(ItemStack is : tile.getContents()) {
@@ -28,7 +28,7 @@ public class DriverCrateStorageNew extends DriverTileEntity {
 			return new Object[] { l.toArray(new ItemStack[l.size()]) };
 		}
 
-		@Callback(direct = true)
+		@Callback(doc = "function():number; Returns the number of slots in the crate", direct = true)
 		public Object[] getCapacity(Context c, Arguments a) {
 			return new Object[] { tile.getCapacity() };
 		}

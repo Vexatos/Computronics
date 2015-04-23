@@ -64,12 +64,14 @@ public class ComputronicsAchievements {
 	}
 
 	private void initializeAchievements() {
-		this.registerAchievement(EnumAchievements.Tape, 0, 0, new ItemStack(Computronics.itemTape, 1, 0), null, false, true);
-		this.registerAchievement(EnumAchievements.Tape_Star, 4, 0, new ItemStack(Computronics.itemTape, 1, 8), this.getAchievement(EnumAchievements.Tape), false, false);
+		if(Computronics.itemTape != null) {
+			this.registerAchievement(EnumAchievements.Tape, 0, 0, new ItemStack(Computronics.itemTape, 1, 0), null, false, true);
+			this.registerAchievement(EnumAchievements.Tape_Star, 4, 0, new ItemStack(Computronics.itemTape, 1, 8), this.getAchievement(EnumAchievements.Tape), false, false);
 
-		if(Loader.isModLoaded(Mods.GregTech)) {
-			this.registerAchievement(EnumAchievements.Tape_IG, 8, 2, new ItemStack(Computronics.itemTape, 1, 9), this.getAchievement(EnumAchievements.Tape_Star), true, false);
-			this.registerAchievement(EnumAchievements.Tape_IG_Dropped, 8, 10, ItemList.IC2_Scrap.get(1), this.getAchievement(EnumAchievements.Tape_IG), true, false);
+			if(Loader.isModLoaded(Mods.GregTech)) {
+				this.registerAchievement(EnumAchievements.Tape_IG, 8, 2, new ItemStack(Computronics.itemTape, 1, 9), this.getAchievement(EnumAchievements.Tape_Star), true, false);
+				this.registerAchievement(EnumAchievements.Tape_IG_Dropped, 8, 10, ItemList.IC2_Scrap.get(1), this.getAchievement(EnumAchievements.Tape_IG), true, false);
+			}
 		}
 
 		if(Loader.isModLoaded(Mods.Railcraft)) {
@@ -110,18 +112,18 @@ public class ComputronicsAchievements {
 		if(player == null || stack == null) {
 			return;
 		}
-		if(stack.getItem() == Computronics.itemTape) {
-			switch(stack.getItemDamage()){
-				case 9:{
+		if(Computronics.itemTape != null && stack.getItem() == Computronics.itemTape) {
+			switch(stack.getItemDamage()) {
+				case 9: {
 					this.triggerAchievement(player, EnumAchievements.Tape_IG);
 					break;
 				}
 				case 4:
-				case 8:{
+				case 8: {
 					this.triggerAchievement(player, EnumAchievements.Tape_Star);
 					break;
 				}
-				default:{
+				default: {
 					this.triggerAchievement(player, EnumAchievements.Tape);
 					break;
 				}
@@ -147,7 +149,8 @@ public class ComputronicsAchievements {
 		EntityItem item = event.entityItem;
 		ItemStack stack = item.getEntityItem();
 
-		if(stack != null && stack.getItem() == Computronics.itemTape && stack.getItemDamage() == 9) {
+		if(stack != null && Computronics.itemTape != null
+			&& stack.getItem() == Computronics.itemTape && stack.getItemDamage() == 9) {
 			if(!stack.hasTagCompound()) {
 				stack.setTagCompound(new NBTTagCompound());
 			}
@@ -169,7 +172,8 @@ public class ComputronicsAchievements {
 		}
 		EntityItem item = event.entityItem;
 		ItemStack stack = item.getEntityItem();
-		if(stack != null && stack.getItem() == Computronics.itemTape && stack.getItemDamage() == 9) {
+		if(stack != null && Computronics.itemTape != null
+			&& stack.getItem() == Computronics.itemTape && stack.getItemDamage() == 9) {
 			if(stack.hasTagCompound()) {
 				NBTTagCompound data = stack.getTagCompound();
 				if(data.hasKey("dropevent")) {
@@ -238,12 +242,15 @@ public class ComputronicsAchievements {
 						int x = data.getInteger("relayX");
 						int y = data.getInteger("relayY");
 						int z = data.getInteger("relayZ");
+						if(!player.worldObj.blockExists(x, y, z)) {
+							return;
+						}
 						if(loco.worldObj.getTileEntity(x, y, z) != null
 							&& loco.worldObj.getTileEntity(x, y, z) instanceof TileLocomotiveRelay) {
 
 							TileLocomotiveRelay relay = (TileLocomotiveRelay) loco.worldObj.getTileEntity(x, y, z);
 							if(loco.dimension == relay.getWorldObj().provider.dimensionId
-								&& loco.getDistance(relay.xCoord, relay.yCoord, relay.zCoord) <= Config.LOCOMOTIVE_RELAY_RANGE) {
+								&& loco.getDistanceSq(relay.xCoord, relay.yCoord, relay.zCoord) <= Config.LOCOMOTIVE_RELAY_RANGE * Config.LOCOMOTIVE_RELAY_RANGE) {
 
 								Computronics.instance.achievements.triggerAchievement(player, EnumAchievements.Relay);
 							}

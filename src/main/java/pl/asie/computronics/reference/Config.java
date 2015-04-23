@@ -19,7 +19,7 @@ public class Config {
 	public static int TAPEDRIVE_DISTANCE = 24;
 	public static int TAPEDRIVE_BUFFER_MS = 750;
 	public static int RADAR_RANGE = 8;
-	public static boolean RADAR_ONLY_DISTANCE = false;
+	public static boolean RADAR_ONLY_DISTANCE = true;
 	public static boolean CIPHER_CAN_LOCK = true;
 	public static double CIPHER_ENERGY_STORAGE = 1600.0;
 	public static double CIPHER_KEY_CONSUMPTION = 1600.0;
@@ -31,6 +31,8 @@ public class Config {
 	public static double SPOOFING_ENERGY_COST = 0.2;
 	public static String CHATBOX_PREFIX = "ChatBox";
 	public static double LOCOMOTIVE_RELAY_RANGE = 128.0;
+	public static double LOCOMOTIVE_RELAY_BASE_POWER = 20.0;
+	public static boolean LOCOMOTIVE_RELAY_CONSUME_CHARGE = true;
 	public static boolean GREGTECH_RECIPES = false;
 	public static boolean NON_OC_RECIPES = false;
 	public static boolean FORESTRY_BEES = true;
@@ -103,6 +105,11 @@ public class Config {
 			SOUND_ENERGY_COST = convertRFtoOC(
 				config.getFloat("ocBeepCardCostPerSound", "power", 10.0f, 0.0f, 10000.0f, "How much energy a single beep will cost for 1 second"));
 
+			if(Loader.isModLoaded(Mods.Railcraft)) {
+				LOCOMOTIVE_RELAY_BASE_POWER = convertRFtoOC(
+					config.getFloat("locomotiveRelayBasePower", "power.railcraft", 20.0f, 0.0f, 10000.0f, "How much base energy the Locomotive Relay consumes per operation"));
+			}
+
 			NON_OC_RECIPES = config.getBoolean("easyRecipeMode", "recipes", false, "Set this to true to make some recipes not require OpenComputers blocks and items");
 
 			if(Loader.isModLoaded(Mods.Forestry)) {
@@ -136,7 +143,7 @@ public class Config {
 
 		// Radar
 		RADAR_RANGE = config.getInt("maxRange", "radar", 8, 0, 256, "The maximum range of the Radar.");
-		RADAR_ONLY_DISTANCE = config.getBoolean("onlyOutputDistance", "radar", false, "Stop Radars from outputting X/Y/Z coordinates and instead only output the distance from an entity.");
+		RADAR_ONLY_DISTANCE = config.getBoolean("onlyOutputDistance", "radar", true, "Stop Radars from outputting X/Y/Z coordinates and instead only output the distance from an entity.");
 
 		// Tape Drive
 		TAPEDRIVE_BUFFER_MS = config.getInt("audioPreloadMs", "tapedrive", 750, 500, 10000, "The amount of time (in milliseconds) used for pre-buffering the tape for audio playback. If you get audio playback glitches in SMP/your TPS is under 20, RAISE THIS VALUE!");
@@ -153,6 +160,8 @@ public class Config {
 		// Railcraft integration
 		if(Loader.isModLoaded(Mods.Railcraft)) {
 			LOCOMOTIVE_RELAY_RANGE = (double) config.getInt("locomotiveRelayRange", "railcraft", 128, 0, 512, "The range of Locomotive Relays in Blocks.");
+			LOCOMOTIVE_RELAY_CONSUME_CHARGE = config.getBoolean("locomotiveRelayConsumeCharge", "railcraft", true, "If true, the Locomotive Relay will consume"
+				+ "a little bit of Railcraft charge in the locomotive everytime it is accessing the locomotive");
 		}
 
 		// GregTech recipe mode

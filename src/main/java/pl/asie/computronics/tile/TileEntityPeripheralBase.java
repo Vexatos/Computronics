@@ -15,7 +15,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
 import pl.asie.computronics.reference.Mods;
-import pl.asie.computronics.util.tile.IComputronicsPeripheral;
+import pl.asie.computronics.util.internal.IComputronicsPeripheral;
 import pl.asie.lib.tile.TileMachine;
 
 import java.util.ArrayList;

@@ -5,16 +5,11 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import li.cil.oc.api.network.Environment;
 import mods.railcraft.client.util.textures.TextureAtlasSheet;
-import mods.railcraft.common.blocks.tracks.TrackTools;
-import mods.railcraft.common.items.IActivationBlockingItem;
-import mods.railcraft.common.plugins.forge.HarvestPlugin;
-import mods.railcraft.common.util.misc.Game;
 import mods.railcraft.common.util.misc.MiscTools;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
@@ -26,7 +21,7 @@ import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TileDigitalDetector;
 
 /**
- * @author CovertJaguar, Vexatos
+ * @author CovertJaguar, Vexatos, marcin212, Kubuxu
  */
 public class BlockDigitalDetector extends BlockPeripheral {
 
@@ -38,13 +33,8 @@ public class BlockDigitalDetector extends BlockPeripheral {
 		this.setHardness(2.0F);
 		this.setStepSound(soundTypeStone);
 		this.setCreativeTab(Computronics.tab);
-		HarvestPlugin.setHarvestLevel(this, "pickaxe", 2);
-		HarvestPlugin.setHarvestLevel(this, "crowbar", 0);
-	}
-
-	@Override
-	public boolean isBlockNormalCube() {
-		return false;
+		this.setHarvestLevel("pickaxe", 2);
+		this.setHarvestLevel("crowbar", 0);
 	}
 
 	@Override
@@ -63,34 +53,12 @@ public class BlockDigitalDetector extends BlockPeripheral {
 		if((tile instanceof TileDigitalDetector)) {
 			((TileDigitalDetector) tile).direction = MiscTools.getSideClosestToPlayer(world, i, j, k, entityliving);
 			world.notifyBlocksOfNeighborChange(i, j, k, this);
-			((TileDigitalDetector) tile).onBlockPlacedBy(entityliving, stack);
 		}
 	}
 
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float u1, float u2, float u3) {
-		ItemStack current = player.getCurrentEquippedItem();
-		if(current != null) {
-			Item item = current.getItem();
-			if((item instanceof IActivationBlockingItem)) {
-				return false;
-			}
-			if(TrackTools.isRailItem(item)) {
-				return false;
-			}
-		}
-		TileEntity tile = world.getTileEntity(x, y, z);
-		return (tile instanceof TileDigitalDetector) && ((TileDigitalDetector) tile).blockActivated(player);
-	}
-
-	@Override
-	public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
-		super.onNeighborBlockChange(world, x, y, z, block);
-		TileEntity tile = world.getTileEntity(x, y, z);
-		if((tile instanceof TileDigitalDetector)) {
-			TileDigitalDetector detector = (TileDigitalDetector) tile;
-			detector.onNeighborBlockChange(block);
-		}
+		return false;
 	}
 
 	@Override
@@ -168,24 +136,10 @@ public class BlockDigitalDetector extends BlockPeripheral {
 	}
 
 	@Override
-	public float getBlockHardness(World world, int x, int y, int z) {
-		TileEntity tile = world.getTileEntity(x, y, z);
-		if((tile instanceof TileDigitalDetector)) {
-			return ((TileDigitalDetector) tile).getDetector().getHardness();
-		}
-		return super.getBlockHardness(world, x, y, z);
-	}
-
-	@Override
-	public boolean canProvidePower() {
-		return true;
-	}
-
-	@Override
 	public void onBlockAdded(World world, int i, int j, int k) {
 		super.onBlockAdded(world, i, j, k);
 		world.markBlockForUpdate(i, j, k);
-		if(Game.isNotHost(world)) {
+		if(world.isRemote) {
 			return;
 		}
 		world.notifyBlocksOfNeighborChange(i + 1, j, k, this);
@@ -199,7 +153,7 @@ public class BlockDigitalDetector extends BlockPeripheral {
 	@Override
 	public void breakBlock(World world, int x, int y, int z, Block block, int metadata) {
 		super.breakBlock(world, x, y, z, this, metadata);
-		if(Game.isNotHost(world)) {
+		if(world.isRemote) {
 			return;
 		}
 		world.notifyBlocksOfNeighborChange(x + 1, y, z, this);
@@ -216,7 +170,7 @@ public class BlockDigitalDetector extends BlockPeripheral {
 	}
 
 	@Override
-	@Optional.Method(modid= Mods.OpenComputers)
+	@Optional.Method(modid = Mods.OpenComputers)
 	public Class<? extends Environment> getTileEntityClass(int meta) {
 		return TileDigitalDetector.class;
 	}

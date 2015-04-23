@@ -34,17 +34,17 @@ public class DriverLamp {
 				this.setNode(Network.newNode(this, Visibility.Network).withComponent(Names.RedLogic_Lamp, Visibility.Network).create());
 			}
 
-			@Callback(direct = true)
+			@Callback(doc = "function():string; Returns the type of this lamp", direct = true)
 			public Object[] getLampType(Context c, Arguments a) {
 				return new Object[] { block.getType().name() };
 			}
 
-			@Callback(direct = true)
+			@Callback(doc = "function():number; Returns the color of this lamp", direct = true)
 			public Object[] getLampColor(Context c, Arguments a) {
 				return new Object[] { block.getColourRGB(w, x, y, z) };
 			}
 
-			@Callback(direct = true)
+			@Callback(doc = "function():boolean; Returns whether this lamp is powered", direct = true)
 			public Object[] isLampPowered(Context c, Arguments a) {
 				return new Object[] { block.isPowered() };
 			}

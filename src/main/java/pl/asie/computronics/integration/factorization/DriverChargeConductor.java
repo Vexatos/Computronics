@@ -31,7 +31,7 @@ public class DriverChargeConductor {
 				super(tile, Names.FZ_ChargeConductor);
 			}
 
-			@Callback(direct = true)
+			@Callback(doc = "function():number; Returns the charge of the block", direct = true)
 			public Object[] getCharge(Context c, Arguments a) {
 				return DriverChargeConductor.getCharge(tile);
 			}
