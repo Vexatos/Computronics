@@ -8,9 +8,12 @@ import li.cil.oc.api.driver.EnvironmentHost;
 import li.cil.oc.api.driver.Item;
 import li.cil.oc.api.driver.item.HostAware;
 import li.cil.oc.api.driver.item.Slot;
+import li.cil.oc.api.driver.item.UpgradeRenderer;
+import li.cil.oc.api.event.RobotRenderEvent;
 import li.cil.oc.api.internal.Adapter;
 import li.cil.oc.api.internal.Drone;
 import li.cil.oc.api.internal.Microcontroller;
+import li.cil.oc.api.internal.Robot;
 import li.cil.oc.api.internal.Tablet;
 import li.cil.oc.api.network.Environment;
 import li.cil.oc.api.network.ManagedEnvironment;
@@ -37,13 +40,15 @@ import pl.asie.computronics.util.StringUtil;
 import pl.asie.lib.item.ItemMultiple;
 
 import java.util.List;
+import java.util.Set;
 
 @Optional.InterfaceList({
 	@Optional.Interface(iface = "li.cil.oc.api.driver.Item", modid = Mods.OpenComputers),
 	@Optional.Interface(iface = "li.cil.oc.api.driver.EnvironmentAware", modid = Mods.OpenComputers),
-	@Optional.Interface(iface = "li.cil.oc.api.driver.item.HostAware", modid = Mods.OpenComputers)
+	@Optional.Interface(iface = "li.cil.oc.api.driver.item.HostAware", modid = Mods.OpenComputers),
+	@Optional.Interface(iface = "li.cil.oc.api.driver.item.UpgradeRenderer", modid = Mods.OpenComputers)
 })
-public class ItemOpenComputers extends ItemMultiple implements Item, EnvironmentAware, HostAware {
+public class ItemOpenComputers extends ItemMultiple implements Item, EnvironmentAware, HostAware, UpgradeRenderer {
 
 	public ItemOpenComputers() {
 		super(Mods.Computronics, new String[] {
@@ -260,5 +265,15 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 					+ EnumChatFormatting.GRAY);
 			}
 		}
+	}
+
+	@Override
+	public String computePreferredMountPoint(ItemStack stack, Robot robot, Set<String> availableMountPoints) {
+		return pl.asie.computronics.client.UpgradeRenderer.INSTANCE.computePreferredMountPoint(stack, robot, availableMountPoints);
+	}
+
+	@Override
+	public void render(ItemStack stack, RobotRenderEvent.MountPoint mountPoint, Robot robot, float pt) {
+		pl.asie.computronics.client.UpgradeRenderer.INSTANCE.render(stack, mountPoint, robot, pt);
 	}
 }

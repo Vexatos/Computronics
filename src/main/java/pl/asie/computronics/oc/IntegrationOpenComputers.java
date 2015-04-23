@@ -107,9 +107,6 @@ public class IntegrationOpenComputers {
 	public void init() {
 
 		Driver.add(new DriverBlockEnvironments());
-		if(Computronics.proxy.isClient() && itemOCParts != null) {
-			UpgradeRenderer.initialize(itemOCParts);
-		}
 
 		if(Loader.isModLoaded(Mods.RedLogic)) {
 			if(compat.isCompatEnabled(Compat.RedLogic_Lamps)) {
