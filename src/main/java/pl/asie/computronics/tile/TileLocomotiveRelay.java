@@ -1,5 +1,6 @@
 package pl.asie.computronics.tile;
 
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
@@ -127,7 +128,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 		}
 	}
 
-	private String cannotAccessLocomotive() {
+	private String cannotAccessLocomotive(double amount) {
 		EntityLocomotiveElectric locomotive = getLocomotive();
 		if(!isBound) {
 			return "relay is not bound to a locomotive";
@@ -144,6 +145,13 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 		if(locomotive.isSecure()) {
 			return "locomotive is locked";
 		}
+		if(Config.LOCOMOTIVE_RELAY_CONSUME_CHARGE && (locomotive.getChargeHandler().getCharge() <= 0
+			|| locomotive.getChargeHandler().removeCharge(10 * amount) < 10 * amount)) {
+			return "locomotive out of energy";
+		}
+		if(Loader.isModLoaded(Mods.OpenComputers)) {
+			return cannotAccessLocomotive_OC(amount);
+		}
 		return null;
 	}
 
@@ -153,11 +161,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 	}
 
 	@Optional.Method(modid = Mods.OpenComputers)
-	private String cannotAccessLocomotive(double amount) {
-		String s = cannotAccessLocomotive();
-		if(s != null) {
-			return s;
-		}
+	private String cannotAccessLocomotive_OC(double amount) {
 		if(!tryConsumeEnergy(Config.LOCOMOTIVE_RELAY_BASE_POWER * amount)) {
 			return "not enough energy";
 		}
@@ -239,8 +243,9 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 	public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments)
 		throws LuaException, InterruptedException {
 		if(method < getMethodNames().length) {
-			if(cannotAccessLocomotive() != null) {
-				return new Object[] { null, cannotAccessLocomotive() };
+			String error = cannotAccessLocomotive(method == 1 ? 3.0 : 1.0);
+			if(error != null) {
+				return new Object[] { null, error };
 			}
 			switch(method) {
 				case 0: {
