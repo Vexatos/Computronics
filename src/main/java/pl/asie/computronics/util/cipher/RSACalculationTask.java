@@ -11,7 +11,10 @@ import java.util.Map;
  */
 public class RSACalculationTask implements Runnable {
 
-	private static final BigInteger TWO = new BigInteger("2");
+	private static final BigInteger
+		ONE = BigInteger.ONE,
+		TWO = new BigInteger("2"),
+		SEVENTEEN = new BigInteger("17");
 
 	private final RSAValue val;
 	private int bitLength = 0;
@@ -74,9 +77,9 @@ public class RSACalculationTask implements Runnable {
 	}
 
 	private ArrayList<Map<Integer, String>> createKeySet(BigInteger p, BigInteger q) {
-		BigInteger cat = p.subtract(BigInteger.ONE).multiply(q.subtract(BigInteger.ONE));
+		BigInteger cat = p.subtract(ONE).multiply(q.subtract(ONE));
 		BigInteger n = p.multiply(q);
-		BigInteger d = new BigInteger("17");
+		BigInteger d = SEVENTEEN;
 		while(cat.gcd(d).intValue() != 1) {
 			d = d.add(TWO);
 		}
