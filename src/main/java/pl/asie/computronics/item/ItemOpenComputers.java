@@ -31,6 +31,7 @@ import pl.asie.computronics.oc.DriverCardBoom;
 import pl.asie.computronics.oc.DriverCardFX;
 import pl.asie.computronics.oc.DriverCardSound;
 import pl.asie.computronics.oc.DriverCardSpoof;
+import pl.asie.computronics.oc.IntegrationOpenComputers;
 import pl.asie.computronics.oc.RobotUpgradeCamera;
 import pl.asie.computronics.oc.RobotUpgradeChatBox;
 import pl.asie.computronics.oc.RobotUpgradeRadar;
@@ -268,12 +269,14 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 	}
 
 	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
 	public String computePreferredMountPoint(ItemStack stack, Robot robot, Set<String> availableMountPoints) {
-		return pl.asie.computronics.client.UpgradeRenderer.INSTANCE.computePreferredMountPoint(stack, robot, availableMountPoints);
+		return IntegrationOpenComputers.upgradeRenderer.computePreferredMountPoint(stack, robot, availableMountPoints);
 	}
 
 	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
 	public void render(ItemStack stack, RobotRenderEvent.MountPoint mountPoint, Robot robot, float pt) {
-		pl.asie.computronics.client.UpgradeRenderer.INSTANCE.render(stack, mountPoint, robot, pt);
+		IntegrationOpenComputers.upgradeRenderer.render(stack, mountPoint, robot, pt);
 	}
 }
