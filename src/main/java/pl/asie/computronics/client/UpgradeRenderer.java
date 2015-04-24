@@ -78,23 +78,26 @@ public class UpgradeRenderer {
 				break;
 			}
 			case 2: {
-				float degrees = ((robot.world().getTotalWorldTime() % 160 + pt) / 160F * 360F);
-				degrees = 360 - degrees;
-				tm.bindTexture(modelRadar);
-				GL11.glDisable(GL11.GL_CULL_FACE);
-				GL11.glRotatef(180, 1, 0, 0);
-				GL11.glRotatef(mountPoint.rotation.getW(), mountPoint.rotation.getX(), mountPoint.rotation.getY(), mountPoint.rotation.getZ());
-				GL11.glTranslatef(0F, -0.8F, 0F);
-				GL11.glTranslatef(mountPoint.offset.getX(), mountPoint.offset.getY(), mountPoint.offset.getZ());
-				GL11.glScalef(0.3f, 0.3f, 0.3f);
-				GL11.glPushMatrix();
-				radarModel.render(Math.max(degrees, 0));
-				GL11.glPopMatrix();
-				GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-				/*
-				tm.bindTexture(upgradeRadar);
-				drawSimpleBlock(mountPoint, 0, true);
-				*/
+				if(mountPoint.name.equals(MountPointName.TopLeft) || mountPoint.name.equals(MountPointName.TopRight)) {
+					float degrees = ((robot.world().getTotalWorldTime() % 160 + pt) / 160F * 360F);
+					if(mountPoint.name.equals(MountPointName.TopRight)) {
+						degrees = 360 - degrees;
+					}
+					tm.bindTexture(modelRadar);
+					GL11.glDisable(GL11.GL_CULL_FACE);
+					GL11.glRotatef(180, 1, 0, 0);
+					GL11.glRotatef(mountPoint.rotation.getW(), mountPoint.rotation.getX(), mountPoint.rotation.getY(), mountPoint.rotation.getZ());
+					GL11.glTranslatef(0F, -0.8F, 0F);
+					GL11.glTranslatef(mountPoint.offset.getX(), mountPoint.offset.getY(), mountPoint.offset.getZ());
+					GL11.glScalef(0.3f, 0.3f, 0.3f);
+					GL11.glPushMatrix();
+					radarModel.render(Math.max(degrees, 0));
+					GL11.glPopMatrix();
+					GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+				} else {
+					tm.bindTexture(upgradeRadar);
+					drawSimpleBlock(mountPoint, 0, true);
+				}
 				break;
 			}
 			case 5: {
