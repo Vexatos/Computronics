@@ -91,7 +91,7 @@ public class UpgradeRenderer {
 			}
 			case 2: {
 				if(mountPoint.name.equals(MountPointName.TopLeft) || mountPoint.name.equals(MountPointName.TopRight)) {
-					float degrees = ((robot.world().getTotalWorldTime() % 160 + pt) / 160F * 360F);
+					float degrees = ((robot.world().getTotalWorldTime() + (robot.hashCode() ^ 0xFF)) % 160 + pt) / 160F * 360F;
 					if(mountPoint.name.equals(MountPointName.TopRight)) {
 						degrees = 360 - degrees;
 					}
