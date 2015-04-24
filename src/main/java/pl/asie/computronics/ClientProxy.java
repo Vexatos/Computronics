@@ -1,16 +1,22 @@
 package pl.asie.computronics;
 
 import cpw.mods.fml.client.registry.RenderingRegistry;
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
 import net.minecraft.world.ChunkPosition;
 import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraftforge.common.MinecraftForge;
 import pl.asie.computronics.client.LampRender;
 import pl.asie.computronics.client.SignalBoxRenderer;
+import pl.asie.computronics.client.UpgradeRenderer;
 import pl.asie.computronics.gui.GuiCipherBlock;
 import pl.asie.computronics.gui.GuiTapePlayer;
 import pl.asie.computronics.item.entity.EntityItemIndestructable;
+import pl.asie.computronics.oc.IntegrationOpenComputers;
+import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.ContainerCipherBlock;
 import pl.asie.computronics.tile.ContainerTapeReader;
 import pl.asie.computronics.util.boom.SelfDestruct;
@@ -48,6 +54,9 @@ public class ClientProxy extends CommonProxy {
 			RenderingRegistry.registerBlockHandler(renderer);
 			MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(renderer.getBlock()), renderer.getItemRenderer());
 		}
+		if(Loader.isModLoaded(Mods.OpenComputers)) {
+			registerOpenComputersRenderers();
+		}
 	}
 
 	@Override
@@ -82,5 +91,13 @@ public class ClientProxy extends CommonProxy {
 		minecraft.thePlayer.motionX += (double) p.readFloat();
 		minecraft.thePlayer.motionY += (double) p.readFloat();
 		minecraft.thePlayer.motionZ += (double) p.readFloat();
+	}
+
+	@Optional.Method(modid = Mods.OpenComputers)
+	private void registerOpenComputersRenderers() {
+		if(IntegrationOpenComputers.upgradeRenderer == null) {
+			IntegrationOpenComputers.upgradeRenderer = new UpgradeRenderer();
+		}
+		MinecraftForge.EVENT_BUS.register(IntegrationOpenComputers.upgradeRenderer);
 	}
 }

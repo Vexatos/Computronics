@@ -9,7 +9,6 @@ import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.MinecraftForge;
 import org.apache.logging.log4j.Logger;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.client.UpgradeRenderer;
@@ -109,10 +108,6 @@ public class IntegrationOpenComputers {
 	public void init() {
 
 		Driver.add(new DriverBlockEnvironments());
-		if(Computronics.proxy.isClient()) {
-			upgradeRenderer = new UpgradeRenderer();
-			MinecraftForge.EVENT_BUS.register(upgradeRenderer);
-		}
 
 		if(Loader.isModLoaded(Mods.RedLogic)) {
 			if(compat.isCompatEnabled(Compat.RedLogic_Lamps)) {
