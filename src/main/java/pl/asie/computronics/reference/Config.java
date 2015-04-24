@@ -134,7 +134,7 @@ public class Config {
 				cc.info("What?");
 				cpx.info("I fixed your peripheral system!");
 				cc.info("You did WHAT?!");
-				cpx.info("Now peripherals are being properly handled in case multiple mods register peripherals for the same block, isn't that amazing?");
+				cpx.info("Multiple mods registering peripherals for the same block won't be a problem anymore!");
 				cc.info("Are you serious?");
 				cpx.info("Yes I am. Now be quiet and let Minecraft continue to load.");
 				cc.info("...");
