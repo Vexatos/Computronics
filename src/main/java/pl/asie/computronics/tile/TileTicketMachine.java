@@ -12,9 +12,12 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import pl.asie.computronics.Computronics;
 import pl.asie.computronics.integration.railcraft.slot.PaperSlotFilter;
+import pl.asie.computronics.network.Packets;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.lib.api.tile.IInventoryProvider;
+import pl.asie.lib.network.Packet;
 
 import java.util.UUID;
 
@@ -50,6 +53,67 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 
 	public boolean isPrintLocked() {
 		return this.isPrintLocked;
+	}
+
+	protected void sendLockChange() {
+		if(worldObj.isRemote) {
+			return;
+		}
+		try {
+			int i = isLocked() ? 1 : 0;
+			i |= isSelectionLocked() ? 1 << 1 : 0;
+			i |= isPrintLocked() ? 1 << 2 : 0;
+
+			Packet packet = Computronics.packet.create(Packets.PACKET_TICKET_SYNC)
+				.writeTileLocation(this)
+				.writeInt(i);
+			Computronics.packet.sendToAllAround(packet, this, 64.0D);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public boolean canUpdate() {
+		return true;
+	}
+
+	private boolean lockChanged = false;
+
+	@Override
+	public void updateEntity() {
+		super.updateEntity();
+		if(!worldObj.isRemote && lockChanged) {
+			sendLockChange();
+			lockChanged = false;
+		}
+	}
+
+	private void markLockDirty() {
+		if(!worldObj.isRemote) {
+			lockChanged = true;
+		}
+	}
+
+	public void setLocked(boolean locked) {
+		if(isLocked != locked) {
+			this.isLocked = locked;
+			markLockDirty();
+		}
+	}
+
+	public void setSelectionLocked(boolean locked) {
+		if(isLocked != locked) {
+			this.isLocked = locked;
+			markLockDirty();
+		}
+	}
+
+	public void setPrintLocked(boolean locked) {
+		if(isLocked != locked) {
+			this.isLocked = locked;
+			markLockDirty();
+		}
 	}
 
 	private void checkSlot(int slot) {
@@ -128,14 +192,14 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 					if(arguments.length < 1 || !(arguments[0] instanceof Boolean)) {
 						throw new LuaException("first argument needs to be a boolean");
 					}
-					this.isPrintLocked = ((Boolean) arguments[0]);
+					this.setPrintLocked((Boolean) arguments[0]);
 					return new Object[] { this.isPrintLocked() };
 				}
 				case 2: {
 					if(arguments.length < 1 || !(arguments[0] instanceof Boolean)) {
 						throw new LuaException("first argument needs to be a boolean");
 					}
-					this.isSelectionLocked = ((Boolean) arguments[0]);
+					this.setSelectionLocked((Boolean) arguments[0]);
 					return new Object[] { this.isSelectionLocked() };
 				}
 				case 3: {

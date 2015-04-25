@@ -6,7 +6,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetHandler;
 import net.minecraft.tileentity.TileEntity;
 import pl.asie.computronics.Computronics;
-import pl.asie.computronics.oc.DriverCardBoom;
 import pl.asie.computronics.oc.DriverCardSound;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
@@ -96,6 +95,12 @@ public class NetworkHandlerClient extends MessageHandlerBase {
 			case Packets.PACKET_COMPUTER_BOOM: {
 				if(Loader.isModLoaded(Mods.OpenComputers)) {
 					Computronics.proxy.goBoom(packet);
+				}
+			}
+			break;
+			case Packets.PACKET_TICKET_SYNC: {
+				if(Loader.isModLoaded(Mods.Railcraft)) {
+					Computronics.railcraft.onMessageRailcraft(packet, player);
 				}
 			}
 			break;

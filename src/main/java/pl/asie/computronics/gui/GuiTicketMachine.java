@@ -3,8 +3,13 @@ package pl.asie.computronics.gui;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.util.ResourceLocation;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.network.Packets;
+import pl.asie.computronics.tile.TileTicketMachine;
 import pl.asie.lib.block.ContainerBase;
 import pl.asie.lib.gui.GuiBase;
+import pl.asie.lib.network.Packet;
+
+import java.io.IOException;
 
 /**
  * @author Vexatos
@@ -14,6 +19,7 @@ public class GuiTicketMachine extends GuiBase {
 	private static final int BUTTON_START_X = 48;
 	private static final int BUTTON_START_Y = 58;
 	private Button buttonMouse;
+	private boolean isLocked = true;
 
 	public enum Button {
 		PRINT(),
@@ -44,11 +50,40 @@ public class GuiTicketMachine extends GuiBase {
 	}
 
 	private boolean isButtonPressed(Button button) {
+		switch(button) {
+			case LOCK: {
+				return isLocked;
+			}
+		}
 		return buttonMouse == button;
 	}
 
 	public void handleButtonPress(Button button) {
-		Computronics.log.debug("You have pressed the print button!");
+		switch(button) {
+			case PRINT: {
+				Computronics.log.debug("You have pressed the print button!");
+				if(!((TileTicketMachine) container.getEntity()).isPrintLocked()) {
+					Computronics.log.debug("And it worked!");
+				}
+				break;
+			}
+			case LOCK: {
+				TileTicketMachine machine = (TileTicketMachine) container.getEntity();
+				machine.setLocked(!machine.isLocked());
+				int i = machine.isLocked() ? 1 : 0;
+				i |= machine.isSelectionLocked() ? 1 << 1 : 0;
+				i |= machine.isPrintLocked() ? 1 << 2 : 0;
+
+				try {
+					Packet packet = Computronics.packet.create(Packets.PACKET_TICKET_SYNC)
+						.writeTileLocation(machine)
+						.writeInt(i);
+					Computronics.packet.sendToServer(packet);
+				} catch(IOException e) {
+					//NO-OP
+				}
+			}
+		}
 	}
 
 	@Override
@@ -79,6 +114,7 @@ public class GuiTicketMachine extends GuiBase {
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
+		this.isLocked = ((TileTicketMachine) this.container.getEntity()).isLocked();
 		super.drawGuiContainerBackgroundLayer(f, i, j);
 		for(Button button : Button.values()) {
 			int button_ty = 170 + (button.ordinal() * 15);
