@@ -24,6 +24,7 @@ public class GuiTicketMachine extends GuiBase {
 	public enum Button {
 		PRINT(),
 		LOCK();
+		//TODO Add the 10 selection buttons
 
 		private final int x;
 		private final int y;
@@ -47,6 +48,10 @@ public class GuiTicketMachine extends GuiBase {
 
 	public GuiTicketMachine(ContainerBase container) {
 		super(container, "computronics:cipherblock", 176, 166);
+	}
+
+	protected boolean maintenanceMode(){
+		return false;
 	}
 
 	private boolean isButtonPressed(Button button) {
@@ -88,7 +93,6 @@ public class GuiTicketMachine extends GuiBase {
 
 	@Override
 	public void mouseClicked(int x, int y, int mb) {
-		super.mouseClicked(x, y, mb);
 		if(mb == 0) {
 			for(Button button : Button.values()) {
 				int button_x = this.xCenter + BUTTON_START_X + (button.ordinal() * 20);
@@ -96,20 +100,23 @@ public class GuiTicketMachine extends GuiBase {
 				if(x >= button_x && x < (button_x + 20) && y >= button_y && y < (button_y + 15)) {
 					if(!isButtonPressed(button)) {
 						buttonMouse = button;
+						return;
 					}
 				}
 			}
 		}
+		super.mouseClicked(x, y, mb);
 	}
 
 	@Override
 	public void mouseMovedOrUp(int x, int y, int which) {
-		super.mouseMovedOrUp(x, y, which);
 		if(which >= 0 && buttonMouse != null) {
 			this.mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0F));
 			handleButtonPress(buttonMouse);
 			buttonMouse = null;
+			return;
 		}
+		super.mouseMovedOrUp(x, y, which);
 	}
 
 	@Override
