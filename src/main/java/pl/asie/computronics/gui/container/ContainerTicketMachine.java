@@ -27,13 +27,13 @@ public class ContainerTicketMachine extends ContainerBase {
 		this.inventoryPlayer = inventoryPlayer;
 		IInventory inventory = (IInventory) entity;
 		for(int i = 0; i < 5; i++) {
-			this.addSlotToContainer(new SlotSecure(ItemTicketGold.FILTER, inventory, i, 35 + (i * 18), 24));
+			this.addSlotToContainer(new SlotSecure(ItemTicketGold.FILTER, inventory, i, 33 + (i * 18), 15));
 		}
 		for(int i = 0; i < 5; i++) {
-			this.addSlotToContainer(new SlotSecure(ItemTicketGold.FILTER, inventory, i + 5, 35 + (i * 18), 48));
+			this.addSlotToContainer(new SlotSecure(ItemTicketGold.FILTER, inventory, i + 5, 33 + (i * 18), 33));
 		}
-		this.addSlotToContainer(new SlotSecureInput(PaperSlotFilter.FILTER, inventory, 10, 161, 34));
-		this.addSlotToContainer(new SlotOutput(inventory, 11, 161, 68));
+		this.addSlotToContainer(new SlotSecureInput(PaperSlotFilter.FILTER, inventory, 10, 144, 15));
+		this.addSlotToContainer(new SlotOutput(inventory, 11, 144, 54));
 		this.bindPlayerInventory(inventoryPlayer, 8, 84);
 	}
 
