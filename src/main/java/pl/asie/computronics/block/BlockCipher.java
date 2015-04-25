@@ -13,6 +13,7 @@ import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import pl.asie.computronics.gui.GUIs;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TileCipherBlock;
@@ -28,7 +29,7 @@ public class BlockCipher extends BlockMachineSidedIcon implements IRedNetOmniNod
 	public BlockCipher() {
 		super("bundled");
 		this.setBlockName("computronics.cipher");
-		this.setGuiID(1);
+		this.setGuiID(GUIs.CIPHER);
 	}
 	
 	@Override

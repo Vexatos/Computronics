@@ -15,20 +15,28 @@ import pl.asie.lib.block.BlockBase;
 })
 public abstract class BlockPeripheral extends BlockBase implements IComputronicsEnvironmentBlock {
 
+	protected boolean noNedoComputers = false;
+
 	public BlockPeripheral() {
 		super(Material.iron, Computronics.instance);
 		this.setCreativeTab(Computronics.tab);
 	}
 
+	protected void setNoNedoComputers(boolean noNedoComputers) {
+		this.noNedoComputers = noNedoComputers;
+	}
+
 	@Override
 	@Optional.Method(modid = Mods.NedoComputers)
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int a, float _x, float _y, float _z) {
-		if (!world.isRemote && player.isSneaking()) {
+		if(!world.isRemote && !noNedoComputers && player.isSneaking()) {
 			try {
 				Object ncinst = this.getClass().getClassLoader().loadClass("nedocomputers.NedoComputers").getField("instance").get(null);
 				player.openGui(ncinst, 2, world, x, y, z);
 				return true;
-			} catch(Exception e) { e.printStackTrace(); }
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
 		}
 		return super.onBlockActivated(world, x, y, z, player, a, _x, _y, _z);
 	}

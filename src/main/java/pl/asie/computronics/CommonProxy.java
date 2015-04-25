@@ -1,7 +1,7 @@
 package pl.asie.computronics;
 
-import pl.asie.computronics.tile.ContainerCipherBlock;
-import pl.asie.computronics.tile.ContainerTapeReader;
+import pl.asie.computronics.gui.container.ContainerCipherBlock;
+import pl.asie.computronics.gui.container.ContainerTapeReader;
 import pl.asie.lib.gui.GuiHandler;
 import pl.asie.lib.network.Packet;
 

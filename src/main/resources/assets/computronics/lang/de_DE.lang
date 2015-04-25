@@ -12,6 +12,7 @@ tile.computronics.eepromReader.name=EEPROM-Lesegerät
 tile.computronics.locomotiveRelay.name=Digitales Lokomotivenrelais
 tile.computronics.digitalBox.name=Digitale Signalempfängerbox
 tile.computronics.detector.name=Detektor - Digital
+tile.computronics.ticketMachine.name=Ticketmaschine
 
 tooltip.computronics.chatBox.creative=Die NSA für zu Hause!
 tooltip.computronics.cipher.advanced=Für die Starchaser!
