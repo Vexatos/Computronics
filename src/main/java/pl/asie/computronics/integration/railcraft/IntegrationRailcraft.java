@@ -7,9 +7,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
+import pl.asie.computronics.Computronics;
 import pl.asie.computronics.block.BlockDigitalDetector;
 import pl.asie.computronics.block.BlockDigitalReceiverBox;
 import pl.asie.computronics.block.BlockLocomotiveRelay;
+import pl.asie.computronics.block.BlockTicketMachine;
+import pl.asie.computronics.integration.railcraft.gui.GuiProviderTicketMachine;
 import pl.asie.computronics.item.ItemRelaySensor;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TileDigitalDetector;
@@ -28,15 +31,16 @@ public class IntegrationRailcraft {
 	public BlockDigitalDetector detector;
 	public ItemRelaySensor relaySensor;
 	public Block digitalBox;
+	public BlockTicketMachine ticketMachine;
 
 	LocomotiveManager manager;
+	public GuiProviderTicketMachine guiTicketMachine;
 
 	private static boolean isEnabled(Configuration config, String name, boolean def) {
 		return config.get("enable.railcraft", name, def).getBoolean(def);
 	}
 
-	public IntegrationRailcraft(Configuration config) {
-
+	public void preInit(Configuration config) {
 		if(isEnabled(config, "locomotiveRelay", true)) {
 			locomotiveRelay = new BlockLocomotiveRelay();
 			GameRegistry.registerBlock(locomotiveRelay, "computronics.locomotiveRelay");
@@ -57,6 +61,13 @@ public class IntegrationRailcraft {
 			detector = new BlockDigitalDetector();
 			GameRegistry.registerBlock(detector, "computronics.detector");
 			GameRegistry.registerTileEntity(TileDigitalDetector.class, "computronics.detector");
+		}
+		if(isEnabled(config, "ticketMachine", true)) {
+			this.guiTicketMachine = new GuiProviderTicketMachine();
+			Computronics.gui.registerGuiProvider(guiTicketMachine);
+			ticketMachine = new BlockTicketMachine();
+			GameRegistry.registerBlock(ticketMachine, "computronics.ticketMachine");
+			GameRegistry.registerTileEntity(TileTicketMachine.class, "computronics.ticketMachine");
 		}
 	}
 

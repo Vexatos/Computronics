@@ -39,7 +39,6 @@ public class GuiTicketMachine extends GuiContainerRailcraft {
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float f, int mouseX, int mouseY) {
 		super.drawGuiContainerBackgroundLayer(f, mouseX, mouseY);
-
 	}
 
 	@Override

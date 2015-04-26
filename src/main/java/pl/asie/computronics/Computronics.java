@@ -38,6 +38,8 @@ import pl.asie.computronics.block.BlockRadar;
 import pl.asie.computronics.block.BlockTapeReader;
 import pl.asie.computronics.cc.IntegrationComputerCraft;
 import pl.asie.computronics.cc.multiperipheral.MultiPeripheralRegistry;
+import pl.asie.computronics.gui.providers.GuiProviderCipher;
+import pl.asie.computronics.gui.providers.GuiProviderTapeDrive;
 import pl.asie.computronics.integration.ModRecipes;
 import pl.asie.computronics.integration.buildcraft.pluggable.IntegrationBuildCraft;
 import pl.asie.computronics.integration.buildcraft.statements.ActionProvider;
@@ -68,7 +70,8 @@ import pl.asie.computronics.tile.TileRadar;
 import pl.asie.computronics.tile.TileTapeDrive;
 import pl.asie.computronics.util.achievements.ComputronicsAchievements;
 import pl.asie.computronics.util.chat.ChatHandler;
-import pl.asie.lib.gui.GuiHandler;
+import pl.asie.lib.gui.managed.IGuiProvider;
+import pl.asie.lib.gui.managed.ManagedGuiHandler;
 import pl.asie.lib.item.ItemMultiple;
 import pl.asie.lib.network.PacketHandler;
 
@@ -97,7 +100,7 @@ public class Computronics {
 	public static Computronics instance;
 	public static StorageManager storage;
 	public static TapeStorageEventHandler storageEventHandler;
-	public static GuiHandler gui;
+	public static ManagedGuiHandler gui;
 	public static PacketHandler packet;
 	public DFPWMPlaybackManager audio;
 	public static ExecutorService rsaThreads;
@@ -125,6 +128,9 @@ public class Computronics {
 	public static ItemTape itemTape;
 	public static ItemMultiple itemParts;
 	public static ItemMultiple itemPartsGreg;
+
+	public static IGuiProvider guiTapeDrive;
+	public static IGuiProvider guiCipher;
 
 	public ComputronicsAchievements achievements;
 
@@ -168,12 +174,17 @@ public class Computronics {
 
 		config.preInit();
 
+		gui = new ManagedGuiHandler();
+		NetworkRegistry.INSTANCE.registerGuiHandler(Computronics.instance, gui);
+
 		if(isEnabled("ironNoteBlock", true)) {
 			ironNote = new BlockIronNote();
 			registerBlockWithTileEntity(ironNote, TileIronNote.class, "computronics.ironNoteBlock");
 		}
 
 		if(isEnabled("tape", true)) {
+			guiTapeDrive = new GuiProviderTapeDrive();
+			gui.registerGuiProvider(Computronics.guiTapeDrive);
 			tapeReader = new BlockTapeReader();
 			registerBlockWithTileEntity(tapeReader, TileTapeDrive.class, "computronics.tapeReader");
 		}
@@ -189,6 +200,8 @@ public class Computronics {
 		}
 
 		if(isEnabled("cipher", true)) {
+			guiCipher = new GuiProviderCipher();
+			gui.registerGuiProvider(Computronics.guiCipher);
 			cipher = new BlockCipher();
 			registerBlockWithTileEntity(cipher, TileCipherBlock.class, "computronics.cipher");
 		}
@@ -231,7 +244,8 @@ public class Computronics {
 		}
 
 		if(Loader.isModLoaded(Mods.Railcraft)) {
-			railcraft = new IntegrationRailcraft(config.config);
+			railcraft = new IntegrationRailcraft();
+			railcraft.preInit(config.config);
 		}
 
 		if(Loader.isModLoaded(Mods.ComputerCraft)) {
@@ -247,8 +261,6 @@ public class Computronics {
 
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
-		gui = new GuiHandler();
-		NetworkRegistry.INSTANCE.registerGuiHandler(Computronics.instance, gui);
 
 		MinecraftForge.EVENT_BUS.register(new ChatHandler());
 
@@ -256,8 +268,6 @@ public class Computronics {
 			storageEventHandler = new TapeStorageEventHandler();
 			MinecraftForge.EVENT_BUS.register(storageEventHandler);
 		}
-
-		proxy.registerGuis(gui);
 
 		FMLInterModComms.sendMessage(Mods.Waila, "register", "pl.asie.computronics.integration.waila.IntegrationWaila.register");
 

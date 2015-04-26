@@ -9,7 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
-import pl.asie.computronics.gui.GUIs;
+import pl.asie.computronics.Computronics;
 import pl.asie.computronics.tile.TileTicketMachine;
 
 /**
@@ -22,7 +22,7 @@ public class BlockTicketMachine extends BlockMachineSidedIcon {
 	public BlockTicketMachine() {
 		super();
 		this.setBlockName("computronics.ticketMachine");
-		this.setGuiID(GUIs.TICKET_MACHINE);
+		this.setGuiProvider(Computronics.railcraft.guiTicketMachine);
 		this.setNoNedoComputers(true);
 	}
 

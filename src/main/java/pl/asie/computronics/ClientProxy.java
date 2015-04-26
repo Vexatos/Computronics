@@ -8,13 +8,8 @@ import net.minecraft.world.ChunkPosition;
 import net.minecraftforge.client.MinecraftForgeClient;
 import pl.asie.computronics.client.LampRender;
 import pl.asie.computronics.client.SignalBoxRenderer;
-import pl.asie.computronics.gui.GuiCipherBlock;
-import pl.asie.computronics.gui.GuiTapePlayer;
-import pl.asie.computronics.gui.container.ContainerCipherBlock;
-import pl.asie.computronics.gui.container.ContainerTapeReader;
 import pl.asie.computronics.item.entity.EntityItemIndestructable;
 import pl.asie.computronics.util.boom.SelfDestruct;
-import pl.asie.lib.gui.GuiHandler;
 import pl.asie.lib.network.Packet;
 
 import java.io.IOException;
@@ -25,12 +20,6 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public boolean isClient() {
 		return true;
-	}
-
-	@Override
-	public void registerGuis(GuiHandler gui) {
-		gui.registerGui(ContainerTapeReader.class, GuiTapePlayer.class);
-		gui.registerGui(ContainerCipherBlock.class, GuiCipherBlock.class);
 	}
 
 	@Override

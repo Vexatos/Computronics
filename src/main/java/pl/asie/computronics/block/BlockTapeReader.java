@@ -9,7 +9,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import pl.asie.computronics.gui.GUIs;
+import pl.asie.computronics.Computronics;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TapeDriveState;
 import pl.asie.computronics.tile.TileTapeDrive;
@@ -20,7 +20,7 @@ public class BlockTapeReader extends BlockMachineSidedIcon {
 	public BlockTapeReader() {
 		super();
 		this.setBlockName("computronics.tapeDrive");
-		this.setGuiID(GUIs.TAPE_DRIVE);
+		this.setGuiProvider(Computronics.guiTapeDrive);
 	}
 
 	@Override
