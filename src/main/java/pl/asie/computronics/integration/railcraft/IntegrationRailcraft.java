@@ -61,14 +61,23 @@ public class IntegrationRailcraft {
 	}
 
 	@Optional.Method(modid = Mods.Railcraft)
-	public void onMessageRailcraft(Packet packet, EntityPlayer player) throws IOException {
-		TileEntity entity = packet.readTileEntityServer();
+	public void onMessageRailcraft(Packet packet, EntityPlayer player, boolean isServer) throws IOException {
+		TileEntity entity = isServer ? packet.readTileEntityServer() : packet.readTileEntity();
 		if(entity instanceof TileTicketMachine) {
 			TileTicketMachine machine = (TileTicketMachine) entity;
 			int i = packet.readInt();
 			machine.setLocked((i & 1) == 1);
 			machine.setSelectionLocked(((i >> 1) & 1) == 1);
 			machine.setPrintLocked((((i >> 2) & 1) == 1));
+			machine.setSelectedSlot(packet.readInt());
+		}
+	}
+
+	@Optional.Method(modid = Mods.Railcraft)
+	public void printTicket(Packet packet, EntityPlayer player, boolean isServer) throws IOException {
+		TileEntity entity = isServer ? packet.readTileEntityServer() : packet.readTileEntity();
+		if(entity instanceof TileTicketMachine) {
+			((TileTicketMachine) entity).printTicket();
 		}
 	}
 }

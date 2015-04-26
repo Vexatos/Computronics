@@ -1,4 +1,4 @@
-package pl.asie.computronics.integration.railcraft.slot;
+package pl.asie.computronics.integration.railcraft.gui.slot;
 
 import mods.railcraft.api.core.items.IStackFilter;
 import mods.railcraft.common.gui.slots.SlotStackFilter;

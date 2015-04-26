@@ -6,6 +6,8 @@ import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import mods.railcraft.api.core.IOwnable;
+import mods.railcraft.common.gui.buttons.LockButtonState;
+import mods.railcraft.common.gui.buttons.MultiButtonController;
 import mods.railcraft.common.items.ItemTicket;
 import mods.railcraft.common.items.ItemTicketGold;
 import net.minecraft.entity.EntityLivingBase;
@@ -13,11 +15,14 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import pl.asie.computronics.Computronics;
-import pl.asie.computronics.integration.railcraft.slot.PaperSlotFilter;
+import pl.asie.computronics.integration.railcraft.gui.slot.PaperSlotFilter;
 import pl.asie.computronics.network.Packets;
 import pl.asie.computronics.reference.Mods;
+import pl.asie.lib.api.tile.IBatteryProvider;
 import pl.asie.lib.api.tile.IInventoryProvider;
 import pl.asie.lib.network.Packet;
+import pl.asie.lib.tile.BatteryBasic;
+import pl.asie.lib.util.EnergyConverter;
 
 import java.util.UUID;
 
@@ -28,19 +33,27 @@ import java.util.UUID;
 @Optional.InterfaceList({
 	@Optional.Interface(iface = "mods.railcraft.api.core.IOwnable", modid = Mods.Railcraft)
 })
-public class TileTicketMachine extends TileEntityPeripheralBase implements IInventoryProvider, IOwnable {
+public class TileTicketMachine extends TileEntityPeripheralBase implements IInventoryProvider, IOwnable, IBatteryProvider {
 
 	private GameProfile owner = new GameProfile((UUID) null, "[Railcraft]");
+	private final MultiButtonController<LockButtonState> lockController;
 	private boolean isLocked = true;
 	private boolean isSelectionLocked = false;
 	private boolean isPrintLocked = false;
 	private static final int
 		paperSlot = 10,
 		ticketSlot = 11;
+	private int selectedSlot = 0;
 
 	public TileTicketMachine() {
 		super("ticket_machine");
 		this.createInventory(12);
+		this.registerBattery(new BatteryBasic(EnergyConverter.convertEnergy(10 * 3.5, "OC", "RF")));
+		lockController = new MultiButtonController<LockButtonState>(0, LockButtonState.VALUES);
+	}
+
+	public MultiButtonController<LockButtonState> getLockController() {
+		return this.lockController;
 	}
 
 	public boolean isLocked() {
@@ -56,9 +69,6 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 	}
 
 	protected void sendLockChange() {
-		if(worldObj.isRemote) {
-			return;
-		}
 		try {
 			int i = isLocked() ? 1 : 0;
 			i |= isSelectionLocked() ? 1 << 1 : 0;
@@ -66,8 +76,13 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 
 			Packet packet = Computronics.packet.create(Packets.PACKET_TICKET_SYNC)
 				.writeTileLocation(this)
-				.writeInt(i);
-			Computronics.packet.sendToAllAround(packet, this, 64.0D);
+				.writeInt(i)
+				.writeInt(selectedSlot);
+			if(worldObj.isRemote) {
+				Computronics.packet.sendToServer(packet);
+			} else {
+				Computronics.packet.sendToAllAround(packet, this, 64.0D);
+			}
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -83,13 +98,13 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
-		if(!worldObj.isRemote && lockChanged) {
+		if(lockChanged) {
 			sendLockChange();
 			lockChanged = false;
 		}
 	}
 
-	private void markLockDirty() {
+	private void markSaveDirty() {
 		if(!worldObj.isRemote) {
 			lockChanged = true;
 		}
@@ -98,21 +113,32 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 	public void setLocked(boolean locked) {
 		if(isLocked != locked) {
 			this.isLocked = locked;
-			markLockDirty();
+			markSaveDirty();
 		}
 	}
 
 	public void setSelectionLocked(boolean locked) {
 		if(isLocked != locked) {
 			this.isLocked = locked;
-			markLockDirty();
+			markSaveDirty();
 		}
 	}
 
 	public void setPrintLocked(boolean locked) {
 		if(isLocked != locked) {
 			this.isLocked = locked;
-			markLockDirty();
+			markSaveDirty();
+		}
+	}
+
+	public int getSelectedSlot() {
+		return this.selectedSlot;
+	}
+
+	public void setSelectedSlot(int slot) {
+		if(slot >= 0 && slot <= 9) {
+			this.selectedSlot = slot;
+			markSaveDirty();
 		}
 	}
 
@@ -120,6 +146,10 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 		if(slot < 0 || slot > 9) {
 			throw new IllegalArgumentException("invalid slot: " + slot);
 		}
+	}
+
+	public Object[] printTicket() {
+		return printTicket(getSelectedSlot() + 1);
 	}
 
 	public Object[] printTicket(int slot) {
@@ -169,12 +199,20 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 		}
 	}
 
+	public Object[] setSelectedTicket(int slot) {
+		slot -= 1;
+		checkSlot(slot);
+		this.setSelectedSlot(slot);
+		return new Object[] { true };
+	}
+
 	//Computer stuff
 	@Override
 	@Optional.Method(modid = Mods.ComputerCraft)
 	public String[] getMethodNames() {
 		return new String[] { "printTicket", "setPrintLock", "setSelectLock",
-			"hasPrintLock", "hasSelectLock", "getDestination", "setDestination" };
+			"hasPrintLock", "hasSelectLock", "getDestination", "setDestination",
+			"getSelectedTicket", "setSelectedTicket" };
 	}
 
 	@Override
@@ -222,6 +260,15 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 						throw new LuaException("second argument needs to be a string");
 					}
 					return setDestination(((Number) arguments[0]).intValue(), ((String) arguments[1]));
+				}
+				case 7: {
+					return new Object[] { this.getSelectedSlot() };
+				}
+				case 8: {
+					if(arguments.length < 1 || !(arguments[0] instanceof Number)) {
+						throw new LuaException("first argument needs to be a number");
+					}
+					return this.setSelectedTicket(((Number) arguments[0]).intValue());
 				}
 			}
 			return null;
@@ -279,6 +326,9 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 		if(tag.hasKey("printLocked")) {
 			isPrintLocked = tag.getBoolean("printLocked");
 		}
+		if(tag.hasKey("selectedslot")) {
+			selectedSlot = tag.getInteger("selectedslot");
+		}
 	}
 
 	public void writeToNBT(NBTTagCompound tag) {
@@ -293,6 +343,7 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 		tag.setBoolean("locked", isLocked);
 		tag.setBoolean("selectionLocked", isSelectionLocked);
 		tag.setBoolean("printLocked", isPrintLocked);
+		tag.setInteger("selectedslot", selectedSlot);
 	}
 
 	@Override
@@ -307,6 +358,9 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 		if(tag.hasKey("printLocked")) {
 			isPrintLocked = tag.getBoolean("printLocked");
 		}
+		if(tag.hasKey("selectedslot")) {
+			selectedSlot = tag.getInteger("selectedslot");
+		}
 	}
 
 	@Override
@@ -315,6 +369,7 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 		tag.setBoolean("locked", isLocked);
 		tag.setBoolean("selectionLocked", isSelectionLocked);
 		tag.setBoolean("printLocked", isPrintLocked);
+		tag.setInteger("selectedslot", selectedSlot);
 	}
 
 	@Override

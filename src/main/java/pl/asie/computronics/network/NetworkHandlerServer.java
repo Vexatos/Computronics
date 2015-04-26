@@ -29,7 +29,13 @@ public class NetworkHandlerServer extends MessageHandlerBase {
 			break;
 			case Packets.PACKET_TICKET_SYNC: {
 				if(Loader.isModLoaded(Mods.Railcraft)) {
-					Computronics.railcraft.onMessageRailcraft(packet, player);
+					Computronics.railcraft.onMessageRailcraft(packet, player, true);
+				}
+			}
+			break;
+			case Packets.PACKET_TICKET_PRINT: {
+				if(Loader.isModLoaded(Mods.Railcraft)) {
+					Computronics.railcraft.printTicket(packet, player, true);
 				}
 			}
 			break;

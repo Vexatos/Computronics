@@ -8,4 +8,5 @@ public class Packets {
 	public static final int PACKET_COMPUTER_BEEP = 4;
 	public static final int PACKET_COMPUTER_BOOM = 5;
 	public static final int PACKET_TICKET_SYNC = 6;
+	public static final int PACKET_TICKET_PRINT = 7;
 }

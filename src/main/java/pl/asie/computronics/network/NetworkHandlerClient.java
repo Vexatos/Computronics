@@ -100,7 +100,7 @@ public class NetworkHandlerClient extends MessageHandlerBase {
 			break;
 			case Packets.PACKET_TICKET_SYNC: {
 				if(Loader.isModLoaded(Mods.Railcraft)) {
-					Computronics.railcraft.onMessageRailcraft(packet, player);
+					Computronics.railcraft.onMessageRailcraft(packet, player, false);
 				}
 			}
 			break;

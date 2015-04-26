@@ -1,27 +1,80 @@
-package pl.asie.computronics.gui;
+package pl.asie.computronics.integration.railcraft.gui;
 
-import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.util.ResourceLocation;
-import pl.asie.computronics.Computronics;
-import pl.asie.computronics.network.Packets;
+import mods.railcraft.client.gui.GuiContainerRailcraft;
+import mods.railcraft.common.gui.widgets.Widget;
+import net.minecraft.entity.player.InventoryPlayer;
+import pl.asie.computronics.integration.railcraft.gui.container.ContainerTicketMachine;
+import pl.asie.computronics.integration.railcraft.gui.widget.ButtonWidget;
 import pl.asie.computronics.tile.TileTicketMachine;
-import pl.asie.lib.block.ContainerBase;
-import pl.asie.lib.gui.GuiBase;
-import pl.asie.lib.network.Packet;
-
-import java.io.IOException;
+import pl.asie.computronics.util.StringUtil;
 
 /**
- * @author Vexatos
+ * @author CovertJaguar, Vexatos
  */
-public class GuiTicketMachine extends GuiBase {
+public class GuiTicketMachine extends GuiContainerRailcraft {
 
-	private static final int BUTTON_START_X = 48;
-	private static final int BUTTON_START_Y = 58;
-	private Button buttonMouse;
+	private final TileTicketMachine tile;
+
 	private boolean isLocked = true;
+	private boolean maintenanceMode = false;
 
-	public enum Button {
+	public GuiTicketMachine(InventoryPlayer inventory, TileTicketMachine tile, boolean maintenanceMode) {
+		super(new ContainerTicketMachine(inventory, tile, maintenanceMode), "computronics:textures/gui/container/ticket_machine.png");
+		this.tile = tile;
+		this.maintenanceMode = maintenanceMode;
+	}
+
+	protected boolean maintenanceMode() {
+		return maintenanceMode;
+	}
+
+	@Override
+	protected void drawGuiContainerForegroundLayer(int x, int y) {
+		super.drawGuiContainerForegroundLayer(x, y);
+		this.fontRendererObj.drawString(StringUtil.localize("container.inventory"), 8, this.ySize - 96 + 2, 0x404040);
+		int slot = tile.getSelectedSlot();
+		drawTexturedModalRect(31 + (slot * 18), slot < 5 ? 13 : 31, 184, 0, 22, 22);
+	}
+
+	@Override
+	protected void drawGuiContainerBackgroundLayer(float f, int mouseX, int mouseY) {
+		super.drawGuiContainerBackgroundLayer(f, mouseX, mouseY);
+
+	}
+
+	@Override
+	protected void mouseClicked(int mouseX, int mouseY, int button) {
+		super.mouseClicked(mouseX, mouseY, button);
+	}
+
+	@Override
+	protected void mouseClickMove(int x, int y, int mouseButton, long time) {
+		super.mouseClickMove(x, y, mouseButton, time);
+		int mX = x - this.guiLeft;
+		int mY = y - this.guiTop;
+		for(Widget widget : container.getElements()) {
+			if(widget instanceof ButtonWidget) {
+				((ButtonWidget) widget).handleMouseMove(mX, mY, mouseButton, time);
+			}
+		}
+	}
+
+	@Override
+	protected void mouseMovedOrUp(int x, int y, int eventType) {
+		super.mouseMovedOrUp(x, y, eventType);
+		int mX = x - this.guiLeft;
+		int mY = y - this.guiTop;
+		for(Widget widget : container.getElements()) {
+			if(widget instanceof ButtonWidget) {
+				((ButtonWidget) widget).handleMouseRelease(mX, mY, eventType);
+			}
+		}
+	}
+
+	//private static final int BUTTON_START_X = 48;
+	//private static final int BUTTON_START_Y = 58;
+	//private Button buttonMouse;
+	/*public enum Button {
 		PRINT(),
 		LOCK();
 		//TODO Add the 10 selection buttons
@@ -50,7 +103,7 @@ public class GuiTicketMachine extends GuiBase {
 		super(container, "computronics:cipherblock", 176, 166);
 	}
 
-	protected boolean maintenanceMode(){
+	protected boolean maintenanceMode() {
 		return false;
 	}
 
@@ -129,5 +182,5 @@ public class GuiTicketMachine extends GuiBase {
 			int button_x = BUTTON_START_X + (button.ordinal() * 20);
 			this.drawTexturedModalRect(this.xCenter + button_x, this.yCenter + BUTTON_START_Y, button_tx, button_ty, 20, 15);
 		}
-	}
+	}*/
 }
