@@ -77,7 +77,6 @@ public class GuiTicketMachine extends GuiContainerRailcraft {
 	/*public enum Button {
 		PRINT(),
 		LOCK();
-		//TODO Add the 10 selection buttons
 
 		private final int x;
 		private final int y;
