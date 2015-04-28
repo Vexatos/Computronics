@@ -16,15 +16,7 @@ public class SlotSecureInput extends SlotStackFilter {
 		super(filter, contents, id, x, y);
 	}
 
-	public int getSlotStackLimit() {
-		return 64;
-	}
-
 	public boolean canTakeStack(EntityPlayer player) {
 		return !this.locked;
-	}
-
-	public boolean canShift() {
-		return super.canShift();
 	}
 }
