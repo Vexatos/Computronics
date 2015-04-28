@@ -5,11 +5,12 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 /**
  * @author Vexatos
  */
-public class RSACalculationTask implements Runnable {
+public class RSACalculationTask implements Callable<ArrayList<Map<Integer, String>>> {
 
 	private static final BigInteger
 		ONE = BigInteger.ONE,
@@ -39,14 +40,7 @@ public class RSACalculationTask implements Runnable {
 	}
 
 	@Override
-	public void run() {
-		ArrayList<Map<Integer, String>> result = this.call();
-		this.publicKey = result.get(0);
-		this.privateKey = result.get(1);
-		val.setKeys(publicKey, privateKey);
-	}
-
-	private ArrayList<Map<Integer, String>> call() {
+	public ArrayList<Map<Integer, String>> call() {
 		if(bitLength > 0) {
 			return this.createKeySet(bitLength);
 		}
