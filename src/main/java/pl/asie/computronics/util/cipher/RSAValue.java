@@ -101,10 +101,10 @@ public class RSAValue implements Value, ILuaObject {
 	public Object[] finished(Context c, Arguments a) throws Exception {
 		switch(checkFinished()) {
 			case -1: {
-				return new Object[] { null, null, "calculation returned no key set" };
+				return new Object[] { null, "calculation returned no key set" };
 			}
 			case -2: {
-				return new Object[] { null, null, "an error occured during key generation" };
+				return new Object[] { null, "an error occured during key generation" };
 			}
 		}
 		return new Object[] { publicKey != null && privateKey != null };
@@ -127,10 +127,10 @@ public class RSAValue implements Value, ILuaObject {
 				case 1: {
 					switch(checkFinished()) {
 						case -1: {
-							return new Object[] { null, null, "calculation returned no key set" };
+							return new Object[] { null, "calculation returned no key set" };
 						}
 						case -2: {
-							return new Object[] { null, null, "an error occured during key generation" };
+							return new Object[] { null, "an error occured during key generation" };
 						}
 					}
 					return new Object[] { publicKey != null && privateKey != null };
