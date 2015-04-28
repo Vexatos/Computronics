@@ -34,10 +34,16 @@ public class RSAValue implements Value, ILuaObject {
 	protected int p = 0;
 	protected int q = 0;
 
-	private Object[] getKeys() throws ExecutionException, InterruptedException {
-		if(!checkFinished()) {
-			return new Object[] { null, null, "calculation returned no key set" };
+	private Object[] getKeys() throws InterruptedException {
+		switch(checkFinished()) {
+			case -1: {
+				return new Object[] { null, null, "calculation returned no key set" };
+			}
+			case -2: {
+				return new Object[] { null, null, "an error occured during key generation" };
+			}
 		}
+
 		if(publicKey != null && privateKey != null) {
 			return new Object[] { publicKey, privateKey };
 		} else if(task != null && !task.isDone() && !task.isCancelled()) {
@@ -46,17 +52,21 @@ public class RSAValue implements Value, ILuaObject {
 		return new Object[] { null, null, "an error occured during key generation" };
 	}
 
-	private boolean checkFinished() throws ExecutionException, InterruptedException {
+	private int checkFinished() throws InterruptedException {
 		if(task != null && task.isDone()) {
-			ArrayList<Map<Integer, String>> result = task.get();
-			if(result != null) {
-				this.publicKey = result.get(0);
-				this.privateKey = result.get(1);
-			} else {
-				return false;
+			try {
+				ArrayList<Map<Integer, String>> result = task.get();
+				if(result != null) {
+					this.publicKey = result.get(0);
+					this.privateKey = result.get(1);
+				} else {
+					return -1;
+				}
+			} catch(ExecutionException e) {
+				return -2;
 			}
 		}
-		return true;
+		return 0;
 	}
 
 	public void startCalculation() {
@@ -89,8 +99,13 @@ public class RSAValue implements Value, ILuaObject {
 	@Callback(doc = "function():boolean; Returns whether key generation has finished", direct = true)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] finished(Context c, Arguments a) throws Exception {
-		if(!checkFinished()) {
-			return new Object[] { false, "calculation returned no key set" };
+		switch(checkFinished()) {
+			case -1: {
+				return new Object[] { null, null, "calculation returned no key set" };
+			}
+			case -2: {
+				return new Object[] { null, null, "an error occured during key generation" };
+			}
 		}
 		return new Object[] { publicKey != null && privateKey != null };
 	}
@@ -110,8 +125,13 @@ public class RSAValue implements Value, ILuaObject {
 					return getKeys();
 				}
 				case 1: {
-					if(!checkFinished()) {
-						return new Object[] { false, "calculation returned no key set" };
+					switch(checkFinished()) {
+						case -1: {
+							return new Object[] { null, null, "calculation returned no key set" };
+						}
+						case -2: {
+							return new Object[] { null, null, "an error occured during key generation" };
+						}
 					}
 					return new Object[] { publicKey != null && privateKey != null };
 				}
