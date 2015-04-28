@@ -1,6 +1,5 @@
 package pl.asie.computronics.integration;
 
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.registry.GameRegistry;
 import li.cil.oc.api.detail.ItemInfo;
@@ -57,13 +56,13 @@ public class ModRecipes {
 			GameRegistry.addShapedRecipe(new ItemStack(Computronics.colorfulLamp, 1, 0),
 				"igi", "glg", "igi", 'i', Items.iron_ingot, 'g', Blocks.glass, 'l', Items.glowstone_dust);
 		}
-		if(!(Loader.isModLoaded(Mods.OpenComputers) && !Config.NON_OC_RECIPES && registerOCRecipes())) {
+		if(!(Mods.isLoaded(Mods.OpenComputers) && !Config.NON_OC_RECIPES && registerOCRecipes())) {
 			GameRegistry.addShapedRecipe(new ItemStack(Computronics.cipher_advanced, 1, 0),
 				"gdg", "gcg", "eie", 'g', Items.gold_ingot,
 				'c', Computronics.cipher != null ? Computronics.cipher : Items.diamond, 'e', Items.ender_pearl, 'i', Items.iron_ingot,
 				'd', Computronics.cipher != null ? Items.diamond : Items.gold_ingot);
 		}
-		if(Loader.isModLoaded(Mods.Railcraft) && Computronics.railcraft != null) {
+		if(Mods.isLoaded(Mods.Railcraft) && Computronics.railcraft != null) {
 			registerRailcraftRecipes();
 		}
 		if(Computronics.itemTape != null) {

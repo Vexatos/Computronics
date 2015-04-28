@@ -1,4 +1,4 @@
-package pl.asie.computronics.block;
+package pl.asie.computronics.integration.railcraft.block;
 
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
@@ -17,8 +17,9 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.block.BlockPeripheral;
 import pl.asie.computronics.reference.Mods;
-import pl.asie.computronics.tile.TileDigitalDetector;
+import pl.asie.computronics.integration.railcraft.tile.TileDigitalDetector;
 
 /**
  * @author CovertJaguar, Vexatos, marcin212, Kubuxu

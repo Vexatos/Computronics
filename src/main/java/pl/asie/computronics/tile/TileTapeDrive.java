@@ -2,7 +2,6 @@ package pl.asie.computronics.tile;
 
 //import java.nio.file.FileSystem;
 
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
@@ -35,7 +34,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 		super("tape_drive");
 		this.createInventory(1);
 		this.state = new TapeDriveState();
-		if(Loader.isModLoaded(Mods.OpenComputers) && node != null) {
+		if(Mods.isLoaded(Mods.OpenComputers) && node != null) {
 			initOCFilesystem();
 		}
 	}
@@ -153,6 +152,22 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 	@Override
 	public void onRedstoneSignal(int signal) {
 		this.switchState(signal > 0 ? State.PLAYING : State.STOPPED);
+	}
+
+	@Override
+	public boolean shouldPlaySound() {
+		switch(getEnumState()) {
+			case REWINDING:
+			case FORWARDING:
+				return true;
+			default:
+				return false;
+		}
+	}
+
+	@Override
+	public String getSoundName() {
+		return "tape_rewind";
 	}
 
 	// Storage handling

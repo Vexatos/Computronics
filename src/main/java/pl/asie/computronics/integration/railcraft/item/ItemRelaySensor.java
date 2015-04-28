@@ -1,4 +1,4 @@
-package pl.asie.computronics.item;
+package pl.asie.computronics.integration.railcraft.item;
 
 import mods.railcraft.common.carts.EntityLocomotive;
 import mods.railcraft.common.carts.EntityLocomotiveElectric;
@@ -12,10 +12,9 @@ import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
-import net.minecraftforge.common.DimensionManager;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.reference.Config;
-import pl.asie.computronics.tile.TileLocomotiveRelay;
+import pl.asie.computronics.integration.railcraft.tile.TileLocomotiveRelay;
 import pl.asie.computronics.util.StringUtil;
 
 import java.util.List;

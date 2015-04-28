@@ -1,7 +1,9 @@
 package pl.asie.computronics.tile;
 
-import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.Optional;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import li.cil.oc.api.Network;
@@ -13,7 +15,9 @@ import li.cil.oc.api.network.Visibility;
 import nedocomputers.api.INedoPeripheral;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
+import pl.asie.computronics.audio.MachineSound;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.internal.IComputronicsPeripheral;
 import pl.asie.lib.tile.TileMachine;
@@ -39,17 +43,19 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 	public TileEntityPeripheralBase(String name) {
 		super();
 		this.peripheralName = name;
-		if(Loader.isModLoaded(Mods.OpenComputers)) {
+		if(Mods.isLoaded(Mods.OpenComputers)) {
 			initOC();
 		}
+		soundRes = getSoundFor(getSoundName());
 	}
 
 	public TileEntityPeripheralBase(String name, double bufferSize) {
 		super();
 		this.peripheralName = name;
-		if(Loader.isModLoaded(Mods.OpenComputers)) {
+		if(Mods.isLoaded(Mods.OpenComputers)) {
 			initOC(bufferSize);
 		}
+		soundRes = getSoundFor(getSoundName());
 	}
 
 	public boolean isValid() {
@@ -109,6 +115,9 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 			Network.joinOrCreateNetwork(this);
 			this.onOCNetworkCreation();
 		}
+		if(worldObj.isRemote && hasSound()) {
+			updateSound();
+		}
 	}
 
 	@Optional.Method(modid = Mods.OpenComputers)
@@ -131,6 +140,9 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 		super.invalidate();
 		if(node != null) {
 			node.remove();
+		}
+		if(worldObj.isRemote && hasSound()) {
+			updateSound();
 		}
 	}
 
@@ -234,10 +246,10 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 	@Override
 	public void readFromNBT(final NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-		if(Loader.isModLoaded(Mods.OpenComputers)) {
+		if(Mods.isLoaded(Mods.OpenComputers)) {
 			readFromNBT_OC(nbt);
 		}
-		if(Loader.isModLoaded(Mods.NedoComputers)) {
+		if(Mods.isLoaded(Mods.NedoComputers)) {
 			readFromNBT_NC(nbt);
 		}
 	}
@@ -245,11 +257,65 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 	@Override
 	public void writeToNBT(final NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-		if(Loader.isModLoaded(Mods.OpenComputers)) {
+		if(Mods.isLoaded(Mods.OpenComputers)) {
 			writeToNBT_OC(nbt);
 		}
-		if(Loader.isModLoaded(Mods.NedoComputers)) {
+		if(Mods.isLoaded(Mods.NedoComputers)) {
 			writeToNBT_NC(nbt);
+		}
+	}
+
+	// Sound related, thanks to EnderIO code for this!
+
+	@SideOnly(Side.CLIENT)
+	private MachineSound sound;
+
+	private ResourceLocation soundRes;
+
+	protected static ResourceLocation getSoundFor(String sound) {
+		return sound == null ? null : new ResourceLocation(Mods.Computronics + ":" + sound);
+	}
+
+	public String getSoundName() {
+		return null;
+	}
+
+	public ResourceLocation getSoundRes() {
+		return soundRes;
+	}
+
+	public boolean shouldPlaySound() {
+		return false;
+	}
+
+	public boolean hasSound() {
+		return getSoundName() != null;
+	}
+
+	public float getVolume() {
+		return 1.0f;
+	}
+
+	public float getPitch() {
+		return 1.0f;
+	}
+
+	public boolean shouldRepeat() {
+		return true;
+	}
+
+	@SideOnly(Side.CLIENT)
+	private void updateSound() {
+		if(hasSound()) {
+			if(shouldPlaySound() && !isInvalid()) {
+				if(sound == null) {
+					sound = new MachineSound(getSoundRes(), xCoord + 0.5f, yCoord + 0.5f, zCoord + 0.5f, getVolume(), getPitch(), shouldRepeat());
+					FMLClientHandler.instance().getClient().getSoundHandler().playSound(sound);
+				}
+			} else if(sound != null) {
+				sound.endPlaying();
+				sound = null;
+			}
 		}
 	}
 }

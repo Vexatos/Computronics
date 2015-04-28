@@ -1,4 +1,4 @@
-package pl.asie.computronics.block;
+package pl.asie.computronics.integration.railcraft.block;
 
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
@@ -10,8 +10,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+import pl.asie.computronics.block.BlockPeripheral;
 import pl.asie.computronics.reference.Mods;
-import pl.asie.computronics.tile.TileLocomotiveRelay;
+import pl.asie.computronics.integration.railcraft.tile.TileLocomotiveRelay;
 
 /**
  * @author Vexatos

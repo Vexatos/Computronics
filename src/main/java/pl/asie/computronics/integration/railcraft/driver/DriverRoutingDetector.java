@@ -1,4 +1,4 @@
-package pl.asie.computronics.integration.railcraft;
+package pl.asie.computronics.integration.railcraft.driver;
 
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;

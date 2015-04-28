@@ -1,7 +1,18 @@
-==== 1.4.7 ====
+==== 1.5.0 ====
 
   * ADDED: All Computronics blocks now support the OpenComputers API documentation in NotEnoughItems.
   * ADDED: OpenComputers Component Documentation for every function any Computronics block provides
+  * ADDED: The tape drive now plays a sound effect when forwarding or rewinding
+  * ADDED: Ticket Machine
+    - Allows printing single-use tickets using ComputerCraft or OpenComputers
+    - Right click to open the customer GUI
+      - Here you can select the ticket you would like to print, insert paper and print tickets
+    - Shift-right click with an empty hand
+      - Now you can insert golden tickets for customers to select or take paper out
+      - If you are the owner or an Op, you can also lock the machine so only the owner and Ops can open the maintenance GUI
+    - You can prohibit selecting a ticket or printing tickets using the GUI using a computer
+      - If set, tickets can only be selected/printed using a computer
+    - Of course you can insert paper and extract printed tickets using any kind of automation
   * CHANGED: Made Camera, Chat Box and Tape Drive functions more consistent in behaviour (The ComputerCraft and OpenComputers functions should do the exact same now)
   * CHANGED: Got rid of the ComputerCraft bundled redstone support for RedLogic as it was not working anyway. Full ComputerCraft support in RedLogic has been proposed to immibis.
   * CHANGED: Radars now only output relative distance by default. This can of course be changed in the config.
@@ -14,6 +25,9 @@
   * FIXED: Reworked the Digital Detector to only send an event once for each passing minecart instead of sending one once per tick and minecart
     - The event will also now ship additional information if the minecart is a locomotive (primary colour, secondary colour and destination)
     - Thanks to marcin212 and Kubuxu for this!
+  * FIXED: Computronics machine sounds now respect the "Blocks" volume setting instead of the "Friendly Creatures" one
+  * MISC: Refactored a lot of code, mainly related to GUIs and Railcraft integration.
+  * MISC: Increased the bitrate on most Computronics textures, they should look much better now.
 
 ==== 1.4.6 ====
 

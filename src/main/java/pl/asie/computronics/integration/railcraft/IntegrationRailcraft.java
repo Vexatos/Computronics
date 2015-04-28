@@ -8,17 +8,17 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import pl.asie.computronics.Computronics;
-import pl.asie.computronics.block.BlockDigitalDetector;
-import pl.asie.computronics.block.BlockDigitalReceiverBox;
-import pl.asie.computronics.block.BlockLocomotiveRelay;
-import pl.asie.computronics.block.BlockTicketMachine;
+import pl.asie.computronics.integration.railcraft.block.BlockDigitalDetector;
+import pl.asie.computronics.integration.railcraft.block.BlockDigitalReceiverBox;
+import pl.asie.computronics.integration.railcraft.block.BlockLocomotiveRelay;
+import pl.asie.computronics.integration.railcraft.block.BlockTicketMachine;
 import pl.asie.computronics.integration.railcraft.gui.GuiProviderTicketMachine;
-import pl.asie.computronics.item.ItemRelaySensor;
+import pl.asie.computronics.integration.railcraft.item.ItemRelaySensor;
+import pl.asie.computronics.integration.railcraft.tile.TileDigitalDetector;
+import pl.asie.computronics.integration.railcraft.tile.TileDigitalReceiverBox;
+import pl.asie.computronics.integration.railcraft.tile.TileLocomotiveRelay;
+import pl.asie.computronics.integration.railcraft.tile.TileTicketMachine;
 import pl.asie.computronics.reference.Mods;
-import pl.asie.computronics.tile.TileDigitalDetector;
-import pl.asie.computronics.tile.TileDigitalReceiverBox;
-import pl.asie.computronics.tile.TileLocomotiveRelay;
-import pl.asie.computronics.tile.TileTicketMachine;
 import pl.asie.lib.network.Packet;
 
 import java.io.IOException;
@@ -77,10 +77,11 @@ public class IntegrationRailcraft {
 		if(entity instanceof TileTicketMachine) {
 			TileTicketMachine machine = (TileTicketMachine) entity;
 			int i = packet.readInt();
-			machine.setLocked((i & 1) == 1);
-			machine.setSelectionLocked(((i >> 1) & 1) == 1);
-			machine.setPrintLocked((((i >> 2) & 1) == 1));
-			machine.setSelectedSlot(packet.readInt());
+			machine.setLocked((i & 1) == 1, isServer);
+			machine.setSelectionLocked(((i >> 1) & 1) == 1, isServer);
+			machine.setPrintLocked((((i >> 2) & 1) == 1), isServer);
+			machine.setActive((((i >> 3) & 1) == 1), isServer);
+			machine.setSelectedSlot(packet.readInt(), isServer);
 		}
 	}
 

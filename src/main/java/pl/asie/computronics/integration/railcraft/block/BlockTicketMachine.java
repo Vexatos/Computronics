@@ -1,16 +1,18 @@
-package pl.asie.computronics.block;
+package pl.asie.computronics.integration.railcraft.block;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import li.cil.oc.api.network.Environment;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import pl.asie.computronics.Computronics;
-import pl.asie.computronics.tile.TileTicketMachine;
+import pl.asie.computronics.block.BlockMachineSidedIcon;
+import pl.asie.computronics.integration.railcraft.tile.TileTicketMachine;
 
 /**
  * @author Vexatos
@@ -36,6 +38,11 @@ public class BlockTicketMachine extends BlockMachineSidedIcon {
 	}
 
 	@Override
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int a, float _x, float _y, float _z) {
+		return super.onBlockActivated(world, x, y, z, player, a, _x, _y, _z);
+	}
+
+	@Override
 	public TileEntity createNewTileEntity(World world, int i) {
 		return new TileTicketMachine();
 	}
@@ -50,9 +57,7 @@ public class BlockTicketMachine extends BlockMachineSidedIcon {
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister r) {
 		super.registerBlockIcons(r);
-		// TODO add proper texture
-		// mFront = r.registerIcon("computronics:ticket_machine_front");
-		mFront = r.registerIcon("computronics:tape_drive_front");
+		mFront = r.registerIcon("computronics:ticket_machine_front");
 	}
 
 	@Override

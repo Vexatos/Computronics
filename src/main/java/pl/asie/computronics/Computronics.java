@@ -1,7 +1,6 @@
 package pl.asie.computronics;
 
 import com.google.common.collect.ImmutableList;
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -222,7 +221,7 @@ public class Computronics {
 			registerBlockWithTileEntity(colorfulLamp, TileColorfulLamp.class, "computronics.colorfulLamp");
 		}
 
-		if(Loader.isModLoaded(Mods.NedoComputers) && isEnabled("eepromReader", true)) {
+		if(Mods.isLoaded(Mods.NedoComputers) && isEnabled("eepromReader", true)) {
 			nc_eepromreader = new BlockEEPROMReader();
 			registerBlockWithTileEntity(nc_eepromreader, TileEEPROMReader.class, "computronics.eepromReader");
 		}
@@ -231,7 +230,7 @@ public class Computronics {
 			itemTape = new ItemTape(Config.TAPE_LENGTHS);
 			GameRegistry.registerItem(itemTape, "computronics.tape");
 
-			if(Loader.isModLoaded(Mods.GregTech)) {
+			if(Mods.isLoaded(Mods.GregTech)) {
 				itemPartsGreg = new ItemMultiple(Mods.Computronics, new String[] { "reelChromoxide" });
 				itemPartsGreg.setCreativeTab(tab);
 				GameRegistry.registerItem(itemPartsGreg, "computronics.gt_parts");
@@ -243,17 +242,17 @@ public class Computronics {
 			GameRegistry.registerItem(itemParts, "computronics.parts");
 		}
 
-		if(Loader.isModLoaded(Mods.Railcraft)) {
+		if(Mods.isLoaded(Mods.Railcraft)) {
 			railcraft = new IntegrationRailcraft();
 			railcraft.preInit(config.config);
 		}
 
-		if(Loader.isModLoaded(Mods.ComputerCraft)) {
+		if(Mods.isLoaded(Mods.ComputerCraft)) {
 			computercraft = new IntegrationComputerCraft(this);
 			peripheralRegistry = new MultiPeripheralRegistry();
 		}
 
-		if(Loader.isModLoaded(Mods.OpenComputers)) {
+		if(Mods.isLoaded(Mods.OpenComputers)) {
 			opencomputers = new IntegrationOpenComputers(this);
 			opencomputers.preInit();
 		}
@@ -273,11 +272,11 @@ public class Computronics {
 
 		config.setCategoryComment("power", "Every value related to energy in this section uses RF as the base power unit.");
 
-		if(Loader.isModLoaded(Mods.ComputerCraft)) {
+		if(Mods.isLoaded(Mods.ComputerCraft)) {
 			config.setCategoryComment(Compat.Compatibility, "Set anything here to false to prevent Computronics from adding the respective Peripherals and Drivers");
 			computercraft.init();
 		}
-		if(Loader.isModLoaded(Mods.OpenComputers)) {
+		if(Mods.isLoaded(Mods.OpenComputers)) {
 			config.setCategoryComment(Compat.Compatibility, "Set anything here to false to prevent Computronics from adding the respective Peripherals and Drivers");
 			opencomputers.init();
 		}
@@ -303,7 +302,7 @@ public class Computronics {
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
 
-		if(Loader.isModLoaded(Mods.GregTech) && Config.GREGTECH_RECIPES) {
+		if(Mods.isLoaded(Mods.GregTech) && Config.GREGTECH_RECIPES) {
 			ModRecipes.instance = new GregTechRecipes();
 		} else {
 			ModRecipes.instance = new ModRecipes();
@@ -315,11 +314,11 @@ public class Computronics {
 		}
 
 		// Mod compat - GregTech
-		if(itemTape != null && Loader.isModLoaded(Mods.GregTech) && itemPartsGreg != null) {
+		if(itemTape != null && Mods.isLoaded(Mods.GregTech) && itemPartsGreg != null) {
 			GregTechRecipes.registerGregTechTapeRecipes();
 		}
 
-		if(Loader.isModLoaded(Mods.OpenComputers)) {
+		if(Mods.isLoaded(Mods.OpenComputers)) {
 			opencomputers.postInit();
 		}
 
@@ -333,14 +332,14 @@ public class Computronics {
 	@EventHandler
 	public void serverStart(FMLServerAboutToStartEvent event) {
 		Computronics.storage = new StorageManager();
-		if(Loader.isModLoaded(Mods.ComputerCraft)) {
+		if(Mods.isLoaded(Mods.ComputerCraft)) {
 			computercraft.serverStart();
 		}
 	}
 
 	@EventHandler
 	public void remap(FMLMissingMappingsEvent event) {
-		if(Loader.isModLoaded(Mods.OpenComputers)) {
+		if(Mods.isLoaded(Mods.OpenComputers)) {
 			opencomputers.remap(event);
 		}
 	}
@@ -357,7 +356,7 @@ public class Computronics {
 	@EventHandler
 	@SuppressWarnings("unchecked")
 	public void receiveIMC(FMLInterModComms.IMCEvent event) {
-		if(Loader.isModLoaded(Mods.ComputerCraft)) {
+		if(Mods.isLoaded(Mods.ComputerCraft)) {
 			ImmutableList<FMLInterModComms.IMCMessage> messages = event.getMessages();
 			for(FMLInterModComms.IMCMessage message : messages) {
 				if(message.key.equalsIgnoreCase("addmultiperipherals") && message.isStringMessage()) {

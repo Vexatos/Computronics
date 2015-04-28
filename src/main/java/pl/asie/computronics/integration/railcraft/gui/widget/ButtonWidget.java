@@ -3,6 +3,7 @@ package pl.asie.computronics.integration.railcraft.gui.widget;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import mods.railcraft.client.gui.GuiContainerRailcraft;
+import mods.railcraft.common.gui.tooltips.ToolTip;
 import mods.railcraft.common.gui.widgets.Widget;
 
 public class ButtonWidget extends Widget {
@@ -20,7 +21,7 @@ public class ButtonWidget extends Widget {
 	}
 
 	@SideOnly(Side.CLIENT)
-	public final boolean mouseClicked(int mouseX, int mouseY, int mouseButton) {
+	public boolean mouseClicked(int mouseX, int mouseY, int mouseButton) {
 		this.pressed = true;
 		this.buttonPressed = mouseButton;
 		this.onPress(this.buttonPressed);
@@ -28,7 +29,7 @@ public class ButtonWidget extends Widget {
 	}
 
 	@SideOnly(Side.CLIENT)
-	public final void handleMouseRelease(int mouseX, int mouseY, int eventType) {
+	public void handleMouseRelease(int mouseX, int mouseY, int eventType) {
 		if(this.pressed) {
 			this.pressed = false;
 			this.onRelease(this.buttonPressed);
@@ -37,7 +38,7 @@ public class ButtonWidget extends Widget {
 	}
 
 	@SideOnly(Side.CLIENT)
-	public final void handleMouseMove(int mouseX, int mouseY, int mouseButton, long time) {
+	public void handleMouseMove(int mouseX, int mouseY, int mouseButton, long time) {
 		if(this.pressed && !this.isMouseOver(mouseX, mouseY)) {
 			this.pressed = false;
 			this.onRelease(this.buttonPressed);
@@ -51,5 +52,17 @@ public class ButtonWidget extends Widget {
 
 	@SideOnly(Side.CLIENT)
 	public void onRelease(int mouseButton) {
+	}
+
+	private ToolTip toolTip;
+
+	@Override
+	public ToolTip getToolTip() {
+		return this.toolTip;
+	}
+
+	@SideOnly(Side.CLIENT)
+	public void setToolTip(ToolTip toolTip) {
+		this.toolTip = toolTip;
 	}
 }

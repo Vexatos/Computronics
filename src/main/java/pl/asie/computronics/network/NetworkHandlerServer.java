@@ -1,6 +1,5 @@
 package pl.asie.computronics.network;
 
-import cpw.mods.fml.common.Loader;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetHandler;
 import net.minecraft.tileentity.TileEntity;
@@ -28,13 +27,13 @@ public class NetworkHandlerServer extends MessageHandlerBase {
 			}
 			break;
 			case Packets.PACKET_TICKET_SYNC: {
-				if(Loader.isModLoaded(Mods.Railcraft)) {
+				if(Mods.isLoaded(Mods.Railcraft)) {
 					Computronics.railcraft.onMessageRailcraft(packet, player, true);
 				}
 			}
 			break;
 			case Packets.PACKET_TICKET_PRINT: {
-				if(Loader.isModLoaded(Mods.Railcraft)) {
+				if(Mods.isLoaded(Mods.Railcraft)) {
 					Computronics.railcraft.printTicket(packet, player, true);
 				}
 			}

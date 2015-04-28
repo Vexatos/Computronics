@@ -3,7 +3,7 @@ package pl.asie.computronics.integration.railcraft.gui.widget;
 import mods.railcraft.client.gui.GuiContainerRailcraft;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.network.Packets;
-import pl.asie.computronics.tile.TileTicketMachine;
+import pl.asie.computronics.integration.railcraft.tile.TileTicketMachine;
 
 import java.io.IOException;
 
@@ -25,10 +25,18 @@ public class PrintButtonWidget extends ButtonWidget {
 	}
 
 	@Override
-	public void onRelease(int mouseButton) {
-		super.onRelease(mouseButton);
+	public boolean mouseClicked(int mouseX, int mouseY, int mouseButton) {
+		return !tile.isPrintLocked() && super.mouseClicked(mouseX, mouseY, mouseButton);
+	}
+
+	@Override
+	public void onPress(int mouseButton) {
+		super.onPress(mouseButton);
+		if(tile.isPrintLocked()) {
+			return;
+		}
 		try {
-			Computronics.packet.sendToServer(Computronics.packet.create(Packets.PACKET_TICKET_PRINT));
+			Computronics.packet.sendToServer(Computronics.packet.create(Packets.PACKET_TICKET_PRINT).writeTileLocation(tile));
 		} catch(IOException e) {
 			e.printStackTrace();
 		}

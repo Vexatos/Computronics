@@ -1,6 +1,5 @@
-package pl.asie.computronics.tile;
+package pl.asie.computronics.integration.railcraft.tile;
 
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -68,7 +67,7 @@ public class TileDigitalReceiverBox extends TileBoxBase
 	public void updateEntity() {
 		super.updateEntity();
 
-		if(!addedToNetwork && Loader.isModLoaded(Mods.OpenComputers)) {
+		if(!addedToNetwork && Mods.isLoaded(Mods.OpenComputers)) {
 			addedToNetwork = true;
 			Network.joinOrCreateNetwork(this);
 		}
@@ -96,10 +95,10 @@ public class TileDigitalReceiverBox extends TileBoxBase
 
 	@Override
 	public void onControllerAspectChange(SignalController con, SignalAspect aspect) {
-		if(Loader.isModLoaded(Mods.OpenComputers)) {
+		if(Mods.isLoaded(Mods.OpenComputers)) {
 			eventOC(aspect);
 		}
-		if(Loader.isModLoaded(Mods.ComputerCraft)) {
+		if(Mods.isLoaded(Mods.ComputerCraft)) {
 			eventCC(aspect);
 		}
 		updateNeighbors();
@@ -112,7 +111,7 @@ public class TileDigitalReceiverBox extends TileBoxBase
 
 	public void writeToNBT(NBTTagCompound data) {
 		super.writeToNBT(data);
-		if(Loader.isModLoaded(Mods.OpenComputers)) {
+		if(Mods.isLoaded(Mods.OpenComputers)) {
 			writeToNBT_OC(data);
 		}
 		this.receiver.writeToNBT(data);
@@ -121,7 +120,7 @@ public class TileDigitalReceiverBox extends TileBoxBase
 	@Override
 	public void readFromNBT(NBTTagCompound data) {
 		super.readFromNBT(data);
-		if(Loader.isModLoaded(Mods.OpenComputers)) {
+		if(Mods.isLoaded(Mods.OpenComputers)) {
 			readFromNBT_OC(data);
 		}
 		this.receiver.readFromNBT(data);
@@ -205,7 +204,7 @@ public class TileDigitalReceiverBox extends TileBoxBase
 	public TileDigitalReceiverBox(String name) {
 		super();
 		this.peripheralName = name;
-		if(Loader.isModLoaded(Mods.OpenComputers)) {
+		if(Mods.isLoaded(Mods.OpenComputers)) {
 			initOC();
 		}
 	}
@@ -213,7 +212,7 @@ public class TileDigitalReceiverBox extends TileBoxBase
 	public TileDigitalReceiverBox(String name, double bufferSize) {
 		super();
 		this.peripheralName = name;
-		if(Loader.isModLoaded(Mods.OpenComputers)) {
+		if(Mods.isLoaded(Mods.OpenComputers)) {
 			initOC(bufferSize);
 		}
 	}
@@ -303,7 +302,7 @@ public class TileDigitalReceiverBox extends TileBoxBase
 	public void invalidate() {
 		this.tileCache.purge();
 		super.invalidate();
-		if(Loader.isModLoaded(Mods.OpenComputers) && node != null) {
+		if(Mods.isLoaded(Mods.OpenComputers) && node != null) {
 			node.remove();
 		}
 	}

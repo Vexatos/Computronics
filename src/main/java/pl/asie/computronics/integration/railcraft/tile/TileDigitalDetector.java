@@ -1,7 +1,6 @@
-package pl.asie.computronics.tile;
+package pl.asie.computronics.integration.railcraft.tile;
 
 import com.mojang.authlib.GameProfile;
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
@@ -19,6 +18,7 @@ import pl.asie.computronics.Computronics;
 import pl.asie.computronics.cc.ISidedPeripheral;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.reference.Names;
+import pl.asie.computronics.tile.TileEntityPeripheralBase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,10 +67,10 @@ public class TileDigitalDetector extends TileEntityPeripheralBase
 				ArrayList<Object> info = new ArrayList<Object>();
 				appendCartType(info, cart);
 				appendLocomotiveInformation(info, cart);
-				if(Loader.isModLoaded(Mods.OpenComputers) && this.node() != null) {
+				if(Mods.isLoaded(Mods.OpenComputers) && this.node() != null) {
 					this.eventOC(info);
 				}
-				if(Loader.isModLoaded(Mods.ComputerCraft)) {
+				if(Mods.isLoaded(Mods.ComputerCraft)) {
 					this.eventCC(info);
 				}
 			}

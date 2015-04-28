@@ -1,6 +1,5 @@
-package pl.asie.computronics.tile;
+package pl.asie.computronics.integration.railcraft.tile;
 
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
@@ -18,6 +17,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import pl.asie.computronics.integration.railcraft.LocomotiveManager;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
+import pl.asie.computronics.tile.TileEntityPeripheralBase;
 
 import java.lang.ref.WeakReference;
 import java.util.UUID;
@@ -149,7 +149,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 			|| locomotive.getChargeHandler().removeCharge(10 * amount) < 10 * amount)) {
 			return "locomotive out of energy";
 		}
-		if(Loader.isModLoaded(Mods.OpenComputers)) {
+		if(Mods.isLoaded(Mods.OpenComputers)) {
 			return cannotAccessLocomotive_OC(amount);
 		}
 		return null;
