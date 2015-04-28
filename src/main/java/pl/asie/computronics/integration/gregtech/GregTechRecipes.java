@@ -157,6 +157,16 @@ public class GregTechRecipes extends ModRecipes {
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Computronics.railcraft.detector, 1, 0),
 				"bbb", "bdp", "bbb", 'b', "plateSteel", 'p', "cableGt02Gold", 'd', GameRegistry.findItemStack(Mods.Railcraft, "detector.advanced", 1)));
 		}
+		if(Computronics.railcraft.ticketMachine != null) {
+			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Computronics.railcraft.ticketMachine, 1, 0),
+				"trt", "shg", "tpt",
+				'h', ItemList.Hull_LV.get(1),
+				'r', ItemList.Electric_Motor_LV.get(1),
+				't', "plateSteel",
+				's', "circuitGood",
+				'p', ItemList.Electric_Piston_LV.get(1),
+				'g', ItemList.Cover_Screen.get(1)));
+		}
 	}
 
 	@SuppressWarnings("deprecation")

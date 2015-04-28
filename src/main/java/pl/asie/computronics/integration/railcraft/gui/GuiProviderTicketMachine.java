@@ -1,5 +1,7 @@
 package pl.asie.computronics.integration.railcraft.gui;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import mods.railcraft.common.plugins.forge.PlayerPlugin;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
@@ -34,6 +36,7 @@ public class GuiProviderTicketMachine extends GuiProviderBase {
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public GuiContainer makeGui(int guiID, EntityPlayer player, World world, int x, int y, int z) {
 		TileEntity tile = world.getTileEntity(x, y, z);
 		if(tile instanceof TileTicketMachine) {

@@ -92,6 +92,7 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 
 	private int progress = 0;
 	private ItemStack currentTicket;
+	private int ticketQueue = 0;
 
 	public void setProgress(int progress) {
 		this.progress = progress;
@@ -157,9 +158,12 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 				this.decrStackSize(paperSlot, 1);
 				setInventorySlotContents(ticketSlot, currentTicket);
 			}
-			this.currentTicket = null;
+			this.ticketQueue--;
 			this.progress = 0;
-			this.setActive(false);
+			if(this.ticketQueue <= 0) {
+				this.currentTicket = null;
+				this.setActive(false);
+			}
 		}
 	}
 
@@ -227,7 +231,13 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 
 	private void checkSlot(int slot) {
 		if(slot < 0 || slot > 9) {
-			throw new IllegalArgumentException("invalid slot: " + slot + 1);
+			throw new IllegalArgumentException("invalid slot: " + String.valueOf(slot + 1));
+		}
+	}
+
+	private void checkAmount(ItemStack stack, int amount) {
+		if(amount < 0 || amount > stack.getMaxStackSize()) {
+			throw new IllegalArgumentException("invalid amount: " + amount);
 		}
 	}
 
@@ -283,10 +293,14 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 	}
 
 	public Object[] printTicket(boolean opencomputers) {
-		return printTicket(getSelectedSlot() + 1, opencomputers);
+		return printTicket(getSelectedSlot() + 1, 1, opencomputers);
 	}
 
-	public Object[] printTicket(int slot, boolean opencomputers) {
+	public Object[] printTicket(int amount, boolean opencomputers) {
+		return printTicket(getSelectedSlot() + 1, amount, opencomputers);
+	}
+
+	public Object[] printTicket(int slot, int amount, boolean opencomputers) {
 		if(worldObj.isRemote) {
 			return null;
 		}
@@ -318,17 +332,20 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 		if(Config.TICKET_MACHINE_CONSUME_RF && getBatteryProvider().getEnergyStored() < powerUsage) {
 			return new Object[] { false, "not enough energy" };
 		}
+		checkAmount(ticket, amount);
 		ItemStack outputSlotStack = this.getStackInSlot(ticketSlot);
 		if(outputSlotStack != null) {
 			if(!outputSlotStack.getItem().equals(ticket.getItem()) || !ItemStack.areItemStackTagsEqual(outputSlotStack, ticket)) {
 				return new Object[] { false, "output slot already contains ticket with different destination" };
 			}
 			if(!outputSlotStack.isStackable()
-				|| outputSlotStack.stackSize >= outputSlotStack.getMaxStackSize()) {
-				return new Object[] { false, "output slot is full" };
+				|| outputSlotStack.stackSize + amount > outputSlotStack.getMaxStackSize()) {
+				return new Object[] { false, "output slot is too full" };
 			}
 		}
+		ticket.stackSize = amount;
 		this.currentTicket = ticket;
+		this.ticketQueue = amount;
 		return new Object[] { true };
 	}
 
@@ -371,13 +388,13 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 
 	// OpenComputers stuff
 
-	@Callback(doc = "function([slot:number]):boolean; Tries to print a ticket from the current or the specified ticket slot; Returns true on success")
+	@Callback(doc = "function(amount:number [, slot:number]):boolean; Tries to print one or more tickets from the current or the specified ticket slot; Returns true on success")
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] printTicket(Context c, Arguments a) {
-		if(a.count() >= 1) {
-			return printTicket(a.checkInteger(0), true);
+		if(a.count() >= 2) {
+			return printTicket(a.checkInteger(1), a.checkInteger(0), true);
 		}
-		return printTicket(true);
+		return printTicket(a.checkInteger(0), true);
 	}
 
 	@Callback(doc = "function(allowed:boolean):boolean; permits or prohibits manual printing; Returns true if manual printing is blocked")
@@ -449,13 +466,16 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 		try {
 			switch(method) {
 				case 0: {
-					if(arguments.length < 1) {
-						return this.printTicket();
+					if(arguments.length < 1 || !(arguments[0] instanceof Number)) {
+						throw new LuaException("first argument needs to be a number");
 					}
-					if(!(arguments[0] instanceof Number)) {
-						throw new LuaException("first argument needs to be a number or non-existant");
+					if(arguments.length < 2) {
+						return this.printTicket(((Number) arguments[0]).intValue(), false);
 					}
-					return this.printTicket(((Number) arguments[0]).intValue(), false);
+					if(!(arguments[1] instanceof Number)) {
+						throw new LuaException("second argument needs to be a number or non-existant");
+					}
+					return this.printTicket(((Number) arguments[1]).intValue(), ((Number) arguments[0]).intValue(), false);
 				}
 				case 1: {
 					if(arguments.length < 1 || !(arguments[0] instanceof Boolean)) {
@@ -496,15 +516,13 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 						}
 						return setDestination(getSelectedSlot() + 1, (String) arguments[0], false);
 					}
-					if(arguments.length < 3) {
-						if(!(arguments[0] instanceof Number)) {
-							throw new LuaException("first argument needs to be a number or string");
-						}
-						if(!(arguments[1] instanceof String)) {
-							throw new LuaException("second argument needs to be a string or non-existant");
-						}
-						return setDestination(((Number) arguments[0]).intValue(), ((String) arguments[1]), false);
+					if(!(arguments[0] instanceof Number)) {
+						throw new LuaException("first argument needs to be a number or string");
 					}
+					if(!(arguments[1] instanceof String)) {
+						throw new LuaException("second argument needs to be a string or non-existant");
+					}
+					return setDestination(((Number) arguments[0]).intValue(), ((String) arguments[1]), false);
 				}
 				case 7: {
 					return new Object[] { this.getSelectedSlot() + 1 };
@@ -559,8 +577,8 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 	}
 
 	@Override
-	public boolean shouldRepeat() {
-		return false;
+	public float getVolume() {
+		return 0.5f;
 	}
 
 	public void readFromNBT(NBTTagCompound tag) {
@@ -596,6 +614,7 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 				progress = 0;
 			}
 			isActive = tag.getBoolean("isActive");
+			ticketQueue = tag.getInteger("ticketQueue");
 		}
 	}
 
@@ -618,6 +637,7 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 			NBTTagCompound currentTicketTag = new NBTTagCompound();
 			currentTicket.writeToNBT(currentTicketTag);
 			tag.setTag("currentTicket", currentTicketTag);
+			tag.setInteger("ticketQueue", this.ticketQueue);
 		}
 	}
 

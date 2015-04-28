@@ -13,11 +13,13 @@
     - You can prohibit selecting a ticket or printing tickets using the GUI using a computer
       - If set, tickets can only be selected/printed using a computer
     - Of course you can insert paper and extract printed tickets using any kind of automation
+    - By default the Ticket Machine uses a little bit of RF for printing tickets, this can be disabled in the config
   * CHANGED: Made Camera, Chat Box and Tape Drive functions more consistent in behaviour (The ComputerCraft and OpenComputers functions should do the exact same now)
   * CHANGED: Got rid of the ComputerCraft bundled redstone support for RedLogic as it was not working anyway. Full ComputerCraft support in RedLogic has been proposed to immibis.
   * CHANGED: Radars now only output relative distance by default. This can of course be changed in the config.
   * CHANGED: The Locomotive Relay now consumes a little Charge in the Electric Locomotive as well as a little OpenComputers energy if used by OpenComputers
     - This can be disabled in the config
+  * CHANGED: Slightly tweaked the recipes of some Railcraft integration blocks
   * FIXED: Updated OpenPeripheral integration to version 1.1 of OpenPeripheralCore (Requires version 1.1 now)
   * FIXED: Updated Forestry integration to version 3.5.3 (Requires version 3.5.3 now)
   * FIXED: Reworked the Locomotive Relay to properly work now and hopefully not randomly get unbound anymore.
