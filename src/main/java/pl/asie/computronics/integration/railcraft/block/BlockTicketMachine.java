@@ -5,7 +5,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 import li.cil.oc.api.network.Environment;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
@@ -35,11 +34,6 @@ public class BlockTicketMachine extends BlockMachineSidedIcon {
 		if(tile instanceof TileTicketMachine) {
 			((TileTicketMachine) tile).onBlockPlacedBy(entity, stack);
 		}
-	}
-
-	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int a, float _x, float _y, float _z) {
-		return super.onBlockActivated(world, x, y, z, player, a, _x, _y, _z);
 	}
 
 	@Override

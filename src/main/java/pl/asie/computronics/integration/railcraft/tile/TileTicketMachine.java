@@ -327,14 +327,7 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 				|| outputSlotStack.stackSize >= outputSlotStack.getMaxStackSize()) {
 				return new Object[] { false, "output slot is full" };
 			}
-
-			/*this.decrStackSize(paperSlot, 1);
-			outputSlotStack.stackSize++;*/
-		}/* else {
-			this.decrStackSize(paperSlot, 1);
-
-			setInventorySlotContents(ticketSlot, ticket);
-		}*/
+		}
 		this.currentTicket = ticket;
 		return new Object[] { true };
 	}
