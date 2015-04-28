@@ -10,7 +10,7 @@ import pl.asie.computronics.util.StringUtil;
 import java.util.List;
 
 /**
- * @author Vexatos
+ * @author CovertJaguar, Vexatos
  */
 public class ToolTips {
 	private static final Splitter keyValueSplitter = Splitter.on('=').trimResults();
