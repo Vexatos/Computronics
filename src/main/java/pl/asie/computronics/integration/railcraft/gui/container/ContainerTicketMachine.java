@@ -22,8 +22,8 @@ import pl.asie.computronics.integration.railcraft.gui.widget.LockButtonWidget;
 import pl.asie.computronics.integration.railcraft.gui.widget.PrintButtonWidget;
 import pl.asie.computronics.integration.railcraft.gui.widget.ProgressBarWidget;
 import pl.asie.computronics.integration.railcraft.gui.widget.SlotSelectionWidget;
-import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.integration.railcraft.tile.TileTicketMachine;
+import pl.asie.computronics.reference.Config;
 
 /**
  * @author Vexatos
@@ -35,7 +35,6 @@ public class ContainerTicketMachine extends RailcraftContainer {
 	private TileTicketMachine tile;
 	private boolean maintenanceMode = false;
 
-	private boolean isPaperLocked = true;
 	private boolean isSelectLocked = true;
 
 	public ContainerTicketMachine(InventoryPlayer inventoryPlayer, TileTicketMachine tile, boolean maintenanceMode) {
@@ -76,8 +75,7 @@ public class ContainerTicketMachine extends RailcraftContainer {
 		for(j = 0; j < 9; ++j) {
 			this.addSlot(new Slot(inventoryPlayer, j, 8 + j * 18, 142));
 		}
-		setTicketsLocked(!maintenanceMode());
-		setPaperLocked(!maintenanceMode());
+		setTicketsAndPaperLocked(!maintenanceMode());
 	}
 
 	public boolean maintenanceMode() {
@@ -87,37 +85,24 @@ public class ContainerTicketMachine extends RailcraftContainer {
 	@Override
 	public ItemStack slotClick(int slotNum, int mouseButton, int modifier, EntityPlayer player) {
 		if(!maintenanceMode()) {
-			setTicketsLocked(true);
-			setPaperLocked(true);
+			setTicketsAndPaperLocked(true);
 		} else {
-			setTicketsLocked(false);
-			setPaperLocked(false);
+			setTicketsAndPaperLocked(false);
 		}
 		return super.slotClick(slotNum, mouseButton, modifier, player);
 	}
 
-	public void setTicketsLocked(boolean locked) {
+	public void setTicketsAndPaperLocked(boolean locked) {
 		if(isSelectLocked == locked) {
 			return;
 		}
-		for(int i = 0; i < 10; i++) {
+		for(int i = 0; i <= 10; i++) {
 			Object slot = this.inventorySlots.get(i);
 			if(slot instanceof SlotSecure) {
 				((SlotSecure) slot).locked = locked;
 			}
 		}
 		isSelectLocked = locked;
-	}
-
-	public void setPaperLocked(boolean locked) {
-		if(isPaperLocked == locked) {
-			return;
-		}
-		Object slot = this.inventorySlots.get(10);
-		if(slot instanceof SlotSecureInput) {
-			((SlotSecureInput) slot).locked = locked;
-		}
-		isPaperLocked = locked;
 	}
 
 	public InventoryPlayer getInventoryPlayer() {

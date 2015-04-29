@@ -1,22 +1,20 @@
 package pl.asie.computronics.integration.railcraft.gui.slot;
 
 import mods.railcraft.api.core.items.IStackFilter;
-import mods.railcraft.common.gui.slots.SlotStackFilter;
-import net.minecraft.entity.player.EntityPlayer;
+import mods.railcraft.common.gui.slots.SlotSecure;
 import net.minecraft.inventory.IInventory;
 
 /**
  * @author Vexatos
  */
-public class SlotSecureInput extends SlotStackFilter {
-
-	public boolean locked = true;
+public class SlotSecureInput extends SlotSecure {
 
 	public SlotSecureInput(IStackFilter filter, IInventory contents, int id, int x, int y) {
 		super(filter, contents, id, x, y);
 	}
 
-	public boolean canTakeStack(EntityPlayer player) {
-		return !this.locked;
+	@Override
+	public int getSlotStackLimit() {
+		return 64;
 	}
 }
