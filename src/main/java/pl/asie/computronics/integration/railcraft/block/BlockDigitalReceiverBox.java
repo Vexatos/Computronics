@@ -42,7 +42,7 @@ public class BlockDigitalReceiverBox extends BlockSignalBase implements IComputr
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister iconRegister) {
 		texturesBox = TextureAtlasSheet.unstitchIcons(iconRegister, "railcraft:signal.box", 6);
-		texturesBoxTop = iconRegister.registerIcon("computronics:signal_box_receiver");
+		texturesBoxTop = iconRegister.registerIcon("computronics:digital_receiver_box");
 	}
 
 	@Override
