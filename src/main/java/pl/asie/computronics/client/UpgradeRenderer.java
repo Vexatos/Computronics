@@ -135,10 +135,8 @@ public class UpgradeRenderer {
 	//Stolen with permission.
 	@Optional.Method(modid = Mods.OpenComputers)
 	private void drawSimpleBlock(MountPoint mountPoint, float frontOffset, boolean separateTopBottomTextures) {
-		GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
 		GL11.glRotatef(mountPoint.rotation.getW(), mountPoint.rotation.getX(), mountPoint.rotation.getY(), mountPoint.rotation.getZ());
 		GL11.glTranslatef(mountPoint.offset.getX(), mountPoint.offset.getY(), mountPoint.offset.getZ());
-		GL11.glDisable(GL11.GL_CULL_FACE);
 		GL11.glBegin(GL11.GL_QUADS);
 
 		// Front.
@@ -210,7 +208,6 @@ public class UpgradeRenderer {
 		GL11.glVertex3d(bounds.minX, bounds.minY, bounds.minZ);
 
 		GL11.glEnd();
-		GL11.glPopAttrib();
 	}
 
 	private final HashMap<String, Triple> entitledPlayers;
