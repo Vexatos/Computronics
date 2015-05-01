@@ -22,6 +22,7 @@ public class LockButtonWidget extends ButtonWidget {
 	public void draw(GuiContainerRailcraft gui, int guiX, int guiY, int mouseX, int mouseY) {
 		if(this.accessible) {
 			int vv = this.pressed ? this.v + this.h : this.v;
+			vv += this.h;
 			int uu = tile.isLocked() ? this.u + this.w : this.u;
 			gui.drawTexturedModalRect(guiX + this.x, guiY + this.y, uu, vv, this.w, this.h);
 		} else {

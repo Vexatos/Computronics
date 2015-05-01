@@ -52,7 +52,7 @@ public class ContainerTicketMachine extends RailcraftContainer {
 		}
 		this.addWidget(new ProgressBarWidget(tile, 136, 34, 208, 25, 10, 13));
 		if(maintenanceMode) {
-			this.addWidget(new LockButtonWidget(tile, 6, 6, 224, 16, 16, 16, true));
+			this.addWidget(new LockButtonWidget(tile, 6, 6, 224, 0, 16, 16, true));
 		} else {
 			this.addWidget(new LockButtonWidget(tile, 6, 6, 224, 0, 16, 16, false));
 		}
