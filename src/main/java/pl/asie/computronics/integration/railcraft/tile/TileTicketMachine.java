@@ -387,13 +387,13 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 
 	// OpenComputers stuff
 
-	@Callback(doc = "function(amount:number [, slot:number]):boolean; Tries to print one or more tickets from the current or the specified ticket slot; Returns true on success")
+	@Callback(doc = "function([amount:number [, slot:number]]):boolean; Tries to print one or more tickets from the current or the specified ticket slot; amount may be nil; Returns true on success")
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] printTicket(Context c, Arguments a) {
 		if(a.count() >= 2) {
-			return printTicket(a.checkInteger(1), a.checkInteger(0), true);
+			return printTicket(a.checkInteger(1), a.checkAny(0) != null ? a.checkInteger(0) : 1, true);
 		}
-		return printTicket(a.checkInteger(0), true);
+		return printTicket(a.checkAny(0) != null ? a.checkInteger(0) : 1, true);
 	}
 
 	@Callback(doc = "function(allowed:boolean):boolean; permits or prohibits manual printing; Returns true if manual printing is blocked")
@@ -465,16 +465,20 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 		try {
 			switch(method) {
 				case 0: {
-					if(arguments.length < 1 || !(arguments[0] instanceof Number)) {
-						throw new LuaException("first argument needs to be a number");
+					if(arguments.length < 1) {
+						return this.printTicket(false);
+					}
+					if(arguments[0] != null && !(arguments[0] instanceof Number)) {
+						throw new LuaException("first argument needs to be a number or nil");
 					}
 					if(arguments.length < 2) {
-						return this.printTicket(((Number) arguments[0]).intValue(), false);
+						return this.printTicket(arguments[0] != null ? ((Number) arguments[0]).intValue() : 1, false);
 					}
 					if(!(arguments[1] instanceof Number)) {
 						throw new LuaException("second argument needs to be a number or non-existant");
 					}
-					return this.printTicket(((Number) arguments[1]).intValue(), ((Number) arguments[0]).intValue(), false);
+					return this.printTicket(((Number) arguments[1]).intValue(),
+						arguments[0] != null ? ((Number) arguments[0]).intValue() : 1, false);
 				}
 				case 1: {
 					if(arguments.length < 1 || !(arguments[0] instanceof Boolean)) {
