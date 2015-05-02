@@ -393,7 +393,10 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 		if(a.count() >= 2) {
 			return printTicket(a.checkInteger(1), a.checkAny(0) != null ? a.checkInteger(0) : 1, true);
 		}
-		return printTicket(a.checkAny(0) != null ? a.checkInteger(0) : 1, true);
+		if(a.count() >= 1) {
+			return printTicket(a.checkAny(0) != null ? a.checkInteger(0) : 1, true);
+		}
+		return printTicket(true);
 	}
 
 	@Callback(doc = "function(allowed:boolean):boolean; permits or prohibits manual printing; Returns true if manual printing is blocked")
