@@ -2,6 +2,9 @@
 
   * ADDED: All Computronics blocks now support the OpenComputers API documentation in NotEnoughItems.
   * ADDED: OpenComputers Component Documentation for every function any Computronics block provides
+  * ADDED: Support for the OpenComputers manual!
+    - Every block and item in Computronics can now be found in the manual
+    - **A huge "Thank You!" to rashy for writing all the documentation!**
   * ADDED: Some Robot Upgrades now render on a robot if the robot contains them. Requires OpenComputers 1.5.9 now.
   * ADDED: The tape drive now plays a sound effect when forwarding or rewinding
   * ADDED: Ticket Machine
