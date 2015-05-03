@@ -5,7 +5,6 @@ import buildcraft.api.statements.ITriggerExternal;
 import buildcraft.api.statements.ITriggerInternal;
 import buildcraft.api.statements.ITriggerProvider;
 import buildcraft.api.statements.StatementManager;
-import cpw.mods.fml.common.Loader;
 import li.cil.oc.api.internal.Case;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -35,7 +34,7 @@ public class TriggerProvider implements ITriggerProvider {
 	public Collection<ITriggerExternal> getExternalTriggers(ForgeDirection side, TileEntity tile) {
 		LinkedList<ITriggerExternal> triggers = new LinkedList<ITriggerExternal>();
 		if(tile != null) {
-			if(Loader.isModLoaded(Mods.OpenComputers) && tile instanceof Case) {
+			if(Mods.isLoaded(Mods.OpenComputers) && tile instanceof Case) {
 				triggers.add(Triggers.Computer_Running);
 				triggers.add(Triggers.Computer_Stopped);
 			}

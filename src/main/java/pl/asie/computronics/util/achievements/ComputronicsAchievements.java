@@ -1,7 +1,6 @@
 package pl.asie.computronics.util.achievements;
 
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
 import gregtech.api.enums.ItemList;
@@ -21,7 +20,7 @@ import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
-import pl.asie.computronics.tile.TileLocomotiveRelay;
+import pl.asie.computronics.integration.railcraft.tile.TileLocomotiveRelay;
 
 import java.util.HashMap;
 
@@ -68,13 +67,13 @@ public class ComputronicsAchievements {
 			this.registerAchievement(EnumAchievements.Tape, 0, 0, new ItemStack(Computronics.itemTape, 1, 0), null, false, true);
 			this.registerAchievement(EnumAchievements.Tape_Star, 4, 0, new ItemStack(Computronics.itemTape, 1, 8), this.getAchievement(EnumAchievements.Tape), false, false);
 
-			if(Loader.isModLoaded(Mods.GregTech)) {
+			if(Mods.isLoaded(Mods.GregTech)) {
 				this.registerAchievement(EnumAchievements.Tape_IG, 8, 2, new ItemStack(Computronics.itemTape, 1, 9), this.getAchievement(EnumAchievements.Tape_Star), true, false);
 				this.registerAchievement(EnumAchievements.Tape_IG_Dropped, 8, 10, ItemList.IC2_Scrap.get(1), this.getAchievement(EnumAchievements.Tape_IG), true, false);
 			}
 		}
 
-		if(Loader.isModLoaded(Mods.Railcraft)) {
+		if(Mods.isLoaded(Mods.Railcraft)) {
 			RailcraftAchievements.initializeRCAchievements();
 		}
 	}
@@ -128,14 +127,14 @@ public class ComputronicsAchievements {
 					break;
 				}
 			}
-		} else if(Loader.isModLoaded(Mods.Railcraft)) {
+		} else if(Mods.isLoaded(Mods.Railcraft)) {
 			RailcraftAchievements.onCrafting(stack, player);
 		}
 	}
 
 	@SubscribeEvent
 	public void onLeftClickEntity(AttackEntityEvent event) {
-		if(Loader.isModLoaded(Mods.Railcraft)) {
+		if(Mods.isLoaded(Mods.Railcraft)) {
 			RailcraftAchievements.onLeftClickEntity(event);
 		}
 	}
@@ -217,7 +216,7 @@ public class ComputronicsAchievements {
 		}
 
 		private static void onLeftClickEntity(AttackEntityEvent event) {
-			if(Loader.isModLoaded(Mods.Railcraft) && event != null && event.target != null
+			if(Mods.isLoaded(Mods.Railcraft) && event != null && event.target != null
 				&& event.target instanceof EntityLocomotiveElectric) {
 
 				EntityPlayer player = event.entityPlayer;

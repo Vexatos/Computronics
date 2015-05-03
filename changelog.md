@@ -1,14 +1,36 @@
-==== 1.4.7 ====
+==== 1.5.0 ====
 
   * ADDED: All Computronics blocks now support the OpenComputers API documentation in NotEnoughItems.
   * ADDED: OpenComputers Component Documentation for every function any Computronics block provides
+  * ADDED: Some Robot Upgrades now render on a robot if the robot contains them. Requires OpenComputers 1.5.9 now.
+  * ADDED: The tape drive now plays a sound effect when forwarding or rewinding
+  * ADDED: Ticket Machine
+    - Allows printing single-use tickets using ComputerCraft or OpenComputers
+    - Right click to open the customer GUI
+      - Here you can select the ticket you would like to print and print tickets
+    - Shift-right click with an empty hand
+      - Now you can insert golden tickets for customers to select or take paper out
+      - If you are the owner or an Op, you can also lock the machine so only the owner and Ops can open the maintenance GUI
+    - You can prohibit selecting a ticket or printing tickets using the GUI using a computer
+      - If set, tickets can only be selected/printed using a computer
+    - Of course you can insert paper and extract printed tickets using any kind of automation
+    - By default the Ticket Machine uses a little bit of RF for printing tickets, this can be disabled in the config
   * CHANGED: Made Camera, Chat Box and Tape Drive functions more consistent in behaviour (The ComputerCraft and OpenComputers functions should do the exact same now)
   * CHANGED: Got rid of the ComputerCraft bundled redstone support for RedLogic as it was not working anyway. Full ComputerCraft support in RedLogic has been proposed to immibis.
   * CHANGED: Radars now only output relative distance by default. This can of course be changed in the config.
+  * CHANGED: The Locomotive Relay now consumes a little Charge in the Electric Locomotive as well as a little OpenComputers energy if used by OpenComputers
+    - This can be disabled in the config
+  * CHANGED: Slightly tweaked the recipes of some Railcraft integration blocks
   * FIXED: Updated OpenPeripheral integration to version 1.1 of OpenPeripheralCore (Requires version 1.1 now)
   * FIXED: Updated Forestry integration to version 3.5.3 (Requires version 3.5.3 now)
   * FIXED: Reworked the Locomotive Relay to properly work now and hopefully not randomly get unbound anymore.
     - Now you can clear a locomotive relay's bond by shift-rightclicking with an empty hand
+  * FIXED: Reworked the Digital Detector to only send an event once for each passing minecart instead of sending one once per tick and minecart
+    - The event will also now ship additional information if the minecart is a locomotive (primary colour, secondary colour and destination)
+    - Thanks to marcin212 and Kubuxu for this!
+  * FIXED: Computronics machine sounds now respect the "Blocks" volume setting instead of the "Friendly Creatures" one
+  * MISC: Refactored a lot of code, mainly related to GUIs and Railcraft integration.
+  * MISC: Increased the bitrate on most Computronics textures, they should look much better now.
 
 ==== 1.4.6 ====
 

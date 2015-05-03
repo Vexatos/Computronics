@@ -1,6 +1,5 @@
 package pl.asie.computronics.block;
 
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -47,7 +46,7 @@ public class BlockColorfulLamp extends BlockPeripheral implements IRedNetInputNo
 	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
 		TileEntity tile = world.getTileEntity(x, y, z);
-		if(Loader.isModLoaded(Mods.ProjectRed)) {
+		if(Mods.isLoaded(Mods.ProjectRed)) {
 			((TileColorfulLamp) tile).onProjectRedBundledInputChanged();
 		}
 	}

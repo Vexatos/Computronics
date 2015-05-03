@@ -12,8 +12,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.reference.Mods;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 /**
@@ -26,13 +28,22 @@ import java.util.concurrent.Future;
 public class RSAValue implements Value, ILuaObject {
 	protected Map<Integer, String> publicKey;
 	protected Map<Integer, String> privateKey;
-	protected Future<?> task;
+	protected Future<ArrayList<Map<Integer, String>>> task;
 
 	protected int bitLength = 0;
 	protected int p = 0;
 	protected int q = 0;
 
-	private Object[] getKeys() {
+	private Object[] getKeys() throws InterruptedException {
+		switch(checkFinished()) {
+			case -1: {
+				return new Object[] { null, null, "calculation returned no key set" };
+			}
+			case -2: {
+				return new Object[] { null, null, "an error occured during key generation" };
+			}
+		}
+
 		if(publicKey != null && privateKey != null) {
 			return new Object[] { publicKey, privateKey };
 		} else if(task != null && !task.isDone() && !task.isCancelled()) {
@@ -41,26 +52,38 @@ public class RSAValue implements Value, ILuaObject {
 		return new Object[] { null, null, "an error occured during key generation" };
 	}
 
-	public void setKeys(Map<Integer, String> publicKey, Map<Integer, String> privateKey) {
-		this.publicKey = publicKey;
-		this.privateKey = privateKey;
+	private int checkFinished() throws InterruptedException {
+		if(task != null && task.isDone()) {
+			try {
+				ArrayList<Map<Integer, String>> result = task.get();
+				if(result != null) {
+					this.publicKey = result.get(0);
+					this.privateKey = result.get(1);
+				} else {
+					return -1;
+				}
+			} catch(ExecutionException e) {
+				return -2;
+			}
+		}
+		return 0;
 	}
 
 	public void startCalculation() {
-		if(task == null) {
+		if(task == null || task.isCancelled()) {
 			task = Computronics.rsaThreads.submit(new RSACalculationTask(this));
 		}
 	}
 
 	public void startCalculation(int bitLength) {
-		if(task == null) {
+		if(task == null || task.isCancelled()) {
 			this.bitLength = bitLength;
 			task = Computronics.rsaThreads.submit(new RSACalculationTask(this, bitLength));
 		}
 	}
 
 	public void startCalculation(int p, int q) {
-		if(task == null) {
+		if(task == null || task.isCancelled()) {
 			this.p = p;
 			this.q = q;
 			task = Computronics.rsaThreads.submit(new RSACalculationTask(this, p, q));
@@ -69,13 +92,21 @@ public class RSAValue implements Value, ILuaObject {
 
 	@Callback(doc = "function():table,table; Returns the two generated keys, or nil if they are still being generated", direct = true)
 	@Optional.Method(modid = Mods.OpenComputers)
-	public Object[] getKeys(Context c, Arguments a) {
+	public Object[] getKeys(Context c, Arguments a) throws Exception {
 		return this.getKeys();
 	}
 
 	@Callback(doc = "function():boolean; Returns whether key generation has finished", direct = true)
 	@Optional.Method(modid = Mods.OpenComputers)
-	public Object[] finished(Context c, Arguments a) {
+	public Object[] finished(Context c, Arguments a) throws Exception {
+		switch(checkFinished()) {
+			case -1: {
+				return new Object[] { null, "calculation returned no key set" };
+			}
+			case -2: {
+				return new Object[] { null, "an error occured during key generation" };
+			}
+		}
 		return new Object[] { publicKey != null && privateKey != null };
 	}
 
@@ -88,13 +119,25 @@ public class RSAValue implements Value, ILuaObject {
 	@Override
 	@Optional.Method(modid = Mods.ComputerCraft)
 	public Object[] callMethod(ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
-		switch(method){
-			case 0:{
-				return getKeys();
+		try {
+			switch(method) {
+				case 0: {
+					return getKeys();
+				}
+				case 1: {
+					switch(checkFinished()) {
+						case -1: {
+							return new Object[] { null, "calculation returned no key set" };
+						}
+						case -2: {
+							return new Object[] { null, "an error occured during key generation" };
+						}
+					}
+					return new Object[] { publicKey != null && privateKey != null };
+				}
 			}
-			case 1:{
-				return new Object[] { publicKey != null && privateKey != null };
-			}
+		} catch(Exception e) {
+			throw new LuaException(e.getMessage());
 		}
 		return null;
 	}

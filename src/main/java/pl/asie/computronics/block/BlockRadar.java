@@ -17,6 +17,7 @@ public class BlockRadar extends BlockMachineSidedIcon {
 		this.setCreativeTab(Computronics.tab);
 		this.setIconName("computronics:radar");
 		this.setBlockName("computronics.radar");
+		this.setNoNedoComputers(true);
 	}
 	
 	@Override

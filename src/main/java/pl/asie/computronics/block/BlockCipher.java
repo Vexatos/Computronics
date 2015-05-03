@@ -1,6 +1,5 @@
 package pl.asie.computronics.block;
 
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -13,6 +12,7 @@ import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import pl.asie.computronics.Computronics;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TileCipherBlock;
@@ -28,7 +28,7 @@ public class BlockCipher extends BlockMachineSidedIcon implements IRedNetOmniNod
 	public BlockCipher() {
 		super("bundled", "cipher");
 		this.setBlockName("computronics.cipher");
-		this.setGuiID(1);
+		this.setGuiProvider(Computronics.guiCipher);
 	}
 	
 	@Override
@@ -55,7 +55,7 @@ public class BlockCipher extends BlockMachineSidedIcon implements IRedNetOmniNod
 	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
 		TileEntity tile = world.getTileEntity(x, y, z);
-		if(Loader.isModLoaded(Mods.ProjectRed))
+		if(Mods.isLoaded(Mods.ProjectRed))
 			((TileCipherBlock)tile).onProjectRedBundledInputChanged();
 	}
 	

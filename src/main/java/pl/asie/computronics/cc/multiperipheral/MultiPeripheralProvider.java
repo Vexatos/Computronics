@@ -1,6 +1,5 @@
 package pl.asie.computronics.cc.multiperipheral;
 
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheralProvider;
@@ -42,7 +41,7 @@ public class MultiPeripheralProvider implements IPeripheralProvider {
 		if(Config.CC_ALL_MULTI_PERIPHERALS) {
 			getAllPeripherals(periphs, world, x, y, z, side);
 		}
-		if(Loader.isModLoaded(Mods.OpenPeripheral) && Config.CC_OPEN_MULTI_PERIPHERAL) {
+		if(Mods.isLoaded(Mods.OpenPeripheral) && Config.CC_OPEN_MULTI_PERIPHERAL) {
 			IMultiPeripheral peripheral = getOpenPeripheral(world, x, y, z);
 			if(peripheral != null) {
 				periphs.add(peripheral);
@@ -125,7 +124,7 @@ public class MultiPeripheralProvider implements IPeripheralProvider {
 		for(Object ccperiph : ccperiphs) {
 			if(ccperiph != null && ccperiph instanceof IPeripheralProvider
 				&& !(ccperiph instanceof MultiPeripheralProvider)
-				&& !(Loader.isModLoaded(Mods.OpenPeripheral) && isOpenPeripheral(ccperiph))) {
+				&& !(Mods.isLoaded(Mods.OpenPeripheral) && isOpenPeripheral(ccperiph))) {
 				ccPeripheralProviders.add((IPeripheralProvider) ccperiph);
 			}
 		}

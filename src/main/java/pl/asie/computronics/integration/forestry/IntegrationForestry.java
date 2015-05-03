@@ -1,6 +1,5 @@
 package pl.asie.computronics.integration.forestry;
 
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.registry.GameRegistry;
 import forestry.api.apiculture.EnumBeeChromosome;
@@ -46,7 +45,7 @@ public class IntegrationForestry {
 		speciesTipsy = "forestry.speciesTipsy";
 
 	public void preInitOC() {
-		if(Loader.isModLoaded(Mods.OpenComputers)) {
+		if(Mods.isLoaded(Mods.OpenComputers)) {
 			itemPartsForestry = new ItemMultiple(Mods.Computronics, new String[] { "for.combAcid", "for.dropAcid" });
 			itemPartsForestry.setCreativeTab(Computronics.tab);
 			GameRegistry.registerItem(itemPartsForestry, "computronics.partsForestry");

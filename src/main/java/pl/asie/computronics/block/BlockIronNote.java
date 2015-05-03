@@ -1,6 +1,5 @@
 package pl.asie.computronics.block;
 
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
 import li.cil.oc.api.network.Environment;
 import net.minecraft.block.Block;
@@ -31,7 +30,7 @@ public class BlockIronNote extends BlockPeripheral implements IRedNetInputNode {
 	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
 		TileEntity tile = world.getTileEntity(x, y, z);
-		if(Loader.isModLoaded(Mods.ProjectRed))
+		if(Mods.isLoaded(Mods.ProjectRed))
 			((TileIronNote)tile).onProjectRedBundledInputChanged();
 	}
 

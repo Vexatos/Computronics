@@ -12,6 +12,7 @@ tile.computronics.eepromReader.name=EEPROM Reader
 tile.computronics.locomotiveRelay.name=Digital Locomotive Relay
 tile.computronics.digitalBox.name=Digital Signal Receiver Box
 tile.computronics.detector.name=Detector - Digital
+tile.computronics.ticketMachine.name=Ticket Machine
 
 tooltip.computronics.chatBox.creative=NSA in a box!
 tooltip.computronics.cipher.advanced=For the Starchasers!
@@ -23,6 +24,12 @@ tooltip.computronics.tape.balanced=Balanced!
 tooltip.computronics.tape.unnamed=Unnamed Tape
 tooltip.computronics.tape.none=No Tape
 tooltip.computronics.tape.ig=The standard CDVR for\nGregTech Intergalactical's ships
+tooltip.computronics.ticket.print=Print Ticket
+tooltip.computronics.ticket.printLocked=§cManual printing disabled
+tooltip.computronics.ticket.locked=This device is locked to\n {owner}.\n Only the owner or an Op\n can do maintenance work.
+tooltip.computronics.ticket.notmaintenance=Shift-right click\n this device with an \nempty hand to do\n maintenance work.
+tooltip.computronics.ticket.notowner=You are not the\n owner of this device.\n It belongs to\n {owner}.
+tooltip.computronics.ticket.unlocked=Click to lock device.\n Once locked, only you\n or an Op can\n do maintenance work.
 
 tooltip.computronics.gate.action.computer_start=Start Computer
 tooltip.computronics.gate.action.computer_stop=Stop Computer

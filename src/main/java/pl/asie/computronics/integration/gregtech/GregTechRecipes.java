@@ -1,6 +1,5 @@
 package pl.asie.computronics.integration.gregtech;
 
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.registry.GameRegistry;
 import gregtech.GT_Mod;
@@ -65,13 +64,13 @@ public class GregTechRecipes extends ModRecipes {
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Computronics.colorfulLamp, 1, 0),
 				"igi", "glg", "ini", 'i', "plateIron", 'g', "plateGlass", 'l', Blocks.redstone_lamp, 'n', "circuitPrimitive"));
 		}
-		if(!(Loader.isModLoaded(Mods.OpenComputers) && !Config.NON_OC_RECIPES && registerOCRecipes())) {
+		if(!(Mods.isLoaded(Mods.OpenComputers) && !Config.NON_OC_RECIPES && registerOCRecipes())) {
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Computronics.cipher_advanced, 1, 0),
 				"gdg", "ece", "gig", 'g', "screwStainlessSteel",
 				'c', Computronics.cipher != null ? Computronics.cipher : ItemList.Robot_Arm_HV.get(1), 'e', "wireGt01Gold", 'i', "circuitMaster",
 				'd', Computronics.cipher != null ? ItemList.Robot_Arm_HV.get(1) : "plateDiamond"));
 		}
-		if(Loader.isModLoaded(Mods.Railcraft) && Computronics.railcraft != null) {
+		if(Mods.isLoaded(Mods.Railcraft) && Computronics.railcraft != null) {
 			registerRailcraftRecipes();
 		}
 		if(Computronics.itemTape != null) {
@@ -157,6 +156,16 @@ public class GregTechRecipes extends ModRecipes {
 		if(Computronics.railcraft.detector != null) {
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Computronics.railcraft.detector, 1, 0),
 				"bbb", "bdp", "bbb", 'b', "plateSteel", 'p', "cableGt02Gold", 'd', GameRegistry.findItemStack(Mods.Railcraft, "detector.advanced", 1)));
+		}
+		if(Computronics.railcraft.ticketMachine != null) {
+			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Computronics.railcraft.ticketMachine, 1, 0),
+				"trt", "shg", "tpt",
+				'h', ItemList.Hull_LV.get(1),
+				'r', ItemList.Electric_Motor_LV.get(1),
+				't', "plateSteel",
+				's', "circuitGood",
+				'p', ItemList.Electric_Piston_LV.get(1),
+				'g', ItemList.Cover_Screen.get(1)));
 		}
 	}
 

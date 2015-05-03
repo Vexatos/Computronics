@@ -1,12 +1,10 @@
 package pl.asie.computronics.network;
 
-import cpw.mods.fml.common.Loader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetHandler;
 import net.minecraft.tileentity.TileEntity;
 import pl.asie.computronics.Computronics;
-import pl.asie.computronics.oc.DriverCardBoom;
 import pl.asie.computronics.oc.DriverCardSound;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
@@ -88,14 +86,20 @@ public class NetworkHandlerClient extends MessageHandlerBase {
 			}
 			break;
 			case Packets.PACKET_COMPUTER_BEEP: {
-				if(Loader.isModLoaded(Mods.OpenComputers)) {
+				if(Mods.isLoaded(Mods.OpenComputers)) {
 					DriverCardSound.onSound(packet, player);
 				}
 			}
 			break;
 			case Packets.PACKET_COMPUTER_BOOM: {
-				if(Loader.isModLoaded(Mods.OpenComputers)) {
+				if(Mods.isLoaded(Mods.OpenComputers)) {
 					Computronics.proxy.goBoom(packet);
+				}
+			}
+			break;
+			case Packets.PACKET_TICKET_SYNC: {
+				if(Mods.isLoaded(Mods.Railcraft)) {
+					Computronics.railcraft.onMessageRailcraft(packet, player, false);
 				}
 			}
 			break;
