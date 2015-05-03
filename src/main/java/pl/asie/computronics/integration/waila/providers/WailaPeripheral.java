@@ -1,6 +1,5 @@
 package pl.asie.computronics.integration.waila.providers;
 
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
 import li.cil.oc.api.network.Environment;
 import li.cil.oc.api.network.Node;
@@ -29,10 +28,10 @@ public class WailaPeripheral extends ComputronicsWailaProvider {
 		IWailaConfigHandler config) {
 
 		NBTTagCompound nbt = accessor.getNBTData();
-		if(Loader.isModLoaded(Mods.OpenComputers) && ConfigValues.OCAddress.getValue(config)) {
+		if(Mods.isLoaded(Mods.OpenComputers) && ConfigValues.OCAddress.getValue(config)) {
 			currenttip = getWailaOCBody(nbt, currenttip);
 		}
-		if(Loader.isModLoaded(Mods.NedoComputers) && ConfigValues.NCAddress.getValue(config)) {
+		if(Mods.isLoaded(Mods.NedoComputers) && ConfigValues.NCAddress.getValue(config)) {
 			currenttip = getWailaNCBody(nbt, currenttip);
 		}
 		return currenttip;
@@ -59,10 +58,10 @@ public class WailaPeripheral extends ComputronicsWailaProvider {
 	@Override
 	public NBTTagCompound getNBTData(EntityPlayerMP player, TileEntity te, NBTTagCompound tag, World world, int x, int y, int z) {
 		if(te != null && te instanceof IComputronicsPeripheral) {
-			if(Loader.isModLoaded(Mods.OpenComputers)) {
+			if(Mods.isLoaded(Mods.OpenComputers)) {
 				tag = getNBTData_OC(te, tag);
 			}
-			if(Loader.isModLoaded(Mods.NedoComputers)) {
+			if(Mods.isLoaded(Mods.NedoComputers)) {
 				tag = getNBTData_NC(te, tag);
 			}
 		}

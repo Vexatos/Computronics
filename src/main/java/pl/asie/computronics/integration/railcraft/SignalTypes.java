@@ -7,7 +7,7 @@ import net.minecraft.block.Block;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.Computronics;
-import pl.asie.computronics.tile.TileDigitalReceiverBox;
+import pl.asie.computronics.integration.railcraft.tile.TileDigitalReceiverBox;
 
 /**
  * @author Vexatos

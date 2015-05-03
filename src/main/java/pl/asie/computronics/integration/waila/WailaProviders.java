@@ -1,9 +1,8 @@
 package pl.asie.computronics.integration.waila;
 
-import cpw.mods.fml.common.Loader;
 import pl.asie.computronics.block.BlockColorfulLamp;
-import pl.asie.computronics.block.BlockDigitalReceiverBox;
-import pl.asie.computronics.block.BlockLocomotiveRelay;
+import pl.asie.computronics.integration.railcraft.block.BlockDigitalReceiverBox;
+import pl.asie.computronics.integration.railcraft.block.BlockLocomotiveRelay;
 import pl.asie.computronics.block.BlockPeripheral;
 import pl.asie.computronics.block.BlockTapeReader;
 import pl.asie.computronics.integration.waila.providers.IComputronicsWailaProvider;
@@ -26,7 +25,7 @@ public class WailaProviders {
 
 	static void initialize() {
 		newProvider(new WailaPeripheral(), BlockPeripheral.class);
-		if(Loader.isModLoaded(Mods.Railcraft)) {
+		if(Mods.isLoaded(Mods.Railcraft)) {
 			newProvider(new WailaPeripheral(), BlockDigitalReceiverBox.class);
 			newProvider(new WailaLocomotiveRelay(), BlockLocomotiveRelay.class);
 		}

@@ -1,6 +1,5 @@
 package pl.asie.computronics.item;
 
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -182,7 +181,7 @@ public class ItemTape extends Item implements IItemTapeStorage, IMedia, IMediaPr
 	@SideOnly(Side.CLIENT)
 	public void getSubItems(Item item, CreativeTabs tabs, List list) {
 		for(int i = 0; i < TAPE_COUNT; i++) {
-			if((i == 7 || i == 9) && !Loader.isModLoaded(Mods.GregTech)) {
+			if((i == 7 || i == 9) && !Mods.isLoaded(Mods.GregTech)) {
 				//Do nothing. If we return here, we lose all new tapes.
 				continue;
 			}

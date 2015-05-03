@@ -63,4 +63,12 @@ public class Mods {
 			return pl.asie.lib.reference.Mods.API.hasAPI(name);
 		}
 	}
+
+	public static boolean isLoaded(String name) {
+		return pl.asie.lib.reference.Mods.isLoaded(name);
+	}
+
+	public static boolean hasEnergyMod(){
+		return pl.asie.lib.reference.Mods.hasEnergyMod();
+	}
 }

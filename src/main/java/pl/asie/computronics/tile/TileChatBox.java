@@ -1,6 +1,5 @@
 package pl.asie.computronics.tile;
 
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
@@ -79,10 +78,10 @@ public class TileChatBox extends TileEntityPeripheralBase implements IChatListen
 			ticksUntilOff = 5;
 			mustRefresh = true;
 		}
-		if(Loader.isModLoaded(Mods.OpenComputers)) {
+		if(Mods.isLoaded(Mods.OpenComputers)) {
 			eventOC(event);
 		}
-		if(Loader.isModLoaded(Mods.ComputerCraft)) {
+		if(Mods.isLoaded(Mods.ComputerCraft)) {
 			eventCC(event);
 		}
 	}

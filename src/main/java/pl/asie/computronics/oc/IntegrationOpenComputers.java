@@ -1,6 +1,5 @@
 package pl.asie.computronics.oc;
 
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.event.FMLMissingMappingsEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -37,15 +36,15 @@ import pl.asie.computronics.integration.gregtech.DriverDeviceInformation;
 import pl.asie.computronics.integration.gregtech.DriverDigitalChest;
 import pl.asie.computronics.integration.gregtech.DriverMachine;
 import pl.asie.computronics.integration.mekanism.DriverStrictEnergyStorage;
-import pl.asie.computronics.integration.railcraft.DriverElectricGrid;
-import pl.asie.computronics.integration.railcraft.DriverRoutingDetector;
-import pl.asie.computronics.integration.railcraft.DriverRoutingSwitch;
-import pl.asie.computronics.integration.railcraft.track.DriverLauncherTrack;
-import pl.asie.computronics.integration.railcraft.track.DriverLimiterTrack;
-import pl.asie.computronics.integration.railcraft.track.DriverLocomotiveTrack;
-import pl.asie.computronics.integration.railcraft.track.DriverPoweredTrack;
-import pl.asie.computronics.integration.railcraft.track.DriverPrimingTrack;
-import pl.asie.computronics.integration.railcraft.track.DriverRoutingTrack;
+import pl.asie.computronics.integration.railcraft.driver.DriverElectricGrid;
+import pl.asie.computronics.integration.railcraft.driver.DriverRoutingDetector;
+import pl.asie.computronics.integration.railcraft.driver.DriverRoutingSwitch;
+import pl.asie.computronics.integration.railcraft.driver.track.DriverLauncherTrack;
+import pl.asie.computronics.integration.railcraft.driver.track.DriverLimiterTrack;
+import pl.asie.computronics.integration.railcraft.driver.track.DriverLocomotiveTrack;
+import pl.asie.computronics.integration.railcraft.driver.track.DriverPoweredTrack;
+import pl.asie.computronics.integration.railcraft.driver.track.DriverPrimingTrack;
+import pl.asie.computronics.integration.railcraft.driver.track.DriverRoutingTrack;
 import pl.asie.computronics.integration.redlogic.DriverLamp;
 import pl.asie.computronics.item.ItemOpenComputers;
 import pl.asie.computronics.oc.block.DriverBlockEnvironments;
@@ -93,12 +92,12 @@ public class IntegrationOpenComputers {
 		// To ensure less TE ticks for those who don't use OC, we keep this tidbit around.
 		Config.MUST_UPDATE_TILE_ENTITIES = true;
 
-		if(Loader.isModLoaded(Mods.Forestry) && Config.FORESTRY_BEES) {
+		if(Mods.isLoaded(Mods.Forestry) && Config.FORESTRY_BEES) {
 			Computronics.forestry = new IntegrationForestry();
 			Computronics.forestry.preInitOC();
 		}
 
-		if(Loader.isModLoaded(Mods.BuildCraftTransport) && Loader.isModLoaded(Mods.BuildCraftCore) && Config.BUILDCRAFT_STATION) {
+		if(Mods.isLoaded(Mods.BuildCraftTransport) && Mods.isLoaded(Mods.BuildCraftCore) && Config.BUILDCRAFT_STATION) {
 			Computronics.buildcraft = new IntegrationBuildCraft();
 			Computronics.buildcraft.preInitOC();
 		}
@@ -109,12 +108,12 @@ public class IntegrationOpenComputers {
 
 		Driver.add(new DriverBlockEnvironments());
 
-		if(Loader.isModLoaded(Mods.RedLogic)) {
+		if(Mods.isLoaded(Mods.RedLogic)) {
 			if(compat.isCompatEnabled(Compat.RedLogic_Lamps)) {
 				Driver.add(new DriverLamp.OCDriver());
 			}
 		}
-		if(Loader.isModLoaded(Mods.BetterStorage)) {
+		if(Mods.isLoaded(Mods.BetterStorage)) {
 			if(compat.isCompatEnabled(Compat.BetterStorage_Crates)) {
 				try {
 					Class.forName("net.mcft.copy.betterstorage.api.ICrateStorage");
@@ -133,17 +132,17 @@ public class IntegrationOpenComputers {
 				}
 			}
 		}
-		if(Loader.isModLoaded(Mods.FSP)) {
+		if(Mods.isLoaded(Mods.FSP)) {
 			if(compat.isCompatEnabled(Compat.FSP_Steam_Transporter)) {
 				Driver.add(new DriverSteamTransporter.OCDriver());
 			}
 		}
-		if(Loader.isModLoaded(Mods.Factorization)) {
+		if(Mods.isLoaded(Mods.Factorization)) {
 			if(compat.isCompatEnabled(Compat.FZ_ChargePeripheral)) {
 				Driver.add(new DriverChargeConductor.OCDriver());
 			}
 		}
-		if(Loader.isModLoaded(Mods.Railcraft)) {
+		if(Mods.isLoaded(Mods.Railcraft)) {
 			if(compat.isCompatEnabled(Compat.Railcraft_Routing)) {
 				Driver.add(new DriverPoweredTrack.OCDriver());
 				Driver.add(new DriverRoutingTrack.OCDriver());
@@ -156,7 +155,7 @@ public class IntegrationOpenComputers {
 				Driver.add(new DriverPrimingTrack.OCDriver());
 			}
 		}
-		if(Loader.isModLoaded(Mods.GregTech)) {
+		if(Mods.isLoaded(Mods.GregTech)) {
 			if(compat.isCompatEnabled(Compat.GregTech_Machines)) {
 				Driver.add(new DriverBaseMetaTileEntity());
 				Driver.add(new DriverDeviceInformation());
@@ -167,12 +166,12 @@ public class IntegrationOpenComputers {
 				Driver.add(new DriverDigitalChest());
 			}
 		}
-		if(Loader.isModLoaded(Mods.AE2)) {
+		if(Mods.isLoaded(Mods.AE2)) {
 			if(compat.isCompatEnabled(Compat.AE2_SpatialIO)) {
 				Driver.add(new DriverSpatialIOPort.OCDriver());
 			}
 		}
-		if(Loader.isModLoaded(Mods.EnderIO)) {
+		if(Mods.isLoaded(Mods.EnderIO)) {
 			if(compat.isCompatEnabled(Compat.EnderIO)) {
 				Driver.add(new DriverRedstoneControllable.OCDriver());
 				Driver.add(new DriverIOConfigurable.OCDriver());
