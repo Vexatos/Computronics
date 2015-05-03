@@ -11,6 +11,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import org.apache.logging.log4j.Logger;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.client.UpgradeRenderer;
 import pl.asie.computronics.integration.appeng.DriverSpatialIOPort;
 import pl.asie.computronics.integration.betterstorage.DriverCrateStorageNew;
 import pl.asie.computronics.integration.betterstorage.DriverCrateStorageOld;
@@ -66,6 +67,7 @@ public class IntegrationOpenComputers {
 	private final Logger log;
 
 	public static ItemOpenComputers itemOCParts;
+	public static UpgradeRenderer upgradeRenderer;
 
 	public IntegrationOpenComputers(Computronics computronics) {
 		this.computronics = computronics;
