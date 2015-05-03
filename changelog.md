@@ -2,6 +2,7 @@
 
   * ADDED: All Computronics blocks now support the OpenComputers API documentation in NotEnoughItems.
   * ADDED: OpenComputers Component Documentation for every function any Computronics block provides
+  * ADDED: Some Robot Upgrades now render on a robot if the robot contains them. Requires OpenComputers 1.5.9 now.
   * CHANGED: Made Camera, Chat Box and Tape Drive functions more consistent in behaviour (The ComputerCraft and OpenComputers functions should do the exact same now)
   * CHANGED: Got rid of the ComputerCraft bundled redstone support for RedLogic as it was not working anyway. Full ComputerCraft support in RedLogic has been proposed to immibis.
   * CHANGED: Radars now only output relative distance by default. This can of course be changed in the config.
