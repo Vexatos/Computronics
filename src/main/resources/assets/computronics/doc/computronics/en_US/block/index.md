@@ -28,3 +28,4 @@ These are blocks that Computronics adds for integration with other mods. They mi
 * [Locomotive Relay](railcraft/locomotive_relay.md)
 * [Digital Detector](railcraft/digital_detector.md)
 * [Digital Signal Receiver Box](railcraft/digital_receiver_box.md)
+* [Ticket Machine](railcraft/ticket_machine.md)
