@@ -7,7 +7,7 @@
   * ADDED: Ticket Machine
     - Allows printing single-use tickets using ComputerCraft or OpenComputers
     - Right click to open the customer GUI
-      - Here you can select the ticket you would like to print, insert paper and print tickets
+      - Here you can select the ticket you would like to print and print tickets
     - Shift-right click with an empty hand
       - Now you can insert golden tickets for customers to select or take paper out
       - If you are the owner or an Op, you can also lock the machine so only the owner and Ops can open the maintenance GUI
