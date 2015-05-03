@@ -20,6 +20,7 @@
   * CHANGED: Radars now only output relative distance by default. This can of course be changed in the config.
   * CHANGED: The Locomotive Relay now consumes a little Charge in the Electric Locomotive as well as a little OpenComputers energy if used by OpenComputers
     - This can be disabled in the config
+  * CHANGED: Renamed the EEPROM Reader component/peripheral name to "eeprom_reader" as it was conflicting with the OpenComputers EEPROM component.
   * CHANGED: Slightly tweaked the recipes of some Railcraft integration blocks
   * FIXED: Updated OpenPeripheral integration to version 1.1 of OpenPeripheralCore (Requires version 1.1 now)
   * FIXED: Updated Forestry integration to version 3.5.3 (Requires version 3.5.3 now)

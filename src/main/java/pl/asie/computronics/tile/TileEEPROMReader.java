@@ -14,7 +14,7 @@ import pl.asie.lib.api.tile.IInventoryProvider;
 
 public class TileEEPROMReader extends TileEntityPeripheralBase implements IInventoryProvider {
 	public TileEEPROMReader() {
-		super("eeprom");
+		super("eeprom_reader");
 		this.createInventory(1);
 	}
 
