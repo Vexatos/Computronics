@@ -38,7 +38,9 @@ public class Config {
 	public static boolean FORESTRY_BEES = true;
 	public static boolean BUILDCRAFT_STATION = true;
 
-	public static boolean OC_ROBOT_UPGRADES;
+	public static boolean OC_UPGRADE_CAMERA;
+	public static boolean OC_UPGRADE_CHATBOX;
+	public static boolean OC_UPGRADE_RADAR;
 	public static boolean OC_CARD_FX;
 	public static boolean OC_CARD_SPOOF;
 	public static boolean OC_CARD_SOUND;
@@ -89,7 +91,9 @@ public class Config {
 			CIPHER_WORK_CONSUMPTION = convertRFtoOC(
 				config.getFloat("cipherWorkConsumption", "power", 160.0f, 0.0f, 100000.0f, "How much base energy the Advanced Cipher Block should consume per encryption/decryption task. It will consume this value + 2*(number of characters in message)"));
 
-			OC_ROBOT_UPGRADES = config.get("enable.opencomputers", "robotUpgrades", true).getBoolean(true);
+			OC_UPGRADE_CAMERA = config.get("enable.opencomputers", "cameraUpgrade", true).getBoolean(true);
+			OC_UPGRADE_CHATBOX = config.get("enable.opencomputers", "chatboxUpgrade", true).getBoolean(true);
+			OC_UPGRADE_RADAR = config.get("enable.opencomputers", "radarUpgrade", true).getBoolean(true);
 			OC_CARD_FX = config.get("enable.opencomputers", "particleCard", true).getBoolean(true);
 			OC_CARD_SPOOF = config.get("enable.opencomputers", "spoofingCard", true).getBoolean(true);
 			OC_CARD_SOUND = config.get("enable.opencomputers", "soundCard", true).getBoolean(true);

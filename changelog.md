@@ -21,7 +21,8 @@
   * CHANGED: The Locomotive Relay now consumes a little Charge in the Electric Locomotive as well as a little OpenComputers energy if used by OpenComputers
     - This can be disabled in the config
   * CHANGED: Renamed the EEPROM Reader component/peripheral name to "eeprom_reader" as it was conflicting with the OpenComputers EEPROM component.
-  * CHANGED: Slightly tweaked the recipes of some Railcraft integration blocks
+  * CHANGED: Slightly tweaked the recipes of some Railcraft integration blocks and OpenComputers upgrades
+  * CHANGED: Added config options for enabling each robot upgrade separately.
   * FIXED: Updated OpenPeripheral integration to version 1.1 of OpenPeripheralCore (Requires version 1.1 now)
   * FIXED: Updated Forestry integration to version 3.5.3 (Requires version 3.5.3 now)
   * FIXED: Reworked the Locomotive Relay to properly work now and hopefully not randomly get unbound anymore.

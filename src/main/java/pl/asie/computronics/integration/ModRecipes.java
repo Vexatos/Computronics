@@ -111,7 +111,7 @@ public class ModRecipes {
 				'b', capacitor.block());
 			return true;
 		}
-		Computronics.log.warn("An error happened during registering OpenComputers-style recipes, falling back to default ones");
+		Computronics.log.warn("An error occured during registering OpenComputers-style recipes, falling back to default ones");
 		return false;
 	}
 

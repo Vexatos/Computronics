@@ -205,9 +205,13 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 	@SideOnly(Side.CLIENT)
 	@SuppressWarnings("unchecked")
 	public void getSubItems(net.minecraft.item.Item item, CreativeTabs tabs, List list) {
-		if(Config.OC_ROBOT_UPGRADES) {
+		if(Config.OC_UPGRADE_CAMERA) {
 			list.add(new ItemStack(item, 1, 0));
+		}
+		if(Config.OC_UPGRADE_CHATBOX) {
 			list.add(new ItemStack(item, 1, 1));
+		}
+		if(Config.OC_UPGRADE_RADAR) {
 			list.add(new ItemStack(item, 1, 2));
 		}
 		if(Config.OC_CARD_FX) {
