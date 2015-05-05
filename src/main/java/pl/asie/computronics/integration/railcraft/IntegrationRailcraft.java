@@ -1,6 +1,7 @@
 package pl.asie.computronics.integration.railcraft;
 
 import cpw.mods.fml.common.Optional;
+import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -45,6 +46,7 @@ public class IntegrationRailcraft {
 			locomotiveRelay = new BlockLocomotiveRelay();
 			GameRegistry.registerBlock(locomotiveRelay, "computronics.locomotiveRelay");
 			GameRegistry.registerTileEntity(TileLocomotiveRelay.class, "computronics.locomotiveRelay");
+			FMLInterModComms.sendMessage(Mods.AE2, "whitelist-spatial", TileLocomotiveRelay.class.getCanonicalName());
 
 			relaySensor = new ItemRelaySensor();
 			GameRegistry.registerItem(relaySensor, "computronics.relaySensor");
@@ -56,11 +58,13 @@ public class IntegrationRailcraft {
 			this.digitalBox = new BlockDigitalReceiverBox();
 			GameRegistry.registerBlock(digitalBox, "computronics.digitalBox");
 			GameRegistry.registerTileEntity(TileDigitalReceiverBox.class, "computronics.digitalBox");
+			FMLInterModComms.sendMessage(Mods.AE2, "whitelist-spatial", TileDigitalReceiverBox.class.getCanonicalName());
 		}
 		if(isEnabled(config, "digitalDetector", true)) {
 			detector = new BlockDigitalDetector();
 			GameRegistry.registerBlock(detector, "computronics.detector");
 			GameRegistry.registerTileEntity(TileDigitalDetector.class, "computronics.detector");
+			FMLInterModComms.sendMessage(Mods.AE2, "whitelist-spatial", TileDigitalDetector.class.getCanonicalName());
 		}
 		if(isEnabled(config, "ticketMachine", true)) {
 			this.guiTicketMachine = new GuiProviderTicketMachine();
@@ -68,6 +72,7 @@ public class IntegrationRailcraft {
 			ticketMachine = new BlockTicketMachine();
 			GameRegistry.registerBlock(ticketMachine, "computronics.ticketMachine");
 			GameRegistry.registerTileEntity(TileTicketMachine.class, "computronics.ticketMachine");
+			FMLInterModComms.sendMessage(Mods.AE2, "whitelist-spatial", TileTicketMachine.class.getCanonicalName());
 		}
 	}
 
