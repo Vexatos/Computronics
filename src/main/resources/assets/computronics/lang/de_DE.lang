@@ -13,6 +13,7 @@ tile.computronics.locomotiveRelay.name=Digitales Lokomotivenrelais
 tile.computronics.digitalBox.name=Digitale Signalempfängerbox
 tile.computronics.detector.name=Detektor - Digital
 tile.computronics.ticketMachine.name=Ticketautomat
+tile.computronics.grogergizer.name=§oDer Grogergizer™
 
 tooltip.computronics.chatBox.creative=Die NSA für zu Hause!
 tooltip.computronics.cipher.advanced=Für die Starchaser!

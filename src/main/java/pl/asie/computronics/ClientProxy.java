@@ -1,5 +1,6 @@
 package pl.asie.computronics;
 
+import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
@@ -9,12 +10,14 @@ import net.minecraft.item.Item;
 import net.minecraft.world.ChunkPosition;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
+import pl.asie.computronics.client.GrogergizerRenderer;
 import pl.asie.computronics.client.LampRender;
 import pl.asie.computronics.client.SignalBoxRenderer;
 import pl.asie.computronics.client.UpgradeRenderer;
 import pl.asie.computronics.item.entity.EntityItemIndestructable;
 import pl.asie.computronics.oc.IntegrationOpenComputers;
 import pl.asie.computronics.reference.Mods;
+import pl.asie.computronics.tile.TileGrogergizer;
 import pl.asie.computronics.util.boom.SelfDestruct;
 import pl.asie.lib.network.Packet;
 
@@ -88,5 +91,6 @@ public class ClientProxy extends CommonProxy {
 			IntegrationOpenComputers.upgradeRenderer = new UpgradeRenderer();
 		}
 		MinecraftForge.EVENT_BUS.register(IntegrationOpenComputers.upgradeRenderer);
+		ClientRegistry.bindTileEntitySpecialRenderer(TileGrogergizer.class, new GrogergizerRenderer());
 	}
 }

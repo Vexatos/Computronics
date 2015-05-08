@@ -58,6 +58,12 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 		soundRes = getSoundFor(getSoundName());
 	}
 
+	public TileEntityPeripheralBase(){
+		super();
+		this.peripheralName = "computronics_tile";
+		soundRes = getSoundFor(getSoundName());
+	}
+
 	public boolean isValid() {
 		return !isInvalid();
 	}
