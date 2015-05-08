@@ -9,6 +9,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import org.apache.logging.log4j.Logger;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.block.BlockGrogergizer;
 import pl.asie.computronics.client.UpgradeRenderer;
 import pl.asie.computronics.integration.appeng.DriverSpatialIOPort;
 import pl.asie.computronics.integration.betterstorage.DriverCrateStorageNew;
@@ -47,9 +48,11 @@ import pl.asie.computronics.integration.railcraft.driver.track.DriverRoutingTrac
 import pl.asie.computronics.integration.redlogic.DriverLamp;
 import pl.asie.computronics.item.ItemOpenComputers;
 import pl.asie.computronics.oc.block.DriverBlockEnvironments;
+import pl.asie.computronics.oc.item.ItemCartridges;
 import pl.asie.computronics.reference.Compat;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
+import pl.asie.computronics.tile.TileGrogergizer;
 
 import static pl.asie.computronics.Computronics.camera;
 import static pl.asie.computronics.Computronics.chatBox;
@@ -86,6 +89,12 @@ public class IntegrationOpenComputers {
 			itemOCParts = new ItemOpenComputers();
 			GameRegistry.registerItem(itemOCParts, "computronics.ocParts");
 			Driver.add(itemOCParts);
+
+			ItemCartridges itemCartridges = new ItemCartridges();
+			GameRegistry.registerItem(itemCartridges, "computronics.ocCartridges");
+			BlockGrogergizer grogergizer = new BlockGrogergizer();
+			GameRegistry.registerBlock(grogergizer, "computronics.grogergizer");
+			GameRegistry.registerTileEntity(TileGrogergizer.class, "computronics.grogergizer");
 		}
 
 		// OpenComputers needs a hook in updateEntity in order to proprly register peripherals.
