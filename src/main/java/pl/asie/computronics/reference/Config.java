@@ -131,18 +131,6 @@ public class Config {
 			CC_ALL_MULTI_PERIPHERALS = config.getBoolean("allMultiPeripherals", "computercraft.multiperipheral", true, "Set this to true to fix multiple mods adding peripherals to the same block not working");
 			CC_ALWAYS_FIRST = config.getBoolean("alwaysFirstPeripheral", "computercraft.multiperipheral", true, "If this is true, the Computronics MultiPeripheral system will almost always be the one recognized by ComputerCraft");
 			config.setCategoryComment("computercraft.multiperipheral", "If all of these options are set to true, Computronics will fix almost every conflict with multiple mods adding peripherals to the same block");
-			if(CC_OPEN_MULTI_PERIPHERAL && CC_ALL_MULTI_PERIPHERALS && CC_ALWAYS_FIRST) {
-				Logger cpx = LogManager.getLogger(Mods.Computronics_NAME);
-				Logger cc = LogManager.getLogger(Mods.ComputerCraft);
-				cpx.info("Hey, ComputerCraft! Guess what!");
-				cc.info("What?");
-				cpx.info("I fixed your peripheral system!");
-				cc.info("You did WHAT?!");
-				cpx.info("Multiple mods registering peripherals for the same block won't be a problem anymore!");
-				cc.info("Are you serious?");
-				cpx.info("Yes I am. Now be quiet and let Minecraft continue to load.");
-				cc.info("...");
-			}
 		}
 
 		// Radar
