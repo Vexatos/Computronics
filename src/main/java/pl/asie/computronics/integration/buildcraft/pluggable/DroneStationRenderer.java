@@ -4,8 +4,8 @@ import buildcraft.api.core.render.ITextureStates;
 import buildcraft.api.transport.IPipe;
 import buildcraft.api.transport.pluggable.IPipePluggableRenderer;
 import buildcraft.api.transport.pluggable.PipePluggable;
-import buildcraft.core.utils.MatrixTranformations;
-import buildcraft.transport.render.TextureStateManager;
+import buildcraft.core.lib.render.TextureStateManager;
+import buildcraft.core.lib.utils.MatrixTranformations;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
@@ -154,11 +154,8 @@ public class DroneStationRenderer implements IPipePluggableRenderer {
 		public boolean handleRenderType(ItemStack item, ItemRenderType type) {
 			switch (type) {
 				case ENTITY:
-					return true;
 				case EQUIPPED:
-					return true;
 				case EQUIPPED_FIRST_PERSON:
-					return true;
 				case INVENTORY:
 					return true;
 				default:
