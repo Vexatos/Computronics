@@ -1,0 +1,3 @@
+# Colorful Lamp
+
+The colorful lamp is a special light block allowing for up to 32768 color combinations. Colors are defined as a 15-bit binary. The last 5 digits control shades of blue; the middle 5, shades of green; and the first 5, shades of red. For instance, the binary representation `000000000011111` (converted to a decimal value) would result in a blue color. The colorful lamp can be used as a status block, where different colors could represent different states of a program running on the computer. 
