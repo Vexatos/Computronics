@@ -10,6 +10,7 @@ import mods.railcraft.common.blocks.signals.BlockSignalBase;
 import mods.railcraft.common.blocks.signals.ISignalTileDefinition;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
@@ -114,13 +115,26 @@ public class BlockDigitalReceiverBox extends BlockSignalBase implements IComputr
 		return TileDigitalReceiverBox.class;
 	}
 
+	private final String documentationName = "digital_receiver_box";
+	private final String prefix = "railcraft/";
+
 	@Override
 	public String getDocumentationName(World world, int x, int y, int z) {
-		return "digital_receiver_box";
+		return this.documentationName;
+	}
+
+	@Override
+	public String getDocumentationName(ItemStack stack) {
+		return this.documentationName;
 	}
 
 	@Override
 	public String getPrefix(World world, int x, int y, int z) {
-		return "railcraft/";
+		return this.prefix;
+	}
+
+	@Override
+	public String getPrefix(ItemStack stack) {
+		return this.prefix;
 	}
 }

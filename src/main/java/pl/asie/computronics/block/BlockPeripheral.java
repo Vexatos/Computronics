@@ -3,6 +3,7 @@ package pl.asie.computronics.block;
 import cpw.mods.fml.common.Optional;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import pl.asie.computronics.Computronics;
@@ -62,6 +63,11 @@ public abstract class BlockPeripheral extends BlockBase implements IComputronics
 
 	@Override
 	public String getDocumentationName(World world, int x, int y, int z) {
+		return this.documentationName;
+	}
+
+	@Override
+	public String getDocumentationName(ItemStack stack) {
 		return this.documentationName;
 	}
 }
