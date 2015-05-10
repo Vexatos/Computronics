@@ -4,7 +4,6 @@ import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.event.FMLMissingMappingsEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import li.cil.oc.api.Driver;
-import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -78,7 +77,9 @@ public class IntegrationOpenComputers {
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void preInit() {
 
-		if(Config.OC_ROBOT_UPGRADES
+		if(Config.OC_UPGRADE_CAMERA
+			|| Config.OC_UPGRADE_CHATBOX
+			|| Config.OC_UPGRADE_RADAR
 			|| Config.OC_CARD_FX
 			|| Config.OC_CARD_SPOOF
 			|| Config.OC_CARD_SOUND
@@ -215,23 +216,46 @@ public class IntegrationOpenComputers {
 
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void postInit() {
-		if(Config.OC_ROBOT_UPGRADES) {
-			Block[] b = { camera, chatBox, radar };
-			try {
-				for(int i = 0; i < b.length; i++) {
-					Block t = b[i];
-					GameRegistry.addShapedRecipe(new ItemStack(itemOCParts, 1, i),
-						"mcm", 'c',
-						new ItemStack(t, 1, 0),
-						'm', li.cil.oc.api.Items.get("chip2").createItemStack(1));
-					GameRegistry.addShapedRecipe(new ItemStack(itemOCParts, 1, i),
-						"m", "c", "m",
-						'c', new ItemStack(t, 1, 0),
-						'm', li.cil.oc.api.Items.get("chip2").createItemStack(1));
-				}
-			} catch(Exception e) {
-				log.error("Could not create robot upgrade recipes! You are most likely using OpenComputers 1.2 - please upgrade to 1.3.0+!");
-				e.printStackTrace();
+		if(Config.OC_UPGRADE_CAMERA) {
+			if(camera != null) {
+				GameRegistry.addShapedRecipe(new ItemStack(itemOCParts, 1, 0),
+					"mcm", 'c',
+					new ItemStack(camera, 1, 0),
+					'm', li.cil.oc.api.Items.get("chip2").createItemStack(1));
+				GameRegistry.addShapedRecipe(new ItemStack(itemOCParts, 1, 0),
+					"m", "c", "m",
+					'c', new ItemStack(camera, 1, 0),
+					'm', li.cil.oc.api.Items.get("chip2").createItemStack(1));
+			} else {
+				log.warn("Could not add Camera Upgrade Recipe because Radar is disabled in the config.");
+			}
+		}
+		if(Config.OC_UPGRADE_CHATBOX) {
+			if(chatBox != null) {
+				GameRegistry.addShapedRecipe(new ItemStack(itemOCParts, 1, 1),
+					"mcm", 'c',
+					new ItemStack(chatBox, 1, 0),
+					'm', li.cil.oc.api.Items.get("chip2").createItemStack(1));
+				GameRegistry.addShapedRecipe(new ItemStack(itemOCParts, 1, 1),
+					"m", "c", "m",
+					'c', new ItemStack(chatBox, 1, 0),
+					'm', li.cil.oc.api.Items.get("chip2").createItemStack(1));
+			} else {
+				log.warn("Could not add Chat Box Upgrade Recipe because Radar is disabled in the config.");
+			}
+		}
+		if(Config.OC_UPGRADE_RADAR) {
+			if(radar != null) {
+				GameRegistry.addShapedRecipe(new ItemStack(itemOCParts, 1, 2),
+					"mcm", 'c',
+					new ItemStack(radar, 1, 0),
+					'm', li.cil.oc.api.Items.get("chip3").createItemStack(1));
+				GameRegistry.addShapedRecipe(new ItemStack(itemOCParts, 1, 2),
+					"m", "c", "m",
+					'c', new ItemStack(radar, 1, 0),
+					'm', li.cil.oc.api.Items.get("chip3").createItemStack(1));
+			} else {
+				log.warn("Could not add Radar Upgrade Recipe because Radar is disabled in the config.");
 			}
 		}
 		if(Config.OC_CARD_FX) {

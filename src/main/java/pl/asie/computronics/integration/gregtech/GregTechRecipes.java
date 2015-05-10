@@ -135,7 +135,7 @@ public class GregTechRecipes extends ModRecipes {
 				'd', Computronics.cipher != null ? cpu.createItemStack(1) : ItemList.Robot_Arm_HV.get(1)));
 			return true;
 		}
-		Computronics.log.warn("An error happened during registering OpenComputers-style recipes, falling back to default ones");
+		Computronics.log.warn("An error occured during registering OpenComputers-style recipes, falling back to default ones");
 		return false;
 	}
 

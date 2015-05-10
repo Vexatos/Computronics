@@ -91,7 +91,8 @@ public class UpgradeRenderer {
 			}
 			case 2: {
 				if(mountPoint.name.equals(MountPointName.TopLeft) || mountPoint.name.equals(MountPointName.TopRight)) {
-					float degrees = ((robot.world().getTotalWorldTime() + (robot.hashCode() ^ 0xFF)) % 160 + pt) / 160F * 360F;
+					float degrees = robot instanceof li.cil.oc.common.tileentity.Robot && ((li.cil.oc.common.tileentity.Robot) robot).isRunning() ?
+						((robot.world().getTotalWorldTime() + (robot.hashCode() ^ 0xFF)) % 160 + pt) / 160F * 360F : 0F;
 					if(mountPoint.name.equals(MountPointName.TopRight)) {
 						degrees = 360 - degrees;
 					}
@@ -230,7 +231,7 @@ public class UpgradeRenderer {
 
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	@Optional.Method(modid = Mods.OpenComputers)
-	public void onPlayerTick1(RenderPlayerEvent.Pre e) {
+	public void onPlayerTickPre(RenderPlayerEvent.Pre e) {
 		String name = e.entityPlayer.getCommandSenderName();
 		if(PetRenderer.hidden().contains(name) || !entitledPlayers.containsKey(name)) {
 			return;
@@ -271,7 +272,7 @@ public class UpgradeRenderer {
 
 	@SubscribeEvent(priority = EventPriority.LOW)
 	@Optional.Method(modid = Mods.OpenComputers)
-	public void onPlayerTick2(RenderPlayerEvent.Pre e) {
+	public void onPlayerTickPost(RenderPlayerEvent.Pre e) {
 		if(rendering) {
 			rendering = false;
 			time = -1;
