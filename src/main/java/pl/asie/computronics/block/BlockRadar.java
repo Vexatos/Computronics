@@ -13,7 +13,7 @@ import pl.asie.computronics.tile.TileRadar;
 
 public class BlockRadar extends BlockMachineSidedIcon {
 	public BlockRadar() {
-		super();
+		super("radar");
 		this.setCreativeTab(Computronics.tab);
 		this.setIconName("computronics:radar");
 		this.setBlockName("computronics.radar");

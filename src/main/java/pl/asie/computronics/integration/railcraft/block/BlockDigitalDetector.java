@@ -18,16 +18,17 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.block.BlockPeripheral;
-import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.integration.railcraft.tile.TileDigitalDetector;
+import pl.asie.computronics.oc.manual.IBlockWithPrefix;
+import pl.asie.computronics.reference.Mods;
 
 /**
  * @author CovertJaguar, Vexatos, marcin212, Kubuxu
  */
-public class BlockDigitalDetector extends BlockPeripheral {
+public class BlockDigitalDetector extends BlockPeripheral implements IBlockWithPrefix {
 
 	public BlockDigitalDetector() {
-		super();
+		super("digital_detector");
 		this.setBlockName("computronics.detector");
 		this.setNoNedoComputers(true);
 		this.setRotation(Rotation.NONE);
@@ -175,5 +176,17 @@ public class BlockDigitalDetector extends BlockPeripheral {
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Class<? extends Environment> getTileEntityClass(int meta) {
 		return TileDigitalDetector.class;
+	}
+
+	private final String prefix = "railcraft/";
+
+	@Override
+	public String getPrefix(World world, int x, int y, int z) {
+		return this.prefix;
+	}
+
+	@Override
+	public String getPrefix(ItemStack stack) {
+		return this.prefix;
 	}
 }

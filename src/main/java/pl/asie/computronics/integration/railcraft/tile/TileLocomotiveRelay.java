@@ -20,6 +20,7 @@ import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TileEntityPeripheralBase;
 
 import java.lang.ref.WeakReference;
+import java.util.Locale;
 import java.util.UUID;
 
 /**
@@ -212,14 +213,14 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 		return new Object[] { getLocomotive().getChargeHandler().getCharge() };
 	}
 
-	@Callback(doc = "function():string; returns the current mode of the locomotive; can be RUNNING, IDLE or SHUTDOWN")
+	@Callback(doc = "function():string; returns the current mode of the locomotive; can be 'running', 'idle' or 'shutdown'")
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] getMode(Context context, Arguments args) {
 		String error = cannotAccessLocomotive(1.0);
 		if(error != null) {
 			return new Object[] { null, error };
 		}
-		return new Object[] { getLocomotive().getMode().toString() };
+		return new Object[] { getLocomotive().getMode().toString().toLowerCase(Locale.ENGLISH) };
 	}
 
 	@Callback(doc = "function():string; returns the current name of the locomotive")

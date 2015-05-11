@@ -27,7 +27,7 @@ public class BlockChatBox extends BlockMachineSidedIcon implements IBlockWithSpe
 	private IIcon mSide;
 
 	public BlockChatBox() {
-		super();
+		super("chatbox");
 		this.setCreativeTab(Computronics.tab);
 		this.setIconName("computronics:chatbox");
 		this.setBlockName("computronics.chatBox");

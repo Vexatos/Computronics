@@ -119,7 +119,7 @@ public class TileChatBox extends TileEntityPeripheralBase implements IChatListen
 
 	// OpenComputers API
 
-	@Callback(doc = "function(text:string [, distance:number]):boolean;"
+	@Callback(doc = "function(text:string [, distance:number]):boolean; "
 		+ "Makes the chat box say some text with the currently set or the specified distance. Returns true on success")
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] say(Context context, Arguments args) {

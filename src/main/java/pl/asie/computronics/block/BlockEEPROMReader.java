@@ -18,7 +18,7 @@ public class BlockEEPROMReader extends BlockPeripheral {
 	private IIcon mTopOff, mTopOn, mSide, mBottom;
 	
 	public BlockEEPROMReader() {
-		super();
+		super("eeprom_reader");
 		this.setBlockName("computronics.eepromReader");
 	}
 	

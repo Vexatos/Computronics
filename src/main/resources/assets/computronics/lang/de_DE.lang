@@ -65,6 +65,9 @@ tooltip.computronics.waila.lamp.red=Rot: %s
 tooltip.computronics.waila.lamp.green=Grün: %s
 tooltip.computronics.waila.lamp.blue=Blau: %s
 
+tooltip.computronics.manual.tab.blocks=Computronics: Blöcke
+tooltip.computronics.manual.tab.items=Computronics: Items
+
 option.computronics.enableOCAddress=Komponentenaddresse
 option.computronics.enableNCAddress=NedoComputers Bus ID
 option.computronics.enableTape=Enthaltene Kassette

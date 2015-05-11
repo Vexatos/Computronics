@@ -13,6 +13,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.oc.manual.IItemWithPrefix;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.integration.railcraft.tile.TileLocomotiveRelay;
 import pl.asie.computronics.util.StringUtil;
@@ -22,7 +23,7 @@ import java.util.List;
 /**
  * @author Vexatos
  */
-public class ItemRelaySensor extends Item {
+public class ItemRelaySensor extends Item implements IItemWithPrefix {
 
 	private IIcon icon_off;
 	private IIcon icon_on;
@@ -142,4 +143,13 @@ public class ItemRelaySensor extends Item {
 		}
 	}
 
+	@Override
+	public String getDocumentationName(ItemStack stack) {
+		return "relay_sensor";
+	}
+
+	@Override
+	public String getPrefix(ItemStack stack) {
+		return "railcraft/";
+	}
 }

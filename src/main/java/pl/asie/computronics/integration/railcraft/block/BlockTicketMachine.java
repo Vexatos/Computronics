@@ -21,7 +21,7 @@ public class BlockTicketMachine extends BlockMachineSidedIcon {
 	private IIcon mFront;
 
 	public BlockTicketMachine() {
-		super();
+		super("ticket_machine");
 		this.setBlockName("computronics.ticketMachine");
 		this.setGuiProvider(Computronics.railcraft.guiTicketMachine);
 		this.setNoNedoComputers(true);

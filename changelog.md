@@ -2,6 +2,9 @@
 
   * ADDED: All Computronics blocks now support the OpenComputers API documentation in NotEnoughItems.
   * ADDED: OpenComputers Component Documentation for every function any Computronics block provides
+  * ADDED: Support for the OpenComputers manual!
+    - Every block and item in Computronics can now be found in the manual
+    - **A huge "Thank You!" to rashy for writing all the documentation!**
   * ADDED: Some Robot Upgrades now render on a robot if the robot contains them. Requires OpenComputers 1.5.9 now.
   * ADDED: The tape drive now plays a sound effect when forwarding or rewinding
   * ADDED: Ticket Machine
@@ -23,7 +26,8 @@
     - Consuming charge can be disabled in the config
   * CHANGED: Renamed the EEPROM Reader component/peripheral name to "eeprom_reader" as it was conflicting with the OpenComputers EEPROM component.
   * CHANGED: Slightly tweaked the recipes of some Railcraft integration blocks and OpenComputers upgrades
-  * CHANGED: Added config options for enabling each OpenComputers robot upgrade separately.
+  * CHANGED: Added config options for enabling each OpenComputers robot upgrade separately, removed the generic one.
+  * CHANGED: The Locomotive Relay's `getMode()` now returns the mode in lower case.
   * FIXED: Updated OpenPeripheral integration to version 1.1 of OpenPeripheralCore (Requires version 1.1 now)
   * FIXED: Updated Forestry integration to version 3.5.3 (Requires version 3.5.3 now)
   * FIXED: Reworked the Locomotive Relay to properly work now and hopefully not randomly get unbound anymore.
@@ -31,7 +35,7 @@
   * FIXED: Reworked the Digital Detector to only send an event once for each passing minecart instead of sending one once per tick and minecart
     - The event will also now ship additional information if the minecart is a locomotive (primary colour, secondary colour and destination)
     - Thanks to marcin212 and Kubuxu for this!
-  * FIXED: Computronics machine sounds now respect the "Blocks" volume setting instead of the "Friendly Creatures" one
+  * FIXED: Computronics machine sounds now use the "Blocks" volume setting instead of the "Friendly Creatures" one
   * MISC: Refactored a lot of code, mainly related to GUIs and Railcraft integration.
   * MISC: Increased the bitrate on most Computronics textures, they should look much better now.
 

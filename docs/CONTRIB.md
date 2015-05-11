@@ -7,3 +7,4 @@
 | gamax92			| gradleization of 1.6 branch, ComputerCraft bugfixes |
 | jaquadro			| Creative Chat Box fix |
 | Sangar			| assistance with radars, being an awesome bro |
+| rashdanml			| OpenComputers manual documentation |
