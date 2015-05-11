@@ -35,7 +35,7 @@
   * FIXED: Reworked the Digital Detector to only send an event once for each passing minecart instead of sending one once per tick and minecart
     - The event will also now ship additional information if the minecart is a locomotive (primary colour, secondary colour and destination)
     - Thanks to marcin212 and Kubuxu for this!
-  * FIXED: Computronics machine sounds now respect the "Blocks" volume setting instead of the "Friendly Creatures" one
+  * FIXED: Computronics machine sounds now use the "Blocks" volume setting instead of the "Friendly Creatures" one
   * MISC: Refactored a lot of code, mainly related to GUIs and Railcraft integration.
   * MISC: Increased the bitrate on most Computronics textures, they should look much better now.
 
