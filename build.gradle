@@ -53,8 +53,12 @@ repositories {
 		url "http://maven.tterrag.com/"
 	}
 	maven {
-		name = "Forestry repo"
+		name = "Forestry and IC2 repo"
 		url = "http://maven.ic2.player.to/"
+	}
+	ivy {
+		name "BuildCraft"
+		artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision]-[classifier].[ext]"
 	}
 }
 
@@ -66,7 +70,8 @@ configurations {
 
 dependencies {
 	compile "li.cil.oc:OpenComputers:${config.oc.version}:dev"
-	provided "com.gregoriust.gregtech:${config.gregtech.version}:dev"
+	provided "net.industrial-craft:industrialcraft-2:${config.ic2.version}:dev"
+	provided "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech.version}:dev"
 	compile("mcp.mobius.waila:Waila:${config.waila.version}:dev") {
 		exclude module: "CodeChickenLib"
 		exclude module: "CodeChickenCore"
@@ -76,10 +81,15 @@ dependencies {
 		exclude module: "appliedenergistics2"
 		exclude module: "buildcraft"
 		exclude module: "Waila"
+        exclude module: "forestry_1.7.10"
 	}
-	compile("net.sengir.forestry:${config.forestry.version}:dev") {
+	compile("net.sengir.forestry:forestry_1.7.10:${config.forestry.version}:dev") {
 		exclude module: "buildcraft"
 		exclude module: "industrialcraft-2"
+	}
+	compile name: "buildcraft", version: "${config.buildcraft.version}", classifier: "dev"
+	compile ("appeng:appliedenergistics2:${config.ae2.version}:dev") {
+		transitive = false
 	}
 }
 

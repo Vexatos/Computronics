@@ -7,7 +7,7 @@
     - **A huge "Thank You!" to rashy for writing all the documentation!**
   * ADDED: Some Robot Upgrades now render on a robot if the robot contains them. Requires OpenComputers 1.5.9 now.
   * ADDED: The tape drive now plays a sound effect when forwarding or rewinding
-  * ADDED: Ticket Machine
+  * ADDED: Ticket Machine for Railcraft
     - Allows printing single-use tickets using ComputerCraft or OpenComputers
     - Right click to open the customer GUI
       - Here you can select the ticket you would like to print and print tickets
