@@ -1,3 +1,8 @@
+==== 1.5.1 ====
+
+  * CHANGED: the Digital Detector now returns a locomotive's colour numbers so that they can be used with the OpenComputers Colors API (so 0 being white, 1 being orange etc.)
+  * MISC: Slight improvements to the Digital Detector manual page
+
 ==== 1.5.0 ====
 
   * ADDED: All Computronics blocks now support the OpenComputers API documentation in NotEnoughItems.
