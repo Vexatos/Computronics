@@ -12,11 +12,12 @@ import net.minecraft.world.World;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.block.BlockMachineSidedIcon;
 import pl.asie.computronics.integration.railcraft.tile.TileTicketMachine;
+import pl.asie.computronics.oc.manual.IBlockWithPrefix;
 
 /**
  * @author Vexatos
  */
-public class BlockTicketMachine extends BlockMachineSidedIcon {
+public class BlockTicketMachine extends BlockMachineSidedIcon implements IBlockWithPrefix {
 
 	private IIcon mFront;
 
@@ -57,5 +58,17 @@ public class BlockTicketMachine extends BlockMachineSidedIcon {
 	@Override
 	public Class<? extends Environment> getTileEntityClass(int meta) {
 		return TileTicketMachine.class;
+	}
+
+	private final String prefix = "railcraft/";
+
+	@Override
+	public String getPrefix(World world, int x, int y, int z) {
+		return this.prefix;
+	}
+
+	@Override
+	public String getPrefix(ItemStack stack) {
+		return this.prefix;
 	}
 }

@@ -1,6 +1,7 @@
 ==== 1.5.1 ====
 
   * CHANGED: the Digital Detector now returns a locomotive's colour numbers so that they can be used with the OpenComputers Colors API (so 0 being white, 1 being orange etc.)
+  * FIXED: Shift-right clicking onto the Ticket Machine with an OpenComputers manual not opening the manual page.
   * MISC: Slight improvements to the Digital Detector manual page
 
 ==== 1.5.0 ====
