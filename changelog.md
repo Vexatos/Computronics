@@ -3,6 +3,7 @@
   * ADDED: Note Block particle to a playing Iron Note Block or Musical Turtle.
   * CHANGED: the Digital Detector now returns a locomotive's colour numbers so that they can be used with the OpenComputers Colors API (so 0 being white, 1 being orange etc.)
   * FIXED: Shift-right clicking onto the Ticket Machine with an OpenComputers manual not opening the manual page.
+  * FIXED: Crash with OpenComputers 1.5.11 and Computronics' Robot Upgrades and cards. Requires OpenComputers 1.5.11.25 now.
   * MISC: Slight improvements to the Digital Detector manual page
 
 ==== 1.5.0 ====
