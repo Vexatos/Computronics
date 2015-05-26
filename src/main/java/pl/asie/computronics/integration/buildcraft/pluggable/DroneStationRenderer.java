@@ -47,10 +47,10 @@ public class DroneStationRenderer implements IPipePluggableRenderer {
 		IIcon[] icons = ((TextureStateManager) blockStateMachine.getTextureState()).popArray();
 		icons[0] = Textures.DRONE_STATION_BOTTOM.getIcon();
 		icons[1] = Textures.DRONE_STATION_BOTTOM.getIcon();
-		for (int i = 2; i < icons.length; i++) {
+		for(int i = 2; i < icons.length; i++) {
 			icons[i] = Textures.DRONE_STATION_SIDE.getIcon();
 		}
-		((TextureStateManager) blockStateMachine.getTextureState()).popArray();
+		//((TextureStateManager) blockStateMachine.getTextureState()).popArray();
 
 		//blockStateMachine.getTextureState().set(Textures.DRONE_STATION_TOP.getIcon());
 
@@ -61,33 +61,33 @@ public class DroneStationRenderer implements IPipePluggableRenderer {
 			rotated[2][0], rotated[0][1], rotated[1][1],
 			rotated[2][1]);
 		renderblocks.renderStandardBlock(blockStateMachine.getBlock(), x, y, z);
-		((TextureStateManager) blockStateMachine.getTextureState()).pushArray();
+		//((TextureStateManager) blockStateMachine.getTextureState()).pushArray();
 	}
 
 	@Override
 	public void renderPluggable(RenderBlocks renderblocks, IPipe pipe, ForgeDirection side, PipePluggable pipePluggable, ITextureStates blockStateMachine, int renderPass, int x, int y, int z) {
-		if (renderPass != 0) {
+		if(renderPass != 0) {
 			return;
 		}
 
 		droneStationPartRender(renderblocks, side, blockStateMachine, x, y, z,
 			0.56F, 0.625F,
-			0.09F, 0.224F,
+			0.09F, 0.225F - zFightOffset,
 			0.375F, 0.44F);
 
 		droneStationPartRender(renderblocks, side, blockStateMachine, x, y, z,
 			0.56F, 0.625F,
-			0.09F, 0.224F,
+			0.09F, 0.225F - zFightOffset,
 			0.56F, 0.625F);
 
 		droneStationPartRender(renderblocks, side, blockStateMachine, x, y, z,
 			0.375F, 0.44F,
-			0.09F, 0.224F,
+			0.09F, 0.225F - zFightOffset,
 			0.375F, 0.44F);
 
 		droneStationPartRender(renderblocks, side, blockStateMachine, x, y, z,
 			0.375F, 0.44F,
-			0.09F, 0.224F,
+			0.09F, 0.225F - zFightOffset,
 			0.56F, 0.625F);
 
 		float[][] zeroState = new float[3][2];
@@ -97,7 +97,7 @@ public class DroneStationRenderer implements IPipePluggableRenderer {
 		zeroState[0][1] = 0.75F - zFightOffset;
 		// Y START - END
 		zeroState[1][0] = 0.225F;
-		zeroState[1][1] = 0.251F;
+		zeroState[1][1] = 0.25F - zFightOffset;
 		// Z START - END
 		zeroState[2][0] = 0.25F + zFightOffset;
 		zeroState[2][1] = 0.75F - zFightOffset;
@@ -105,10 +105,10 @@ public class DroneStationRenderer implements IPipePluggableRenderer {
 		IIcon[] icons = ((TextureStateManager) blockStateMachine.getTextureState()).popArray();
 		icons[0] = Textures.DRONE_STATION_SIDE.getIcon();
 		icons[1] = Textures.DRONE_STATION_TOP.getIcon();
-		for (int i = 2; i < icons.length; i++) {
+		for(int i = 2; i < icons.length; i++) {
 			icons[i] = Textures.DRONE_STATION_SIDE.getIcon();
 		}
-		((TextureStateManager) blockStateMachine.getTextureState()).popArray();
+		//((TextureStateManager) blockStateMachine.getTextureState()).popArray();
 
 		//blockStateMachine.getTextureState().set(Textures.DRONE_STATION_TOP.getIcon());
 
@@ -121,20 +121,20 @@ public class DroneStationRenderer implements IPipePluggableRenderer {
 
 		// X START - END
 		zeroState[0][0] = 0.25F + 0.125F / 2 + zFightOffset;
-		zeroState[0][1] = 0.75F - 0.125F / 2 + zFightOffset;
+		zeroState[0][1] = 0.75F - 0.125F / 2 - zFightOffset;
 		// Y START - END
 		zeroState[1][0] = 0.25F;
 		zeroState[1][1] = 0.25F + 0.125F;
 		// Z START - END
-		zeroState[2][0] = 0.25F + 0.125F / 2;
-		zeroState[2][1] = 0.75F - 0.125F / 2;
+		zeroState[2][0] = 0.25F + 0.125F / 2 + zFightOffset;
+		zeroState[2][1] = 0.75F - 0.125F / 2 - zFightOffset;
 
 		//((TextureStateManager) blockStateMachine.getTextureState()).pushArray();
 
 		icons[0] = Textures.DRONE_STATION_BOTTOM.getIcon();
 		icons[1] = Textures.DRONE_STATION_SIDE.getIcon();
-		for (int i = 2; i < icons.length; i++) {
-			icons[i] = Textures.DRONE_STATION_BOTTOM.getIcon();
+		for(int i = 2; i < icons.length; i++) {
+			icons[i] = Textures.DRONE_STATION_SIDE.getIcon();
 		}
 
 		//blockStateMachine.getTextureState().set(Textures.DRONE_STATION_BOTTOM.getIcon());
@@ -152,7 +152,7 @@ public class DroneStationRenderer implements IPipePluggableRenderer {
 
 		@Override
 		public boolean handleRenderType(ItemStack item, ItemRenderType type) {
-			switch (type) {
+			switch(type) {
 				case ENTITY:
 					return true;
 				case EQUIPPED:
@@ -181,7 +181,7 @@ public class DroneStationRenderer implements IPipePluggableRenderer {
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			GL11.glDepthFunc(GL11.GL_LEQUAL);
 			GL11.glDisable(GL11.GL_CULL_FACE);
-			switch (type) {
+			switch(type) {
 				case ENTITY:
 					GL11.glRotatef(-180, 1, 0, 0);
 					this.Base.render(1 / 16f);
@@ -249,9 +249,9 @@ public class DroneStationRenderer implements IPipePluggableRenderer {
 
 		@SubscribeEvent
 		public void textureHook(TextureStitchEvent.Pre event) {
-			if (event.map.getTextureType() == 0) {
-				for (Textures t : Textures.VALUES) {
-					t.registerIcons(event.map);
+			if(event.map.getTextureType() == 0) {
+				for(Textures t : Textures.VALUES) {
+					t.registerIcon(event.map);
 				}
 			}
 		}
@@ -273,7 +273,7 @@ public class DroneStationRenderer implements IPipePluggableRenderer {
 				return icon;
 			}
 
-			public void registerIcons(IIconRegister iconRegister) {
+			public void registerIcon(IIconRegister iconRegister) {
 				this.icon = new WrappedIcon(iconRegister.registerIcon("computronics:buildcraft/pluggable/" + location));
 			}
 		}
@@ -315,7 +315,14 @@ public class DroneStationRenderer implements IPipePluggableRenderer {
 			@Override
 			public float getInterpolatedU(double par1) {
 				float f = this.getMaxU() - this.getMinU();
-				return this.getMinU() + f * (float) par1 / 16.0F;
+				//return this.getMinU() + f * ((float) par1 / 16.0F);
+				float uOffset = this.getMinU() + f * (float) par1 / 16.0F;
+				if(uOffset < icon.getMinU()) {
+					uOffset += Math.abs(icon.getMinU() - this.getMinU());
+				} else if(uOffset > icon.getMaxU()) {
+					uOffset -= Math.abs(this.getMaxU() - icon.getMaxU());
+				}
+				return uOffset;
 			}
 
 			@Override
@@ -333,7 +340,14 @@ public class DroneStationRenderer implements IPipePluggableRenderer {
 			@Override
 			public float getInterpolatedV(double par1) {
 				float f = this.getMaxV() - this.getMinV();
-				return this.getMinV() + f * ((float) par1 / 16.0F);
+				//return this.getMinV() + f * ((float) par1 / 16.0F);
+				float vOffset = this.getMinV() + f * (float) par1 / 16.0F;
+				if(vOffset < icon.getMinV()) {
+					vOffset += Math.abs(icon.getMinV() - this.getMinV());
+				} else if(vOffset > icon.getMaxV()) {
+					vOffset -= Math.abs(this.getMaxV() - icon.getMaxV());
+				}
+				return vOffset;
 			}
 
 			@Override
