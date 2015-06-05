@@ -141,7 +141,8 @@ public class ComputronicsAchievements {
 
 	@SubscribeEvent
 	public void onItemDropped(ItemTossEvent event) {
-		if(event == null || event.player == null || event.entityItem == null || event.entityItem.worldObj.isRemote) {
+		if(event == null || event.player == null || event.entityItem == null
+			|| (event.entityItem.worldObj != null && event.entityItem.worldObj.isRemote)) {
 			return;
 		}
 		EntityPlayer player = event.player;
@@ -161,7 +162,8 @@ public class ComputronicsAchievements {
 
 	@SubscribeEvent
 	public void onItemDespawn(ItemExpireEvent event) {
-		if(event == null || event.entityItem == null || event.entityItem.worldObj.isRemote) {
+		if(event == null || event.entityItem == null
+			|| (event.entityItem.worldObj != null && event.entityItem.worldObj.isRemote)) {
 			return;
 		}
 		EntityItem item = event.entityItem;
