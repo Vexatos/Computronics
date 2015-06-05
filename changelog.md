@@ -1,3 +1,7 @@
+==== 1.5.2 ====
+
+  * FIXED: A certain achievement not getting triggered all the time
+
 ==== 1.5.1 ====
 
   * ADDED: Note Block particle to a playing Iron Note Block or Musical Turtle.

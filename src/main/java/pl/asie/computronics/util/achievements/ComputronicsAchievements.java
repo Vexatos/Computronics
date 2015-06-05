@@ -11,16 +11,18 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.stats.Achievement;
+import net.minecraft.util.ChatComponentText;
 import net.minecraftforge.common.AchievementPage;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.item.ItemExpireEvent;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.integration.railcraft.tile.TileLocomotiveRelay;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
-import pl.asie.computronics.integration.railcraft.tile.TileLocomotiveRelay;
 
 import java.util.HashMap;
 
@@ -29,8 +31,6 @@ import java.util.HashMap;
  */
 public class ComputronicsAchievements {
 	public HashMap<String, Achievement> achievementMap = new HashMap<String, Achievement>();
-	private HashMap<Number, String> playerMap = new HashMap<Number, String>();
-	private int playerIndex = 0;
 
 	private enum EnumAchievements {
 
@@ -141,7 +141,7 @@ public class ComputronicsAchievements {
 
 	@SubscribeEvent
 	public void onItemDropped(ItemTossEvent event) {
-		if(event == null || event.player == null || event.entityItem == null) {
+		if(event == null || event.player == null || event.entityItem == null || event.entityItem.worldObj.isRemote) {
 			return;
 		}
 		EntityPlayer player = event.player;
@@ -154,19 +154,14 @@ public class ComputronicsAchievements {
 				stack.setTagCompound(new NBTTagCompound());
 			}
 			NBTTagCompound data = stack.getTagCompound();
-			NBTTagCompound eventdata = new NBTTagCompound();
-			eventdata.setString("player", player.getDisplayName());
-			eventdata.setInteger("index", playerIndex);
-			data.setTag("dropevent", eventdata);
+			data.setString("computronics:dropplayer", player.getCommandSenderName());
 			stack.setTagCompound(data);
-			playerMap.put(playerIndex, player.getDisplayName());
-			playerIndex++;
 		}
 	}
 
 	@SubscribeEvent
 	public void onItemDespawn(ItemExpireEvent event) {
-		if(event == null || event.entityItem == null) {
+		if(event == null || event.entityItem == null || event.entityItem.worldObj.isRemote) {
 			return;
 		}
 		EntityItem item = event.entityItem;
@@ -175,23 +170,21 @@ public class ComputronicsAchievements {
 			&& stack.getItem() == Computronics.itemTape && stack.getItemDamage() == 9) {
 			if(stack.hasTagCompound()) {
 				NBTTagCompound data = stack.getTagCompound();
-				if(data.hasKey("dropevent")) {
-					NBTTagCompound eventdata = data.getCompoundTag("dropevent");
-					String playername = null;
-					if(eventdata.hasKey("player")) {
-						playername = eventdata.getString("player");
-					}
-					if(playername != null && playerMap.containsValue(playername)) {
-						Integer index = null;
-						if(eventdata.hasKey("index")) {
-							index = eventdata.getInteger("index");
+				if(data.hasKey("computronics:dropplayer")) {
+					String playername = data.getString("computronics:dropplayer");
+					if(playername != null && !playername.isEmpty()) {
+						for(Object o : MinecraftServer.getServer().getConfigurationManager().playerEntityList) {
+							if(o instanceof EntityPlayer && ((EntityPlayer) o).getCommandSenderName().equals(playername)) {
+								this.triggerAchievement((EntityPlayer) o, EnumAchievements.Tape_IG_Dropped);
+								((EntityPlayer) o).addChatMessage(new ChatComponentText("Test"));
+								data.removeTag("computronics:dropplayer");
+								if(data.hasNoTags()) {
+									stack.setTagCompound(null);
+								} else {
+									stack.setTagCompound(data);
+								}
+							}
 						}
-						this.triggerAchievement(item.worldObj.getPlayerEntityByName(playername), EnumAchievements.Tape_IG_Dropped);
-						playerMap.remove(index);
-						eventdata.removeTag("player");
-						eventdata.removeTag("index");
-						data.removeTag("dropevent");
-
 					}
 				}
 			}
