@@ -31,6 +31,7 @@ public class BlockChatBox extends BlockMachineSidedIcon implements IBlockWithSpe
 		this.setCreativeTab(Computronics.tab);
 		this.setIconName("computronics:chatbox");
 		this.setBlockName("computronics.chatBox");
+		this.setRotation(Rotation.NONE);
 	}
 
 	// I'm such a cheater.
@@ -61,7 +62,7 @@ public class BlockChatBox extends BlockMachineSidedIcon implements IBlockWithSpe
 
 	@Override
 	public int damageDropped(int metadata) {
-		return metadata;
+		return metadata & (~7);
 	}
 
 	@Override

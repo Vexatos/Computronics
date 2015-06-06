@@ -290,7 +290,13 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements IBundle
 		super.writeToNBT(tag);
 		if(isLocked) tag.setBoolean("cb_l", true);
 	}
-	
+
+	@Override
+	public void removeFromNBTForTransfer(NBTTagCompound data) {
+		super.removeFromNBTForTransfer(data);
+		data.removeTag("cb_l");
+	}
+
 	@Override
 	public boolean canBundledConnectTo(int arg0, int arg1) {
 		int s = Computronics.cipher.relToAbs(5, blockMetadata);

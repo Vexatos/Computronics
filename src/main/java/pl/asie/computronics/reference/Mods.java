@@ -43,6 +43,7 @@ public class Mods {
 	//APIs
 	public static class API {
 		public static final String
+			BuildCraftBlueprints = "BuildCraftAPI|blueprints",
 			BuildCraftStatements = "BuildCraftAPI|statements",
 			BuildCraftTiles = "BuildCraftAPI|tiles",
 			CoFHAPI_Energy = "CoFHAPI|energy",

@@ -1,5 +1,6 @@
 ==== 1.5.2 ====
 
+  * ADDED: BuildCraft Builder support for all Computronics blocks except for the Digital Receiver Box
   * FIXED: A certain achievement not getting triggered all the time
   * FIXED: Updated BuildCraft integration to 7.0.6. Requires BuildCraft 7.0.6 now.
 

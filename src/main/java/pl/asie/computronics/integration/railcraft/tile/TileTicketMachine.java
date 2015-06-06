@@ -648,6 +648,21 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 	}
 
 	@Override
+	public void removeFromNBTForTransfer(NBTTagCompound data) {
+		super.removeFromNBTForTransfer(data);
+		data.removeTag("owner");
+		data.removeTag("ownerId");
+		data.removeTag("locked");
+		data.removeTag("selectionLocked");
+		data.removeTag("printLocked");
+		data.removeTag("selectedslot");
+		data.removeTag("progress");
+		data.removeTag("isActive");
+		data.removeTag("currentTicket");
+		data.removeTag("ticketQueue");
+	}
+
+	@Override
 	public void readFromRemoteNBT(NBTTagCompound tag) {
 		super.readFromRemoteNBT(tag);
 		String ownerName = "[Unknown]";

@@ -14,7 +14,7 @@ import pl.asie.computronics.integration.appeng.DriverSpatialIOPort;
 import pl.asie.computronics.integration.betterstorage.DriverCrateStorageNew;
 import pl.asie.computronics.integration.betterstorage.DriverCrateStorageOld;
 import pl.asie.computronics.integration.buildcraft.DriverHeatable;
-import pl.asie.computronics.integration.buildcraft.pluggable.IntegrationBuildCraft;
+import pl.asie.computronics.integration.buildcraft.IntegrationBuildCraft;
 import pl.asie.computronics.integration.draconicevolution.DriverExtendedRFStorage;
 import pl.asie.computronics.integration.enderio.DriverAbstractMachine;
 import pl.asie.computronics.integration.enderio.DriverAbstractPoweredMachine;

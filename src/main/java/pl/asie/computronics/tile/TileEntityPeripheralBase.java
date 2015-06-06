@@ -265,6 +265,12 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 		}
 	}
 
+	@Override
+	public void removeFromNBTForTransfer(NBTTagCompound data) {
+		super.removeFromNBTForTransfer(data);
+		data.removeTag("oc:node");
+	}
+
 	// Sound related, thanks to EnderIO code for this!
 
 	@SideOnly(Side.CLIENT)

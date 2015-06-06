@@ -298,6 +298,13 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 	}
 
 	@Override
+	public void removeFromNBTForTransfer(NBTTagCompound data) {
+		super.removeFromNBTForTransfer(data);
+		data.removeTag("oc:fs");
+		data.removeTag("state");
+	}
+
+	@Override
 	public void readFromRemoteNBT(NBTTagCompound tag) {
 		super.readFromRemoteNBT(tag);
 		if(tag.hasKey("state")) {

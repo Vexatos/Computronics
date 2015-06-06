@@ -116,6 +116,13 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 	}
 
 	@Override
+	public void removeFromNBTForTransfer(NBTTagCompound data) {
+		super.removeFromNBTForTransfer(data);
+		data.removeTag("locomotive");
+		data.removeTag("bound");
+	}
+
+	@Override
 	public void writeToRemoteNBT(NBTTagCompound nbt) {
 		super.writeToRemoteNBT(nbt);
 		nbt.setBoolean("bound", isBound);
