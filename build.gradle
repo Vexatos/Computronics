@@ -61,7 +61,7 @@ repositories {
 		url = "http://maven.bluepowermod.com/"
 	}
 	ivy {
-		name "BuildCraft"
+		name = "BuildCraft"
 		artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision]-[classifier].[ext]"
 	}
 }
@@ -92,12 +92,12 @@ dependencies {
 	compile("appeng:appliedenergistics2:${config.ae2.version}:dev") {
 		transitive = false
 	}
-	provided("com.bluepowermod:BluePower:${config.bluepower.version}:deobf") {
-		transitive = false
-	}
-	provided("qmunity:QmunityLib:${config.qmunitylib.version}:deobf") {
-		transitive = false
-	}
+	//provided("com.bluepowermod:BluePower:${config.bluepower.version}:deobf") {
+	//	transitive = false
+	//}
+	//provided("qmunity:QmunityLib:${config.qmunitylib.version}:deobf") {
+	//	transitive = false
+	//}
 }
 
 minecraft {

@@ -1,6 +1,7 @@
 ==== 1.5.2 ====
 
   * FIXED: A certain achievement not getting triggered all the time
+  * FIXED: Updated BuildCraft integration to 7.0.6. Requires BuildCraft 7.0.6 now.
 
 ==== 1.5.1 ====
 

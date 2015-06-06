@@ -85,7 +85,7 @@ import java.util.concurrent.Executors;
 		+ "after:ComputerCraft;after:OpenComputers@[1.5.11.25,);after:nedocomputers;"
 		+ "before:OpenPeripheralCore@[1.1,);before:OpenPeripheralApi@[3.2,);"
 		+ "after:MineFactoryReloaded;after:RedLogic@[59.1.9,);after:ProjRed|Core;"
-		+ "after:BuildCraft|Core@[6.4.1,);after:Railcraft@[9.5.0.0,);"
+		+ "after:BuildCraft|Core@[7.0.6,);after:Railcraft@[9.5.0.0,);"
 		+ "after:gregtech@[MC1710];after:EnderIO@[1.7.10_2.2.7,);"
 		+ "after:Forestry@[3.5.3,);after:Waila@[1.5.10,);"
 		+ "after:MekanismAPI|energy@[8.0.0,)")
