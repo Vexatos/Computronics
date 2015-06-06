@@ -245,7 +245,7 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 				boolean shouldShorten = (font.getStringWidth(tip) > maxWidth) && !KeyBindings.showExtendedTooltips();
 				if(shouldShorten) {
 					tooltip.add(StringUtil.localizeAndFormat("oc:tooltip.TooLong",
-						KeyBindings.getKeybindName(KeyBindings.extendedTooltip())));
+						KeyBindings.getKeyBindingName(KeyBindings.extendedTooltip())));
 				} else {
 					for(String line : lines) {
 						List list = font.listFormattedStringToWidth(line, maxWidth);
@@ -260,7 +260,7 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 			} else {
 				tooltip.add(StringUtil.localizeAndFormat(
 					"oc:tooltip.MaterialCosts",
-					KeyBindings.getKeybindName(KeyBindings.materialCosts())));
+					KeyBindings.getKeyBindingName(KeyBindings.materialCosts())));
 			}
 		}
 		if(stack.hasTagCompound() && stack.getTagCompound().hasKey("oc:data")) {

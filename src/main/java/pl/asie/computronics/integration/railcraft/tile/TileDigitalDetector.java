@@ -118,9 +118,10 @@ public class TileDigitalDetector extends TileEntityPeripheralBase
 			EntityLocomotive locomotive = (EntityLocomotive) cart;
 
 			GameProfile owner = locomotive.getOwner();
-			info.add(locomotive.getPrimaryColor());
-			info.add(locomotive.getSecondaryColor());
-			info.add(locomotive.getDestination());
+			info.add(Math.max(15 - locomotive.getPrimaryColor(), -1));
+			info.add(Math.max(15 - locomotive.getSecondaryColor(), -1));
+			String destination = locomotive.getDestination();
+			info.add(destination != null ? destination : "");
 			info.add(owner != null ? owner.getName() : "");
 		}
 	}

@@ -3,7 +3,6 @@ package pl.asie.computronics;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
-import cpw.mods.fml.common.registry.EntityRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
 import net.minecraft.world.ChunkPosition;
@@ -12,7 +11,6 @@ import net.minecraftforge.common.MinecraftForge;
 import pl.asie.computronics.client.LampRender;
 import pl.asie.computronics.client.SignalBoxRenderer;
 import pl.asie.computronics.client.UpgradeRenderer;
-import pl.asie.computronics.item.entity.EntityItemIndestructable;
 import pl.asie.computronics.oc.IntegrationOpenComputers;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.boom.SelfDestruct;
@@ -30,7 +28,7 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public void registerEntities() {
-		EntityRegistry.registerModEntity(EntityItemIndestructable.class, "computronics.itemTape", 1, Computronics.instance, 64, 20, true);
+		super.registerEntities();
 	}
 
 	@Override

@@ -53,8 +53,16 @@ repositories {
 		url "http://maven.tterrag.com/"
 	}
 	maven {
-		name = "Forestry repo"
+		name = "Forestry and IC2 repo"
 		url = "http://maven.ic2.player.to/"
+	}
+	maven {
+		name = "Bluepower Repo"
+		url = "http://maven.bluepowermod.com/"
+	}
+	ivy {
+		name "BuildCraft"
+		artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision]-[classifier].[ext]"
 	}
 }
 
@@ -62,24 +70,33 @@ configurations {
 	provided
 	embedded
 	compile.extendsFrom provided, embedded
+	all*.exclude group: "codechicken"
 }
 
 dependencies {
 	compile "li.cil.oc:OpenComputers:${config.oc.version}:dev"
-	provided "com.gregoriust.gregtech:${config.gregtech.version}:dev"
-	compile("mcp.mobius.waila:Waila:${config.waila.version}:dev") {
-		exclude module: "CodeChickenLib"
-		exclude module: "CodeChickenCore"
-		exclude module: "NotEnoughItems"
-	}
+	provided "net.industrial-craft:industrialcraft-2:${config.ic2.version}:dev"
+	provided "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech.version}:dev"
+	compile "mcp.mobius.waila:Waila:${config.waila.version}:dev"
 	compile("com.enderio:EnderIO:${config.enderio.version}:dev") {
 		exclude module: "appliedenergistics2"
 		exclude module: "buildcraft"
 		exclude module: "Waila"
+		exclude module: "forestry_1.7.10"
 	}
-	compile("net.sengir.forestry:${config.forestry.version}:dev") {
+	compile("net.sengir.forestry:forestry_1.7.10:${config.forestry.version}:dev") {
 		exclude module: "buildcraft"
 		exclude module: "industrialcraft-2"
+	}
+	compile name: "buildcraft", version: "${config.buildcraft.version}", classifier: "dev"
+	compile("appeng:appliedenergistics2:${config.ae2.version}:dev") {
+		transitive = false
+	}
+	provided("com.bluepowermod:BluePower:${config.bluepower.version}:deobf") {
+		transitive = false
+	}
+	provided("qmunity:QmunityLib:${config.qmunitylib.version}:deobf") {
+		transitive = false
 	}
 }
 
