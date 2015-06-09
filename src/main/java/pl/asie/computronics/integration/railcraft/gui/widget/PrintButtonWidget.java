@@ -2,8 +2,8 @@ package pl.asie.computronics.integration.railcraft.gui.widget;
 
 import mods.railcraft.client.gui.GuiContainerRailcraft;
 import pl.asie.computronics.Computronics;
-import pl.asie.computronics.network.Packets;
 import pl.asie.computronics.integration.railcraft.tile.TileTicketMachine;
+import pl.asie.computronics.network.Packets;
 
 import java.io.IOException;
 

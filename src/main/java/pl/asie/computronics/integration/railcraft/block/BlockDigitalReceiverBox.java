@@ -18,10 +18,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.integration.railcraft.SignalTypes;
+import pl.asie.computronics.integration.railcraft.tile.TileDigitalReceiverBox;
 import pl.asie.computronics.oc.block.IComputronicsEnvironmentBlock;
 import pl.asie.computronics.oc.manual.IBlockWithPrefix;
 import pl.asie.computronics.reference.Mods;
-import pl.asie.computronics.integration.railcraft.tile.TileDigitalReceiverBox;
 
 /**
  * @author CovertJaguar, Vexatos

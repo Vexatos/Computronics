@@ -15,6 +15,7 @@ import pl.asie.computronics.integration.railcraft.block.BlockDigitalReceiverBox;
 import pl.asie.computronics.integration.railcraft.block.BlockLocomotiveRelay;
 import pl.asie.computronics.integration.railcraft.block.BlockTicketMachine;
 import pl.asie.computronics.integration.railcraft.gui.GuiProviderTicketMachine;
+import pl.asie.computronics.integration.railcraft.item.ItemBlockSignalBox;
 import pl.asie.computronics.integration.railcraft.item.ItemRelaySensor;
 import pl.asie.computronics.integration.railcraft.tile.TileDigitalDetector;
 import pl.asie.computronics.integration.railcraft.tile.TileDigitalReceiverBox;
@@ -58,7 +59,7 @@ public class IntegrationRailcraft {
 		}
 		if(isEnabled(config, "digitalReceiverBox", true)) {
 			this.digitalBox = new BlockDigitalReceiverBox();
-			GameRegistry.registerBlock(digitalBox, "computronics.digitalBox");
+			GameRegistry.registerBlock(digitalBox, ItemBlockSignalBox.class, "computronics.digitalBox");
 			GameRegistry.registerTileEntity(TileDigitalReceiverBox.class, "computronics.digitalBox");
 			FMLInterModComms.sendMessage(Mods.AE2, "whitelist-spatial", TileDigitalReceiverBox.class.getCanonicalName());
 		}

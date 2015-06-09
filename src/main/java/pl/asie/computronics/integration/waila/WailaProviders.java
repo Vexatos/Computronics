@@ -1,10 +1,10 @@
 package pl.asie.computronics.integration.waila;
 
 import pl.asie.computronics.block.BlockColorfulLamp;
-import pl.asie.computronics.integration.railcraft.block.BlockDigitalReceiverBox;
-import pl.asie.computronics.integration.railcraft.block.BlockLocomotiveRelay;
 import pl.asie.computronics.block.BlockPeripheral;
 import pl.asie.computronics.block.BlockTapeReader;
+import pl.asie.computronics.integration.railcraft.block.BlockDigitalReceiverBox;
+import pl.asie.computronics.integration.railcraft.block.BlockLocomotiveRelay;
 import pl.asie.computronics.integration.waila.providers.IComputronicsWailaProvider;
 import pl.asie.computronics.integration.waila.providers.WailaColorfulLamp;
 import pl.asie.computronics.integration.waila.providers.WailaLocomotiveRelay;

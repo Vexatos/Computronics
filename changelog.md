@@ -1,3 +1,7 @@
+==== 1.5.3 ====
+
+  * FIXED: The ability to place a Digital Signal Receiver Box on a side of a block when it's not supported.
+
 ==== 1.5.2 ====
 
   * ADDED: BuildCraft Builder support for all Computronics blocks except for the Digital Receiver Box

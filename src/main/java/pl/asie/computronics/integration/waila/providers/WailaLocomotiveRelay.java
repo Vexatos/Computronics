@@ -7,8 +7,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import pl.asie.computronics.integration.waila.ConfigValues;
 import pl.asie.computronics.integration.railcraft.tile.TileLocomotiveRelay;
+import pl.asie.computronics.integration.waila.ConfigValues;
 import pl.asie.computronics.util.StringUtil;
 
 import java.util.List;
