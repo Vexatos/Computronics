@@ -20,6 +20,7 @@ import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TileChatBox;
 import pl.asie.computronics.util.StringUtil;
+import pl.asie.lib.block.TileEntityBase;
 
 import java.util.List;
 
@@ -84,6 +85,20 @@ public class BlockChatBox extends BlockMachineSidedIcon implements IBlockWithSpe
 	}
 
 	@Override
+	public boolean hasComparatorInputOverride() {
+		return Config.REDSTONE_REFRESH;
+	}
+
+	@Override
+	public int getComparatorInputOverride(World world, int x, int y, int z, int side) {
+		TileEntity tile = world.getTileEntity(x, y, z);
+		if(tile instanceof TileEntityBase) {
+			return ((TileEntityBase) tile).requestCurrentRedstoneValue(side);
+		}
+		return super.getComparatorInputOverride(world, x, y, z, side);
+	}
+
+	@Override
 	public boolean hasSubTypes() {
 		return true;
 	}
@@ -102,7 +117,7 @@ public class BlockChatBox extends BlockMachineSidedIcon implements IBlockWithSpe
 	}
 
 	@Override
-	@Optional.Method(modid= Mods.OpenComputers)
+	@Optional.Method(modid = Mods.OpenComputers)
 	public Class<? extends Environment> getTileEntityClass(int meta) {
 		return TileChatBox.class;
 	}

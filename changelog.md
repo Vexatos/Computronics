@@ -1,6 +1,8 @@
 ==== 1.5.3 ====
 
+  * ADDED: The Chat Box and Camera now emit a comparator signal similar to the usually emitted redstone signal.
   * FIXED: The ability to place a Digital Signal Receiver Box on a side of a block when it's not supported.
+  * FIXED: Crash when placing a Camera or Chat Box next to a Rail.
 
 ==== 1.5.2 ====
 

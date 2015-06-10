@@ -47,7 +47,7 @@ public class TileChatBox extends TileEntityPeripheralBase implements IChatListen
 		if(Config.REDSTONE_REFRESH && ticksUntilOff > 0) {
 			ticksUntilOff--;
 			if(ticksUntilOff == 0 || mustRefresh) {
-				this.worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, this.blockType);
+				this.worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, this.getBlockType());
 			}
 		}
 	}
