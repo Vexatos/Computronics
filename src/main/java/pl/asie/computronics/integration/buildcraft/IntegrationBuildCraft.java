@@ -1,6 +1,5 @@
 package pl.asie.computronics.integration.buildcraft;
 
-import buildcraft.api.blueprints.BuilderAPI;
 import buildcraft.api.transport.PipeManager;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -15,10 +14,6 @@ import pl.asie.computronics.integration.buildcraft.pluggable.DroneStationRendere
 import pl.asie.computronics.integration.buildcraft.pluggable.ItemDockingUpgrade;
 import pl.asie.computronics.integration.buildcraft.pluggable.ItemDroneStation;
 import pl.asie.computronics.reference.Mods;
-import pl.asie.lib.block.BlockBase;
-import pl.asie.lib.integration.buildcraft.SchematicBlockBase;
-
-import java.util.ArrayList;
 
 /**
  * @author Vexatos
@@ -68,19 +63,5 @@ public class IntegrationBuildCraft {
 			" a ", "tst", " c ", 's', new ItemStack(droneStationItem, 1, 0), 'a', li.cil.oc.api.Items.get("chip1").createItemStack(1),
 			'c', pipe, 't', li.cil.oc.api.Items.get("transistor").createItemStack(1)
 		);
-	}
-
-	private static final ArrayList<BlockBase> blocks = new ArrayList<BlockBase>();
-
-	public static void registerBlockBaseSchematic(BlockBase block) {
-		if(Mods.API.hasAPI(Mods.API.BuildCraftBlueprints)) {
-			blocks.add(block);
-		}
-	}
-
-	public static void init() {
-		for(BlockBase block : blocks) {
-			BuilderAPI.schematicRegistry.registerSchematicBlock(block, SchematicBlockBase.class);
-		}
 	}
 }

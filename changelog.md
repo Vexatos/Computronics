@@ -1,3 +1,7 @@
+==== 1.5.4 ====
+
+  * FIXED: Crash when OpenComputers is present but BuildCraft is not.
+
 ==== 1.5.3 ====
 
   * ADDED: The Chat Box and Camera now emit a comparator signal similar to the usually emitted redstone signal.

@@ -9,7 +9,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import pl.asie.computronics.Computronics;
-import pl.asie.computronics.integration.buildcraft.IntegrationBuildCraft;
+import pl.asie.computronics.integration.buildcraft.IntegrationBuildCraftBuilder;
 import pl.asie.computronics.integration.railcraft.block.BlockDigitalDetector;
 import pl.asie.computronics.integration.railcraft.block.BlockDigitalReceiverBox;
 import pl.asie.computronics.integration.railcraft.block.BlockLocomotiveRelay;
@@ -49,7 +49,7 @@ public class IntegrationRailcraft {
 			GameRegistry.registerBlock(locomotiveRelay, "computronics.locomotiveRelay");
 			GameRegistry.registerTileEntity(TileLocomotiveRelay.class, "computronics.locomotiveRelay");
 			FMLInterModComms.sendMessage(Mods.AE2, "whitelist-spatial", TileLocomotiveRelay.class.getCanonicalName());
-			IntegrationBuildCraft.registerBlockBaseSchematic(locomotiveRelay);
+			IntegrationBuildCraftBuilder.INSTANCE.registerBlockBaseSchematic(locomotiveRelay);
 
 			relaySensor = new ItemRelaySensor();
 			GameRegistry.registerItem(relaySensor, "computronics.relaySensor");
@@ -68,7 +68,7 @@ public class IntegrationRailcraft {
 			GameRegistry.registerBlock(detector, "computronics.detector");
 			GameRegistry.registerTileEntity(TileDigitalDetector.class, "computronics.detector");
 			FMLInterModComms.sendMessage(Mods.AE2, "whitelist-spatial", TileDigitalDetector.class.getCanonicalName());
-			IntegrationBuildCraft.registerBlockBaseSchematic(detector);
+			IntegrationBuildCraftBuilder.INSTANCE.registerBlockBaseSchematic(detector);
 		}
 		if(isEnabled(config, "ticketMachine", true)) {
 			this.guiTicketMachine = new GuiProviderTicketMachine();
@@ -77,7 +77,7 @@ public class IntegrationRailcraft {
 			GameRegistry.registerBlock(ticketMachine, "computronics.ticketMachine");
 			GameRegistry.registerTileEntity(TileTicketMachine.class, "computronics.ticketMachine");
 			FMLInterModComms.sendMessage(Mods.AE2, "whitelist-spatial", TileTicketMachine.class.getCanonicalName());
-			IntegrationBuildCraft.registerBlockBaseSchematic(ticketMachine);
+			IntegrationBuildCraftBuilder.INSTANCE.registerBlockBaseSchematic(ticketMachine);
 		}
 	}
 

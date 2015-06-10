@@ -40,6 +40,7 @@ import pl.asie.computronics.gui.providers.GuiProviderCipher;
 import pl.asie.computronics.gui.providers.GuiProviderTapeDrive;
 import pl.asie.computronics.integration.ModRecipes;
 import pl.asie.computronics.integration.buildcraft.IntegrationBuildCraft;
+import pl.asie.computronics.integration.buildcraft.IntegrationBuildCraftBuilder;
 import pl.asie.computronics.integration.buildcraft.statements.ActionProvider;
 import pl.asie.computronics.integration.buildcraft.statements.StatementParameters;
 import pl.asie.computronics.integration.buildcraft.statements.TriggerProvider;
@@ -160,7 +161,7 @@ public class Computronics {
 		GameRegistry.registerTileEntity(tile, name);
 		//System.out.println("Registering " + name + " as TE " + tile.getCanonicalName());
 		FMLInterModComms.sendMessage(Mods.AE2, "whitelist-spatial", tile.getCanonicalName());
-		IntegrationBuildCraft.registerBlockBaseSchematic(block);
+		IntegrationBuildCraftBuilder.INSTANCE.registerBlockBaseSchematic(block);
 	}
 
 	@EventHandler
@@ -285,7 +286,7 @@ public class Computronics {
 		}
 
 		if(Mods.API.hasAPI(Mods.API.BuildCraftBlueprints)) {
-			IntegrationBuildCraft.init();
+			IntegrationBuildCraftBuilder.INSTANCE.init();
 		}
 
 		achievements = new ComputronicsAchievements();
