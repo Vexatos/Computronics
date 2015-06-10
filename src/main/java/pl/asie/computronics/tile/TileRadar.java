@@ -69,7 +69,7 @@ public class TileRadar extends TileEntityPeripheralBase implements IBatteryProvi
 		Set<Map> entities = new HashSet<Map>();
 		int distance = getDistance(args);
 		double energyNeeded = (Config.RADAR_ENERGY_COST_OC * distance * 1.75);
-		if(((Connector) node).tryChangeBuffer(0 - energyNeeded)
+		if(((Connector) node()).tryChangeBuffer(0 - energyNeeded)
 			|| extractFromBattery(energyNeeded)) {
 			AxisAlignedBB bounds = getBounds(distance);
 			entities.addAll(RadarUtils.getEntities(worldObj, xCoord, yCoord, zCoord, bounds, EntityPlayer.class));
@@ -91,7 +91,7 @@ public class TileRadar extends TileEntityPeripheralBase implements IBatteryProvi
 		Set<Map> entities = new HashSet<Map>();
 		int distance = getDistance(args);
 		double energyNeeded = (Config.RADAR_ENERGY_COST_OC * distance * 1.0);
-		if(((Connector) node).tryChangeBuffer(0 - energyNeeded)
+		if(((Connector) node()).tryChangeBuffer(0 - energyNeeded)
 			|| extractFromBattery(energyNeeded)) {
 			AxisAlignedBB bounds = getBounds(distance);
 			entities.addAll(RadarUtils.getEntities(worldObj, xCoord, yCoord, zCoord, bounds, EntityPlayer.class));
@@ -106,7 +106,7 @@ public class TileRadar extends TileEntityPeripheralBase implements IBatteryProvi
 		Set<Map> entities = new HashSet<Map>();
 		int distance = getDistance(args);
 		double energyNeeded = (Config.RADAR_ENERGY_COST_OC * distance * 1.0);
-		if(((Connector) node).tryChangeBuffer(0 - energyNeeded)
+		if(((Connector) node()).tryChangeBuffer(0 - energyNeeded)
 			|| extractFromBattery(energyNeeded)) {
 			AxisAlignedBB bounds = getBounds(distance);
 			entities.addAll(RadarUtils.getEntities(worldObj, xCoord, yCoord, zCoord, bounds, EntityLiving.class));
@@ -121,7 +121,7 @@ public class TileRadar extends TileEntityPeripheralBase implements IBatteryProvi
 		Set<Map> entities = new HashSet<Map>();
 		int distance = getDistance(args);
 		double energyNeeded = (Config.RADAR_ENERGY_COST_OC * distance * 2.0);
-		if(((Connector) node).tryChangeBuffer(0 - energyNeeded)
+		if(((Connector) node()).tryChangeBuffer(0 - energyNeeded)
 			|| extractFromBattery(energyNeeded)) {
 			AxisAlignedBB bounds = getBounds(distance);
 			entities.addAll(RadarUtils.getItems(worldObj, xCoord, yCoord, zCoord, bounds, EntityItem.class));

@@ -64,25 +64,32 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 
 	@Optional.Method(modid = Mods.OpenComputers)
 	private void initOC(double s) {
-		node = Network.newNode(this, Visibility.Network).withComponent(this.peripheralName, Visibility.Network).withConnector(s).create();
+		setNode(Network.newNode(this, Visibility.Network).withComponent(this.peripheralName, Visibility.Network).withConnector(s).create());
 	}
 
 	@Optional.Method(modid = Mods.OpenComputers)
 	private void initOC() {
-		node = Network.newNode(this, Visibility.Network).withComponent(this.peripheralName, Visibility.Network).create();
+		setNode(Network.newNode(this, Visibility.Network).withComponent(this.peripheralName, Visibility.Network).create());
 	}
 
 	// OpenComputers Environment boilerplate
 	// From TileEntityEnvironment
 
-	protected Node node;
+	// Has to be an Object for getDeclaredFields to not error when
+	// called on this class without OpenComputers being present. Blame OpenPeripheral.
+	private Object node;
 	protected ArrayList<IComputerAccess> attachedComputersCC;
 	protected boolean addedToNetwork = false;
 
 	@Override
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Node node() {
-		return node;
+		return (Node) node;
+	}
+
+	@Optional.Method(modid = Mods.OpenComputers)
+	public void setNode(final Node node) {
+		this.node = node;
 	}
 
 	@Override
@@ -129,8 +136,8 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void onChunkUnload() {
 		super.onChunkUnload();
-		if(node != null) {
-			node.remove();
+		if(node() != null) {
+			node().remove();
 		}
 	}
 
@@ -138,8 +145,8 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void invalidate() {
 		super.invalidate();
-		if(node != null) {
-			node.remove();
+		if(node() != null) {
+			node().remove();
 		}
 		if(worldObj.isRemote && hasSound()) {
 			updateSound();
@@ -148,16 +155,16 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void readFromNBT_OC(final NBTTagCompound nbt) {
-		if(node != null && node.host() == this) {
-			node.load(nbt.getCompoundTag("oc:node"));
+		if(node() != null && node().host() == this) {
+			node().load(nbt.getCompoundTag("oc:node"));
 		}
 	}
 
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void writeToNBT_OC(final NBTTagCompound nbt) {
-		if(node != null && node.host() == this) {
+		if(node() != null && node().host() == this) {
 			final NBTTagCompound nodeNbt = new NBTTagCompound();
-			node.save(nodeNbt);
+			node().save(nodeNbt);
 			nbt.setTag("oc:node", nodeNbt);
 		}
 	}

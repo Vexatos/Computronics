@@ -100,8 +100,8 @@ public class TileChatBox extends TileEntityPeripheralBase implements IChatListen
 
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void eventOC(ServerChatEvent event) {
-		if(node != null) {
-			node.sendToReachable("computer.signal", "chat_message", event.username, event.message);
+		if(node() != null) {
+			node().sendToReachable("computer.signal", "chat_message", event.username, event.message);
 		}
 	}
 

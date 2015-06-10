@@ -262,11 +262,11 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 
 	@Optional.Method(modid = Mods.OpenComputers)
 	private Object[] tryConsumeEnergy(double v, String methodName) {
-		if(this.node instanceof Connector) {
+		if(this.node() instanceof Connector) {
 			int power = this.tryConsumeEnergy(v);
 			if(power < 0) {
 				return new Object[] { null, null, power + ": " + methodName + ": not enough energy available: required"
-					+ v + ", found " + ((Connector) node).globalBuffer() };
+					+ v + ", found " + ((Connector) node()).globalBuffer() };
 			}
 		}
 		return null;
@@ -278,8 +278,8 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 			return -2;
 		}
 		v = -v;
-		if(this.node instanceof Connector) {
-			Connector connector = ((Connector) this.node);
+		if(this.node() instanceof Connector) {
+			Connector connector = ((Connector) this.node());
 			return connector.tryChangeBuffer(v) ? 1 : -1;
 
 		}

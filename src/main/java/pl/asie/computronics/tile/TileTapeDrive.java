@@ -34,7 +34,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 		super("tape_drive");
 		this.createInventory(1);
 		this.state = new TapeDriveState();
-		if(Mods.isLoaded(Mods.OpenComputers) && node != null) {
+		if(Mods.isLoaded(Mods.OpenComputers) && node() != null) {
 			initOCFilesystem();
 		}
 	}
@@ -64,7 +64,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 			// Remove our file systems when we get disconnected from a
 			// computer.
 			node.disconnect(oc_fs.node());
-		} else if(node == this.node) {
+		} else if(node == this.node()) {
 			// Remove the file system if we are disconnected, because in that
 			// case this method is only called once.
 			oc_fs.node().remove();

@@ -150,7 +150,7 @@ public class TileDigitalDetector extends TileEntityPeripheralBase
 
 	@Override
 	public Node sidedNode(ForgeDirection side) {
-		return side == this.direction ? node : null;
+		return side == this.direction ? node() : null;
 	}
 
 	@Override
