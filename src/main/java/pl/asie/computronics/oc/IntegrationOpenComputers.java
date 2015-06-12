@@ -45,6 +45,7 @@ import pl.asie.computronics.integration.railcraft.driver.track.DriverPoweredTrac
 import pl.asie.computronics.integration.railcraft.driver.track.DriverPrimingTrack;
 import pl.asie.computronics.integration.railcraft.driver.track.DriverRoutingTrack;
 import pl.asie.computronics.integration.redlogic.DriverLamp;
+import pl.asie.computronics.integration.storagedrawers.DriverDrawerGroup;
 import pl.asie.computronics.item.ItemOpenComputers;
 import pl.asie.computronics.oc.block.DriverBlockEnvironments;
 import pl.asie.computronics.oc.manual.ComputronicsPathProvider;
@@ -133,6 +134,11 @@ public class IntegrationOpenComputers {
 				} catch(Exception e) {
 					//NO-OP
 				}
+			}
+		}
+		if(Mods.isLoaded(Mods.StorageDrawers)) {
+			if(compat.isCompatEnabled(Compat.StorageDrawers)) {
+				Driver.add(new DriverDrawerGroup.OCDriver());
 			}
 		}
 		if(Mods.isLoaded(Mods.FSP)) {

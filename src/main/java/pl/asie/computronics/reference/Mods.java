@@ -38,6 +38,7 @@ public class Mods {
 		RedLogic = "RedLogic",
 		ProjectRed = "ProjRed|Core",
 		Railcraft = "Railcraft",
+		StorageDrawers = "StorageDrawers",
 		Waila = "Waila";
 
 	//APIs
@@ -69,7 +70,7 @@ public class Mods {
 		return pl.asie.lib.reference.Mods.isLoaded(name);
 	}
 
-	public static boolean hasEnergyMod(){
+	public static boolean hasEnergyMod() {
 		return pl.asie.lib.reference.Mods.hasEnergyMod();
 	}
 }

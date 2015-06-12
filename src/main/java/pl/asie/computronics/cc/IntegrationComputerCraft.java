@@ -36,6 +36,7 @@ import pl.asie.computronics.integration.railcraft.driver.track.DriverPoweredTrac
 import pl.asie.computronics.integration.railcraft.driver.track.DriverPrimingTrack;
 import pl.asie.computronics.integration.railcraft.driver.track.DriverRoutingTrack;
 import pl.asie.computronics.integration.redlogic.DriverLamp;
+import pl.asie.computronics.integration.storagedrawers.DriverDrawerGroup;
 import pl.asie.computronics.reference.Compat;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
@@ -70,6 +71,11 @@ public class IntegrationComputerCraft {
 		if(Mods.isLoaded(Mods.MFR) || Mods.isLoaded(Mods.JABBA)) {
 			if(compat.isCompatEnabled(Compat.MFR_DSU)) {
 				registerMultiPeripheralProvider(new DriverDeepStorageUnit.CCDriver());
+			}
+		}
+		if(Mods.isLoaded(Mods.StorageDrawers)) {
+			if(compat.isCompatEnabled(Compat.StorageDrawers)) {
+				registerMultiPeripheralProvider(new DriverDrawerGroup.CCDriver());
 			}
 		}
 		if(Mods.isLoaded(Mods.FSP)) {

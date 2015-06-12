@@ -1,3 +1,8 @@
+==== 1.5.5 ====
+
+  * ADDED: StorageDrawers integration!
+    - Now you can properly get the (max) item count stored in a specific drawer slot.
+
 ==== 1.5.4 ====
 
   * FIXED: Crash when OpenComputers is present but BuildCraft is not.
