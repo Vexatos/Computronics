@@ -10,6 +10,7 @@ import net.minecraft.world.World;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.gui.GuiTapePlayer;
 import pl.asie.computronics.gui.container.ContainerTapeReader;
+import pl.asie.computronics.gui.handlers.PortableTapeDriveHandler;
 import pl.asie.computronics.gui.handlers.TileTapeDriveHandler;
 import pl.asie.computronics.tile.TileTapeDrive;
 import pl.asie.lib.gui.managed.GuiProviderBase;
@@ -37,6 +38,10 @@ public class GuiProviderTapeDrive extends GuiProviderBase {
 				Computronics.log.warn("[Server] Entity not found when opening GUI: {0}", x);
 				return null;
 			} else {
+				if(z < 0) {
+					PortableTapeDriveHandler handler = new PortableTapeDriveHandler(entityPlayer.getCurrentEquippedItem(), entityPlayer);
+					return new ContainerTapeReader(handler, entityPlayer.inventory, handler);
+				}
 				return null;
 			}
 		}

@@ -15,8 +15,8 @@ import pl.asie.computronics.oc.DriverCardSound;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TapeDriveState.State;
-import pl.asie.computronics.util.NBTUtils;
 import pl.asie.computronics.util.internal.ITapeDrive;
+import pl.asie.computronics.util.internal.ITapeDriveItem;
 import pl.asie.lib.audio.StreamingAudioPlayer;
 import pl.asie.lib.network.MessageHandlerBase;
 import pl.asie.lib.network.Packet;
@@ -42,23 +42,24 @@ public class NetworkHandlerClient extends MessageHandlerBase {
 					if(entity instanceof ITapeDrive) {
 						((ITapeDrive) entity).switchState(state);
 					}
-				} else if(type == Types.Entity) {
+				} else {
 					int dimensionId = packet.readInt();
 					WorldServer world = MinecraftServer.getServer().worldServerForDimension(dimensionId);
 					Entity entity = world == null ? null : world.getEntityByID(packet.readInt());
 					state = State.values()[packet.readUnsignedByte()];
-					if(entity instanceof ITapeDrive) {
+					if(type == Types.Entity && entity instanceof ITapeDrive) {
 						((ITapeDrive) entity).switchState(state);
-					}
-				} else {
-					state = State.values()[packet.readUnsignedByte()];
-					ItemStack stack = NBTUtils.readItemStack(packet);
-					if(stack != null && stack.getItem() instanceof ITapeDrive) {
-						NBTTagCompound data = stack.getTagCompound();
-						if(data == null) {
-							data = new NBTTagCompound();
+					} else if(type == Types.Item && entity instanceof EntityPlayer
+						&& ((EntityPlayer) entity).inventory != null) {
+						ItemStack stack = ((EntityPlayer) entity).getCurrentEquippedItem();
+						if(stack != null && stack.getItem() instanceof ITapeDriveItem) {
+							NBTTagCompound data = stack.getTagCompound();
+							if(data == null) {
+								data = new NBTTagCompound();
+							}
+							data.setInteger("computronics:state", state.ordinal());
+							stack.setTagCompound(data);
 						}
-						data.setInteger("state", state.ordinal());
 					}
 				}
 			}

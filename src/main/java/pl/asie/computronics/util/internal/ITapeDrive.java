@@ -7,4 +7,6 @@ import pl.asie.computronics.tile.TapeDriveState.State;
  */
 public interface ITapeDrive {
 	public void switchState(State state);
+
+	public State getEnumState();
 }

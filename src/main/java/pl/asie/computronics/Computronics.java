@@ -47,6 +47,7 @@ import pl.asie.computronics.integration.buildcraft.statements.TriggerProvider;
 import pl.asie.computronics.integration.forestry.IntegrationForestry;
 import pl.asie.computronics.integration.gregtech.GregTechRecipes;
 import pl.asie.computronics.integration.railcraft.IntegrationRailcraft;
+import pl.asie.computronics.item.ItemPortableTapeDrive;
 import pl.asie.computronics.item.ItemTape;
 import pl.asie.computronics.item.block.IBlockWithSpecialText;
 import pl.asie.computronics.item.block.ItemBlockWithSpecialText;
@@ -128,6 +129,7 @@ public class Computronics {
 	public static IntegrationForestry forestry;
 
 	public static ItemTape itemTape;
+	public static ItemPortableTapeDrive itemTapeDrive;
 	public static ItemMultiple itemParts;
 	public static ItemMultiple itemPartsGreg;
 
@@ -233,6 +235,9 @@ public class Computronics {
 		if(isEnabled("tape", true)) {
 			itemTape = new ItemTape(Config.TAPE_LENGTHS);
 			GameRegistry.registerItem(itemTape, "computronics.tape");
+
+			itemTapeDrive = new ItemPortableTapeDrive();
+			GameRegistry.registerItem(itemTapeDrive, "computronics.portable_tape_drive");
 
 			if(Mods.isLoaded(Mods.GregTech)) {
 				itemPartsGreg = new ItemMultiple(Mods.Computronics, new String[] { "reelChromoxide" });

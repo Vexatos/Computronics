@@ -90,6 +90,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 	}
 
 	// Logic
+	@Override
 	public State getEnumState() {
 		return this.state.getState();
 	}

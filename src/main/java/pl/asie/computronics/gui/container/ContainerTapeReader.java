@@ -3,6 +3,7 @@ package pl.asie.computronics.gui.container;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -25,6 +26,24 @@ public class ContainerTapeReader extends Container {
 		this.bindPlayerInventory(inventoryPlayer, 8, 84);
 
 		this.containerSize = this.inventory.getSizeInventory();
+	}
+
+	@Override
+	public void addCraftingToCrafters(ICrafting icrafting) {
+		super.addCraftingToCrafters(icrafting);
+		getHandler().initialize(icrafting);
+	}
+
+	@Override
+	public void detectAndSendChanges() {
+		super.detectAndSendChanges();
+		getHandler().sendChanges();
+	}
+
+	@Override
+	public void updateProgressBar(int id, int value) {
+		super.updateProgressBar(id, value);
+		getHandler().updateFromRemote(id, value);
 	}
 
 	public ItemStack transferStackInSlot(EntityPlayer player, int slot) {

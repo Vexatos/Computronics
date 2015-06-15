@@ -37,6 +37,10 @@ public class TapeDriveState {
 	}
 	
 	public void switchState(World worldObj, int x, int y, int z, State newState) {
+		switchState(worldObj, newState);
+	}
+
+	public void switchState(World worldObj, State newState){
 		if(worldObj.isRemote) { // Client-side happening
 			if(newState == state) return;
 		}
