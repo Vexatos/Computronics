@@ -9,4 +9,11 @@ public class Packets {
 	public static final int PACKET_COMPUTER_BOOM = 5;
 	public static final int PACKET_TICKET_SYNC = 6;
 	public static final int PACKET_TICKET_PRINT = 7;
+
+	public static final class Types {
+		public static final int
+			TileEntity = 0,
+			Entity = 1,
+			Item = 2;
+	}
 }

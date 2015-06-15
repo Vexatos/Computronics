@@ -20,13 +20,15 @@ import pl.asie.computronics.Computronics;
 import pl.asie.computronics.api.tape.IItemTapeStorage;
 import pl.asie.computronics.item.ItemTape;
 import pl.asie.computronics.network.Packets;
+import pl.asie.computronics.network.Packets.Types;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TapeDriveState.State;
+import pl.asie.computronics.util.internal.ITapeDrive;
 import pl.asie.lib.api.tile.IInventoryProvider;
 import pl.asie.lib.network.Packet;
 
-public class TileTapeDrive extends TileEntityPeripheralBase implements IInventoryProvider {
+public class TileTapeDrive extends TileEntityPeripheralBase implements IInventoryProvider, ITapeDrive {
 	private String storageName = "";
 	private TapeDriveState state;
 
@@ -77,6 +79,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 		}
 		try {
 			Packet packet = Computronics.packet.create(Packets.PACKET_TAPE_GUI_STATE)
+				.writeInt(Types.TileEntity)
 				.writeTileLocation(this)
 				.writeByte((byte) state.getState().ordinal());
 			//.writeByte((byte)soundVolume);
@@ -91,6 +94,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 		return this.state.getState();
 	}
 
+	@Override
 	public void switchState(State s) {
 		//System.out.println("Switchy switch to " + s.name());
 		if(this.getEnumState() != s) {

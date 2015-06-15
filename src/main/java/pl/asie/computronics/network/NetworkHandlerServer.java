@@ -1,12 +1,19 @@
 package pl.asie.computronics.network;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetHandler;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.WorldServer;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.network.Packets.Types;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TapeDriveState.State;
-import pl.asie.computronics.tile.TileTapeDrive;
+import pl.asie.computronics.util.NBTUtils;
+import pl.asie.computronics.util.internal.ITapeDrive;
 import pl.asie.lib.network.MessageHandlerBase;
 import pl.asie.lib.network.Packet;
 
@@ -18,11 +25,32 @@ public class NetworkHandlerServer extends MessageHandlerBase {
 		throws IOException {
 		switch(command) {
 			case Packets.PACKET_TAPE_GUI_STATE: {
-				TileEntity entity = packet.readTileEntityServer();
-				State state = State.values()[packet.readUnsignedByte()];
-				if(entity instanceof TileTapeDrive) {
-					TileTapeDrive tile = (TileTapeDrive) entity;
-					tile.switchState(state);
+				int type = packet.readInt();
+				State state;
+				if(type == Types.TileEntity) {
+					TileEntity entity = packet.readTileEntityServer();
+					state = State.values()[packet.readUnsignedByte()];
+					if(entity instanceof ITapeDrive) {
+						((ITapeDrive) entity).switchState(state);
+					}
+				} else if(type == Types.Entity) {
+					int dimensionId = packet.readInt();
+					WorldServer world = MinecraftServer.getServer().worldServerForDimension(dimensionId);
+					Entity entity = world == null ? null : world.getEntityByID(packet.readInt());
+					state = State.values()[packet.readUnsignedByte()];
+					if(entity instanceof ITapeDrive) {
+						((ITapeDrive) entity).switchState(state);
+					}
+				} else {
+					state = State.values()[packet.readUnsignedByte()];
+					ItemStack stack = NBTUtils.readItemStack(packet);
+					if(stack != null && stack.getItem() instanceof ITapeDrive) {
+						NBTTagCompound data = stack.getTagCompound();
+						if(data == null) {
+							data = new NBTTagCompound();
+						}
+						data.setInteger("state", state.ordinal());
+					}
 				}
 			}
 			break;
