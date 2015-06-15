@@ -102,7 +102,7 @@ dependencies {
 
 minecraft {
 	version = "${config.minecraft.version}-${config.forge.version}"
-	runDir = "eclipse/assets"
+	runDir = "eclipse"
 
 	replaceIn "pl/asie/computronics/Computronics.java"
 	replace "@VERSION@", "${config.computronics.version}"
