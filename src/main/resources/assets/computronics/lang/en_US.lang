@@ -99,9 +99,9 @@ itemGroup.tabComputronics=Computronics
 
 entity.computronics.itemTape.name=Intergalactical CDVR
 
-for.computronics.flowers.sea=Sea
-for.computronics.bees.species.scummy=Scummy
-for.description.computronics.speciesScummy=Kerosene, propylene glycol, artificial sweeteners, sulfuric acid, rum, acetone, red dye #2, scumm, axle grease, battery acid and/or pepperoni|Strange people in a bar
+computronics.flowers.sea=Sea
+computronics.bees.species.scummy=Scummy
+computronics.bees.species.scummy.description=Kerosene, propylene glycol, artificial sweeteners, sulfuric acid, rum, acetone, red dye #2, scumm, axle grease, battery acid and/or pepperoni|Strange people in a bar
 
 chat.computronics.cipher.locked=This Cipher Block is locked! You may not access it.
 chat.computronics.relay.notBound=Relay is currently not bound to any locomotive!

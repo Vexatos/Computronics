@@ -2,6 +2,7 @@
 
   * ADDED: StorageDrawers integration!
     - Now you can properly get the (max) item count stored in a specific drawer slot.
+  * MISC: Updated Forestry integration to version 3.6; requires Forestry 3.6 now.
 
 ==== 1.5.4 ====
 

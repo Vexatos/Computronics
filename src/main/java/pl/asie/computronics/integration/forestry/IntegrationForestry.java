@@ -2,7 +2,9 @@ package pl.asie.computronics.integration.forestry;
 
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.registry.GameRegistry;
+import forestry.api.apiculture.BeeManager;
 import forestry.api.apiculture.EnumBeeChromosome;
+import forestry.api.apiculture.IAlleleBeeSpecies;
 import forestry.api.core.EnumHumidity;
 import forestry.api.core.EnumTemperature;
 import forestry.api.genetics.AlleleManager;
@@ -12,10 +14,6 @@ import forestry.api.genetics.IAlleleSpecies;
 import forestry.api.genetics.IClassification;
 import forestry.api.genetics.IMutation;
 import forestry.api.recipes.RecipeManagers;
-import forestry.apiculture.genetics.AlleleFlowers;
-import forestry.apiculture.genetics.BeeMutation;
-import forestry.apiculture.genetics.BranchBees;
-import forestry.apiculture.genetics.MutationReqRes;
 import li.cil.oc.api.Items;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -26,6 +24,8 @@ import net.minecraftforge.fluids.FluidRegistry;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.lib.item.ItemMultiple;
+
+import java.util.HashMap;
 
 /**
  * @author Vexatos
@@ -40,7 +40,7 @@ public class IntegrationForestry {
 	public static ItemMultiple itemPartsForestry;
 
 	private static final String
-		speciesArgrarian = "forestry.speciesArgrarian",
+		speciesAgrarian = "forestry.speciesAgrarian",
 		speciesExotic = "forestry.speciesExotic",
 		speciesTipsy = "forestry.speciesTipsy";
 
@@ -55,9 +55,9 @@ public class IntegrationForestry {
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void initOC() {
 		Computronics.log.info("Adding Forestry Bees for OpenComputers.");
-		IClassification pirates = new BranchBees("pirates", "Piraticus");
+		IClassification pirates = BeeManager.beeFactory.createBranch("pirates", "Piraticus");
 		AlleleManager.alleleRegistry.getClassification("family.apidae").addMemberGroup(pirates);
-		sea = new AlleleFlowers("flowersSea", new FlowerProviderSea(), true);
+		sea = AlleleManager.alleleFactory.createFlowers(Mods.Computronics, "flowers", "sea", new FlowerProviderSea(), true);
 
 		Block shortMead = null;
 		{
@@ -66,29 +66,42 @@ public class IntegrationForestry {
 				shortMead = FluidRegistry.getFluid("short.mead").getBlock();
 			}
 		}
-		speciesScummy = new OCBeeSpecies("computronics.speciesScummy", false, "computronics.bees.species.scummy", pirates, "ebriosus", 0x00DF1F, 0xffdc16, shortMead, 0)
-			.addSpecialty(new ItemStack(itemPartsForestry, 1, 0), 20).setEntityTexture("tropicalBee").setIsSecret()
+		speciesScummy = BeeManager.beeFactory.createSpecies("computronics.speciesScummy", false, "Sangar",
+			"computronics.bees.species.scummy", "computronics.bees.species.scummy.description", pirates, "ebriosus", 0x00DF1F, 0xffdc16)
+			.setNocturnal().setJubilanceProvider(new JubilanceSea(shortMead, 0))
+			.addSpecialty(new ItemStack(itemPartsForestry, 1, 0), 0.2f).setIsSecret()
 			.setTemperature(EnumTemperature.WARM).setHumidity(EnumHumidity.DAMP).setHasEffect().setIsNotCounted();
+		//TODO .setEntityTexture("tropicalBee");
 		if(shortMead != null) {
-			scummyA = new MutationReqRes(AlleleManager.alleleRegistry.getAllele(speciesArgrarian),
-				AlleleManager.alleleRegistry.getAllele(speciesExotic), getScummyTemplate(), 2, new ItemStack(shortMead, 1, 0))
-				.requireNight().restrictBiomeType(BiomeDictionary.Type.OCEAN).enableStrictBiomeCheck().setTemperature(0.5f, 1.0f)
+			scummyA = BeeManager.beeMutationFactory.createMutation(
+				(IAlleleBeeSpecies) AlleleManager.alleleRegistry.getAllele(speciesAgrarian),
+				(IAlleleBeeSpecies) AlleleManager.alleleRegistry.getAllele(speciesExotic), getScummyTemplate(), 2)
+				.requireResource(shortMead, 0).addMutationCondition(new MutationConditionStrictBiome(BiomeDictionary.Type.OCEAN))
+				.requireNight()
+				.restrictTemperature(EnumTemperature.WARM, EnumTemperature.HELLISH)
 				.setIsSecret();
 		}
 		if(scummyA == null) {
-			scummyA = new BeeMutation(AlleleManager.alleleRegistry.getAllele(speciesArgrarian),
-				AlleleManager.alleleRegistry.getAllele(speciesExotic), getScummyTemplate(), 2)
-				.requireNight().restrictBiomeType(BiomeDictionary.Type.OCEAN).enableStrictBiomeCheck().setTemperature(0.5f, 1.0f)
+			scummyA = BeeManager.beeMutationFactory.createMutation(
+				(IAlleleBeeSpecies) AlleleManager.alleleRegistry.getAllele(speciesAgrarian),
+				(IAlleleBeeSpecies) AlleleManager.alleleRegistry.getAllele(speciesExotic), getScummyTemplate(), 2)
+				.requireNight()
+				.addMutationCondition(new MutationConditionStrictBiome(BiomeDictionary.Type.OCEAN))
+				.restrictTemperature(EnumTemperature.WARM, EnumTemperature.HELLISH)
 				.setIsSecret();
 		}
 
-		scummyB = new BeeMutation(AlleleManager.alleleRegistry.getAllele(speciesTipsy),
-			AlleleManager.alleleRegistry.getAllele(speciesExotic), getScummyTemplate(), 10).requireNight().setIsSecret();
+		scummyB = BeeManager.beeMutationFactory.createMutation(
+			(IAlleleBeeSpecies) AlleleManager.alleleRegistry.getAllele(speciesTipsy),
+			(IAlleleBeeSpecies) AlleleManager.alleleRegistry.getAllele(speciesExotic), getScummyTemplate(), 10)
+			.requireNight().setIsSecret();
 		AlleleManager.alleleRegistry.getSpeciesRoot("rootBees").registerTemplate(getScummyTemplate());
+		HashMap<ItemStack, Float> acidRecipe = new HashMap<ItemStack, Float>();
+		acidRecipe.put(new ItemStack(itemPartsForestry, 1, 1), 1.0f);
+		acidRecipe.put(new ItemStack(itemPartsForestry, 1, 1), 0.3f);
 		RecipeManagers.centrifugeManager.addRecipe(40,
 			new ItemStack(itemPartsForestry, 1, 0),
-			new ItemStack(itemPartsForestry, 1, 1),
-			new ItemStack(itemPartsForestry, 1, 1), 30);
+			acidRecipe);
 		Item bottleItem = GameRegistry.findItem(Mods.Forestry, "beverage");
 		ItemStack bottle = bottleItem != null ? new ItemStack(bottleItem, 1, 0)
 			: new ItemStack(net.minecraft.init.Items.potionitem, 1, 32);
@@ -102,7 +115,6 @@ public class IntegrationForestry {
 		IAllele[] alleles = AlleleManager.alleleRegistry.getSpeciesRoot("rootBees").getTemplate(speciesExotic).clone();
 
 		//Just making sure
-		alleles[EnumBeeChromosome.TOLERANT_FLYER.ordinal()] = AlleleManager.alleleRegistry.getAllele("forestry.boolFalse");
 		alleles[EnumBeeChromosome.CAVE_DWELLING.ordinal()] = AlleleManager.alleleRegistry.getAllele("forestry.boolFalse");
 		alleles[EnumBeeChromosome.HUMIDITY_TOLERANCE.ordinal()] = AlleleManager.alleleRegistry.getAllele("forestry.toleranceUp1");
 		alleles[EnumBeeChromosome.FLOWERING.ordinal()] = AlleleManager.alleleRegistry.getAllele("forestry.floweringSlowest");
@@ -111,6 +123,7 @@ public class IntegrationForestry {
 		//Actual template
 		alleles[EnumBeeChromosome.SPECIES.ordinal()] = speciesScummy;
 		alleles[EnumBeeChromosome.FERTILITY.ordinal()] = AlleleManager.alleleRegistry.getAllele("forestry.fertilityLow");
+		alleles[EnumBeeChromosome.TOLERANT_FLYER.ordinal()] = AlleleManager.alleleRegistry.getAllele("forestry.boolTrue");
 		alleles[EnumBeeChromosome.NOCTURNAL.ordinal()] = AlleleManager.alleleRegistry.getAllele("forestry.boolFalse");
 		alleles[EnumBeeChromosome.SPEED.ordinal()] = AlleleManager.alleleRegistry.getAllele("forestry.speedSlowest");
 		alleles[EnumBeeChromosome.LIFESPAN.ordinal()] = AlleleManager.alleleRegistry.getAllele("forestry.lifespanLonger");
