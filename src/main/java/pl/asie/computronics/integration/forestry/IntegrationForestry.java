@@ -5,6 +5,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import forestry.api.apiculture.BeeManager;
 import forestry.api.apiculture.EnumBeeChromosome;
 import forestry.api.apiculture.IAlleleBeeSpecies;
+import forestry.api.apiculture.IBeeMutationCustom;
 import forestry.api.core.EnumHumidity;
 import forestry.api.core.EnumTemperature;
 import forestry.api.genetics.AlleleManager;
@@ -12,13 +13,12 @@ import forestry.api.genetics.IAllele;
 import forestry.api.genetics.IAlleleFlowers;
 import forestry.api.genetics.IAlleleSpecies;
 import forestry.api.genetics.IClassification;
-import forestry.api.genetics.IMutation;
 import forestry.api.recipes.RecipeManagers;
 import li.cil.oc.api.Items;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import pl.asie.computronics.Computronics;
@@ -33,8 +33,8 @@ import java.util.HashMap;
 public class IntegrationForestry {
 
 	public static IAlleleSpecies speciesScummy;
-	public static IMutation scummyA;
-	public static IMutation scummyB;
+	public static IBeeMutationCustom scummyA;
+	public static IBeeMutationCustom scummyB;
 	public static IAlleleFlowers sea;
 
 	public static ItemMultiple itemPartsForestry;
@@ -71,31 +71,23 @@ public class IntegrationForestry {
 			.setNocturnal().setJubilanceProvider(new JubilanceSea(shortMead, 0))
 			.addSpecialty(new ItemStack(itemPartsForestry, 1, 0), 0.2f).setIsSecret()
 			.setTemperature(EnumTemperature.WARM).setHumidity(EnumHumidity.DAMP).setHasEffect().setIsNotCounted();
-		//TODO .setEntityTexture("tropicalBee");
+
+		scummyA = BeeManager.beeMutationFactory.createMutation(
+			(IAlleleBeeSpecies) AlleleManager.alleleRegistry.getAllele(speciesAgrarian),
+			(IAlleleBeeSpecies) AlleleManager.alleleRegistry.getAllele(speciesExotic), getScummyTemplate(), 2);
 		if(shortMead != null) {
-			scummyA = BeeManager.beeMutationFactory.createMutation(
-				(IAlleleBeeSpecies) AlleleManager.alleleRegistry.getAllele(speciesAgrarian),
-				(IAlleleBeeSpecies) AlleleManager.alleleRegistry.getAllele(speciesExotic), getScummyTemplate(), 2)
-				.requireResource(shortMead, 0).addMutationCondition(new MutationConditionStrictBiome(BiomeDictionary.Type.OCEAN))
-				.requireNight()
-				.restrictTemperature(EnumTemperature.WARM, EnumTemperature.HELLISH)
-				.setIsSecret();
+			scummyA.requireResource(shortMead, 0);
 		}
-		if(scummyA == null) {
-			scummyA = BeeManager.beeMutationFactory.createMutation(
-				(IAlleleBeeSpecies) AlleleManager.alleleRegistry.getAllele(speciesAgrarian),
-				(IAlleleBeeSpecies) AlleleManager.alleleRegistry.getAllele(speciesExotic), getScummyTemplate(), 2)
-				.requireNight()
-				.addMutationCondition(new MutationConditionStrictBiome(BiomeDictionary.Type.OCEAN))
-				.restrictTemperature(EnumTemperature.WARM, EnumTemperature.HELLISH)
-				.setIsSecret();
-		}
+		scummyA.restrictBiomeType(Type.OCEAN)
+			.requireNight()
+			.restrictTemperature(EnumTemperature.WARM, EnumTemperature.HELLISH)
+			.setIsSecret();
 
 		scummyB = BeeManager.beeMutationFactory.createMutation(
 			(IAlleleBeeSpecies) AlleleManager.alleleRegistry.getAllele(speciesTipsy),
-			(IAlleleBeeSpecies) AlleleManager.alleleRegistry.getAllele(speciesExotic), getScummyTemplate(), 10)
-			.requireNight().setIsSecret();
-		AlleleManager.alleleRegistry.getSpeciesRoot("rootBees").registerTemplate(getScummyTemplate());
+			(IAlleleBeeSpecies) AlleleManager.alleleRegistry.getAllele(speciesExotic), getScummyTemplate(), 10);
+		scummyB.requireNight().setIsSecret();
+		BeeManager.beeRoot.registerTemplate(getScummyTemplate());
 		HashMap<ItemStack, Float> acidRecipe = new HashMap<ItemStack, Float>();
 		acidRecipe.put(new ItemStack(itemPartsForestry, 1, 1), 1.0f);
 		acidRecipe.put(new ItemStack(itemPartsForestry, 1, 1), 0.3f);
@@ -112,7 +104,7 @@ public class IntegrationForestry {
 	}
 
 	public static IAllele[] getScummyTemplate() {
-		IAllele[] alleles = AlleleManager.alleleRegistry.getSpeciesRoot("rootBees").getTemplate(speciesExotic).clone();
+		IAllele[] alleles = BeeManager.beeRoot.getTemplate(speciesExotic).clone();
 
 		//Just making sure
 		alleles[EnumBeeChromosome.CAVE_DWELLING.ordinal()] = AlleleManager.alleleRegistry.getAllele("forestry.boolFalse");
