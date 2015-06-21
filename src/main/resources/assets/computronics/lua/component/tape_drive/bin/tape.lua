@@ -132,7 +132,7 @@ local function writeTape(path)
   tape.stop() --Just making sure
 
   local file, msg, _, y, success
-  local block = 1024 --How much to read at a time
+  local block = 2048 --How much to read at a time
   if options.b then
     local nBlock = tonumber(options.b)
     if nBlock then
