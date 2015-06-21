@@ -26,7 +26,7 @@ local function printUsage()
   print("'tape write <URL>' to write from a URL")
   print("Other options:")
   print("'--address=<address>' to use a specific tape drive")
-  print("'-b=<bytes>' to specify the size of the chunks the program will write to a tape")
+  print("'--b=<bytes>' to specify the size of the chunks the program will write to a tape")
   return
 end
 
@@ -136,10 +136,10 @@ local function writeTape(path)
   if options.b then
     local nBlock = tonumber(options.b)
     if nBlock then
-      print("Setting chunk size to " + options.b)
+      print("Setting chunk size to " .. options.b)
       block = nBlock
     else
-      io.stderr:write("option -b is not a number.\n")
+      io.stderr:write("option --b is not a number.\n")
       return
     end
   end
