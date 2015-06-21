@@ -2,6 +2,7 @@
 
   * ADDED: StorageDrawers integration!
     - Now you can properly get the (max) item count stored in a specific drawer slot.
+  * CHANGED: Doubled the default download rate of the built-in tape program
 
 ==== 1.5.4 ====
 
