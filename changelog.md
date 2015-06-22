@@ -2,6 +2,7 @@
 
   * ADDED: StorageDrawers integration!
     - Now you can properly get the (max) item count stored in a specific drawer slot.
+  * FIXED: Possible crash with Colorful Lamps
 
 ==== 1.5.4 ====
 

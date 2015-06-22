@@ -22,6 +22,7 @@ import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectio
 	@Optional.Interface(iface = "powercrystals.minefactoryreloaded.api.rednet.IRedNetInputNode", modid = Mods.MFR)
 })
 public class BlockColorfulLamp extends BlockPeripheral implements IRedNetInputNode {
+
 	public IIcon m0, m1;
 
 	public BlockColorfulLamp() {
@@ -47,7 +48,7 @@ public class BlockColorfulLamp extends BlockPeripheral implements IRedNetInputNo
 	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
 		TileEntity tile = world.getTileEntity(x, y, z);
-		if(Mods.isLoaded(Mods.ProjectRed)) {
+		if(Mods.isLoaded(Mods.ProjectRed) && tile instanceof TileColorfulLamp) {
 			((TileColorfulLamp) tile).onProjectRedBundledInputChanged();
 		}
 	}
@@ -61,7 +62,7 @@ public class BlockColorfulLamp extends BlockPeripheral implements IRedNetInputNo
 			r = value > 0x7FFF ? 15 : r < 0 ? 0 : r > 15 ? 15 : r;
 			g = value > 0x7FFF ? 15 : g < 0 ? 0 : g > 15 ? 15 : g;
 			b = value > 0x7FFF ? 15 : b < 0 ? 0 : b > 15 ? 15 : b;
-			int brightness = Math.max(Math.max(r , g), b);
+			int brightness = Math.max(Math.max(r, g), b);
 			this.lightValue = brightness | ((b << 15) + (g << 10) + (r << 5));
 		} else {
 			this.lightValue = value;
@@ -103,11 +104,14 @@ public class BlockColorfulLamp extends BlockPeripheral implements IRedNetInputNo
 	@Optional.Method(modid = Mods.MFR)
 	public void onInputChanged(World world, int x, int y, int z,
 		ForgeDirection side, int inputValue) {
-		((TileColorfulLamp) world.getTileEntity(x, y, z)).setLampColor(inputValue & 0x7FFF);
+		TileEntity tile = world.getTileEntity(x, y, z);
+		if(tile instanceof TileColorfulLamp) {
+			((TileColorfulLamp) tile).setLampColor(inputValue & 0x7FFF);
+		}
 	}
 
 	@Override
-	@Optional.Method(modid= Mods.OpenComputers)
+	@Optional.Method(modid = Mods.OpenComputers)
 	public Class<? extends Environment> getTileEntityClass(int meta) {
 		return TileColorfulLamp.class;
 	}

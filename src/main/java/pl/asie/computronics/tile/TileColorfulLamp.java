@@ -13,6 +13,7 @@ import mods.immibis.redlogic.api.wiring.IConnectable;
 import mods.immibis.redlogic.api.wiring.IWire;
 import mrtjp.projectred.api.IBundledTile;
 import mrtjp.projectred.api.ProjectRedAPI;
+import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -38,11 +39,12 @@ public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundl
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
-		if(!initialized) {
+		Block block = worldObj.getBlock(xCoord, yCoord, zCoord);
+		if(!initialized && block instanceof BlockColorfulLamp) {
 			if(LampUtil.shouldColorLight()) {
-				((BlockColorfulLamp) worldObj.getBlock(xCoord, yCoord, zCoord)).setLightValue(color);
+				((BlockColorfulLamp) block).setLightValue(color);
 			} else {
-				((BlockColorfulLamp) worldObj.getBlock(xCoord, yCoord, zCoord)).setLightValue(color == 0 ? 0 : 15);
+				((BlockColorfulLamp) block).setLightValue(color == 0 ? 0 : 15);
 			}
 			initialized = true;
 		}
