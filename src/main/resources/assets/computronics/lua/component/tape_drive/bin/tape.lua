@@ -26,6 +26,7 @@ local function printUsage()
   print("'tape write <URL>' to write from a URL")
   print("Other options:")
   print("'--address=<address>' to use a specific tape drive")
+  print("'--b=<bytes>' to specify the size of the chunks the program will write to a tape")
   return
 end
 
@@ -131,7 +132,17 @@ local function writeTape(path)
   tape.stop() --Just making sure
 
   local file, msg, _, y, success
-  local block = 1024 --How much to read at a time
+  local block = 2048 --How much to read at a time
+  if options.b then
+    local nBlock = tonumber(options.b)
+    if nBlock then
+      print("Setting chunk size to " .. options.b)
+      block = nBlock
+    else
+      io.stderr:write("option --b is not a number.\n")
+      return
+    end
+  end
   local bytery = 0 --For the progress indicator
   local filesize = tape.getSize()
 

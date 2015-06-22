@@ -5,6 +5,7 @@ import cpw.mods.fml.client.registry.RenderingRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import org.lwjgl.opengl.GL11;
@@ -12,6 +13,7 @@ import pl.asie.computronics.block.BlockColorfulLamp;
 import pl.asie.computronics.tile.TileColorfulLamp;
 
 public class LampRender implements ISimpleBlockRenderingHandler {
+
 	private static int renderId;
 
 	public LampRender() {
@@ -68,7 +70,11 @@ public class LampRender implements ISimpleBlockRenderingHandler {
 		Tessellator t = Tessellator.instance;
 
 		// calculate colors
-		int color = ((TileColorfulLamp) world.getTileEntity(x, y, z)).getLampColor();
+		TileEntity tile = world.getTileEntity(x, y, z);
+		int color = 0x6318;
+		if(tile instanceof TileColorfulLamp) {
+			color = ((TileColorfulLamp) tile).getLampColor();
+		}
 		float b = 0.2f + (((color & 31) / 31.0f) * 0.8f);
 		float g = 0.2f + ((((color >> 5) & 31) / 31.0f) * 0.8f);
 		float r = 0.2f + ((((color >> 10) & 31) / 31.0f) * 0.8f);
