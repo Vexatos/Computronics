@@ -5,6 +5,7 @@
   * CHANGED: Doubled the default download rate of the built-in tape program
   * FIXED: Possible crash with Colorful Lamps
   * MISC: Updated Forestry integration to version 3.6; requires Forestry 3.6 now.
+  * MISC: Made secret bees more secret.
 
 ==== 1.5.4 ====
 

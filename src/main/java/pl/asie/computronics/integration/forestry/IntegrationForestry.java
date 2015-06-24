@@ -15,6 +15,8 @@ import forestry.api.genetics.IAlleleSpecies;
 import forestry.api.genetics.IClassification;
 import forestry.api.recipes.RecipeManagers;
 import li.cil.oc.api.Items;
+import net.bdew.gendustry.api.EnumMutationSetting;
+import net.bdew.gendustry.api.GendustryAPI;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -101,6 +103,17 @@ public class IntegrationForestry {
 			new ItemStack(itemPartsForestry, 1, 1),
 			new ItemStack(itemPartsForestry, 1, 1),
 			bottle);
+
+		if(Mods.API.hasVersion(Mods.API.Gendustry, "[2.0.0,)")) {
+			registerBees();
+		}
+	}
+
+	@Optional.Method(modid = Mods.API.Gendustry)
+	private void registerBees() {
+		if(GendustryAPI.Registries != null && GendustryAPI.Registries.getMutatronOverrides() != null) {
+			GendustryAPI.Registries.getMutatronOverrides().set(speciesScummy, EnumMutationSetting.REQUIREMENTS);
+		}
 	}
 
 	public static IAllele[] getScummyTemplate() {
