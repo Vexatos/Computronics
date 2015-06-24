@@ -4,6 +4,7 @@
     - Now you can properly get the (max) item count stored in a specific drawer slot.
   * CHANGED: Doubled the default download rate of the built-in tape program
   * FIXED: Possible crash with Colorful Lamps
+  * MISC: Made secret bees more secret.
 
 ==== 1.5.4 ====
 

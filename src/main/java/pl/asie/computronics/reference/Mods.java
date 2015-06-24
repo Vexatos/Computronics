@@ -9,6 +9,7 @@ import java.util.HashMap;
  * @author Vexatos
  */
 public class Mods {
+
 	//The mod itself
 	public static final String
 		Computronics = "computronics",
@@ -43,12 +44,14 @@ public class Mods {
 
 	//APIs
 	public static class API {
+
 		public static final String
 			BuildCraftBlueprints = "BuildCraftAPI|blueprints",
 			BuildCraftStatements = "BuildCraftAPI|statements",
 			BuildCraftTiles = "BuildCraftAPI|tiles",
 			CoFHAPI_Energy = "CoFHAPI|energy",
 			DraconicEvolution = "DraconicEvolution|API",
+			Gendustry = "gendustryAPI",
 			Mekanism_Energy = "MekanismAPI|energy";
 
 		private static HashMap<String, ArtifactVersion> apiList;

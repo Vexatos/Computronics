@@ -45,6 +45,7 @@ Deobfuscated code gives you many benefits, including but not limited to:
 | EnderIO* | 2.2.8.343 | CrazyPants, tterrag | [Website](http://enderio.com) |
 | Factorization | 0.8.87.1 | neptunepink | [MCF](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1284592-factorization-0-8-88-8-8888-the-update-that-ate) |
 | Forestry* | 3.5.3.11 | Sengir (don't confuse with Sangar), CovertJaguar, mezz | [Secret hideout](http://ic2api.player.to:8080/job/Forestry/) |
+| Gendustry | 1.4.14.99-mc1.7.10-api | bdew | [bdew's jenkins repo](http://jenkins.bdew.net/job/gendustry-1.7.10/) |
 | GregTech* | 5.07.07 | GregoriousT | [IC2 Forums](http://forum.industrial-craft.net/index.php?page=Thread&threadID=7156&) |
 | IndustrialCraft 2* | 2.2.643 | Player | [Wiki](http://wiki.industrial-craft.net/) |
 | OpenComputers* | 1.5.9.21 | Sangar (don't confuse with Sengir) | [Website](http://oc.cil.li/) |
