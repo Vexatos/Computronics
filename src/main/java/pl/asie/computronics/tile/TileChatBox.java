@@ -102,6 +102,12 @@ public class TileChatBox extends TileEntityPeripheralBase implements IChatListen
 		ChatAPI.registry.unregisterChatListener(this);
 	}
 
+	@Override
+	public void onChunkUnload() {
+		super.onChunkUnload();
+		ChatAPI.registry.unregisterChatListener(this);
+	}
+
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void eventOC(ServerChatEvent event) {
 		if(node() != null) {
