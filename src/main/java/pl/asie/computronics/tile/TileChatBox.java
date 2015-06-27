@@ -16,6 +16,7 @@ import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.ChatBoxUtils;
 
 public class TileChatBox extends TileEntityPeripheralBase implements IChatListener {
+
 	private int distance;
 	private int ticksUntilOff = 0;
 	private boolean mustRefresh = false;
@@ -70,6 +71,9 @@ public class TileChatBox extends TileEntityPeripheralBase implements IChatListen
 	}
 
 	public void receiveChatMessage(ServerChatEvent event) {
+		if(!worldObj.blockExists(xCoord, yCoord, zCoord)) {
+			return;
+		}
 		if(!isCreative() && (event.player.worldObj != this.worldObj || event.player.getDistanceSq(xCoord, yCoord, zCoord) > distance * distance)) {
 			return;
 		}
@@ -95,6 +99,12 @@ public class TileChatBox extends TileEntityPeripheralBase implements IChatListen
 	@Override
 	public void invalidate() {
 		super.invalidate();
+		ChatAPI.registry.unregisterChatListener(this);
+	}
+
+	@Override
+	public void onChunkUnload() {
+		super.onChunkUnload();
 		ChatAPI.registry.unregisterChatListener(this);
 	}
 
