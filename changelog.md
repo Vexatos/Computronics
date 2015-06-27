@@ -5,7 +5,7 @@
   * CHANGED: Doubled the default download rate of the built-in tape program
   * FIXED: Possible crash with Colorful Lamps
   * FIXED: Rare error with chat boxes kicking people from servers.
-  * MISC: Updated Forestry integration to version 3.6; requires Forestry 3.6 now.
+  * FIXED: Updated Forestry integration to version 3.6; requires Forestry 3.6 now.
   * MISC: Made secret bees more secret.
   * MISC: Added IChatListenerRegistry.isListenerRegistered to the API.
 
