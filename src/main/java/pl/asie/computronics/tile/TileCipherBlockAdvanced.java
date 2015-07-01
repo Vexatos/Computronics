@@ -32,6 +32,11 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 		return Config.MUST_UPDATE_TILE_ENTITIES;
 	}
 
+	@Override
+	public boolean canBeColored() {
+		return false;
+	}
+
 	/**
 	 * Checks whether a number is a prime number
 	 * @param number the number to check

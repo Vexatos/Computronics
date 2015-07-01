@@ -38,7 +38,7 @@ public class TileChatBox extends TileEntityPeripheralBase implements IChatListen
 	}
 
 	public boolean isCreative() {
-		return Config.CHATBOX_CREATIVE && worldObj != null
+		return Config.CHATBOX_CREATIVE && worldObj != null && worldObj.blockExists(xCoord, yCoord, zCoord)
 			&& worldObj.getBlockMetadata(xCoord, yCoord, zCoord) >= 8;
 	}
 
@@ -173,6 +173,29 @@ public class TileChatBox extends TileEntityPeripheralBase implements IChatListen
 	public Object[] setName(Context context, Arguments args) {
 		this.name = args.checkString(0);
 		return new Object[] { this.name };
+	}
+
+	@Override
+	public boolean canBeColored() {
+		return !isCreative() && super.canBeColored();
+	}
+
+	@Override
+	public int getColor() {
+		int color = super.getColor();
+		if(isCreative()) {
+			return 0xFF60FF;
+		}
+		return color;
+	}
+
+	@Override
+	public void setColor(int color) {
+		if(isCreative()) {
+			super.setColor(0xFF60FF);
+		} else {
+			super.setColor(color);
+		}
 	}
 
 	@Override

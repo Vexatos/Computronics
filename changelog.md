@@ -1,3 +1,9 @@
+==== 1.5.6 ====
+
+  * ADDED: Made most Computronics blocks dyable!
+    - You can now right click most Computronics blocks with any kind of dye to change their colour!
+  * FIXED: Creative Chat Boxes turning into normal chat boxes when placed.
+
 ==== 1.5.5 ====
 
   * ADDED: StorageDrawers integration!

@@ -19,6 +19,7 @@ import net.minecraft.util.ResourceLocation;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
 import pl.asie.computronics.audio.MachineSound;
 import pl.asie.computronics.reference.Mods;
+import pl.asie.computronics.util.ColorUtils;
 import pl.asie.computronics.util.internal.IComputronicsPeripheral;
 import pl.asie.lib.tile.TileMachine;
 
@@ -38,6 +39,7 @@ import java.util.ArrayList;
 })
 public abstract class TileEntityPeripheralBase extends TileMachine implements Environment,
 	IMultiPeripheral, IComputronicsPeripheral, INedoPeripheral, BlacklistedPeripheral {
+
 	protected String peripheralName;
 
 	public TileEntityPeripheralBase(String name) {
@@ -250,9 +252,26 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 		}
 	}
 
+	protected int color = ColorUtils.Colors.White.color;
+
+	public int getColor() {
+		return color;
+	}
+
+	public void setColor(int color) {
+		this.color = color;
+	}
+
+	public boolean canBeColored() {
+		return true;
+	}
+
 	@Override
 	public void readFromNBT(final NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
+		if(nbt.hasKey("computronics:color")) {
+			color = nbt.getInteger("computronics:color");
+		}
 		if(Mods.isLoaded(Mods.OpenComputers)) {
 			readFromNBT_OC(nbt);
 		}
@@ -264,6 +283,9 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 	@Override
 	public void writeToNBT(final NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
+		if(color != ColorUtils.Colors.White.color) {
+			nbt.setInteger("computronics:color", color);
+		}
 		if(Mods.isLoaded(Mods.OpenComputers)) {
 			writeToNBT_OC(nbt);
 		}

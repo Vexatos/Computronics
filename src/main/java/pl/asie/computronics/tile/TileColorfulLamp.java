@@ -132,6 +132,11 @@ public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundl
 	}
 
 	@Override
+	public boolean canBeColored() {
+		return false;
+	}
+
+	@Override
 	public void writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
 		tag.setShort("clc", (short) (color & 32767));

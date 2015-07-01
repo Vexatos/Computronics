@@ -25,6 +25,7 @@ import pl.asie.lib.block.TileEntityBase;
 import java.util.List;
 
 public class BlockChatBox extends BlockMachineSidedIcon implements IBlockWithSpecialText {
+
 	private IIcon mSide;
 
 	public BlockChatBox() {
@@ -32,7 +33,7 @@ public class BlockChatBox extends BlockMachineSidedIcon implements IBlockWithSpe
 		this.setCreativeTab(Computronics.tab);
 		this.setIconName("computronics:chatbox");
 		this.setBlockName("computronics.chatBox");
-		this.setRotation(Rotation.NONE);
+		this.setRotation(Rotation.FOUR);
 	}
 
 	// I'm such a cheater.
@@ -43,8 +44,12 @@ public class BlockChatBox extends BlockMachineSidedIcon implements IBlockWithSpe
 
 	// Cheaters never win! ~ jaquadro
 	@Override
-	public int colorMultiplier(IBlockAccess blockAccess, int x, int y, int z) {
-		return getRenderColor(blockAccess.getBlockMetadata(x, y, z));
+	public int colorMultiplier(IBlockAccess world, int x, int y, int z) {
+		int meta = world.getBlockMetadata(x, y, z);
+		if(meta >= 8) {
+			return getRenderColor(meta);
+		}
+		return super.colorMultiplier(world, x, y, z);
 	}
 
 	@Override

@@ -19,6 +19,11 @@ public class TileEEPROMReader extends TileEntityPeripheralBase implements IInven
 	}
 
 	@Override
+	public boolean canBeColored() {
+		return false;
+	}
+
+	@Override
 	public void onSlotUpdate(int slot) {
 		int meta = this.worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
 		int newMeta = -1;

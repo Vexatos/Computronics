@@ -15,6 +15,7 @@ import pl.asie.computronics.tile.TapeDriveState;
 import pl.asie.computronics.tile.TileTapeDrive;
 
 public class BlockTapeReader extends BlockMachineSidedIcon {
+
 	private IIcon mFront;
 
 	public BlockTapeReader() {
@@ -61,7 +62,7 @@ public class BlockTapeReader extends BlockMachineSidedIcon {
 	}
 
 	@Override
-	@Optional.Method(modid= Mods.OpenComputers)
+	@Optional.Method(modid = Mods.OpenComputers)
 	public Class<? extends Environment> getTileEntityClass(int meta) {
 		return TileTapeDrive.class;
 	}

@@ -81,6 +81,11 @@ public class TileDigitalDetector extends TileEntityPeripheralBase
 	}
 
 	@Override
+	public boolean canBeColored() {
+		return false;
+	}
+
+	@Override
 	public void writeToNBT(NBTTagCompound data) {
 		super.writeToNBT(data);
 		data.setByte("direction", (byte) direction.ordinal());
