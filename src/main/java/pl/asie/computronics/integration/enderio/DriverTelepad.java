@@ -1,8 +1,8 @@
 package pl.asie.computronics.integration.enderio;
 
+import com.enderio.core.common.util.BlockCoord;
 import crazypants.enderio.api.teleport.ITelePad;
 import crazypants.enderio.config.Config;
-import crazypants.util.BlockCoord;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
