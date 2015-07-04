@@ -73,7 +73,7 @@ public abstract class BlockPeripheral extends BlockBase implements IComputronics
 		if(tile instanceof TileEntityPeripheralBase && ((TileEntityPeripheralBase) tile).canBeColored()) {
 			((TileEntityPeripheralBase) tile).setColor(ColorUtils.fromWoolMeta(colour).color);
 			world.markBlockForUpdate(x, y, z);
-			return false;
+			return true;
 		}
 		return super.recolourBlock(world, x, y, z, side, colour);
 	}
