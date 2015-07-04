@@ -9,17 +9,19 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import pl.asie.computronics.Computronics;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TapeDriveState;
 import pl.asie.computronics.tile.TileTapeDrive;
 
 public class BlockTapeReader extends BlockMachineSidedIcon {
+
 	private IIcon mFront;
 
 	public BlockTapeReader() {
-		super();
+		super("tape_drive");
 		this.setBlockName("computronics.tapeDrive");
-		this.setGuiID(0);
+		this.setGuiProvider(Computronics.guiTapeDrive);
 	}
 
 	@Override
@@ -60,7 +62,7 @@ public class BlockTapeReader extends BlockMachineSidedIcon {
 	}
 
 	@Override
-	@Optional.Method(modid= Mods.OpenComputers)
+	@Optional.Method(modid = Mods.OpenComputers)
 	public Class<? extends Environment> getTileEntityClass(int meta) {
 		return TileTapeDrive.class;
 	}

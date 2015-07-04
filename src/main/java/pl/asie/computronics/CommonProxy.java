@@ -1,24 +1,19 @@
 package pl.asie.computronics;
 
-import pl.asie.computronics.tile.ContainerCipherBlock;
-import pl.asie.computronics.tile.ContainerTapeReader;
-import pl.asie.lib.gui.GuiHandler;
+import cpw.mods.fml.common.registry.EntityRegistry;
+import pl.asie.computronics.item.entity.EntityItemIndestructable;
 import pl.asie.lib.network.Packet;
 
 import java.io.IOException;
 
 public class CommonProxy {
+
 	public boolean isClient() {
 		return false;
 	}
 
-	public void registerGuis(GuiHandler gui) {
-		gui.registerGui(ContainerTapeReader.class, null);
-		gui.registerGui(ContainerCipherBlock.class, null);
-	}
-
 	public void registerEntities() {
-		//NO-OP
+		EntityRegistry.registerModEntity(EntityItemIndestructable.class, "computronics.itemTape", 1, Computronics.instance, 64, 20, true);
 	}
 
 	public void registerRenderers() {

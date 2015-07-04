@@ -6,11 +6,13 @@ import pl.asie.computronics.api.chat.ChatAPI;
 import pl.asie.computronics.api.chat.IChatListener;
 import pl.asie.computronics.api.chat.IChatListenerRegistry;
 
-import java.util.HashSet;
+import java.util.WeakHashMap;
 
 public class ChatHandler implements IChatListenerRegistry {
-	private final HashSet<IChatListener> listeners = new HashSet<IChatListener>();
-	private final HashSet<IChatListener> invalidated = new HashSet<IChatListener>();
+
+	private final WeakHashMap<IChatListener, Object> listeners = new WeakHashMap<IChatListener, Object>();
+	private final WeakHashMap<IChatListener, Object> invalidated = new WeakHashMap<IChatListener, Object>();
+	private static final Object EMPTY = new Object();
 
 	public ChatHandler() {
 		ChatAPI.registry = this;
@@ -18,24 +20,31 @@ public class ChatHandler implements IChatListenerRegistry {
 
 	@SubscribeEvent
 	public void chatEvent(ServerChatEvent event) {
-		for (IChatListener l : listeners) {
-			if (!l.isValid()) {
-				invalidated.add(l);
+		for(IChatListener l : listeners.keySet()) {
+			if(!l.isValid()) {
+				invalidated.put(l, EMPTY);
 			} else {
 				l.receiveChatMessage(event);
 			}
 		}
-		listeners.removeAll(invalidated);
+		for(IChatListener l : invalidated.keySet()) {
+			listeners.remove(l);
+		}
 		invalidated.clear();
 	}
 
 	@Override
 	public void registerChatListener(IChatListener listener) {
-		listeners.add(listener);
+		listeners.put(listener, EMPTY);
 	}
 
 	@Override
 	public void unregisterChatListener(IChatListener listener) {
 		listeners.remove(listener);
+	}
+
+	@Override
+	public boolean isListenerRegistered(IChatListener listener) {
+		return listeners.containsKey(listener);
 	}
 }

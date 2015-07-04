@@ -1,6 +1,5 @@
 package pl.asie.computronics.tile;
 
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
@@ -17,6 +16,7 @@ import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.ChatBoxUtils;
 
 public class TileChatBox extends TileEntityPeripheralBase implements IChatListener {
+
 	private int distance;
 	private int ticksUntilOff = 0;
 	private boolean mustRefresh = false;
@@ -38,7 +38,7 @@ public class TileChatBox extends TileEntityPeripheralBase implements IChatListen
 	}
 
 	public boolean isCreative() {
-		return Config.CHATBOX_CREATIVE && worldObj != null
+		return Config.CHATBOX_CREATIVE && worldObj != null && worldObj.blockExists(xCoord, yCoord, zCoord)
 			&& worldObj.getBlockMetadata(xCoord, yCoord, zCoord) >= 8;
 	}
 
@@ -48,7 +48,7 @@ public class TileChatBox extends TileEntityPeripheralBase implements IChatListen
 		if(Config.REDSTONE_REFRESH && ticksUntilOff > 0) {
 			ticksUntilOff--;
 			if(ticksUntilOff == 0 || mustRefresh) {
-				this.worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, this.blockType);
+				this.worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, this.getBlockType());
 			}
 		}
 	}
@@ -71,6 +71,9 @@ public class TileChatBox extends TileEntityPeripheralBase implements IChatListen
 	}
 
 	public void receiveChatMessage(ServerChatEvent event) {
+		if(!worldObj.blockExists(xCoord, yCoord, zCoord)) {
+			return;
+		}
 		if(!isCreative() && (event.player.worldObj != this.worldObj || event.player.getDistanceSq(xCoord, yCoord, zCoord) > distance * distance)) {
 			return;
 		}
@@ -79,10 +82,10 @@ public class TileChatBox extends TileEntityPeripheralBase implements IChatListen
 			ticksUntilOff = 5;
 			mustRefresh = true;
 		}
-		if(Loader.isModLoaded(Mods.OpenComputers)) {
+		if(Mods.isLoaded(Mods.OpenComputers)) {
 			eventOC(event);
 		}
-		if(Loader.isModLoaded(Mods.ComputerCraft)) {
+		if(Mods.isLoaded(Mods.ComputerCraft)) {
 			eventCC(event);
 		}
 	}
@@ -99,10 +102,16 @@ public class TileChatBox extends TileEntityPeripheralBase implements IChatListen
 		ChatAPI.registry.unregisterChatListener(this);
 	}
 
+	@Override
+	public void onChunkUnload() {
+		super.onChunkUnload();
+		ChatAPI.registry.unregisterChatListener(this);
+	}
+
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void eventOC(ServerChatEvent event) {
-		if(node != null) {
-			node.sendToReachable("computer.signal", "chat_message", event.username, event.message);
+		if(node() != null) {
+			node().sendToReachable("computer.signal", "chat_message", event.username, event.message);
 		}
 	}
 
@@ -120,7 +129,7 @@ public class TileChatBox extends TileEntityPeripheralBase implements IChatListen
 
 	// OpenComputers API
 
-	@Callback(doc = "function(text:string [, distance:number]):boolean;"
+	@Callback(doc = "function(text:string [, distance:number]):boolean; "
 		+ "Makes the chat box say some text with the currently set or the specified distance. Returns true on success")
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] say(Context context, Arguments args) {
@@ -164,6 +173,29 @@ public class TileChatBox extends TileEntityPeripheralBase implements IChatListen
 	public Object[] setName(Context context, Arguments args) {
 		this.name = args.checkString(0);
 		return new Object[] { this.name };
+	}
+
+	@Override
+	public boolean canBeColored() {
+		return !isCreative() && super.canBeColored();
+	}
+
+	@Override
+	public int getColor() {
+		int color = super.getColor();
+		if(isCreative()) {
+			return 0xFF60FF;
+		}
+		return color;
+	}
+
+	@Override
+	public void setColor(int color) {
+		if(isCreative()) {
+			super.setColor(0xFF60FF);
+		} else {
+			super.setColor(color);
+		}
 	}
 
 	@Override

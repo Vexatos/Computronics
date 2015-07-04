@@ -36,7 +36,7 @@ public class TileIronNote extends TileEntityPeripheralBase implements IBundledTi
 
 	// OpenComputers
 
-	@Callback(direct = true, limit = 10, doc = "function([instrument:number or string,] note:number [, volume:number]);"
+	@Callback(direct = true, limit = 10, doc = "function([instrument:number or string,] note:number [, volume:number]); "
 		+ "Plays the specified note with the specified instrument or the default one; volume may be a number between 0 and 1")
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] playNote(Context context, Arguments args) {

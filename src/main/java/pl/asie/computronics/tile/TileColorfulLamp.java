@@ -13,10 +13,8 @@ import mods.immibis.redlogic.api.wiring.IConnectable;
 import mods.immibis.redlogic.api.wiring.IWire;
 import mrtjp.projectred.api.IBundledTile;
 import mrtjp.projectred.api.ProjectRedAPI;
+import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.block.BlockColorfulLamp;
@@ -41,11 +39,12 @@ public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundl
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
-		if(!initialized) {
+		Block block = worldObj.getBlock(xCoord, yCoord, zCoord);
+		if(!initialized && block instanceof BlockColorfulLamp) {
 			if(LampUtil.shouldColorLight()) {
-				((BlockColorfulLamp) worldObj.getBlock(xCoord, yCoord, zCoord)).setLightValue(color);
+				((BlockColorfulLamp) block).setLightValue(color);
 			} else {
-				((BlockColorfulLamp) worldObj.getBlock(xCoord, yCoord, zCoord)).setLightValue(color == 0 ? 0 : 15);
+				((BlockColorfulLamp) block).setLightValue(color == 0 ? 0 : 15);
 			}
 			initialized = true;
 		}
@@ -95,11 +94,11 @@ public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundl
 	public Object[] callMethod(IComputerAccess computer, ILuaContext context,
 		int method, Object[] arguments) throws LuaException,
 		InterruptedException {
-		switch(method){
+		switch(method) {
 			case 0:
 			default:
 				return new Object[] { this.color };
-			case 1:{
+			case 1: {
 				if(arguments.length > 0 && (arguments[0] instanceof Double)) {
 					this.setLampColor(((Double) arguments[0]).intValue());
 				}
@@ -133,6 +132,11 @@ public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundl
 	}
 
 	@Override
+	public boolean canBeColored() {
+		return false;
+	}
+
+	@Override
 	public void writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
 		tag.setShort("clc", (short) (color & 32767));
@@ -147,26 +151,14 @@ public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundl
 	@Override
 	public void readFromRemoteNBT(NBTTagCompound tag) {
 		super.readFromRemoteNBT(tag);
+		int oldColor = this.color;
 		if(tag.hasKey("clc")) {
-			color = tag.getShort("clc");
+			this.color = tag.getShort("clc");
 		}
-		if(color < 0) {
-			color = 0;
+		if(this.color < 0) {
+			this.color = 0;
 		}
-	}
-
-	@Override
-	public Packet getDescriptionPacket() {
-		NBTTagCompound tag = new NBTTagCompound();
-		tag.setShort("c", (short) (color & 32767));
-		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, tag);
-	}
-
-	@Override
-	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
-		NBTTagCompound tag = pkt.func_148857_g();
-		if(tag != null && tag.hasKey("c")) {
-			this.color = tag.getShort("c");
+		if(oldColor != this.color) {
 			this.worldObj.markBlockRangeForRenderUpdate(xCoord, yCoord, zCoord, xCoord, yCoord, zCoord);
 		}
 	}

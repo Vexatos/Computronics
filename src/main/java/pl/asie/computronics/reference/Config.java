@@ -1,10 +1,8 @@
 package pl.asie.computronics.reference;
 
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.common.config.Configuration;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import pl.asie.computronics.Computronics;
 import pl.asie.lib.util.EnergyConverter;
 
 /**
@@ -31,12 +29,17 @@ public class Config {
 	public static double SPOOFING_ENERGY_COST = 0.2;
 	public static String CHATBOX_PREFIX = "ChatBox";
 	public static double LOCOMOTIVE_RELAY_RANGE = 128.0;
+	public static double LOCOMOTIVE_RELAY_BASE_POWER = 20.0;
+	public static boolean LOCOMOTIVE_RELAY_CONSUME_CHARGE = true;
+	public static boolean TICKET_MACHINE_CONSUME_RF = true;
 	public static boolean GREGTECH_RECIPES = false;
 	public static boolean NON_OC_RECIPES = false;
 	public static boolean FORESTRY_BEES = true;
 	public static boolean BUILDCRAFT_STATION = true;
 
-	public static boolean OC_ROBOT_UPGRADES;
+	public static boolean OC_UPGRADE_CAMERA;
+	public static boolean OC_UPGRADE_CHATBOX;
+	public static boolean OC_UPGRADE_RADAR;
 	public static boolean OC_CARD_FX;
 	public static boolean OC_CARD_SPOOF;
 	public static boolean OC_CARD_SOUND;
@@ -78,7 +81,7 @@ public class Config {
 		// Cipher Block
 		CIPHER_CAN_LOCK = config.getBoolean("canLock", "cipherblock", true, "Decides whether Cipher Blocks can or cannot be locked.");
 
-		if(Loader.isModLoaded(Mods.OpenComputers)) {
+		if(Mods.isLoaded(Mods.OpenComputers)) {
 			//Advanced Cipher Block
 			CIPHER_ENERGY_STORAGE = convertRFtoOC(
 				config.getFloat("cipherEnergyStorage", "power", 16000.0f, 0.0f, 100000.0F, "How much energy the Advanced Chipher Block can store"));
@@ -87,7 +90,9 @@ public class Config {
 			CIPHER_WORK_CONSUMPTION = convertRFtoOC(
 				config.getFloat("cipherWorkConsumption", "power", 160.0f, 0.0f, 100000.0f, "How much base energy the Advanced Cipher Block should consume per encryption/decryption task. It will consume this value + 2*(number of characters in message)"));
 
-			OC_ROBOT_UPGRADES = config.get("enable.opencomputers", "robotUpgrades", true).getBoolean(true);
+			OC_UPGRADE_CAMERA = config.get("enable.opencomputers", "cameraUpgrade", true).getBoolean(true);
+			OC_UPGRADE_CHATBOX = config.get("enable.opencomputers", "chatboxUpgrade", true).getBoolean(true);
+			OC_UPGRADE_RADAR = config.get("enable.opencomputers", "radarUpgrade", true).getBoolean(true);
 			OC_CARD_FX = config.get("enable.opencomputers", "particleCard", true).getBoolean(true);
 			OC_CARD_SPOOF = config.get("enable.opencomputers", "spoofingCard", true).getBoolean(true);
 			OC_CARD_SOUND = config.get("enable.opencomputers", "soundCard", true).getBoolean(true);
@@ -103,34 +108,31 @@ public class Config {
 			SOUND_ENERGY_COST = convertRFtoOC(
 				config.getFloat("ocBeepCardCostPerSound", "power", 10.0f, 0.0f, 10000.0f, "How much energy a single beep will cost for 1 second"));
 
+			if(Mods.isLoaded(Mods.Railcraft)) {
+				LOCOMOTIVE_RELAY_BASE_POWER = convertRFtoOC(
+					config.getFloat("locomotiveRelayBasePower", "power.railcraft", 20.0f, 0.0f, 10000.0f, "How much base energy the Locomotive Relay consumes per operation"));
+			}
+
 			NON_OC_RECIPES = config.getBoolean("easyRecipeMode", "recipes", false, "Set this to true to make some recipes not require OpenComputers blocks and items");
 
-			if(Loader.isModLoaded(Mods.Forestry)) {
+			if(Mods.isLoaded(Mods.Forestry)) {
 				FORESTRY_BEES = config.getBoolean("opencomputersBees", "enable.forestry", true, "Set this to false to disable Forestry bee species for OpenComputers");
 			}
-			if(Loader.isModLoaded(Mods.BuildCraftTransport) && Loader.isModLoaded(Mods.BuildCraftCore)) {
+			if(Mods.isLoaded(Mods.BuildCraftTransport) && Mods.isLoaded(Mods.BuildCraftCore)) {
 				BUILDCRAFT_STATION = config.getBoolean("droneDockingStation", "enable.buildcraft", true, "Set this to false to disable the Drone Docking Station for OpenComputers");
 			}
 		}
 
-		if(Loader.isModLoaded(Mods.ComputerCraft)) {
-			if(Loader.isModLoaded(Mods.OpenPeripheral)) {
+		if(Mods.isLoaded(Mods.ComputerCraft)) {
+			if(Mods.isLoaded(Mods.OpenPeripheral)) {
 				CC_OPEN_MULTI_PERIPHERAL = config.getBoolean("openMultiPeripheral", "computercraft.multiperipheral", true, "Set this to false to disable MultiPeripheral compatibility with OpenPeripheral peripherals");
 			}
 			CC_ALL_MULTI_PERIPHERALS = config.getBoolean("allMultiPeripherals", "computercraft.multiperipheral", true, "Set this to true to fix multiple mods adding peripherals to the same block not working");
 			CC_ALWAYS_FIRST = config.getBoolean("alwaysFirstPeripheral", "computercraft.multiperipheral", true, "If this is true, the Computronics MultiPeripheral system will almost always be the one recognized by ComputerCraft");
 			config.setCategoryComment("computercraft.multiperipheral", "If all of these options are set to true, Computronics will fix almost every conflict with multiple mods adding peripherals to the same block");
 			if(CC_OPEN_MULTI_PERIPHERAL && CC_ALL_MULTI_PERIPHERALS && CC_ALWAYS_FIRST) {
-				Logger cpx = LogManager.getLogger(Mods.Computronics_NAME);
-				Logger cc = LogManager.getLogger(Mods.ComputerCraft);
-				cpx.info("Hey, ComputerCraft! Guess what!");
-				cc.info("What?");
-				cpx.info("I fixed your peripheral system!");
-				cc.info("You did WHAT?!");
-				cpx.info("Now peripherals are being properly handled in case multiple mods register peripherals for the same block, isn't that amazing?");
-				cc.info("Are you serious?");
-				cpx.info("Yes I am. Now be quiet and let Minecraft continue to load.");
-				cc.info("...");
+				Computronics.log.info("Multiperipheral system for ComputerCraft engaged. Hooray!");
+				Computronics.log.info("Multiple mods registering peripherals for the same block now won't be a problem anymore.");
 			}
 		}
 
@@ -151,12 +153,16 @@ public class Config {
 			config.getFloat("radarCostPerBlock", "power", 50.0f, 0.0f, 10000.0f, "How much energy each 1-block distance takes by OpenComputers radars."));
 
 		// Railcraft integration
-		if(Loader.isModLoaded(Mods.Railcraft)) {
+		if(Mods.isLoaded(Mods.Railcraft)) {
 			LOCOMOTIVE_RELAY_RANGE = (double) config.getInt("locomotiveRelayRange", "railcraft", 128, 0, 512, "The range of Locomotive Relays in Blocks.");
+			LOCOMOTIVE_RELAY_CONSUME_CHARGE = config.getBoolean("locomotiveRelayConsumeCharge", "railcraft", true, "If true, the Locomotive Relay will consume"
+				+ "a little bit of Railcraft charge in the locomotive everytime it is accessing the locomotive");
+			TICKET_MACHINE_CONSUME_RF = config.getBoolean("ticketMachineConsumeCharge", "railcraft", true, "If true, the Ticket Machine will"
+				+ "require a little bit of RF to print tickets");
 		}
 
 		// GregTech recipe mode
-		if(Loader.isModLoaded(Mods.GregTech)) {
+		if(Mods.isLoaded(Mods.GregTech)) {
 			GREGTECH_RECIPES = config.getBoolean("gtRecipeMode", "recipes", true, "Set this to true to enable GregTech-style recipes");
 		}
 	}

@@ -14,8 +14,13 @@ import pl.asie.lib.api.tile.IInventoryProvider;
 
 public class TileEEPROMReader extends TileEntityPeripheralBase implements IInventoryProvider {
 	public TileEEPROMReader() {
-		super("eeprom");
+		super("eeprom_reader");
 		this.createInventory(1);
+	}
+
+	@Override
+	public boolean canBeColored() {
+		return false;
 	}
 
 	@Override
@@ -84,7 +89,7 @@ public class TileEEPROMReader extends TileEntityPeripheralBase implements IInven
 		} else return null;
     }
 
-    @Callback(doc = "function(pos:number, data:number or string):boolean;Writes the specified data to the specified position. Returns true on success", direct = true)
+    @Callback(doc = "function(pos:number, data:number or string):boolean; Writes the specified data to the specified position. Returns true on success", direct = true)
     @Optional.Method(modid=Mods.OpenComputers)
     public Object[] write(Context context, Arguments args) {
     	byte[] data = getData();

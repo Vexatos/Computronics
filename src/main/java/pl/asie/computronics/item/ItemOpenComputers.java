@@ -8,9 +8,12 @@ import li.cil.oc.api.driver.EnvironmentHost;
 import li.cil.oc.api.driver.Item;
 import li.cil.oc.api.driver.item.HostAware;
 import li.cil.oc.api.driver.item.Slot;
+import li.cil.oc.api.driver.item.UpgradeRenderer;
+import li.cil.oc.api.event.RobotRenderEvent;
 import li.cil.oc.api.internal.Adapter;
 import li.cil.oc.api.internal.Drone;
 import li.cil.oc.api.internal.Microcontroller;
+import li.cil.oc.api.internal.Robot;
 import li.cil.oc.api.internal.Tablet;
 import li.cil.oc.api.network.Environment;
 import li.cil.oc.api.network.ManagedEnvironment;
@@ -28,22 +31,26 @@ import pl.asie.computronics.oc.DriverCardBoom;
 import pl.asie.computronics.oc.DriverCardFX;
 import pl.asie.computronics.oc.DriverCardSound;
 import pl.asie.computronics.oc.DriverCardSpoof;
+import pl.asie.computronics.oc.IntegrationOpenComputers;
 import pl.asie.computronics.oc.RobotUpgradeCamera;
 import pl.asie.computronics.oc.RobotUpgradeChatBox;
 import pl.asie.computronics.oc.RobotUpgradeRadar;
+import pl.asie.computronics.oc.manual.IItemWithDocumentation;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.StringUtil;
 import pl.asie.lib.item.ItemMultiple;
 
 import java.util.List;
+import java.util.Set;
 
 @Optional.InterfaceList({
 	@Optional.Interface(iface = "li.cil.oc.api.driver.Item", modid = Mods.OpenComputers),
 	@Optional.Interface(iface = "li.cil.oc.api.driver.EnvironmentAware", modid = Mods.OpenComputers),
-	@Optional.Interface(iface = "li.cil.oc.api.driver.item.HostAware", modid = Mods.OpenComputers)
+	@Optional.Interface(iface = "li.cil.oc.api.driver.item.HostAware", modid = Mods.OpenComputers),
+	@Optional.Interface(iface = "li.cil.oc.api.driver.item.UpgradeRenderer", modid = Mods.OpenComputers)
 })
-public class ItemOpenComputers extends ItemMultiple implements Item, EnvironmentAware, HostAware {
+public class ItemOpenComputers extends ItemMultiple implements Item, EnvironmentAware, HostAware, UpgradeRenderer, IItemWithDocumentation {
 
 	public ItemOpenComputers() {
 		super(Mods.Computronics, new String[] {
@@ -199,9 +206,13 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 	@SideOnly(Side.CLIENT)
 	@SuppressWarnings("unchecked")
 	public void getSubItems(net.minecraft.item.Item item, CreativeTabs tabs, List list) {
-		if(Config.OC_ROBOT_UPGRADES) {
+		if(Config.OC_UPGRADE_CAMERA) {
 			list.add(new ItemStack(item, 1, 0));
+		}
+		if(Config.OC_UPGRADE_CHATBOX) {
 			list.add(new ItemStack(item, 1, 1));
+		}
+		if(Config.OC_UPGRADE_RADAR) {
 			list.add(new ItemStack(item, 1, 2));
 		}
 		if(Config.OC_CARD_FX) {
@@ -234,7 +245,7 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 				boolean shouldShorten = (font.getStringWidth(tip) > maxWidth) && !KeyBindings.showExtendedTooltips();
 				if(shouldShorten) {
 					tooltip.add(StringUtil.localizeAndFormat("oc:tooltip.TooLong",
-						KeyBindings.getKeybindName(KeyBindings.extendedTooltip())));
+						KeyBindings.getKeyBindingName(KeyBindings.extendedTooltip())));
 				} else {
 					for(String line : lines) {
 						List list = font.listFormattedStringToWidth(line, maxWidth);
@@ -249,7 +260,7 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 			} else {
 				tooltip.add(StringUtil.localizeAndFormat(
 					"oc:tooltip.MaterialCosts",
-					KeyBindings.getKeybindName(KeyBindings.materialCosts())));
+					KeyBindings.getKeyBindingName(KeyBindings.materialCosts())));
 			}
 		}
 		if(stack.hasTagCompound() && stack.getTagCompound().hasKey("oc:data")) {
@@ -260,5 +271,39 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 					+ EnumChatFormatting.GRAY);
 			}
 		}
+	}
+
+	@Override
+	public String getDocumentationName(ItemStack stack) {
+		switch(stack.getItemDamage()) {
+			case 0:
+				return "camera_upgrade";
+			case 1:
+				return "chat_upgrade";
+			case 2:
+				return "radar_upgrade";
+			case 3:
+				return "particle_card";
+			case 4:
+				return "spoofing_card";
+			case 5:
+				return "beep_card";
+			case 6:
+				return "self_destructing_card";
+			default:
+				return "index";
+		}
+	}
+
+	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
+	public String computePreferredMountPoint(ItemStack stack, Robot robot, Set<String> availableMountPoints) {
+		return IntegrationOpenComputers.upgradeRenderer.computePreferredMountPoint(stack, robot, availableMountPoints);
+	}
+
+	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
+	public void render(ItemStack stack, RobotRenderEvent.MountPoint mountPoint, Robot robot, float pt) {
+		IntegrationOpenComputers.upgradeRenderer.render(stack, mountPoint, robot, pt);
 	}
 }

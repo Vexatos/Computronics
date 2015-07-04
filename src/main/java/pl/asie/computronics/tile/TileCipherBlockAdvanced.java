@@ -32,6 +32,11 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 		return Config.MUST_UPDATE_TILE_ENTITIES;
 	}
 
+	@Override
+	public boolean canBeColored() {
+		return false;
+	}
+
 	/**
 	 * Checks whether a number is a prime number
 	 * @param number the number to check
@@ -156,11 +161,11 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 
 	@Optional.Method(modid = Mods.OpenComputers)
 	private Object[] tryConsumeEnergy(Object[] result, double v, String methodName) {
-		if(this.node instanceof Connector) {
+		if(this.node() instanceof Connector) {
 			int power = this.tryConsumeEnergy(v);
 			if(power < 0) {
 				return new Object[] { null, null, power + ": " + methodName + ": not enough energy available: required"
-					+ v + ", found " + ((Connector) node).globalBuffer() };
+					+ v + ", found " + ((Connector) node()).globalBuffer() };
 			}
 		}
 		return result;
@@ -172,8 +177,8 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 			return -2;
 		}
 		v = -v;
-		if(this.node instanceof Connector) {
-			Connector connector = ((Connector) this.node);
+		if(this.node() instanceof Connector) {
+			Connector connector = ((Connector) this.node());
 			return connector.tryChangeBuffer(v) ? 1 : -1;
 
 		}

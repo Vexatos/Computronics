@@ -38,5 +38,6 @@ public class Names {
 		Railcraft_RoutingSwitch = "routing_switch",
 		Railcraft_RoutingTrack = "routing_track",
 		Railcraft_SteamTurbine = "steam_turbine",
-		RedLogic_Lamp = "lamp";
+		RedLogic_Lamp = "lamp",
+		StorageDrawers_DrawerGroup = "drawer";
 }

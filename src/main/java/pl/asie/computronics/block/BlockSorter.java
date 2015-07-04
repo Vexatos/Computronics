@@ -15,7 +15,7 @@ public class BlockSorter extends BlockMachineSidedIcon {
 	private IIcon mFrontOn, mFrontOff;
 	
 	public BlockSorter() {
-		super();
+		super("sorter");
 		this.setBlockName("computronics.sorter");
 	}
 	

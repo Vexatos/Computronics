@@ -9,6 +9,7 @@ import java.util.HashMap;
  * @author Vexatos
  */
 public class Mods {
+
 	//The mod itself
 	public static final String
 		Computronics = "computronics",
@@ -38,15 +39,19 @@ public class Mods {
 		RedLogic = "RedLogic",
 		ProjectRed = "ProjRed|Core",
 		Railcraft = "Railcraft",
+		StorageDrawers = "StorageDrawers",
 		Waila = "Waila";
 
 	//APIs
 	public static class API {
+
 		public static final String
+			BuildCraftBlueprints = "BuildCraftAPI|blueprints",
 			BuildCraftStatements = "BuildCraftAPI|statements",
 			BuildCraftTiles = "BuildCraftAPI|tiles",
 			CoFHAPI_Energy = "CoFHAPI|energy",
 			DraconicEvolution = "DraconicEvolution|API",
+			Gendustry = "gendustryAPI",
 			Mekanism_Energy = "MekanismAPI|energy";
 
 		private static HashMap<String, ArtifactVersion> apiList;
@@ -62,5 +67,13 @@ public class Mods {
 		public static boolean hasAPI(String name) {
 			return pl.asie.lib.reference.Mods.API.hasAPI(name);
 		}
+	}
+
+	public static boolean isLoaded(String name) {
+		return pl.asie.lib.reference.Mods.isLoaded(name);
+	}
+
+	public static boolean hasEnergyMod() {
+		return pl.asie.lib.reference.Mods.hasEnergyMod();
 	}
 }

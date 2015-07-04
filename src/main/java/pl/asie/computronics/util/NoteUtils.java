@@ -13,6 +13,7 @@ public class NoteUtils {
 		float f = (float) Math.pow(2.0D, (double) (note - 12) / 12.0D);
 
 		worldObj.playSoundEffect((double) xCoord + 0.5D, (double) yCoord + 0.5D, (double) zCoord + 0.5D, "note." + instrument, volume, f);
+		ParticleUtils.sendParticlePacket("note", worldObj, (double) xCoord + 0.5D, (double) yCoord + 1.2D, (double) zCoord + 0.5D, (double) note / 24.0D, 1.0D, 0.0D);
 	}
 
 	public static void playNote(World worldObj, int xCoord, int yCoord, int zCoord, String instrument, int note) {

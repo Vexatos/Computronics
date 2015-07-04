@@ -25,7 +25,6 @@ public class RobotUpgradeChatBox extends ManagedEnvironment implements IChatList
 		this.container = container;
 		distance = Config.CHATBOX_DISTANCE;
 		this.setNode(Network.newNode(this, Visibility.Network).withConnector().withComponent("chat", Visibility.Neighbors).create());
-		ChatAPI.registry.registerChatListener(this);
 	}
 
 	public void receiveChatMessage(ServerChatEvent event) {
@@ -40,6 +39,14 @@ public class RobotUpgradeChatBox extends ManagedEnvironment implements IChatList
 	@Override
 	public boolean isValid() {
 		return this.node() != null;
+	}
+
+	@Override
+	public void onConnect(Node node) {
+		super.onConnect(node);
+		if (node == this.node()) {
+			ChatAPI.registry.registerChatListener(this);
+		}
 	}
 
 	@Override

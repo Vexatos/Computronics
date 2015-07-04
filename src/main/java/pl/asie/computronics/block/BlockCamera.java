@@ -12,12 +12,13 @@ import net.minecraft.world.World;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TileCamera;
+import pl.asie.lib.block.TileEntityBase;
 
 public class BlockCamera extends BlockMachineSidedIcon {
 	private IIcon mFront;
 	
 	public BlockCamera() {
-		super();
+		super("camera");
 		this.setBlockName("computronics.camera");
 		this.setRotation(Rotation.SIX);
 	}
@@ -43,6 +44,20 @@ public class BlockCamera extends BlockMachineSidedIcon {
 	@Override
 	public boolean emitsRedstone(IBlockAccess world, int x, int y, int z, int side) {
 		return Config.REDSTONE_REFRESH;
+	}
+
+	@Override
+	public boolean hasComparatorInputOverride() {
+		return Config.REDSTONE_REFRESH;
+	}
+
+	@Override
+	public int getComparatorInputOverride(World world, int x, int y, int z, int side) {
+		TileEntity tile = world.getTileEntity(x, y, z);
+		if(tile instanceof TileEntityBase) {
+			return ((TileEntityBase) tile).requestCurrentRedstoneValue(side);
+		}
+		return super.getComparatorInputOverride(world, x, y, z, side);
 	}
 
 	@Override

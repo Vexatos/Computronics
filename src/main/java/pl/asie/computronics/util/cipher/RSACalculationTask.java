@@ -5,13 +5,17 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 /**
  * @author Vexatos
  */
-public class RSACalculationTask implements Runnable {
+public class RSACalculationTask implements Callable<ArrayList<Map<Integer, String>>> {
 
-	private static final BigInteger TWO = new BigInteger("2");
+	private static final BigInteger
+		ONE = BigInteger.ONE,
+		TWO = new BigInteger("2"),
+		SEVENTEEN = new BigInteger("17");
 
 	private final RSAValue val;
 	private int bitLength = 0;
@@ -36,14 +40,7 @@ public class RSACalculationTask implements Runnable {
 	}
 
 	@Override
-	public void run() {
-		ArrayList<Map<Integer, String>> result = this.call();
-		this.publicKey = result.get(0);
-		this.privateKey = result.get(1);
-		val.setKeys(publicKey, privateKey);
-	}
-
-	private ArrayList<Map<Integer, String>> call() {
+	public ArrayList<Map<Integer, String>> call() {
 		if(bitLength > 0) {
 			return this.createKeySet(bitLength);
 		}
@@ -74,9 +71,9 @@ public class RSACalculationTask implements Runnable {
 	}
 
 	private ArrayList<Map<Integer, String>> createKeySet(BigInteger p, BigInteger q) {
-		BigInteger cat = p.subtract(BigInteger.ONE).multiply(q.subtract(BigInteger.ONE));
+		BigInteger cat = p.subtract(ONE).multiply(q.subtract(ONE));
 		BigInteger n = p.multiply(q);
-		BigInteger d = new BigInteger("17");
+		BigInteger d = SEVENTEEN;
 		while(cat.gcd(d).intValue() != 1) {
 			d = d.add(TWO);
 		}

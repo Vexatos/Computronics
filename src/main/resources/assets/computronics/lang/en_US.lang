@@ -12,6 +12,7 @@ tile.computronics.eepromReader.name=EEPROM Reader
 tile.computronics.locomotiveRelay.name=Digital Locomotive Relay
 tile.computronics.digitalBox.name=Digital Signal Receiver Box
 tile.computronics.detector.name=Detector - Digital
+tile.computronics.ticketMachine.name=Ticket Machine
 
 tooltip.computronics.chatBox.creative=NSA in a box!
 tooltip.computronics.cipher.advanced=For the Starchasers!
@@ -23,6 +24,12 @@ tooltip.computronics.tape.balanced=Balanced!
 tooltip.computronics.tape.unnamed=Unnamed Tape
 tooltip.computronics.tape.none=No Tape
 tooltip.computronics.tape.ig=The standard CDVR for\nGregTech Intergalactical's ships
+tooltip.computronics.ticket.print=Print Ticket
+tooltip.computronics.ticket.printLocked=§cManual printing disabled
+tooltip.computronics.ticket.locked=This device is locked to\n {owner}.\n Only the owner or an Op\n can do maintenance work.
+tooltip.computronics.ticket.notmaintenance=Shift-right click\n this device with an \nempty hand to do\n maintenance work.
+tooltip.computronics.ticket.notowner=You are not the\n owner of this device.\n It belongs to\n {owner}.
+tooltip.computronics.ticket.unlocked=Click to lock device.\n Once locked, only you\n or an Op can\n do maintenance work.
 
 tooltip.computronics.gate.action.computer_start=Start Computer
 tooltip.computronics.gate.action.computer_stop=Stop Computer
@@ -58,6 +65,9 @@ tooltip.computronics.waila.lamp.red=Red: %s
 tooltip.computronics.waila.lamp.green=Green: %s
 tooltip.computronics.waila.lamp.blue=Blue: %s
 
+tooltip.computronics.manual.tab.blocks=Computronics: Blocks
+tooltip.computronics.manual.tab.items=Computronics: Items
+
 option.computronics.enableOCAddress=Component address
 option.computronics.enableNCAddress=NedoComputers Bus ID
 option.computronics.enableTape=Inserted tape
@@ -89,9 +99,9 @@ itemGroup.tabComputronics=Computronics
 
 entity.computronics.itemTape.name=Intergalactical CDVR
 
-for.computronics.flowers.sea=Sea
-for.computronics.bees.species.scummy=Scummy
-for.description.computronics.speciesScummy=Kerosene, propylene glycol, artificial sweeteners, sulfuric acid, rum, acetone, red dye #2, scumm, axle grease, battery acid and/or pepperoni|Strange people in a bar
+computronics.flowers.sea=Sea
+computronics.bees.species.scummy=Scummy
+computronics.bees.species.scummy.description=Kerosene, propylene glycol, artificial sweeteners, sulfuric acid, rum, acetone, red dye #2, scumm, axle grease, battery acid and/or pepperoni|Strange people in a bar
 
 chat.computronics.cipher.locked=This Cipher Block is locked! You may not access it.
 chat.computronics.relay.notBound=Relay is currently not bound to any locomotive!

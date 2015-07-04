@@ -12,11 +12,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.oc.manual.IItemWithPrefix;
 
 /**
  * @author Vexatos
  */
-public class ItemDroneStation extends Item implements IPipePluggableItem {
+public class ItemDroneStation extends Item implements IPipePluggableItem, IItemWithPrefix {
 
 	public ItemDroneStation() {
 		super();
@@ -49,5 +50,15 @@ public class ItemDroneStation extends Item implements IPipePluggableItem {
 			default:
 				return null;
 		}
+	}
+
+	@Override
+	public String getDocumentationName(ItemStack stack) {
+		return "drone_station";
+	}
+
+	@Override
+	public String getPrefix(ItemStack stack) {
+		return "buildcraft/";
 	}
 }
