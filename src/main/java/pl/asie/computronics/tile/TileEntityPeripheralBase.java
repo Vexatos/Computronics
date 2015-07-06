@@ -252,14 +252,15 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 		}
 	}
 
-	protected int color = ColorUtils.Colors.White.color;
+	protected int overlayColor = ColorUtils.Colors.White.color;
 
 	public int getColor() {
-		return color;
+		return overlayColor;
 	}
 
 	public void setColor(int color) {
-		this.color = color;
+		this.overlayColor = color;
+		this.markDirty();
 	}
 
 	public boolean canBeColored() {
@@ -267,10 +268,36 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 	}
 
 	@Override
+	public void readFromRemoteNBT(NBTTagCompound nbt) {
+		super.readFromRemoteNBT(nbt);
+		int oldColor = this.overlayColor;
+		if(nbt.hasKey("computronics:color")) {
+			overlayColor = nbt.getInteger("computronics:color");
+		}
+		if(this.overlayColor < 0) {
+			this.overlayColor = ColorUtils.Colors.White.color;
+		}
+		if(oldColor != this.overlayColor) {
+			this.worldObj.markBlockRangeForRenderUpdate(xCoord, yCoord, zCoord, xCoord, yCoord, zCoord);
+		}
+	}
+
+	@Override
+	public void writeToRemoteNBT(NBTTagCompound nbt) {
+		super.writeToRemoteNBT(nbt);
+		if(overlayColor != ColorUtils.Colors.White.color) {
+			nbt.setInteger("computronics:color", overlayColor);
+		}
+	}
+
+	@Override
 	public void readFromNBT(final NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 		if(nbt.hasKey("computronics:color")) {
-			color = nbt.getInteger("computronics:color");
+			overlayColor = nbt.getInteger("computronics:color");
+		}
+		if(this.overlayColor < 0) {
+			this.overlayColor = ColorUtils.Colors.White.color;
 		}
 		if(Mods.isLoaded(Mods.OpenComputers)) {
 			readFromNBT_OC(nbt);
@@ -283,8 +310,8 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 	@Override
 	public void writeToNBT(final NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-		if(color != ColorUtils.Colors.White.color) {
-			nbt.setInteger("computronics:color", color);
+		if(overlayColor != ColorUtils.Colors.White.color) {
+			nbt.setInteger("computronics:color", overlayColor);
 		}
 		if(Mods.isLoaded(Mods.OpenComputers)) {
 			writeToNBT_OC(nbt);

@@ -2,6 +2,7 @@
 
   * ADDED: Made most Computronics blocks dyable!
     - You can now right click most Computronics blocks with any kind of dye to change their colour!
+    - In case you change the colour of a block that existed in the world before you updated, it might not properly save the colour. In this case just break and re-place the block!
   * ADDED: Flamingo integration!
     - Now you can make Flamingos wiggle using ComputerCraft or OpenComputers.
   * FIXED: Creative Chat Boxes turning into normal chat boxes when placed.

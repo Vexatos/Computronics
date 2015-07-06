@@ -3,7 +3,6 @@ package pl.asie.computronics.util;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -14,13 +13,12 @@ public class ColorUtils {
 	public static final HashMap<String, Colors> dyes = new HashMap<String, Colors>();
 
 	public static Colors getColor(ItemStack stack) {
+		int[] oreIDs = OreDictionary.getOreIDs(stack);
 		for(Colors color : Colors.VALUES) {
-			ArrayList<ItemStack> ores = OreDictionary.getOres(color.dyeName);
-			if(ores != null) {
-				for(ItemStack ore : ores) {
-					if(OreDictionary.itemMatches(stack, ore, false)) {
-						return color;
-					}
+			int colorID = OreDictionary.getOreID(color.dyeName);
+			for(int oreID : oreIDs) {
+				if(colorID == oreID) {
+					return color;
 				}
 			}
 		}
