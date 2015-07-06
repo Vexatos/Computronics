@@ -44,6 +44,7 @@ Deobfuscated code gives you many benefits, including but not limited to:
 | Computronics* | latest | asie/Vexatos | [GitHub](https://github.com/asiekierka/Computronics) |
 | EnderIO* | 2.2.8.343 | CrazyPants, tterrag | [Website](http://enderio.com) |
 | Factorization | 0.8.87.1 | neptunepink | [MCF](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1284592-factorization-0-8-88-8-8888-the-update-that-ate) |
+| Flamingo | 1.3 | copygirl/Vexatos | [Github](https://github.com/Vexatos/Flamingo/releases) |
 | Forestry* | 3.5.3.11 | Sengir (don't confuse with Sangar), CovertJaguar, mezz | [Secret hideout](http://ic2api.player.to:8080/job/Forestry/) |
 | Gendustry | 1.4.14.99-mc1.7.10-api | bdew | [bdew's jenkins repo](http://jenkins.bdew.net/job/gendustry-1.7.10/) |
 | GregTech* | 5.07.07 | GregoriousT | [IC2 Forums](http://forum.industrial-craft.net/index.php?page=Thread&threadID=7156&) |

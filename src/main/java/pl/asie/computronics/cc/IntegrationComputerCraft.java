@@ -21,6 +21,7 @@ import pl.asie.computronics.integration.enderio.DriverPowerStorage;
 import pl.asie.computronics.integration.enderio.DriverRedstoneControllable;
 import pl.asie.computronics.integration.enderio.DriverTransceiver;
 import pl.asie.computronics.integration.factorization.DriverChargeConductor;
+import pl.asie.computronics.integration.flamingo.DriverFlamingo;
 import pl.asie.computronics.integration.fsp.DriverSteamTransporter;
 import pl.asie.computronics.integration.mekanism.DriverStrictEnergyStorage;
 import pl.asie.computronics.integration.mfr.DriverDeepStorageUnit;
@@ -145,6 +146,12 @@ public class IntegrationComputerCraft {
 		if(Mods.API.hasVersion(Mods.API.BuildCraftTiles, "[1.1,)")) {
 			if(compat.isCompatEnabled(Compat.BuildCraft_Drivers)) {
 				registerMultiPeripheralProvider(new DriverHeatable.CCDriver());
+			}
+		}
+
+		if(Mods.isLoaded(Mods.Flamingo)) {
+			if(compat.isCompatEnabled(Compat.Flamingo)) {
+				registerMultiPeripheralProvider(new DriverFlamingo.CCDriver());
 			}
 		}
 

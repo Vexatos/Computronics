@@ -27,6 +27,7 @@ import pl.asie.computronics.integration.enderio.DriverPowerStorage;
 import pl.asie.computronics.integration.enderio.DriverRedstoneControllable;
 import pl.asie.computronics.integration.enderio.DriverTransceiver;
 import pl.asie.computronics.integration.factorization.DriverChargeConductor;
+import pl.asie.computronics.integration.flamingo.DriverFlamingo;
 import pl.asie.computronics.integration.forestry.IntegrationForestry;
 import pl.asie.computronics.integration.fsp.DriverSteamTransporter;
 import pl.asie.computronics.integration.gregtech.DriverBaseMetaTileEntity;
@@ -208,6 +209,12 @@ public class IntegrationOpenComputers {
 		if(Mods.API.hasVersion(Mods.API.BuildCraftTiles, "[1.1,)")) {
 			if(compat.isCompatEnabled(Compat.BuildCraft_Drivers)) {
 				Driver.add(new DriverHeatable.OCDriver());
+			}
+		}
+
+		if(Mods.isLoaded(Mods.Flamingo)) {
+			if(compat.isCompatEnabled(Compat.Flamingo)) {
+				Driver.add(new DriverFlamingo.OCDriver());
 			}
 		}
 

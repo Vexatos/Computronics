@@ -29,6 +29,7 @@ public class Mods {
 		BuildCraftTransport = "BuildCraft|Transport",
 		EnderIO = "EnderIO",
 		Factorization = "factorization",
+		Flamingo = "Flamingo",
 		Forestry = "Forestry",
 		FSP = "Steamcraft",
 		GregTech = "gregtech",

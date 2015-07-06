@@ -22,7 +22,8 @@ public class Compat {
 		BuildCraft_Drivers = "enableBuildCraftDrivers",
 		DraconicEvolution = "enableDraconicEvolutionEnergyStoragePeripheral",
 		MekanismEnergy = "enableMekanismEnergyStoragePeripheral",
-		StorageDrawers = "enableStorageDrawersDriver";
+		StorageDrawers = "enableStorageDrawersDriver",
+		Flamingo = "enableFlamingoDriver";
 
 	public static final String Compatibility = "modCompatibility";
 

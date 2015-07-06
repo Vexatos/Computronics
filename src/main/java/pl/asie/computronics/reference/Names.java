@@ -18,6 +18,7 @@ public class Names {
 		EnderIO_PowerStorage = "power_storage",
 		EnderIO_RedstoneTile = "redstone_tile",
 		EnderIO_Transceiver = "dimensional_transceiver",
+		Flamingo_Flamingo = "flamingo",
 		FSP_SteamTransporter = "steam_transporter",
 		FZ_ChargeConductor = "charge_conductor",
 		Mekanism_EnergyStorage = "mekanism_machine",
