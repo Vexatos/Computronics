@@ -39,7 +39,7 @@ Deobfuscated code gives you many benefits, including but not limited to:
 | APIs* | 1.0 | javac | [GitHub](https://github.com/asiekierka/Computronics/blob/master/libs/APIs.zip) |
 | Applied Energistics 2*  | rv2-stable-1 | Walrus Technologies Ltd | [Website](http://ae2.ae-mod.info/) |
 | AsieLib* | randomly chosen | asie/Vexatos | [GitHub](https://github.com/asiekierka/AsieLib) |
-| Armourer's Workshop | 0.33.0.85 | RiskyKen | [Jenkins repo](http://jenkins.rx14.co.uk/job/RiskyKen/job/Armourers-Workshop/) |
+| Armourer's Workshop* | 0.33.0.85 | RiskyKen | [Jenkins repo](http://jenkins.rx14.co.uk/job/RiskyKen/job/Armourers-Workshop/) |
 | BestModEver* | 1.7.10 | Notch, jeb, Dinnerbone and others | [Website](http://minecraft.net) |
 | BuildCraft* | 6.4.1 | SpaceToad | [Website](http://mod-buildcraft.com/) |
 | Computronics* | latest | asie/Vexatos | [GitHub](https://github.com/asiekierka/Computronics) |

@@ -18,6 +18,7 @@ import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 
 public class DriverMannequin {
 
@@ -29,12 +30,16 @@ public class DriverMannequin {
 		private static final Part[] VALUES = values();
 
 		private Part() {
-			parts.put(this.name(), this);
+			parts.put(this.name().toLowerCase(Locale.ENGLISH), this);
+		}
+
+		private static Part from(String name) {
+			return parts.get(name.toLowerCase(Locale.ENGLISH));
 		}
 	}
 
 	private static BipedPart getPart(TileEntityMannequin tile, String s) {
-		Part part = parts.get(s);
+		Part part = Part.from(s);
 		if(part != null) {
 			if(tile.getBipedRotations() != null) {
 				switch(part) {
@@ -68,12 +73,19 @@ public class DriverMannequin {
 		tile.getWorldObj().markBlockForUpdate(tile.xCoord, tile.yCoord, tile.zCoord);
 	}
 
+	private static float check(double d) {
+		if(d < -180 || d > 180) {
+			throw new IllegalArgumentException("rotation must be between -180 and 180");
+		}
+		return (float) Math.toRadians(d);
+	}
+
 	public static Object[] setRotation(TileEntityMannequin tile, String partName, Double rotationX, Double rotationY, Double rotationZ) {
 		BipedPart part = getPart(tile, partName);
 		if(part != null) {
-			part.rotationX = (float) (rotationX != null ? rotationX : part.rotationX);
-			part.rotationY = (float) (rotationY != null ? rotationY : part.rotationY);
-			part.rotationZ = (float) (rotationZ != null ? rotationZ : part.rotationZ);
+			part.rotationX = rotationX != null ? check(rotationX) : part.rotationX;
+			part.rotationY = rotationY != null ? check(rotationY) : part.rotationY;
+			part.rotationZ = rotationZ != null ? check(rotationZ) : part.rotationZ;
 			updateMannequin(tile);
 		}
 		return new Object[] {};
@@ -82,7 +94,7 @@ public class DriverMannequin {
 	public static Object[] setRotationX(TileEntityMannequin tile, String partName, double rotation) {
 		BipedPart part = getPart(tile, partName);
 		if(part != null) {
-			part.rotationX = (float) rotation;
+			part.rotationX = check(rotation);
 			updateMannequin(tile);
 		}
 		return new Object[] {};
@@ -91,7 +103,7 @@ public class DriverMannequin {
 	public static Object[] setRotationY(TileEntityMannequin tile, String partName, double rotation) {
 		BipedPart part = getPart(tile, partName);
 		if(part != null) {
-			part.rotationY = (float) rotation;
+			part.rotationY = check(rotation);
 			updateMannequin(tile);
 		}
 		return new Object[] {};
@@ -100,7 +112,7 @@ public class DriverMannequin {
 	public static Object[] setRotationZ(TileEntityMannequin tile, String partName, double rotation) {
 		BipedPart part = getPart(tile, partName);
 		if(part != null) {
-			part.rotationZ = (float) rotation;
+			part.rotationZ = check(rotation);
 			updateMannequin(tile);
 		}
 		return new Object[] {};
@@ -109,7 +121,7 @@ public class DriverMannequin {
 	public static Object[] getRotation(TileEntityMannequin tile, String partName) {
 		BipedPart part = getPart(tile, partName);
 		if(part != null) {
-			return new Object[] { part.rotationX, part.rotationY, part.rotationZ };
+			return new Object[] { Math.toDegrees(part.rotationX), Math.toDegrees(part.rotationY), Math.toDegrees(part.rotationZ) };
 		}
 		return new Object[] { 0.0, 0.0, 0.0 };
 	}
@@ -117,7 +129,7 @@ public class DriverMannequin {
 	public static Object[] getRotationX(TileEntityMannequin tile, String partName) {
 		BipedPart part = getPart(tile, partName);
 		if(part != null) {
-			return new Object[] { part.rotationX };
+			return new Object[] { Math.toDegrees(part.rotationX) };
 		}
 		return new Object[] { 0.0 };
 	}
@@ -125,7 +137,7 @@ public class DriverMannequin {
 	public static Object[] getRotationY(TileEntityMannequin tile, String partName) {
 		BipedPart part = getPart(tile, partName);
 		if(part != null) {
-			return new Object[] { part.rotationY };
+			return new Object[] { Math.toDegrees(part.rotationY) };
 		}
 		return new Object[] { 0.0, 0.0, 0.0 };
 	}
@@ -133,7 +145,7 @@ public class DriverMannequin {
 	public static Object[] getRotationZ(TileEntityMannequin tile, String partName) {
 		BipedPart part = getPart(tile, partName);
 		if(part != null) {
-			return new Object[] { part.rotationZ };
+			return new Object[] { Math.toDegrees(part.rotationZ) };
 		}
 		return new Object[] { 0.0, 0.0, 0.0 };
 	}
@@ -160,7 +172,7 @@ public class DriverMannequin {
 				return 4;
 			}
 
-			@Callback(doc = "function(part:string, x:number or nil , y:number or nil , z:number or nil); Sets the rotation of the mannequin.")
+			@Callback(doc = "function(part:string, x:number or nil , y:number or nil , z:number or nil); Sets the rotation (in degrees) of the mannequin.")
 			public Object[] setRotation(Context c, Arguments a) {
 				Double x = null, y = null, z = null;
 				if(a.isDouble(1)) {
@@ -175,37 +187,37 @@ public class DriverMannequin {
 				return DriverMannequin.setRotation(tile, a.checkString(0), x, y, z);
 			}
 
-			@Callback(doc = "function(part:string, x:number); Sets the X rotation of the mannequin.")
+			@Callback(doc = "function(part:string, x:number); Sets the X rotation (in degrees) of the mannequin.")
 			public Object[] setRotationX(Context c, Arguments a) {
 				return DriverMannequin.setRotationX(tile, a.checkString(0), a.checkDouble(1));
 			}
 
-			@Callback(doc = "function(part:string, y:number); Sets the Y rotation of the mannequin.")
+			@Callback(doc = "function(part:string, y:number); Sets the Y rotation (in degrees) of the mannequin.")
 			public Object[] setRotationY(Context c, Arguments a) {
 				return DriverMannequin.setRotationY(tile, a.checkString(0), a.checkDouble(1));
 			}
 
-			@Callback(doc = "function(part:string, z:number); Sets the Z rotation of the mannequin.")
+			@Callback(doc = "function(part:string, z:number); Sets the Z rotation (in degrees) of the mannequin.")
 			public Object[] setRotationZ(Context c, Arguments a) {
 				return DriverMannequin.setRotationZ(tile, a.checkString(0), a.checkDouble(1));
 			}
 
-			@Callback(doc = "function(part:string):number, number, number; Returns the rotation of the mannequin.", direct = true)
+			@Callback(doc = "function(part:string):number, number, number; Returns the rotation of the mannequin, in degrees.", direct = true)
 			public Object[] getRotation(Context c, Arguments a) {
 				return DriverMannequin.getRotation(tile, a.checkString(0));
 			}
 
-			@Callback(doc = "function(part:string):number; Returns the X rotation of the mannequin.", direct = true)
+			@Callback(doc = "function(part:string):number; Returns the X rotation of the mannequin, in degrees.", direct = true)
 			public Object[] getRotationX(Context c, Arguments a) {
 				return DriverMannequin.getRotationX(tile, a.checkString(0));
 			}
 
-			@Callback(doc = "function(part:string):number; Returns the Y rotation of the mannequin.", direct = true)
+			@Callback(doc = "function(part:string):number; Returns the Y rotation of the mannequin, in degrees.", direct = true)
 			public Object[] getRotationY(Context c, Arguments a) {
 				return DriverMannequin.getRotationY(tile, a.checkString(0));
 			}
 
-			@Callback(doc = "function(part:string):number; Returns the Z rotation of the mannequin.", direct = true)
+			@Callback(doc = "function(part:string):number; Returns the Z rotation of the mannequin, in degrees.", direct = true)
 			public Object[] getRotationZ(Context c, Arguments a) {
 				return DriverMannequin.getRotationZ(tile, a.checkString(0));
 			}
@@ -265,13 +277,13 @@ public class DriverMannequin {
 				switch(method) {
 					case 0: {
 						Double x = null, y = null, z = null;
-						if(arguments.length >= 1 && arguments[1] instanceof Double) {
+						if(arguments.length > 1 && arguments[1] instanceof Double) {
 							x = ((Double) arguments[1]);
 						}
-						if(arguments.length >= 2 && arguments[2] instanceof Double) {
+						if(arguments.length > 2 && arguments[2] instanceof Double) {
 							y = ((Double) arguments[2]);
 						}
-						if(arguments.length >= 3 && arguments[3] instanceof Double) {
+						if(arguments.length > 3 && arguments[3] instanceof Double) {
 							z = ((Double) arguments[3]);
 						}
 						return DriverMannequin.setRotation(tile, ((String) arguments[0]), x, y, z);
