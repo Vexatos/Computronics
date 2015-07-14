@@ -1,16 +1,19 @@
 package pl.asie.computronics.oc;
 
-import cpw.mods.fml.common.Optional;
-import cpw.mods.fml.common.event.FMLMissingMappingsEvent;
-import cpw.mods.fml.common.registry.GameRegistry;
-import li.cil.oc.api.Driver;
+import org.apache.logging.log4j.Logger;
+
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import org.apache.logging.log4j.Logger;
+import cpw.mods.fml.common.Optional;
+import cpw.mods.fml.common.event.FMLMissingMappingsEvent;
+import cpw.mods.fml.common.registry.GameRegistry;
+
+import li.cil.oc.api.Driver;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.client.UpgradeRenderer;
 import pl.asie.computronics.integration.appeng.DriverSpatialIOPort;
+import pl.asie.computronics.integration.armourersworkshop.DriverMannequin;
 import pl.asie.computronics.integration.betterstorage.DriverCrateStorageNew;
 import pl.asie.computronics.integration.betterstorage.DriverCrateStorageOld;
 import pl.asie.computronics.integration.buildcraft.DriverHeatable;
@@ -53,7 +56,6 @@ import pl.asie.computronics.oc.manual.ComputronicsPathProvider;
 import pl.asie.computronics.reference.Compat;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
-
 import static pl.asie.computronics.Computronics.camera;
 import static pl.asie.computronics.Computronics.chatBox;
 import static pl.asie.computronics.Computronics.radar;
@@ -174,6 +176,11 @@ public class IntegrationOpenComputers {
 			}
 			if(compat.isCompatEnabled(Compat.GregTech_DigitalChests)) {
 				Driver.add(new DriverDigitalChest());
+			}
+		}
+		if(Mods.isLoaded(Mods.ArmourersWorkshop)) {
+			if(compat.isCompatEnabled(Compat.AW_Mannequins)) {
+				Driver.add(new DriverMannequin.OCDriver());
 			}
 		}
 		if(Mods.isLoaded(Mods.AE2)) {

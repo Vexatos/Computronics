@@ -7,6 +7,7 @@ public class Names {
 
 	public static final String
 		AE2_SpatialIO = "spatial_io",
+		AW_Mannequin = "mannequin",
 		BuildCraft_Heatable = "heatable_tile",
 		CoFH_PoweredTile = "powered_tile",
 		DraconicEvolution_Storage = "draconic_storage",

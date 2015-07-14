@@ -23,7 +23,8 @@ public class Compat {
 		DraconicEvolution = "enableDraconicEvolutionEnergyStoragePeripheral",
 		MekanismEnergy = "enableMekanismEnergyStoragePeripheral",
 		StorageDrawers = "enableStorageDrawersDriver",
-		Flamingo = "enableFlamingoDriver";
+		Flamingo = "enableFlamingoDriver",
+		AW_Mannequins = "enableAWMannequins";
 
 	public static final String Compatibility = "modCompatibility";
 

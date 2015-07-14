@@ -1,8 +1,8 @@
 package pl.asie.computronics.reference;
 
-import cpw.mods.fml.common.versioning.ArtifactVersion;
-
 import java.util.HashMap;
+
+import cpw.mods.fml.common.versioning.ArtifactVersion;
 
 /**
  * List of used mod IDs
@@ -24,6 +24,7 @@ public class Mods {
 	//Other mods
 	public static final String
 		AE2 = "appliedenergistics2",
+		ArmourersWorkshop = "armourersWorkshop",
 		BetterStorage = "betterstorage",
 		BuildCraftCore = "BuildCraft|Core",
 		BuildCraftTransport = "BuildCraft|Transport",
