@@ -5,6 +5,8 @@
     - Note: In case you change the colour of a block that existed in the world before you updated, it might not properly save the colour (this should only happen very rarely so you probably will not be affected at all). In this case just break and re-place the block!
   * ADDED: Flamingo integration!
     - Now you can make Flamingos wiggle using ComputerCraft or OpenComputers.
+  * ADDED: Armourer's Workshop integration!
+    - Now you can change rotation of body parts of mannequins using ComputerCraft or OpenComputers.
   * FIXED: Creative Chat Boxes turning into normal chat boxes when placed.
 
 ==== 1.5.5 ====

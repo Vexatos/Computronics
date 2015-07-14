@@ -6,6 +6,7 @@ import net.minecraftforge.common.config.Configuration;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.cc.multiperipheral.MultiPeripheralProvider;
 import pl.asie.computronics.integration.appeng.DriverSpatialIOPort;
+import pl.asie.computronics.integration.armourersworkshop.DriverMannequin;
 import pl.asie.computronics.integration.buildcraft.DriverHeatable;
 import pl.asie.computronics.integration.cofh.DriverEnergyProvider;
 import pl.asie.computronics.integration.cofh.DriverEnergyReceiver;
@@ -103,6 +104,12 @@ public class IntegrationComputerCraft {
 				registerMultiPeripheralProvider(new DriverPrimingTrack.CCDriver());
 				registerMultiPeripheralProvider(new DriverBoilerFirebox.CCDriver());
 				registerMultiPeripheralProvider(new DriverSteamTurbine.CCDriver());
+			}
+		}
+
+		if(Mods.isLoaded(Mods.ArmourersWorkshop)) {
+			if(compat.isCompatEnabled(Compat.AW_Mannequins)) {
+				registerMultiPeripheralProvider(new DriverMannequin.CCDriver());
 			}
 		}
 

@@ -1,137 +1,218 @@
 package pl.asie.computronics.integration.armourersworkshop;
 
-import java.lang.reflect.Field;
-
-import net.minecraft.world.World;
-
+import dan200.computercraft.api.lua.ILuaContext;
+import dan200.computercraft.api.lua.LuaException;
+import dan200.computercraft.api.peripheral.IComputerAccess;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.ManagedEnvironment;
 import li.cil.oc.api.prefab.DriverTileEntity;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
+import pl.asie.computronics.integration.CCMultiPeripheral;
 import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
 import pl.asie.computronics.reference.Names;
-import riskyken.armourersWorkshop.common.data.BipedRotations;
+import riskyken.armourersWorkshop.common.data.BipedRotations.BipedPart;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+
 public class DriverMannequin {
+
+	private static final HashMap<String, Part> parts = new HashMap<String, Part>();
+
+	private static enum Part {
+		head, chest, left_arm, right_arm, left_leg, right_leg;
+
+		private static final Part[] VALUES = values();
+
+		private Part() {
+			parts.put(this.name(), this);
+		}
+	}
+
+	private static BipedPart getPart(TileEntityMannequin tile, String s) {
+		Part part = parts.get(s);
+		if(part != null) {
+			if(tile.getBipedRotations() != null) {
+				switch(part) {
+					case head: {
+						return tile.getBipedRotations().head;
+					}
+					case chest: {
+						return tile.getBipedRotations().chest;
+					}
+					case left_arm: {
+						return tile.getBipedRotations().leftArm;
+					}
+					case right_arm: {
+						return tile.getBipedRotations().rightArm;
+					}
+					case left_leg: {
+						return tile.getBipedRotations().leftLeg;
+					}
+					case right_leg: {
+						return tile.getBipedRotations().rightLeg;
+					}
+				}
+			}
+			return null;
+		}
+		throw new IllegalArgumentException("invalid mannequin part");
+	}
+
+	private static void updateMannequin(TileEntityMannequin tile) {
+		tile.markDirty();
+		tile.getWorldObj().markBlockForUpdate(tile.xCoord, tile.yCoord, tile.zCoord);
+	}
+
+	public static Object[] setRotation(TileEntityMannequin tile, String partName, Double rotationX, Double rotationY, Double rotationZ) {
+		BipedPart part = getPart(tile, partName);
+		if(part != null) {
+			part.rotationX = (float) (rotationX != null ? rotationX : part.rotationX);
+			part.rotationY = (float) (rotationY != null ? rotationY : part.rotationY);
+			part.rotationZ = (float) (rotationZ != null ? rotationZ : part.rotationZ);
+			updateMannequin(tile);
+		}
+		return new Object[] {};
+	}
+
+	public static Object[] setRotationX(TileEntityMannequin tile, String partName, double rotation) {
+		BipedPart part = getPart(tile, partName);
+		if(part != null) {
+			part.rotationX = (float) rotation;
+			updateMannequin(tile);
+		}
+		return new Object[] {};
+	}
+
+	public static Object[] setRotationY(TileEntityMannequin tile, String partName, double rotation) {
+		BipedPart part = getPart(tile, partName);
+		if(part != null) {
+			part.rotationY = (float) rotation;
+			updateMannequin(tile);
+		}
+		return new Object[] {};
+	}
+
+	public static Object[] setRotationZ(TileEntityMannequin tile, String partName, double rotation) {
+		BipedPart part = getPart(tile, partName);
+		if(part != null) {
+			part.rotationZ = (float) rotation;
+			updateMannequin(tile);
+		}
+		return new Object[] {};
+	}
+
+	public static Object[] getRotation(TileEntityMannequin tile, String partName) {
+		BipedPart part = getPart(tile, partName);
+		if(part != null) {
+			return new Object[] { part.rotationX, part.rotationY, part.rotationZ };
+		}
+		return new Object[] { 0.0, 0.0, 0.0 };
+	}
+
+	public static Object[] getRotationX(TileEntityMannequin tile, String partName) {
+		BipedPart part = getPart(tile, partName);
+		if(part != null) {
+			return new Object[] { part.rotationX };
+		}
+		return new Object[] { 0.0 };
+	}
+
+	public static Object[] getRotationY(TileEntityMannequin tile, String partName) {
+		BipedPart part = getPart(tile, partName);
+		if(part != null) {
+			return new Object[] { part.rotationY };
+		}
+		return new Object[] { 0.0, 0.0, 0.0 };
+	}
+
+	public static Object[] getRotationZ(TileEntityMannequin tile, String partName) {
+		BipedPart part = getPart(tile, partName);
+		if(part != null) {
+			return new Object[] { part.rotationZ };
+		}
+		return new Object[] { 0.0, 0.0, 0.0 };
+	}
+
+	private static Object[] parts() {
+		LinkedHashMap<Integer, String> modes = new LinkedHashMap<Integer, String>();
+		int i = 1;
+		for(Part mode : Part.VALUES) {
+			modes.put(i++, mode.name());
+		}
+		return new Object[] { modes };
+	}
+
 	public static class OCDriver extends DriverTileEntity {
 
 		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TileEntityMannequin> {
+
 			public InternalManagedEnvironment(TileEntityMannequin tile) {
 				super(tile, Names.AW_Mannequin);
 			}
 
-			private BipedRotations.BipedPart getPart(String s) {
-				try {
-					Field f = BipedRotations.class.getField(s);
-					Object o = f.get(tile.getBipedRotations());
-					if (o instanceof BipedRotations.BipedPart) {
-						return (BipedRotations.BipedPart) o;
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				return null;
+			@Override
+			public int priority() {
+				return 4;
 			}
 
-			private void updateMannequin() {
-				tile.markDirty();
-				tile.getWorldObj().markBlockForUpdate(tile.xCoord, tile.yCoord, tile.zCoord);
-			}
-
-			@Callback(doc = "function(string, number, number, number); Set the rotation of the mannequin.")
+			@Callback(doc = "function(part:string, x:number or nil , y:number or nil , z:number or nil); Sets the rotation of the mannequin.")
 			public Object[] setRotation(Context c, Arguments a) {
-				if (a.isString(0) && a.isDouble(1)) {
-					BipedRotations.BipedPart part = getPart(a.checkString(0));
-					if (part != null) {
-						part.rotationX = (float) a.checkDouble(1);
-						part.rotationY = (float) (a.isDouble(2) ? a.checkDouble(2) : part.rotationX);
-						part.rotationZ = (float) (a.isDouble(3) ? a.checkDouble(3) : part.rotationY);
-						updateMannequin();
-					}
+				Double x = null, y = null, z = null;
+				if(a.isDouble(1)) {
+					x = a.checkDouble(1);
 				}
-				return new Object[]{};
+				if(a.isDouble(2)) {
+					y = a.checkDouble(2);
+				}
+				if(a.isDouble(3)) {
+					z = a.checkDouble(3);
+				}
+				return DriverMannequin.setRotation(tile, a.checkString(0), x, y, z);
 			}
 
-			@Callback(doc = "function(string, number); Set the X rotation of the mannequin.")
+			@Callback(doc = "function(part:string, x:number); Sets the X rotation of the mannequin.")
 			public Object[] setRotationX(Context c, Arguments a) {
-				if (a.isString(0) && a.isDouble(1)) {
-					BipedRotations.BipedPart part = getPart(a.checkString(0));
-					if (part != null) {
-						part.rotationX = (float) a.checkDouble(1);
-						updateMannequin();
-					}
-				}
-				return new Object[]{};
+				return DriverMannequin.setRotationX(tile, a.checkString(0), a.checkDouble(1));
 			}
 
-			@Callback(doc = "function(string, number); Set the Y rotation of the mannequin.")
+			@Callback(doc = "function(part:string, y:number); Sets the Y rotation of the mannequin.")
 			public Object[] setRotationY(Context c, Arguments a) {
-				if (a.isString(0) && a.isDouble(1)) {
-					BipedRotations.BipedPart part = getPart(a.checkString(0));
-					if (part != null) {
-						part.rotationY = (float) a.checkDouble(1);
-						updateMannequin();
-					}
-				}
-				return new Object[]{};
+				return DriverMannequin.setRotationY(tile, a.checkString(0), a.checkDouble(1));
 			}
 
-			@Callback(doc = "function(string, number); Set the Z rotation of the mannequin.")
+			@Callback(doc = "function(part:string, z:number); Sets the Z rotation of the mannequin.")
 			public Object[] setRotationZ(Context c, Arguments a) {
-				if (a.isString(0) && a.isDouble(1)) {
-					BipedRotations.BipedPart part = getPart(a.checkString(0));
-					if (part != null) {
-						part.rotationZ = (float) a.checkDouble(1);
-						updateMannequin();
-					}
-				}
-				return new Object[]{};
+				return DriverMannequin.setRotationZ(tile, a.checkString(0), a.checkDouble(1));
 			}
 
-			@Callback(doc = "function(string):number, number, number; Get the rotation of the mannequin.")
+			@Callback(doc = "function(part:string):number, number, number; Returns the rotation of the mannequin.", direct = true)
 			public Object[] getRotation(Context c, Arguments a) {
-				if (a.isString(0)) {
-					BipedRotations.BipedPart part = getPart(a.checkString(0));
-					if (part != null) {
-						return new Object[]{part.rotationX, part.rotationY, part.rotationZ};
-					}
-				}
-				return new Object[]{0.0, 0.0, 0.0};
+				return DriverMannequin.getRotation(tile, a.checkString(0));
 			}
 
-			@Callback(doc = "function(string):number; Get the X rotation of the mannequin.")
+			@Callback(doc = "function(part:string):number; Returns the X rotation of the mannequin.", direct = true)
 			public Object[] getRotationX(Context c, Arguments a) {
-				if (a.isString(0)) {
-					BipedRotations.BipedPart part = getPart(a.checkString(0));
-					if (part != null) {
-						return new Object[]{part.rotationX};
-					}
-				}
-				return new Object[]{0.0};
+				return DriverMannequin.getRotationX(tile, a.checkString(0));
 			}
 
-			@Callback(doc = "function(string):number; Get the Y rotation of the mannequin.")
+			@Callback(doc = "function(part:string):number; Returns the Y rotation of the mannequin.", direct = true)
 			public Object[] getRotationY(Context c, Arguments a) {
-				if (a.isString(0)) {
-					BipedRotations.BipedPart part = getPart(a.checkString(0));
-					if (part != null) {
-						return new Object[]{part.rotationY};
-					}
-				}
-				return new Object[]{0.0, 0.0, 0.0};
+				return DriverMannequin.getRotationY(tile, a.checkString(0));
 			}
 
-			@Callback(doc = "function(string):number; Get the Z rotation of the mannequin.")
+			@Callback(doc = "function(part:string):number; Returns the Z rotation of the mannequin.", direct = true)
 			public Object[] getRotationZ(Context c, Arguments a) {
-				if (a.isString(0)) {
-					BipedRotations.BipedPart part = getPart(a.checkString(0));
-					if (part != null) {
-						return new Object[]{part.rotationZ};
-					}
-				}
-				return new Object[]{0.0, 0.0, 0.0};
+				return DriverMannequin.getRotationZ(tile, a.checkString(0));
+			}
+
+			@Callback(doc = "This is a table containing all valid mannequin part names.", getter = true, direct = true)
+			public Object[] parts(Context c, Arguments a) {
+				return DriverMannequin.parts();
 			}
 		}
 
@@ -143,6 +224,98 @@ public class DriverMannequin {
 		@Override
 		public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
 			return new InternalManagedEnvironment((TileEntityMannequin) world.getTileEntity(x, y, z));
+		}
+	}
+
+	public static class CCDriver extends CCMultiPeripheral<TileEntityMannequin> {
+
+		public CCDriver() {
+		}
+
+		public CCDriver(TileEntityMannequin tile, World world, int x, int y, int z) {
+			super(tile, Names.AW_Mannequin, world, x, y, z);
+		}
+
+		@Override
+		public int peripheralPriority() {
+			return 4;
+		}
+
+		@Override
+		public CCMultiPeripheral getPeripheral(World world, int x, int y, int z, int side) {
+			TileEntity te = world.getTileEntity(x, y, z);
+			if(te != null && te instanceof TileEntityMannequin) {
+				return new CCDriver((TileEntityMannequin) te, world, x, y, z);
+			}
+			return null;
+		}
+
+		@Override
+		public String[] getMethodNames() {
+			return new String[] { "setRotation", "setRotationX", "setRotationY", "setRotationZ",
+				"getRotation", "getRotationX", "getRotationY", "getRotationZ", "parts" };
+		}
+
+		@Override
+		public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
+			try {
+				if(method != 8 && (arguments.length < 1 || !(arguments[0] instanceof String))) {
+					throw new LuaException("first argument needs to be a string");
+				}
+				switch(method) {
+					case 0: {
+						Double x = null, y = null, z = null;
+						if(arguments.length >= 1 && arguments[1] instanceof Double) {
+							x = ((Double) arguments[1]);
+						}
+						if(arguments.length >= 2 && arguments[2] instanceof Double) {
+							y = ((Double) arguments[2]);
+						}
+						if(arguments.length >= 3 && arguments[3] instanceof Double) {
+							z = ((Double) arguments[3]);
+						}
+						return DriverMannequin.setRotation(tile, ((String) arguments[0]), x, y, z);
+					}
+					case 1: {
+						if(arguments.length < 2 || !(arguments[1] instanceof Double)) {
+							throw new LuaException("second argument needs to be a number");
+						}
+						return DriverMannequin.setRotationX(tile, ((String) arguments[0]), ((Double) arguments[1]));
+					}
+					case 2: {
+						if(arguments.length < 2 || !(arguments[1] instanceof Double)) {
+							throw new LuaException("second argument needs to be a number");
+						}
+						return DriverMannequin.setRotationY(tile, ((String) arguments[0]), ((Double) arguments[1]));
+					}
+					case 3: {
+						if(arguments.length < 2 || !(arguments[1] instanceof Double)) {
+							throw new LuaException("second argument needs to be a number");
+						}
+						return DriverMannequin.setRotationZ(tile, ((String) arguments[0]), ((Double) arguments[1]));
+					}
+					case 4: {
+						return DriverMannequin.getRotation(tile, ((String) arguments[0]));
+					}
+					case 5: {
+						return DriverMannequin.getRotationX(tile, ((String) arguments[0]));
+					}
+					case 6: {
+						return DriverMannequin.getRotationY(tile, ((String) arguments[0]));
+					}
+					case 7: {
+						return DriverMannequin.getRotationZ(tile, ((String) arguments[0]));
+					}
+					case 8: {
+						return DriverMannequin.parts();
+					}
+				}
+				return null;
+			} catch(LuaException le) {
+				throw le;
+			} catch(Exception e) {
+				throw new LuaException(e.getMessage());
+			}
 		}
 	}
 }

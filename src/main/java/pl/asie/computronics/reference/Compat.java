@@ -24,7 +24,7 @@ public class Compat {
 		MekanismEnergy = "enableMekanismEnergyStoragePeripheral",
 		StorageDrawers = "enableStorageDrawersDriver",
 		Flamingo = "enableFlamingoDriver",
-		AW_Mannequins = "enableAWMannequins";
+		AW_Mannequins = "enableAWMannequinDriver";
 
 	public static final String Compatibility = "modCompatibility";
 
