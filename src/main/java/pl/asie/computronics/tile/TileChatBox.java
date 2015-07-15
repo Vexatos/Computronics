@@ -64,6 +64,8 @@ public class TileChatBox extends TileEntityPeripheralBase implements IChatListen
 
 		if(!isCreative()) {
 			this.distance = Math.min(Config.CHATBOX_DISTANCE, dist);
+		} else {
+			this.distance = dist;
 		}
 		if(this.distance < 0) {
 			this.distance = Config.CHATBOX_DISTANCE;
