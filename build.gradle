@@ -60,6 +60,10 @@ repositories {
 		name = "Bluepower Repo"
 		url = "http://maven.bluepowermod.com/"
 	}
+	maven {
+		name = "RX14's Repo"
+		url = "http://mvn.rx14.co.uk/repo/"
+    }
 	ivy {
 		name = "BuildCraft"
 		artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision]-[classifier].[ext]"

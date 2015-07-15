@@ -1,5 +1,7 @@
 package pl.asie.computronics.util.cipher;
 
+import pl.asie.lib.util.Base64;
+
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -17,24 +19,20 @@ public class RSACalculationTask implements Callable<ArrayList<Map<Integer, Strin
 		TWO = new BigInteger("2"),
 		SEVENTEEN = new BigInteger("17");
 
-	private final RSAValue val;
 	private int bitLength = 0;
 	private int p = 0;
 	private int q = 0;
 	private Map<Integer, String> publicKey;
 	private Map<Integer, String> privateKey;
 
-	public RSACalculationTask(RSAValue val) {
-		this.val = val;
+	public RSACalculationTask() {
 	}
 
-	public RSACalculationTask(RSAValue val, int bitLength) {
-		this(val);
+	public RSACalculationTask(int bitLength) {
 		this.bitLength = bitLength;
 	}
 
-	public RSACalculationTask(RSAValue val, int p, int q) {
-		this(val);
+	public RSACalculationTask(int p, int q) {
 		this.p = p;
 		this.q = q;
 	}
@@ -81,10 +79,10 @@ public class RSACalculationTask implements Callable<ArrayList<Map<Integer, Strin
 
 		Map<Integer, String> publicKey = new LinkedHashMap<Integer, String>();
 		Map<Integer, String> privateKey = new LinkedHashMap<Integer, String>();
-		publicKey.put(1, n.toString());
-		publicKey.put(2, d.toString());
-		privateKey.put(1, n.toString());
-		privateKey.put(2, e.toString());
+		publicKey.put(1, Base64.encodeBytes(n.toByteArray()));
+		publicKey.put(2, Base64.encodeBytes(d.toByteArray()));
+		privateKey.put(1, Base64.encodeBytes(n.toByteArray()));
+		privateKey.put(2, Base64.encodeBytes(e.toByteArray()));
 		ArrayList<Map<Integer, String>> list = new ArrayList<Map<Integer, String>>();
 		list.add(publicKey);
 		list.add(privateKey);

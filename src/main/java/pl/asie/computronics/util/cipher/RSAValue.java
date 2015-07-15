@@ -26,6 +26,7 @@ import java.util.concurrent.Future;
 	@Optional.Interface(iface = "dan200.computercraft.api.lua.ILuaObject", modid = Mods.ComputerCraft)
 })
 public class RSAValue implements Value, ILuaObject {
+
 	protected Map<Integer, String> publicKey;
 	protected Map<Integer, String> privateKey;
 	protected Future<ArrayList<Map<Integer, String>>> task;
@@ -71,14 +72,14 @@ public class RSAValue implements Value, ILuaObject {
 
 	public void startCalculation() {
 		if(task == null || task.isCancelled()) {
-			task = Computronics.rsaThreads.submit(new RSACalculationTask(this));
+			task = Computronics.rsaThreads.submit(new RSACalculationTask());
 		}
 	}
 
 	public void startCalculation(int bitLength) {
 		if(task == null || task.isCancelled()) {
 			this.bitLength = bitLength;
-			task = Computronics.rsaThreads.submit(new RSACalculationTask(this, bitLength));
+			task = Computronics.rsaThreads.submit(new RSACalculationTask(bitLength));
 		}
 	}
 
@@ -86,7 +87,7 @@ public class RSAValue implements Value, ILuaObject {
 		if(task == null || task.isCancelled()) {
 			this.p = p;
 			this.q = q;
-			task = Computronics.rsaThreads.submit(new RSACalculationTask(this, p, q));
+			task = Computronics.rsaThreads.submit(new RSACalculationTask(p, q));
 		}
 	}
 

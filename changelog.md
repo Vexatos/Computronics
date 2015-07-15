@@ -7,6 +7,7 @@
     - Now you can make Flamingos wiggle using ComputerCraft or OpenComputers.
   * ADDED: Armourer's Workshop integration!
     - Now you can change rotation of body parts of mannequins using ComputerCraft or OpenComputers.
+  * CHANGED: The encoding for the Advanced Cipher Block's keys have changed. You will need to re-generate keys you might be using.
   * FIXED: Creative Chat Boxes turning into normal chat boxes when placed.
 
 ==== 1.5.5 ====

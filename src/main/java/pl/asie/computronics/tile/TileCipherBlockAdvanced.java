@@ -85,7 +85,7 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 		return new String(bytes, Charsets.UTF_8);
 	}
 
-	private Object[] encrypt(Map<Integer, String> publicKey, String messageString) {
+	private Object[] encrypt(Map<Integer, String> publicKey, String messageString) throws Exception {
 		return this.encrypt(publicKey, messageString.getBytes(Charsets.UTF_8));
 	}
 
@@ -93,10 +93,10 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 		return this.decrypt(privateKey, messageString.getBytes(Charsets.UTF_8));
 	}
 
-	private Object[] encrypt(Map<Integer, String> publicKey, byte[] messageBytes) {
+	private Object[] encrypt(Map<Integer, String> publicKey, byte[] messageBytes) throws Exception {
 		BigInteger message = new BigInteger(messageBytes);
-		BigInteger n = new BigInteger(publicKey.get(1));
-		BigInteger d = new BigInteger(publicKey.get(2));
+		BigInteger n = new BigInteger(Base64.decode(publicKey.get(1)));
+		BigInteger d = new BigInteger(Base64.decode(publicKey.get(2)));
 		if(n.toByteArray().length < messageBytes.length) {
 			throw new IllegalArgumentException("key is too small, needs to have a bit length of at least " + messageBytes.length + ", but only has " + n.toByteArray().length);
 		}
@@ -106,8 +106,8 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 	private Object[] decrypt(Map<Integer, String> privateKey, byte[] messageBytes) throws Exception {
 		byte[] decodedBytes = Base64.decode(messageBytes);
 		BigInteger message = new BigInteger(decodedBytes);
-		BigInteger n = new BigInteger(privateKey.get(1));
-		BigInteger e = new BigInteger(privateKey.get(2));
+		BigInteger n = new BigInteger(Base64.decode(privateKey.get(1)));
+		BigInteger e = new BigInteger(Base64.decode(privateKey.get(2)));
 		if(n.toByteArray().length < decodedBytes.length) {
 			throw new IllegalArgumentException("key is too small, needs to have a bit length of at least " + decodedBytes.length + ", but only has " + n.toByteArray().length);
 		}
@@ -141,7 +141,7 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 
 	@Callback(doc = "function(message:string, publicKey:table):string; Encrypts the specified message using the specified public RSA key", direct = true)
 	@Optional.Method(modid = Mods.OpenComputers)
-	public Object[] encrypt(Context c, Arguments a) {
+	public Object[] encrypt(Context c, Arguments a) throws Exception {
 		byte[] message = a.checkByteArray(0);
 		Object[] result = this.encrypt(
 			checkValidKey(a.checkTable(1), 1),
@@ -195,8 +195,8 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 	@Optional.Method(modid = Mods.ComputerCraft)
 	public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
 		try {
-			switch(method){
-				case 0:{
+			switch(method) {
+				case 0: {
 					RSAValue val = new RSAValue();
 					if(arguments.length > 0) {
 						if(!(arguments[0] instanceof Number)) {
@@ -209,7 +209,7 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 						return new Object[] { val };
 					}
 				}
-				case 1:{
+				case 1: {
 					if(!(arguments.length >= 1 && arguments[0] instanceof Number)) {
 						throw new LuaException("first argument needs to be a number");
 					} else if(!(arguments.length >= 2 && arguments[1] instanceof Number)) {
@@ -220,7 +220,7 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 						checkPrime(((Number) arguments[1]).intValue(), 1));
 					return new Object[] { val };
 				}
-				case 2:{
+				case 2: {
 					if(!(arguments.length >= 1 && arguments[0] instanceof String)) {
 						throw new LuaException("first argument needs to be a string");
 					} else if(!(arguments.length >= 2 && arguments[1] instanceof Map)) {
@@ -230,7 +230,7 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 						checkValidKey((Map) arguments[1], 1),
 						(String) arguments[0]);
 				}
-				case 3:{
+				case 3: {
 					if(!(arguments.length >= 1 && arguments[0] instanceof String)) {
 						throw new LuaException("first argument needs to be a string");
 					} else if(!(arguments.length >= 2 && arguments[1] instanceof Map)) {
@@ -241,13 +241,11 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 						(String) arguments[0]);
 				}
 			}
+		} catch(InterruptedException ie) {
+			throw ie;
+		} catch(LuaException le) {
+			throw le;
 		} catch(Exception e) {
-			if(e instanceof InterruptedException) {
-				throw (InterruptedException) e;
-			}
-			if(e instanceof LuaException) {
-				throw (LuaException) e;
-			}
 			throw new LuaException(e.getMessage());
 		}
 		return null;
