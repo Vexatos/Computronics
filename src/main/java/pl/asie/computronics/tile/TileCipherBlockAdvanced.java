@@ -155,7 +155,7 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 		}
 	}
 
-	@Callback(doc = "function([bitlength:number]):keygen; Creates the key generator from two random prime numbers (optionally with given bit length)", direct = true, limit = 1)
+	@Callback(doc = "function([keylength:number]):keygen; Creates the key generator from two random prime numbers (optionally with given key length)", direct = true, limit = 1)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] createRandomKeySet(Context c, Arguments a) {
 		RSAValue val = new RSAValue();

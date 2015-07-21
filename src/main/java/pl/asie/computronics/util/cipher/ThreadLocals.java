@@ -16,7 +16,7 @@ public class ThreadLocals {
 		protected KeyPairGenerator initialValue() {
 			try {
 				return KeyPairGenerator.getInstance("RSA");
-			} catch(NoSuchAlgorithmException e) {
+			} catch(Exception e) {
 				return super.initialValue();
 			}
 		}
