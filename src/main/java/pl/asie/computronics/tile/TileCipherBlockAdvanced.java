@@ -43,7 +43,10 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 	 * @return <tt>true</tt> if the number is a prime number
 	 */
 	private static boolean isPrime(int number) {
-		if(number % 2 == 0) {
+		if(number == 2) {
+			return true;
+		}
+		if(number < 2 || number % 2 == 0) {
 			return false;
 		}
 		for(int i = 3; i * i <= number; i += 2) {
@@ -114,21 +117,25 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 		return new Object[] { encodeToString(message.modPow(e, n).toByteArray()) };
 	}
 
-	@Callback(doc = "function([bitlength:number]):keygen; Creates the key generator from two random prime numbers (optionally with given bit length)", direct = true)
+	@Callback(doc = "function([bitlength:number]):keygen; Creates the key generator from two random prime numbers (optionally with given bit length)", direct = true, limit = 1)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] createRandomKeySet(Context c, Arguments a) {
-		Object[] result;
 		RSAValue val = new RSAValue();
 		if(a.count() > 0) {
-			val.startCalculation(a.checkInteger(0));
+			int length = a.checkInteger(0);
+			if(length <= 0 || length > 2048) {
+				throw new IllegalArgumentException("bitlength must be between 1 and 2048");
+			}
+			val.startCalculation(length);
 		} else {
 			val.startCalculation();
 		}
-		result = new Object[] { val };
-		return this.tryConsumeEnergy(result, Config.CIPHER_KEY_CONSUMPTION, "createRandomKeySet");
+		Object[] result = this.tryConsumeEnergy(new Object[] { val }, Config.CIPHER_KEY_CONSUMPTION, "createRandomKeySet");
+		c.pause(0.5);
+		return result;
 	}
 
-	@Callback(doc = "function(num1:number, num2:number):keygen; Creates the key generator from the two given prime numbers", direct = true)
+	@Callback(doc = "function(num1:number, num2:number):keygen; Creates the key generator from the two given prime numbers", direct = true, limit = 1)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] createKeySet(Context c, Arguments a) {
 		RSAValue val = new RSAValue();
@@ -202,7 +209,11 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 						if(!(arguments[0] instanceof Number)) {
 							throw new LuaException("first argument needs to be a number, or there must not be any arguments");
 						}
-						val.startCalculation(((Number) arguments[1]).intValue());
+						int length = ((Number) arguments[0]).intValue();
+						if(length <= 0 || length > 2048) {
+							throw new LuaException("bitlength must be between 1 and 2048");
+						}
+						val.startCalculation(length);
 						return new Object[] { val };
 					} else {
 						val.startCalculation();

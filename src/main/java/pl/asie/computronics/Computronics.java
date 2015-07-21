@@ -1,6 +1,7 @@
 package pl.asie.computronics;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -92,6 +93,7 @@ import java.util.concurrent.Executors;
 		+ "after:MekanismAPI|energy@[8.0.0,);after:Flamingo@[1.7.10-1.3,);"
 		+ "after:armourersWorkshop@[1.7.10-0.33,)")
 public class Computronics {
+
 	public Config config;
 	public Compat compat;
 	public static Random rand = new Random();
@@ -213,7 +215,7 @@ public class Computronics {
 		if(isEnabled("cipher_advanced", true)) {
 			cipher_advanced = new BlockCipherAdvanced();
 			registerBlockWithTileEntity(cipher_advanced, TileCipherBlockAdvanced.class, "computronics.cipher_advanced");
-			rsaThreads = Executors.newCachedThreadPool();
+			rsaThreads = Executors.newFixedThreadPool(2, new ThreadFactoryBuilder().setPriority(Thread.MIN_PRIORITY).build());
 		}
 
 		if(isEnabled("radar", true)) {
