@@ -8,6 +8,7 @@
   * ADDED: Armourer's Workshop integration!
     - Now you can change rotation of body parts of mannequins using ComputerCraft or OpenComputers.
   * CHANGED: The encoding for the Advanced Cipher Block's keys have changed. You will need to re-generate keys you might be using. Sorry for the inconvenience, but the new encoding is a lot more compact.
+    - **Huge thanks to makkarpov for helping me with improving the Advanced Cipher Block!**
   * FIXED: Creative Chat Boxes turning into normal chat boxes when placed.
   * FIXED: `setDistance()` not working on Creative Chat Boxes.
 

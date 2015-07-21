@@ -12,9 +12,16 @@ import li.cil.oc.api.network.Connector;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.cipher.RSAValue;
+import pl.asie.computronics.util.cipher.ThreadLocals;
 import pl.asie.lib.util.Base64;
 
+import javax.crypto.Cipher;
 import java.math.BigInteger;
+import java.security.KeyFactory;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.spec.RSAPrivateKeySpec;
+import java.security.spec.RSAPublicKeySpec;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -67,17 +74,21 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 	}
 
 	private static Map<Integer, String> checkValidKey(Map map, int index) {
-		if(map.get(1) != null && map.get(1) instanceof String
-			&& map.get(2) != null && map.get(2) instanceof String) {
+		if(map.get(1) instanceof String && map.get(2) instanceof String) {
 			Map<Integer, String> keyMap = new LinkedHashMap<Integer, String>();
 			keyMap.put(1, (String) map.get(1));
 			keyMap.put(2, (String) map.get(2));
+			if(map.get(3) instanceof String) {
+				keyMap.put(3, (String) map.get(3));
+			}
 			return keyMap;
-		} else if(map.get(1.0D) != null && map.get(1.0D) instanceof String
-			&& map.get(2.0D) != null && map.get(2.0D) instanceof String) {
+		} else if(map.get(1.0D) instanceof String && map.get(2.0D) instanceof String) {
 			Map<Integer, String> keyMap = new LinkedHashMap<Integer, String>();
 			keyMap.put(1, (String) map.get(1.0D));
 			keyMap.put(2, (String) map.get(2.0D));
+			if(map.get(3.0D) instanceof String) {
+				keyMap.put(3, (String) map.get(3.0D));
+			}
 			return keyMap;
 		}
 		throw new IllegalArgumentException(
@@ -96,25 +107,52 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 		return this.decrypt(privateKey, messageString.getBytes(Charsets.UTF_8));
 	}
 
+	private static final ThreadLocal<KeyFactory> keyFactory = new ThreadLocals.LocalKeyFactory();
+	private static final ThreadLocal<Cipher> cipher = new ThreadLocals.LocalCipher();
+
 	private Object[] encrypt(Map<Integer, String> publicKey, byte[] messageBytes) throws Exception {
-		BigInteger message = new BigInteger(messageBytes);
 		BigInteger n = new BigInteger(Base64.decode(publicKey.get(1)));
 		BigInteger d = new BigInteger(Base64.decode(publicKey.get(2)));
-		if(n.toByteArray().length < messageBytes.length) {
-			throw new IllegalArgumentException("key is too small, needs to have a bit length of at least " + messageBytes.length + ", but only has " + n.toByteArray().length);
+		if(("prime").equals(publicKey.get(3))) {
+			BigInteger message = new BigInteger(messageBytes);
+			if(n.toByteArray().length < messageBytes.length) {
+				throw new IllegalArgumentException("key is too small, needs to have a bit length of at least " + messageBytes.length + ", but only has " + n.toByteArray().length);
+			}
+			return new Object[] { Base64.encodeBytes(message.modPow(d, n).toByteArray()) };
+		} else {
+			KeyFactory factory = TileCipherBlockAdvanced.keyFactory.get();
+			Cipher c = cipher.get();
+			if(factory == null || c == null) {
+				return new Object[] { null, "an error occured during encryption" };
+			}
+			PublicKey pubKey = factory.generatePublic(new RSAPublicKeySpec(
+				new BigInteger(Base64.decode(publicKey.get(1))),
+				new BigInteger(Base64.decode(publicKey.get(2)))));
+			c.init(Cipher.ENCRYPT_MODE, pubKey);
+			return new Object[] { Base64.encodeBytes(c.doFinal(messageBytes)) };
 		}
-		return new Object[] { Base64.encodeBytes(message.modPow(d, n).toByteArray()) };
 	}
 
 	private Object[] decrypt(Map<Integer, String> privateKey, byte[] messageBytes) throws Exception {
 		byte[] decodedBytes = Base64.decode(messageBytes);
-		BigInteger message = new BigInteger(decodedBytes);
 		BigInteger n = new BigInteger(Base64.decode(privateKey.get(1)));
 		BigInteger e = new BigInteger(Base64.decode(privateKey.get(2)));
-		if(n.toByteArray().length < decodedBytes.length) {
-			throw new IllegalArgumentException("key is too small, needs to have a bit length of at least " + decodedBytes.length + ", but only has " + n.toByteArray().length);
+		if(("prime").equals(privateKey.get(3))) {
+			BigInteger message = new BigInteger(decodedBytes);
+			if(n.toByteArray().length < decodedBytes.length) {
+				throw new IllegalArgumentException("key is too small, needs to have a bit length of at least " + decodedBytes.length + ", but only has " + n.toByteArray().length);
+			}
+			return new Object[] { encodeToString(message.modPow(e, n).toByteArray()) };
+		} else {
+			KeyFactory factory = TileCipherBlockAdvanced.keyFactory.get();
+			Cipher c = cipher.get();
+			if(factory == null || c == null) {
+				return new Object[] { null, "an error occured during decryption" };
+			}
+			PrivateKey privKey = factory.generatePrivate(new RSAPrivateKeySpec(n, e));
+			c.init(Cipher.DECRYPT_MODE, privKey);
+			return new Object[] { encodeToString(c.doFinal(decodedBytes)) };
 		}
-		return new Object[] { encodeToString(message.modPow(e, n).toByteArray()) };
 	}
 
 	@Callback(doc = "function([bitlength:number]):keygen; Creates the key generator from two random prime numbers (optionally with given bit length)", direct = true, limit = 1)
@@ -146,7 +184,7 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 		return this.tryConsumeEnergy(result, Config.CIPHER_KEY_CONSUMPTION, "createKeySet");
 	}
 
-	@Callback(doc = "function(message:string, publicKey:table):string; Encrypts the specified message using the specified public RSA key", direct = true)
+	@Callback(doc = "function(message:string, publicKey:table):string; Encrypts the specified message using the specified public RSA key", direct = true, limit = 1)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] encrypt(Context c, Arguments a) throws Exception {
 		byte[] message = a.checkByteArray(0);
@@ -156,7 +194,7 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 		return this.tryConsumeEnergy(result, Config.CIPHER_WORK_CONSUMPTION + 0.2 * message.length, "encrypt");
 	}
 
-	@Callback(doc = "function(message:string, privateKey:table):string; Decrypts the specified message using the specified RSA key", direct = true)
+	@Callback(doc = "function(message:string, privateKey:table):string; Decrypts the specified message using the specified RSA key", direct = true, limit = 1)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] decrypt(Context c, Arguments a) throws Exception {
 		byte[] message = a.checkByteArray(0);
