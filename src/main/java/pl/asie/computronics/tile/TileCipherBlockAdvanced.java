@@ -120,7 +120,7 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 			}
 			return new Object[] { Base64.encodeBytes(message.modPow(d, n).toByteArray()) };
 		} else {
-			KeyFactory factory = TileCipherBlockAdvanced.keyFactory.get();
+			KeyFactory factory = keyFactory.get();
 			Cipher c = cipher.get();
 			if(factory == null || c == null) {
 				return new Object[] { null, "an error occured during encryption" };
@@ -144,7 +144,7 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 			}
 			return new Object[] { encodeToString(message.modPow(e, n).toByteArray()) };
 		} else {
-			KeyFactory factory = TileCipherBlockAdvanced.keyFactory.get();
+			KeyFactory factory = keyFactory.get();
 			Cipher c = cipher.get();
 			if(factory == null || c == null) {
 				return new Object[] { null, "an error occured during decryption" };

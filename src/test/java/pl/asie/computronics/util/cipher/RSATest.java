@@ -170,7 +170,7 @@ class RSATest {
 
 	public static void main(String[] args) {
 		//String s1 = "Hello World!";
-		//String s2 = "Hello World! 1234567891 \n\täöüß♡♥❤❥{$\"%/§&%&%'()§/!&(%}";
+		//String s2 = "Hello World! 1234567891 \n\täöüß{$\"%/§&%&%'()§/!&(%}";
 		//testEncoding(s2);
 		String msg;
 		//msg = "{to=\"AKV8iZtovmZVTGjtf4sEbyHOAMEZBFdLc/l24JTNOFMV+Gv30tCpDz2n4Tq2ceAWZP7bx+ns9V23AyqyrqlyArQImcRPdgj/Sg5e5Q6ZBwwVZk8myRQDJ/9w9MLgz7x/5vd8FeTn6ruRpN36/WCpdf7yfqH4+asbKvhKiab1a8kdxjbNZLFy5XOlTUM7A7yiBuvzbRseBn0NkKNz7qVpxlWRFjptxo5QkVTVdNw6XiLlaW/oSgup4KUrMPHD5mVXYXza0Hq+JvBftTvjs5NQazrVANrqCqdL4XMMQ4YCPT2oC1gtrFXVWe95G//WjdhaYgtlMqvgLdJRXynbrJncwIc=:EQ==\",amount=10,comment=\"B5Vp0b/luf98z4Z9DNZWWrbQ5WPVXfXWdnsihFj6SeWcg4G1Qti2oWjEsCJsAAAAAA==\"}";
