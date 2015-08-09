@@ -14,6 +14,6 @@ public class DefaultMultiPeripheral extends WrappedMultiPeripheral {
 
 	@Override
 	public int peripheralPriority() {
-		return -10;
+		return 0;
 	}
 }

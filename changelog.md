@@ -1,3 +1,7 @@
+==== 1.5.7 ====
+
+  * FIXED: Some issues with default peripheral priority.
+
 ==== 1.5.6 ====
 
   * ADDED: Made most Computronics blocks dyable!
@@ -7,7 +11,7 @@
     - Now you can make Flamingos wiggle using ComputerCraft or OpenComputers.
   * ADDED: Armourer's Workshop integration!
     - Now you can change rotation of body parts of mannequins using ComputerCraft or OpenComputers.
-  * CHANGED: The encoding for the Advanced Cipher Block's keys have changed. You will need to re-generate keys you might be using. Sorry for the inconvenience, but the new encoding is a lot more compact.
+  * CHANGED: The encoding for the Advanced Cipher Block's keys have changed. You will need to re-generate keys you might be using. Sorry for the inconvenience, but the new encoding is a lot more compact and server-friendly.
     - **Huge thanks to makkarpov for helping me with improving the Advanced Cipher Block!**
   * FIXED: Creative Chat Boxes turning into normal chat boxes when placed.
   * FIXED: `setDistance()` not working on Creative Chat Boxes.
