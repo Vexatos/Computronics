@@ -1,6 +1,8 @@
 ==== 1.5.7 ====
 
   * FIXED: Some issues with default peripheral priority.
+  * FIXED: Errors in the multiperipheral system not being handled properly.
+  * FIXED: Errors in the multiperipheral system not being written to log properly.
 
 ==== 1.5.6 ====
 

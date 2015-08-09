@@ -24,8 +24,9 @@ import java.util.List;
  * @author Vexatos
  */
 public class MultiPeripheralProvider implements IPeripheralProvider {
+
 	ArrayList<IMultiPeripheralProvider> peripheralProviders = new ArrayList<IMultiPeripheralProvider>();
-	public static Logger log = LogManager.getLogger(Mods.Computronics + "-Multiperipheral");
+	public static Logger log = LogManager.getLogger(Mods.Computronics + "-multiperipheral");
 
 	public MultiPeripheralProvider(ArrayList<IMultiPeripheralProvider> peripheralProviders) {
 		this.peripheralProviders = peripheralProviders;
@@ -147,13 +148,21 @@ public class MultiPeripheralProvider implements IPeripheralProvider {
 		}
 		try {
 			for(IPeripheralProvider peripheralProvider : ccPeripheralProviders) {
-				IPeripheral peripheral = peripheralProvider.getPeripheral(world, x, y, z, side);
-				if(peripheral != null) {
-					periphs.add(new DefaultMultiPeripheral(peripheral));
+				if(peripheralProvider != null) {
+					try {
+						IPeripheral peripheral = peripheralProvider.getPeripheral(world, x, y, z, side);
+						if(peripheral != null) {
+							periphs.add(new DefaultMultiPeripheral(peripheral));
+						}
+					} catch(Exception e) {
+						log.warn("An exception got thrown trying to get a peripheral from provider " + peripheralProvider.getClass().toString(), e);
+					} catch(Throwable t) {
+						log.error("An error occured trying to get all a peripheral from provider " + peripheralProvider.getClass().toString(), t);
+					}
 				}
 			}
 		} catch(Exception e) {
-			log.debug("An exception got thrown trying to get all peripherals", e);
+			log.warn("An exception got thrown trying to get all peripherals", e);
 		} catch(Throwable t) {
 			log.error("An error occured trying to get all peripherals", t);
 		}
