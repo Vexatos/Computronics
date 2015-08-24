@@ -1,5 +1,6 @@
 ==== 1.5.7 ====
 
+  * CHANGED: The Particle Turtle now uses blaze powder instead of Firework Stars as those weren't working properly.
   * FIXED: Some issues with default peripheral priority.
   * FIXED: Errors in the multiperipheral system not being handled properly.
   * FIXED: Errors in the multiperipheral system not being written to log properly.
