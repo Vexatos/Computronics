@@ -58,6 +58,7 @@ import pl.asie.computronics.reference.Mods;
 
 import static pl.asie.computronics.Computronics.camera;
 import static pl.asie.computronics.Computronics.chatBox;
+import static pl.asie.computronics.Computronics.colorfulLamp;
 import static pl.asie.computronics.Computronics.radar;
 
 /**
@@ -88,7 +89,8 @@ public class IntegrationOpenComputers {
 			|| Config.OC_CARD_FX
 			|| Config.OC_CARD_SPOOF
 			|| Config.OC_CARD_SOUND
-			|| Config.OC_CARD_BOOM) {
+			|| Config.OC_CARD_BOOM
+			|| Config.OC_UPGRADE_COLORFUL) {
 			itemOCParts = new ItemOpenComputers();
 			GameRegistry.registerItem(itemOCParts, "computronics.ocParts");
 			Driver.add(itemOCParts);
@@ -317,6 +319,20 @@ public class IntegrationOpenComputers {
 				'f', Blocks.tnt,
 				'b', li.cil.oc.api.Items.get("redstoneCard1").createItemStack(1));
 
+		}
+		if(Config.OC_UPGRADE_COLORFUL) {
+			if(colorfulLamp != null) {
+				GameRegistry.addShapedRecipe(new ItemStack(itemOCParts, 1, 2),
+					"mcm", 'c',
+					new ItemStack(colorfulLamp, 1, 0),
+					'm', li.cil.oc.api.Items.get("chip2").createItemStack(1));
+				GameRegistry.addShapedRecipe(new ItemStack(itemOCParts, 1, 2),
+					"m", "c", "m",
+					'c', new ItemStack(colorfulLamp, 1, 0),
+					'm', li.cil.oc.api.Items.get("chip2").createItemStack(1));
+			} else {
+				log.warn("Could not add Colorful Upgrade Recipe because Colorful Lamp is disabled in the config.");
+			}
 		}
 		if(Computronics.buildcraft != null) {
 			Computronics.buildcraft.postInitOC();

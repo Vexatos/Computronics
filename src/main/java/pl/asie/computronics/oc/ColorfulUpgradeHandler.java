@@ -64,6 +64,7 @@ public class ColorfulUpgradeHandler {
 		GL11.glColor3ub((byte) ((color >> 16) & 0xFF), (byte) ((color >> 8) & 0xFF), (byte) (color & 0xFF));
 	}
 
+	@Optional.Method(modid = Mods.OpenComputers)
 	private int getColor(Agent agent) {
 		try {
 			for(Node node : agent.machine().node().reachableNodes()) {

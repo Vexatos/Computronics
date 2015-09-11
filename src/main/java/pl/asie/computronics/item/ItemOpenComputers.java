@@ -199,7 +199,7 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 			case 6:
 				return 0; // Tier 1
 			case 7:
-				return 0; // Tier 1
+				return 1; // Tier 2
 			default:
 				return 0; // Tier 1 default
 		}
