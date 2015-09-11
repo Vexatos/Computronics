@@ -1,5 +1,8 @@
 ==== 1.5.7 ====
 
+  * ADDED: The Colorful Upgade for OpenComputers Robots!
+    - Allows changing the colour of the Robot case to make your bots even prettier than before!
+    - Only works in Robots.
   * CHANGED: The Particle Turtle now uses blaze powder instead of Firework Stars as those weren't working properly.
   * FIXED: Some issues with default peripheral priority.
   * FIXED: Errors in the multiperipheral system not being handled properly.

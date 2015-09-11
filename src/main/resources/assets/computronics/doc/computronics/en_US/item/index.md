@@ -13,6 +13,7 @@ Keep in mind that some of these may not be available, depending on the recipe se
 * [Camera Upgrade](camera_upgrade.md)
 * [Chat Upgrade](chat_upgrade.md)
 * [Radar Upgrade](radar_upgrade.md)
+* [Colorful Upgrade](colorful_upgrade.md)
 
 ## Cards
 

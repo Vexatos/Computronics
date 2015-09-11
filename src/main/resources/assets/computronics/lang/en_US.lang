@@ -88,6 +88,8 @@ item.computronics.card_spoof.name=Spoofing Card
 item.computronics.card_spoof.tip=Works just like a Network Card, but allows specifying the sending address
 item.computronics.card_boom.name=Self-Destructing Card
 item.computronics.card_boom.tip=Any proper villain needs such a thing.
+item.computronics.robot_upgrade_colorful.name=Colorful Upgrade
+item.computronics.robot_upgrade_colorful.tip=Make your bots more colorful!
 item.computronics.for.combAcid.name=Caustic Comb
 item.computronics.for.dropAcid.name=Caustic Drop
 item.computronics.relaySensor.name=Digital Relay Sensor
@@ -104,6 +106,7 @@ computronics.bees.species.scummy=Scummy
 computronics.bees.species.scummy.description=Kerosene, propylene glycol, artificial sweeteners, sulfuric acid, rum, acetone, red dye #2, scumm, axle grease, battery acid and/or pepperoni|Strange people in a bar
 
 chat.computronics.cipher.locked=This Cipher Block is locked! You may not access it.
+chat.computronics.colorful_upgrade.color=§6Color§f: %s
 chat.computronics.relay.notBound=Relay is currently not bound to any locomotive!
 chat.computronics.relay.unbound=Relay successfully unbound from locomotive!
 chat.computronics.sensor.bound=Relay successfully bound to locomotive!

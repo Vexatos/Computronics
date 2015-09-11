@@ -21,11 +21,13 @@ import li.cil.oc.client.KeyBindings;
 import li.cil.oc.util.ItemCosts;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IIcon;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.oc.DriverCardBoom;
 import pl.asie.computronics.oc.DriverCardFX;
@@ -34,6 +36,7 @@ import pl.asie.computronics.oc.DriverCardSpoof;
 import pl.asie.computronics.oc.IntegrationOpenComputers;
 import pl.asie.computronics.oc.RobotUpgradeCamera;
 import pl.asie.computronics.oc.RobotUpgradeChatBox;
+import pl.asie.computronics.oc.RobotUpgradeColorful;
 import pl.asie.computronics.oc.RobotUpgradeRadar;
 import pl.asie.computronics.oc.manual.IItemWithDocumentation;
 import pl.asie.computronics.reference.Config;
@@ -41,6 +44,7 @@ import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.StringUtil;
 import pl.asie.lib.item.ItemMultiple;
 
+import java.awt.*;
 import java.util.List;
 import java.util.Set;
 
@@ -60,7 +64,8 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 			"card_fx",
 			"card_spoof",
 			"card_beep",
-			"card_boom"
+			"card_boom",
+			"robot_upgrade_colorful",
 		});
 		this.setCreativeTab(Computronics.tab);
 	}
@@ -90,6 +95,11 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 					&& !Drone.class.isAssignableFrom(host);
 				break;
 			}
+			case 7: {
+				works = works
+					&& Robot.class.isAssignableFrom(host);
+				break;
+			}
 		}
 		return works;
 	}
@@ -112,6 +122,8 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 				return DriverCardSound.class;
 			case 6:
 				return DriverCardBoom.class;
+			case 7:
+				return RobotUpgradeColorful.class;
 			default:
 				return null;
 		}
@@ -136,6 +148,8 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 				return new DriverCardSound(container);
 			case 6:
 				return new DriverCardBoom(container);
+			case 7:
+				return new RobotUpgradeColorful(container);
 			default:
 				return null;
 		}
@@ -159,6 +173,8 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 				return Slot.Card;
 			case 6:
 				return Slot.Card;
+			case 7:
+				return Slot.Upgrade;
 			default:
 				return Slot.None;
 		}
@@ -181,6 +197,8 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 			case 5:
 				return 1; // Tier 2
 			case 6:
+				return 0; // Tier 1
+			case 7:
 				return 0; // Tier 1
 			default:
 				return 0; // Tier 1 default
@@ -226,6 +244,71 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 		}
 		if(Config.OC_CARD_BOOM) {
 			list.add(new ItemStack(item, 1, 6));
+		}
+		if(Config.OC_UPGRADE_COLORFUL) {
+			list.add(new ItemStack(item, 1, 7));
+		}
+	}
+
+	private IIcon colorfulUpgradeCanvasIcon, colorfulUpgradeTopIcon;
+
+	@SideOnly(Side.CLIENT)
+	public void registerIcons(IIconRegister r) {
+		super.registerIcons(r);
+		colorfulUpgradeCanvasIcon = r.registerIcon("computronics:robot_upgrade_colorful_canvas");
+		colorfulUpgradeTopIcon = r.registerIcon("computronics:robot_upgrade_colorful_top");
+	}
+
+	@Override
+	public boolean requiresMultipleRenderPasses() {
+		return true;
+	}
+
+	@Override
+	public int getRenderPasses(int meta) {
+		return meta == 7 ? 3 : 1;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public IIcon getIconFromDamageForRenderPass(int meta, int pass) {
+		switch(meta) {
+			case 7: {
+				switch(pass) {
+					case 1: {
+						return colorfulUpgradeCanvasIcon;
+					}
+					case 2: {
+						return colorfulUpgradeTopIcon;
+					}
+				}
+			}
+			default: {
+				return super.getIconFromDamageForRenderPass(meta, pass);
+			}
+		}
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public int getColorFromItemStack(ItemStack stack, int pass) {
+		switch(stack.getItemDamage()) {
+			case 7: {
+				if(pass == 1) {
+					NBTTagCompound tag = dataTag(stack);
+					if(tag.hasKey("computronics:color")) {
+						int col = tag.getInteger("computronics:color");
+						if(col >= 0) {
+							return col;
+						}
+					}
+					float[] hsb = Color.RGBtoHSB(0x00, 0xFF, 0x00, null);
+					return Color.HSBtoRGB((((System.currentTimeMillis() + (stack.hashCode() % 30000)) % 30000) / 30000F), hsb[1], hsb[2]) & 0xFFFFFF;
+				}
+			}
+			default: {
+				return super.getColorFromItemStack(stack, pass);
+			}
 		}
 	}
 
@@ -290,6 +373,8 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 				return "beep_card";
 			case 6:
 				return "self_destructing_card";
+			case 7:
+				return "colorful_upgrade";
 			default:
 				return "index";
 		}

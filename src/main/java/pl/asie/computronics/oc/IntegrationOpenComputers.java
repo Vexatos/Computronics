@@ -1,15 +1,14 @@
 package pl.asie.computronics.oc;
 
-import org.apache.logging.log4j.Logger;
-
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.event.FMLMissingMappingsEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
-
 import li.cil.oc.api.Driver;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.MinecraftForge;
+import org.apache.logging.log4j.Logger;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.client.UpgradeRenderer;
 import pl.asie.computronics.integration.appeng.DriverSpatialIOPort;
@@ -56,6 +55,7 @@ import pl.asie.computronics.oc.manual.ComputronicsPathProvider;
 import pl.asie.computronics.reference.Compat;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
+
 import static pl.asie.computronics.Computronics.camera;
 import static pl.asie.computronics.Computronics.chatBox;
 import static pl.asie.computronics.Computronics.radar;
@@ -71,6 +71,7 @@ public class IntegrationOpenComputers {
 
 	public static ItemOpenComputers itemOCParts;
 	public static UpgradeRenderer upgradeRenderer;
+	public static ColorfulUpgradeHandler colorfulUpgradeHandler;
 
 	public IntegrationOpenComputers(Computronics computronics) {
 		this.computronics = computronics;
@@ -114,6 +115,12 @@ public class IntegrationOpenComputers {
 
 		Driver.add(new DriverBlockEnvironments());
 		ComputronicsPathProvider.initialize();
+
+		if(colorfulUpgradeHandler == null) {
+			colorfulUpgradeHandler = new ColorfulUpgradeHandler();
+		}
+
+		MinecraftForge.EVENT_BUS.register(colorfulUpgradeHandler);
 
 		if(Mods.isLoaded(Mods.RedLogic)) {
 			if(compat.isCompatEnabled(Compat.RedLogic_Lamps)) {
