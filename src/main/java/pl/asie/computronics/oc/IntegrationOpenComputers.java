@@ -322,14 +322,16 @@ public class IntegrationOpenComputers {
 		}
 		if(Config.OC_UPGRADE_COLORFUL) {
 			if(colorfulLamp != null) {
-				GameRegistry.addShapedRecipe(new ItemStack(itemOCParts, 1, 2),
-					"mcm", 'c',
+				GameRegistry.addShapedRecipe(new ItemStack(itemOCParts, 1, 7),
+					" f ", "mcm", " f ", 'c',
 					new ItemStack(colorfulLamp, 1, 0),
-					'm', li.cil.oc.api.Items.get("chip2").createItemStack(1));
-				GameRegistry.addShapedRecipe(new ItemStack(itemOCParts, 1, 2),
-					"m", "c", "m",
+					'm', li.cil.oc.api.Items.get("chip2").createItemStack(1),
+					'f', li.cil.oc.api.Items.get("chamelium").createItemStack(1));
+				GameRegistry.addShapedRecipe(new ItemStack(itemOCParts, 1, 7),
+					" m ", "fcf", " m ",
 					'c', new ItemStack(colorfulLamp, 1, 0),
-					'm', li.cil.oc.api.Items.get("chip2").createItemStack(1));
+					'm', li.cil.oc.api.Items.get("chip2").createItemStack(1),
+					'f', li.cil.oc.api.Items.get("chamelium").createItemStack(1));
 			} else {
 				log.warn("Could not add Colorful Upgrade Recipe because Colorful Lamp is disabled in the config.");
 			}
