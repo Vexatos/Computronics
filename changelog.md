@@ -1,3 +1,7 @@
+==== 1.5.8 ====
+
+  * CHANGED: Made the Deep Storage Unit driver for ComputerCraft work with Quantum Storage.
+
 ==== 1.5.7 ====
 
   * ADDED: The Colorful Upgade for OpenComputers Robots!

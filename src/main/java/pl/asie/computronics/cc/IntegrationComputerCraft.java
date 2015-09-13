@@ -70,7 +70,7 @@ public class IntegrationComputerCraft {
 				registerMultiPeripheralProvider(new DriverLamp.CCDriver());
 			}
 		}
-		if(Mods.isLoaded(Mods.MFR) || Mods.isLoaded(Mods.JABBA)) {
+		if(Mods.isClassLoaded("powercrystals.minefactoryreloaded.api.IDeepStorageUnit")) {
 			if(compat.isCompatEnabled(Compat.MFR_DSU)) {
 				registerMultiPeripheralProvider(new DriverDeepStorageUnit.CCDriver());
 			}

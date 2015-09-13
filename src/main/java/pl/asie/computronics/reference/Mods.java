@@ -1,8 +1,8 @@
 package pl.asie.computronics.reference;
 
-import java.util.HashMap;
-
 import cpw.mods.fml.common.versioning.ArtifactVersion;
+
+import java.util.HashMap;
 
 /**
  * List of used mod IDs
@@ -36,6 +36,7 @@ public class Mods {
 		GregTech = "gregtech",
 		JABBA = "JABBA",
 		MFR = "MineFactoryReloaded",
+		QuantumStorage = "QuantumStorage",
 		OpenBlocks = "OpenBlocks",
 		OpenPeripheral = "OpenPeripheralCore",
 		RedLogic = "RedLogic",
@@ -77,5 +78,18 @@ public class Mods {
 
 	public static boolean hasEnergyMod() {
 		return pl.asie.lib.reference.Mods.hasEnergyMod();
+	}
+
+	private static final HashMap<String, Boolean> loadedClasses = new HashMap<String, Boolean>();
+
+	public static boolean isClassLoaded(String className) {
+		if(!loadedClasses.containsKey(className)) {
+			try {
+				loadedClasses.put(className, Class.forName(className) != null);
+			} catch(ClassNotFoundException e) {
+				loadedClasses.put(className, false);
+			}
+		}
+		return loadedClasses.get(className);
 	}
 }
