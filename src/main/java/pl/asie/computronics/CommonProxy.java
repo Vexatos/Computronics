@@ -1,6 +1,7 @@
 package pl.asie.computronics;
 
 import cpw.mods.fml.common.registry.EntityRegistry;
+import net.minecraft.entity.Entity;
 import pl.asie.computronics.item.entity.EntityItemIndestructable;
 import pl.asie.lib.network.Packet;
 
@@ -21,6 +22,10 @@ public class CommonProxy {
 	}
 
 	public void goBoom(Packet p) throws IOException {
+		//NO-OP
+	}
+
+	public void spawnParticle(Entity entity) {
 		//NO-OP
 	}
 }

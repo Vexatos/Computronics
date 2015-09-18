@@ -3,7 +3,10 @@ package pl.asie.computronics;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
+import forestry.apiculture.render.ParticleRenderer;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.particle.EntityFX;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.world.ChunkPosition;
 import net.minecraftforge.client.MinecraftForgeClient;
@@ -78,6 +81,13 @@ public class ClientProxy extends CommonProxy {
 		minecraft.thePlayer.motionX += (double) p.readFloat();
 		minecraft.thePlayer.motionY += (double) p.readFloat();
 		minecraft.thePlayer.motionZ += (double) p.readFloat();
+	}
+
+	@Override
+	public void spawnParticle(Entity entity) {
+		if(entity instanceof EntityFX) {
+			ParticleRenderer.getInstance().addEffect((EntityFX) entity);
+		}
 	}
 
 	@Optional.Method(modid = Mods.OpenComputers)
