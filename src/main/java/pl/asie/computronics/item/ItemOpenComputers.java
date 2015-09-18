@@ -302,8 +302,7 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 							return col;
 						}
 					}
-					float[] hsb = Color.RGBtoHSB(0x00, 0xFF, 0x00, null);
-					return Color.HSBtoRGB((((System.currentTimeMillis() + (stack.hashCode() % 30000)) % 30000) / 30000F), hsb[1], hsb[2]) & 0xFFFFFF;
+					return Color.HSBtoRGB((((System.currentTimeMillis() + (stack.hashCode() % 30000)) % 30000) / 30000F), 1F, 1F) & 0xFFFFFF;
 				}
 			}
 			default: {
