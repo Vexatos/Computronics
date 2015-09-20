@@ -1,15 +1,11 @@
 package pl.asie.computronics;
 
 import cpw.mods.fml.client.registry.RenderingRegistry;
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
-import forestry.apiculture.render.ParticleRenderer;
-import forestry.core.render.TextureManager;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.EntityFX;
-import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.world.ChunkPosition;
+import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
 import pl.asie.computronics.client.LampRender;
@@ -47,7 +43,7 @@ public class ClientProxy extends CommonProxy {
 		}
 		if(Mods.isLoaded(Mods.OpenComputers)) {
 			registerOpenComputersRenderers();
-			if(Mods.isLoaded(Mods.Forestry)){
+			if(Mods.isLoaded(Mods.Forestry)) {
 				Computronics.forestry.registerOCRenderers();
 			}
 		}
@@ -88,12 +84,9 @@ public class ClientProxy extends CommonProxy {
 	}
 
 	@Override
-	public void spawnParticle(Entity entity) {
-		if(entity instanceof EntityFX) {
-			((EntityFX) entity).setParticleIcon(TextureManager.getInstance().getDefault("particles/swarm_bee"));
-			ParticleRenderer.getInstance().addEffect((EntityFX) entity);
-			//Minecraft.getMinecraft().effectRenderer.addEffect((EntityFX) entity);
-		}
+	@Optional.Method(modid = Mods.Forestry)
+	public void spawnSwarmParticle(World worldObj, double xPos, double yPos, double zPos, int color) {
+		Computronics.forestry.spawnSwarmParticle(worldObj, xPos, yPos, zPos, color);
 	}
 
 	@Optional.Method(modid = Mods.OpenComputers)

@@ -3,14 +3,15 @@ package pl.asie.computronics.integration.forestry.entity;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import forestry.apiculture.items.ItemArmorApiarist;
-import forestry.apiculture.render.EntityBeeFX;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
@@ -75,7 +76,7 @@ public class EntitySwarm extends EntityFlyingCreature {
 						zPos = posZ + (width / 2) + (worldObj.rand.nextDouble() * (worldObj.rand.nextBoolean() ? 0.5 : -0.5));
 					EntitySwarmFX member = new EntitySwarmFX(worldObj, xPos, yPos, zPos, 0xF0F000, this);
 					swarmMembers.add(member);
-					Computronics.proxy.spawnParticle(member);
+					Computronics.proxy.spawnSwarmParticle(member);
 				}
 			}*/
 			//if(worldObj.getTotalWorldTime() % 1 == hashCode() % 1) {
@@ -86,11 +87,10 @@ public class EntitySwarm extends EntityFlyingCreature {
 				double xPos = posX /*+ (width / 2f)*/ + (worldObj.rand.nextDouble() * (worldObj.rand.nextBoolean() ? 0.5 : -0.5));
 				double yPos = posY + (height / 2f) + (worldObj.rand.nextDouble() * (worldObj.rand.nextBoolean() ? 0.5 : -0.5));
 				double zPos = posZ /*+ (width / 2f)*/ + (worldObj.rand.nextDouble() * (worldObj.rand.nextBoolean() ? 0.5 : -0.5));
-				EntityBeeFX member = new EntityBeeFX(worldObj, xPos, yPos, zPos, 0f, 0f, 0f, getColor());
-				Computronics.proxy.spawnParticle(member);
+				Computronics.proxy.spawnSwarmParticle(worldObj, xPos, yPos, zPos, getColor());
 			}
 			//EntityBeeFX member = new EntityBeeFX(worldObj, posX /*+ (width / 2f)*/, posY + (height / 2f), posZ /*+ (width / 2f)*/, 0f, 0f, 0f, 0xF0F000);
-			//Computronics.proxy.spawnParticle(member);
+			//Computronics.proxy.spawnSwarmParticle(member);
 			//}
 		}
 	}
@@ -118,7 +118,12 @@ public class EntitySwarm extends EntityFlyingCreature {
 				}
 			}
 		} else if(player != null && (player.getDistanceSqToEntity(this) < 100 || this.canEntityBeSeen(player))) {
-			moveTo(player, 3f, 0.3f, 1f);
+			if(player.getHeldItem() != null && player.isBlocking()) {
+				Vec3 look = player.getLookVec();
+				moveTo(player.posX + look.xCoord, player.posY + look.yCoord, player.posZ + look.zCoord, player.width / 2f, player.getEyeHeight(), 0.3f, 1f, 0.5f);
+			} else {
+				moveTo(player, 3f, 0.3f, 1f);
+			}
 		}
 	}
 
@@ -127,9 +132,13 @@ public class EntitySwarm extends EntityFlyingCreature {
 	}
 
 	private double moveTo(EntityLivingBase target, double yOffset, float modifier, float xFuzzy, float xFuzzyAttack) {
-		double deltaX = (target.posX + (target.width / 2f)) - (posX + (width / 4f));
-		double deltaY = (target.posY + yOffset) - (posY + (height / 4f));
-		double deltaZ = (target.posZ + (target.width / 2f)) - (posZ + (width / 4f));
+		return moveTo(target.posX, target.posY, target.posZ, target.width / 2f, yOffset, modifier, xFuzzy, xFuzzyAttack);
+	}
+
+	private double moveTo(double x, double y, double z, double xzOffset, double yOffset, float modifier, float xFuzzy, float xFuzzyAttack) {
+		double deltaX = (x + xzOffset) - (posX + (width / 4f));
+		double deltaY = (y + yOffset) - (posY + (height / 4f));
+		double deltaZ = (z + xzOffset) - (posZ + (width / 4f));
 		double res = deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ;
 		Vec3 vec3 = Vec3.createVectorHelper(deltaX, deltaY, deltaZ);
 		//double res = vec3.dotProduct(vec3);
@@ -253,6 +262,13 @@ public class EntitySwarm extends EntityFlyingCreature {
 	}
 
 	@Override
+	public void setAttackTarget(EntityLivingBase entity) {
+		if(entity != this && (player == null || entity != player)) {
+			super.setAttackTarget(entity);
+		}
+	}
+
+	@Override
 	protected int getExperiencePoints(EntityPlayer player) {
 		return 0;
 	}
@@ -290,7 +306,7 @@ public class EntitySwarm extends EntityFlyingCreature {
 
 	@Override
 	public boolean canBePushed() {
-		return false;
+		return super.canBePushed();
 	}
 
 	@Override
@@ -315,10 +331,37 @@ public class EntitySwarm extends EntityFlyingCreature {
 
 	@Override
 	protected void collideWithNearbyEntities() {
+		if(!worldObj.isRemote && player != null && player.getHeldItem() != null && player.isBlocking()) {
+			super.collideWithNearbyEntities();
+		}
 	}
 
 	@Override
 	protected void collideWithEntity(Entity entity) {
+		if(!worldObj.isRemote && player != null && entity != player && player.getHeldItem() != null && player.isBlocking()) {
+			super.collideWithEntity(entity);
+		}
+	}
+
+	@Override
+	public void applyEntityCollision(Entity entity) {
+		if(!worldObj.isRemote && player != null && entity != player && player.getHeldItem() != null && player.isBlocking()) {
+			//entity.attackEntityFrom(new BeeDamageSource(), 2 * getAmplifier());
+			entity.motionX /= 2.0D;
+			entity.motionY /= 2.0D;
+			entity.motionZ /= 2.0D;
+			double deltaX = this.posX - entity.posX;
+			double deltaZ = this.posZ - entity.posZ;
+			double modifier = 0.4D * (getHealth() / getMaxHealth());
+			float dist = MathHelper.sqrt_double(deltaX * deltaX + deltaZ * deltaZ);
+			entity.motionX -= deltaX / dist * modifier;
+			entity.motionZ -= deltaZ / dist * modifier;
+		}
+	}
+
+	@Override
+	public boolean isPotionApplicable(PotionEffect p_70687_1_) {
+		return false;
 	}
 
 	@Override
@@ -342,10 +385,22 @@ public class EntitySwarm extends EntityFlyingCreature {
 
 	public static class BeeDamageSource extends DamageSource {
 
+		private EntityLivingBase entity = null;
+
 		public BeeDamageSource() {
 			super("computronics.sting");
 			this.setDamageBypassesArmor();
 			this.setDamageIsAbsolute();
+		}
+
+		public BeeDamageSource(EntityLivingBase entity) {
+			this();
+			this.entity = entity;
+		}
+
+		@Override
+		public Entity getEntity() {
+			return this.entity;
 		}
 	}
 }

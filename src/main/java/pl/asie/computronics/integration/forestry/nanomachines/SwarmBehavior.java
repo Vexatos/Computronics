@@ -34,7 +34,7 @@ public class SwarmBehavior extends AbstractBehavior {
 		if(reason == DisableReason.OutOfEnergy) {
 			entity.setAttackTarget(player);
 			entity.setPlayer(null);
-			entity.setAdditionalLifespan(5 * 20);
+			entity.setAdditionalLifespan(200);
 		} else if(entity != null) {
 			//entityTag = new NBTTagCompound();
 			//entity.writeToNBT(entityTag);
@@ -43,11 +43,11 @@ public class SwarmBehavior extends AbstractBehavior {
 		}
 	}
 
-	public void spawnNewEntity(double x, double y, double z){
+	public void spawnNewEntity(double x, double y, double z) {
 		spawnNewEntity(x, y, z, 0xF0F000, true);
 	}
 
-	public void spawnNewEntity(double x, double y, double z, int color, boolean tolerant){
+	public void spawnNewEntity(double x, double y, double z, int color, boolean tolerant) {
 		entity = new EntitySwarm(player.worldObj);
 		//if(entityTag != null) {
 		//	entity.readFromNBT(entityTag);
@@ -63,13 +63,13 @@ public class SwarmBehavior extends AbstractBehavior {
 
 	@Override
 	public void update() {
-		if(entity == null) {
-			//spawnNewEntity(player.posX, player.posY + 2f, player.posZ);
-		} else {
+		if(entity != null) {
 			if(entity.isDead) {
 				entity = null;
 			}
 			//TODO entity.setAmplifier(Nanomachines.getController(player).getInputCount(this));
+			//} else {
+			//spawnNewEntity(player.posX, player.posY + 2f, player.posZ);
 		}
 	}
 

@@ -1,7 +1,7 @@
 package pl.asie.computronics;
 
 import cpw.mods.fml.common.registry.EntityRegistry;
-import net.minecraft.entity.Entity;
+import net.minecraft.world.World;
 import pl.asie.computronics.item.entity.EntityItemIndestructable;
 import pl.asie.lib.network.Packet;
 
@@ -25,7 +25,7 @@ public class CommonProxy {
 		//NO-OP
 	}
 
-	public void spawnParticle(Entity entity) {
+	public void spawnSwarmParticle(World worldObj, double xPos, double yPos, double zPos, int color) {
 		//NO-OP
 	}
 }

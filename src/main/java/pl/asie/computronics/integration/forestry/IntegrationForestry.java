@@ -19,6 +19,9 @@ import forestry.api.genetics.IAlleleFlowers;
 import forestry.api.genetics.IAlleleSpecies;
 import forestry.api.genetics.IClassification;
 import forestry.api.recipes.RecipeManagers;
+import forestry.apiculture.render.EntityBeeFX;
+import forestry.apiculture.render.ParticleRenderer;
+import forestry.core.render.TextureManager;
 import li.cil.oc.api.Items;
 import li.cil.oc.api.Nanomachines;
 import net.bdew.gendustry.api.EnumMutationSetting;
@@ -26,6 +29,7 @@ import net.bdew.gendustry.api.GendustryAPI;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.Fluid;
@@ -50,6 +54,7 @@ public class IntegrationForestry {
 	public static IAlleleFlowers sea;
 
 	public static ItemMultiple itemPartsForestry;
+	public static Item itemStickImpregnated;
 
 	private static final String
 		speciesAgrarian = "forestry.speciesAgrarian",
@@ -118,6 +123,7 @@ public class IntegrationForestry {
 			registerBees();
 		}
 
+		itemStickImpregnated = GameRegistry.findItem(Mods.Forestry, "oakStick");
 		EntityRegistry.registerModEntity(EntitySwarm.class, "swarm", 9, Computronics.instance, 64, 1, true);
 		SwarmProvider provider = new SwarmProvider();
 		MinecraftForge.EVENT_BUS.register(provider);
@@ -158,5 +164,13 @@ public class IntegrationForestry {
 		alleles[EnumBeeChromosome.FLOWER_PROVIDER.ordinal()] = sea;
 		alleles[EnumBeeChromosome.EFFECT.ordinal()] = AlleleManager.alleleRegistry.getAllele("forestry.effectDrunkard");
 		return alleles;
+	}
+
+	@SideOnly(Side.CLIENT)
+	public void spawnSwarmParticle(World worldObj, double xPos, double yPos, double zPos, int color) {
+		EntityBeeFX entity = new EntityBeeFX(worldObj, xPos, yPos, zPos, 0f, 0f, 0f, color);
+		entity.setParticleIcon(TextureManager.getInstance().getDefault("particles/swarm_bee"));
+		ParticleRenderer.getInstance().addEffect(entity);
+		//Minecraft.getMinecraft().effectRenderer.addEffect((EntityFX) entity);
 	}
 }

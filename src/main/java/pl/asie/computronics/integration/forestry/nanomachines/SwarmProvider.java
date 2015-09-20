@@ -12,14 +12,17 @@ import li.cil.oc.api.prefab.AbstractProvider;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.play.server.S0BPacketAnimation;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import pl.asie.computronics.integration.forestry.IntegrationForestry;
 import pl.asie.lib.util.RayTracer;
 
 import java.util.Collections;
+import java.util.HashMap;
 
 /**
  * @author Vexatos
@@ -53,23 +56,24 @@ public class SwarmProvider extends AbstractProvider {
 		EntityPlayer player = e.entityPlayer;
 		if(player != null && !player.worldObj.isRemote) {
 			if((e.action == PlayerInteractEvent.Action.RIGHT_CLICK_AIR || e.action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK)
-				&& player.getHeldItem() != null && player.getHeldItem().getItem() == Items.stick) {
+				&& player.getHeldItem() != null && player.getHeldItem().getItem() == IntegrationForestry.itemStickImpregnated) {
 				SwarmBehavior behavior = getSwarmBehavior(player);
 				if(behavior != null) {
-					if(behavior.entity == null) {
-						behavior.spawnNewEntity(player.posX, player.posY + 2f, player.posZ);
-					} else {
+					if(behavior.entity != null) {
 						RayTracer.instance().fire(player, 30);
 						MovingObjectPosition target = RayTracer.instance().getTarget();
 						if((target != null) && (target.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY)) {
 							Entity entity = target.entityHit;
 							if(entity != null && entity instanceof EntityLivingBase) {
 								behavior.entity.setAttackTarget((EntityLivingBase) entity);
-								player.swingItem();
+								swingItem(player);
 							}
 						} else if(behavior.entity.getAttackTarget() != null) {
 							behavior.entity.setAttackTarget(null);
+							swingItem(player);
 						}
+					} else {
+						behavior.spawnNewEntity(player.posX, player.posY + 2f, player.posZ);
 					}
 				}
 			} else if(e.action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK && player.getHeldItem() == null
@@ -97,14 +101,22 @@ public class SwarmProvider extends AbstractProvider {
 		}
 	}
 
+	private static void swingItem(EntityPlayer player) {
+		player.swingItem();
+		if(player instanceof EntityPlayerMP && ((EntityPlayerMP) player).playerNetServerHandler != null) {
+			((EntityPlayerMP) player).playerNetServerHandler.sendPacket(new S0BPacketAnimation(player, 0));
+		}
+	}
+
 	@SubscribeEvent
 	public void onPlayerTick(TickEvent.PlayerTickEvent e) {
+		SwarmBehavior behavior = getSwarmBehavior(e.player);
 		if(behavior != null && !e.player.worldObj.isRemote && e.phase == TickEvent.PlayerTickEvent.Phase.START) {
 			behavior.update();
 		}
 	}
 
-	private SwarmBehavior behavior;
+	private final HashMap<String, SwarmBehavior> behaviors = new HashMap<String, SwarmBehavior>();
 
 	private SwarmBehavior getSwarmBehavior(EntityPlayer player) {
 		Controller controller = Nanomachines.getController(player);
@@ -119,9 +131,11 @@ public class SwarmProvider extends AbstractProvider {
 		//return null
 
 		// TODO remove
+		SwarmBehavior behavior = behaviors.get(player.getCommandSenderName());
 		if(behavior == null) {
 			behavior = new SwarmBehavior(player);
 			behavior.onEnable();
+			behaviors.put(player.getCommandSenderName(), behavior);
 		}
 		return behavior;
 	}
