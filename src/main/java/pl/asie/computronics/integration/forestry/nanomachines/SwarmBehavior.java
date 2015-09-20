@@ -43,18 +43,27 @@ public class SwarmBehavior extends AbstractBehavior {
 		}
 	}
 
+	public void spawnNewEntity(double x, double y, double z){
+		spawnNewEntity(x, y, z, 0xF0F000);
+	}
+
+	public void spawnNewEntity(double x, double y, double z, int color){
+		entity = new EntitySwarm(player.worldObj);
+		//if(entityTag != null) {
+		//	entity.readFromNBT(entityTag);
+		//}
+		//TODO entity.setAmplifier(Nanomachines.getController(player).getInputCount(this));
+		entity.setAmplifier(1); //TODO remove
+		entity.setColor(color);
+		entity.setPlayer(player);
+		entity.setPosition(x, y, z);
+		player.worldObj.spawnEntityInWorld(entity);
+	}
+
 	@Override
 	public void update() {
 		if(entity == null) {
-			entity = new EntitySwarm(player.worldObj);
-			//if(entityTag != null) {
-			//	entity.readFromNBT(entityTag);
-			//}
-			//TODO entity.setAmplifier(Nanomachines.getController(player).getInputCount(this));
-			entity.setAmplifier(1); //TODO remove
-			entity.setPlayer(player);
-			entity.setPosition(player.posX, player.posY + 2f, player.posZ);
-			player.worldObj.spawnEntityInWorld(entity);
+			//spawnNewEntity(player.posX, player.posY + 2f, player.posZ);
 		} else {
 			if(entity.isDead) {
 				entity = null;

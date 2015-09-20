@@ -29,7 +29,7 @@ public class EntitySwarm extends EntityFlyingCreature {
 	}
 
 	//private ArrayList<Entity> swarmMembers = new ArrayList<Entity>();
-	private int lifespan;
+	private int lifespan = 0;
 
 	@Override
 	public void onEntityUpdate() {
@@ -74,7 +74,7 @@ public class EntitySwarm extends EntityFlyingCreature {
 				double xPos = posX /*+ (width / 2f)*/ + (worldObj.rand.nextDouble() * (worldObj.rand.nextBoolean() ? 0.5 : -0.5));
 				double yPos = posY + (height / 2f) + (worldObj.rand.nextDouble() * (worldObj.rand.nextBoolean() ? 0.5 : -0.5));
 				double zPos = posZ /*+ (width / 2f)*/ + (worldObj.rand.nextDouble() * (worldObj.rand.nextBoolean() ? 0.5 : -0.5));
-				EntityBeeFX member = new EntityBeeFX(worldObj, xPos, yPos, zPos, 0f, 0f, 0f, 0xF0F000);
+				EntityBeeFX member = new EntityBeeFX(worldObj, xPos, yPos, zPos, 0f, 0f, 0f, getColor());
 				Computronics.proxy.spawnParticle(member);
 			}
 			//EntityBeeFX member = new EntityBeeFX(worldObj, posX /*+ (width / 2f)*/, posY + (height / 2f), posZ /*+ (width / 2f)*/, 0f, 0f, 0f, 0xF0F000);
@@ -94,7 +94,7 @@ public class EntitySwarm extends EntityFlyingCreature {
 	protected void updateEntityActionState() {
 		EntityLivingBase target = getAttackTarget();
 		if(target != null) {
-			if(target.isDead || !this.canEntityBeSeen(target) || (target == player && lifespan <= 0)) {
+			if(target.isDead || (this.getDistanceSqToEntity(target) > 25 && !this.canEntityBeSeen(target)) || (target == player && lifespan <= 0)) {
 				setAttackTarget(null);
 			} else {
 				double dist = moveTo(target, target.getEyeHeight(), 0.3f, 1f, 10f);
@@ -105,7 +105,7 @@ public class EntitySwarm extends EntityFlyingCreature {
 					target.attackEntityFrom(beeDamageSource, 2 * getAmplifier());
 				}
 			}
-		} else if(player != null /*&& player.getDistanceSqToEntity(this) > 4*/) {
+		} else if(player != null && player.getDistanceSqToEntity(this) > 100 && this.canEntityBeSeen(player)) {
 			moveTo(player, 3f, 0.3f, 1f);
 		}
 	}
@@ -181,6 +181,7 @@ public class EntitySwarm extends EntityFlyingCreature {
 	protected void entityInit() {
 		super.entityInit();
 		this.dataWatcher.addObject(20, 0);
+		this.dataWatcher.addObject(21, 0xF0F000);
 	}
 
 	public void setAmplifier(int amplifier) {
@@ -190,6 +191,14 @@ public class EntitySwarm extends EntityFlyingCreature {
 
 	public int getAmplifier() {
 		return this.dataWatcher.getWatchableObjectInt(20);
+	}
+
+	public void setColor(int color) {
+		this.dataWatcher.updateObject(21, color);
+	}
+
+	public int getColor() {
+		return this.dataWatcher.getWatchableObjectInt(21);
 	}
 
 	public EntityPlayer getPlayer() {
@@ -220,7 +229,7 @@ public class EntitySwarm extends EntityFlyingCreature {
 	@SideOnly(Side.CLIENT)
 	@Override
 	public int getBrightnessForRender(float par1) {
-		return 0xf0f000;
+		return getColor();
 	}
 
 	@Override
