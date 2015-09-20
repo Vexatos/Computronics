@@ -44,10 +44,10 @@ public class SwarmBehavior extends AbstractBehavior {
 	}
 
 	public void spawnNewEntity(double x, double y, double z){
-		spawnNewEntity(x, y, z, 0xF0F000);
+		spawnNewEntity(x, y, z, 0xF0F000, true);
 	}
 
-	public void spawnNewEntity(double x, double y, double z, int color){
+	public void spawnNewEntity(double x, double y, double z, int color, boolean tolerant){
 		entity = new EntitySwarm(player.worldObj);
 		//if(entityTag != null) {
 		//	entity.readFromNBT(entityTag);
@@ -55,6 +55,7 @@ public class SwarmBehavior extends AbstractBehavior {
 		//TODO entity.setAmplifier(Nanomachines.getController(player).getInputCount(this));
 		entity.setAmplifier(1); //TODO remove
 		entity.setColor(color);
+		entity.setTolerant(tolerant);
 		entity.setPlayer(player);
 		entity.setPosition(x, y, z);
 		player.worldObj.spawnEntityInWorld(entity);

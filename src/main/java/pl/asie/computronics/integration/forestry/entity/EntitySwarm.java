@@ -13,15 +13,21 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.BiomeGenDesert;
 import pl.asie.computronics.Computronics;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author Vexatos
  */
 public class EntitySwarm extends EntityFlyingCreature {
 
-	private EntityPlayer player;
 	public static final DamageSource beeDamageSource = new BeeDamageSource();
+
+	private EntityPlayer player;
 
 	public EntitySwarm(World world) {
 		super(world);
@@ -44,6 +50,12 @@ public class EntitySwarm extends EntityFlyingCreature {
 				|| player.isInsideOfMaterial(Material.water) || this.isInsideOfMaterial(Material.water)
 				|| (getAttackTarget() == null && player.getDistanceSqToEntity(this) > 2500 && !canEntityBeSeen(player))) {
 				this.setDead();
+			}
+			if(!isTolerant() && worldObj.getTotalWorldTime() % 40 == hashCode() % 40) {
+				BiomeGenBase biome = worldObj.getBiomeGenForCoordsBody((int) this.posX, (int) this.posY);
+				if(!(biome instanceof BiomeGenDesert) && (worldObj.isRaining() || worldObj.isThundering())) {
+					this.setDead();
+				}
 			}
 		} else {
 			/*ArrayList<Entity> toKeep = new ArrayList<Entity>();
@@ -105,7 +117,7 @@ public class EntitySwarm extends EntityFlyingCreature {
 					target.attackEntityFrom(beeDamageSource, 2 * getAmplifier());
 				}
 			}
-		} else if(player != null && player.getDistanceSqToEntity(this) < 100 && this.canEntityBeSeen(player)) {
+		} else if(player != null && (player.getDistanceSqToEntity(this) < 100 || this.canEntityBeSeen(player))) {
 			moveTo(player, 3f, 0.3f, 1f);
 		}
 	}
@@ -167,9 +179,17 @@ public class EntitySwarm extends EntityFlyingCreature {
 		return super.interact(player);
 	}
 
+	private static final List<String> damageTypesImmune = Arrays.asList(
+		DamageSource.inWall.getDamageType(),
+		DamageSource.cactus.getDamageType(),
+		DamageSource.anvil.getDamageType(),
+		DamageSource.fallingBlock.getDamageType(),
+		DamageSource.fall.getDamageType()
+	);
+
 	@Override
 	public boolean attackEntityFrom(DamageSource source, float amount) {
-		return !(source.getDamageType().equals(DamageSource.inWall.getDamageType()) || (this.player != null && source.getEntity() == player))
+		return !(damageTypesImmune.contains(source.getDamageType()) || (this.player != null && source.getEntity() == player))
 			&& super.attackEntityFrom(source, Math.min(amount, 2f));
 
 	}
@@ -184,6 +204,7 @@ public class EntitySwarm extends EntityFlyingCreature {
 		super.entityInit();
 		this.dataWatcher.addObject(20, 0);
 		this.dataWatcher.addObject(21, 0xF0F000);
+		this.dataWatcher.addObject(22, (byte) 0);
 	}
 
 	public void setAmplifier(int amplifier) {
@@ -201,6 +222,14 @@ public class EntitySwarm extends EntityFlyingCreature {
 
 	public int getColor() {
 		return this.dataWatcher.getWatchableObjectInt(21);
+	}
+
+	public void setTolerant(boolean tolerant) {
+		this.dataWatcher.updateObject(22, (byte) (tolerant ? 1 : 0));
+	}
+
+	public boolean isTolerant() {
+		return this.dataWatcher.getWatchableObjectByte(22) != 0;
 	}
 
 	public EntityPlayer getPlayer() {
