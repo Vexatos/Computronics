@@ -100,6 +100,10 @@ item.computronics.tape.name=Cassette Tape
 itemGroup.tabComputronics=Computronics
 
 entity.computronics.itemTape.name=Intergalactical CDVR
+entity.computronics.swarm.name=Swarm
+
+death.attack.computronics.sting=%1$s got stung to death
+death.attack.computronics.sting=%1$s got stung to death while fighting %2$s
 
 computronics.flowers.sea=Sea
 computronics.bees.species.scummy=Scummy

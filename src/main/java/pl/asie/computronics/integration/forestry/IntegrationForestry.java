@@ -1,7 +1,12 @@
 package pl.asie.computronics.integration.forestry;
 
+import cpw.mods.fml.client.registry.RenderingRegistry;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Optional;
+import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import forestry.api.apiculture.BeeManager;
 import forestry.api.apiculture.EnumBeeChromosome;
 import forestry.api.apiculture.IAlleleBeeSpecies;
@@ -15,15 +20,20 @@ import forestry.api.genetics.IAlleleSpecies;
 import forestry.api.genetics.IClassification;
 import forestry.api.recipes.RecipeManagers;
 import li.cil.oc.api.Items;
+import li.cil.oc.api.Nanomachines;
 import net.bdew.gendustry.api.EnumMutationSetting;
 import net.bdew.gendustry.api.GendustryAPI;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.BiomeDictionary.Type;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.integration.forestry.entity.EntitySwarm;
+import pl.asie.computronics.integration.forestry.entity.SwarmRenderer;
+import pl.asie.computronics.integration.forestry.nanomachines.SwarmProvider;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.lib.item.ItemMultiple;
 
@@ -107,6 +117,18 @@ public class IntegrationForestry {
 		if(Mods.API.hasVersion(Mods.API.Gendustry, "[2.0.0,)")) {
 			registerBees();
 		}
+
+		EntityRegistry.registerModEntity(EntitySwarm.class, "swarm", 9, Computronics.instance, 64, 1, true);
+		SwarmProvider provider = new SwarmProvider();
+		MinecraftForge.EVENT_BUS.register(provider);
+		FMLCommonHandler.instance().bus().register(provider);
+		Nanomachines.addProvider(provider);
+	}
+
+	@Optional.Method(modid = Mods.OpenComputers)
+	@SideOnly(Side.CLIENT)
+	public void registerOCRenderers() {
+		RenderingRegistry.registerEntityRenderingHandler(EntitySwarm.class, new SwarmRenderer());
 	}
 
 	@Optional.Method(modid = Mods.API.Gendustry)

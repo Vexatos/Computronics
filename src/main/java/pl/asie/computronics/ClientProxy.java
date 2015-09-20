@@ -4,6 +4,7 @@ import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
 import forestry.apiculture.render.ParticleRenderer;
+import forestry.core.render.TextureManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.entity.Entity;
@@ -44,8 +45,11 @@ public class ClientProxy extends CommonProxy {
 			RenderingRegistry.registerBlockHandler(renderer);
 			MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(renderer.getBlock()), renderer.getItemRenderer());
 		}
-		if(Loader.isModLoaded(Mods.OpenComputers)) {
+		if(Mods.isLoaded(Mods.OpenComputers)) {
 			registerOpenComputersRenderers();
+			if(Mods.isLoaded(Mods.Forestry)){
+				Computronics.forestry.registerOCRenderers();
+			}
 		}
 	}
 
@@ -86,7 +90,9 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void spawnParticle(Entity entity) {
 		if(entity instanceof EntityFX) {
+			((EntityFX) entity).setParticleIcon(TextureManager.getInstance().getDefault("particles/swarm_bee"));
 			ParticleRenderer.getInstance().addEffect((EntityFX) entity);
+			//Minecraft.getMinecraft().effectRenderer.addEffect((EntityFX) entity);
 		}
 	}
 

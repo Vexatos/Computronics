@@ -1,5 +1,6 @@
 ==== 1.5.8 ====
 
+  * ADDED: Some Nanomachine Beehaviour. Requires OpenComputers 1.5.18 now.
   * CHANGED: Made the Deep Storage Unit driver for ComputerCraft work with Quantum Storage.
 
 ==== 1.5.7 ====

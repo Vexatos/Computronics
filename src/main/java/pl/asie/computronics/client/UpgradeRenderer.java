@@ -219,7 +219,7 @@ public class UpgradeRenderer {
 	private Triple color;
 
 	public UpgradeRenderer() {
-		if(!Loader.isModLoaded(Mods.OpenComputers)) {
+		if(!Mods.isLoaded(Mods.OpenComputers)) {
 			entitledPlayers = null;
 			WHITE = null;
 			return;
