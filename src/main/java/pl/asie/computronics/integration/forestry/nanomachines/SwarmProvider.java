@@ -3,6 +3,7 @@ package pl.asie.computronics.integration.forestry.nanomachines;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import forestry.api.apiculture.BeeManager;
+import forestry.api.apiculture.IBee;
 import forestry.api.apiculture.IBeeHousing;
 import li.cil.oc.api.Nanomachines;
 import li.cil.oc.api.nanomachines.Behavior;
@@ -78,15 +79,18 @@ public class SwarmProvider extends AbstractProvider {
 					IBeeHousing tile = (IBeeHousing) te;
 					// TODO make this use IBeekeepingLogic in Forestry 4
 					if(tile.getQueen() != null) {
-						SwarmBehavior behavior = getSwarmBehavior(player);
-						if(behavior != null) {
-							if(behavior.entity != null) {
-								behavior.entity.setDead();
-							}
-							try {
-								behavior.spawnNewEntity(e.x + 0.5, e.y + 0.5, e.z + 0.5, BeeManager.beeRoot.getMember(tile.getQueen()).getGenome().getPrimary().getIconColour(0));
-							} catch(NullPointerException ex) {
-								behavior.spawnNewEntity(e.x + 0.5, e.y + 0.5, e.z + 0.5);
+						IBee member = BeeManager.beeRoot.getMember(tile.getQueen());
+						if(member != null && member.getCanWork(tile).size() <= 0 && member.hasFlower(tile)) {
+							SwarmBehavior behavior = getSwarmBehavior(player);
+							if(behavior != null) {
+								if(behavior.entity != null) {
+									behavior.entity.setDead();
+								}
+								try {
+									behavior.spawnNewEntity(e.x + 0.5, e.y + 0.5, e.z + 0.5, BeeManager.beeRoot.getMember(tile.getQueen()).getGenome().getPrimary().getIconColour(0));
+								} catch(NullPointerException ex) {
+									behavior.spawnNewEntity(e.x + 0.5, e.y + 0.5, e.z + 0.5);
+								}
 							}
 						}
 					}

@@ -105,7 +105,7 @@ public class EntitySwarm extends EntityFlyingCreature {
 					target.attackEntityFrom(beeDamageSource, 2 * getAmplifier());
 				}
 			}
-		} else if(player != null && player.getDistanceSqToEntity(this) > 100 && this.canEntityBeSeen(player)) {
+		} else if(player != null && player.getDistanceSqToEntity(this) < 100 && this.canEntityBeSeen(player)) {
 			moveTo(player, 3f, 0.3f, 1f);
 		}
 	}
@@ -169,7 +169,9 @@ public class EntitySwarm extends EntityFlyingCreature {
 
 	@Override
 	public boolean attackEntityFrom(DamageSource source, float amount) {
-		return !(source != null && this.player != null && source.getEntity() == player) && super.attackEntityFrom(source, Math.min(amount, 2f));
+		return !(source.getDamageType().equals(DamageSource.inWall.getDamageType()) || (this.player != null && source.getEntity() == player))
+			&& super.attackEntityFrom(source, Math.min(amount, 2f));
+
 	}
 
 	@Override
@@ -269,6 +271,11 @@ public class EntitySwarm extends EntityFlyingCreature {
 
 	@Override
 	public boolean canRenderOnFire() {
+		return false;
+	}
+
+	@Override
+	public boolean hasCustomNameTag() {
 		return false;
 	}
 
