@@ -1,7 +1,6 @@
 package pl.asie.computronics.integration.forestry.nanomachines;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
 import forestry.api.apiculture.BeeManager;
 import forestry.api.apiculture.IBee;
 import forestry.api.apiculture.IBeeHousing;
@@ -22,7 +21,6 @@ import pl.asie.computronics.integration.forestry.IntegrationForestry;
 import pl.asie.lib.util.RayTracer;
 
 import java.util.Collections;
-import java.util.HashMap;
 
 /**
  * @author Vexatos
@@ -35,15 +33,16 @@ public class SwarmProvider extends AbstractProvider {
 
 	@Override
 	protected Behavior readBehaviorFromNBT(EntityPlayer player, NBTTagCompound nbt) {
-		SwarmBehavior behavior = new SwarmBehavior(player);
-		behavior.readFromNBT(nbt);
-		return behavior;
+		//SwarmBehavior behavior = new SwarmBehavior(player);
+		//behavior.readFromNBT(nbt);
+		return new SwarmBehavior(player);
 	}
 
+	@Override
 	protected void writeBehaviorToNBT(Behavior behavior, NBTTagCompound nbt) {
-		if(behavior instanceof SwarmBehavior) {
+		/*if(behavior instanceof SwarmBehavior) {
 			((SwarmBehavior) behavior).writeToNBT(nbt);
-		}
+		}*/
 	}
 
 	@Override
@@ -64,7 +63,7 @@ public class SwarmProvider extends AbstractProvider {
 						MovingObjectPosition target = RayTracer.instance().getTarget();
 						if((target != null) && (target.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY)) {
 							Entity entity = target.entityHit;
-							if(entity != null && entity instanceof EntityLivingBase) {
+							if(entity != null && entity instanceof EntityLivingBase && entity != behavior.entity) {
 								behavior.entity.setAttackTarget((EntityLivingBase) entity);
 								swingItem(player);
 							}
@@ -72,11 +71,26 @@ public class SwarmProvider extends AbstractProvider {
 							behavior.entity.setAttackTarget(null);
 							swingItem(player);
 						}
-					} else {
+					} else if(player.capabilities != null && player.capabilities.isCreativeMode) {
 						behavior.spawnNewEntity(player.posX, player.posY + 2f, player.posZ);
 					}
-				}
-			} else if(e.action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK && player.getHeldItem() == null
+				}/* else {
+					Controller controller = Nanomachines.installController(player);
+					boolean win = false;
+					while(!win) {
+						Iterator<Behavior> behaviorSet = ((ControllerImpl) controller).configuration().behaviorMap().keySet().iterator();
+						while(behaviorSet.hasNext()) {
+							Behavior next = behaviorSet.next();
+							if(next instanceof SwarmBehavior) {
+								win = true;
+								break;
+							}
+						}
+						controller.reconfigure();
+					}
+				}*/
+			} else if(e.action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK
+				&& (player.getHeldItem() == null || player.getHeldItem().getItem() == IntegrationForestry.itemStickImpregnated)
 				&& player.isSneaking() && e.world.blockExists(e.x, e.y, e.z)) {
 				TileEntity te = e.world.getTileEntity(e.x, e.y, e.z);
 				if(te instanceof IBeeHousing) {
@@ -101,22 +115,22 @@ public class SwarmProvider extends AbstractProvider {
 		}
 	}
 
-	private static void swingItem(EntityPlayer player) {
+	public static void swingItem(EntityPlayer player) {
 		player.swingItem();
 		if(player instanceof EntityPlayerMP && ((EntityPlayerMP) player).playerNetServerHandler != null) {
 			((EntityPlayerMP) player).playerNetServerHandler.sendPacket(new S0BPacketAnimation(player, 0));
 		}
 	}
 
-	@SubscribeEvent
+	/*@SubscribeEvent
 	public void onPlayerTick(TickEvent.PlayerTickEvent e) {
 		SwarmBehavior behavior = getSwarmBehavior(e.player);
 		if(behavior != null && !e.player.worldObj.isRemote && e.phase == TickEvent.PlayerTickEvent.Phase.START) {
 			behavior.update();
 		}
-	}
+	}*/
 
-	private final HashMap<String, SwarmBehavior> behaviors = new HashMap<String, SwarmBehavior>();
+	//private final HashMap<String, SwarmBehavior> behaviors = new HashMap<String, SwarmBehavior>();
 
 	private SwarmBehavior getSwarmBehavior(EntityPlayer player) {
 		Controller controller = Nanomachines.getController(player);
@@ -128,16 +142,15 @@ public class SwarmProvider extends AbstractProvider {
 				}
 			}
 		}
-		//return null
+		return null;
 
-		// TODO remove
-		SwarmBehavior behavior = behaviors.get(player.getCommandSenderName());
+		/*SwarmBehavior behavior = behaviors.get(player.getCommandSenderName());
 		if(behavior == null) {
 			behavior = new SwarmBehavior(player);
 			behavior.onEnable();
 			behaviors.put(player.getCommandSenderName(), behavior);
 		}
-		return behavior;
+		return behavior;*/
 	}
 
 }

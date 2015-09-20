@@ -17,6 +17,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenDesert;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.integration.forestry.nanomachines.SwarmProvider;
 
 import java.util.Arrays;
 import java.util.List;
@@ -95,6 +96,7 @@ public class EntitySwarm extends EntityFlyingCreature {
 		}
 	}
 
+	@Override
 	protected void applyEntityAttributes() {
 		super.applyEntityAttributes();
 		getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(30.0D);
@@ -114,13 +116,14 @@ public class EntitySwarm extends EntityFlyingCreature {
 				//this.faceEntity(target, 10.0F, (float) this.getVerticalFaceSpeed());
 
 				if(dist < 1f && !(target instanceof EntityPlayer && ItemArmorApiarist.wearsItems((EntityPlayer) target, "computronics:swarm", true) >= 4)) {
-					target.attackEntityFrom(beeDamageSource, 2 * getAmplifier());
+					target.attackEntityFrom(beeDamageSource, getAmplifier());
 				}
 			}
 		} else if(player != null && (player.getDistanceSqToEntity(this) < 100 || this.canEntityBeSeen(player))) {
 			if(player.getHeldItem() != null && player.isBlocking()) {
 				Vec3 look = player.getLookVec();
-				moveTo(player.posX + look.xCoord, player.posY + look.yCoord, player.posZ + look.zCoord, player.width / 2f, player.getEyeHeight(), 0.3f, 1f, 0.5f);
+				moveTo(player.posX + look.xCoord, player.posY + look.yCoord, player.posZ + look.zCoord,
+					player.width / 2f, ((player.height / 2f) + player.getEyeHeight()) / 2f, 0.3f, 1f, 0.5f);
 			} else {
 				moveTo(player, 3f, 0.3f, 1f);
 			}
@@ -182,7 +185,7 @@ public class EntitySwarm extends EntityFlyingCreature {
 	protected boolean interact(EntityPlayer player) {
 		if(!worldObj.isRemote && this.player != null && player == this.player && player.isSneaking() && player.getHeldItem() == null) {
 			setDead();
-			player.swingItem();
+			SwarmProvider.swingItem(player);
 			return true;
 		}
 		return super.interact(player);
@@ -331,16 +334,16 @@ public class EntitySwarm extends EntityFlyingCreature {
 
 	@Override
 	protected void collideWithNearbyEntities() {
-		if(!worldObj.isRemote && player != null && player.getHeldItem() != null && player.isBlocking()) {
+		/*if(!worldObj.isRemote && player != null && player.getHeldItem() != null && player.isBlocking()) {
 			super.collideWithNearbyEntities();
-		}
+		}*/
 	}
 
 	@Override
 	protected void collideWithEntity(Entity entity) {
-		if(!worldObj.isRemote && player != null && entity != player && player.getHeldItem() != null && player.isBlocking()) {
-			super.collideWithEntity(entity);
-		}
+		/*if(!worldObj.isRemote && player != null && entity != player && player.getHeldItem() != null && player.isBlocking()) {
+			//super.collideWithEntity(entity);
+		}*/
 	}
 
 	@Override
@@ -352,11 +355,23 @@ public class EntitySwarm extends EntityFlyingCreature {
 			entity.motionZ /= 2.0D;
 			double deltaX = this.posX - entity.posX;
 			double deltaZ = this.posZ - entity.posZ;
-			double modifier = 0.4D * (getHealth() / getMaxHealth());
+			double modifier = 0.1D * (getHealth() / getMaxHealth());
 			float dist = MathHelper.sqrt_double(deltaX * deltaX + deltaZ * deltaZ);
 			entity.motionX -= deltaX / dist * modifier;
 			entity.motionZ -= deltaZ / dist * modifier;
+			/*float health = getHealth();
+			float maxHealth = getMaxHealth();
+			float diff = health / maxHealth;
+			entity.motionX /= 100f * diff;
+			entity.motionZ /= 100f * diff;*/
+			entity.isAirBorne = true;
+			entity.velocityChanged = true;
 		}
+	}
+
+	@Override
+	public void knockBack(Entity entity, float damage, double deltaX, double deltaZ) {
+		//super.knockBack(entity, damage, deltaX, deltaZ);
 	}
 
 	@Override
@@ -385,7 +400,7 @@ public class EntitySwarm extends EntityFlyingCreature {
 
 	public static class BeeDamageSource extends DamageSource {
 
-		private EntityLivingBase entity = null;
+		//private EntityLivingBase entity = null;
 
 		public BeeDamageSource() {
 			super("computronics.sting");
@@ -393,7 +408,7 @@ public class EntitySwarm extends EntityFlyingCreature {
 			this.setDamageIsAbsolute();
 		}
 
-		public BeeDamageSource(EntityLivingBase entity) {
+		/*public BeeDamageSource(EntityLivingBase entity) {
 			this();
 			this.entity = entity;
 		}
@@ -401,6 +416,6 @@ public class EntitySwarm extends EntityFlyingCreature {
 		@Override
 		public Entity getEntity() {
 			return this.entity;
-		}
+		}*/
 	}
 }

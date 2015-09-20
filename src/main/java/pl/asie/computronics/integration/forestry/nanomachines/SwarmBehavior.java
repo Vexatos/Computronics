@@ -1,9 +1,9 @@
 package pl.asie.computronics.integration.forestry.nanomachines;
 
+import li.cil.oc.api.Nanomachines;
 import li.cil.oc.api.nanomachines.DisableReason;
 import li.cil.oc.api.prefab.AbstractBehavior;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
 import pl.asie.computronics.integration.forestry.entity.EntitySwarm;
 
 /**
@@ -31,15 +31,17 @@ public class SwarmBehavior extends AbstractBehavior {
 
 	@Override
 	public void onDisable(DisableReason reason) {
-		if(reason == DisableReason.OutOfEnergy) {
-			entity.setAttackTarget(player);
-			entity.setPlayer(null);
-			entity.setAdditionalLifespan(200);
-		} else if(entity != null) {
-			//entityTag = new NBTTagCompound();
-			//entity.writeToNBT(entityTag);
-			entity.setDead();
-			entity = null;
+		if(entity != null) {
+			if(reason == DisableReason.OutOfEnergy && (player.capabilities == null || !player.capabilities.isCreativeMode)) {
+				entity.setPlayer(null);
+				entity.setAdditionalLifespan(200);
+				entity.setAttackTarget(player);
+			} else {
+				//entityTag = new NBTTagCompound();
+				//entity.writeToNBT(entityTag);
+				entity.setDead();
+				entity = null;
+			}
 		}
 	}
 
@@ -48,43 +50,48 @@ public class SwarmBehavior extends AbstractBehavior {
 	}
 
 	public void spawnNewEntity(double x, double y, double z, int color, boolean tolerant) {
-		entity = new EntitySwarm(player.worldObj);
-		//if(entityTag != null) {
-		//	entity.readFromNBT(entityTag);
-		//}
-		//TODO entity.setAmplifier(Nanomachines.getController(player).getInputCount(this));
-		entity.setAmplifier(1); //TODO remove
-		entity.setColor(color);
-		entity.setTolerant(tolerant);
-		entity.setPlayer(player);
-		entity.setPosition(x, y, z);
-		player.worldObj.spawnEntityInWorld(entity);
+		if(!player.worldObj.isRemote) {
+			entity = new EntitySwarm(player.worldObj);
+			//if(entityTag != null) {
+			//	entity.readFromNBT(entityTag);
+			//}
+			entity.setAmplifier(Nanomachines.getController(player).getInputCount(this));
+			//entity.setAmplifier(1);
+			entity.setColor(color);
+			entity.setTolerant(tolerant);
+			entity.setPlayer(player);
+			entity.setPosition(x, y, z);
+			player.worldObj.spawnEntityInWorld(entity);
+		}
 	}
 
 	@Override
 	public void update() {
-		if(entity != null) {
+		if(!player.worldObj.isRemote && entity != null) {
 			if(entity.isDead) {
 				entity = null;
 			}
-			//TODO entity.setAmplifier(Nanomachines.getController(player).getInputCount(this));
+			if(player.worldObj.getTotalWorldTime() % 10 == 0) {
+				Nanomachines.getController(player).changeBuffer(-1.0);
+			}
+			entity.setAmplifier(Nanomachines.getController(player).getInputCount(this));
 			//} else {
 			//spawnNewEntity(player.posX, player.posY + 2f, player.posZ);
 		}
 	}
 
-	public void readFromNBT(NBTTagCompound tag) {
+	/*public void readFromNBT(NBTTagCompound tag) {
 		//entityTag = tag.getCompoundTag("computronics:swarm");
-		if(entity != null) {
+		//if(entity != null) {
 			//entity.readFromNBT(entityTag);
-		}
+		//}
 	}
 
 	public void writeToNBT(NBTTagCompound tag) {
-		if(entity != null) {
+		//if(entity != null) {
 			//entityTag = new NBTTagCompound();
 			//entity.writeToNBT(entityTag);
-		}
+		//}
 		//tag.setTag("computronics:swarm", entityTag);
-	}
+	}*/
 }
