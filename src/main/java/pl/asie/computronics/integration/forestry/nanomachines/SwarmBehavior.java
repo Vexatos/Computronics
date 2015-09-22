@@ -1,6 +1,7 @@
 package pl.asie.computronics.integration.forestry.nanomachines;
 
 import li.cil.oc.api.Nanomachines;
+import li.cil.oc.api.nanomachines.Controller;
 import li.cil.oc.api.nanomachines.DisableReason;
 import li.cil.oc.api.prefab.AbstractBehavior;
 import net.minecraft.entity.player.EntityPlayer;
@@ -34,7 +35,7 @@ public class SwarmBehavior extends AbstractBehavior {
 		if(entity != null) {
 			if(reason == DisableReason.OutOfEnergy && (player.capabilities == null || !player.capabilities.isCreativeMode)) {
 				entity.setPlayer(null);
-				entity.setAdditionalLifespan(200);
+				entity.setAggressive(true);
 				entity.setAttackTarget(player);
 			} else {
 				//entityTag = new NBTTagCompound();
@@ -70,11 +71,14 @@ public class SwarmBehavior extends AbstractBehavior {
 		if(!player.worldObj.isRemote && entity != null) {
 			if(entity.isDead) {
 				entity = null;
+				return;
 			}
+			Controller controller = Nanomachines.getController(player);
+			int amplifier = controller.getInputCount(this);
 			if(player.worldObj.getTotalWorldTime() % 10 == 0) {
-				Nanomachines.getController(player).changeBuffer(-1.0);
+				controller.changeBuffer(amplifier * 10 * -0.5);
 			}
-			entity.setAmplifier(Nanomachines.getController(player).getInputCount(this));
+			entity.setAmplifier(amplifier);
 			//} else {
 			//spawnNewEntity(player.posX, player.posY + 2f, player.posZ);
 		}

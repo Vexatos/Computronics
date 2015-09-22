@@ -100,6 +100,14 @@ item.computronics.tape.name=Kasettenband
 itemGroup.tabComputronics=Computronics
 
 entity.computronics.itemTape.name=Intergalaktischer CDVR
+entity.computronics.swarm.name=Schwarm
+
+death.attack.computronics.sting.1=%1$s fand die Ursache von Apiphobie
+death.attack.computronics.sting.2=%1$s konnte den Bienen doch nicht entkommen
+death.attack.computronics.sting.3=%1$s entdeckte, dass Bienen sehr wohl aggressiv sein können
+death.attack.computronics.sting.4=%1$s erlag einem anaphylaktischen Schock
+death.attack.computronics.sting.5=%1$s wurde Opfer eines Bienenattentats
+death.attack.computronics.sting.self=%1$s wurde vom eigenen Schwarm betrogen
 
 for.computronics.flowers.sea=Meer
 for.computronics.bees.species.scummy=Schmutzig

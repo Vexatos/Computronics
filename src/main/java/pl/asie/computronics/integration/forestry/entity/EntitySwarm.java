@@ -10,8 +10,11 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.IChatComponent;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.StatCollector;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
@@ -27,7 +30,8 @@ import java.util.List;
  */
 public class EntitySwarm extends EntityFlyingCreature {
 
-	public static final DamageSource beeDamageSource = new BeeDamageSource();
+	public static final DamageSource beeDamageSource = new BeeDamageSource("computronics.sting", 5);
+	public static final DamageSource beeDamageSourceSelf = new BeeDamageSource("computronics.sting.self", 1);
 
 	private EntityPlayer player;
 
@@ -37,20 +41,19 @@ public class EntitySwarm extends EntityFlyingCreature {
 	}
 
 	//private ArrayList<Entity> swarmMembers = new ArrayList<Entity>();
-	private int lifespan = 0;
+	private boolean aggressive = false;
 
 	@Override
 	public void onEntityUpdate() {
 		super.onEntityUpdate();
 		if(!worldObj.isRemote) {
-			if(player == null && lifespan > 0) {
-				--lifespan;
-				if(lifespan <= 0) {
+			if(player != null) {
+				if(player.isDead || this.isInsideOfMaterial(Material.water)
+					|| (getAttackTarget() == null
+					&& ((player.getDistanceSqToEntity(this) > 2500 && !canEntityBeSeen(player)) || player.isInsideOfMaterial(Material.water)))) {
 					this.setDead();
 				}
-			} else if(player == null || player.isDead
-				|| player.isInsideOfMaterial(Material.water) || this.isInsideOfMaterial(Material.water)
-				|| (getAttackTarget() == null && player.getDistanceSqToEntity(this) > 2500 && !canEntityBeSeen(player))) {
+			} else if(!aggressive) {
 				this.setDead();
 			}
 			if(!isTolerant() && worldObj.getTotalWorldTime() % 40 == hashCode() % 40) {
@@ -108,7 +111,8 @@ public class EntitySwarm extends EntityFlyingCreature {
 	protected void updateEntityActionState() {
 		EntityLivingBase target = getAttackTarget();
 		if(target != null) {
-			if(target.isDead || (this.getDistanceSqToEntity(target) > 25 && !this.canEntityBeSeen(target)) || (target == player && lifespan <= 0)) {
+			if(target.isDead || (target == player && !aggressive) || target.isInsideOfMaterial(Material.water)
+				|| (this.getDistanceSqToEntity(target) > 25 && !this.canEntityBeSeen(target))) {
 				setAttackTarget(null);
 			} else {
 				double dist = moveTo(target, target.getEyeHeight(), 0.3f, 1f, 10f);
@@ -116,7 +120,7 @@ public class EntitySwarm extends EntityFlyingCreature {
 				//this.faceEntity(target, 10.0F, (float) this.getVerticalFaceSpeed());
 
 				if(dist < 1f && !(target instanceof EntityPlayer && ItemArmorApiarist.wearsItems((EntityPlayer) target, "computronics:swarm", true) >= 4)) {
-					target.attackEntityFrom(beeDamageSource, getAmplifier());
+					target.attackEntityFrom(!aggressive ? beeDamageSource : beeDamageSourceSelf, getAmplifier());
 				}
 			}
 		} else if(player != null && (player.getDistanceSqToEntity(this) < 100 || this.canEntityBeSeen(player))) {
@@ -214,7 +218,7 @@ public class EntitySwarm extends EntityFlyingCreature {
 	@Override
 	protected void entityInit() {
 		super.entityInit();
-		this.dataWatcher.addObject(20, 0);
+		this.dataWatcher.addObject(20, 1);
 		this.dataWatcher.addObject(21, 0xF0F000);
 		this.dataWatcher.addObject(22, (byte) 0);
 	}
@@ -252,8 +256,8 @@ public class EntitySwarm extends EntityFlyingCreature {
 		this.player = player;
 	}
 
-	public void setAdditionalLifespan(int lifespan) {
-		this.lifespan = lifespan;
+	public void setAggressive(boolean aggressive) {
+		this.aggressive = aggressive;
 	}
 
 	@Override
@@ -401,11 +405,22 @@ public class EntitySwarm extends EntityFlyingCreature {
 	public static class BeeDamageSource extends DamageSource {
 
 		//private EntityLivingBase entity = null;
+		private int numCauses;
 
-		public BeeDamageSource() {
-			super("computronics.sting");
+		public BeeDamageSource(String key, int numCauses) {
+			super(key);
 			this.setDamageBypassesArmor();
 			this.setDamageIsAbsolute();
+			this.numCauses = numCauses;
+		}
+
+		public IChatComponent func_151519_b(EntityLivingBase victim) {
+			EntityLivingBase damager = victim.func_94060_bK();
+			String format = "death.attack." + this.damageType + (numCauses > 1 ? "." + (victim.worldObj.rand.nextInt(this.numCauses) + 1) : "");
+			String withCauseFormat = format + ".player";
+			return damager != null && StatCollector.canTranslate(withCauseFormat) ?
+				new ChatComponentTranslation(withCauseFormat, victim.func_145748_c_(), damager.func_145748_c_()) :
+				new ChatComponentTranslation(format, victim.func_145748_c_());
 		}
 
 		/*public BeeDamageSource(EntityLivingBase entity) {

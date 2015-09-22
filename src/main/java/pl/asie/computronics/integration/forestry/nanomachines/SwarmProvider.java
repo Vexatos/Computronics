@@ -12,11 +12,13 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.S0BPacketAnimation;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 import pl.asie.computronics.integration.forestry.IntegrationForestry;
 import pl.asie.lib.util.RayTracer;
 
@@ -50,65 +52,87 @@ public class SwarmProvider extends AbstractProvider {
 		return Collections.<Behavior>singletonList(new SwarmBehavior(player));
 	}
 
+	private void findTarget(EntityPlayer player) {
+		SwarmBehavior behavior = getSwarmBehavior(player);
+		if(behavior != null) {
+			if(behavior.entity != null) {
+				RayTracer.instance().fire(player, 30);
+				MovingObjectPosition target = RayTracer.instance().getTarget();
+				if((target != null) && (target.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY)) {
+					Entity entity = target.entityHit;
+					if(entity != null && entity instanceof EntityLivingBase && entity != behavior.entity) {
+						behavior.entity.setAttackTarget((EntityLivingBase) entity);
+						swingItem(player);
+					}
+				} else if(behavior.entity.getAttackTarget() != null) {
+					behavior.entity.setAttackTarget(null);
+					swingItem(player);
+				}
+			} else if(player.capabilities != null && player.capabilities.isCreativeMode) {
+				behavior.spawnNewEntity(player.posX, player.posY + 2f, player.posZ);
+				swingItem(player);
+			}
+		} /*else {
+			Controller controller = Nanomachines.installController(player);
+			boolean win = false;
+			while(!win) {
+				Iterator<Behavior> behaviorSet = ((ControllerImpl) controller).configuration().behaviorMap().keySet().iterator();
+				while(behaviorSet.hasNext()) {
+					Behavior next = behaviorSet.next();
+					if(next instanceof SwarmBehavior) {
+						win = true;
+						break;
+					}
+				}
+				controller.reconfigure();
+			}
+		}*/
+	}
+
+	private void makeSwarm(PlayerInteractEvent e, EntityPlayer player, IBeeHousing tile) {
+		// TODO make this use IBeekeepingLogic in Forestry 4
+		if(tile.getQueen() != null) {
+			IBee member = BeeManager.beeRoot.getMember(tile.getQueen());
+			if(member != null && member.getCanWork(tile).size() <= 0 && member.hasFlower(tile)) {
+				SwarmBehavior behavior = getSwarmBehavior(player);
+				if(behavior != null) {
+					if(behavior.entity != null) {
+						behavior.entity.setDead();
+					}
+					behavior.spawnNewEntity(e.x + 0.5, e.y + 0.5, e.z + 0.5,
+						BeeManager.beeRoot.getMember(tile.getQueen()).getGenome().getPrimary().getIconColour(0),
+						member.getGenome().getTolerantFlyer());
+					swingItem(player);
+				}
+			}
+		}
+	}
+
 	@SubscribeEvent
 	public void onPlayerInteract(PlayerInteractEvent e) {
 		EntityPlayer player = e.entityPlayer;
 		if(player != null && !player.worldObj.isRemote) {
-			if((e.action == PlayerInteractEvent.Action.RIGHT_CLICK_AIR || e.action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK)
-				&& player.getHeldItem() != null && player.getHeldItem().getItem() == IntegrationForestry.itemStickImpregnated) {
-				SwarmBehavior behavior = getSwarmBehavior(player);
-				if(behavior != null) {
-					if(behavior.entity != null) {
-						RayTracer.instance().fire(player, 30);
-						MovingObjectPosition target = RayTracer.instance().getTarget();
-						if((target != null) && (target.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY)) {
-							Entity entity = target.entityHit;
-							if(entity != null && entity instanceof EntityLivingBase && entity != behavior.entity) {
-								behavior.entity.setAttackTarget((EntityLivingBase) entity);
-								swingItem(player);
-							}
-						} else if(behavior.entity.getAttackTarget() != null) {
-							behavior.entity.setAttackTarget(null);
-							swingItem(player);
+			ItemStack heldItem = player.getHeldItem();
+			if(heldItem != null && heldItem.getItem() == IntegrationForestry.itemStickImpregnated) {
+				if(e.action == Action.RIGHT_CLICK_AIR) {
+					findTarget(player);
+				} else if(e.action == Action.RIGHT_CLICK_BLOCK) {
+					if(player.isSneaking() && e.world.blockExists(e.x, e.y, e.z)) {
+						TileEntity te = e.world.getTileEntity(e.x, e.y, e.z);
+						if(te instanceof IBeeHousing) {
+							makeSwarm(e, player, ((IBeeHousing) te));
+						} else {
+							findTarget(player);
 						}
-					} else if(player.capabilities != null && player.capabilities.isCreativeMode) {
-						behavior.spawnNewEntity(player.posX, player.posY + 2f, player.posZ);
+					} else {
+						findTarget(player);
 					}
-				}/* else {
-					Controller controller = Nanomachines.installController(player);
-					boolean win = false;
-					while(!win) {
-						Iterator<Behavior> behaviorSet = ((ControllerImpl) controller).configuration().behaviorMap().keySet().iterator();
-						while(behaviorSet.hasNext()) {
-							Behavior next = behaviorSet.next();
-							if(next instanceof SwarmBehavior) {
-								win = true;
-								break;
-							}
-						}
-						controller.reconfigure();
-					}
-				}*/
-			} else if(e.action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK
-				&& (player.getHeldItem() == null || player.getHeldItem().getItem() == IntegrationForestry.itemStickImpregnated)
-				&& player.isSneaking() && e.world.blockExists(e.x, e.y, e.z)) {
-				TileEntity te = e.world.getTileEntity(e.x, e.y, e.z);
-				if(te instanceof IBeeHousing) {
-					IBeeHousing tile = (IBeeHousing) te;
-					// TODO make this use IBeekeepingLogic in Forestry 4
-					if(tile.getQueen() != null) {
-						IBee member = BeeManager.beeRoot.getMember(tile.getQueen());
-						if(member != null && member.getCanWork(tile).size() <= 0 && member.hasFlower(tile)) {
-							SwarmBehavior behavior = getSwarmBehavior(player);
-							if(behavior != null) {
-								if(behavior.entity != null) {
-									behavior.entity.setDead();
-								}
-								behavior.spawnNewEntity(e.x + 0.5, e.y + 0.5, e.z + 0.5,
-									BeeManager.beeRoot.getMember(tile.getQueen()).getGenome().getPrimary().getIconColour(0),
-									member.getGenome().getTolerantFlyer());
-							}
-						}
+				}
+			} else if(heldItem == null && e.action == Action.RIGHT_CLICK_BLOCK) {
+				if(player.isSneaking() && e.world.blockExists(e.x, e.y, e.z)) {
+					TileEntity te = e.world.getTileEntity(e.x, e.y, e.z);
+					if(te instanceof IBeeHousing) {
+						makeSwarm(e, player, ((IBeeHousing) te));
 					}
 				}
 			}

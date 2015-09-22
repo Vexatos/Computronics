@@ -102,8 +102,12 @@ itemGroup.tabComputronics=Computronics
 entity.computronics.itemTape.name=Intergalactical CDVR
 entity.computronics.swarm.name=Swarm
 
-death.attack.computronics.sting=%1$s got stung to death
-death.attack.computronics.sting.player=%1$s got stung to death while fighting %2$s
+death.attack.computronics.sting.1=%1$s figured out why some people have apiphobia
+death.attack.computronics.sting.2=<%1$s> §oNo! Not the bees! NOT THE BEEEES! AAAAAHHHHHH!
+death.attack.computronics.sting.3=%1$s couldn't handle the swarm's stinging puns
+death.attack.computronics.sting.4=%1$s forgot their epipen
+death.attack.computronics.sting.5=%1$s was the victim of an assassination plot. With bees.
+death.attack.computronics.sting.self=%1$s was beetrayed
 
 computronics.flowers.sea=Sea
 computronics.bees.species.scummy=Scummy
