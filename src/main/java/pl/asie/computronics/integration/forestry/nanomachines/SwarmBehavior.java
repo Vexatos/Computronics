@@ -52,7 +52,7 @@ public class SwarmBehavior extends AbstractBehavior {
 
 	public void spawnNewEntity(double x, double y, double z, int color, boolean tolerant) {
 		if(!player.worldObj.isRemote) {
-			entity = new EntitySwarm(player.worldObj);
+			entity = new EntitySwarm(player.worldObj, x, y, z);
 			//if(entityTag != null) {
 			//	entity.readFromNBT(entityTag);
 			//}
@@ -61,7 +61,7 @@ public class SwarmBehavior extends AbstractBehavior {
 			entity.setColor(color);
 			entity.setTolerant(tolerant);
 			entity.setPlayer(player);
-			entity.setPosition(x, y, z);
+			//entity.setPosition(x, y, z);
 			player.worldObj.spawnEntityInWorld(entity);
 		}
 	}

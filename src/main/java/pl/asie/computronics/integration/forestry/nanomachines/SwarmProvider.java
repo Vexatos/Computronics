@@ -99,6 +99,10 @@ public class SwarmProvider extends AbstractProvider {
 					if(behavior.entity != null) {
 						behavior.entity.setDead();
 					}
+					Controller controller = Nanomachines.getController(player);
+					if(controller != null) {
+						controller.changeBuffer(-10);
+					}
 					behavior.spawnNewEntity(e.x + 0.5, e.y + 0.5, e.z + 0.5,
 						BeeManager.beeRoot.getMember(tile.getQueen()).getGenome().getPrimary().getIconColour(0),
 						member.getGenome().getTolerantFlyer());

@@ -40,6 +40,14 @@ public class EntitySwarm extends EntityFlyingCreature {
 		this.setSize(1.0F, 1.0F);
 	}
 
+	public EntitySwarm(World world, double x, double y, double z) {
+		this(world);
+		this.setPosition(x, y, z);
+		this.prevPosX = x;
+		this.prevPosY = y;
+		this.prevPosZ = z;
+	}
+
 	//private ArrayList<Entity> swarmMembers = new ArrayList<Entity>();
 	private boolean aggressive = false;
 
@@ -48,12 +56,12 @@ public class EntitySwarm extends EntityFlyingCreature {
 		super.onEntityUpdate();
 		if(!worldObj.isRemote) {
 			if(player != null) {
-				if(player.isDead || this.isInsideOfMaterial(Material.water)
+				if(player.isDead || (player.worldObj.provider.dimensionId != this.worldObj.provider.dimensionId) || this.isInsideOfMaterial(Material.water)
 					|| (getAttackTarget() == null
 					&& ((player.getDistanceSqToEntity(this) > 2500 && !canEntityBeSeen(player)) || player.isInsideOfMaterial(Material.water)))) {
 					this.setDead();
 				}
-			} else if(!aggressive) {
+			} else if(!aggressive || getAttackTarget() == null) {
 				this.setDead();
 			}
 			if(!isTolerant() && worldObj.getTotalWorldTime() % 40 == hashCode() % 40) {
@@ -120,7 +128,7 @@ public class EntitySwarm extends EntityFlyingCreature {
 				//this.faceEntity(target, 10.0F, (float) this.getVerticalFaceSpeed());
 
 				if(dist < 1f && !(target instanceof EntityPlayer && ItemArmorApiarist.wearsItems((EntityPlayer) target, "computronics:swarm", true) >= 4)) {
-					target.attackEntityFrom(!aggressive ? beeDamageSource : beeDamageSourceSelf, getAmplifier());
+					target.attackEntityFrom(!aggressive ? beeDamageSource : beeDamageSourceSelf, getAmplifier() + (aggressive ? 1F : 0F));
 				}
 			}
 		} else if(player != null && (player.getDistanceSqToEntity(this) < 100 || this.canEntityBeSeen(player))) {
