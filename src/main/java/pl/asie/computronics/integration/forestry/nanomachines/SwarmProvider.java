@@ -91,7 +91,7 @@ public class SwarmProvider extends AbstractProvider {
 
 	private void makeSwarm(PlayerInteractEvent e, EntityPlayer player, IBeeHousing tile) {
 		// TODO make this use IBeekeepingLogic in Forestry 4
-		if(tile.getQueen() != null) {
+		if(tile.getQueen() != null && BeeManager.beeRoot.isMated(tile.getQueen())) {
 			IBee member = BeeManager.beeRoot.getMember(tile.getQueen());
 			if(member != null && member.getCanWork(tile).size() <= 0 && member.hasFlower(tile)) {
 				SwarmBehavior behavior = getSwarmBehavior(player);

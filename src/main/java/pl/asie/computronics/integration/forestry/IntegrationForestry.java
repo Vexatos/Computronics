@@ -1,7 +1,6 @@
 package pl.asie.computronics.integration.forestry;
 
 import cpw.mods.fml.client.registry.RenderingRegistry;
-import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -19,9 +18,7 @@ import forestry.api.genetics.IAlleleFlowers;
 import forestry.api.genetics.IAlleleSpecies;
 import forestry.api.genetics.IClassification;
 import forestry.api.recipes.RecipeManagers;
-import forestry.apiculture.render.EntityBeeFX;
 import forestry.apiculture.render.ParticleRenderer;
-import forestry.core.render.TextureManager;
 import li.cil.oc.api.Items;
 import li.cil.oc.api.Nanomachines;
 import net.bdew.gendustry.api.EnumMutationSetting;
@@ -35,6 +32,8 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.integration.forestry.client.SwarmTextureHandler;
+import pl.asie.computronics.integration.forestry.client.entity.EntitySwarmBeeFX;
 import pl.asie.computronics.integration.forestry.entity.EntitySwarm;
 import pl.asie.computronics.integration.forestry.entity.SwarmRenderer;
 import pl.asie.computronics.integration.forestry.nanomachines.SwarmProvider;
@@ -66,6 +65,9 @@ public class IntegrationForestry {
 			itemPartsForestry = new ItemMultiple(Mods.Computronics, new String[] { "for.combAcid", "for.dropAcid" });
 			itemPartsForestry.setCreativeTab(Computronics.tab);
 			GameRegistry.registerItem(itemPartsForestry, "computronics.partsForestry");
+			if(Computronics.proxy.isClient()) {
+				MinecraftForge.EVENT_BUS.register(new SwarmTextureHandler());
+			}
 		}
 	}
 
@@ -168,9 +170,8 @@ public class IntegrationForestry {
 
 	@SideOnly(Side.CLIENT)
 	public void spawnSwarmParticle(World worldObj, double xPos, double yPos, double zPos, int color) {
-		EntityBeeFX entity = new EntityBeeFX(worldObj, xPos, yPos, zPos, 0f, 0f, 0f, color);
-		entity.setParticleIcon(TextureManager.getInstance().getDefault("particles/swarm_bee"));
+		EntitySwarmBeeFX entity = new EntitySwarmBeeFX(worldObj, xPos, yPos, zPos, color);
 		ParticleRenderer.getInstance().addEffect(entity);
-		//Minecraft.getMinecraft().effectRenderer.addEffect((EntityFX) entity);
+		//Minecraft.getMinecraft().effectRenderer.addEffect(entity);
 	}
 }
