@@ -115,6 +115,8 @@ computronics.bees.species.scummy.description=Kerosene, propylene glycol, artific
 
 chat.computronics.cipher.locked=This Cipher Block is locked! You may not access it.
 chat.computronics.colorful_upgrade.color=§6Color§f: %s
+chat.computronics.lamp.binary.on=RedNet mode set to Binary
+chat.computronics.lamp.binary.off=RedNet mode set to Normal
 chat.computronics.relay.notBound=Relay is currently not bound to any locomotive!
 chat.computronics.relay.unbound=Relay successfully unbound from locomotive!
 chat.computronics.sensor.bound=Relay successfully bound to locomotive!

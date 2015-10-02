@@ -129,6 +129,9 @@ public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundl
 		if(color < 0) {
 			color = 0;
 		}
+		if(tag.hasKey("binaryMode")) {
+			this.binaryMode = tag.getBoolean("binaryMode");
+		}
 	}
 
 	@Override
@@ -136,10 +139,24 @@ public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundl
 		return false;
 	}
 
+	private boolean binaryMode = false;
+
+	public boolean isBinaryMode() {
+		return this.binaryMode;
+	}
+
+	public void setBinaryMode(boolean mode) {
+		this.binaryMode = mode;
+		this.markDirty();
+		this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		this.worldObj.notifyBlockChange(xCoord, yCoord, zCoord, getBlockType());
+	}
+
 	@Override
 	public void writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
 		tag.setShort("clc", (short) (color & 32767));
+		tag.setBoolean("binaryMode", this.binaryMode);
 	}
 
 	@Override
