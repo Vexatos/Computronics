@@ -71,7 +71,7 @@ public class FlowerProviderSea implements IFlowerProvider {
 
 	@Override
 	public String getDescription() {
-		return StringUtil.localize("for.computronics.flowers.sea");
+		return StringUtil.localize("computronics.flowers.sea");
 	}
 
 	@Override
