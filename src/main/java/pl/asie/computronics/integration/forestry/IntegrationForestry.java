@@ -8,6 +8,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import forestry.api.apiculture.BeeManager;
 import forestry.api.apiculture.EnumBeeChromosome;
+import forestry.api.apiculture.FlowerManager;
 import forestry.api.apiculture.IAlleleBeeSpecies;
 import forestry.api.apiculture.IBeeMutationCustom;
 import forestry.api.core.EnumHumidity;
@@ -76,7 +77,9 @@ public class IntegrationForestry {
 		Computronics.log.info("Adding Forestry Bees for OpenComputers.");
 		IClassification pirates = BeeManager.beeFactory.createBranch("pirates", "Piraticus");
 		AlleleManager.alleleRegistry.getClassification("family.apidae").addMemberGroup(pirates);
-		sea = AlleleManager.alleleFactory.createFlowers(Mods.Computronics, "flowers", "sea", new FlowerProviderSea(), true);
+		FlowerProviderSea providerSea = new FlowerProviderSea();
+		sea = AlleleManager.alleleFactory.createFlowers(Mods.Computronics, "flowers", "sea", providerSea, true);
+		FlowerManager.flowerRegistry.registerAcceptableFlowerRule(providerSea, providerSea.getFlowerType());
 
 		Block shortMead = null;
 		{

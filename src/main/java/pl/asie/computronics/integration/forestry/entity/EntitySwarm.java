@@ -2,7 +2,7 @@ package pl.asie.computronics.integration.forestry.entity;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import forestry.apiculture.items.ItemArmorApiarist;
+import forestry.api.apiculture.BeeManager;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -127,7 +127,7 @@ public class EntitySwarm extends EntityFlyingCreature {
 
 				//this.faceEntity(target, 10.0F, (float) this.getVerticalFaceSpeed());
 
-				if(dist < 1f && !(target instanceof EntityPlayer && ItemArmorApiarist.wearsItems((EntityPlayer) target, "computronics:swarm", true) >= 4)) {
+				if(dist < 1f && !(target instanceof EntityPlayer && BeeManager.armorApiaristHelper.wearsItems((EntityPlayer) target, "computronics:swarm", true) >= 4)) {
 					target.attackEntityFrom(!aggressive ? beeDamageSource : beeDamageSourceSelf, getAmplifier() + (aggressive ? 1F : 0F));
 				}
 			}
@@ -232,7 +232,7 @@ public class EntitySwarm extends EntityFlyingCreature {
 	}
 
 	public void setAmplifier(int amplifier) {
-		this.dataWatcher.updateObject(20, amplifier);
+		this.dataWatcher.updateObject(20, Math.max(amplifier, 1));
 		//getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(2 * amplifier);
 	}
 

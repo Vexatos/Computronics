@@ -90,10 +90,9 @@ public class SwarmProvider extends AbstractProvider {
 	}
 
 	private void makeSwarm(PlayerInteractEvent e, EntityPlayer player, IBeeHousing tile) {
-		// TODO make this use IBeekeepingLogic in Forestry 4
-		if(tile.getQueen() != null && BeeManager.beeRoot.isMated(tile.getQueen())) {
-			IBee member = BeeManager.beeRoot.getMember(tile.getQueen());
-			if(member != null && member.getCanWork(tile).size() <= 0 && member.hasFlower(tile)) {
+		if(tile.getBeekeepingLogic() != null && tile.getBeeInventory() != null && tile.getBeekeepingLogic().canDoBeeFX()) {
+			IBee member = BeeManager.beeRoot.getMember(tile.getBeeInventory().getQueen());
+			if(member != null) {
 				SwarmBehavior behavior = getSwarmBehavior(player);
 				if(behavior != null) {
 					if(behavior.entity != null) {
@@ -104,7 +103,7 @@ public class SwarmProvider extends AbstractProvider {
 						controller.changeBuffer(-10);
 					}
 					behavior.spawnNewEntity(e.x + 0.5, e.y + 0.5, e.z + 0.5,
-						BeeManager.beeRoot.getMember(tile.getQueen()).getGenome().getPrimary().getIconColour(0),
+						member.getGenome().getPrimary().getIconColour(0),
 						member.getGenome().getTolerantFlyer());
 					swingItem(player);
 				}

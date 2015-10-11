@@ -1,6 +1,7 @@
 package pl.asie.computronics.integration.forestry;
 
-import forestry.api.genetics.IFlower;
+import forestry.api.apiculture.FlowerManager;
+import forestry.api.genetics.IFlowerAcceptableRule;
 import forestry.api.genetics.IFlowerProvider;
 import forestry.api.genetics.IIndividual;
 import forestry.api.genetics.IPollinatable;
@@ -12,14 +13,14 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.IFluidBlock;
 import pl.asie.computronics.util.StringUtil;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Vexatos
  */
-public class FlowerProviderSea implements IFlowerProvider {
+public class FlowerProviderSea implements IFlowerProvider, IFlowerAcceptableRule {
 
 	private static List<String> waterTypes = Arrays.asList("water");
 	private static final List<String> saltwaterTypes = Arrays.asList("saltwater", "saltWater", "Saltwater", "SaltWater");
@@ -39,7 +40,7 @@ public class FlowerProviderSea implements IFlowerProvider {
 	}
 
 	@Override
-	public boolean isAcceptedFlower(World world, IIndividual individual, int x, int y, int z) {
+	public boolean isAcceptableFlower(String flowerType, World world, int x, int y, int z) {
 		Block block = world.getBlock(x, y, z);
 		if(block != null) {
 			Fluid fluid = FluidRegistry.lookupFluidForBlock(block);
@@ -65,13 +66,13 @@ public class FlowerProviderSea implements IFlowerProvider {
 	}
 
 	@Override
-	public boolean growFlower(World world, IIndividual iIndividual, int i, int i1, int i2) {
-		return false;
+	public String getFlowerType() {
+		return "computronics.flowers.sea";
 	}
 
 	@Override
 	public String getDescription() {
-		return StringUtil.localize("computronics.flowers.sea");
+		return StringUtil.localize(getFlowerType());
 	}
 
 	@Override
@@ -79,10 +80,16 @@ public class FlowerProviderSea implements IFlowerProvider {
 		return products;
 	}
 
-	private static final ArrayList<IFlower> flowerList = new ArrayList<IFlower>();
+	@Override
+	@Deprecated
+	@SuppressWarnings("deprecation")
+	public Set<forestry.api.genetics.IFlower> getFlowers() {
+		return FlowerManager.flowerRegistry.getAcceptableFlowers(getFlowerType());
+	}
 
 	@Override
-	public List<IFlower> getFlowers() {
-		return flowerList;
+	@Deprecated
+	public boolean growFlower(World world, IIndividual iIndividual, int i, int i1, int i2) {
+		return false;
 	}
 }

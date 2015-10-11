@@ -3,6 +3,7 @@
   * ADDED: Some Nanomachine Beehaviour. Requires OpenComputers 1.5.18 now.
   * ADDED: Binary mode to the Colorful Lamp for MineFactory Reloaded. Shift-right click the lamp using a wrench or sledgehammer to make the lamp read every RedNet color frequency, each colour (apart from black) setting a specific bit of the lamp's colour (just like it works for Project: Red and RedLogic Bundled Cable). Shift-right clicking again will reset the mode.
   * CHANGED: Made the Deep Storage Unit driver for ComputerCraft work with Quantum Storage.
+  * FIXED: Updated Forestry integration to version 4.0.8; requires Forestry 4.0.8 now.
 
 ==== 1.5.7 ====
 
