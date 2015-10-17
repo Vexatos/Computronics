@@ -1,3 +1,8 @@
+==== 1.5.9 ====
+
+  * ADDED: New config option (disabled by default) to make the normal Chat Box have no range limit and work interdimensionally unless you specify a distance.
+  * CHANGED: The Creative Chat Box can now send messages interdimensionally and has no range limit anymore unless you specify a distance.
+
 ==== 1.5.8 ====
 
   * ADDED: Some Nanomachine Beehaviour. Requires OpenComputers 1.5.18 now.

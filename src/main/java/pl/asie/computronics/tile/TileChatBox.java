@@ -18,6 +18,7 @@ import pl.asie.computronics.util.ChatBoxUtils;
 public class TileChatBox extends TileEntityPeripheralBase implements IChatListener {
 
 	private int distance;
+	private boolean hasDistance = false;
 	private int ticksUntilOff = 0;
 	private boolean mustRefresh = false;
 	private String name = "";
@@ -67,8 +68,10 @@ public class TileChatBox extends TileEntityPeripheralBase implements IChatListen
 		} else {
 			this.distance = dist;
 		}
+		this.hasDistance = true;
 		if(this.distance < 0) {
 			this.distance = Config.CHATBOX_DISTANCE;
+			this.hasDistance = false;
 		}
 	}
 
@@ -76,7 +79,7 @@ public class TileChatBox extends TileEntityPeripheralBase implements IChatListen
 		if(!worldObj.blockExists(xCoord, yCoord, zCoord)) {
 			return;
 		}
-		if(!isCreative() && (event.player.worldObj != this.worldObj || event.player.getDistanceSq(xCoord, yCoord, zCoord) > distance * distance)) {
+		if(Config.CHATBOX_MAGIC && !isCreative() && (event.player.worldObj != this.worldObj || event.player.getDistanceSq(xCoord, yCoord, zCoord) > distance * distance)) {
 			return;
 		}
 
@@ -137,14 +140,17 @@ public class TileChatBox extends TileEntityPeripheralBase implements IChatListen
 	public Object[] say(Context context, Arguments args) {
 		int d = distance;
 		if(args.count() >= 1) {
+			boolean isCreative = isCreative();
+			boolean hasDistance = this.hasDistance;
 			if(args.isInteger(1)) {
-				d = isCreative() ? args.checkInteger(1) : Math.min(Config.CHATBOX_DISTANCE, args.checkInteger(1));
+				d = isCreative ? args.checkInteger(1) : Math.min(Config.CHATBOX_DISTANCE, args.checkInteger(1));
 				if(d <= 0) {
 					d = distance;
 				}
+				hasDistance = true;
 			}
 			if(args.isString(0)) {
-				ChatBoxUtils.sendChatMessage(this, d, name.length() > 0 ? name : Config.CHATBOX_PREFIX, args.checkString(0));
+				ChatBoxUtils.sendChatMessage(this, d, name.length() > 0 ? name : Config.CHATBOX_PREFIX, args.checkString(0), !hasDistance && (Config.CHATBOX_MAGIC || isCreative));
 				return new Object[] { true };
 			}
 		}
@@ -206,6 +212,9 @@ public class TileChatBox extends TileEntityPeripheralBase implements IChatListen
 		if(nbt.hasKey("d")) {
 			this.distance = nbt.getShort("d");
 		}
+		if(nbt.hasKey("hd")) {
+			this.hasDistance = nbt.getBoolean("hd");
+		}
 		if(nbt.hasKey("n")) {
 			this.name = nbt.getString("n");
 		}
@@ -215,6 +224,7 @@ public class TileChatBox extends TileEntityPeripheralBase implements IChatListen
 	public void writeToNBT(final NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 		nbt.setShort("d", (short) this.distance);
+		nbt.setBoolean("hd", this.hasDistance);
 		if(name.length() > 0) {
 			nbt.setString("n", this.name);
 		}
@@ -235,13 +245,16 @@ public class TileChatBox extends TileEntityPeripheralBase implements IChatListen
 			case 0: { // say
 				if(arguments.length >= 1 && arguments[0] instanceof String) {
 					int d = distance;
+					boolean hasDistance = this.hasDistance;
+					boolean isCreative = isCreative();
 					if(arguments.length >= 2 && arguments[1] instanceof Double) {
-						d = isCreative() ? ((Double) arguments[1]).intValue() : Math.min(Config.CHATBOX_DISTANCE, ((Double) arguments[1]).intValue());
+						d = isCreative ? ((Double) arguments[1]).intValue() : Math.min(Config.CHATBOX_DISTANCE, ((Double) arguments[1]).intValue());
 						if(d <= 0) {
 							d = distance;
 						}
+						hasDistance = true;
 					}
-					ChatBoxUtils.sendChatMessage(this, d, name.length() > 0 ? name : Config.CHATBOX_PREFIX, ((String) arguments[0]));
+					ChatBoxUtils.sendChatMessage(this, d, name.length() > 0 ? name : Config.CHATBOX_PREFIX, ((String) arguments[0]), !hasDistance && (Config.CHATBOX_MAGIC || isCreative));
 					return new Object[] { true };
 				}
 				return new Object[] { false };

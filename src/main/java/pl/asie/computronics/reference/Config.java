@@ -13,6 +13,7 @@ public class Config {
 	public final Configuration config;
 
 	public static int CHATBOX_DISTANCE = 40;
+	public static boolean CHATBOX_MAGIC = false;
 	public static int CAMERA_DISTANCE = 32;
 	public static int TAPEDRIVE_DISTANCE = 24;
 	public static int TAPEDRIVE_BUFFER_MS = 750;
@@ -78,6 +79,7 @@ public class Config {
 		// Chat Box
 		CHATBOX_CREATIVE = config.getBoolean("enableCreative", "chatbox", true, "Enable Creative Chat Boxes.");
 		CHATBOX_DISTANCE = config.getInt("maxDistance", "chatbox", 40, 4, 32767, "The maximum chat box distance, in blocks.");
+		CHATBOX_MAGIC = config.getBoolean("makeMagical", "chatbox", false, "Make the normal Chat Box have no range limit and work interdimensionally.");
 		CHATBOX_PREFIX = config.getString("prefix", "chatbox", "ChatBox", "The Chat Box's default prefix.");
 
 		// Cipher Block

@@ -28,12 +28,14 @@ public class RobotUpgradeChatBox extends ManagedEnvironment implements IChatList
 	}
 
 	public void receiveChatMessage(ServerChatEvent event) {
-		if (event.player.worldObj != this.container.world() || event.player.getDistanceSq(container.xPosition(), container.yPosition(), container.zPosition()) > distance * distance) {
+		if(!Config.CHATBOX_MAGIC && (event.player.worldObj != this.container.world()
+			|| event.player.getDistanceSq(container.xPosition(), container.yPosition(), container.zPosition()) > distance * distance)) {
 			return;
 		}
 
-		if(this.node() != null)
+		if(this.node() != null) {
 			this.node().sendToReachable("computer.signal", "chat_message", event.username, event.message);
+		}
 	}
 
 	@Override
@@ -44,7 +46,7 @@ public class RobotUpgradeChatBox extends ManagedEnvironment implements IChatList
 	@Override
 	public void onConnect(Node node) {
 		super.onConnect(node);
-		if (node == this.node()) {
+		if(node == this.node()) {
 			ChatAPI.registry.registerChatListener(this);
 		}
 	}
@@ -52,46 +54,50 @@ public class RobotUpgradeChatBox extends ManagedEnvironment implements IChatList
 	@Override
 	public void onDisconnect(final Node node) {
 		super.onDisconnect(node);
-		if (node == this.node()) {
+		if(node == this.node()) {
 			ChatAPI.registry.unregisterChatListener(this);
 		}
 	}
 
-	public int getDistance() { return distance; }
-
-	public void setDistance(int dist) {
-		if(dist > 32767) dist = 32767;
-
-		this.distance = Math.min(Config.CHATBOX_DISTANCE, dist);
-		if(this.distance < 0) this.distance = Config.CHATBOX_DISTANCE;
+	public int getDistance() {
+		return distance;
 	}
 
+	public void setDistance(int dist) {
+		if(dist > 32767) {
+			dist = 32767;
+		}
 
+		this.distance = Math.min(Config.CHATBOX_DISTANCE, dist);
+		if(this.distance < 0) {
+			this.distance = Config.CHATBOX_DISTANCE;
+		}
+	}
 
 	@Callback(doc = "function():number; Returns the chat distance the chat box is currently set to", direct = true)
-	@Optional.Method(modid= Mods.OpenComputers)
+	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] getDistance(Context context, Arguments args) {
-		return new Object[]{ distance };
+		return new Object[] { distance };
 	}
 
 	@Callback(doc = "function(distance:number):number; Sets the distance of the chat box. Returns the new distance", direct = true)
-	@Optional.Method(modid=Mods.OpenComputers)
+	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] setDistance(Context context, Arguments args) {
 		setDistance(args.checkInteger(0));
-		return new Object[]{ distance };
+		return new Object[] { distance };
 	}
 
 	@Callback(doc = "function():string; Returns the name of the chat box", direct = true)
-	@Optional.Method(modid=Mods.OpenComputers)
+	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] getName(Context context, Arguments args) {
-		return new Object[]{name};
+		return new Object[] { name };
 	}
 
 	@Callback(doc = "function(name:string):string; Sets the name of the chat box. Returns the new name", direct = true)
-	@Optional.Method(modid=Mods.OpenComputers)
+	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] setName(Context context, Arguments args) {
 		this.name = args.checkString(0);
-		return new Object[]{ this.name };
+		return new Object[] { this.name };
 	}
 
 	@Callback(doc = "function(text:string [, distance:number]):boolean; "
@@ -105,15 +111,24 @@ public class RobotUpgradeChatBox extends ManagedEnvironment implements IChatList
 			if(args.count() >= 1) {
 				if(args.isInteger(1)) {
 					d = Math.min(Config.CHATBOX_DISTANCE, args.checkInteger(1));
-					if(d <= 0) d = distance;
+					if(d <= 0) {
+						d = distance;
+					}
 				}
-				if(args.isString(0)){
-					ChatBoxUtils.sendChatMessage(this.container, d, name.length() > 0 ? name : Config.CHATBOX_PREFIX, args.checkString(0));
+				if(args.isString(0)) {
+					sendChatMessage(this.container, d, name.length() > 0 ? name : Config.CHATBOX_PREFIX, args.checkString(0));
 					return new Object[] { true };
 				}
 			}
 			return new Object[] { false };
 		}
 		return null;
+	}
+
+	public static void sendChatMessage(EnvironmentHost c, int d, String prefix, String string) {
+		if(c == null) {
+			return;
+		}
+		ChatBoxUtils.sendChatMessage(c.world(), c.xPosition(), c.yPosition(), c.zPosition(), d, prefix, string);
 	}
 }
