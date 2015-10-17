@@ -36,7 +36,6 @@ public class EntitySwarmBeeFX extends EntityFXBee {
 		this.motionZ *= 0.2D;*/
 	}
 
-	// TODO Make sure this is still valid in Forestry 4
 	@Override
 	public void onUpdate() {
 		this.prevPosX = this.posX;
