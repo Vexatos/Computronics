@@ -1,7 +1,5 @@
 package pl.asie.computronics.integration.waila;
 
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.ModAPIManager;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaRegistrar;
 import pl.asie.computronics.reference.Mods;
@@ -48,14 +46,14 @@ public enum ConfigValues {
 
 	static void registerConfigs(IWailaRegistrar reg) {
 		for(ConfigValues value : ConfigValues.values()) {
-			if(value.modID == null || Loader.isModLoaded(value.modID) || ModAPIManager.INSTANCE.hasAPI(value.modID)) {
+			if(value.modID == null || Mods.isLoaded(value.modID) || Mods.API.hasAPI(value.modID)) {
 				value.registerConfigRemote(reg);
 			}
 		}
 	}
 
 	public boolean getValue(IWailaConfigHandler config) {
-		return (this.modID == null || Loader.isModLoaded(this.modID) || ModAPIManager.INSTANCE.hasAPI(this.modID))
+		return (this.modID == null || Mods.isLoaded(this.modID) || Mods.API.hasAPI(this.modID))
 			&& config.getConfig(key, defvalue);
 	}
 }

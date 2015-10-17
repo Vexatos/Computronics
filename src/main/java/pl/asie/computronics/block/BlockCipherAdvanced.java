@@ -1,7 +1,9 @@
 package pl.asie.computronics.block;
 
+import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import li.cil.oc.api.network.Environment;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -10,6 +12,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import pl.asie.computronics.item.block.IBlockWithSpecialText;
+import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TileCipherBlockAdvanced;
 import pl.asie.computronics.util.StringUtil;
 
@@ -23,8 +26,9 @@ public class BlockCipherAdvanced extends BlockMachineSidedIcon implements IBlock
 	private IIcon mFront;
 
 	public BlockCipherAdvanced() {
-		super();
+		super("cipher_advanced");
 		this.setBlockName("computronics.cipher_advanced");
+		this.setNoNedoComputers(true);
 	}
 
 	@Override
@@ -61,5 +65,11 @@ public class BlockCipherAdvanced extends BlockMachineSidedIcon implements IBlock
 	@Override
 	public String getUnlocalizedName(ItemStack stack) {
 		return this.getUnlocalizedName();
+	}
+
+	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
+	public Class<? extends Environment> getTileEntityClass(int meta) {
+		return TileCipherBlockAdvanced.class;
 	}
 }

@@ -1,13 +1,12 @@
 package pl.asie.computronics.cc;
 
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.ModAPIManager;
 import cpw.mods.fml.common.Optional;
 import dan200.computercraft.api.ComputerCraftAPI;
 import net.minecraftforge.common.config.Configuration;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.cc.multiperipheral.MultiPeripheralProvider;
 import pl.asie.computronics.integration.appeng.DriverSpatialIOPort;
+import pl.asie.computronics.integration.armourersworkshop.DriverMannequin;
 import pl.asie.computronics.integration.buildcraft.DriverHeatable;
 import pl.asie.computronics.integration.cofh.DriverEnergyProvider;
 import pl.asie.computronics.integration.cofh.DriverEnergyReceiver;
@@ -23,21 +22,23 @@ import pl.asie.computronics.integration.enderio.DriverPowerStorage;
 import pl.asie.computronics.integration.enderio.DriverRedstoneControllable;
 import pl.asie.computronics.integration.enderio.DriverTransceiver;
 import pl.asie.computronics.integration.factorization.DriverChargeConductor;
+import pl.asie.computronics.integration.flamingo.DriverFlamingo;
 import pl.asie.computronics.integration.fsp.DriverSteamTransporter;
+import pl.asie.computronics.integration.mekanism.DriverStrictEnergyStorage;
 import pl.asie.computronics.integration.mfr.DriverDeepStorageUnit;
-import pl.asie.computronics.integration.railcraft.DriverBoilerFirebox;
-import pl.asie.computronics.integration.railcraft.DriverElectricGrid;
-import pl.asie.computronics.integration.railcraft.DriverRoutingDetector;
-import pl.asie.computronics.integration.railcraft.DriverRoutingSwitch;
-import pl.asie.computronics.integration.railcraft.DriverSteamTurbine;
-import pl.asie.computronics.integration.railcraft.track.DriverLauncherTrack;
-import pl.asie.computronics.integration.railcraft.track.DriverLimiterTrack;
-import pl.asie.computronics.integration.railcraft.track.DriverLocomotiveTrack;
-import pl.asie.computronics.integration.railcraft.track.DriverPoweredTrack;
-import pl.asie.computronics.integration.railcraft.track.DriverPrimingTrack;
-import pl.asie.computronics.integration.railcraft.track.DriverRoutingTrack;
-import pl.asie.computronics.integration.redlogic.CCBundledRedstoneProviderRedLogic;
+import pl.asie.computronics.integration.railcraft.driver.DriverBoilerFirebox;
+import pl.asie.computronics.integration.railcraft.driver.DriverElectricGrid;
+import pl.asie.computronics.integration.railcraft.driver.DriverRoutingDetector;
+import pl.asie.computronics.integration.railcraft.driver.DriverRoutingSwitch;
+import pl.asie.computronics.integration.railcraft.driver.DriverSteamTurbine;
+import pl.asie.computronics.integration.railcraft.driver.track.DriverLauncherTrack;
+import pl.asie.computronics.integration.railcraft.driver.track.DriverLimiterTrack;
+import pl.asie.computronics.integration.railcraft.driver.track.DriverLocomotiveTrack;
+import pl.asie.computronics.integration.railcraft.driver.track.DriverPoweredTrack;
+import pl.asie.computronics.integration.railcraft.driver.track.DriverPrimingTrack;
+import pl.asie.computronics.integration.railcraft.driver.track.DriverRoutingTrack;
 import pl.asie.computronics.integration.redlogic.DriverLamp;
+import pl.asie.computronics.integration.storagedrawers.DriverDrawerGroup;
 import pl.asie.computronics.reference.Compat;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
@@ -64,31 +65,33 @@ public class IntegrationComputerCraft {
 
 	@Optional.Method(modid = Mods.ComputerCraft)
 	public void init() {
-		if(Loader.isModLoaded(Mods.RedLogic)) {
+		if(Mods.isLoaded(Mods.RedLogic)) {
 			if(compat.isCompatEnabled(Compat.RedLogic_Lamps)) {
 				registerMultiPeripheralProvider(new DriverLamp.CCDriver());
 			}
-			if(compat.isCompatEnabled(Compat.Bundled_Redstone)) {
-				ComputerCraftAPI.registerBundledRedstoneProvider(new CCBundledRedstoneProviderRedLogic());
-			}
 		}
-		if(Loader.isModLoaded(Mods.MFR) || Loader.isModLoaded(Mods.JABBA)) {
+		if(Mods.isClassLoaded("powercrystals.minefactoryreloaded.api.IDeepStorageUnit")) {
 			if(compat.isCompatEnabled(Compat.MFR_DSU)) {
 				registerMultiPeripheralProvider(new DriverDeepStorageUnit.CCDriver());
 			}
 		}
-		if(Loader.isModLoaded(Mods.FSP)) {
+		if(Mods.isLoaded(Mods.StorageDrawers)) {
+			if(compat.isCompatEnabled(Compat.StorageDrawers)) {
+				registerMultiPeripheralProvider(new DriverDrawerGroup.CCDriver());
+			}
+		}
+		if(Mods.isLoaded(Mods.FSP)) {
 			if(compat.isCompatEnabled(Compat.FSP_Steam_Transporter)) {
 				registerMultiPeripheralProvider(new DriverSteamTransporter.CCDriver());
 			}
 		}
-		if(Loader.isModLoaded(Mods.Factorization)) {
+		if(Mods.isLoaded(Mods.Factorization)) {
 			if(compat.isCompatEnabled(Compat.FZ_ChargePeripheral)) {
 				registerMultiPeripheralProvider(new DriverChargeConductor.CCDriver());
 			}
 		}
 
-		if(Loader.isModLoaded(Mods.Railcraft)) {
+		if(Mods.isLoaded(Mods.Railcraft)) {
 			if(compat.isCompatEnabled(Compat.Railcraft_Routing)) {
 				registerMultiPeripheralProvider(new DriverPoweredTrack.CCDriver());
 				registerMultiPeripheralProvider(new DriverRoutingTrack.CCDriver());
@@ -104,19 +107,25 @@ public class IntegrationComputerCraft {
 			}
 		}
 
-		if(Loader.isModLoaded(Mods.AE2)) {
+		if(Mods.isLoaded(Mods.ArmourersWorkshop)) {
+			if(compat.isCompatEnabled(Compat.AW_Mannequins)) {
+				registerMultiPeripheralProvider(new DriverMannequin.CCDriver());
+			}
+		}
+
+		if(Mods.isLoaded(Mods.AE2)) {
 			if(compat.isCompatEnabled(Compat.AE2_SpatialIO)) {
 				registerMultiPeripheralProvider(new DriverSpatialIOPort.CCDriver());
 			}
 		}
 
-		if(ModAPIManager.INSTANCE.hasAPI(Mods.API.CoFHAPI_Energy)
+		if(Mods.API.hasAPI(Mods.API.CoFHAPI_Energy)
 			&& compat.isCompatEnabled(Compat.RedstoneFlux)) {
 			registerMultiPeripheralProvider(new DriverEnergyReceiver.CCDriver());
 			registerMultiPeripheralProvider(new DriverEnergyProvider.CCDriver());
 		}
 
-		if(Loader.isModLoaded(Mods.EnderIO)) {
+		if(Mods.isLoaded(Mods.EnderIO)) {
 			if(compat.isCompatEnabled(Compat.EnderIO)) {
 				registerMultiPeripheralProvider(new DriverRedstoneControllable.CCDriver());
 				registerMultiPeripheralProvider(new DriverIOConfigurable.CCDriver());
@@ -131,14 +140,25 @@ public class IntegrationComputerCraft {
 			}
 		}
 
-		if(Loader.isModLoaded(Mods.API.DraconicEvolution)
+		if(Mods.API.hasAPI(Mods.API.DraconicEvolution)
 			&& compat.isCompatEnabled(Compat.DraconicEvolution)) {
 			registerMultiPeripheralProvider(new DriverExtendedRFStorage.CCDriver());
+		}
+
+		if(Mods.API.hasAPI(Mods.API.Mekanism_Energy)
+			&& compat.isCompatEnabled(Compat.MekanismEnergy)) {
+			registerMultiPeripheralProvider(new DriverStrictEnergyStorage.CCDriver());
 		}
 
 		if(Mods.API.hasVersion(Mods.API.BuildCraftTiles, "[1.1,)")) {
 			if(compat.isCompatEnabled(Compat.BuildCraft_Drivers)) {
 				registerMultiPeripheralProvider(new DriverHeatable.CCDriver());
+			}
+		}
+
+		if(Mods.isLoaded(Mods.Flamingo)) {
+			if(compat.isCompatEnabled(Compat.Flamingo)) {
+				registerMultiPeripheralProvider(new DriverFlamingo.CCDriver());
 			}
 		}
 

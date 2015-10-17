@@ -2,7 +2,6 @@ package pl.asie.computronics.tile;
 
 //import java.nio.file.FileSystem;
 
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
@@ -35,7 +34,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 		super("tape_drive");
 		this.createInventory(1);
 		this.state = new TapeDriveState();
-		if(Loader.isModLoaded(Mods.OpenComputers) && node != null) {
+		if(Mods.isLoaded(Mods.OpenComputers) && node() != null) {
 			initOCFilesystem();
 		}
 	}
@@ -65,7 +64,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 			// Remove our file systems when we get disconnected from a
 			// computer.
 			node.disconnect(oc_fs.node());
-		} else if(node == this.node) {
+		} else if(node == this.node()) {
 			// Remove the file system if we are disconnected, because in that
 			// case this method is only called once.
 			oc_fs.node().remove();
@@ -153,6 +152,22 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 	@Override
 	public void onRedstoneSignal(int signal) {
 		this.switchState(signal > 0 ? State.PLAYING : State.STOPPED);
+	}
+
+	@Override
+	public boolean shouldPlaySound() {
+		switch(getEnumState()) {
+			case REWINDING:
+			case FORWARDING:
+				return true;
+			default:
+				return false;
+		}
+	}
+
+	@Override
+	public String getSoundName() {
+		return "tape_rewind";
 	}
 
 	// Storage handling
@@ -283,6 +298,13 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 	}
 
 	@Override
+	public void removeFromNBTForTransfer(NBTTagCompound data) {
+		super.removeFromNBTForTransfer(data);
+		data.removeTag("oc:fs");
+		data.removeTag("state");
+	}
+
+	@Override
 	public void readFromRemoteNBT(NBTTagCompound tag) {
 		super.readFromRemoteNBT(tag);
 		if(tag.hasKey("state")) {
@@ -292,7 +314,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 
 	// OpenComputers
 
-	@Callback(direct = true)
+	@Callback(doc = "function():boolean; Returns true if the tape drive is empty or the inserted tape has reached its end", direct = true)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] isEnd(Context context, Arguments args) {
 		if(state.getStorage() != null) {
@@ -302,45 +324,45 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 		}
 	}
 
-	@Callback(direct = true)
+	@Callback(doc = "function():boolean; Returns true if there is a tape inserted", direct = true)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] isReady(Context context, Arguments args) {
 		return new Object[] { state.getStorage() != null };
 	}
 
-	@Callback(direct = true)
+	@Callback(doc = "function():number; Returns the size of the tape, in bytes", direct = true)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] getSize(Context context, Arguments args) {
 		return new Object[] { (state.getStorage() != null ? state.getStorage().getSize() : 0) };
 	}
 
-	@Callback
+	@Callback(doc = "function(label:string):string; Sets the label of the tape. "
+		+ "Returns the new label, or nil if there is no tape inserted")
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] setLabel(Context context, Arguments args) {
-		if(args.count() == 1) {
-			if(args.isString(0)) {
-				setLabel(args.checkString(0));
-			}
-		}
-		return new Object[] { (state.getStorage() != null ? storageName : "") };
+		setLabel(args.checkString(0));
+		return new Object[] { (state.getStorage() != null ? storageName : null) };
 	}
 
-	@Callback
+	@Callback(doc = "function():string; Returns the current label of the tape, or nil if there is no tape inserted")
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] getLabel(Context context, Arguments args) {
-		return new Object[] { (state.getStorage() != null ? storageName : "") };
+		return new Object[] { (state.getStorage() != null ? storageName : null) };
 	}
 
-	@Callback
+	@Callback(doc = "function(length:number):number; Seeks the specified amount of bytes on the tape. "
+		+ "Negative values for rewinding. Returns the amount of bytes sought, or nil if there is no tape inserted")
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] seek(Context context, Arguments args) {
-		if(state.getStorage() != null && args.count() >= 1 && args.isInteger(0)) {
+		if(state.getStorage() != null) {
 			return new Object[] { state.getStorage().seek(args.checkInteger(0)) };
 		}
 		return null;
 	}
 
-	@Callback
+	@Callback(doc = "function([length:number]):string; "
+		+ "Reads and returns the specified amount of bytes or a single byte from the tape. "
+		+ "Returns nil if there is no tape inserted")
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] read(Context context, Arguments args) {
 		if(state.getStorage() != null) {
@@ -356,7 +378,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 		}
 	}
 
-	@Callback
+	@Callback(doc = "function(data:number or string); Writes the specified data to the tape if there is one inserted")
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] write(Context context, Arguments args) {
 		if(state.getStorage() != null && args.count() >= 1) {
@@ -364,45 +386,41 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 				state.getStorage().write((byte) args.checkInteger(0));
 			} else if(args.isByteArray(0)) {
 				state.getStorage().write(args.checkByteArray(0));
+			} else {
+				throw new IllegalArgumentException("bad arguments #1 (number or string expected)");
 			}
 		}
 		return null;
 	}
 
-	@Callback
+	@Callback(doc = "function():boolean; Make the Tape Drive start playing the tape. Returns true on success")
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] play(Context context, Arguments args) {
 		switchState(State.PLAYING);
-		return new Object[] { state.getStorage() != null };
+		return new Object[] { state.getStorage() != null && this.getEnumState() == State.PLAYING };
 	}
 
-	@Callback
+	@Callback(doc = "function():boolean; Make the Tape Drive stop playing the tape. Returns true on success")
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] stop(Context context, Arguments args) {
 		switchState(State.STOPPED);
-		return new Object[] { state.getStorage() != null };
+		return new Object[] { state.getStorage() != null && this.getEnumState() == State.STOPPED };
 	}
 
-	@Callback
+	@Callback(doc = "function(speed:number):boolean; Sets the speed of the tape drive. Needs to be beween 0.25 and 2. Returns true on success")
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] setSpeed(Context context, Arguments args) {
-		if(args.count() > 0 && args.isDouble(0)) {
-			return new Object[] { this.state.setSpeed((float) args.checkDouble(0)) };
-		} else {
-			return null;
-		}
+		return new Object[] { this.state.setSpeed((float) args.checkDouble(0)) };
 	}
 
-	@Callback
+	@Callback(doc = "function(speed:number); Sets the volume of the tape drive. Needs to be beween 0 and 1")
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] setVolume(Context context, Arguments args) {
-		if(args.count() > 0 && args.isDouble(0)) {
-			this.state.setVolume((float) args.checkDouble(0));
-		}
+		this.state.setVolume((float) args.checkDouble(0));
 		return null;
 	}
 
-	@Callback
+	@Callback(doc = "function():string; Returns the current state of the tape drive", direct = true)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] getState(Context context, Arguments args) {
 		return new Object[] { state.getState().toString() };
@@ -419,40 +437,113 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 	public Object[] callMethod(IComputerAccess computer, ILuaContext context,
 		int method, Object[] arguments) throws LuaException,
 		InterruptedException {
-		// methods which take strings and do something
-		if(arguments.length == 1 && (arguments[0] instanceof String)) {
-			switch(method){
-				case 5:
+
+		// methods which don't take any arguments
+		switch(method) {
+			case 0: { // isEnd
+				if(state.getStorage() != null) {
+					return new Object[] { state.getStorage().getPosition() + state.packetSize > state.getStorage().getSize() };
+				} else {
+					return new Object[] { true };
+				}
+			}
+			case 1: { // isReady
+				return new Object[] { state.getStorage() != null };
+			}
+			case 2: { // getSize
+				return new Object[] { (state.getStorage() != null ? state.getStorage().getSize() : 0) };
+			}
+			case 3: { // getLabel
+				return new Object[] { (state.getStorage() != null ? storageName : null) };
+			}
+			case 4: { // getState
+				return new Object[] { state.getState().toString() };
+			}
+			case 9: { // read
+				if(arguments.length < 1) {
+					if(state.getStorage() != null) {
+						return new Object[] { state.getStorage().read(false) & 0xFF };
+					} else {
+						return null;
+					}
+				}
+				break;
+			}
+			case 11: { // play
+				switchState(State.PLAYING);
+				return new Object[] { state.getStorage() != null && this.getEnumState() == State.PLAYING };
+			}
+			case 12: { // stop
+				switchState(State.STOPPED);
+				return new Object[] { state.getStorage() != null && this.getEnumState() == State.STOPPED };
+			}
+		}
+
+		// Argument type check
+		switch(method) {
+			case 5: { // setLabel
+				if(arguments.length < 1 || !(arguments[0] instanceof String)) {
+					throw new LuaException("first argument needs to be a string");
+				}
+				break;
+			}
+			case 6:
+			case 7:
+			case 8: { // setSpeed, setVolume, seek
+				if(arguments.length < 1 || !(arguments[0] instanceof Number)) {
+					throw new LuaException("first argument needs to be a number");
+				}
+				break;
+			}
+			case 9: { // read
+				if(arguments.length < 1 || !(arguments[0] instanceof Number)) {
+					throw new LuaException("first argument needs to be a number or non-existant");
+				}
+				break;
+			}
+			case 10: { // write
+				if(arguments.length < 1 || (!(arguments[0] instanceof String) && !(arguments[0] instanceof Number))) {
+					throw new LuaException("first argument needs to be a number or string");
+				}
+				break;
+			}
+		}
+
+		if(arguments.length < 1) {
+			throw new LuaException("no first argument found");
+		}
+
+		// Execution
+		if((arguments[0] instanceof String)) {
+			// methods which take strings and do something
+			switch(method) {
+				case 5: // setLabel
 					setLabel((String) arguments[0]);
-					break;
-				case 10:
+					return new Object[] { (state.getStorage() != null ? storageName : null) };
+				case 10: // write
 					if(state.getStorage() != null) {
 						return new Object[] { state.getStorage().write(((String) arguments[0]).getBytes()) };
 					}
 					break;
 			}
-		}
-
-		// methods which take floats and do something
-		if(arguments.length == 1 && (arguments[0] instanceof Double)) {
-			float f = ((Double) arguments[0]).floatValue();
-			int i = ((Double) arguments[0]).intValue();
-			switch(method){
-				case 6:
-					return new Object[] { this.state.setSpeed(f) };
-				case 7:
-					this.state.setVolume(f);
+		} else if(arguments[0] instanceof Number) {
+			// methods which take floats and do something
+			switch(method) {
+				case 6: { // setSpeed
+					return new Object[] { this.state.setSpeed(((Number) arguments[0]).floatValue()) };
+				}
+				case 7: { // setVolume
+					this.state.setVolume(((Number) arguments[0]).floatValue());
 					return null;
-				case 8:
+				}
+				case 8: { // seek
 					if(state.getStorage() != null) {
-						return new Object[] { state.getStorage().seek(i) };
-					}
-				case 10:
-					if(state.getStorage() != null) {
-						state.getStorage().write((byte) i);
+						return new Object[] { state.getStorage().seek(((Number) arguments[0]).intValue()) };
 					}
 					break;
-				case 9:
+				}
+				case 9: { // read
+					int i = ((Number) arguments[0]).intValue();
 					if(state.getStorage() != null) {
 						if(i >= 256) {
 							i = 256;
@@ -460,49 +551,17 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 						byte[] data = new byte[i];
 						state.getStorage().read(data, false);
 						return new Object[] { new String(data) };
+					} else {
+						return null;
+					}
+				}
+				case 10: { // write
+					if(state.getStorage() != null) {
+						state.getStorage().write((byte) ((Number) arguments[0]).intValue());
 					}
 					break;
+				}
 			}
-		}
-
-		// methods which don't take any arguments and do something
-		switch(method){
-			case 11:
-				switchState(State.PLAYING);
-				break;
-			case 12:
-				switchState(State.STOPPED);
-				break;
-		}
-
-		// returns for the methods which didn't return something before
-		switch(method){
-			case 0:
-				if(state.getStorage() != null) {
-					return new Object[] { state.getStorage().getPosition() + state.packetSize > state.getStorage().getSize() };
-				} else {
-					return new Object[] { true };
-				}
-
-			case 1:  // isReady, play, stop
-			case 11:
-			case 12:
-				return new Object[] { state.getStorage() != null };
-
-			case 2:
-				return new Object[] { (state.getStorage() != null ? state.getStorage().getSize() : 0) };
-
-			case 3: // getLabel, setLabel
-			case 5:
-				return new Object[] { (state.getStorage() != null ? storageName : "") };
-
-			case 4:
-				return new Object[] { state.getState().toString() };
-
-			case 9:
-				if(state.getStorage() != null) {
-					return new Object[] { state.getStorage().read(false) & 0xFF };
-				}
 		}
 
 		// catch all other methods
@@ -514,7 +573,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 	@Override
 	@Optional.Method(modid = Mods.NedoComputers)
 	public short busRead(int addr) {
-		switch(addr & 0xFFFE){
+		switch(addr & 0xFFFE) {
 			case 0:
 				return (short) state.getState().ordinal();
 			case 2:
@@ -534,7 +593,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 	@Override
 	@Optional.Method(modid = Mods.NedoComputers)
 	public void busWrite(int addr, short data) {
-		switch(addr & 0xFFFE){
+		switch(addr & 0xFFFE) {
 			case 0:
 				switchState(State.values()[data % State.values().length]);
 				break;

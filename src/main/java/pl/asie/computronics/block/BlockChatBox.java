@@ -1,7 +1,9 @@
 package pl.asie.computronics.block;
 
+import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import li.cil.oc.api.network.Environment;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,19 +17,23 @@ import net.minecraft.world.World;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.item.block.IBlockWithSpecialText;
 import pl.asie.computronics.reference.Config;
+import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TileChatBox;
 import pl.asie.computronics.util.StringUtil;
+import pl.asie.lib.block.TileEntityBase;
 
 import java.util.List;
 
 public class BlockChatBox extends BlockMachineSidedIcon implements IBlockWithSpecialText {
+
 	private IIcon mSide;
 
 	public BlockChatBox() {
-		super();
+		super("chatbox");
 		this.setCreativeTab(Computronics.tab);
 		this.setIconName("computronics:chatbox");
 		this.setBlockName("computronics.chatBox");
+		this.setRotation(Rotation.FOUR);
 	}
 
 	// I'm such a cheater.
@@ -38,8 +44,12 @@ public class BlockChatBox extends BlockMachineSidedIcon implements IBlockWithSpe
 
 	// Cheaters never win! ~ jaquadro
 	@Override
-	public int colorMultiplier(IBlockAccess blockAccess, int x, int y, int z) {
-		return getRenderColor(blockAccess.getBlockMetadata(x, y, z));
+	public int colorMultiplier(IBlockAccess world, int x, int y, int z) {
+		int meta = world.getBlockMetadata(x, y, z);
+		if(meta >= 8) {
+			return getRenderColor(meta);
+		}
+		return super.colorMultiplier(world, x, y, z);
 	}
 
 	@Override
@@ -58,7 +68,7 @@ public class BlockChatBox extends BlockMachineSidedIcon implements IBlockWithSpe
 
 	@Override
 	public int damageDropped(int metadata) {
-		return metadata;
+		return metadata & (~7);
 	}
 
 	@Override
@@ -80,6 +90,20 @@ public class BlockChatBox extends BlockMachineSidedIcon implements IBlockWithSpe
 	}
 
 	@Override
+	public boolean hasComparatorInputOverride() {
+		return Config.REDSTONE_REFRESH;
+	}
+
+	@Override
+	public int getComparatorInputOverride(World world, int x, int y, int z, int side) {
+		TileEntity tile = world.getTileEntity(x, y, z);
+		if(tile instanceof TileEntityBase) {
+			return ((TileEntityBase) tile).requestCurrentRedstoneValue(side);
+		}
+		return super.getComparatorInputOverride(world, x, y, z, side);
+	}
+
+	@Override
 	public boolean hasSubTypes() {
 		return true;
 	}
@@ -95,5 +119,11 @@ public class BlockChatBox extends BlockMachineSidedIcon implements IBlockWithSpe
 	@Override
 	public String getUnlocalizedName(ItemStack stack) {
 		return (stack.getItemDamage() >= 8 ? "tile.computronics.chatBox.creative" : this.getUnlocalizedName());
+	}
+
+	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
+	public Class<? extends Environment> getTileEntityClass(int meta) {
+		return TileChatBox.class;
 	}
 }

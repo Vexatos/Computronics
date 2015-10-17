@@ -7,6 +7,7 @@ public class Names {
 
 	public static final String
 		AE2_SpatialIO = "spatial_io",
+		AW_Mannequin = "mannequin",
 		BuildCraft_Heatable = "heatable_tile",
 		CoFH_PoweredTile = "powered_tile",
 		DraconicEvolution_Storage = "draconic_storage",
@@ -18,8 +19,10 @@ public class Names {
 		EnderIO_PowerStorage = "power_storage",
 		EnderIO_RedstoneTile = "redstone_tile",
 		EnderIO_Transceiver = "dimensional_transceiver",
+		Flamingo_Flamingo = "flamingo",
 		FSP_SteamTransporter = "steam_transporter",
 		FZ_ChargeConductor = "charge_conductor",
+		Mekanism_EnergyStorage = "mekanism_machine",
 		MFR_DSU = "deep_storage_unit",
 		OpenBlocks_BuildingGuide = "building_guide",
 		Railcraft_BoilerFirebox = "boiler_firebox",
@@ -35,5 +38,6 @@ public class Names {
 		Railcraft_RoutingSwitch = "routing_switch",
 		Railcraft_RoutingTrack = "routing_track",
 		Railcraft_SteamTurbine = "steam_turbine",
-		RedLogic_Lamp = "lamp";
+		RedLogic_Lamp = "lamp",
+		StorageDrawers_DrawerGroup = "drawer";
 }

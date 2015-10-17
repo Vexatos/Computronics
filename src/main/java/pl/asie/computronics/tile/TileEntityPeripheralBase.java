@@ -1,7 +1,9 @@
 package pl.asie.computronics.tile;
 
-import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.Optional;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import li.cil.oc.api.Network;
@@ -13,9 +15,12 @@ import li.cil.oc.api.network.Visibility;
 import nedocomputers.api.INedoPeripheral;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
+import pl.asie.computronics.audio.MachineSound;
 import pl.asie.computronics.reference.Mods;
-import pl.asie.computronics.util.tile.IComputronicsPeripheral;
+import pl.asie.computronics.util.ColorUtils;
+import pl.asie.computronics.util.internal.IComputronicsPeripheral;
 import pl.asie.lib.tile.TileMachine;
 
 import java.util.ArrayList;
@@ -34,22 +39,25 @@ import java.util.ArrayList;
 })
 public abstract class TileEntityPeripheralBase extends TileMachine implements Environment,
 	IMultiPeripheral, IComputronicsPeripheral, INedoPeripheral, BlacklistedPeripheral {
+
 	protected String peripheralName;
 
 	public TileEntityPeripheralBase(String name) {
 		super();
 		this.peripheralName = name;
-		if(Loader.isModLoaded(Mods.OpenComputers)) {
+		if(Mods.isLoaded(Mods.OpenComputers)) {
 			initOC();
 		}
+		soundRes = getSoundFor(getSoundName());
 	}
 
 	public TileEntityPeripheralBase(String name, double bufferSize) {
 		super();
 		this.peripheralName = name;
-		if(Loader.isModLoaded(Mods.OpenComputers)) {
+		if(Mods.isLoaded(Mods.OpenComputers)) {
 			initOC(bufferSize);
 		}
+		soundRes = getSoundFor(getSoundName());
 	}
 
 	public boolean isValid() {
@@ -58,25 +66,32 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 
 	@Optional.Method(modid = Mods.OpenComputers)
 	private void initOC(double s) {
-		node = Network.newNode(this, Visibility.Network).withComponent(this.peripheralName, Visibility.Network).withConnector(s).create();
+		setNode(Network.newNode(this, Visibility.Network).withComponent(this.peripheralName, Visibility.Network).withConnector(s).create());
 	}
 
 	@Optional.Method(modid = Mods.OpenComputers)
 	private void initOC() {
-		node = Network.newNode(this, Visibility.Network).withComponent(this.peripheralName, Visibility.Network).create();
+		setNode(Network.newNode(this, Visibility.Network).withComponent(this.peripheralName, Visibility.Network).create());
 	}
 
 	// OpenComputers Environment boilerplate
 	// From TileEntityEnvironment
 
-	protected Node node;
+	// Has to be an Object for getDeclaredFields to not error when
+	// called on this class without OpenComputers being present. Blame OpenPeripheral.
+	private Object node;
 	protected ArrayList<IComputerAccess> attachedComputersCC;
 	protected boolean addedToNetwork = false;
 
 	@Override
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Node node() {
-		return node;
+		return (Node) node;
+	}
+
+	@Optional.Method(modid = Mods.OpenComputers)
+	public void setNode(final Node node) {
+		this.node = node;
 	}
 
 	@Override
@@ -109,6 +124,9 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 			Network.joinOrCreateNetwork(this);
 			this.onOCNetworkCreation();
 		}
+		if(worldObj.isRemote && hasSound()) {
+			updateSound();
+		}
 	}
 
 	@Optional.Method(modid = Mods.OpenComputers)
@@ -120,8 +138,8 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void onChunkUnload() {
 		super.onChunkUnload();
-		if(node != null) {
-			node.remove();
+		if(node() != null) {
+			node().remove();
 		}
 	}
 
@@ -129,23 +147,26 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void invalidate() {
 		super.invalidate();
-		if(node != null) {
-			node.remove();
+		if(node() != null) {
+			node().remove();
+		}
+		if(worldObj.isRemote && hasSound()) {
+			updateSound();
 		}
 	}
 
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void readFromNBT_OC(final NBTTagCompound nbt) {
-		if(node != null && node.host() == this) {
-			node.load(nbt.getCompoundTag("oc:node"));
+		if(node() != null && node().host() == this) {
+			node().load(nbt.getCompoundTag("oc:node"));
 		}
 	}
 
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void writeToNBT_OC(final NBTTagCompound nbt) {
-		if(node != null && node.host() == this) {
+		if(node() != null && node().host() == this) {
 			final NBTTagCompound nodeNbt = new NBTTagCompound();
-			node.save(nodeNbt);
+			node().save(nodeNbt);
 			nbt.setTag("oc:node", nodeNbt);
 		}
 	}
@@ -231,13 +252,57 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 		}
 	}
 
+	protected int overlayColor = ColorUtils.Colors.White.color;
+
+	public int getColor() {
+		return overlayColor;
+	}
+
+	public void setColor(int color) {
+		this.overlayColor = color;
+		this.markDirty();
+	}
+
+	public boolean canBeColored() {
+		return true;
+	}
+
+	@Override
+	public void readFromRemoteNBT(NBTTagCompound nbt) {
+		super.readFromRemoteNBT(nbt);
+		int oldColor = this.overlayColor;
+		if(nbt.hasKey("computronics:color")) {
+			overlayColor = nbt.getInteger("computronics:color");
+		}
+		if(this.overlayColor < 0) {
+			this.overlayColor = ColorUtils.Colors.White.color;
+		}
+		if(oldColor != this.overlayColor) {
+			this.worldObj.markBlockRangeForRenderUpdate(xCoord, yCoord, zCoord, xCoord, yCoord, zCoord);
+		}
+	}
+
+	@Override
+	public void writeToRemoteNBT(NBTTagCompound nbt) {
+		super.writeToRemoteNBT(nbt);
+		if(overlayColor != ColorUtils.Colors.White.color) {
+			nbt.setInteger("computronics:color", overlayColor);
+		}
+	}
+
 	@Override
 	public void readFromNBT(final NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-		if(Loader.isModLoaded(Mods.OpenComputers)) {
+		if(nbt.hasKey("computronics:color")) {
+			overlayColor = nbt.getInteger("computronics:color");
+		}
+		if(this.overlayColor < 0) {
+			this.overlayColor = ColorUtils.Colors.White.color;
+		}
+		if(Mods.isLoaded(Mods.OpenComputers)) {
 			readFromNBT_OC(nbt);
 		}
-		if(Loader.isModLoaded(Mods.NedoComputers)) {
+		if(Mods.isLoaded(Mods.NedoComputers)) {
 			readFromNBT_NC(nbt);
 		}
 	}
@@ -245,11 +310,74 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 	@Override
 	public void writeToNBT(final NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-		if(Loader.isModLoaded(Mods.OpenComputers)) {
+		if(overlayColor != ColorUtils.Colors.White.color) {
+			nbt.setInteger("computronics:color", overlayColor);
+		}
+		if(Mods.isLoaded(Mods.OpenComputers)) {
 			writeToNBT_OC(nbt);
 		}
-		if(Loader.isModLoaded(Mods.NedoComputers)) {
+		if(Mods.isLoaded(Mods.NedoComputers)) {
 			writeToNBT_NC(nbt);
+		}
+	}
+
+	@Override
+	public void removeFromNBTForTransfer(NBTTagCompound data) {
+		super.removeFromNBTForTransfer(data);
+		data.removeTag("oc:node");
+	}
+
+	// Sound related, thanks to EnderIO code for this!
+
+	@SideOnly(Side.CLIENT)
+	private MachineSound sound;
+
+	private ResourceLocation soundRes;
+
+	protected static ResourceLocation getSoundFor(String sound) {
+		return sound == null ? null : new ResourceLocation(Mods.Computronics + ":" + sound);
+	}
+
+	public String getSoundName() {
+		return null;
+	}
+
+	public ResourceLocation getSoundRes() {
+		return soundRes;
+	}
+
+	public boolean shouldPlaySound() {
+		return false;
+	}
+
+	public boolean hasSound() {
+		return getSoundName() != null;
+	}
+
+	public float getVolume() {
+		return 1.0f;
+	}
+
+	public float getPitch() {
+		return 1.0f;
+	}
+
+	public boolean shouldRepeat() {
+		return true;
+	}
+
+	@SideOnly(Side.CLIENT)
+	private void updateSound() {
+		if(hasSound()) {
+			if(shouldPlaySound() && !isInvalid()) {
+				if(sound == null) {
+					sound = new MachineSound(getSoundRes(), xCoord + 0.5f, yCoord + 0.5f, zCoord + 0.5f, getVolume(), getPitch(), shouldRepeat());
+					FMLClientHandler.instance().getClient().getSoundHandler().playSound(sound);
+				}
+			} else if(sound != null) {
+				sound.endPlaying();
+				sound = null;
+			}
 		}
 	}
 }

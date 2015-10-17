@@ -1,9 +1,9 @@
 package pl.asie.computronics.block;
 
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import li.cil.oc.api.network.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,6 +12,7 @@ import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import pl.asie.computronics.Computronics;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TileCipherBlock;
@@ -25,9 +26,9 @@ public class BlockCipher extends BlockMachineSidedIcon implements IRedNetOmniNod
 	private IIcon mFront;
 	
 	public BlockCipher() {
-		super("bundled");
+		super("bundled", "cipher");
 		this.setBlockName("computronics.cipher");
-		this.setGuiID(1);
+		this.setGuiProvider(Computronics.guiCipher);
 	}
 	
 	@Override
@@ -41,20 +42,19 @@ public class BlockCipher extends BlockMachineSidedIcon implements IRedNetOmniNod
 		if(!world.isRemote && Config.CIPHER_CAN_LOCK) {
 			TileEntity tile = world.getTileEntity(x, y, z);
 			if(tile != null) {
-				isLocked = ((TileCipherBlock)tile).isLocked();
+				isLocked = ((TileCipherBlock) tile).isLocked();
 			}
 			if(isLocked) {
-				player.addChatMessage(new ChatComponentTranslation("chat.computronics.cipher.locked"));	
+				player.addChatMessage(new ChatComponentTranslation("chat.computronics.cipher.locked"));
 			}
 		}
-		if(!isLocked) return super.onBlockActivated(world, x, y, z, player, par6, par7, par8, par9);
-		else return true;
+		return isLocked || super.onBlockActivated(world, x, y, z, player, par6, par7, par8, par9);
 	}
 	
 	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
 		TileEntity tile = world.getTileEntity(x, y, z);
-		if(Loader.isModLoaded(Mods.ProjectRed))
+		if(Mods.isLoaded(Mods.ProjectRed))
 			((TileCipherBlock)tile).onProjectRedBundledInputChanged();
 	}
 	
@@ -105,5 +105,11 @@ public class BlockCipher extends BlockMachineSidedIcon implements IRedNetOmniNod
 	public int getOutputValue(World world, int x, int y, int z,
 			ForgeDirection side, int subnet) {
 		return ((TileCipherBlock)world.getTileEntity(x, y, z)).redNetSingleOutput;
+	}
+
+	@Override
+	@Optional.Method(modid= Mods.OpenComputers)
+	public Class<? extends Environment> getTileEntityClass(int meta) {
+		return TileCipherBlock.class;
 	}
 }

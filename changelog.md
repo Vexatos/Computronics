@@ -1,11 +1,143 @@
+==== 1.5.9 ====
+
+  * ADDED: New config option (disabled by default) to make the normal Chat Box have no range limit and work interdimensionally unless you specify a distance.
+  * CHANGED: The Creative Chat Box can now send messages interdimensionally and has no range limit anymore unless you specify a distance.
+
+==== 1.5.8 ====
+
+  * ADDED: Some Nanomachine Beehaviour. Requires OpenComputers 1.5.18 now.
+  * ADDED: Binary mode to the Colorful Lamp for MineFactory Reloaded. Shift-right click the lamp using a wrench or sledgehammer to make the lamp read every RedNet color frequency, each colour (apart from black) setting a specific bit of the lamp's colour (just like it works for Project: Red and RedLogic Bundled Cable). Shift-right clicking again will reset the mode.
+  * CHANGED: Made the Deep Storage Unit driver for ComputerCraft work with Quantum Storage.
+  * FIXED: Updated Forestry integration to version 4.0.8; requires Forestry 4.0.8 now.
+
+==== 1.5.7 ====
+
+  * ADDED: The Colorful Upgade for OpenComputers Robots!
+    - Allows changing the colour of the Robot case to make your bots even prettier than before!
+    - Only works in Robots.
+  * CHANGED: The Particle Turtle now uses blaze powder instead of Firework Stars as those weren't working properly.
+  * FIXED: Some issues with default peripheral priority.
+  * FIXED: Errors in the multiperipheral system not being handled properly.
+  * FIXED: Errors in the multiperipheral system not being written to log properly.
+
+==== 1.5.6 ====
+
+  * ADDED: Made most Computronics blocks dyable!
+    - You can now right click most Computronics blocks with any kind of dye to change their colour!
+    - Note: In case you change the colour of a block that existed in the world before you updated, it might not properly save the colour (this should only happen very rarely so you probably will not be affected at all). In this case just break and re-place the block!
+  * ADDED: Flamingo integration!
+    - Now you can make Flamingos wiggle using ComputerCraft or OpenComputers.
+  * ADDED: Armourer's Workshop integration!
+    - Now you can change rotation of body parts of mannequins using ComputerCraft or OpenComputers.
+  * CHANGED: The encoding for the Advanced Cipher Block's keys have changed. You will need to re-generate keys you might be using. Sorry for the inconvenience, but the new encoding is a lot more compact and server-friendly.
+    - **Huge thanks to makkarpov for helping me with improving the Advanced Cipher Block!**
+  * FIXED: Creative Chat Boxes turning into normal chat boxes when placed.
+  * FIXED: `setDistance()` not working on Creative Chat Boxes.
+
+==== 1.5.5 ====
+
+  * ADDED: StorageDrawers integration!
+    - Now you can properly get the (max) item count stored in a specific drawer slot.
+  * CHANGED: Doubled the default download rate of the built-in tape program
+  * FIXED: Possible crash with Colorful Lamps
+  * FIXED: Rare error with chat boxes kicking people from servers.
+  * FIXED: Updated Forestry integration to version 3.6; requires Forestry 3.6 now.
+  * MISC: Made secret bees more secret.
+  * MISC: Added IChatListenerRegistry.isListenerRegistered to the API.
+
+==== 1.5.4 ====
+
+  * FIXED: Crash when OpenComputers is present but BuildCraft is not.
+
+==== 1.5.3 ====
+
+  * ADDED: The Chat Box and Camera now emit a comparator signal similar to the usually emitted redstone signal.
+  * FIXED: The ability to place a Digital Signal Receiver Box on a side of a block when it's not supported.
+  * FIXED: Computronics Blocks not having any functions provided to ComputerCraft when OpenPeripheral is there and OpenComputers is not.
+  * FIXED: Crash when placing a Camera or Chat Box next to a Rail.
+
+==== 1.5.2 ====
+
+  * ADDED: BuildCraft Builder support for all Computronics blocks except for the Digital Receiver Box
+  * FIXED: A certain achievement not getting triggered all the time
+  * FIXED: Updated BuildCraft integration to 7.0.6. Requires BuildCraft 7.0.6 now.
+
+==== 1.5.1 ====
+
+  * ADDED: Note Block particle to a playing Iron Note Block or Musical Turtle.
+  * CHANGED: the Digital Detector now returns a locomotive's colour numbers so that they can be used with the OpenComputers Colors API (so 0 being white, 1 being orange etc.)
+  * FIXED: Shift-right clicking onto the Ticket Machine with an OpenComputers manual not opening the manual page.
+  * FIXED: Crash with OpenComputers 1.5.11 and Computronics' Robot Upgrades and cards. Requires OpenComputers 1.5.11.25 now.
+  * MISC: Slight improvements to the Digital Detector manual page
+
+==== 1.5.0 ====
+
+  * ADDED: All Computronics blocks now support the OpenComputers API documentation in NotEnoughItems.
+  * ADDED: OpenComputers Component Documentation for every function any Computronics block provides
+  * ADDED: Support for the OpenComputers manual!
+    - Every block and item in Computronics can now be found in the manual
+    - **A huge "Thank You!" to rashy for writing all the documentation!**
+  * ADDED: Some Robot Upgrades now render on a robot if the robot contains them. Requires OpenComputers 1.5.9 now.
+  * ADDED: The tape drive now plays a sound effect when forwarding or rewinding
+  * ADDED: Ticket Machine for Railcraft
+    - Allows printing single-use tickets using ComputerCraft or OpenComputers
+    - Right click to open the customer GUI
+      - Here you can select the ticket you would like to print and print tickets
+    - Shift-right click with an empty hand
+      - Now you can insert golden tickets for customers to select or take paper out
+      - If you are the owner or an Op, you can also lock the machine so only the owner and Ops can open the maintenance GUI
+    - You can prohibit selecting a ticket or printing tickets using the GUI using a computer
+      - If set, tickets can only be selected/printed using a computer
+    - Of course you can insert paper and extract printed tickets using any kind of automation
+    - By default the Ticket Machine uses a little bit of RF for printing tickets, this can be disabled in the config
+  * CHANGED: Made Camera, Chat Box and Tape Drive functions more consistent in behaviour (The ComputerCraft and OpenComputers functions should do the exact same now)
+  * CHANGED: Got rid of the ComputerCraft bundled redstone support for RedLogic as it was not working anyway. Full ComputerCraft support in RedLogic has been proposed to immibis.
+  * CHANGED: Radars now only output relative distance by default.
+    - This can of course be changed in the config.
+  * CHANGED: The Locomotive Relay now consumes a little Charge in the Electric Locomotive as well as a little OpenComputers energy if used by OpenComputers
+    - Consuming charge can be disabled in the config
+  * CHANGED: Renamed the EEPROM Reader component/peripheral name to "eeprom_reader" as it was conflicting with the OpenComputers EEPROM component.
+  * CHANGED: Slightly tweaked the recipes of some Railcraft integration blocks and OpenComputers upgrades
+  * CHANGED: Added config options for enabling each OpenComputers robot upgrade separately, removed the generic one.
+  * CHANGED: The Locomotive Relay's `getMode()` now returns the mode in lower case.
+  * FIXED: Updated OpenPeripheral integration to version 1.1 of OpenPeripheralCore (Requires version 1.1 now)
+  * FIXED: Updated Forestry integration to version 3.5.3 (Requires version 3.5.3 now)
+  * FIXED: Reworked the Locomotive Relay to properly work now and hopefully not randomly get unbound anymore.
+    - Now you can clear a locomotive relay's bond by shift-rightclicking with an empty hand
+  * FIXED: Reworked the Digital Detector to only send an event once for each passing minecart instead of sending one once per tick and minecart
+    - The event will also now ship additional information if the minecart is a locomotive (primary colour, secondary colour and destination)
+    - Thanks to marcin212 and Kubuxu for this!
+  * FIXED: Computronics machine sounds now use the "Blocks" volume setting instead of the "Friendly Creatures" one
+  * MISC: Refactored a lot of code, mainly related to GUIs and Railcraft integration.
+  * MISC: Increased the bitrate on most Computronics textures, they should look much better now.
+
+==== 1.4.6 ====
+
+This one is semi-officially known as "The Cyther Update".
+  * FIXED: A crash when the Iron Note Block has been disabled in the config.
+  * FIXED: A crash with GregTech 6; depending on GregTech 5 for now until GregTech 6 is out of alpha.
+
+==== 1.4.5 ====
+
+This is semi-officially known as "The Kodos Update".
+  * FIXED: The Creative Chat Box respecting the max range of the normal Chat Box
+  * FIXED: Draconic Evolution and Mekanism Energy integration not working at all. Woops.
+
 ==== 1.4.4 ====
 
   * ADDED: Draconic Evolution integration!
     - You can now properly get the (max) energy stored from Energy Pylons, the values can be so huge it needed a special handler
-    - You will need at least version v1.0.1-snapshot_6 of the mod for this to work
+    - You will need at least version v1.0.1-RC-1 of the mod for this to work
+  * ADDED: Mekanism 8 integration!
+    - You can now properly get the (max) energy stored from Mekanism machines like the Induction Matrix, the values can be so huge it needed a special handler
+  * ADDED: getItems() function to Radar Block, Turtle and Robot Upgrade
+    - Gives you information about all the items floating in the world around the Radar.
   * CHANGED: Digital Signal Reciver Box functions are now direct (thus they can be accessed much faster now)
-  * CHANGED: Added getEnergyStored() / getMaxEnergyStored functions to blocks that only receive or provide RF and not do both
+  * CHANGED: Added getEnergyStored() / getMaxEnergyStored functions to blocks that only receive or provide RF and do not do both
+  * FIXED: Updated OpenPeripheral integration to version 1.0 of OpenPeripheralCore (Requires version 1.0 now)
   * FIXED: Digital Locomotive Relay's getDestination() and setDestination() actually work properly again now!
+  * FIXED: Bees now don't run on oil anymore
+  * FIXED: A couple of issues that may have been appearing with Locomotive Relays
 
 ==== 1.4.3 ====
 

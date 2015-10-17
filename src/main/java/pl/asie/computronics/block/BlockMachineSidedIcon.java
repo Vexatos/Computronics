@@ -1,6 +1,5 @@
 package pl.asie.computronics.block;
 
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -11,16 +10,16 @@ public abstract class BlockMachineSidedIcon extends BlockPeripheral {
 	protected IIcon mSide, mSideBI, mSideBO, mTop, mBottom;
 	private String sidingType;
 	
-	public BlockMachineSidedIcon(String sidingType) {
-		super();
+	public BlockMachineSidedIcon(String sidingType, String documentationName) {
+		super(documentationName);
 		this.sidingType = sidingType;
-		if(sidingType.equals("bundled") && !Loader.isModLoaded(Mods.RedLogic) && !Loader.isModLoaded(Mods.ProjectRed))
+		if(sidingType.equals("bundled") && !Mods.isLoaded(Mods.RedLogic) && !Mods.isLoaded(Mods.ProjectRed))
 			this.sidingType = "";
 		this.setRotation(Rotation.FOUR);
 	}
 
-	public BlockMachineSidedIcon() {
-		this("");
+	public BlockMachineSidedIcon(String documentationName) {
+		this("", documentationName);
 	}
 	
 	@SideOnly(Side.CLIENT)

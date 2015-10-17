@@ -1,9 +1,6 @@
 package pl.asie.computronics.reference;
 
-import cpw.mods.fml.common.ModAPIManager;
-import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.versioning.ArtifactVersion;
-import cpw.mods.fml.common.versioning.VersionParser;
 
 import java.util.HashMap;
 
@@ -12,6 +9,7 @@ import java.util.HashMap;
  * @author Vexatos
  */
 public class Mods {
+
 	//The mod itself
 	public static final String
 		Computronics = "computronics",
@@ -26,72 +24,72 @@ public class Mods {
 	//Other mods
 	public static final String
 		AE2 = "appliedenergistics2",
+		ArmourersWorkshop = "armourersWorkshop",
 		BetterStorage = "betterstorage",
 		BuildCraftCore = "BuildCraft|Core",
 		BuildCraftTransport = "BuildCraft|Transport",
 		EnderIO = "EnderIO",
 		Factorization = "factorization",
+		Flamingo = "Flamingo",
 		Forestry = "Forestry",
 		FSP = "Steamcraft",
 		GregTech = "gregtech",
 		JABBA = "JABBA",
 		MFR = "MineFactoryReloaded",
+		QuantumStorage = "QuantumStorage",
 		OpenBlocks = "OpenBlocks",
 		OpenPeripheral = "OpenPeripheralCore",
 		RedLogic = "RedLogic",
 		ProjectRed = "ProjRed|Core",
 		Railcraft = "Railcraft",
+		StorageDrawers = "StorageDrawers",
 		Waila = "Waila";
 
 	//APIs
 	public static class API {
+
 		public static final String
+			BuildCraftBlueprints = "BuildCraftAPI|blueprints",
 			BuildCraftStatements = "BuildCraftAPI|statements",
 			BuildCraftTiles = "BuildCraftAPI|tiles",
 			CoFHAPI_Energy = "CoFHAPI|energy",
-			DraconicEvolution = "DraconicEvolution|API";
+			DraconicEvolution = "DraconicEvolution|API",
+			Gendustry = "gendustryAPI",
+			Mekanism_Energy = "MekanismAPI|energy";
 
 		private static HashMap<String, ArtifactVersion> apiList;
 
 		public static ArtifactVersion getVersion(String name) {
-			if(apiList == null) {
-				apiList = new HashMap<String, ArtifactVersion>();
-				Iterable<? extends ModContainer> apis = ModAPIManager.INSTANCE.getAPIList();
-
-				for(ModContainer api : apis) {
-					apiList.put(api.getModId(), api.getProcessedVersion());
-				}
-			}
-
-			if(apiList.containsKey(name)) {
-				return apiList.get(name);
-			}
-			throw new IllegalArgumentException("API '" + name + "' does not exist!");
+			return pl.asie.lib.reference.Mods.API.getVersion(name);
 		}
 
 		public static boolean hasVersion(String name, String version) {
-			if(ModAPIManager.INSTANCE.hasAPI(name)) {
-				ArtifactVersion v1 = VersionParser.parseVersionReference(name + "@" + version);
-				ArtifactVersion v2 = getVersion(name);
-				return v1.containsVersion(v2);
-			}
-			return false;
+			return pl.asie.lib.reference.Mods.API.hasVersion(name, version);
 		}
 
-		private static HashMap<String, Boolean> classesSearched = new HashMap<String, Boolean>();
+		public static boolean hasAPI(String name) {
+			return pl.asie.lib.reference.Mods.API.hasAPI(name);
+		}
+	}
 
-		public static boolean hasClass(String name) {
-			if(classesSearched.containsKey(name)) {
-				return classesSearched.get(name);
-			}
+	public static boolean isLoaded(String name) {
+		return pl.asie.lib.reference.Mods.isLoaded(name);
+	}
+
+	public static boolean hasEnergyMod() {
+		return pl.asie.lib.reference.Mods.hasEnergyMod();
+	}
+
+	private static final HashMap<String, Boolean> loadedClasses = new HashMap<String, Boolean>();
+
+	public static boolean isClassLoaded(String className) {
+		if(!loadedClasses.containsKey(className)) {
 			try {
-				Class.forName(name);
-				classesSearched.put(name, true);
-				return true;
+				loadedClasses.put(className, Class.forName(className) != null);
 			} catch(ClassNotFoundException e) {
-				classesSearched.put(name, false);
-				return false;
+				loadedClasses.put(className, false);
 			}
 		}
+		return loadedClasses.get(className);
 	}
 }

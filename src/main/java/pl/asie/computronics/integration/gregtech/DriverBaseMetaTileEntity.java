@@ -19,37 +19,37 @@ public class DriverBaseMetaTileEntity extends DriverTileEntity {
 			super(tile, name);
 		}
 
-		@Callback(direct = true)
+		@Callback(doc = "function():number; Returns the EU stored in this block", direct = true)
 		public Object[] getEUStored(Context c, Arguments a) {
 			return new Object[] { tile.getStoredEU() };
 		}
 
-		@Callback(direct = true)
+		@Callback(doc = "function():number; Returns the steam stored in this block", direct = true)
 		public Object[] getSteamStored(Context c, Arguments a) {
 			return new Object[] { tile.getStoredSteam() };
 		}
 
-		@Callback(direct = true)
+		@Callback(doc = "function():number; Returns the max EU that can be stored in this block", direct = true)
 		public Object[] getEUMaxStored(Context c, Arguments a) {
 			return new Object[] { tile.getEUCapacity() };
 		}
 
-		@Callback(direct = true)
+		@Callback(doc = "function():number; Returns the max steam that can be stored in this block", direct = true)
 		public Object[] getSteamMaxStored(Context c, Arguments a) {
 			return new Object[] { tile.getSteamCapacity() };
 		}
 
-		@Callback(direct = true)
+		@Callback(doc = "function():number; Returns the average EU input of this block", direct = true)
 		public Object[] getEUInputAverage(Context c, Arguments a) {
 			return new Object[] { tile.getAverageElectricInput() };
 		}
 
-		@Callback(direct = true)
+		@Callback(doc = "function():number; Returns the average EU output of this block", direct = true)
 		public Object[] getEUOutputAverage(Context c, Arguments a) {
 			return new Object[] { tile.getAverageElectricOutput() };
 		}
 
-		@Callback(direct = true)
+		@Callback(doc = "function():string; Returns the name of this block's owner", direct = true)
 		public Object[] getOwnerName(Context c, Arguments a) {
 			return new Object[] { tile.getOwnerName() };
 		}

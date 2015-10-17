@@ -17,7 +17,7 @@ public class DriverDeviceInformation extends DriverTileEntity {
 			super(tile, name);
 		}
 
-		@Callback(direct = true)
+		@Callback(doc = "function():table; Returns sensor information about this block", direct = true)
 		public Object[] getSensorInformation(Context c, Arguments a) {
 			return new Object[] { tile.getInfoData() };
 		}

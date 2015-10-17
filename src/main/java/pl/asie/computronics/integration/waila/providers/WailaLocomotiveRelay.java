@@ -7,8 +7,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import pl.asie.computronics.integration.railcraft.tile.TileLocomotiveRelay;
 import pl.asie.computronics.integration.waila.ConfigValues;
-import pl.asie.computronics.tile.TileLocomotiveRelay;
 import pl.asie.computronics.util.StringUtil;
 
 import java.util.List;
@@ -36,9 +36,7 @@ public class WailaLocomotiveRelay extends ComputronicsWailaProvider {
 	public NBTTagCompound getNBTData(EntityPlayerMP player, TileEntity te, NBTTagCompound tag, World world, int x, int y, int z) {
 		if(te instanceof TileLocomotiveRelay) {
 			TileLocomotiveRelay relay = (TileLocomotiveRelay) te;
-			if(relay.getLocomotive() != null) {
-				tag.setBoolean("bound", relay.isBound());
-			}
+			tag.setBoolean("bound", relay.isBound());
 		}
 		return tag;
 	}

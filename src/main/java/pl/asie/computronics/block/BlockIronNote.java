@@ -1,7 +1,7 @@
 package pl.asie.computronics.block;
 
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
+import li.cil.oc.api.network.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -17,7 +17,7 @@ import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectio
 })
 public class BlockIronNote extends BlockPeripheral implements IRedNetInputNode {
 	public BlockIronNote() {
-		super();
+		super("iron_noteblock");
 		this.setIconName("computronics:noteblock");
 		this.setBlockName("computronics.ironNoteBlock");
 	}
@@ -30,7 +30,7 @@ public class BlockIronNote extends BlockPeripheral implements IRedNetInputNode {
 	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
 		TileEntity tile = world.getTileEntity(x, y, z);
-		if(Loader.isModLoaded(Mods.ProjectRed))
+		if(Mods.isLoaded(Mods.ProjectRed))
 			((TileIronNote)tile).onProjectRedBundledInputChanged();
 	}
 
@@ -56,5 +56,11 @@ public class BlockIronNote extends BlockPeripheral implements IRedNetInputNode {
 				NoteUtils.playNote(world, x, y, z, -1, i);
 			inputValue >>= 1;
 		}
+	}
+
+	@Override
+	@Optional.Method(modid= Mods.OpenComputers)
+	public Class<? extends Environment> getTileEntityClass(int meta) {
+		return TileIronNote.class;
 	}
 }

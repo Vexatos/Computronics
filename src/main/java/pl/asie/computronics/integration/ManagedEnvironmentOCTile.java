@@ -20,7 +20,7 @@ public abstract class ManagedEnvironmentOCTile<T> extends ManagedEnvironment imp
 	public String preferredName() {
 		return name;
 	}
-	
+
 	@Override
 	public int priority() {
 		return 0;

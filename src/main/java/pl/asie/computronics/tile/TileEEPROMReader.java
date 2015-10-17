@@ -14,8 +14,13 @@ import pl.asie.lib.api.tile.IInventoryProvider;
 
 public class TileEEPROMReader extends TileEntityPeripheralBase implements IInventoryProvider {
 	public TileEEPROMReader() {
-		super("eeprom");
+		super("eeprom_reader");
 		this.createInventory(1);
+	}
+
+	@Override
+	public boolean canBeColored() {
+		return false;
 	}
 
 	@Override
@@ -55,19 +60,19 @@ public class TileEEPROMReader extends TileEntityPeripheralBase implements IInven
 		is.getTagCompound().setByteArray("ram", data);
 	}
 	
-    @Callback(direct = true)
+    @Callback(doc = "function():boolean; Returns whether the reader has a valid EEPROM in it",direct = true)
     @Optional.Method(modid=Mods.OpenComputers)
     public Object[] isReady(Context context, Arguments args) {
 		return new Object[]{ isReady() };
     }
     
-    @Callback(direct = true)
+    @Callback(doc = "function():number; Returns the size of the data on the current EEPROM", direct = true)
     @Optional.Method(modid=Mods.OpenComputers)
     public Object[] getSize(Context context, Arguments args) {
 		return new Object[]{ getSize() };
     }
     
-    @Callback(direct = true)
+    @Callback(doc = "function(pos:number [, length:number]):number or string; Reads the piece of data at the specified position, with optionally the specified length", direct = true)
     @Optional.Method(modid=Mods.OpenComputers)
     public Object[] read(Context context, Arguments args) {
     	byte[] data = getData();
@@ -84,7 +89,7 @@ public class TileEEPROMReader extends TileEntityPeripheralBase implements IInven
 		} else return null;
     }
 
-    @Callback(direct = true)
+    @Callback(doc = "function(pos:number, data:number or string):boolean; Writes the specified data to the specified position. Returns true on success", direct = true)
     @Optional.Method(modid=Mods.OpenComputers)
     public Object[] write(Context context, Arguments args) {
     	byte[] data = getData();

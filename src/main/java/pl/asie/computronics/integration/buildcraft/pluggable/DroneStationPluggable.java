@@ -3,7 +3,7 @@ package pl.asie.computronics.integration.buildcraft.pluggable;
 import buildcraft.api.transport.IPipeTile;
 import buildcraft.api.transport.pluggable.IPipePluggableRenderer;
 import buildcraft.api.transport.pluggable.PipePluggable;
-import buildcraft.core.utils.MatrixTranformations;
+import buildcraft.core.lib.utils.MatrixTranformations;
 import cofh.api.energy.IEnergyReceiver;
 import io.netty.buffer.ByteBuf;
 import li.cil.oc.Settings;

@@ -12,6 +12,7 @@ tile.computronics.eepromReader.name=EEPROM Reader
 tile.computronics.locomotiveRelay.name=Digital Locomotive Relay
 tile.computronics.digitalBox.name=Digital Signal Receiver Box
 tile.computronics.detector.name=Detector - Digital
+tile.computronics.ticketMachine.name=Ticket Machine
 
 tooltip.computronics.chatBox.creative=NSA in a box!
 tooltip.computronics.cipher.advanced=For the Starchasers!
@@ -23,6 +24,12 @@ tooltip.computronics.tape.balanced=Balanced!
 tooltip.computronics.tape.unnamed=Unnamed Tape
 tooltip.computronics.tape.none=No Tape
 tooltip.computronics.tape.ig=The standard CDVR for\nGregTech Intergalactical's ships
+tooltip.computronics.ticket.print=Print Ticket
+tooltip.computronics.ticket.printLocked=§cManual printing disabled
+tooltip.computronics.ticket.locked=This device is locked to\n {owner}.\n Only the owner or an Op\n can do maintenance work.
+tooltip.computronics.ticket.notmaintenance=Shift-right click\n this device with an \nempty hand to do\n maintenance work.
+tooltip.computronics.ticket.notowner=You are not the\n owner of this device.\n It belongs to\n {owner}.
+tooltip.computronics.ticket.unlocked=Click to lock device.\n Once locked, only you\n or an Op can\n do maintenance work.
 
 tooltip.computronics.gate.action.computer_start=Start Computer
 tooltip.computronics.gate.action.computer_stop=Stop Computer
@@ -58,12 +65,15 @@ tooltip.computronics.waila.lamp.red=Red: %s
 tooltip.computronics.waila.lamp.green=Green: %s
 tooltip.computronics.waila.lamp.blue=Blue: %s
 
+tooltip.computronics.manual.tab.blocks=Computronics: Blocks
+tooltip.computronics.manual.tab.items=Computronics: Items
+
 option.computronics.enableOCAddress=Component address
 option.computronics.enableNCAddress=NedoComputers Bus ID
 option.computronics.enableTape=Inserted tape
 option.computronics.enableTapeName=Tape name
 option.computronics.enableDriveState=Tape Drive state
-option.computronics.enableRelayBound=Relay binding
+option.computronics.enableRelayBound=Relay bound
 option.computronics.enableLampColor=Lamp Color
 
 item.computronics.reelChromoxide.name=Chromium Dioxide Tape Reel
@@ -78,6 +88,8 @@ item.computronics.card_spoof.name=Spoofing Card
 item.computronics.card_spoof.tip=Works just like a Network Card, but allows specifying the sending address
 item.computronics.card_boom.name=Self-Destructing Card
 item.computronics.card_boom.tip=Any proper villain needs such a thing.
+item.computronics.robot_upgrade_colorful.name=Colorful Upgrade
+item.computronics.robot_upgrade_colorful.tip=Make your bots more colorful!
 item.computronics.for.combAcid.name=Caustic Comb
 item.computronics.for.dropAcid.name=Caustic Drop
 item.computronics.relaySensor.name=Digital Relay Sensor
@@ -88,14 +100,28 @@ item.computronics.tape.name=Cassette Tape
 itemGroup.tabComputronics=Computronics
 
 entity.computronics.itemTape.name=Intergalactical CDVR
+entity.computronics.swarm.name=Swarm
 
-for.computronics.flowers.sea=Sea
-for.computronics.bees.species.scummy=Scummy
-for.description.computronics.speciesScummy=Kerosene, propylene glycol, artificial sweeteners, sulfuric acid, rum, acetone, red dye #2, scumm, axle grease, battery acid and/or pepperoni|Strange people in a bar
+death.attack.computronics.sting.1=%1$s figured out why some people have apiphobia
+death.attack.computronics.sting.2=<%1$s> §oNo! Not the bees! NOT THE BEEEES! AAAAAHHHHHH!
+death.attack.computronics.sting.3=%1$s couldn't handle the swarm's stinging puns
+death.attack.computronics.sting.4=%1$s forgot their epipen
+death.attack.computronics.sting.5=%1$s was the victim of an assassination plot. With bees.
+death.attack.computronics.sting.self=%1$s was beetrayed
+
+computronics.flowers.sea=Sea
+computronics.bees.species.scummy=Scummy
+computronics.bees.species.scummy.description=Kerosene, propylene glycol, artificial sweeteners, sulfuric acid, rum, acetone, red dye #2, scumm, axle grease, battery acid and/or pepperoni|Strange people in a bar
 
 chat.computronics.cipher.locked=This Cipher Block is locked! You may not access it.
+chat.computronics.colorful_upgrade.color=§6Color§f: %s
+chat.computronics.lamp.binary.on=RedNet mode set to Binary
+chat.computronics.lamp.binary.off=RedNet mode set to Normal
+chat.computronics.relay.notBound=Relay is currently not bound to any locomotive!
+chat.computronics.relay.unbound=Relay successfully unbound from locomotive!
 chat.computronics.sensor.bound=Relay successfully bound to locomotive!
 chat.computronics.sensor.noRelay=There is no relay at the specified coordinates!
+chat.computronics.sensor.noRelayDetected=Could not detect relay at the specified coordinates!
 chat.computronics.sensor.tooFarAway=Relay and locomotive are too far away from each other!
 chat.computronics.sensor.wrongLoco=Sensor can only be attached to electric locomotives!
 chat.computronics.sensor.wrongDim=Relay and locomotive are in different dimensions!

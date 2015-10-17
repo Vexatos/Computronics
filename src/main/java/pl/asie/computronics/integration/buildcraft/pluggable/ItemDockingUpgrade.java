@@ -12,6 +12,7 @@ import li.cil.oc.api.network.ManagedEnvironment;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.oc.manual.IItemWithPrefix;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.lib.item.ItemMultiple;
 
@@ -23,7 +24,7 @@ import pl.asie.lib.item.ItemMultiple;
 	@Optional.Interface(iface = "li.cil.oc.api.driver.EnvironmentAware", modid = Mods.OpenComputers),
 	@Optional.Interface(iface = "li.cil.oc.api.driver.item.HostAware", modid = Mods.OpenComputers)
 })
-public class ItemDockingUpgrade extends ItemMultiple implements Item, EnvironmentAware, HostAware {
+public class ItemDockingUpgrade extends ItemMultiple implements Item, EnvironmentAware, HostAware, IItemWithPrefix {
 
 	public ItemDockingUpgrade() {
 		super(Mods.Computronics, new String[] {
@@ -77,5 +78,15 @@ public class ItemDockingUpgrade extends ItemMultiple implements Item, Environmen
 			nbt.setTag("oc:data", new NBTTagCompound());
 		}
 		return nbt.getCompoundTag("oc:data");
+	}
+
+	@Override
+	public String getDocumentationName(ItemStack stack) {
+		return "docking_upgrade";
+	}
+
+	@Override
+	public String getPrefix(ItemStack stack) {
+		return "buildcraft/";
 	}
 }

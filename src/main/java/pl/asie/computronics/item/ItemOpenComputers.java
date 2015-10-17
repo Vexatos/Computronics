@@ -8,9 +8,12 @@ import li.cil.oc.api.driver.EnvironmentHost;
 import li.cil.oc.api.driver.Item;
 import li.cil.oc.api.driver.item.HostAware;
 import li.cil.oc.api.driver.item.Slot;
+import li.cil.oc.api.driver.item.UpgradeRenderer;
+import li.cil.oc.api.event.RobotRenderEvent;
 import li.cil.oc.api.internal.Adapter;
 import li.cil.oc.api.internal.Drone;
 import li.cil.oc.api.internal.Microcontroller;
+import li.cil.oc.api.internal.Robot;
 import li.cil.oc.api.internal.Tablet;
 import li.cil.oc.api.network.Environment;
 import li.cil.oc.api.network.ManagedEnvironment;
@@ -18,32 +21,40 @@ import li.cil.oc.client.KeyBindings;
 import li.cil.oc.util.ItemCosts;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IIcon;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.oc.DriverCardBoom;
 import pl.asie.computronics.oc.DriverCardFX;
 import pl.asie.computronics.oc.DriverCardSound;
 import pl.asie.computronics.oc.DriverCardSpoof;
+import pl.asie.computronics.oc.IntegrationOpenComputers;
 import pl.asie.computronics.oc.RobotUpgradeCamera;
 import pl.asie.computronics.oc.RobotUpgradeChatBox;
+import pl.asie.computronics.oc.RobotUpgradeColorful;
 import pl.asie.computronics.oc.RobotUpgradeRadar;
+import pl.asie.computronics.oc.manual.IItemWithDocumentation;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.StringUtil;
 import pl.asie.lib.item.ItemMultiple;
 
+import java.awt.*;
 import java.util.List;
+import java.util.Set;
 
 @Optional.InterfaceList({
 	@Optional.Interface(iface = "li.cil.oc.api.driver.Item", modid = Mods.OpenComputers),
 	@Optional.Interface(iface = "li.cil.oc.api.driver.EnvironmentAware", modid = Mods.OpenComputers),
-	@Optional.Interface(iface = "li.cil.oc.api.driver.item.HostAware", modid = Mods.OpenComputers)
+	@Optional.Interface(iface = "li.cil.oc.api.driver.item.HostAware", modid = Mods.OpenComputers),
+	@Optional.Interface(iface = "li.cil.oc.api.driver.item.UpgradeRenderer", modid = Mods.OpenComputers)
 })
-public class ItemOpenComputers extends ItemMultiple implements Item, EnvironmentAware, HostAware {
+public class ItemOpenComputers extends ItemMultiple implements Item, EnvironmentAware, HostAware, UpgradeRenderer, IItemWithDocumentation {
 
 	public ItemOpenComputers() {
 		super(Mods.Computronics, new String[] {
@@ -53,7 +64,8 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 			"card_fx",
 			"card_spoof",
 			"card_beep",
-			"card_boom"
+			"card_boom",
+			"robot_upgrade_colorful",
 		});
 		this.setCreativeTab(Computronics.tab);
 	}
@@ -83,6 +95,11 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 					&& !Drone.class.isAssignableFrom(host);
 				break;
 			}
+			case 7: {
+				works = works
+					&& Robot.class.isAssignableFrom(host);
+				break;
+			}
 		}
 		return works;
 	}
@@ -105,6 +122,8 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 				return DriverCardSound.class;
 			case 6:
 				return DriverCardBoom.class;
+			case 7:
+				return RobotUpgradeColorful.class;
 			default:
 				return null;
 		}
@@ -129,6 +148,8 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 				return new DriverCardSound(container);
 			case 6:
 				return new DriverCardBoom(container);
+			case 7:
+				return new RobotUpgradeColorful(container);
 			default:
 				return null;
 		}
@@ -152,6 +173,8 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 				return Slot.Card;
 			case 6:
 				return Slot.Card;
+			case 7:
+				return Slot.Upgrade;
 			default:
 				return Slot.None;
 		}
@@ -175,6 +198,8 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 				return 1; // Tier 2
 			case 6:
 				return 0; // Tier 1
+			case 7:
+				return 1; // Tier 2
 			default:
 				return 0; // Tier 1 default
 		}
@@ -199,9 +224,13 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 	@SideOnly(Side.CLIENT)
 	@SuppressWarnings("unchecked")
 	public void getSubItems(net.minecraft.item.Item item, CreativeTabs tabs, List list) {
-		if(Config.OC_ROBOT_UPGRADES) {
+		if(Config.OC_UPGRADE_CAMERA) {
 			list.add(new ItemStack(item, 1, 0));
+		}
+		if(Config.OC_UPGRADE_CHATBOX) {
 			list.add(new ItemStack(item, 1, 1));
+		}
+		if(Config.OC_UPGRADE_RADAR) {
 			list.add(new ItemStack(item, 1, 2));
 		}
 		if(Config.OC_CARD_FX) {
@@ -215,6 +244,70 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 		}
 		if(Config.OC_CARD_BOOM) {
 			list.add(new ItemStack(item, 1, 6));
+		}
+		if(Config.OC_UPGRADE_COLORFUL) {
+			list.add(new ItemStack(item, 1, 7));
+		}
+	}
+
+	private IIcon colorfulUpgradeCanvasIcon, colorfulUpgradeTopIcon;
+
+	@SideOnly(Side.CLIENT)
+	public void registerIcons(IIconRegister r) {
+		super.registerIcons(r);
+		colorfulUpgradeCanvasIcon = r.registerIcon("computronics:robot_upgrade_colorful_canvas");
+		colorfulUpgradeTopIcon = r.registerIcon("computronics:robot_upgrade_colorful_top");
+	}
+
+	@Override
+	public boolean requiresMultipleRenderPasses() {
+		return true;
+	}
+
+	@Override
+	public int getRenderPasses(int meta) {
+		return meta == 7 ? 3 : 1;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public IIcon getIconFromDamageForRenderPass(int meta, int pass) {
+		switch(meta) {
+			case 7: {
+				switch(pass) {
+					case 1: {
+						return colorfulUpgradeCanvasIcon;
+					}
+					case 2: {
+						return colorfulUpgradeTopIcon;
+					}
+				}
+			}
+			default: {
+				return super.getIconFromDamageForRenderPass(meta, pass);
+			}
+		}
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public int getColorFromItemStack(ItemStack stack, int pass) {
+		switch(stack.getItemDamage()) {
+			case 7: {
+				if(pass == 1) {
+					NBTTagCompound tag = dataTag(stack);
+					if(tag.hasKey("computronics:color")) {
+						int col = tag.getInteger("computronics:color");
+						if(col >= 0) {
+							return col;
+						}
+					}
+					return Color.HSBtoRGB((((System.currentTimeMillis() + (stack.hashCode() % 30000)) % 30000) / 30000F), 1F, 1F) & 0xFFFFFF;
+				}
+			}
+			default: {
+				return super.getColorFromItemStack(stack, pass);
+			}
 		}
 	}
 
@@ -234,7 +327,7 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 				boolean shouldShorten = (font.getStringWidth(tip) > maxWidth) && !KeyBindings.showExtendedTooltips();
 				if(shouldShorten) {
 					tooltip.add(StringUtil.localizeAndFormat("oc:tooltip.TooLong",
-						KeyBindings.getKeybindName(KeyBindings.extendedTooltip())));
+						KeyBindings.getKeyBindingName(KeyBindings.extendedTooltip())));
 				} else {
 					for(String line : lines) {
 						List list = font.listFormattedStringToWidth(line, maxWidth);
@@ -249,7 +342,7 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 			} else {
 				tooltip.add(StringUtil.localizeAndFormat(
 					"oc:tooltip.MaterialCosts",
-					KeyBindings.getKeybindName(KeyBindings.materialCosts())));
+					KeyBindings.getKeyBindingName(KeyBindings.materialCosts())));
 			}
 		}
 		if(stack.hasTagCompound() && stack.getTagCompound().hasKey("oc:data")) {
@@ -260,5 +353,41 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 					+ EnumChatFormatting.GRAY);
 			}
 		}
+	}
+
+	@Override
+	public String getDocumentationName(ItemStack stack) {
+		switch(stack.getItemDamage()) {
+			case 0:
+				return "camera_upgrade";
+			case 1:
+				return "chat_upgrade";
+			case 2:
+				return "radar_upgrade";
+			case 3:
+				return "particle_card";
+			case 4:
+				return "spoofing_card";
+			case 5:
+				return "beep_card";
+			case 6:
+				return "self_destructing_card";
+			case 7:
+				return "colorful_upgrade";
+			default:
+				return "index";
+		}
+	}
+
+	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
+	public String computePreferredMountPoint(ItemStack stack, Robot robot, Set<String> availableMountPoints) {
+		return IntegrationOpenComputers.upgradeRenderer.computePreferredMountPoint(stack, robot, availableMountPoints);
+	}
+
+	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
+	public void render(ItemStack stack, RobotRenderEvent.MountPoint mountPoint, Robot robot, float pt) {
+		IntegrationOpenComputers.upgradeRenderer.render(stack, mountPoint, robot, pt);
 	}
 }

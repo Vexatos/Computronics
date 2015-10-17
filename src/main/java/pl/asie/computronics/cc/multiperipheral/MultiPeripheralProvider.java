@@ -1,15 +1,16 @@
 package pl.asie.computronics.cc.multiperipheral;
 
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheralProvider;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import openperipheral.api.ApiAccess;
-import openperipheral.api.IAdapterFactory;
-import openperipheral.api.IPeripheralBlacklist;
-import pl.asie.computronics.Computronics;
+import openperipheral.api.architecture.cc.IComputerCraftObjectsFactory;
+import openperipheral.api.peripheral.IOpenPeripheral;
+import openperipheral.api.peripheral.IPeripheralBlacklist;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheralProvider;
 import pl.asie.computronics.reference.Config;
@@ -23,7 +24,9 @@ import java.util.List;
  * @author Vexatos
  */
 public class MultiPeripheralProvider implements IPeripheralProvider {
+
 	ArrayList<IMultiPeripheralProvider> peripheralProviders = new ArrayList<IMultiPeripheralProvider>();
+	public static Logger log = LogManager.getLogger(Mods.Computronics + "-multiperipheral");
 
 	public MultiPeripheralProvider(ArrayList<IMultiPeripheralProvider> peripheralProviders) {
 		this.peripheralProviders = peripheralProviders;
@@ -41,7 +44,7 @@ public class MultiPeripheralProvider implements IPeripheralProvider {
 		if(Config.CC_ALL_MULTI_PERIPHERALS) {
 			getAllPeripherals(periphs, world, x, y, z, side);
 		}
-		if(Loader.isModLoaded(Mods.OpenPeripheral) && Config.CC_OPEN_MULTI_PERIPHERAL) {
+		if(Mods.isLoaded(Mods.OpenPeripheral) && Config.CC_OPEN_MULTI_PERIPHERAL) {
 			IMultiPeripheral peripheral = getOpenPeripheral(world, x, y, z);
 			if(peripheral != null) {
 				periphs.add(peripheral);
@@ -56,15 +59,21 @@ public class MultiPeripheralProvider implements IPeripheralProvider {
 	@Optional.Method(modid = Mods.OpenPeripheral)
 	private IMultiPeripheral getOpenPeripheral(World world, int x, int y, int z) {
 		TileEntity tile = world.getTileEntity(x, y, z);
-		if(tile != null && ApiAccess.isApiPresent(IAdapterFactory.class)) {
-			IPeripheral peripheral = ApiAccess.getApi(IAdapterFactory.class).createPeripheral(tile);
-			boolean blacklisted = false;
-			if(ApiAccess.isApiPresent(IPeripheralBlacklist.class)) {
-				blacklisted = ApiAccess.getApi(IPeripheralBlacklist.class).isBlacklisted(tile.getClass());
+		try {
+			if(tile != null && ApiAccess.isApiPresent(IComputerCraftObjectsFactory.class)) {
+				IPeripheral peripheral = ApiAccess.getApi(IComputerCraftObjectsFactory.class).createPeripheral(tile);
+				boolean blacklisted = false;
+				if(ApiAccess.isApiPresent(IPeripheralBlacklist.class)) {
+					blacklisted = ApiAccess.getApi(IPeripheralBlacklist.class).isBlacklisted(tile.getClass());
+				}
+				if(peripheral != null && !blacklisted) {
+					return new OpenMultiPeripheral(peripheral);
+				}
 			}
-			if(peripheral != null && !blacklisted) {
-				return new OpenMultiPeripheral(peripheral);
-			}
+		} catch(Exception e) {
+			log.debug("An exception got thrown trying to get OpenPeripheral peripherals", e);
+		} catch(Throwable t) {
+			log.error("An error occured trying to get OpenPeripheral peripherals", t);
 		}
 		return null;
 	}
@@ -86,23 +95,23 @@ public class MultiPeripheralProvider implements IPeripheralProvider {
 			cfield.setAccessible(true);
 			ccperiphs = (List) cfield.get(null);
 		} catch(IllegalAccessException e) {
-			Computronics.log.error("Could not access ComputerCraft peripheral provider list");
+			log.error("Could not access ComputerCraft peripheral provider list");
 			ccErrored = true;
 			return;
 		} catch(ClassNotFoundException e) {
-			Computronics.log.error("Could not find ComputerCraft main class");
+			log.error("Could not find ComputerCraft main class");
 			ccErrored = true;
 			return;
 		} catch(NoSuchFieldException e) {
-			Computronics.log.error("Could not find ComputerCraft peripheral provider list");
+			log.error("Could not find ComputerCraft peripheral provider list");
 			ccErrored = true;
 			return;
 		} catch(ClassCastException e) {
-			Computronics.log.error("Could not cast ComputerCraft peripheral provider list");
+			log.error("Could not cast ComputerCraft peripheral provider list");
 			ccErrored = true;
 			return;
 		} catch(Exception e) {
-			Computronics.log.error("Could not wrap ComputerCraft peripheral provider list");
+			log.error("Could not wrap ComputerCraft peripheral provider list");
 			ccErrored = true;
 			return;
 		}
@@ -124,7 +133,7 @@ public class MultiPeripheralProvider implements IPeripheralProvider {
 		for(Object ccperiph : ccperiphs) {
 			if(ccperiph != null && ccperiph instanceof IPeripheralProvider
 				&& !(ccperiph instanceof MultiPeripheralProvider)
-				&& !(Loader.isModLoaded(Mods.OpenPeripheral) && isOpenPeripheral(ccperiph))) {
+				&& !(Mods.isLoaded(Mods.OpenPeripheral) && isOpenPeripheral(ccperiph))) {
 				ccPeripheralProviders.add((IPeripheralProvider) ccperiph);
 			}
 		}
@@ -137,11 +146,25 @@ public class MultiPeripheralProvider implements IPeripheralProvider {
 		if(ccPeripheralProviders == null) {
 			getCCProviders();
 		}
-		for(IPeripheralProvider peripheralProvider : ccPeripheralProviders) {
-			IPeripheral peripheral = peripheralProvider.getPeripheral(world, x, y, z, side);
-			if(peripheral != null) {
-				periphs.add(new DefaultMultiPeripheral(peripheral));
+		try {
+			for(IPeripheralProvider peripheralProvider : ccPeripheralProviders) {
+				if(peripheralProvider != null) {
+					try {
+						IPeripheral peripheral = peripheralProvider.getPeripheral(world, x, y, z, side);
+						if(peripheral != null) {
+							periphs.add(new DefaultMultiPeripheral(peripheral));
+						}
+					} catch(Exception e) {
+						log.warn("An exception got thrown trying to get a peripheral from provider " + peripheralProvider.getClass().toString(), e);
+					} catch(Throwable t) {
+						log.error("An error occured trying to get all a peripheral from provider " + peripheralProvider.getClass().toString(), t);
+					}
+				}
 			}
+		} catch(Exception e) {
+			log.warn("An exception got thrown trying to get all peripherals", e);
+		} catch(Throwable t) {
+			log.error("An error occured trying to get all peripherals", t);
 		}
 	}
 
@@ -154,6 +177,7 @@ public class MultiPeripheralProvider implements IPeripheralProvider {
 	@Optional.Method(modid = Mods.OpenPeripheral)
 	private boolean isOpenPeripheral(Object ccperiph) {
 		// I guess I have to do it this way
-		return ccperiph != null && ccperiph.getClass().getName().startsWith("openperipheral");
+		return ccperiph != null
+			&& (ccperiph instanceof IOpenPeripheral || ccperiph.getClass().getName().startsWith("openperipheral"));
 	}
 }

@@ -9,7 +9,6 @@ public class Compat {
 
 	public static final String
 		RedLogic_Lamps = "enableRedLogicLamps",
-		Bundled_Redstone = "enableBundledRedstoneProviders",
 		MFR_DSU = "enableDeepStorageUnit",
 		FSP_Steam_Transporter = "enableFlaxbeardSteamTransporters",
 		FZ_ChargePeripheral = "enableFactorizationChargePeripheral",
@@ -21,7 +20,11 @@ public class Compat {
 		GregTech_Machines = "enableGregTechMachines",
 		GregTech_DigitalChests = "enableGregTechDigitalChests",
 		BuildCraft_Drivers = "enableBuildCraftDrivers",
-		DraconicEvolution = "enableDraconicEvolutionEnergyStoragePeripheral";
+		DraconicEvolution = "enableDraconicEvolutionEnergyStoragePeripheral",
+		MekanismEnergy = "enableMekanismEnergyStoragePeripheral",
+		StorageDrawers = "enableStorageDrawersDriver",
+		Flamingo = "enableFlamingoDriver",
+		AW_Mannequins = "enableAWMannequinDriver";
 
 	public static final String Compatibility = "modCompatibility";
 
