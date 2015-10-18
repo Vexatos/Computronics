@@ -147,24 +147,21 @@ public class TextToSpeech {
 									if(format != null) {
 										int time = (int) (((double) format.getFrameLength() / (double) format.getFormat().getFrameRate()) * 20D);
 										if(time > 0) {
-											String name = file.getName();
-											sndSys.newSource(false, name, file.toURI().toURL(), name,
-												false, result.x, result.y, result.z, SoundSystemConfig.ATTENUATION_LINEAR, 16);
-											sndSys.setVolume(name, lastVolume);
-											sndSys.activate(name);
-											sndSys.play(name);
-											playingSounds.add(new SoundPos(name, result.dimID, result.x, result.y, result.z));
-											Packet packet = Computronics.packet.create(Packets.PACKET_TTS)
-												.writeInt(result.dimID)
-												.writeInt(result.x)
-												.writeInt(result.y)
-												.writeInt(result.z)
-												.writeInt(time);
-											Computronics.packet.sendToServer(packet);
 											World world = AsieLibMod.proxy.getWorld(result.dimID);
 											if(world != null) {
 												TileEntity tile = world.getTileEntity(result.x, result.y, result.z);
 												if(tile instanceof TileTTSBox) {
+													String name = file.getName();
+													sndSys.newSource(false, name, file.toURI().toURL(), name,
+														false, result.x, result.y, result.z, SoundSystemConfig.ATTENUATION_LINEAR, 16);
+													sndSys.setVolume(name, lastVolume);
+													sndSys.activate(name);
+													sndSys.play(name);
+													playingSounds.add(new SoundPos(name, result.dimID, result.x, result.y, result.z));
+													Packet packet = Computronics.packet.create(Packets.PACKET_TTS)
+														.writeTileLocation(tile)
+														.writeInt(time);
+													Computronics.packet.sendToServer(packet);
 													((TileTTSBox) tile).setLocked(time);
 												}
 											}
