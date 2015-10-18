@@ -1,12 +1,11 @@
 package pl.asie.computronics.network;
 
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.ModAPIManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetHandler;
 import net.minecraft.tileentity.TileEntity;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.audio.tts.TileTTSBox;
 import pl.asie.computronics.oc.DriverCardSound;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
@@ -105,20 +104,16 @@ public class NetworkHandlerClient extends MessageHandlerBase {
 				}
 			}
 			break;
-			case 6: {
-				/*if(Mods.API.hasClass("marytts.LocalMaryInterface")){
-					int dimId = packet.readInt();
-					int x = packet.readInt();
-					int y = packet.readInt();
-					int z = packet.readInt();
-					int codecId = packet.readInt();
-					StreamingAudioPlayer codec = Computronics.tts.getPlayer(codecId);
-					if(dimId != WorldUtils.getCurrentClientDimension()) {
-						return;
+			case Packets.PACKET_TTS: {
+				if(Mods.isClassLoaded("marytts.LocalMaryInterface")) {
+					TileEntity tile = packet.readTileEntity();
+					if(tile instanceof TileTTSBox) {
+						Computronics.tts.say(packet.readString(), tile.getWorldObj().provider.dimensionId, tile.xCoord, tile.yCoord, tile.zCoord);
 					}
 					//Computronics.tts.say(x, y, z, packet.readString());
-				}*/
-			}break;
+				}
+			}
+			break;
 		}
 	}
 }

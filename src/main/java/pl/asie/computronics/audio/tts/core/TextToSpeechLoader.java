@@ -2,7 +2,9 @@ package pl.asie.computronics.audio.tts.core;
 
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.launchwrapper.LaunchClassLoader;
-import pl.asie.computronics.Computronics;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import pl.asie.computronics.reference.Mods;
 import sun.misc.JarFilter;
 
 import java.io.File;
@@ -17,6 +19,8 @@ import java.net.URLClassLoader;
  */
 public class TextToSpeechLoader {
 	public static final TextToSpeechLoader INSTANCE = new TextToSpeechLoader();
+	public static Logger log = LogManager.getLogger(Mods.Computronics + "-text-to-spech-loader");
+	public static File ttsDir;
 
 	private ClasspathAdder classpathAdder;
 
@@ -41,23 +45,23 @@ public class TextToSpeechLoader {
 			Class.forName("marytts.MaryInterface");
 			Class.forName("marytts.LocalMaryInterface");
 			Class.forName("marytts.server.Mary");
-			Computronics.log.trace("MaryTTS in classpath.");
+			log.trace("MaryTTS in classpath.");
 		} catch(Exception e) {
-			Computronics.log.trace("No MaryTTS in classpath.");
+			log.trace("No MaryTTS in classpath.");
 		}
-		File ttsDir = new File(System.getProperty("user.dir"));
+		ttsDir = new File(System.getProperty("user.dir"));
 		ttsDir = new File(ttsDir, "marytts");
 		if(!ttsDir.exists()) {
-			Computronics.log.info("No MaryTTS folder found, disable Text To Speech");
+			log.info("No MaryTTS folder found, disable Text To Speech");
 			return false;
 		}
 		if(!ttsDir.isDirectory()) {
-			Computronics.log.error("Could not read MaryTTS folder - found a file, not a directory!");
+			log.error("Could not read MaryTTS folder - found a file, not a directory!");
 			return false;
 		}
 		File[] files = ttsDir.listFiles(new JarFilter());
 		if(files == null || files.length <= 0) {
-			Computronics.log.error("Found an empty or invalid marytts directory, Text To Speech will not be initialized");
+			log.error("Found an empty or invalid marytts directory, Text To Speech will not be initialized");
 			return false;
 		}
 		for(File file : files) {
@@ -83,7 +87,7 @@ public class TextToSpeechLoader {
 			//Class.forName("pl.asie.computronics.audio.tts.core.TextToSpeech");
 			return true;
 		} catch(Exception e) {
-			Computronics.log.error("Text To Speech folder initialization failed, you will not be able to hear anything");
+			log.error("Text To Speech folder initialization failed, you will not be able to hear anything");
 			e.printStackTrace();
 			return false;
 		}

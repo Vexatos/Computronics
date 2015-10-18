@@ -2,6 +2,7 @@ package pl.asie.computronics.audio.tts;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import li.cil.oc.api.network.Environment;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
@@ -17,7 +18,7 @@ public class BlockTTSBox extends BlockMachineSidedIcon {
 	private IIcon mSide;
 
 	public BlockTTSBox() {
-		super();
+		super("ttsBox");
 		this.setCreativeTab(Computronics.tab);
 		this.setIconName("computronics:chatbox");
 		this.setBlockName("computronics.ttsBox");
@@ -50,5 +51,10 @@ public class BlockTTSBox extends BlockMachineSidedIcon {
 	public void registerBlockIcons(IIconRegister r) {
 		super.registerBlockIcons(r);
 		mSide = r.registerIcon("computronics:chatbox_side");
+	}
+
+	@Override
+	public Class<? extends Environment> getTileEntityClass(int meta) {
+		return TileTTSBox.class;
 	}
 }

@@ -29,103 +29,38 @@ public class TileTTSBox extends TileEntityPeripheralBase {
 
 	@Override
 	public boolean canUpdate() {
-		return Config.MUST_UPDATE_TILE_ENTITIES;
+		return true;
 	}
 
-	private int codecId, codecTick, packetId;
-	protected int packetSize = 1024;
-	private byte[] buffer;
-
-	private Packet createMusicPacket() {
-		byte[] packet = new byte[packetSize];
-		int amount = read(packet, false); // read data into packet array
-		try {
-			if(amount <= 0) {
-				stop();
-				return Computronics.packet.create(Packets.PACKET_AUDIO_STOP).writeInt(codecId);
-			}
-			Packet pkt = Computronics.packet.create(Packets.PACKET_AUDIO_DATA)
-				.writeInt(worldObj.provider.dimensionId)
-				.writeInt(xCoord).writeInt(yCoord).writeInt(zCoord)
-				.writeInt(packetId++)
-				.writeInt(codecId)
-				.writeShort((short) packetSize)
-				.writeByte((byte) 127)
-				.writeByteArrayData(packet);
-			if(amount < packetSize) {
-				stop();
-			}
-			return pkt;
-		} catch(Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	private void stop() {
-		Computronics.tts.removePlayer(codecId);
-		this.buffer = null;
-		this.position = 0;
-	}
-
-	private int position;
-
-	private int read(byte[] v, boolean simulate) {
-		if(buffer == null || buffer.length <= 0) {
-			return 0;
-		}
-		int len = Math.min(buffer.length, v.length);
-		if(position + len > buffer.length) {
-			len = buffer.length - position;
-		}
-		System.arraycopy(buffer, position, v, 0, len);
-		if(!simulate) {
-			position += len;
-		}
-
-		return len;
-	}
+	private int lockedTicks = 0;
 
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
-		if(!worldObj.isRemote && buffer != null) {
-			if(codecTick % 5 == 0) {
-				codecTick++;
-				Packet pkt = createMusicPacket();
-				if(pkt != null) {
-					Computronics.packet.sendToAllAround(pkt, this, Config.TAPEDRIVE_DISTANCE);
-				}
-			} else {
-				codecTick++;
+		if(lockedTicks > 0) {
+			--lockedTicks;
+			if(lockedTicks <= 0 && worldObj.isRemote) {
+				Computronics.tts.stopSource(this);
 			}
 		}
 	}
 
+	public void setLocked(int ticks) {
+		this.lockedTicks = ticks;
+	}
+
 	private Object[] sendNewText(String text) throws IOException {
-		if(buffer != null) {
-			return new Object[] { false, "there is already something being said" };
-		}
-		buffer = Computronics.tts.say(xCoord, yCoord, zCoord, text);
-		if(buffer == null || buffer.length <= 0) {
-			buffer = null;
-			return new Object[] { false, "an unknown error occured" };
-		}
-		codecId = Computronics.tts.newPlayer();
-		codecTick = 0;
-		packetId = 0;
-		Computronics.instance.audio.getPlayer(codecId);
-		Packet pkt = createMusicPacket();
-		if(pkt != null) {
-			Computronics.packet.sendToAllAround(pkt, this, Config.TAPEDRIVE_DISTANCE);
-			return new Object[] { true };
-		}
-		return new Object[] { false, "an unknown error occured" };
+		Packet packet = Computronics.packet.create(Packets.PACKET_TTS).writeTileLocation(this).writeString(text);
+		Computronics.packet.sendToAllAround(packet, this, Config.TAPEDRIVE_DISTANCE);
+		return new Object[] { true };
 	}
 
 	@Callback
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] say(Context context, Arguments args) {
+		if(lockedTicks > 0) {
+			return new Object[] { false, "already talking" };
+		}
 		try {
 			return this.sendNewText(args.checkString(0));
 		} catch(IOException e) {
@@ -150,6 +85,9 @@ public class TileTTSBox extends TileEntityPeripheralBase {
 			case 0: {
 				if(arguments.length < 1 || !(arguments[0] instanceof String)) {
 					throw new LuaException("first argument needs to be a string");
+				}
+				if(lockedTicks > 0) {
+					return new Object[] { false, "already talking" };
 				}
 				try {
 					return new Object[] { this.sendNewText((String) arguments[0]) };
@@ -182,24 +120,14 @@ public class TileTTSBox extends TileEntityPeripheralBase {
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-		if(nbt.hasKey("bufferdata")) {
-			buffer = nbt.getByteArray("bufferdata");
-			codecId = nbt.getInteger("buffer:codecId");
-			position = nbt.getInteger("buffer:pos");
-			codecTick = nbt.getInteger("buffer:tick");
-			packetId = nbt.getInteger("buffer:packet");
-		}
+		/*if(nbt.hasKey("lockedTicks")) {
+			lockedTicks = nbt.getInteger("lockedTicks");
+		}*/
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-		if(buffer != null && buffer.length > 0) {
-			nbt.setByteArray("buffer:data", buffer);
-			nbt.setInteger("buffer:codecId", codecId);
-			nbt.setInteger("buffer:pos", position);
-			nbt.setInteger("buffer:tick", codecTick);
-			nbt.setInteger("buffer:packet", packetId);
-		}
+		//nbt.setInteger("lockedTicks", lockedTicks);
 	}
 }
