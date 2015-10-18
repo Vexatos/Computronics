@@ -266,7 +266,7 @@ public class Computronics {
 			opencomputers.preInit();
 		}
 
-		if(config.config.get("enable.tts", "textToSpeech", TextToSpeechLoader.INSTANCE.preInit()).getBoolean()) {
+		if(config.config.get("enable.tts", "textToSpeech", TextToSpeechLoader.INSTANCE.hasDoneInit()).getBoolean()) {
 			tts = new TextToSpeech();
 			tts.preInit(this);
 		}

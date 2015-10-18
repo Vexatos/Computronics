@@ -1,5 +1,6 @@
 package pl.asie.computronics.audio.tts.core;
 
+import marytts.util.MaryRuntimeUtils;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.launchwrapper.LaunchClassLoader;
 import org.apache.logging.log4j.LogManager;
@@ -12,13 +13,16 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Arrays;
 
 /**
  * MaryTTS cannot load in FML's class loader, this is why we have to add it ourselves.
  * @author Vexatos
  */
 public class TextToSpeechLoader {
+
 	public static final TextToSpeechLoader INSTANCE = new TextToSpeechLoader();
+	private boolean hasDoneInit = false;
 	public static Logger log = LogManager.getLogger(Mods.Computronics + "-text-to-spech-loader");
 	public static File ttsDir;
 
@@ -53,26 +57,28 @@ public class TextToSpeechLoader {
 		ttsDir = new File(ttsDir, "marytts");
 		if(!ttsDir.exists()) {
 			log.info("No MaryTTS folder found, disable Text To Speech");
-			return false;
+			return hasDoneInit = false;
 		}
 		if(!ttsDir.isDirectory()) {
 			log.error("Could not read MaryTTS folder - found a file, not a directory!");
-			return false;
+			return hasDoneInit = false;
 		}
 		File[] files = ttsDir.listFiles(new JarFilter());
 		if(files == null || files.length <= 0) {
 			log.error("Found an empty or invalid marytts directory, Text To Speech will not be initialized");
-			return false;
+			return hasDoneInit = false;
 		}
+		Arrays.sort(files);
 		for(File file : files) {
 			if(file.isDirectory() || !file.exists()) {
 				continue;
 			}
 			try {
+				log.info("Found Text-to-speech file " + file.getName());
 				classLoader.addURL(file.toURI().toURL());
 				classpathAdder.addFile(file);
 			} catch(IOException e) {
-				e.printStackTrace();
+				log.error("Error trying to load " + file.getName(), e);
 			}
 		}
 		//Check for marytts to be present
@@ -85,12 +91,16 @@ public class TextToSpeechLoader {
 			Class.forName("marytts.LocalMaryInterface");
 			Class.forName("marytts.server.Mary");
 			//Class.forName("pl.asie.computronics.audio.tts.core.TextToSpeech");
-			return true;
+			MaryRuntimeUtils.ensureMaryStarted();
+			return hasDoneInit = true;
 		} catch(Exception e) {
-			log.error("Text To Speech folder initialization failed, you will not be able to hear anything");
-			e.printStackTrace();
-			return false;
+			log.error("Text To Speech folder initialization failed, you will not be able to hear anything", e);
+			return hasDoneInit = false;
 		}
+	}
+
+	public boolean hasDoneInit() {
+		return this.hasDoneInit;
 	}
 
 	/**

@@ -180,7 +180,7 @@ public class TextToSpeech {
 				}
 				for(int i = 0; i < playingSounds.size(); i++) {
 					SoundPos sound = playingSounds.get(i);
-					if(!sndSys.playing(sound.soundName)) {
+					if(!sndSys.playing(sound.soundName) && !sound.isPaused()) {
 						playingSounds.remove(i);
 					}
 				}
@@ -211,14 +211,21 @@ public class TextToSpeech {
 	}
 
 	public void stopSource(TileEntity tile) {
-		for(SoundPos sound : playingSounds) {
+		int toRemove = -1;
+		for(int i = 0; i < playingSounds.size(); i++) {
+			SoundPos sound = playingSounds.get(i);
 			if(sound.matches(tile)) {
 				SoundSystem soundSystem = getSoundSystem();
 				if(soundSystem != null) {
 					soundSystem.stop(sound.soundName);
 					soundSystem.removeSource(sound.soundName);
+					toRemove = i;
+					break;
 				}
 			}
+		}
+		if(toRemove >= 0) {
+			playingSounds.remove(toRemove);
 		}
 	}
 
@@ -314,10 +321,10 @@ public class TextToSpeech {
 			log.info("Initializing Text To Speech");
 			try {
 				marytts = new LocalMaryInterface();
-				Set<String> voices = marytts.getAvailableVoices();
+				//Set<String> voices = marytts.getAvailableVoices();
 				marytts.setStreamingAudio(true);
-				marytts.setLocale(Locale.US);
-				marytts.setVoice(voices.iterator().next());
+				//marytts.setLocale(Locale.US);
+				//marytts.setVoice(voices.iterator().next());
 				marytts.setOutputType("AUDIO");
 				ttsThreads = Executors.newCachedThreadPool();
 			} catch(Exception e) {
