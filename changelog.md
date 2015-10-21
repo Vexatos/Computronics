@@ -2,6 +2,8 @@
 
   * ADDED: New config option (disabled by default) to make the normal Chat Box have no range limit and work interdimensionally unless you specify a distance.
   * CHANGED: The Creative Chat Box can now send messages interdimensionally and has no range limit anymore unless you specify a distance.
+  * FIXED: Various crashes related to invalid crafting recipes.
+  * FIXED: Crash when disabling the Digital Signal Receiver Box.
 
 ==== 1.5.8 ====
 

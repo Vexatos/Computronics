@@ -39,6 +39,7 @@ import pl.asie.computronics.integration.forestry.entity.EntitySwarm;
 import pl.asie.computronics.integration.forestry.entity.SwarmRenderer;
 import pl.asie.computronics.integration.forestry.nanomachines.SwarmProvider;
 import pl.asie.computronics.reference.Mods;
+import pl.asie.computronics.util.RecipeUtils;
 import pl.asie.lib.item.ItemMultiple;
 
 import java.util.HashMap;
@@ -119,7 +120,7 @@ public class IntegrationForestry {
 		Item bottleItem = GameRegistry.findItem(Mods.Forestry, "beverage");
 		ItemStack bottle = bottleItem != null ? new ItemStack(bottleItem, 1, 0)
 			: new ItemStack(net.minecraft.init.Items.potionitem, 1, 32);
-		GameRegistry.addShapelessRecipe(Items.get("acid").createItemStack(1),
+		RecipeUtils.addShapelessRecipe(Items.get("acid").createItemStack(1),
 			new ItemStack(itemPartsForestry, 1, 1),
 			new ItemStack(itemPartsForestry, 1, 1),
 			bottle);

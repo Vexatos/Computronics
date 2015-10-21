@@ -55,6 +55,7 @@ import pl.asie.computronics.oc.manual.ComputronicsPathProvider;
 import pl.asie.computronics.reference.Compat;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
+import pl.asie.computronics.util.RecipeUtils;
 
 import static pl.asie.computronics.Computronics.camera;
 import static pl.asie.computronics.Computronics.chatBox;
@@ -247,11 +248,11 @@ public class IntegrationOpenComputers {
 	public void postInit() {
 		if(Config.OC_UPGRADE_CAMERA) {
 			if(camera != null) {
-				GameRegistry.addShapedRecipe(new ItemStack(itemOCParts, 1, 0),
+				RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 0),
 					"mcm", 'c',
 					new ItemStack(camera, 1, 0),
 					'm', li.cil.oc.api.Items.get("chip2").createItemStack(1));
-				GameRegistry.addShapedRecipe(new ItemStack(itemOCParts, 1, 0),
+				RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 0),
 					"m", "c", "m",
 					'c', new ItemStack(camera, 1, 0),
 					'm', li.cil.oc.api.Items.get("chip2").createItemStack(1));
@@ -261,11 +262,11 @@ public class IntegrationOpenComputers {
 		}
 		if(Config.OC_UPGRADE_CHATBOX) {
 			if(chatBox != null) {
-				GameRegistry.addShapedRecipe(new ItemStack(itemOCParts, 1, 1),
+				RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 1),
 					"mcm", 'c',
 					new ItemStack(chatBox, 1, 0),
 					'm', li.cil.oc.api.Items.get("chip2").createItemStack(1));
-				GameRegistry.addShapedRecipe(new ItemStack(itemOCParts, 1, 1),
+				RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 1),
 					"m", "c", "m",
 					'c', new ItemStack(chatBox, 1, 0),
 					'm', li.cil.oc.api.Items.get("chip2").createItemStack(1));
@@ -275,11 +276,11 @@ public class IntegrationOpenComputers {
 		}
 		if(Config.OC_UPGRADE_RADAR) {
 			if(radar != null) {
-				GameRegistry.addShapedRecipe(new ItemStack(itemOCParts, 1, 2),
+				RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 2),
 					"mcm", 'c',
 					new ItemStack(radar, 1, 0),
 					'm', li.cil.oc.api.Items.get("chip3").createItemStack(1));
-				GameRegistry.addShapedRecipe(new ItemStack(itemOCParts, 1, 2),
+				RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 2),
 					"m", "c", "m",
 					'c', new ItemStack(radar, 1, 0),
 					'm', li.cil.oc.api.Items.get("chip3").createItemStack(1));
@@ -288,7 +289,7 @@ public class IntegrationOpenComputers {
 			}
 		}
 		if(Config.OC_CARD_FX) {
-			GameRegistry.addShapedRecipe(new ItemStack(itemOCParts, 1, 3),
+			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 3),
 				"mf", " b",
 				'm', li.cil.oc.api.Items.get("chip2").createItemStack(1),
 				'f', Items.firework_charge,
@@ -296,7 +297,7 @@ public class IntegrationOpenComputers {
 
 		}
 		if(Config.OC_CARD_SPOOF) {
-			GameRegistry.addShapedRecipe(new ItemStack(itemOCParts, 1, 4),
+			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 4),
 				"mfl", "pb ", "   ",
 				'm', li.cil.oc.api.Items.get("ram2").createItemStack(1),
 				'f', li.cil.oc.api.Items.get("chip2").createItemStack(1),
@@ -305,7 +306,7 @@ public class IntegrationOpenComputers {
 				'l', Items.brick);
 		}
 		if(Config.OC_CARD_SOUND) {
-			GameRegistry.addShapedRecipe(new ItemStack(itemOCParts, 1, 5),
+			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 5),
 				" l ", "mb ", " f ",
 				'm', li.cil.oc.api.Items.get("chip2").createItemStack(1),
 				'f', Computronics.ironNote,
@@ -313,7 +314,7 @@ public class IntegrationOpenComputers {
 				'l', li.cil.oc.api.Items.get("cu").createItemStack(1));
 		}
 		if(Config.OC_CARD_BOOM) {
-			GameRegistry.addShapedRecipe(new ItemStack(itemOCParts, 1, 6),
+			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 6),
 				"mf", "fb",
 				'm', li.cil.oc.api.Items.get("cu").createItemStack(1),
 				'f', Blocks.tnt,
@@ -322,12 +323,12 @@ public class IntegrationOpenComputers {
 		}
 		if(Config.OC_UPGRADE_COLORFUL) {
 			if(colorfulLamp != null) {
-				GameRegistry.addShapedRecipe(new ItemStack(itemOCParts, 1, 7),
+				RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 7),
 					" f ", "mcm", " f ", 'c',
 					new ItemStack(colorfulLamp, 1, 0),
 					'm', li.cil.oc.api.Items.get("chip2").createItemStack(1),
 					'f', li.cil.oc.api.Items.get("chamelium").createItemStack(1));
-				GameRegistry.addShapedRecipe(new ItemStack(itemOCParts, 1, 7),
+				RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 7),
 					" m ", "fcf", " m ",
 					'c', new ItemStack(colorfulLamp, 1, 0),
 					'm', li.cil.oc.api.Items.get("chip2").createItemStack(1),
