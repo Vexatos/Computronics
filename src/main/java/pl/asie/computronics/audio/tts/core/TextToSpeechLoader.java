@@ -1,19 +1,18 @@
 package pl.asie.computronics.audio.tts.core;
 
-import marytts.util.MaryRuntimeUtils;
-import net.minecraft.launchwrapper.Launch;
-import net.minecraft.launchwrapper.LaunchClassLoader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pl.asie.computronics.reference.Mods;
 import sun.misc.JarFilter;
 
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.Arrays;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.Map;
 
 /**
  * MaryTTS cannot load in FML's class loader, this is why we have to add it ourselves.
@@ -26,33 +25,11 @@ public class TextToSpeechLoader {
 	public static Logger log = LogManager.getLogger(Mods.Computronics + "-text-to-spech-loader");
 	public static File ttsDir;
 
-	private ClasspathAdder classpathAdder;
-
-	/*static {
-		ClassLoader classLoader = TextToSpeech.class.getClassLoader();
-		System.out.println("Classloader: " + classLoader.toString());
-	}*/
+	public PrintWriter out;
+	public BufferedReader in;
+	public Socket socket;
 
 	public boolean preInit() {
-		LaunchClassLoader classLoader = Launch.classLoader;
-		ClassLoader ownClassLoader = getClass().getClassLoader();
-		if(ownClassLoader instanceof LaunchClassLoader) {
-			classLoader = (LaunchClassLoader) ownClassLoader;
-		}
-		classpathAdder = new ClasspathAdder(classLoader);
-		classLoader.addClassLoaderExclusion("marytts.");
-		classLoader.addClassLoaderExclusion("jtok.");
-		classLoader.addClassLoaderExclusion("de.dfki.");
-		//classLoader.addClassLoaderExclusion("pl.asie.computronics.audio.tts.core.");
-		//classLoader.addClassLoaderExclusion("com.sun.org.apache.xalan.internal.xsltc.");
-		try {
-			Class.forName("marytts.MaryInterface");
-			Class.forName("marytts.LocalMaryInterface");
-			Class.forName("marytts.server.Mary");
-			log.trace("MaryTTS in classpath.");
-		} catch(Exception e) {
-			log.trace("No MaryTTS in classpath.");
-		}
 		ttsDir = new File(System.getProperty("user.dir"));
 		ttsDir = new File(ttsDir, "marytts");
 		if(!ttsDir.exists()) {
@@ -68,31 +45,41 @@ public class TextToSpeechLoader {
 			log.error("Found an empty or invalid marytts directory, Text To Speech will not be initialized");
 			return hasDoneInit = false;
 		}
-		Arrays.sort(files);
-		for(File file : files) {
-			if(file.isDirectory() || !file.exists()) {
-				continue;
-			}
-			try {
-				log.info("Found Text-to-speech file " + file.getName());
-				classLoader.addURL(file.toURI().toURL());
-				classpathAdder.addFile(file);
-			} catch(IOException e) {
-				log.error("Error trying to load " + file.getName(), e);
-			}
-		}
-		//Check for marytts to be present
 		try {
-			classLoader.findClass("marytts.MaryInterface");
-			classLoader.findClass("marytts.LocalMaryInterface");
-			classLoader.findClass("marytts.server.Mary");
-			//classLoader.findClass("pl.asie.computronics.audio.tts.core.TextToSpeech");
-			Class.forName("marytts.MaryInterface");
-			Class.forName("marytts.LocalMaryInterface");
-			Class.forName("marytts.server.Mary");
-			//Class.forName("pl.asie.computronics.audio.tts.core.TextToSpeech");
-			MaryRuntimeUtils.ensureMaryStarted();
-			return hasDoneInit = true;
+			String path = null;
+			for(File file : files) {
+				if(file.getName().contains("computronics")) {
+					path = file.getCanonicalPath();
+					break;
+				}
+			}
+			if(path != null) {
+				final ProcessBuilder pb = new ProcessBuilder(new File(System.getProperty("java.home"), "bin/java").getCanonicalPath(), "-cp",
+					path, "pl.asie.computronics.audio.tts.core.TextToSpeechRelay");
+				final Map<String, String> env = pb.environment();
+
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						try {
+							log.info("Launching TTS relay.");
+							ServerSocket serverSocket = new ServerSocket(0, 1, InetAddress.getLoopbackAddress());
+							env.put("TTS-Port", String.valueOf(serverSocket.getLocalPort()));
+							Process p = pb.start();
+							socket = serverSocket.accept();
+							log.info("Launch successful.");
+							out = new PrintWriter(socket.getOutputStream(), true);
+							in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+							out.write("Hello!");
+						} catch(Exception e) {
+							// NO-OP
+						} finally {
+
+						}
+					}
+				}, "Computronics Text-to-Speech Listener");
+			}
+			return true;
 		} catch(Exception e) {
 			log.error("Text To Speech folder initialization failed, you will not be able to hear anything", e);
 			return hasDoneInit = false;
@@ -101,56 +88,5 @@ public class TextToSpeechLoader {
 
 	public boolean hasDoneInit() {
 		return this.hasDoneInit;
-	}
-
-	/**
-	 * Useful class for dynamically changing the classpath, adding classes during runtime.
-	 */
-	private static class ClasspathAdder {
-
-		private final ClassLoader classLoader;
-
-		private ClasspathAdder(ClassLoader classLoader) {
-			this.classLoader = classLoader;
-		}
-
-		/**
-		 * Adds a file to the classpath.
-		 * @param path a String pointing to the file
-		 * @throws IOException
-		 */
-		private void addFile(String path) throws IOException {
-			File f = new File(path);
-			addFile(f);
-		}
-
-		/**
-		 * Adds a file to the classpath
-		 * @param file the file to be added
-		 * @throws IOException
-		 */
-		private void addFile(File file) throws IOException {
-			addURL(file.toURI().toURL());
-		}
-
-		/**
-		 * Adds the content pointed by the URL to the classpath.
-		 * @param url the URL pointing to the content to be added
-		 * @throws IOException
-		 */
-		private void addURL(URL url) throws IOException {
-			try {
-				ClassLoader parent = this.classLoader.getParent();
-				URLClassLoader sysloader = parent != null && parent instanceof URLClassLoader ?
-					((URLClassLoader) parent) : (URLClassLoader) ClassLoader.getSystemClassLoader();
-				Class<?> sysclass = URLClassLoader.class;
-				Method method = sysclass.getDeclaredMethod("addURL", URL.class);
-				method.setAccessible(true);
-				method.invoke(sysloader, url);
-			} catch(Throwable t) {
-				t.printStackTrace();
-				throw new IOException("Error, could not add URL to system classloader", t);
-			}
-		}
 	}
 }

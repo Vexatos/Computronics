@@ -10,7 +10,6 @@ import marytts.LocalMaryInterface;
 import marytts.MaryInterface;
 import marytts.exceptions.MaryConfigurationException;
 import marytts.exceptions.SynthesisException;
-import marytts.server.Mary;
 import marytts.util.data.audio.AudioPlayer;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -57,7 +56,7 @@ import java.util.concurrent.Future;
  * @author Vexatos
  */
 public class TextToSpeech {
-	public MaryInterface marytts;
+	//public MaryInterface marytts;
 
 	private ExecutorService ttsThreads;
 	public final ArrayList<Future<Result>> processes = new ArrayList<Future<Result>>();
@@ -319,7 +318,7 @@ public class TextToSpeech {
 	public void preInit(Computronics computronics) {
 		if(computronics.isEnabled("ttsBox", Mods.isClassLoaded("marytts.LocalMaryInterface"))) {
 			log.info("Initializing Text To Speech");
-			try {
+			/*try {
 				marytts = new LocalMaryInterface();
 				//Set<String> voices = marytts.getAvailableVoices();
 				marytts.setStreamingAudio(true);
@@ -334,7 +333,7 @@ public class TextToSpeech {
 					marytts = null;
 				}
 				return;
-			}
+			}*/
 			ttsBox = new BlockTTSBox();
 			GameRegistry.registerBlock(ttsBox, "computronics.ttsBox");
 			GameRegistry.registerTileEntity(TileTTSBox.class, "computronics.ttsBox");

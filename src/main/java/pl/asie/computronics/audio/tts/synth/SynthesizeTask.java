@@ -36,6 +36,7 @@ public class SynthesizeTask implements Callable<Result> {
 			return null;
 		}
 		try {
+			TextToSpeechLoader.INSTANCE.out.write("text:" + text);
 			AudioInputStream audio = Computronics.tts.marytts.generateAudio(text);
 			//AudioFormat audioFormat = audio.getFormat();
 			//AudioFormat e = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, audioFormat.getSampleRate(), audioFormat.getSampleSizeInBits(), 2, audioFormat.getFrameSize(), audioFormat.getSampleRate(), audioFormat.isBigEndian());
@@ -48,6 +49,7 @@ public class SynthesizeTask implements Callable<Result> {
 			File tempFile = File.createTempFile("tts_", ".wav", tmpDir);
 			tempFile.deleteOnExit();
 			AudioSystem.write(audio, AudioFileFormat.Type.WAVE, tempFile);
+			
 			//AudioFileFormat audioFileFormat = AudioSystem.getAudioFileFormat(tempFile);
 			//sndSys.quickPlay(false, tempFile.toURI().toURL(), tempFile.getName(), false, x, y, z, SoundSystemConfig.ATTENUATION_LINEAR, 16);
 			//SoundSystem sndSys = getSoundSystem();
