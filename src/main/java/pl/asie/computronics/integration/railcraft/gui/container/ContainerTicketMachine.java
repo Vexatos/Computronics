@@ -123,8 +123,8 @@ public class ContainerTicketMachine extends RailcraftContainer {
 	private int lastProgress;
 
 	@Override
-	public void detectAndSendChanges() {
-		super.detectAndSendChanges();
+	public void sendUpdateToClient() {
+		super.sendUpdateToClient();
 		for(Object crafter : this.crafters) {
 			if(crafter instanceof ICrafting) {
 				if(this.lastEnergy != tile.getEnergyStored(ForgeDirection.UNKNOWN)) {
