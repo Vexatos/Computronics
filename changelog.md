@@ -4,6 +4,7 @@
   * CHANGED: The Creative Chat Box can now send messages interdimensionally and has no range limit anymore unless you specify a distance.
   * FIXED: Various crashes related to invalid crafting recipes.
   * FIXED: Crash when disabling the Digital Signal Receiver Box.
+  * FIXED: Updated Railcraft integration to version 9.8.0.0; requires Railcraft 9.8.0.0 now.
 
 ==== 1.5.8 ====
 
