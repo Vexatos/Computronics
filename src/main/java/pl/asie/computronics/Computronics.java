@@ -1,7 +1,21 @@
 package pl.asie.computronics;
 
+import java.lang.reflect.Method;
+import java.util.Locale;
+import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.tileentity.TileEntity;
+
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -16,16 +30,12 @@ import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
 import cpw.mods.fml.common.network.FMLEventChannel;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheralProvider;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheralRegistry;
 import pl.asie.computronics.audio.DFPWMPlaybackManager;
+import pl.asie.computronics.block.BlockAudioCable;
 import pl.asie.computronics.block.BlockCamera;
 import pl.asie.computronics.block.BlockChatBox;
 import pl.asie.computronics.block.BlockCipher;
@@ -34,6 +44,7 @@ import pl.asie.computronics.block.BlockColorfulLamp;
 import pl.asie.computronics.block.BlockEEPROMReader;
 import pl.asie.computronics.block.BlockIronNote;
 import pl.asie.computronics.block.BlockRadar;
+import pl.asie.computronics.block.BlockSpeaker;
 import pl.asie.computronics.block.BlockTapeReader;
 import pl.asie.computronics.cc.IntegrationComputerCraft;
 import pl.asie.computronics.cc.multiperipheral.MultiPeripheralRegistry;
@@ -59,6 +70,7 @@ import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tape.StorageManager;
 import pl.asie.computronics.tape.TapeStorageEventHandler;
+import pl.asie.computronics.tile.TileAudioCable;
 import pl.asie.computronics.tile.TileCamera;
 import pl.asie.computronics.tile.TileChatBox;
 import pl.asie.computronics.tile.TileCipherBlock;
@@ -67,6 +79,7 @@ import pl.asie.computronics.tile.TileColorfulLamp;
 import pl.asie.computronics.tile.TileEEPROMReader;
 import pl.asie.computronics.tile.TileIronNote;
 import pl.asie.computronics.tile.TileRadar;
+import pl.asie.computronics.tile.TileSpeaker;
 import pl.asie.computronics.tile.TileTapeDrive;
 import pl.asie.computronics.util.achievements.ComputronicsAchievements;
 import pl.asie.computronics.util.chat.ChatHandler;
@@ -75,12 +88,6 @@ import pl.asie.lib.gui.managed.IGuiProvider;
 import pl.asie.lib.gui.managed.ManagedGuiHandler;
 import pl.asie.lib.item.ItemMultiple;
 import pl.asie.lib.network.PacketHandler;
-
-import java.lang.reflect.Method;
-import java.util.Locale;
-import java.util.Random;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 @Mod(modid = Mods.Computronics, name = Mods.Computronics_NAME, version = "@VERSION@",
 	dependencies = "required-after:asielib@[0.4.4,);required-after:Forge@[10.13.2.1291,);"
@@ -115,6 +122,8 @@ public class Computronics {
 
 	public static BlockIronNote ironNote;
 	public static BlockTapeReader tapeReader;
+	public static BlockAudioCable audioCable;
+	public static BlockSpeaker speaker;
 	public static BlockCamera camera;
 	public static BlockChatBox chatBox;
 	public static BlockCipher cipher;
@@ -186,6 +195,16 @@ public class Computronics {
 		if(isEnabled("ironNoteBlock", true)) {
 			ironNote = new BlockIronNote();
 			registerBlockWithTileEntity(ironNote, TileIronNote.class, "computronics.ironNoteBlock");
+		}
+
+		if(isEnabled("audioCable", true)) {
+			audioCable = new BlockAudioCable();
+			registerBlockWithTileEntity(audioCable, TileAudioCable.class, "computronics.audioCable");
+		}
+
+		if(isEnabled("speaker", true)) {
+			speaker = new BlockSpeaker();
+			registerBlockWithTileEntity(speaker, TileSpeaker.class, "computronics.speaker");
 		}
 
 		if(isEnabled("tape", true)) {

@@ -1,12 +1,17 @@
 package pl.asie.computronics.network;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetHandler;
 import net.minecraft.tileentity.TileEntity;
+
+import javax.sound.sampled.AudioFormat;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.oc.DriverCardSound;
-import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TapeDriveState.State;
 import pl.asie.computronics.tile.TileTapeDrive;
@@ -15,10 +20,19 @@ import pl.asie.lib.network.MessageHandlerBase;
 import pl.asie.lib.network.Packet;
 import pl.asie.lib.util.WorldUtils;
 
-import javax.sound.sampled.AudioFormat;
-import java.io.IOException;
-
 public class NetworkHandlerClient extends MessageHandlerBase {
+	private class CodecData {
+		public final int x, y, z;
+		public final byte[] data;
+
+		public CodecData(int x, int y, int z, byte[] data) {
+			this.x = x;
+			this.y = y;
+			this.z = z;
+			this.data = data;
+		}
+	}
+
 	private static final AudioFormat DFPWM_DECODED_FORMAT = new AudioFormat(32768, 8, 1, false, false);
 
 	@Override
@@ -37,36 +51,54 @@ public class NetworkHandlerClient extends MessageHandlerBase {
 			break;
 			case Packets.PACKET_AUDIO_DATA: {
 				int dimId = packet.readInt();
-				int x = packet.readInt();
-				int y = packet.readInt();
-				int z = packet.readInt();
 				int packetId = packet.readInt();
-				int codecId = packet.readInt();
+				int sampleRate = packet.readInt();
 				short packetSize = packet.readShort();
-				short volume = packet.readByte();
 				byte[] data = packet.readByteArrayData(packetSize);
-				byte[] audio = new byte[packetSize * 8];
-				String sourceName = "dfpwm_" + codecId;
-				StreamingAudioPlayer codec = Computronics.instance.audio.getPlayer(codecId);
+				short receivers = packet.readShort();
 
-				if(dimId != WorldUtils.getCurrentClientDimension()) {
+				if (dimId != WorldUtils.getCurrentClientDimension()) {
+					for (int i = 0; i < receivers; i++) {
+						packet.readInt();
+						packet.readInt();
+						packet.readInt();
+						packet.readInt();
+						packet.readShort();
+						packet.readByte();
+					}
+
 					return;
 				}
 
-				codec.decompress(audio, data, 0, 0, packetSize);
-				for(int i = 0; i < (packetSize * 8); i++) {
-					// Convert signed to unsigned data
-					audio[i] = (byte) (((int) audio[i] & 0xFF) ^ 0x80);
+				Map<StreamingAudioPlayer, CodecData> codecs = new HashMap<StreamingAudioPlayer, CodecData>();
+
+				for (int j = 0; j < receivers; j++) {
+					int codecId = packet.readInt();
+					int x = packet.readInt();
+					int y = packet.readInt();
+					int z = packet.readInt();
+					int distance = packet.readUnsignedShort();
+					byte volume = packet.readByte();
+
+					byte[] audio = new byte[packetSize * 8];
+					StreamingAudioPlayer codec = Computronics.instance.audio.getPlayer(codecId);
+					codec.decompress(audio, data, 0, 0, packetSize);
+					for (int i = 0; i < (packetSize * 8); i++) {
+						// Convert signed to unsigned data
+						audio[i] = (byte) (((int) audio[i] & 0xFF) ^ 0x80);
+					}
+
+					codec.setSampleRate(sampleRate);
+					codec.setDistance((float) distance);
+					codec.setVolume(volume / 127.0F);
+					codec.lastPacketId = packetId;
+					codecs.put(codec, new CodecData(x, y, z, audio));
 				}
 
-				if((codec.lastPacketId + 1) != packetId) {
-					codec.reset();
+				for (StreamingAudioPlayer codec : codecs.keySet()) {
+					CodecData cd = codecs.get(codec);
+					codec.playPacket(cd.data, cd.x, cd.y, cd.z);
 				}
-				codec.setSampleRate(packetSize * 32);
-				codec.setDistance((float) Config.TAPEDRIVE_DISTANCE);
-				codec.setVolume(volume / 127.0F);
-				codec.playPacket(audio, x, y, z);
-				codec.lastPacketId = packetId;
 			}
 			break;
 			case Packets.PACKET_AUDIO_STOP: {

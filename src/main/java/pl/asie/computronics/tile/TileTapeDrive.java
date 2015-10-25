@@ -2,7 +2,16 @@ package pl.asie.computronics.tile;
 
 //import java.nio.file.FileSystem;
 
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
+
 import cpw.mods.fml.common.Optional;
+
+import net.minecraftforge.common.util.ForgeDirection;
+
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
@@ -13,11 +22,11 @@ import li.cil.oc.api.network.Component;
 import li.cil.oc.api.network.ManagedEnvironment;
 import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.Visibility;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.api.tape.IItemTapeStorage;
+import pl.asie.computronics.audio.AudioPacket;
+import pl.asie.computronics.audio.IAudioReceiver;
+import pl.asie.computronics.audio.IAudioSource;
 import pl.asie.computronics.item.ItemTape;
 import pl.asie.computronics.network.Packets;
 import pl.asie.computronics.reference.Config;
@@ -26,7 +35,7 @@ import pl.asie.computronics.tile.TapeDriveState.State;
 import pl.asie.lib.api.tile.IInventoryProvider;
 import pl.asie.lib.network.Packet;
 
-public class TileTapeDrive extends TileEntityPeripheralBase implements IInventoryProvider {
+public class TileTapeDrive extends TileEntityPeripheralBase implements IInventoryProvider, IAudioSource {
 	private String storageName = "";
 	private TapeDriveState state;
 
@@ -99,13 +108,70 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 		}
 	}
 
+	// TODO
+	private final IAudioReceiver tempReceiver = new IAudioReceiver() {
+		@Override
+		public int getSoundReceiverId() {
+			return state.getId();
+		}
+
+		@Override
+		public World getSoundWorld() {
+			return worldObj;
+		}
+
+		@Override
+		public int getSoundX() {
+			return xCoord;
+		}
+
+		@Override
+		public int getSoundY() {
+			return yCoord;
+		}
+
+		@Override
+		public int getSoundZ() {
+			return zCoord;
+		}
+
+		@Override
+		public int getSoundDistance() {
+			return Config.TAPEDRIVE_DISTANCE;
+		}
+
+		@Override
+		public byte getSoundVolume() {
+			return state.getVolume();
+		}
+
+		@Override
+		public void receivePacket(AudioPacket packet, ForgeDirection direction) {
+
+		}
+	};
+
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
 		State st = getEnumState();
-		Packet pkt = state.update(worldObj, xCoord, yCoord, zCoord);
+		AudioPacket pkt = state.update(this, worldObj, xCoord, yCoord, zCoord);
 		if(pkt != null) {
-			Computronics.packet.sendToAllAround(pkt, this, Config.TAPEDRIVE_DISTANCE * 2);
+			int receivers = 0;
+			for (int i = 0; i < 6; i++) {
+				ForgeDirection dir = ForgeDirection.getOrientation(i);
+				TileEntity tile = worldObj.getTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
+				if (tile instanceof IAudioReceiver) {
+					((IAudioReceiver) tile).receivePacket(pkt, dir);
+					receivers++;
+				}
+			}
+
+			if (receivers == 0) {
+				pkt.addReceiver(tempReceiver);
+			}
+
+			pkt.send();
 		}
 		if(!worldObj.isRemote && st != getEnumState()) {
 			sendState();

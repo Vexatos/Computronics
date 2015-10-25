@@ -1,10 +1,14 @@
 package pl.asie.computronics.tile;
 
+import java.util.Arrays;
+
 import net.minecraft.world.World;
+
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.api.tape.ITapeStorage;
-import pl.asie.computronics.network.Packets;
-import pl.asie.lib.network.Packet;
+import pl.asie.computronics.audio.AudioPacket;
+import pl.asie.computronics.audio.AudioUtils;
+import pl.asie.computronics.audio.IAudioSource;
 
 public class TapeDriveState {
 	public enum State {
@@ -29,6 +33,14 @@ public class TapeDriveState {
 		this.packetSize = Math.round(1024*speed);
 		return true;
 	}
+
+	public int getId() {
+		return codecId;
+	}
+
+	public byte getVolume() {
+		return (byte) soundVolume;
+	}
 	
 	public void setVolume(float volume) {
 		if(volume < 0.0F) volume = 0.0F;
@@ -43,12 +55,7 @@ public class TapeDriveState {
 		if(!worldObj.isRemote) { // Server-side happening
 			if(this.storage == null) newState = State.STOPPED;
 			if(state == State.PLAYING) { // State is playing - stop playback
-				Computronics.instance.audio.removePlayer(codecId);
-				try {
-					Packet pkt = Computronics.packet.create(Packets.PACKET_AUDIO_STOP)
-						.writeInt(codecId);
-					Computronics.packet.sendToAll(pkt);
-				} catch(Exception e) { e.printStackTrace(); }
+				AudioUtils.removePlayer(codecId);
 			}
 			if(newState == State.PLAYING) { // Time to play again!
 				codecId = Computronics.instance.audio.newPlayer();
@@ -65,24 +72,20 @@ public class TapeDriveState {
 		return state;
 	}
 
-	private Packet createMusicPacket(World worldObj, int x, int y, int z) {
-		byte[] packet = new byte[packetSize];
-		int amount = storage.read(packet, false); // read data into packet array
-		try {
-			Packet pkt = Computronics.packet.create(Packets.PACKET_AUDIO_DATA)
-				.writeInt(worldObj.provider.dimensionId)
-				.writeInt(x).writeInt(y).writeInt(z)
-				.writeInt(packetId++)
-				.writeInt(codecId)
-				.writeShort((short)packetSize)
-				.writeByte((byte)soundVolume)
-				.writeByteArrayData(packet);
-			if(amount < packetSize) switchState(worldObj, x, y, z, State.STOPPED);
-			return pkt;
-		} catch(Exception e) { e.printStackTrace(); return null; }
+	private AudioPacket createMusicPacket(IAudioSource source, World worldObj, int x, int y, int z) {
+		byte[] pktData = new byte[packetSize];
+		int amount = storage.read(pktData, false); // read data into packet array
+
+		if (amount < packetSize) switchState(worldObj, x, y, z, State.STOPPED);
+
+		if (amount > 0) {
+			return new AudioPacket(source, worldObj, AudioPacket.Type.DFPWM, packetSize * 8 * 4, Arrays.copyOf(pktData, amount));
+		} else {
+			return null;
+		}
 	}
 	
-	public Packet update(World worldObj, int x, int y, int z) {
+	public AudioPacket update(IAudioSource source, World worldObj, int x, int y, int z) {
 		if(!worldObj.isRemote) {
 			switch(state) {
 				case PLAYING: {
@@ -91,7 +94,7 @@ public class TapeDriveState {
 					}
 					if(codecTick % 5 == 0) {
 						codecTick++;
-						return createMusicPacket(worldObj, x, y, z);
+						return createMusicPacket(source, worldObj, x, y, z);
 					} else codecTick++;
 				} break;
 				case REWINDING: {

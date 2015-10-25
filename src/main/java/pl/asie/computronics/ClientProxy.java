@@ -1,13 +1,19 @@
 package pl.asie.computronics;
 
-import cpw.mods.fml.client.registry.RenderingRegistry;
-import cpw.mods.fml.common.Optional;
+import java.io.IOException;
+import java.util.ArrayList;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
 import net.minecraft.world.ChunkPosition;
 import net.minecraft.world.World;
+
+import cpw.mods.fml.client.registry.RenderingRegistry;
+import cpw.mods.fml.common.Optional;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
+
+import pl.asie.computronics.client.AudioCableRender;
 import pl.asie.computronics.client.LampRender;
 import pl.asie.computronics.client.SignalBoxRenderer;
 import pl.asie.computronics.client.UpgradeRenderer;
@@ -15,9 +21,6 @@ import pl.asie.computronics.oc.IntegrationOpenComputers;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.boom.SelfDestruct;
 import pl.asie.lib.network.Packet;
-
-import java.io.IOException;
-import java.util.ArrayList;
 
 public class ClientProxy extends CommonProxy {
 
@@ -35,6 +38,9 @@ public class ClientProxy extends CommonProxy {
 	public void registerRenderers() {
 		if(Computronics.colorfulLamp != null) {
 			RenderingRegistry.registerBlockHandler(new LampRender());
+		}
+		if(Computronics.audioCable != null) {
+			RenderingRegistry.registerBlockHandler(new AudioCableRender());
 		}
 		if(Computronics.railcraft != null && Computronics.railcraft.digitalBox != null) {
 			SignalBoxRenderer renderer = new SignalBoxRenderer();
