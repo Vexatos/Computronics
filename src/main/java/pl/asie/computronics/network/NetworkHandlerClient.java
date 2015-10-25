@@ -52,6 +52,7 @@ public class NetworkHandlerClient extends MessageHandlerBase {
 			case Packets.PACKET_AUDIO_DATA: {
 				int dimId = packet.readInt();
 				int packetId = packet.readInt();
+				int codecId = packet.readInt();
 				int sampleRate = packet.readInt();
 				short packetSize = packet.readShort();
 				byte[] data = packet.readByteArrayData(packetSize);
@@ -59,7 +60,6 @@ public class NetworkHandlerClient extends MessageHandlerBase {
 
 				if (dimId != WorldUtils.getCurrentClientDimension()) {
 					for (int i = 0; i < receivers; i++) {
-						packet.readInt();
 						packet.readInt();
 						packet.readInt();
 						packet.readInt();
@@ -72,33 +72,35 @@ public class NetworkHandlerClient extends MessageHandlerBase {
 
 				Map<StreamingAudioPlayer, CodecData> codecs = new HashMap<StreamingAudioPlayer, CodecData>();
 
+				byte[] audio = new byte[packetSize * 8];
+				StreamingAudioPlayer codec = Computronics.instance.audio.getPlayer(codecId);
+				codec.decompress(audio, data, 0, 0, packetSize);
+				for (int i = 0; i < (packetSize * 8); i++) {
+					// Convert signed to unsigned data
+					audio[i] = (byte) (((int) audio[i] & 0xFF) ^ 0x80);
+				}
+
+				codec.setSampleRate(sampleRate);
+				codec.lastPacketId = packetId;
+
+				codec.queueData(audio);
+
 				for (int j = 0; j < receivers; j++) {
-					int codecId = packet.readInt();
 					int x = packet.readInt();
 					int y = packet.readInt();
 					int z = packet.readInt();
 					int distance = packet.readUnsignedShort();
 					byte volume = packet.readByte();
 
-					byte[] audio = new byte[packetSize * 8];
-					StreamingAudioPlayer codec = Computronics.instance.audio.getPlayer(codecId);
-					codec.decompress(audio, data, 0, 0, packetSize);
-					for (int i = 0; i < (packetSize * 8); i++) {
-						// Convert signed to unsigned data
-						audio[i] = (byte) (((int) audio[i] & 0xFF) ^ 0x80);
-					}
-
-					codec.setSampleRate(sampleRate);
 					codec.setDistance((float) distance);
 					codec.setVolume(volume / 127.0F);
-					codec.lastPacketId = packetId;
-					codecs.put(codec, new CodecData(x, y, z, audio));
+					codec.playPacket(x, y, z);
 				}
 
-				for (StreamingAudioPlayer codec : codecs.keySet()) {
+				/* for (StreamingAudioPlayer codec : codecs.keySet()) {
 					CodecData cd = codecs.get(codec);
 					codec.playPacket(cd.data, cd.x, cd.y, cd.z);
-				}
+				} */
 			}
 			break;
 			case Packets.PACKET_AUDIO_STOP: {

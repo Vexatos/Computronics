@@ -50,11 +50,6 @@ public class TileAudioCable extends TileEntityBase implements IAudioReceiver {
 	}
 
 	@Override
-	public int getSoundReceiverId() {
-		return 0;
-	}
-
-	@Override
 	public World getSoundWorld() {
 		return null;
 	}

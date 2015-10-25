@@ -70,20 +70,18 @@ public final class AudioPacket {
 				if (receiversLocal.size() > 0) {
 					Packet pkt = Computronics.packet.create(Packets.PACKET_AUDIO_DATA)
 							.writeInt(world.provider.dimensionId)
-							.writeInt(id)
+							.writeInt(id).writeInt(source.getSourceId())
 							.writeInt(this.frequency);
 
 					pkt.writeShort((short) data.length);
 					pkt.writeByteArrayData(data);
 
-					pkt.writeShort((short) receiversLocal.size());
+					pkt.writeShort((short) receivers.size());
 
-					for (IAudioReceiver receiver : receiversLocal) {
-						pkt.writeInt(receiver.getSoundReceiverId())
-								.writeInt(receiver.getSoundX()).writeInt(receiver.getSoundY()).writeInt(receiver.getSoundZ())
+					for (IAudioReceiver receiver : receivers) {
+						pkt.writeInt(receiver.getSoundX()).writeInt(receiver.getSoundY()).writeInt(receiver.getSoundZ())
 								.writeShort((short) receiver.getSoundDistance()).writeByte(receiver.getSoundVolume());
 					}
-
 
 					Computronics.packet.sendTo(pkt, playerMP);
 				}

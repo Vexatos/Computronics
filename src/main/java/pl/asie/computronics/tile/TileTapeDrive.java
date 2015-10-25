@@ -9,7 +9,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
 import cpw.mods.fml.common.Optional;
-
 import net.minecraftforge.common.util.ForgeDirection;
 
 import dan200.computercraft.api.lua.ILuaContext;
@@ -110,11 +109,6 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 
 	// TODO
 	private final IAudioReceiver tempReceiver = new IAudioReceiver() {
-		@Override
-		public int getSoundReceiverId() {
-			return state.getId();
-		}
-
 		@Override
 		public World getSoundWorld() {
 			return worldObj;
@@ -679,5 +673,10 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 				}
 				break;
 		}
+	}
+
+	@Override
+	public int getSourceId() {
+		return state.getId();
 	}
 }

@@ -9,9 +9,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
-import pl.asie.computronics.Computronics;
 import pl.asie.computronics.audio.AudioPacket;
-import pl.asie.computronics.audio.AudioUtils;
 import pl.asie.computronics.audio.IAudioReceiver;
 import pl.asie.computronics.audio.IAudioSource;
 import pl.asie.computronics.reference.Config;
@@ -19,7 +17,6 @@ import pl.asie.computronics.reference.Config;
 public class TileSpeaker extends TileEntityPeripheralBase implements IAudioReceiver {
 	private final TIntHashSet packetIds = new TIntHashSet();
 	private IAudioSource lastSource;
-	private int id = -1;
 
 	public TileSpeaker() {
 		super("speaker");
@@ -28,29 +25,6 @@ public class TileSpeaker extends TileEntityPeripheralBase implements IAudioRecei
 	@Override
 	public void updateEntity() {
 		packetIds.clear();
-	}
-
-	@Override
-	public void validate() {
-		super.validate();
-		if (id >= 0) {
-			AudioUtils.removePlayer(id);
-		}
-		id = Computronics.instance.audio.newPlayer();
-	}
-
-	@Override
-	public void invalidate() {
-		super.invalidate();
-		if (id >= 0) {
-			AudioUtils.removePlayer(id);
-		}
-		id = -1;
-	}
-
-	@Override
-	public int getSoundReceiverId() {
-		return id;
 	}
 
 	@Override
@@ -85,15 +59,8 @@ public class TileSpeaker extends TileEntityPeripheralBase implements IAudioRecei
 
 	@Override
 	public void receivePacket(AudioPacket packet, ForgeDirection direction) {
-		if (id >= 0 && !packetIds.contains(packet.id)) {
+		if (!packetIds.contains(packet.id)) {
 			packetIds.add(packet.id);
-
-			if (lastSource != null && packet.source != lastSource) {
-				if (id >= 0) {
-					AudioUtils.removePlayer(id);
-				}
-				id = Computronics.instance.audio.newPlayer();
-			}
 
 			lastSource = packet.source;
 			packet.addReceiver(this);
