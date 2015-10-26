@@ -14,7 +14,7 @@ public enum StatementParameters {
 	public final String name;
 	private Class<? extends IStatementParameter> paramClass;
 
-	private StatementParameters(String name, Class<? extends IStatementParameter> paramClass) {
+	StatementParameters(String name, Class<? extends IStatementParameter> paramClass) {
 		this.name = name;
 		this.paramClass = paramClass;
 	}

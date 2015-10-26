@@ -24,12 +24,12 @@ public class DriverMannequin {
 
 	private static final HashMap<String, Part> parts = new HashMap<String, Part>();
 
-	private static enum Part {
+	private enum Part {
 		head, chest, left_arm, right_arm, left_leg, right_leg;
 
 		private static final Part[] VALUES = values();
 
-		private Part() {
+		Part() {
 			parts.put(this.name().toLowerCase(Locale.ENGLISH), this);
 		}
 

@@ -46,7 +46,7 @@ public class ColorUtils {
 		return Colors.White;
 	}
 
-	public static enum Colors {
+	public enum Colors {
 		Black(0x444444, "dyeBlack"),
 		Red(0xB3312C, "dyeRed"),
 		Green(0x339911, "dyeGreen"),

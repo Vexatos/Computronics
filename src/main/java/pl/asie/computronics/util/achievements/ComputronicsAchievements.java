@@ -43,7 +43,7 @@ public class ComputronicsAchievements {
 
 		String key;
 
-		private EnumAchievements(String key) {
+		EnumAchievements(String key) {
 			this.key = key;
 		}
 

@@ -24,7 +24,7 @@ import pl.asie.lib.util.EnergyConverter;
  */
 public class DroneStationPluggable extends PipePluggable implements IEnergyReceiver {
 
-	public static enum DroneStationState {
+	public enum DroneStationState {
 		Available,
 		Used;
 
