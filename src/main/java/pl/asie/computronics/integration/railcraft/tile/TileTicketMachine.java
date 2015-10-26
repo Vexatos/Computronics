@@ -712,24 +712,6 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 		tag.setBoolean("isActive", isActive);
 	}
 
-	@Override
-	@Optional.Method(modid = Mods.NedoComputers)
-	public boolean connectable(int side) {
-		return false;
-	}
-
-	@Override
-	@Optional.Method(modid = Mods.NedoComputers)
-	public short busRead(int addr) {
-		return 0;
-	}
-
-	@Override
-	@Optional.Method(modid = Mods.NedoComputers)
-	public void busWrite(int addr, short data) {
-
-	}
-
 	// Security
 
 	@Override

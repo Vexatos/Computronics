@@ -12,7 +12,6 @@ import li.cil.oc.api.network.Environment;
 import li.cil.oc.api.network.Message;
 import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.Visibility;
-import nedocomputers.api.INedoPeripheral;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
@@ -34,11 +33,10 @@ import java.util.ArrayList;
 @Optional.InterfaceList({
 	@Optional.Interface(iface = "li.cil.oc.api.network.Environment", modid = Mods.OpenComputers),
 	@Optional.Interface(iface = "li.cil.oc.api.network.BlacklistedPeripheral", modid = Mods.OpenComputers),
-	@Optional.Interface(iface = "pl.asie.computronics.api.multiperipheral.IMultiPeripheral", modid = Mods.ComputerCraft),
-	@Optional.Interface(iface = "nedocomputers.api.INedoPeripheral", modid = Mods.NedoComputers)
+	@Optional.Interface(iface = "pl.asie.computronics.api.multiperipheral.IMultiPeripheral", modid = Mods.ComputerCraft)
 })
 public abstract class TileEntityPeripheralBase extends TileMachine implements Environment,
-	IMultiPeripheral, IComputronicsPeripheral, INedoPeripheral, BlacklistedPeripheral {
+	IMultiPeripheral, IComputronicsPeripheral, BlacklistedPeripheral {
 
 	protected String peripheralName;
 
@@ -218,40 +216,6 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 		return 1;
 	}
 
-	@Override
-	@Optional.Method(modid = Mods.NedoComputers)
-	public boolean connectable(int side) {
-		return true;
-	}
-
-	protected int nedoBusID = 0;
-
-	@Override
-	@Optional.Method(modid = Mods.NedoComputers)
-	public int getBusId() {
-		return nedoBusID;
-	}
-
-	@Override
-	@Optional.Method(modid = Mods.NedoComputers)
-	public void setBusId(int id) {
-		nedoBusID = id;
-	}
-
-	@Optional.Method(modid = Mods.NedoComputers)
-	public void readFromNBT_NC(final NBTTagCompound nbt) {
-		if(nbt.hasKey("nc:bus")) {
-			nedoBusID = nbt.getShort("nc:bus");
-		}
-	}
-
-	@Optional.Method(modid = Mods.NedoComputers)
-	public void writeToNBT_NC(final NBTTagCompound nbt) {
-		if(nedoBusID != 0) {
-			nbt.setShort("nc:bus", (short) nedoBusID);
-		}
-	}
-
 	protected int overlayColor = ColorUtils.Colors.White.color;
 
 	public int getColor() {
@@ -302,9 +266,6 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 		if(Mods.isLoaded(Mods.OpenComputers)) {
 			readFromNBT_OC(nbt);
 		}
-		if(Mods.isLoaded(Mods.NedoComputers)) {
-			readFromNBT_NC(nbt);
-		}
 	}
 
 	@Override
@@ -315,9 +276,6 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 		}
 		if(Mods.isLoaded(Mods.OpenComputers)) {
 			writeToNBT_OC(nbt);
-		}
-		if(Mods.isLoaded(Mods.NedoComputers)) {
-			writeToNBT_NC(nbt);
 		}
 	}
 

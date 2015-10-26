@@ -30,7 +30,6 @@ public class BlockDigitalDetector extends BlockPeripheral implements IBlockWithP
 	public BlockDigitalDetector() {
 		super("digital_detector");
 		this.setBlockName("computronics.detector");
-		this.setNoNedoComputers(true);
 		this.setRotation(Rotation.NONE);
 		this.setResistance(4.5F);
 		this.setHardness(2.0F);

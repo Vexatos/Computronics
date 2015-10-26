@@ -180,19 +180,4 @@ public class TileDigitalDetector extends TileEntityPeripheralBase
 	public boolean canConnectPeripheralOnSide(int side) {
 		return ForgeDirection.getOrientation(side) == this.direction;
 	}
-
-	@Override
-	public boolean connectable(int side) {
-		return false;
-	}
-
-	@Override
-	public short busRead(int addr) {
-		return 0;
-	}
-
-	@Override
-	public void busWrite(int addr, short data) {
-
-	}
 }

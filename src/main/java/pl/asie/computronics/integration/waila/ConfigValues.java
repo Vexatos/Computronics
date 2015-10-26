@@ -10,7 +10,6 @@ import pl.asie.computronics.reference.Mods;
 public enum ConfigValues {
 
 	OCAddress(Mods.Computronics + ".enableOCAddress", Mods.OpenComputers),
-	NCAddress(Mods.Computronics + ".enableNCAddress", Mods.NedoComputers),
 	Tape(Mods.Computronics + ".enableTape"),
 	TapeName(Mods.Computronics + ".enableTapeName"),
 	DriveState(Mods.Computronics + ".enableDriveState"),
@@ -21,20 +20,20 @@ public enum ConfigValues {
 	private boolean defvalue;
 	private String modID;
 
-	private ConfigValues(String key) {
+	ConfigValues(String key) {
 		this(key, true);
 	}
 
-	private ConfigValues(String key, boolean defvalue) {
+	ConfigValues(String key, boolean defvalue) {
 		this.key = key;
 		this.defvalue = defvalue;
 	}
 
-	private ConfigValues(String key, String modID) {
+	ConfigValues(String key, String modID) {
 		this(key, modID, true);
 	}
 
-	private ConfigValues(String key, String modID, boolean defvalue) {
+	ConfigValues(String key, String modID, boolean defvalue) {
 		this.key = key;
 		this.defvalue = defvalue;
 		this.modID = modID;

@@ -59,10 +59,6 @@ public class ModRecipes {
 			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.radar, 1, 0),
 				"sts", "rbr", "scs", 'i', Items.iron_ingot, 'r', Items.redstone, 't', Blocks.redstone_torch, 's', Blocks.stonebrick, 'b', Items.bowl, 'c', Items.comparator);
 		}
-		if(Computronics.nc_eepromreader != null) {
-			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.nc_eepromreader, 1, 0),
-				"sts", "iei", "srs", 'i', Items.iron_ingot, 'r', Items.redstone, 't', Blocks.redstone_torch, 's', Blocks.stonebrick, 'e', GameRegistry.findItem(Mods.NedoComputers, "EEPROM"));
-		}
 		if(Computronics.colorfulLamp != null) {
 			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.colorfulLamp, 1, 0),
 				"igi", "glg", "igi", 'i', Items.iron_ingot, 'g', Blocks.glass, 'l', Items.glowstone_dust);

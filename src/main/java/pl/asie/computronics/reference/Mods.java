@@ -18,8 +18,7 @@ public class Mods {
 	//Computer mods
 	public static final String
 		OpenComputers = "OpenComputers",
-		ComputerCraft = "ComputerCraft",
-		NedoComputers = "nedocomputers";
+		ComputerCraft = "ComputerCraft";
 
 	//Other mods
 	public static final String

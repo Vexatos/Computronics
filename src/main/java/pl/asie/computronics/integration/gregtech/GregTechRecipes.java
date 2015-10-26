@@ -56,10 +56,6 @@ public class GregTechRecipes extends ModRecipes {
 			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.radar, 1, 0),
 				"ftf", "dbd", "lcl", 't', ItemList.Sensor_HV.get(1), 'b', ItemList.Emitter_HV.get(1), 'c', ItemList.Hull_HV.get(1), 'f', "circuitMaster", 'd', "circuitElite", 'l', "cableGt02Gold");
 		}
-		if(Computronics.nc_eepromreader != null) {
-			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.nc_eepromreader, 1, 0),
-				"ntn", "cec", "nhn", 'e', GameRegistry.findItem(Mods.NedoComputers, "EEPROM"), 'c', "circuitBasic", 't', "cableGt01Tin", 'h', ItemList.Hull_LV.get(1), 'n', "circuitPrimitive");
-		}
 		if(Computronics.colorfulLamp != null) {
 			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.colorfulLamp, 1, 0),
 				"igi", "glg", "ini", 'i', "plateIron", 'g', "plateGlass", 'l', Blocks.redstone_lamp, 'n', "circuitPrimitive");
