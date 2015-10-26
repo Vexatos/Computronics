@@ -1,3 +1,7 @@
+==== 1.5.10 ====
+
+  * FIXED: More crashes related to invalid crafting recipes.
+
 ==== 1.5.9 ====
 
   * ADDED: New config option (disabled by default) to make the normal Chat Box have no range limit and work interdimensionally unless you specify a distance.

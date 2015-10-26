@@ -63,6 +63,14 @@ public class RecipeUtils {
 	}
 
 	private static void warnCrafting(ItemStack result, Object[] recipe) {
+		recipe = recipe.clone();
+		for(int i = 0; i < recipe.length; i++) {
+			if(recipe[i] == null) {
+				recipe[i] = "null";
+			} else if(recipe[i] instanceof ItemStack && ((ItemStack) recipe[i]).getItem() == null){
+				recipe[i] = "null";
+			}
+		}
 		Computronics.log.warn(String.format("Invalid recipe: %s -> %s", Arrays.toString(recipe), result));
 		//"Invalid recipe: " + Arrays.toString(recipe) + " -> " + result + "; %s was null");
 	}
