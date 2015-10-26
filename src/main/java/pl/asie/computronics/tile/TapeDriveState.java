@@ -45,7 +45,7 @@ public class TapeDriveState {
 	public void setVolume(float volume) {
 		if(volume < 0.0F) volume = 0.0F;
 		if(volume > 1.0F) volume = 1.0F;
-		this.soundVolume = (int)Math.floor(volume*127);
+		this.soundVolume = (int) Math.floor(volume * 127.0F);
 	}
 	
 	public void switchState(World worldObj, int x, int y, int z, State newState) {
@@ -79,7 +79,8 @@ public class TapeDriveState {
 		if (amount < packetSize) switchState(worldObj, x, y, z, State.STOPPED);
 
 		if (amount > 0) {
-			return new AudioPacket(source, worldObj, AudioPacket.Type.DFPWM, packetSize * 8 * 4, Arrays.copyOf(pktData, amount));
+			return new AudioPacket(source, worldObj, AudioPacket.Type.DFPWM,
+					packetSize * 8 * 4, getVolume(), amount == packetSize ? pktData : Arrays.copyOf(pktData, amount));
 		} else {
 			return null;
 		}

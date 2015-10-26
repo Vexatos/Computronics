@@ -1,8 +1,6 @@
 package pl.asie.computronics.network;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -70,8 +68,6 @@ public class NetworkHandlerClient extends MessageHandlerBase {
 					return;
 				}
 
-				Map<StreamingAudioPlayer, CodecData> codecs = new HashMap<StreamingAudioPlayer, CodecData>();
-
 				byte[] audio = new byte[packetSize * 8];
 				StreamingAudioPlayer codec = Computronics.instance.audio.getPlayer(codecId);
 				codec.decompress(audio, data, 0, 0, packetSize);
@@ -96,11 +92,6 @@ public class NetworkHandlerClient extends MessageHandlerBase {
 					codec.setVolume(volume / 127.0F);
 					codec.playPacket(x, y, z);
 				}
-
-				/* for (StreamingAudioPlayer codec : codecs.keySet()) {
-					CodecData cd = codecs.get(codec);
-					codec.playPacket(cd.data, cd.x, cd.y, cd.z);
-				} */
 			}
 			break;
 			case Packets.PACKET_AUDIO_STOP: {

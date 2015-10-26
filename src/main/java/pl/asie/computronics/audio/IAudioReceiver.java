@@ -10,6 +10,5 @@ public interface IAudioReceiver {
 	int getSoundY();
 	int getSoundZ();
 	int getSoundDistance();
-	byte getSoundVolume(); // 0-127
 	void receivePacket(AudioPacket packet, ForgeDirection side);
 }

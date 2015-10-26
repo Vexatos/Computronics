@@ -35,6 +35,38 @@ import pl.asie.lib.api.tile.IInventoryProvider;
 import pl.asie.lib.network.Packet;
 
 public class TileTapeDrive extends TileEntityPeripheralBase implements IInventoryProvider, IAudioSource {
+	private final IAudioReceiver internalSpeaker = new IAudioReceiver() {
+		@Override
+		public World getSoundWorld() {
+			return worldObj;
+		}
+
+		@Override
+		public int getSoundX() {
+			return xCoord;
+		}
+
+		@Override
+		public int getSoundY() {
+			return yCoord;
+		}
+
+		@Override
+		public int getSoundZ() {
+			return zCoord;
+		}
+
+		@Override
+		public int getSoundDistance() {
+			return Config.TAPEDRIVE_DISTANCE;
+		}
+
+		@Override
+		public void receivePacket(AudioPacket packet, ForgeDirection direction) {
+			packet.addReceiver(this);
+		}
+	};
+
 	private String storageName = "";
 	private TapeDriveState state;
 
@@ -107,44 +139,6 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 		}
 	}
 
-	// TODO
-	private final IAudioReceiver tempReceiver = new IAudioReceiver() {
-		@Override
-		public World getSoundWorld() {
-			return worldObj;
-		}
-
-		@Override
-		public int getSoundX() {
-			return xCoord;
-		}
-
-		@Override
-		public int getSoundY() {
-			return yCoord;
-		}
-
-		@Override
-		public int getSoundZ() {
-			return zCoord;
-		}
-
-		@Override
-		public int getSoundDistance() {
-			return Config.TAPEDRIVE_DISTANCE;
-		}
-
-		@Override
-		public byte getSoundVolume() {
-			return state.getVolume();
-		}
-
-		@Override
-		public void receivePacket(AudioPacket packet, ForgeDirection direction) {
-
-		}
-	};
-
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
@@ -156,13 +150,13 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 				ForgeDirection dir = ForgeDirection.getOrientation(i);
 				TileEntity tile = worldObj.getTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
 				if (tile instanceof IAudioReceiver) {
-					((IAudioReceiver) tile).receivePacket(pkt, dir);
+					((IAudioReceiver) tile).receivePacket(pkt, dir.getOpposite());
 					receivers++;
 				}
 			}
 
 			if (receivers == 0) {
-				pkt.addReceiver(tempReceiver);
+				internalSpeaker.receivePacket(pkt, ForgeDirection.UNKNOWN);
 			}
 
 			pkt.send();

@@ -73,9 +73,4 @@ public class TileAudioCable extends TileEntityBase implements IAudioReceiver {
 	public int getSoundDistance() {
 		return 0;
 	}
-
-	@Override
-	public byte getSoundVolume() {
-		return 0;
-	}
 }

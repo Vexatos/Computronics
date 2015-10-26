@@ -1,6 +1,8 @@
 package pl.asie.computronics.audio;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -25,6 +27,7 @@ public final class AudioPacket {
 
 	public final IAudioSource source;
 	public final int id;
+	public final byte volume;
 	public final World world;
 	public final Type type;
 	public final int frequency;
@@ -32,18 +35,22 @@ public final class AudioPacket {
 
 	private final Set<IAudioReceiver> receivers = new HashSet<IAudioReceiver>();
 
-	public AudioPacket(IAudioSource source, World world, Type type, int freq, byte[] data) {
+	public AudioPacket(IAudioSource source, World world, Type type, int frequency, byte volume, byte[] data) {
 		this.id = getNewId();
 		this.source = source;
 		this.world = world;
 		this.type = type;
-		this.frequency = freq;
+		this.frequency = frequency;
+		this.volume = volume;
 		this.data = data;
 	}
 
+	public Collection<IAudioReceiver> getReceivers() {
+		return Collections.unmodifiableSet(receivers);
+	}
+
 	public void addReceiver(IAudioReceiver receiver) {
-		if (receiver.getSoundWorld() != null && receiver.getSoundWorld().provider.dimensionId == world.provider.dimensionId
-				&& receiver.getSoundVolume() > 0 && receiver.getSoundDistance() > 0) {
+		if (receiver.getSoundWorld() != null && receiver.getSoundWorld().provider.dimensionId == world.provider.dimensionId) {
 			receivers.add(receiver);
 		}
 	}
@@ -80,7 +87,7 @@ public final class AudioPacket {
 
 					for (IAudioReceiver receiver : receivers) {
 						pkt.writeInt(receiver.getSoundX()).writeInt(receiver.getSoundY()).writeInt(receiver.getSoundZ())
-								.writeShort((short) receiver.getSoundDistance()).writeByte(receiver.getSoundVolume());
+								.writeShort((short) receiver.getSoundDistance()).writeByte(volume);
 					}
 
 					Computronics.packet.sendTo(pkt, playerMP);

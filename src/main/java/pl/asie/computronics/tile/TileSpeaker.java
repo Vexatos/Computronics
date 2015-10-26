@@ -53,11 +53,6 @@ public class TileSpeaker extends TileEntityPeripheralBase implements IAudioRecei
 	}
 
 	@Override
-	public byte getSoundVolume() {
-		return 127;
-	}
-
-	@Override
 	public void receivePacket(AudioPacket packet, ForgeDirection direction) {
 		if (!packetIds.contains(packet.id)) {
 			packetIds.add(packet.id);
