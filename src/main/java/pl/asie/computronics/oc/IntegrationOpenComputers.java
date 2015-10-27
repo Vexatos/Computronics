@@ -102,9 +102,13 @@ public class IntegrationOpenComputers {
 		// To ensure less TE ticks for those who don't use OC, we keep this tidbit around.
 		Config.MUST_UPDATE_TILE_ENTITIES = true;
 
-		if(Mods.isLoaded(Mods.Forestry) && Config.FORESTRY_BEES) {
-			Computronics.forestry = new IntegrationForestry();
-			Computronics.forestry.preInitOC();
+		if(Mods.hasVersion(Mods.Forestry, "[4.0.8.36,)")) {
+			if(Config.FORESTRY_BEES) {
+				Computronics.forestry = new IntegrationForestry();
+				Computronics.forestry.preInitOC();
+			}
+		} else {
+			log.warn("Detected outdated version of Forestry, Forestry integration will not be enabled. Please update to Forestry 4.");
 		}
 
 		if(Mods.isLoaded(Mods.BuildCraftTransport) && Mods.isLoaded(Mods.BuildCraftCore) && Config.BUILDCRAFT_STATION) {
@@ -223,7 +227,7 @@ public class IntegrationOpenComputers {
 			Driver.add(new DriverStrictEnergyStorage.OCDriver());
 		}
 
-		if(Mods.API.hasVersion(Mods.API.BuildCraftTiles, "[1.1,)")) {
+		if(Mods.hasVersion(Mods.API.BuildCraftTiles, "[1.1,)")) {
 			if(compat.isCompatEnabled(Compat.BuildCraft_Drivers)) {
 				Driver.add(new DriverHeatable.OCDriver());
 			}

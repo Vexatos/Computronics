@@ -96,7 +96,7 @@ import pl.asie.lib.network.PacketHandler;
 		+ "after:MineFactoryReloaded;after:RedLogic@[59.1.9,);after:ProjRed|Core;"
 		+ "after:BuildCraft|Core@[7.0.6,);after:Railcraft@[9.8.0.0,);"
 		+ "after:gregtech@[MC1710];after:EnderIO@[1.7.10_2.2.7,);"
-		+ "after:Forestry@[4.0.8.36,);after:Waila@[1.5.10,);"
+		+ "after:Forestry;after:Waila@[1.5.10,);"
 		+ "after:MekanismAPI|energy@[8.0.0,);after:Flamingo@[1.7.10-1.3,);"
 		+ "after:armourersWorkshop@[1.7.10-0.33,)")
 public class Computronics {

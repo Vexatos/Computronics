@@ -57,16 +57,6 @@ public class Mods {
 			Gendustry = "gendustryAPI",
 			Mekanism_Energy = "MekanismAPI|energy";
 
-		private static HashMap<String, ArtifactVersion> apiList;
-
-		public static ArtifactVersion getVersion(String name) {
-			return pl.asie.lib.reference.Mods.API.getVersion(name);
-		}
-
-		public static boolean hasVersion(String name, String version) {
-			return pl.asie.lib.reference.Mods.API.hasVersion(name, version);
-		}
-
 		public static boolean hasAPI(String name) {
 			return pl.asie.lib.reference.Mods.API.hasAPI(name);
 		}
@@ -74,6 +64,14 @@ public class Mods {
 
 	public static boolean isLoaded(String name) {
 		return pl.asie.lib.reference.Mods.isLoaded(name);
+	}
+
+	public static ArtifactVersion getVersion(String name) {
+		return pl.asie.lib.reference.Mods.getVersion(name);
+	}
+
+	public static boolean hasVersion(String name, String version) {
+		return pl.asie.lib.reference.Mods.hasVersion(name, version);
 	}
 
 	public static boolean hasEnergyMod() {

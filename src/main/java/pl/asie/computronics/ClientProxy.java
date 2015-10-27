@@ -49,7 +49,7 @@ public class ClientProxy extends CommonProxy {
 		}
 		if(Mods.isLoaded(Mods.OpenComputers)) {
 			registerOpenComputersRenderers();
-			if(Mods.isLoaded(Mods.Forestry)) {
+			if(Mods.hasVersion(Mods.Forestry, "[4.0.8.36,)")) {
 				Computronics.forestry.registerOCRenderers();
 			}
 		}
