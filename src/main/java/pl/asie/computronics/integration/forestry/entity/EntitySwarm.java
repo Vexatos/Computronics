@@ -197,7 +197,7 @@ public class EntitySwarm extends EntityFlyingCreature {
 	protected boolean interact(EntityPlayer player) {
 		if(!worldObj.isRemote && this.player != null && player == this.player && player.isSneaking() && player.getHeldItem() == null) {
 			setDead();
-			SwarmProvider.swingItem(player);
+			SwarmProvider.swingItem(player, null);
 			return true;
 		}
 		return super.interact(player);
