@@ -2,6 +2,7 @@ package pl.asie.computronics.util;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
+import pl.asie.computronics.util.internal.IColorable;
 
 import java.util.HashMap;
 
@@ -44,6 +45,14 @@ public class ColorUtils {
 			return fromDyeMeta(15 - meta);
 		}
 		return Colors.White;
+	}
+
+	public static boolean isSameOrDefault(IColorable one, IColorable two) {
+		int oc = one.getColor(),
+			tc = two.getColor(),
+			ocd = one.getDefaultColor(),
+			tcd = two.getDefaultColor();
+		return oc == ocd || tc == tcd || oc == tc;
 	}
 
 	public enum Colors {

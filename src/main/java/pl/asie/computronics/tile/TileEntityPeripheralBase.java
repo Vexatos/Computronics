@@ -20,6 +20,7 @@ import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
 import pl.asie.computronics.audio.MachineSound;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.ColorUtils;
+import pl.asie.computronics.util.internal.IColorable;
 import pl.asie.computronics.util.internal.IComputronicsPeripheral;
 import pl.asie.lib.tile.TileMachine;
 
@@ -38,7 +39,7 @@ import java.util.ArrayList;
 	@Optional.Interface(iface = "nedocomputers.api.INedoPeripheral", modid = Mods.NedoComputers)
 })
 public abstract class TileEntityPeripheralBase extends TileMachine implements Environment,
-	IMultiPeripheral, IComputronicsPeripheral, INedoPeripheral, BlacklistedPeripheral {
+	IMultiPeripheral, IComputronicsPeripheral, INedoPeripheral, BlacklistedPeripheral, IColorable {
 
 	protected String peripheralName;
 
@@ -252,17 +253,25 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 		}
 	}
 
-	protected int overlayColor = ColorUtils.Colors.White.color;
+	protected int overlayColor = getDefaultColor();
 
+	@Override
 	public int getColor() {
 		return overlayColor;
 	}
 
+	@Override
+	public int getDefaultColor() {
+		return ColorUtils.Colors.White.color;
+	}
+
+	@Override
 	public void setColor(int color) {
 		this.overlayColor = color;
 		this.markDirty();
 	}
 
+	@Override
 	public boolean canBeColored() {
 		return true;
 	}
@@ -275,7 +284,7 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 			overlayColor = nbt.getInteger("computronics:color");
 		}
 		if(this.overlayColor < 0) {
-			this.overlayColor = ColorUtils.Colors.White.color;
+			this.overlayColor = getDefaultColor();
 		}
 		if(oldColor != this.overlayColor) {
 			this.worldObj.markBlockRangeForRenderUpdate(xCoord, yCoord, zCoord, xCoord, yCoord, zCoord);
@@ -285,7 +294,7 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 	@Override
 	public void writeToRemoteNBT(NBTTagCompound nbt) {
 		super.writeToRemoteNBT(nbt);
-		if(overlayColor != ColorUtils.Colors.White.color) {
+		if(overlayColor != getDefaultColor()) {
 			nbt.setInteger("computronics:color", overlayColor);
 		}
 	}
@@ -297,7 +306,7 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 			overlayColor = nbt.getInteger("computronics:color");
 		}
 		if(this.overlayColor < 0) {
-			this.overlayColor = ColorUtils.Colors.White.color;
+			this.overlayColor = getDefaultColor();
 		}
 		if(Mods.isLoaded(Mods.OpenComputers)) {
 			readFromNBT_OC(nbt);
@@ -310,7 +319,7 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 	@Override
 	public void writeToNBT(final NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-		if(overlayColor != ColorUtils.Colors.White.color) {
+		if(overlayColor != getDefaultColor()) {
 			nbt.setInteger("computronics:color", overlayColor);
 		}
 		if(Mods.isLoaded(Mods.OpenComputers)) {

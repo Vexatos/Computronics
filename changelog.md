@@ -1,5 +1,13 @@
-==== 1.5.10 ====
+==== 1.6.0 ====
 
+  * ADDED: Audio Cables!
+    - Connects audio players (like Tape Drives) to audio receivers (Like Speakers)
+    - If you connect one to a Tape Drive, it will stop playing itself and instead send the sound across the cables.
+    - Can be coloured. When coloured, they won't connect to cables with a different colour and won't connect to coloured audio senders/receivers with a different colour.
+  * ADDED: Speakers!
+    - Can be connected to Tape Drives or Cables
+    - Plays any sound it receives through the cables
+    - Allows you to play sound in multiple places at once using only a single Tape Drive.
   * FIXED: More crashes related to invalid crafting recipes.
 
 ==== 1.5.9 ====

@@ -35,7 +35,6 @@ public abstract class BlockPeripheral extends BlockBase implements IComputronics
 	}
 
 	@Override
-	@Optional.Method(modid = Mods.NedoComputers)
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int a, float _x, float _y, float _z) {
 		TileEntity tile = world.getTileEntity(x, y, z);
 		if(tile instanceof TileEntityPeripheralBase && ((TileEntityPeripheralBase) tile).canBeColored()) {

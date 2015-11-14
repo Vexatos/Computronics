@@ -2,15 +2,7 @@ package pl.asie.computronics.tile;
 
 //import java.nio.file.FileSystem;
 
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
-
 import cpw.mods.fml.common.Optional;
-import net.minecraftforge.common.util.ForgeDirection;
-
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
@@ -21,6 +13,12 @@ import li.cil.oc.api.network.Component;
 import li.cil.oc.api.network.ManagedEnvironment;
 import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.Visibility;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.api.tape.IItemTapeStorage;
 import pl.asie.computronics.audio.AudioPacket;
@@ -31,6 +29,8 @@ import pl.asie.computronics.network.Packets;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TapeDriveState.State;
+import pl.asie.computronics.util.ColorUtils;
+import pl.asie.computronics.util.internal.IColorable;
 import pl.asie.lib.api.tile.IInventoryProvider;
 import pl.asie.lib.network.Packet;
 
@@ -146,16 +146,20 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 		AudioPacket pkt = state.update(this, worldObj, xCoord, yCoord, zCoord);
 		if(pkt != null) {
 			int receivers = 0;
-			for (int i = 0; i < 6; i++) {
+			for(int i = 0; i < 6; i++) {
 				ForgeDirection dir = ForgeDirection.getOrientation(i);
 				TileEntity tile = worldObj.getTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
-				if (tile instanceof IAudioReceiver) {
+				if(tile instanceof IAudioReceiver) {
+					if(tile instanceof IColorable && ((IColorable) tile).canBeColored()
+						&& !ColorUtils.isSameOrDefault(this, (IColorable) tile)) {
+						continue;
+					}
 					((IAudioReceiver) tile).receivePacket(pkt, dir.getOpposite());
 					receivers++;
 				}
 			}
 
-			if (receivers == 0) {
+			if(receivers == 0) {
 				internalSpeaker.receivePacket(pkt, ForgeDirection.UNKNOWN);
 			}
 

@@ -75,7 +75,7 @@ public class AudioCableRender implements ISimpleBlockRenderingHandler {
 
 		bac.setRenderMask(connMask ^ 0x3f);
 		renderer.setRenderBounds(0.3125, 0.3125, 0.3125, 1 - 0.3125, 1 - 0.3125, 1 - 0.3125);
-		renderer.renderStandardBlockWithColorMultiplier(block, x, y, z, 1.0F, 1.0F, 1.0F);
+		renderer.renderStandardBlock(block, x, y, z);
 
 		for (int i = 0; i < 6; i++) {
 			if ((connMask & (1 << i)) != 0) {
@@ -100,7 +100,7 @@ public class AudioCableRender implements ISimpleBlockRenderingHandler {
 						renderer.setRenderBounds(1 - 0.3125, 0.3125, 0.3125, 1, 1 - 0.3125, 1 - 0.3125);
 						break;
 				}
-				renderer.renderStandardBlockWithColorMultiplier(block, x, y, z, 1.0F, 1.0F, 1.0F);
+				renderer.renderStandardBlock(block, x, y, z);
 			}
 		}
 
