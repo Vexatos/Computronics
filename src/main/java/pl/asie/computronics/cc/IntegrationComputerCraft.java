@@ -150,7 +150,7 @@ public class IntegrationComputerCraft {
 			registerMultiPeripheralProvider(new DriverStrictEnergyStorage.CCDriver());
 		}
 
-		if(Mods.hasVersion(Mods.API.BuildCraftTiles, "[1.1,)")) {
+		if(Mods.hasVersion(Mods.API.BuildCraftTiles, Mods.Versions.BuildCraftTiles)) {
 			if(compat.isCompatEnabled(Compat.BuildCraft_Drivers)) {
 				registerMultiPeripheralProvider(new DriverHeatable.CCDriver());
 			}

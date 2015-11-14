@@ -17,6 +17,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.S0BPacketAnimation;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraftforge.event.entity.minecart.MinecartInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 import pl.asie.computronics.integration.forestry.IntegrationForestry;
@@ -89,7 +90,7 @@ public class SwarmProvider extends AbstractProvider {
 		}*/
 	}
 
-	private void makeSwarm(PlayerInteractEvent e, EntityPlayer player, IBeeHousing tile) {
+	private void makeSwarm(double x, double y, double z, EntityPlayer player, IBeeHousing tile) {
 		if(tile.getBeekeepingLogic() != null && tile.getBeeInventory() != null && tile.getBeekeepingLogic().canDoBeeFX()) {
 			IBee member = BeeManager.beeRoot.getMember(tile.getBeeInventory().getQueen());
 			if(member != null) {
@@ -102,7 +103,7 @@ public class SwarmProvider extends AbstractProvider {
 					if(controller != null) {
 						controller.changeBuffer(-10);
 					}
-					behavior.spawnNewEntity(e.x + 0.5, e.y + 0.5, e.z + 0.5,
+					behavior.spawnNewEntity(x, y, z,
 						member.getGenome().getPrimary().getIconColour(0),
 						member.getGenome().getTolerantFlyer());
 					swingItem(player);
@@ -123,7 +124,7 @@ public class SwarmProvider extends AbstractProvider {
 					if(player.isSneaking() && e.world.blockExists(e.x, e.y, e.z)) {
 						TileEntity te = e.world.getTileEntity(e.x, e.y, e.z);
 						if(te instanceof IBeeHousing) {
-							makeSwarm(e, player, ((IBeeHousing) te));
+							makeSwarm(e.x + 0.5, e.y + 0.5, e.z + 0.5, player, (IBeeHousing) te);
 						} else {
 							findTarget(player);
 						}
@@ -135,8 +136,27 @@ public class SwarmProvider extends AbstractProvider {
 				if(player.isSneaking() && e.world.blockExists(e.x, e.y, e.z)) {
 					TileEntity te = e.world.getTileEntity(e.x, e.y, e.z);
 					if(te instanceof IBeeHousing) {
-						makeSwarm(e, player, ((IBeeHousing) te));
+						makeSwarm(e.x + 0.5, e.y + 0.5, e.z + 0.5, player, (IBeeHousing) te);
 					}
+				}
+			}
+		}
+	}
+
+	@SubscribeEvent
+	public void onMinecartInteract(MinecartInteractEvent e) {
+		EntityPlayer player = e.player;
+		if(player != null && !player.worldObj.isRemote) {
+			ItemStack heldItem = player.getHeldItem();
+			if(heldItem != null && heldItem.getItem() == IntegrationForestry.itemStickImpregnated) {
+				if(player.isSneaking() && e.minecart instanceof IBeeHousing) {
+					makeSwarm(e.minecart.posX, e.minecart.posY + 0.25, e.minecart.posZ, player, (IBeeHousing) e.minecart);
+				} else {
+					findTarget(player);
+				}
+			} else if(heldItem == null) {
+				if(player.isSneaking() && e.minecart instanceof IBeeHousing) {
+					makeSwarm(e.minecart.posX, e.minecart.posY + 0.25, e.minecart.posZ, player, (IBeeHousing) e.minecart);
 				}
 			}
 		}
