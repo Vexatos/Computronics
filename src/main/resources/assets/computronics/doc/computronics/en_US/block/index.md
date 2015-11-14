@@ -19,10 +19,6 @@ Keep in mind that some of these may not be available, depending on the recipe se
 
 These are blocks that Computronics adds for integration with other mods. They might not exist in your mod pack.
 
-## NedoComputers
-
-* [EEPROM Reader](eeprom_reader.md)
-
 ## Railcraft
 
 * [Locomotive Relay](railcraft/locomotive_relay.md)

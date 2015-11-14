@@ -8,7 +8,6 @@ tile.computronics.cipher.name=Блок шифрования
 tile.computronics.cipher_advanced.name=Продвинутый блок шифрования
 tile.computronics.radar.name=Радар
 tile.computronics.colorfulLamp.name=Цветной светильник
-tile.computronics.eepromReader.name=Считыватель EEPROM
 tile.computronics.locomotiveRelay.name=Цифровое локомотивное реле
 tile.computronics.digitalBox.name=Цифровой приёмник сигнала
 tile.computronics.detector.name=Детектор - Цифровой
@@ -69,7 +68,6 @@ tooltip.computronics.manual.tab.blocks=Computronics: Блоки
 tooltip.computronics.manual.tab.items=Computronics: Предметы
 
 option.computronics.enableOCAddress=Адрес компонента
-option.computronics.enableNCAddress=ID шины NedoComputers
 option.computronics.enableTape=Вставленная лента
 option.computronics.enableTapeName=Название ленты
 option.computronics.enableDriveState=Состояние стримера

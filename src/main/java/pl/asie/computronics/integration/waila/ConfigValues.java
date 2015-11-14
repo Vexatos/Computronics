@@ -10,7 +10,6 @@ import pl.asie.computronics.reference.Mods;
 public enum ConfigValues {
 
 	OCAddress(Mods.Computronics + ".enableOCAddress", Mods.OpenComputers),
-	NCAddress(Mods.Computronics + ".enableNCAddress", Mods.NedoComputers),
 	Tape(Mods.Computronics + ".enableTape"),
 	TapeName(Mods.Computronics + ".enableTapeName"),
 	DriveState(Mods.Computronics + ".enableDriveState"),

@@ -55,6 +55,7 @@ public final class AudioPacket {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public void send() {
 		try {
 			for (EntityPlayerMP playerMP : (List<EntityPlayerMP>) MinecraftServer.getServer().getConfigurationManager().playerEntityList) {

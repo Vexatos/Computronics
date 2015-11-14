@@ -5,7 +5,6 @@ import li.cil.oc.api.network.Environment;
 import li.cil.oc.api.network.Node;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
-import nedocomputers.api.INedoPeripheral;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -31,9 +30,6 @@ public class WailaPeripheral extends ComputronicsWailaProvider {
 		if(Mods.isLoaded(Mods.OpenComputers) && ConfigValues.OCAddress.getValue(config)) {
 			currenttip = getWailaOCBody(nbt, currenttip);
 		}
-		if(Mods.isLoaded(Mods.NedoComputers) && ConfigValues.NCAddress.getValue(config)) {
-			currenttip = getWailaNCBody(nbt, currenttip);
-		}
 		return currenttip;
 	}
 
@@ -46,23 +42,11 @@ public class WailaPeripheral extends ComputronicsWailaProvider {
 		return currenttip;
 	}
 
-	@Optional.Method(modid = Mods.NedoComputers)
-	private List<String> getWailaNCBody(NBTTagCompound nbt, List<String> currenttip) {
-		if(nbt.hasKey("nc:bus")) {
-			currenttip.add(StringUtil.localizeAndFormat(
-				"tooltip.computronics.waila.base.bus", nbt.getShort("nc:bus")));
-		}
-		return currenttip;
-	}
-
 	@Override
 	public NBTTagCompound getNBTData(EntityPlayerMP player, TileEntity te, NBTTagCompound tag, World world, int x, int y, int z) {
 		if(te != null && te instanceof IComputronicsPeripheral) {
 			if(Mods.isLoaded(Mods.OpenComputers)) {
 				tag = getNBTData_OC(te, tag);
-			}
-			if(Mods.isLoaded(Mods.NedoComputers)) {
-				tag = getNBTData_NC(te, tag);
 			}
 		}
 		return tag;
@@ -79,18 +63,6 @@ public class WailaPeripheral extends ComputronicsWailaProvider {
 			final NBTTagCompound nodeNbt = new NBTTagCompound();
 			node.save(nodeNbt);
 			tag.setTag("oc:node", nodeNbt);
-		}
-		return tag;
-	}
-
-	@Optional.Method(modid = Mods.NedoComputers)
-	private NBTTagCompound getNBTData_NC(TileEntity te, NBTTagCompound tag) {
-		if(!(te instanceof INedoPeripheral)) {
-			return tag;
-		}
-		INedoPeripheral tile = ((INedoPeripheral) te);
-		if(tile.getBusId() != 0) {
-			tag.setShort("nc:bus", (short) tile.getBusId());
 		}
 		return tag;
 	}

@@ -8,6 +8,7 @@
     - Can be connected to Tape Drives or Cables
     - Plays any sound it receives through the cables
     - Allows you to play sound in multiple places at once using only a single Tape Drive.
+  * CHANGED: NedoComputers is no longer supported. Removed the EEPROM Reader and any kind of NedoComputers support there was.
   * FIXED: More crashes related to invalid crafting recipes.
 
 ==== 1.5.9 ====

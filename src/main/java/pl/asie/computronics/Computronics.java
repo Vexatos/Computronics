@@ -41,7 +41,6 @@ import pl.asie.computronics.block.BlockChatBox;
 import pl.asie.computronics.block.BlockCipher;
 import pl.asie.computronics.block.BlockCipherAdvanced;
 import pl.asie.computronics.block.BlockColorfulLamp;
-import pl.asie.computronics.block.BlockEEPROMReader;
 import pl.asie.computronics.block.BlockIronNote;
 import pl.asie.computronics.block.BlockRadar;
 import pl.asie.computronics.block.BlockSpeaker;
@@ -76,7 +75,6 @@ import pl.asie.computronics.tile.TileChatBox;
 import pl.asie.computronics.tile.TileCipherBlock;
 import pl.asie.computronics.tile.TileCipherBlockAdvanced;
 import pl.asie.computronics.tile.TileColorfulLamp;
-import pl.asie.computronics.tile.TileEEPROMReader;
 import pl.asie.computronics.tile.TileIronNote;
 import pl.asie.computronics.tile.TileRadar;
 import pl.asie.computronics.tile.TileSpeaker;
@@ -91,7 +89,7 @@ import pl.asie.lib.network.PacketHandler;
 
 @Mod(modid = Mods.Computronics, name = Mods.Computronics_NAME, version = "@VERSION@",
 	dependencies = "required-after:asielib@[0.4.5,);required-after:Forge@[10.13.2.1291,);"
-		+ "after:ComputerCraft;after:OpenComputers@[1.5.18,);after:nedocomputers;"
+		+ "after:ComputerCraft;after:OpenComputers@[1.5.18,);"
 		+ "before:OpenPeripheralCore@[1.1,);before:OpenPeripheralApi@[3.2,);"
 		+ "after:MineFactoryReloaded;after:RedLogic@[59.1.9,);after:ProjRed|Core;"
 		+ "after:BuildCraft|Core@[7.0.6,);after:Railcraft@[9.8.0.0,);"
@@ -129,7 +127,6 @@ public class Computronics {
 	public static BlockCipher cipher;
 	public static BlockCipherAdvanced cipher_advanced;
 	public static BlockRadar radar;
-	public static BlockEEPROMReader nc_eepromreader;
 	public static BlockColorfulLamp colorfulLamp;
 
 	public static IntegrationOpenComputers opencomputers;
@@ -245,11 +242,6 @@ public class Computronics {
 		if(isEnabled("lamp", true)) {
 			colorfulLamp = new BlockColorfulLamp();
 			registerBlockWithTileEntity(colorfulLamp, TileColorfulLamp.class, "computronics.colorfulLamp");
-		}
-
-		if(Mods.isLoaded(Mods.NedoComputers) && isEnabled("eepromReader", true)) {
-			nc_eepromreader = new BlockEEPROMReader();
-			registerBlockWithTileEntity(nc_eepromreader, TileEEPROMReader.class, "computronics.eepromReader");
 		}
 
 		if(isEnabled("tape", true)) {

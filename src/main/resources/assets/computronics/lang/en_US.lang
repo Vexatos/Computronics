@@ -8,7 +8,6 @@ tile.computronics.cipher.name=Cipher Block
 tile.computronics.cipher_advanced.name=Advanced Cipher Block
 tile.computronics.radar.name=Radar
 tile.computronics.colorfulLamp.name=Colorful Lamp
-tile.computronics.eepromReader.name=EEPROM Reader
 tile.computronics.locomotiveRelay.name=Digital Locomotive Relay
 tile.computronics.digitalBox.name=Digital Signal Receiver Box
 tile.computronics.detector.name=Detector - Digital
@@ -71,7 +70,6 @@ tooltip.computronics.manual.tab.blocks=Computronics: Blocks
 tooltip.computronics.manual.tab.items=Computronics: Items
 
 option.computronics.enableOCAddress=Component address
-option.computronics.enableNCAddress=NedoComputers Bus ID
 option.computronics.enableTape=Inserted tape
 option.computronics.enableTapeName=Tape name
 option.computronics.enableDriveState=Tape Drive state

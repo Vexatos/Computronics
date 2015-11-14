@@ -282,22 +282,4 @@ public class TileChatBox extends TileEntityPeripheralBase implements IChatListen
 		}
 		return null;
 	}
-
-	@Override
-	@Optional.Method(modid = Mods.NedoComputers)
-	public short busRead(int addr) {
-		return 0;
-	}
-
-	@Override
-	@Optional.Method(modid = Mods.NedoComputers)
-	public void busWrite(int addr, short data) {
-		switch((addr & 0xFFFE)) {
-			case 0:
-				if(data > 0) {
-					distance = data;
-				}
-				break;
-		}
-	}
 }

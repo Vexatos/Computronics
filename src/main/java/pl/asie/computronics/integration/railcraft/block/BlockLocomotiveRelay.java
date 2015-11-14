@@ -26,7 +26,6 @@ public class BlockLocomotiveRelay extends BlockPeripheral implements IBlockWithP
 		super("locomotive_relay");
 		this.setIconName("computronics:machine_top");
 		this.setBlockName("computronics.locomotiveRelay");
-		this.setNoNedoComputers(true);
 		this.setRotation(Rotation.NONE);
 	}
 

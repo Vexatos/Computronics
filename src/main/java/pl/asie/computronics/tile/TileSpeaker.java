@@ -60,16 +60,6 @@ public class TileSpeaker extends TileEntityPeripheralBase implements IAudioRecei
 	}
 
 	@Override
-	public short busRead(int addr) {
-		return 0;
-	}
-
-	@Override
-	public void busWrite(int addr, short data) {
-
-	}
-
-	@Override
 	public String[] getMethodNames() {
 		return new String[0];
 	}

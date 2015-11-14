@@ -89,18 +89,6 @@ public class TileIronNote extends TileEntityPeripheralBase implements IBundledTi
 		return null;
 	}
 
-	@Override
-	@Optional.Method(modid = Mods.NedoComputers)
-	public short busRead(int addr) {
-		return 0;
-	}
-
-	@Override
-	@Optional.Method(modid = Mods.NedoComputers)
-	public void busWrite(int addr, short data) {
-		NoteUtils.playNote(worldObj, xCoord, yCoord, zCoord, (data >> 5), (data & 31));
-	}
-
 	private void parseBundledInput(byte[] data) {
 		int baseNote = 4;
 		if(data != null) {
