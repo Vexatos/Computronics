@@ -39,7 +39,7 @@ public class BlockAudioCable extends BlockBase {
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int a, float _x, float _y, float _z) {
 		TileEntity tile = world.getTileEntity(x, y, z);
 		if(tile instanceof TileAudioCable) {
-			ColorUtils.Colors color = ColorUtils.getColor(player.getHeldItem());
+			ColorUtils.Color color = ColorUtils.getColor(player.getHeldItem());
 			if(color != null) {
 				((TileAudioCable) tile).setColor(color.color);
 				world.markBlockForUpdate(x, y, z);
@@ -51,7 +51,7 @@ public class BlockAudioCable extends BlockBase {
 
 	@Override
 	public int getRenderColor(int meta) {
-		return ColorUtils.Colors.LightGray.color;
+		return ColorUtils.Color.LightGray.color;
 	}
 
 	@Override

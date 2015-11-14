@@ -11,11 +11,12 @@ import java.util.HashMap;
  */
 public class ColorUtils {
 
-	public static final HashMap<String, Colors> dyes = new HashMap<String, Colors>();
+	public static final HashMap<String, Color> dyes = new HashMap<String, Color>();
+	public static final HashMap<Integer, Color> colorValues = new HashMap<Integer, Color>();
 
-	public static Colors getColor(ItemStack stack) {
+	public static Color getColor(ItemStack stack) {
 		int[] oreIDs = OreDictionary.getOreIDs(stack);
-		for(Colors color : Colors.VALUES) {
+		for(Color color : Color.VALUES) {
 			int colorID = OreDictionary.getOreID(color.dyeName);
 			for(int oreID : oreIDs) {
 				if(colorID == oreID) {
@@ -26,25 +27,32 @@ public class ColorUtils {
 		return null;
 	}
 
-	public static Colors fromName(String name) {
+	public static Color fromName(String name) {
 		if(dyes.containsKey(name)) {
 			return dyes.get(name);
 		}
-		return Colors.White;
+		return Color.White;
 	}
 
-	public static Colors fromDyeMeta(int meta) {
-		if(meta >= 0 && meta < Colors.VALUES.length) {
-			return Colors.VALUES[meta];
+	public static Color fromDyeMeta(int meta) {
+		if(meta >= 0 && meta < Color.VALUES.length) {
+			return Color.VALUES[meta];
 		}
-		return Colors.White;
+		return Color.White;
 	}
 
-	public static Colors fromWoolMeta(int meta) {
-		if(meta >= 0 && meta < Colors.VALUES.length) {
+	public static Color fromWoolMeta(int meta) {
+		if(meta >= 0 && meta < Color.VALUES.length) {
 			return fromDyeMeta(15 - meta);
 		}
-		return Colors.White;
+		return Color.White;
+	}
+
+	public static Color fromColor(int color) {
+		if(colorValues.containsKey(color)) {
+			return colorValues.get(color);
+		}
+		return Color.White;
 	}
 
 	public static boolean isSameOrDefault(IColorable one, IColorable two) {
@@ -55,7 +63,7 @@ public class ColorUtils {
 		return oc == ocd || tc == tcd || oc == tc;
 	}
 
-	public enum Colors {
+	public enum Color {
 		Black(0x444444, "dyeBlack"),
 		Red(0xB3312C, "dyeRed"),
 		Green(0x339911, "dyeGreen"),
@@ -74,15 +82,16 @@ public class ColorUtils {
 		White(0xFFFFFF, "dyeWhite");
 		//OxF0F0F0
 
-		public static final Colors[] VALUES = values();
+		public static final Color[] VALUES = values();
 
 		public final int color;
 		public final String dyeName;
 
-		Colors(int color, String dyeName) {
+		Color(int color, String dyeName) {
 			this.color = color;
 			this.dyeName = dyeName;
 			dyes.put(dyeName, this);
+			colorValues.put(color, this);
 		}
 	}
 }

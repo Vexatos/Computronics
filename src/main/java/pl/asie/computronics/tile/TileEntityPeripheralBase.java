@@ -226,7 +226,7 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 
 	@Override
 	public int getDefaultColor() {
-		return ColorUtils.Colors.White.color;
+		return ColorUtils.Color.White.color;
 	}
 
 	@Override

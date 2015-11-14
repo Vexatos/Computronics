@@ -111,7 +111,7 @@ public class TileAudioCable extends TileEntityBase implements IAudioReceiver, IC
 
 	@Override
 	public int getDefaultColor() {
-		return ColorUtils.Colors.LightGray.color;
+		return ColorUtils.Color.LightGray.color;
 	}
 
 	@Override
