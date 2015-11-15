@@ -5,6 +5,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
@@ -15,13 +16,14 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.client.AudioCableRender;
+import pl.asie.computronics.oc.manual.IBlockWithDocumentation;
 import pl.asie.computronics.tile.TileAudioCable;
 import pl.asie.computronics.util.ColorUtils;
 import pl.asie.lib.block.BlockBase;
 
 import java.util.ArrayList;
 
-public class BlockAudioCable extends BlockBase {
+public class BlockAudioCable extends BlockBase implements IBlockWithDocumentation {
 	private IIcon mCable;
 	private int connectionMask = 0x3f;
 
@@ -248,5 +250,17 @@ public class BlockAudioCable extends BlockBase {
 	@SideOnly(Side.CLIENT)
 	public int getRenderType() {
 		return AudioCableRender.id();
+	}
+
+	protected String documentationName = "audio_cable";
+
+	@Override
+	public String getDocumentationName(World world, int x, int y, int z) {
+		return this.documentationName;
+	}
+
+	@Override
+	public String getDocumentationName(ItemStack stack) {
+		return this.documentationName;
 	}
 }

@@ -4,6 +4,7 @@ import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.registry.GameRegistry;
 import gregtech.GT_Mod;
 import gregtech.api.GregTech_API;
+import gregtech.api.enums.GT_Values;
 import gregtech.api.enums.ItemList;
 import gregtech.api.enums.Materials;
 import gregtech.api.enums.OrePrefixes;
@@ -32,7 +33,7 @@ public class GregTechRecipes extends ModRecipes {
 
 		if(Computronics.camera != null) {
 			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.camera, 1, 0),
-				"gct", "ges", "gct", 's', ItemList.Hull_LV.get(1), 'i', "plateIron", 'e', "lensRuby", 'g', "lensGlass", 'c', "circuitPrimitive", 't', "cableGt01Tin");
+				"tcg", "seg", "tcg", 's', ItemList.Hull_LV.get(1), 'i', "plateIron", 'e', "lensRuby", 'g', "lensGlass", 'c', "circuitPrimitive", 't', "cableGt01Tin");
 		}
 		if(Computronics.chatBox != null) {
 			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.chatBox, 1, 0),
@@ -42,9 +43,21 @@ public class GregTechRecipes extends ModRecipes {
 			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.ironNote, 1, 0),
 				"iii", "ini", "iii", 'i', "plateIron", 'n', Blocks.noteblock);
 		}
+		if(Computronics.audioCable != null) {
+			GT_Values.RA.addAssemblerRecipe(GT_OreDictUnificator.get(OrePrefixes.wireGt02, Materials.Silver, 1), GT_OreDictUnificator.get(OrePrefixes.plateDouble, Materials.Paper, 1), Materials.Bismuth.getMolten(GT_Values.L), new ItemStack(Computronics.audioCable, 1, 0), 64, 30);
+			GT_Values.RA.addAssemblerRecipe(GT_OreDictUnificator.get(OrePrefixes.wireGt02, Materials.Silver, 1), GT_OreDictUnificator.get(OrePrefixes.plateDouble, Materials.Paper, 1), Materials.Lead.getMolten(GT_Values.L), new ItemStack(Computronics.audioCable, 1, 0), 64, 30);
+		}
+		if(Computronics.speaker != null) {
+			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.speaker, 1, 0),
+				"wpc", "ifb", "shc", 'h', ItemList.Casing_LV.get(1),
+				'f', "foilGallium", 'p', "plateSteel",
+				'b', "plateDoublePaper", 'i', "plateIronMagnetic",
+				's', Computronics.audioCable != null ? new ItemStack(Computronics.audioCable, 1, 0) : "cableGt02Silver",
+				'c', "screwSteel", 'w', "craftingToolScrewdriver");
+		}
 		if(Computronics.tapeReader != null) {
 			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.tapeReader, 1, 0),
-				"tit", "mrm", "cac", 'i', ItemList.Hull_LV.get(1), 'r', "circuitBasic",
+				"trt", "mim", "cac", 'i', ItemList.Hull_LV.get(1), 'r', "circuitBasic",
 				'a', Computronics.ironNote != null ? Computronics.ironNote : Blocks.noteblock,
 				'm', ItemList.Electric_Motor_LV.get(1), 't', "cableGt01Tin", 'c', "plateIronMagnetic");
 		}

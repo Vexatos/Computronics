@@ -14,6 +14,8 @@ Keep in mind that some of these may not be available, depending on the recipe se
 * [Iron Note Block](iron_noteblock.md)
 * [Radar](radar.md)
 * [Tape Drive](tape_drive.md)
+* [Audio Cable](audio_cable.md)
+* [Speaker](speaker.md)
 
 # Blocks for other mods
 

@@ -1,17 +1,15 @@
 package pl.asie.computronics.integration;
 
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.registry.GameRegistry;
-
 import li.cil.oc.api.detail.ItemInfo;
 import mods.railcraft.common.items.ItemElectricMeter;
 import mods.railcraft.common.items.ItemRail;
 import mods.railcraft.common.items.RailcraftItem;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
@@ -26,14 +24,6 @@ public class ModRecipes {
 	public static ModRecipes instance;
 
 	public void registerRecipes() {
-		if(Computronics.audioCable != null) {
-			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.audioCable, 8, 0),
-					"ini", 'i', Items.iron_ingot, 'n', Blocks.noteblock);
-		}
-		if(Computronics.speaker != null) {
-			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.speaker, 1, 0),
-					"sIs", "ini", "sIs", 's', Blocks.stonebrick, 'I', Items.iron_ingot, 'i', Blocks.iron_bars, 'n', Blocks.noteblock);
-		}
 		if(Computronics.camera != null) {
 			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.camera, 1, 0),
 				"sss", "geg", "iii", 's', Blocks.stonebrick, 'i', Items.iron_ingot, 'e', Items.ender_pearl, 'g', Blocks.glass);
@@ -45,6 +35,14 @@ public class ModRecipes {
 		if(Computronics.ironNote != null) {
 			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.ironNote, 1, 0),
 				"iii", "ini", "iii", 'i', Items.iron_ingot, 'n', Blocks.noteblock);
+		}
+		if(Computronics.audioCable != null) {
+			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.audioCable, 8, 0),
+				"ini", 'i', Items.iron_ingot, 'n', Blocks.noteblock);
+		}
+		if(Computronics.speaker != null) {
+			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.speaker, 1, 0),
+				"sIs", "ini", "sIs", 's', Blocks.stonebrick, 'I', Items.iron_ingot, 'i', Blocks.iron_bars, 'n', Blocks.noteblock);
 		}
 		if(Computronics.tapeReader != null) {
 			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.tapeReader, 1, 0),
