@@ -118,10 +118,9 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 	public void updateEntity() {
 		super.updateEntity();
 		if(!addedToNetwork) {
+			addedToNetwork = true;
 			if(Mods.isLoaded(Mods.OpenComputers)) {
 				addToNetwork_OC();
-			} else {
-				addedToNetwork = true; // Just so this check won't be done every tick
 			}
 		}
 		if(worldObj.isRemote && hasSound()) {
@@ -131,11 +130,8 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 
 	@Optional.Method(modid = Mods.OpenComputers)
 	protected void addToNetwork_OC() {
-		if(!addedToNetwork) {
-			addedToNetwork = true;
-			Network.joinOrCreateNetwork(this);
-			this.onOCNetworkCreation();
-		}
+		Network.joinOrCreateNetwork(this);
+		this.onOCNetworkCreation();
 	}
 
 	@Optional.Method(modid = Mods.OpenComputers)
