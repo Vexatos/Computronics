@@ -24,7 +24,6 @@ import pl.asie.computronics.api.tape.IItemTapeStorage;
 import pl.asie.computronics.audio.AudioPacket;
 import pl.asie.computronics.audio.IAudioReceiver;
 import pl.asie.computronics.audio.IAudioSource;
-import pl.asie.computronics.item.ItemTape;
 import pl.asie.computronics.network.Packets;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
@@ -79,37 +78,48 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 		}
 	}
 
-	private ManagedEnvironment oc_fs;
+	private Object oc_fs;
+
+	protected ManagedEnvironment oc_fs(){
+		return (ManagedEnvironment) this.oc_fs;
+	}
 
 	@Optional.Method(modid = Mods.OpenComputers)
 	private void initOCFilesystem() {
 		oc_fs = li.cil.oc.api.FileSystem.asManagedEnvironment(li.cil.oc.api.FileSystem.fromClass(Computronics.class, Mods.Computronics, "lua/component/tape_drive"),
 			"tape_drive");
-		((Component) oc_fs.node()).setVisibility(Visibility.Network);
+		((Component) oc_fs().node()).setVisibility(Visibility.Network);
 	}
 
 	@Override
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void onConnect(final Node node) {
-		if(node.host() instanceof Context) {
-			node.connect(oc_fs.node());
+		if(node == node()) {
+			node.connect(oc_fs().node());
 		}
 	}
-	// GUI/State
 
 	@Override
 	@Optional.Method(modid = Mods.OpenComputers)
-	public void onDisconnect(final Node node) {
-		if(node.host() instanceof Context) {
-			// Remove our file systems when we get disconnected from a
-			// computer.
-			node.disconnect(oc_fs.node());
-		} else if(node == this.node()) {
-			// Remove the file system if we are disconnected, because in that
-			// case this method is only called once.
-			oc_fs.node().remove();
+	protected void onChunkUnload_OC() {
+		super.onChunkUnload_OC();
+		Node node = oc_fs().node();
+		if(node != null) {
+			node.remove();
 		}
 	}
+
+	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
+	protected void invalidate_OC() {
+		super.invalidate_OC();
+		Node node = oc_fs().node();
+		if(node != null) {
+			node.remove();
+		}
+	}
+
+	// GUI/State
 
 	protected void sendState() {
 		if(worldObj.isRemote) {
@@ -333,8 +343,8 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void readFromNBT_OC(NBTTagCompound tag) {
 		super.readFromNBT_OC(tag);
-		if(oc_fs != null && oc_fs.node() != null) {
-			oc_fs.node().load(tag.getCompoundTag("oc:fs"));
+		if(oc_fs() != null && oc_fs().node() != null) {
+			oc_fs().node().load(tag.getCompoundTag("oc:fs"));
 		}
 	}
 
@@ -342,9 +352,9 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void writeToNBT_OC(NBTTagCompound tag) {
 		super.writeToNBT_OC(tag);
-		if(oc_fs != null && oc_fs.node() != null) {
+		if(oc_fs() != null && oc_fs().node() != null) {
 			final NBTTagCompound fsNbt = new NBTTagCompound();
-			oc_fs.node().save(fsNbt);
+			oc_fs().node().save(fsNbt);
 			tag.setTag("oc:fs", fsNbt);
 		}
 	}

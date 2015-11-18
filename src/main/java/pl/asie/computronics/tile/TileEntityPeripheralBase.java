@@ -115,16 +115,26 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 	}
 
 	@Override
-	@Optional.Method(modid = Mods.OpenComputers)
 	public void updateEntity() {
 		super.updateEntity();
+		if(!addedToNetwork) {
+			if(Mods.isLoaded(Mods.OpenComputers)) {
+				addToNetwork_OC();
+			} else {
+				addedToNetwork = true; // Just so this check won't be done every tick
+			}
+		}
+		if(worldObj.isRemote && hasSound()) {
+			updateSound();
+		}
+	}
+
+	@Optional.Method(modid = Mods.OpenComputers)
+	protected void addToNetwork_OC() {
 		if(!addedToNetwork) {
 			addedToNetwork = true;
 			Network.joinOrCreateNetwork(this);
 			this.onOCNetworkCreation();
-		}
-		if(worldObj.isRemote && hasSound()) {
-			updateSound();
 		}
 	}
 
@@ -134,23 +144,35 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 	}
 
 	@Override
-	@Optional.Method(modid = Mods.OpenComputers)
 	public void onChunkUnload() {
 		super.onChunkUnload();
+		if(Mods.isLoaded(Mods.OpenComputers)) {
+			onChunkUnload_OC();
+		}
+	}
+
+	@Override
+	public void invalidate() {
+		super.invalidate();
+		if(Mods.isLoaded(Mods.OpenComputers)) {
+			invalidate_OC();
+		}
+		if(worldObj.isRemote && hasSound()) {
+			updateSound();
+		}
+	}
+
+	@Optional.Method(modid = Mods.OpenComputers)
+	protected void onChunkUnload_OC() {
 		if(node() != null) {
 			node().remove();
 		}
 	}
 
-	@Override
 	@Optional.Method(modid = Mods.OpenComputers)
-	public void invalidate() {
-		super.invalidate();
+	protected void invalidate_OC() {
 		if(node() != null) {
 			node().remove();
-		}
-		if(worldObj.isRemote && hasSound()) {
-			updateSound();
 		}
 	}
 
