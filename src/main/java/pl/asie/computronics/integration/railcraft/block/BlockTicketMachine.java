@@ -59,15 +59,15 @@ public class BlockTicketMachine extends BlockMachineSidedIcon implements IBlockW
 		return TileTicketMachine.class;
 	}
 
-	private final String prefix = "railcraft/";
+	private static final String prefix = "railcraft/";
 
 	@Override
 	public String getPrefix(World world, int x, int y, int z) {
-		return this.prefix;
+		return prefix;
 	}
 
 	@Override
 	public String getPrefix(ItemStack stack) {
-		return this.prefix;
+		return prefix;
 	}
 }

@@ -11,7 +11,9 @@ import net.minecraft.world.World;
 import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
 
 public class DriverDigitalChest extends DriverTileEntity {
-	public class ManagedEnvironmentDC extends ManagedEnvironmentOCTile<IDigitalChest> {
+
+	public static class ManagedEnvironmentDC extends ManagedEnvironmentOCTile<IDigitalChest> {
+
 		public ManagedEnvironmentDC(IDigitalChest tile, String name) {
 			super(tile, name);
 		}

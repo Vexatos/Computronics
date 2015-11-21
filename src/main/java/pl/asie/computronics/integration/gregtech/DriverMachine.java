@@ -10,7 +10,9 @@ import net.minecraft.world.World;
 import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
 
 public class DriverMachine extends DriverTileEntity {
-	public class ManagedEnvironmentMachine extends ManagedEnvironmentOCTile<IMachineProgress> {
+
+	public static class ManagedEnvironmentMachine extends ManagedEnvironmentOCTile<IMachineProgress> {
+
 		public ManagedEnvironmentMachine(IMachineProgress tile, String name) {
 			super(tile, name);
 		}

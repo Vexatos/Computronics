@@ -26,7 +26,9 @@ public class DriverChargeConductor {
 	}
 
 	public static class OCDriver extends DriverTileEntity {
-		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<IChargeConductor> {
+
+		public static class InternalManagedEnvironment extends ManagedEnvironmentOCTile<IChargeConductor> {
+
 			public InternalManagedEnvironment(IChargeConductor tile) {
 				super(tile, Names.FZ_ChargeConductor);
 			}
@@ -75,8 +77,8 @@ public class DriverChargeConductor {
 		public Object[] callMethod(IComputerAccess computer, ILuaContext context,
 			int method, Object[] arguments) throws LuaException,
 			InterruptedException {
-			switch(method){
-				case 0:{
+			switch(method) {
+				case 0: {
 					return DriverChargeConductor.getCharge(tile);
 				}
 			}

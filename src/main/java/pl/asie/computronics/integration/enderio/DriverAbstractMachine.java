@@ -22,7 +22,8 @@ public class DriverAbstractMachine {
 
 	public static class OCDriver extends DriverTileEntity {
 
-		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<AbstractMachineEntity> {
+		public static class InternalManagedEnvironment extends ManagedEnvironmentOCTile<AbstractMachineEntity> {
+
 			public InternalManagedEnvironment(AbstractMachineEntity tile) {
 				super(tile, Names.EnderIO_MachineTile);
 			}
@@ -79,8 +80,8 @@ public class DriverAbstractMachine {
 
 		@Override
 		public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
-			switch(method){
-				case 0:{
+			switch(method) {
+				case 0: {
 					return new Object[] { tile.isActive() };
 				}
 			}

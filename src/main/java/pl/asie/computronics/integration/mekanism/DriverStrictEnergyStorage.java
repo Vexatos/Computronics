@@ -22,7 +22,7 @@ public class DriverStrictEnergyStorage {
 
 	public static class OCDriver extends DriverTileEntity {
 
-		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<IStrictEnergyStorage> {
+		public static class InternalManagedEnvironment extends ManagedEnvironmentOCTile<IStrictEnergyStorage> {
 			public InternalManagedEnvironment(IStrictEnergyStorage tile) {
 				super(tile, Names.Mekanism_EnergyStorage);
 			}

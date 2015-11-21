@@ -22,7 +22,7 @@ public class DriverExtendedRFStorage {
 
 	public static class OCDriver extends DriverTileEntity {
 
-		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<IExtendedRFStorage> {
+		public static class InternalManagedEnvironment extends ManagedEnvironmentOCTile<IExtendedRFStorage> {
 
 			public InternalManagedEnvironment(IExtendedRFStorage tile) {
 				super(tile, Names.DraconicEvolution_Storage);

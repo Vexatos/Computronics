@@ -1,22 +1,19 @@
 package pl.asie.computronics.client;
 
-import org.lwjgl.opengl.GL11;
-
+import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
+import cpw.mods.fml.client.registry.RenderingRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
-
-import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
-import cpw.mods.fml.client.registry.RenderingRegistry;
-
 import net.minecraftforge.common.util.ForgeDirection;
-
+import org.lwjgl.opengl.GL11;
 import pl.asie.computronics.block.BlockAudioCable;
 import pl.asie.computronics.tile.TileAudioCable;
 
 public class AudioCableRender implements ISimpleBlockRenderingHandler {
+
 	private static int renderId;
 
 	public AudioCableRender() {
@@ -55,7 +52,7 @@ public class AudioCableRender implements ISimpleBlockRenderingHandler {
 
 	@Override
 	public void renderInventoryBlock(Block block, int metadata, int modelId,
-									 RenderBlocks renderer) {
+		RenderBlocks renderer) {
 		renderer.setRenderBounds(0.3125, 0, 0.3125, 1 - 0.3125, 1, 1 - 0.3125);
 		renderInventoryIcon(block, block.getIcon(0, 0), renderer);
 	}
@@ -63,11 +60,14 @@ public class AudioCableRender implements ISimpleBlockRenderingHandler {
 	@Override
 	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks renderer) {
 		int connMask = 0;
+		if(!(block instanceof BlockAudioCable)) {
+			return false;
+		}
 		BlockAudioCable bac = (BlockAudioCable) block;
 		TileAudioCable tac = (TileAudioCable) world.getTileEntity(x, y, z);
-		if (tac != null) {
-			for (int i = 0; i < 6; i++) {
-				if (tac.connects(ForgeDirection.getOrientation(i))) {
+		if(tac != null) {
+			for(int i = 0; i < 6; i++) {
+				if(tac.connects(ForgeDirection.getOrientation(i))) {
 					connMask |= (1 << i);
 				}
 			}
@@ -77,10 +77,10 @@ public class AudioCableRender implements ISimpleBlockRenderingHandler {
 		renderer.setRenderBounds(0.3125, 0.3125, 0.3125, 1 - 0.3125, 1 - 0.3125, 1 - 0.3125);
 		renderer.renderStandardBlock(block, x, y, z);
 
-		for (int i = 0; i < 6; i++) {
-			if ((connMask & (1 << i)) != 0) {
+		for(int i = 0; i < 6; i++) {
+			if((connMask & (1 << i)) != 0) {
 				bac.setRenderMask(0x3f ^ (1 << (i ^ 1)));
-				switch (i) {
+				switch(i) {
 					case 0:
 						renderer.setRenderBounds(0.3125, 0, 0.3125, 1 - 0.3125, 0.3125, 1 - 0.3125);
 						break;

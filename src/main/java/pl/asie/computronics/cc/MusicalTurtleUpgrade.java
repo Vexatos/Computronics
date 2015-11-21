@@ -14,7 +14,7 @@ import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.NoteUtils;
 
 public class MusicalTurtleUpgrade extends TurtleUpgradeBase {
-	private class MusicalTurtlePeripheral extends TurtlePeripheralBase {
+	private static class MusicalTurtlePeripheral extends TurtlePeripheralBase {
 		public MusicalTurtlePeripheral(ITurtleAccess access) {
 			super(access);
 		}

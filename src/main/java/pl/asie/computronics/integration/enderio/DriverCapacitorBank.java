@@ -37,7 +37,7 @@ public class DriverCapacitorBank {
 		} else {
 			tile.setMaxInput(input);
 		}
-		return new Object[] { };
+		return new Object[] {};
 	}
 
 	private static Object[] setMaxOutput(TileCapBank tile, int output) {
@@ -46,7 +46,7 @@ public class DriverCapacitorBank {
 		} else {
 			tile.setMaxOutput(output);
 		}
-		return new Object[] { };
+		return new Object[] {};
 	}
 
 	private static Object[] getRedstoneMode(TileCapBank tile, boolean input) {
@@ -78,7 +78,7 @@ public class DriverCapacitorBank {
 		} catch(IllegalArgumentException e) {
 			throw new IllegalArgumentException("No valid Redstone mode given");
 		}
-		return new Object[] { };
+		return new Object[] {};
 	}
 
 	private static Object[] modes() {
@@ -91,7 +91,9 @@ public class DriverCapacitorBank {
 	}
 
 	public static class OCDriver extends DriverTileEntity {
-		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TileCapBank> {
+
+		public static class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TileCapBank> {
+
 			public InternalManagedEnvironment(TileCapBank tile) {
 				super(tile, Names.EnderIO_CapacitorBank);
 			}

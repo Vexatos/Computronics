@@ -121,15 +121,15 @@ public class UpgradeRenderer {
 		}
 	}
 
-	@Optional.Method(modid = Mods.OpenComputers)
+	/*@Optional.Method(modid = Mods.OpenComputers)
 	private void drawSimpleBlock(MountPoint mountPoint) {
 		drawSimpleBlock(mountPoint, 0);
-	}
+	}*/
 
-	@Optional.Method(modid = Mods.OpenComputers)
+	/*@Optional.Method(modid = Mods.OpenComputers)
 	private void drawSimpleBlock(MountPoint mountPoint, float frontOffset) {
 		drawSimpleBlock(mountPoint, frontOffset, false);
-	}
+	}*/
 
 	//Mostly stolen from Sangar, like most of the things in this class.
 	//Stolen with permission.

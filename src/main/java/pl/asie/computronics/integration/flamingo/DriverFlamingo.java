@@ -22,7 +22,7 @@ public class DriverFlamingo {
 
 	public static class OCDriver extends DriverTileEntity {
 
-		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TileEntityFlamingo> {
+		public static class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TileEntityFlamingo> {
 
 			public InternalManagedEnvironment(TileEntityFlamingo tile) {
 				super(tile, Names.Flamingo_Flamingo);

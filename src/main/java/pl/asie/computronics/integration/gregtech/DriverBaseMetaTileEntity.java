@@ -14,7 +14,8 @@ import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
  */
 public class DriverBaseMetaTileEntity extends DriverTileEntity {
 
-	public class ManagedEnvironmentMachine extends ManagedEnvironmentOCTile<BaseMetaTileEntity> {
+	public static class ManagedEnvironmentMachine extends ManagedEnvironmentOCTile<BaseMetaTileEntity> {
+
 		public ManagedEnvironmentMachine(BaseMetaTileEntity tile, String name) {
 			super(tile, name);
 		}

@@ -38,7 +38,7 @@ public class DriverTransceiver {
 			}
 			return new Object[] { channelMap };
 		}
-		return new Object[] { };
+		return new Object[] {};
 	}
 
 	private static Object[] getSendChannels(TileTransceiver tile, Object[] arguments) {
@@ -223,7 +223,8 @@ public class DriverTransceiver {
 
 	public static class OCDriver extends DriverTileEntity {
 
-		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TileTransceiver> {
+		public static class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TileTransceiver> {
+
 			public InternalManagedEnvironment(TileTransceiver tile) {
 				super(tile, Names.EnderIO_Transceiver);
 			}

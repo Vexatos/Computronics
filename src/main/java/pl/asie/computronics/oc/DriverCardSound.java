@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * @author Vexatos
@@ -72,24 +73,28 @@ public class DriverCardSound extends ManagedEnvironment {
 		if(this.expirationList.size() + map.size() > 8) {
 			return new Object[] { false, "already too many sounds playing, maximum is 8" };
 		}
-		for(Object o : map.keySet()) {
-			if(!(o instanceof Number)) {
-				throw new IllegalArgumentException("frequency " + o.toString() + "is not a number");
+		for(Object entryObj : map.entrySet()) {
+			if(entryObj instanceof Entry) {
+				Object freqObj = ((Entry) entryObj).getKey();
+				if(!(freqObj instanceof Number)) {
+					throw new IllegalArgumentException("frequency " + String.valueOf(freqObj) + "is not a number");
+				}
+				//Object durObj = map.get(freqObj);
+				Object durObj = ((Entry) entryObj).getValue();
+				if(durObj != null && !(durObj instanceof Number)) {
+					throw new IllegalArgumentException("duration '" + String.valueOf(durObj) + "'is not a number");
+				}
+				int frequency = ((Number) freqObj).intValue();
+				if(frequency < 20 || frequency > 2000) {
+					throw new IllegalArgumentException("invalid frequency, must be in [20, 2000]");
+				}
+				double duration = optDouble(durObj != null ? (Number) durObj : null, 0.1);
+				int durationInMilliseconds = Math.max(50, Math.min(5000, (int) (duration * 1000)));
+				longest = Math.max(longest, Math.max(50, Math.min(5000, (duration * 1000))));
+				this.expirationList.add(host.world().getTotalWorldTime() + (long) (durationInMilliseconds / 1000 * 20));
+				Collections.sort(expirationList);
+				freqMap.put(frequency, durationInMilliseconds);
 			}
-			Object durObj = map.get(o);
-			if(durObj != null && !(durObj instanceof Number)) {
-				throw new IllegalArgumentException("duration '" + durObj.toString() + "'is not a number");
-			}
-			int frequency = ((Number) o).intValue();
-			if(frequency < 20 || frequency > 2000) {
-				throw new IllegalArgumentException("invalid frequency, must be in [20, 2000]");
-			}
-			double duration = optDouble(durObj != null ? (Number) durObj : null, 0.1);
-			int durationInMilliseconds = Math.max(50, Math.min(5000, (int) (duration * 1000)));
-			longest = Math.max(longest, Math.max(50, Math.min(5000, (duration * 1000))));
-			this.expirationList.add(host.world().getTotalWorldTime() + (long) (durationInMilliseconds / 1000 * 20));
-			Collections.sort(expirationList);
-			freqMap.put(frequency, durationInMilliseconds);
 		}
 		return trySendSound(freqMap, new Object[] { true }, Config.SOUND_ENERGY_COST * map.size() * (longest / 1000d), "beep");
 	}
@@ -133,10 +138,9 @@ public class DriverCardSound extends ManagedEnvironment {
 			.writeInt((int) Math.floor(y))
 			.writeInt((int) Math.floor(z))
 			.writeInt(freqMap.size());
-		for(int frequency : freqMap.keySet()) {
-			int duration = freqMap.get(frequency);
-			packet.writeShort((short) frequency)
-				.writeShort((short) duration);
+		for(Entry<Integer, Integer> e : freqMap.entrySet()) {
+			packet.writeShort((short) (int) e.getKey())
+				.writeShort((short) (int) e.getValue());
 		}
 		Computronics.packet.sendToAllAround(packet, new NetworkRegistry.TargetPoint(
 			world.provider.dimensionId,

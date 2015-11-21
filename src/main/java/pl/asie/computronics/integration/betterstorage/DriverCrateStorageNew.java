@@ -14,7 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DriverCrateStorageNew extends DriverTileEntity {
-	public class ManagedEnvironmentCrate extends ManagedEnvironmentOCTile<ICrateStorage> {
+
+	public static class ManagedEnvironmentCrate extends ManagedEnvironmentOCTile<ICrateStorage> {
+
 		public ManagedEnvironmentCrate(ICrateStorage tile, String name) {
 			super(tile, name);
 		}

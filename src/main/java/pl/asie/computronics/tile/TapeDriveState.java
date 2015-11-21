@@ -19,7 +19,7 @@ public class TapeDriveState {
 	}
 	
 	private State state = State.STOPPED;
-	private int codecId, codecTick, packetId;
+	private int codecId, codecTick;//, packetId;
 	protected int packetSize = 1024;
 	protected int soundVolume = 127;
 	private ITapeStorage storage;
@@ -61,7 +61,7 @@ public class TapeDriveState {
 				codecId = Computronics.instance.audio.newPlayer();
 				Computronics.instance.audio.getPlayer(codecId);
 				codecTick = 0;
-				packetId = 0;
+				//packetId = 0;
 			}
 		}
 		state = newState;

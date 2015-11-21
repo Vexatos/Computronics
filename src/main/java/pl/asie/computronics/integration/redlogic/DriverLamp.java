@@ -19,8 +19,10 @@ import pl.asie.computronics.integration.CCMultiPeripheral;
 import pl.asie.computronics.reference.Names;
 
 public class DriverLamp {
+
 	public static class OCDriver extends DriverBlock {
-		public class InternalManagedEnvironment extends li.cil.oc.api.prefab.ManagedEnvironment {
+
+		public static class InternalManagedEnvironment extends li.cil.oc.api.prefab.ManagedEnvironment {
 			private ILampBlock block;
 			private IBlockAccess w;
 			private int x, y, z;
@@ -93,7 +95,7 @@ public class DriverLamp {
 		public Object[] callMethod(IComputerAccess computer, ILuaContext context,
 			int method, Object[] arguments) throws LuaException,
 			InterruptedException {
-			switch(method){
+			switch(method) {
 				case 0:
 					return new Object[] { tile.getColourRGB(w, x, y, z) };
 				case 1:

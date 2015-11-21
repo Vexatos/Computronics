@@ -14,7 +14,9 @@ import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
 import java.util.List;
 
 public class DriverCrateStorageOld extends DriverTileEntity {
-	public class ManagedEnvironmentCrate extends ManagedEnvironmentOCTile<ICrateStorage> {
+
+	public static class ManagedEnvironmentCrate extends ManagedEnvironmentOCTile<ICrateStorage> {
+
 		public ManagedEnvironmentCrate(ICrateStorage tile, String name) {
 			super(tile, name);
 		}

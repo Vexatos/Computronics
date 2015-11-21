@@ -161,7 +161,7 @@ public class DriverMannequin {
 
 	public static class OCDriver extends DriverTileEntity {
 
-		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TileEntityMannequin> {
+		public static class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TileEntityMannequin> {
 
 			public InternalManagedEnvironment(TileEntityMannequin tile) {
 				super(tile, Names.AW_Mannequin);

@@ -2,6 +2,7 @@ package pl.asie.computronics.tile;
 
 //import java.nio.file.FileSystem;
 
+import com.google.common.base.Charsets;
 import cpw.mods.fml.common.Optional;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
@@ -590,7 +591,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 					return new Object[] { (state.getStorage() != null ? storageName : null) };
 				case 10: // write
 					if(state.getStorage() != null) {
-						return new Object[] { state.getStorage().write(((String) arguments[0]).getBytes()) };
+						return new Object[] { state.getStorage().write(((String) arguments[0]).getBytes(Charsets.UTF_8)) };
 					}
 					break;
 			}
@@ -618,7 +619,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 						}
 						byte[] data = new byte[i];
 						state.getStorage().read(data, false);
-						return new Object[] { new String(data) };
+						return new Object[] { new String(data, Charsets.UTF_8) };
 					} else {
 						return null;
 					}

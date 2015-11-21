@@ -36,7 +36,7 @@ public class TileCamera extends TileEntityPeripheralBase {
 	public int requestCurrentRedstoneValue(int side) {
 		double distance = cameraRedstone.getDistance();
 		if(distance > 0.0) {
-			return 15 - (int) Math.min(15, Math.round(distance / 2));
+			return 15 - (int) Math.min(15, Math.round(distance / 2D));
 		} else {
 			return 0;
 		}

@@ -63,8 +63,8 @@ public class DriverRoutingSwitch {
 				List<List<String>> pages = new ArrayList<List<String>>();
 				pages.add(new ArrayList<String>());
 				int pageIndex = 0;
-				for(Object key : pageMap.keySet()) {
-					Object line = pageMap.get(key);
+				for(Object line : pageMap.values()) {
+					//Object line = pageMap.get(key);
 					if(line instanceof String) {
 						if(((String) line).toLowerCase().equals("{newline}")) {
 							pages.add(new ArrayList<String>());
@@ -108,7 +108,8 @@ public class DriverRoutingSwitch {
 	}
 
 	public static class OCDriver extends DriverTileEntity {
-		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TileSwitchRouting> {
+
+		public static class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TileSwitchRouting> {
 
 			public InternalManagedEnvironment(TileSwitchRouting routingSwitch) {
 				super(routingSwitch, Names.Railcraft_RoutingSwitch);

@@ -19,7 +19,7 @@ import pl.asie.lib.network.Packet;
 import pl.asie.lib.util.WorldUtils;
 
 public class NetworkHandlerClient extends MessageHandlerBase {
-	private class CodecData {
+	private static class CodecData {
 		public final int x, y, z;
 		public final byte[] data;
 

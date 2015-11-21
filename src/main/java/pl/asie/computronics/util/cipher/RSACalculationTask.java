@@ -21,8 +21,8 @@ public class RSACalculationTask implements Callable<ArrayList<Map<Integer, Strin
 	private int bitLength = 0;
 	private int p = 0;
 	private int q = 0;
-	private Map<Integer, String> publicKey;
-	private Map<Integer, String> privateKey;
+	//private Map<Integer, String> publicKey;
+	//private Map<Integer, String> privateKey;
 
 	public RSACalculationTask() {
 	}

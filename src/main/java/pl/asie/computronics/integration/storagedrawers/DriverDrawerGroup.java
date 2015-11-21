@@ -30,7 +30,8 @@ public class DriverDrawerGroup {
 
 	public static class OCDriver extends DriverTileEntity {
 
-		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<IDrawerGroup> {
+		public static class InternalManagedEnvironment extends ManagedEnvironmentOCTile<IDrawerGroup> {
+
 			public InternalManagedEnvironment(IDrawerGroup tile) {
 				super(tile, Names.StorageDrawers_DrawerGroup);
 			}

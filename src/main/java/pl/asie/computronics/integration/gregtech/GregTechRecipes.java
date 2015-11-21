@@ -51,6 +51,12 @@ public class GregTechRecipes extends ModRecipes {
 			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.speaker, 1, 0),
 				"wpc", "ifb", "shc", 'h', ItemList.Casing_LV.get(1),
 				'f', "foilGallium", 'p', "plateSteel",
+				'b', "plateDoublePaper", 'i', "plateSteelMagnetic",
+				's', Computronics.audioCable != null ? new ItemStack(Computronics.audioCable, 1, 0) : "cableGt02Silver",
+				'c', "screwSteel", 'w', "craftingToolScrewdriver");
+			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.speaker, 1, 0),
+				"wpc", "ifb", "shc", 'h', ItemList.Casing_LV.get(1),
+				'f', "foilAluminium", 'p', "plateSteel",
 				'b', "plateDoublePaper", 'i', "plateIronMagnetic",
 				's', Computronics.audioCable != null ? new ItemStack(Computronics.audioCable, 1, 0) : "cableGt02Silver",
 				'c', "screwSteel", 'w', "craftingToolScrewdriver");

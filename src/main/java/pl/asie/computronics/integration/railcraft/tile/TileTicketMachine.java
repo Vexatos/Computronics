@@ -741,6 +741,6 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 
 	@Override
 	public int[] getAccessibleSlotsFromSide(int side) {
-		return ACCESSIBLE_SLOTS;
+		return ACCESSIBLE_SLOTS.clone();
 	}
 }

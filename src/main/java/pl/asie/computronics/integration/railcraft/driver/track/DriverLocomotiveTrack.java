@@ -52,7 +52,8 @@ public class DriverLocomotiveTrack {
 	}
 
 	public static class OCDriver extends DriverTileEntity {
-		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TrackLocomotive> {
+
+		public static class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TrackLocomotive> {
 
 			public InternalManagedEnvironment(TrackLocomotive tile) {
 				super(tile, Names.Railcraft_LocomotiveTrack);
@@ -98,6 +99,7 @@ public class DriverLocomotiveTrack {
 	}
 
 	public static class CCDriver extends CCMultiPeripheral<TrackLocomotive> {
+
 		public CCDriver() {
 		}
 
@@ -123,8 +125,8 @@ public class DriverLocomotiveTrack {
 		public Object[] callMethod(IComputerAccess computer, ILuaContext context,
 			int method, Object[] arguments) throws LuaException,
 			InterruptedException {
-			switch(method){
-				case 0:{
+			switch(method) {
+				case 0: {
 					if(arguments.length < 1 || !(arguments[0] instanceof Double)) {
 						throw new LuaException("first argument needs to be a number");
 					}
@@ -133,10 +135,10 @@ public class DriverLocomotiveTrack {
 					}
 					return DriverLocomotiveTrack.setMode(tile, arguments);
 				}
-				case 1:{
+				case 1: {
 					return DriverLocomotiveTrack.getMode(tile);
 				}
-				case 2:{
+				case 2: {
 					return DriverLocomotiveTrack.modes();
 				}
 			}
