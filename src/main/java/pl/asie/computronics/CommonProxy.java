@@ -1,16 +1,24 @@
 package pl.asie.computronics;
 
-import cpw.mods.fml.common.registry.EntityRegistry;
+import java.io.IOException;
+
 import net.minecraft.world.World;
+
+import cpw.mods.fml.common.registry.EntityRegistry;
+
+import pl.asie.computronics.api.audio.AudioPacketRegistry;
+import pl.asie.computronics.api.audio.AudioPacketDFPWM;
 import pl.asie.computronics.item.entity.EntityItemIndestructable;
 import pl.asie.lib.network.Packet;
-
-import java.io.IOException;
 
 public class CommonProxy {
 
 	public boolean isClient() {
 		return false;
+	}
+
+	public void registerAudioHandlers() {
+		AudioPacketRegistry.INSTANCE.registerType(AudioPacketDFPWM.class);
 	}
 
 	public void registerEntities() {

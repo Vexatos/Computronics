@@ -6,9 +6,9 @@ import dan200.computercraft.api.peripheral.IComputerAccess;
 import gnu.trove.set.hash.TIntHashSet;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import pl.asie.computronics.audio.AudioPacket;
-import pl.asie.computronics.audio.IAudioReceiver;
-import pl.asie.computronics.audio.IAudioSource;
+import pl.asie.computronics.api.audio.AudioPacket;
+import pl.asie.computronics.api.audio.IAudioReceiver;
+import pl.asie.computronics.api.audio.IAudioSource;
 import pl.asie.computronics.reference.Config;
 
 public class TileSpeaker extends TileEntityPeripheralBase implements IAudioReceiver {

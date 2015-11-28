@@ -1,4 +1,4 @@
-package pl.asie.computronics.audio;
+package pl.asie.computronics.api.audio;
 
 import net.minecraft.world.World;
 

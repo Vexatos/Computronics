@@ -3,7 +3,16 @@ package pl.asie.computronics.tile;
 //import java.nio.file.FileSystem;
 
 import com.google.common.base.Charsets;
+
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
+
 import cpw.mods.fml.common.Optional;
+import net.minecraftforge.common.util.ForgeDirection;
+
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
@@ -14,17 +23,11 @@ import li.cil.oc.api.network.Component;
 import li.cil.oc.api.network.ManagedEnvironment;
 import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.Visibility;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.api.audio.AudioPacket;
+import pl.asie.computronics.api.audio.IAudioReceiver;
+import pl.asie.computronics.api.audio.IAudioSource;
 import pl.asie.computronics.api.tape.IItemTapeStorage;
-import pl.asie.computronics.audio.AudioPacket;
-import pl.asie.computronics.audio.IAudioReceiver;
-import pl.asie.computronics.audio.IAudioSource;
 import pl.asie.computronics.network.Packets;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
@@ -95,29 +98,39 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 	@Override
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void onConnect(final Node node) {
+		super.onConnect(node);
+
 		if(node == node()) {
-			node.connect(oc_fs().node());
+			if (oc_fs() != null) {
+				node.connect(oc_fs().node());
+			}
 		}
 	}
 
 	@Override
 	@Optional.Method(modid = Mods.OpenComputers)
 	protected void onChunkUnload_OC() {
-		super.onChunkUnload_OC();
-		Node node = oc_fs().node();
-		if(node != null) {
-			node.remove();
+		if (oc_fs() != null) {
+			Node node = oc_fs().node();
+			if (node != null) {
+				node.remove();
+			}
 		}
+
+		super.onChunkUnload_OC();
 	}
 
 	@Override
 	@Optional.Method(modid = Mods.OpenComputers)
 	protected void invalidate_OC() {
-		super.invalidate_OC();
-		Node node = oc_fs().node();
-		if(node != null) {
-			node.remove();
+		if (oc_fs() != null) {
+			Node node = oc_fs().node();
+			if (node != null) {
+				node.remove();
+			}
 		}
+
+		super.invalidate_OC();
 	}
 
 	// GUI/State
@@ -174,7 +187,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 				internalSpeaker.receivePacket(pkt, ForgeDirection.UNKNOWN);
 			}
 
-			pkt.send();
+			pkt.sendPacket();
 		}
 		if(!worldObj.isRemote && st != getEnumState()) {
 			sendState();

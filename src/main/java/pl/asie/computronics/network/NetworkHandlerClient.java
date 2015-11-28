@@ -9,14 +9,14 @@ import net.minecraft.tileentity.TileEntity;
 
 import javax.sound.sampled.AudioFormat;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.api.audio.AudioPacketClientHandler;
+import pl.asie.computronics.api.audio.AudioPacketRegistry;
 import pl.asie.computronics.oc.DriverCardSound;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TapeDriveState.State;
 import pl.asie.computronics.tile.TileTapeDrive;
-import pl.asie.lib.audio.StreamingAudioPlayer;
 import pl.asie.lib.network.MessageHandlerBase;
 import pl.asie.lib.network.Packet;
-import pl.asie.lib.util.WorldUtils;
 
 public class NetworkHandlerClient extends MessageHandlerBase {
 	private static class CodecData {
@@ -36,7 +36,6 @@ public class NetworkHandlerClient extends MessageHandlerBase {
 	@Override
 	public void onMessage(Packet packet, INetHandler handler, EntityPlayer player, int command)
 		throws IOException {
-		//System.out.println("CLIENT PACKET " + command);
 		switch(command) {
 			case Packets.PACKET_TAPE_GUI_STATE: {
 				TileEntity entity = packet.readTileEntity();
@@ -48,49 +47,10 @@ public class NetworkHandlerClient extends MessageHandlerBase {
 			}
 			break;
 			case Packets.PACKET_AUDIO_DATA: {
-				int dimId = packet.readInt();
-				int packetId = packet.readInt();
-				int codecId = packet.readInt();
-				int sampleRate = packet.readInt();
-				short packetSize = packet.readShort();
-				byte[] data = packet.readByteArrayData(packetSize);
-				short receivers = packet.readShort();
-
-				if (dimId != WorldUtils.getCurrentClientDimension()) {
-					for (int i = 0; i < receivers; i++) {
-						packet.readInt();
-						packet.readInt();
-						packet.readInt();
-						packet.readShort();
-						packet.readByte();
-					}
-
-					return;
-				}
-
-				byte[] audio = new byte[packetSize * 8];
-				StreamingAudioPlayer codec = Computronics.instance.audio.getPlayer(codecId);
-				codec.decompress(audio, data, 0, 0, packetSize);
-				for (int i = 0; i < (packetSize * 8); i++) {
-					// Convert signed to unsigned data
-					audio[i] = (byte) (((int) audio[i] & 0xFF) ^ 0x80);
-				}
-
-				codec.setSampleRate(sampleRate);
-				codec.lastPacketId = packetId;
-
-				codec.queueData(audio);
-
-				for (int j = 0; j < receivers; j++) {
-					int x = packet.readInt();
-					int y = packet.readInt();
-					int z = packet.readInt();
-					int distance = packet.readUnsignedShort();
-					byte volume = packet.readByte();
-
-					codec.setDistance((float) distance);
-					codec.setVolume(volume / 127.0F);
-					codec.playPacket(x, y, z);
+				int handlerId = packet.readShort();
+				AudioPacketClientHandler packetHandler = AudioPacketRegistry.INSTANCE.getClientHandler(handlerId);
+				if (packetHandler != null) {
+					packetHandler.receivePacket(packet);
 				}
 			}
 			break;

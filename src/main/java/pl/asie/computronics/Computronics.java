@@ -274,11 +274,12 @@ public class Computronics {
 			opencomputers = new IntegrationOpenComputers(this);
 			opencomputers.preInit();
 		}
+
+		proxy.registerAudioHandlers();
 	}
 
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
-
 		MinecraftForge.EVENT_BUS.register(new ChatHandler());
 
 		if(tapeReader != null) {

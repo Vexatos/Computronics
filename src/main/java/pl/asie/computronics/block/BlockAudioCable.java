@@ -1,7 +1,7 @@
 package pl.asie.computronics.block;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import java.util.ArrayList;
+
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,7 +13,11 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraftforge.common.util.ForgeDirection;
+
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.client.AudioCableRender;
 import pl.asie.computronics.oc.manual.IBlockWithDocumentation;
@@ -21,11 +25,10 @@ import pl.asie.computronics.tile.TileAudioCable;
 import pl.asie.computronics.util.ColorUtils;
 import pl.asie.lib.block.BlockBase;
 
-import java.util.ArrayList;
-
 public class BlockAudioCable extends BlockBase implements IBlockWithDocumentation {
 	private IIcon mCable;
 	private int connectionMask = 0x3f;
+	private int ImmibisMicroblocks_TransformableBlockMarker;
 
 	public BlockAudioCable() {
 		super(Material.iron, Computronics.instance);

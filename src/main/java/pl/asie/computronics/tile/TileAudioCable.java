@@ -5,9 +5,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import pl.asie.computronics.audio.AudioPacket;
-import pl.asie.computronics.audio.IAudioReceiver;
-import pl.asie.computronics.audio.IAudioSource;
+import pl.asie.computronics.api.audio.AudioPacket;
+import pl.asie.computronics.api.audio.IAudioReceiver;
+import pl.asie.computronics.api.audio.IAudioSource;
 import pl.asie.computronics.util.ColorUtils;
 import pl.asie.computronics.util.internal.IColorable;
 import pl.asie.lib.block.TileEntityBase;
@@ -15,12 +15,18 @@ import pl.asie.lib.block.TileEntityBase;
 public class TileAudioCable extends TileEntityBase implements IAudioReceiver, IColorable {
 	private final TIntHashSet packetIds = new TIntHashSet();
 
+	private int ImmibisMicroblocks_TransformableTileEntityMarker;
+
 	private int connectionMap = 0;
 	private boolean initialConnect = false;
 
 	private void updateConnections() {
 		connectionMap = 0;
-		for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+		for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+			if (!ImmibisMicroblocks_isSideOpen(dir.ordinal())) {
+				continue;
+			}
+
 			if(worldObj.blockExists(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ)) {
 				TileEntity tile = worldObj.getTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
 				if(tile instanceof IAudioSource || tile instanceof IAudioReceiver) {
@@ -160,5 +166,13 @@ public class TileAudioCable extends TileEntityBase implements IAudioReceiver, IC
 		if(overlayColor != getDefaultColor()) {
 			nbt.setInteger("computronics:color", overlayColor);
 		}
+	}
+
+	public boolean ImmibisMicroblocks_isSideOpen(int side) {
+		return true;
+	}
+
+	public void ImmibisMicroblocks_onMicroblocksChanged() {
+
 	}
 }

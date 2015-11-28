@@ -6,9 +6,10 @@ import net.minecraft.world.World;
 
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.api.tape.ITapeStorage;
-import pl.asie.computronics.audio.AudioPacket;
+import pl.asie.computronics.api.audio.AudioPacket;
+import pl.asie.computronics.api.audio.AudioPacketDFPWM;
 import pl.asie.computronics.audio.AudioUtils;
-import pl.asie.computronics.audio.IAudioSource;
+import pl.asie.computronics.api.audio.IAudioSource;
 
 public class TapeDriveState {
 	public enum State {
@@ -79,8 +80,7 @@ public class TapeDriveState {
 		if (amount < packetSize) switchState(worldObj, x, y, z, State.STOPPED);
 
 		if (amount > 0) {
-			return new AudioPacket(source, worldObj, AudioPacket.Type.DFPWM,
-					packetSize * 8 * 4, getVolume(), amount == packetSize ? pktData : Arrays.copyOf(pktData, amount));
+			return new AudioPacketDFPWM(source, getVolume(), packetSize * 8 * 4, amount == packetSize ? pktData : Arrays.copyOf(pktData, amount));
 		} else {
 			return null;
 		}

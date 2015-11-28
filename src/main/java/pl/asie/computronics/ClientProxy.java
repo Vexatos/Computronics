@@ -13,6 +13,9 @@ import cpw.mods.fml.common.Optional;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
 
+import pl.asie.computronics.api.audio.AudioPacketRegistry;
+import pl.asie.computronics.audio.AudioPacketClientHandlerDFPWM;
+import pl.asie.computronics.api.audio.AudioPacketDFPWM;
 import pl.asie.computronics.client.AudioCableRender;
 import pl.asie.computronics.client.LampRender;
 import pl.asie.computronics.client.SignalBoxRenderer;
@@ -23,10 +26,17 @@ import pl.asie.computronics.util.boom.SelfDestruct;
 import pl.asie.lib.network.Packet;
 
 public class ClientProxy extends CommonProxy {
-
 	@Override
 	public boolean isClient() {
 		return true;
+	}
+
+	@Override
+	public void registerAudioHandlers() {
+		super.registerAudioHandlers();
+		AudioPacketRegistry.INSTANCE.registerClientHandler(
+				AudioPacketDFPWM.class, new AudioPacketClientHandlerDFPWM()
+		);
 	}
 
 	@Override
