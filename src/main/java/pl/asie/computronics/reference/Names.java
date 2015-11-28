@@ -24,7 +24,6 @@ public class Names {
 		FZ_ChargeConductor = "charge_conductor",
 		Mekanism_EnergyStorage = "mekanism_machine",
 		MFR_DSU = "deep_storage_unit",
-		OpenBlocks_BuildingGuide = "building_guide",
 		Railcraft_BoilerFirebox = "boiler_firebox",
 		Railcraft_DigitalDetector = "digital_detector",
 		Railcraft_DigitalReceiverBox = "digital_receiver_box",
