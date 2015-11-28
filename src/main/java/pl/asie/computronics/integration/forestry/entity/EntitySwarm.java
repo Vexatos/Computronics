@@ -127,7 +127,7 @@ public class EntitySwarm extends EntityFlyingCreature {
 
 				//this.faceEntity(target, 10.0F, (float) this.getVerticalFaceSpeed());
 
-				if(dist < 1f && !(target instanceof EntityPlayer && BeeManager.armorApiaristHelper.wearsItems((EntityPlayer) target, "computronics:swarm", true) >= 4)) {
+				if(dist < 1f && !(target instanceof EntityPlayer && BeeManager.armorApiaristHelper.wearsItems(target, "computronics:swarm", true) >= 4)) {
 					target.attackEntityFrom(!aggressive ? beeDamageSource : beeDamageSourceSelf, getAmplifier() + (aggressive ? 1F : 0F));
 				}
 			}

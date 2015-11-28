@@ -79,7 +79,7 @@ public class IntegrationForestry {
 		IClassification pirates = BeeManager.beeFactory.createBranch("pirates", "Piraticus");
 		AlleleManager.alleleRegistry.getClassification("family.apidae").addMemberGroup(pirates);
 		FlowerProviderSea providerSea = new FlowerProviderSea();
-		sea = AlleleManager.alleleFactory.createFlowers(Mods.Computronics, "flowers", "sea", providerSea, true);
+		sea = AlleleManager.alleleFactory.createFlowers(Mods.Computronics, "flowers", "sea", providerSea, true, EnumBeeChromosome.FLOWER_PROVIDER);
 		FlowerManager.flowerRegistry.registerAcceptableFlowerRule(providerSea, providerSea.getFlowerType());
 
 		Block shortMead = null;
