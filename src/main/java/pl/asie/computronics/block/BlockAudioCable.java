@@ -162,7 +162,7 @@ public class BlockAudioCable extends BlockBase implements IBlockWithDocumentatio
 		TileEntity tile = world.getTileEntity(x, y, z);
 		if(tile instanceof TileAudioCable) {
 			for(ForgeDirection side : ForgeDirection.VALID_DIRECTIONS) {
-				if(((TileAudioCable) tile).connects(side)) {
+				if(((TileAudioCable) tile).connectsAudio(side)) {
 					result |= side.flag;
 				}
 			}

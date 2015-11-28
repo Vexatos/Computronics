@@ -1,14 +1,17 @@
 package pl.asie.computronics.client;
 
-import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
-import cpw.mods.fml.client.registry.RenderingRegistry;
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
+
+import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
+import cpw.mods.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.common.util.ForgeDirection;
-import org.lwjgl.opengl.GL11;
+
 import pl.asie.computronics.block.BlockAudioCable;
 import pl.asie.computronics.tile.TileAudioCable;
 
@@ -67,7 +70,7 @@ public class AudioCableRender implements ISimpleBlockRenderingHandler {
 		TileAudioCable tac = (TileAudioCable) world.getTileEntity(x, y, z);
 		if(tac != null) {
 			for(int i = 0; i < 6; i++) {
-				if(tac.connects(ForgeDirection.getOrientation(i))) {
+				if(tac.connectsAudio(ForgeDirection.getOrientation(i))) {
 					connMask |= (1 << i);
 				}
 			}

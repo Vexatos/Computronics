@@ -1,13 +1,16 @@
 package pl.asie.computronics.tile;
 
 import gnu.trove.set.hash.TIntHashSet;
+
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+
 import net.minecraftforge.common.util.ForgeDirection;
+
 import pl.asie.computronics.api.audio.AudioPacket;
+import pl.asie.computronics.api.audio.IAudioConnection;
 import pl.asie.computronics.api.audio.IAudioReceiver;
-import pl.asie.computronics.api.audio.IAudioSource;
 import pl.asie.computronics.util.ColorUtils;
 import pl.asie.computronics.util.internal.IColorable;
 import pl.asie.lib.block.TileEntityBase;
@@ -23,24 +26,40 @@ public class TileAudioCable extends TileEntityBase implements IAudioReceiver, IC
 	private void updateConnections() {
 		connectionMap = 0;
 		for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
-			if (!ImmibisMicroblocks_isSideOpen(dir.ordinal())) {
+			if (!connectsInternal(dir)) {
 				continue;
 			}
 
 			if(worldObj.blockExists(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ)) {
 				TileEntity tile = worldObj.getTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
-				if(tile instanceof IAudioSource || tile instanceof IAudioReceiver) {
-					if(tile instanceof IColorable && ((IColorable) tile).canBeColored()
-						&& !ColorUtils.isSameOrDefault(this, (IColorable) tile)) {
+				if (tile instanceof TileAudioCable) {
+					if (!((TileAudioCable) tile).connectsInternal(dir.getOpposite())) {
 						continue;
 					}
-					connectionMap |= 1 << dir.ordinal();
+				} else if (tile instanceof IAudioConnection) {
+					if (!((IAudioConnection) tile).connectsAudio(dir.getOpposite())) {
+						continue;
+					}
+				} else {
+					continue;
 				}
+
+				if(tile instanceof IColorable && ((IColorable) tile).canBeColored()
+					&& !ColorUtils.isSameOrDefault(this, (IColorable) tile)) {
+					continue;
+				}
+
+				connectionMap |= 1 << dir.ordinal();
 			}
 		}
 	}
 
-	public boolean connects(ForgeDirection dir) {
+	protected boolean connectsInternal(ForgeDirection dir) {
+		return ImmibisMicroblocks_isSideOpen(dir.ordinal());
+	}
+
+	@Override
+	public boolean connectsAudio(ForgeDirection dir) {
 		if(!initialConnect) {
 			updateConnections();
 			initialConnect = true;
@@ -72,7 +91,7 @@ public class TileAudioCable extends TileEntityBase implements IAudioReceiver, IC
 			}
 
 			TileEntity tile = worldObj.getTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
-			if(tile instanceof IAudioReceiver && connects(dir)) {
+			if(tile instanceof IAudioReceiver && connectsAudio(dir)) {
 				((IAudioReceiver) tile).receivePacket(packet, dir.getOpposite());
 			}
 		}

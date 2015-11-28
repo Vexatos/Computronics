@@ -40,6 +40,11 @@ import pl.asie.lib.network.Packet;
 public class TileTapeDrive extends TileEntityPeripheralBase implements IInventoryProvider, IAudioSource {
 	private final IAudioReceiver internalSpeaker = new IAudioReceiver() {
 		@Override
+		public boolean connectsAudio(ForgeDirection side) {
+			return true;
+		}
+
+		@Override
 		public World getSoundWorld() {
 			return worldObj;
 		}
@@ -653,5 +658,10 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 	@Override
 	public int getSourceId() {
 		return state.getId();
+	}
+
+	@Override
+	public boolean connectsAudio(ForgeDirection side) {
+		return true;
 	}
 }

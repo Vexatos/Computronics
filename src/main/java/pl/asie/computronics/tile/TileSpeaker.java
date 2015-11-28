@@ -1,11 +1,14 @@
 package pl.asie.computronics.tile;
 
+import gnu.trove.set.hash.TIntHashSet;
+
+import net.minecraft.world.World;
+
+import net.minecraftforge.common.util.ForgeDirection;
+
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
-import gnu.trove.set.hash.TIntHashSet;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.api.audio.AudioPacket;
 import pl.asie.computronics.api.audio.IAudioReceiver;
 import pl.asie.computronics.api.audio.IAudioSource;
@@ -67,5 +70,10 @@ public class TileSpeaker extends TileEntityPeripheralBase implements IAudioRecei
 	@Override
 	public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
 		return new Object[0];
+	}
+
+	@Override
+	public boolean connectsAudio(ForgeDirection side) {
+		return true;
 	}
 }
