@@ -9,8 +9,8 @@ import pl.asie.lib.network.Packet;
  * The client-side implementation of the packet is left to be internal.
  */
 public class AudioPacketDFPWM extends AudioPacket {
-	private final int frequency;
-	private final byte[] data;
+	public final int frequency;
+	public final byte[] data;
 
 	public AudioPacketDFPWM(IAudioSource source, byte volume, int frequency, byte[] data) {
 		super(source, volume);
