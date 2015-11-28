@@ -33,9 +33,7 @@ public class Mods {
 		Forestry = "Forestry",
 		FSP = "Steamcraft",
 		GregTech = "gregtech",
-		JABBA = "JABBA",
 		MFR = "MineFactoryReloaded",
-		QuantumStorage = "QuantumStorage",
 		OpenBlocks = "OpenBlocks",
 		OpenPeripheral = "OpenPeripheralCore",
 		RedLogic = "RedLogic",
@@ -65,7 +63,7 @@ public class Mods {
 	public static class Versions {
 		public static final String
 			BuildCraftTiles = "[1.1,)",
-			Forestry = "[4.1.1,)",
+			Forestry = "[4.2.0,)",
 			Gendustry = "[2.0.0,)";
 	}
 
