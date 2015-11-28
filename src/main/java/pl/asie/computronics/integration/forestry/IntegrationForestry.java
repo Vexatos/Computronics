@@ -125,7 +125,7 @@ public class IntegrationForestry {
 			new ItemStack(itemPartsForestry, 1, 1),
 			bottle);
 
-		if(Mods.hasVersion(Mods.API.Gendustry, "[2.0.0,)")) {
+		if(Mods.hasVersion(Mods.API.Gendustry, Mods.Versions.Gendustry)) {
 			registerBees();
 		}
 

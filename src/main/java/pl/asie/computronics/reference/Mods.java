@@ -61,6 +61,14 @@ public class Mods {
 		}
 	}
 
+	// Mod Versions
+	public static class Versions {
+		public static final String
+			BuildCraftTiles = "[1.1,)",
+			Forestry = "[4.1.1,)",
+			Gendustry = "[2.0.0,)";
+	}
+
 	public static boolean isLoaded(String name) {
 		return pl.asie.lib.reference.Mods.isLoaded(name);
 	}
