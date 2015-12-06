@@ -18,7 +18,8 @@ public class Mods {
 	//Computer mods
 	public static final String
 		OpenComputers = "OpenComputers",
-		ComputerCraft = "ComputerCraft";
+		ComputerCraft = "ComputerCraft",
+		TIS3D = "tis3d";
 
 	//Other mods
 	public static final String
@@ -61,6 +62,7 @@ public class Mods {
 
 	// Mod Versions
 	public static class Versions {
+
 		public static final String
 			BuildCraftTiles = "[1.1,)",
 			Forestry = "[4.2.0,)",

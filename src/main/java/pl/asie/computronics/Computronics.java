@@ -58,6 +58,7 @@ import pl.asie.computronics.integration.buildcraft.statements.TriggerProvider;
 import pl.asie.computronics.integration.forestry.IntegrationForestry;
 import pl.asie.computronics.integration.gregtech.GregTechRecipes;
 import pl.asie.computronics.integration.railcraft.IntegrationRailcraft;
+import pl.asie.computronics.integration.tis3d.IntegrationTIS3D;
 import pl.asie.computronics.item.ItemTape;
 import pl.asie.computronics.item.block.IBlockWithSpecialText;
 import pl.asie.computronics.item.block.ItemBlockWithSpecialText;
@@ -302,6 +303,10 @@ public class Computronics {
 
 		if(Mods.API.hasAPI(Mods.API.BuildCraftBlueprints)) {
 			IntegrationBuildCraftBuilder.INSTANCE.init();
+		}
+
+		if(Mods.isLoaded(Mods.TIS3D)){
+			new IntegrationTIS3D().init();
 		}
 
 		achievements = new ComputronicsAchievements();

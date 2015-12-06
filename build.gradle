@@ -79,6 +79,7 @@ configurations {
 
 dependencies {
 	compile "li.cil.oc:OpenComputers:${config.oc.version}:dev"
+	compile "li.cil.tis3d:TIS-3D:${config.tis3d.version}:dev"
 	provided "net.industrial-craft:industrialcraft-2:${config.ic2.version}:dev"
 	provided "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech.version}:dev"
 	compile "mcp.mobius.waila:Waila:${config.waila.version}:dev"
