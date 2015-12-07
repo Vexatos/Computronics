@@ -9,5 +9,6 @@ public class IntegrationTIS3D {
 
 	public void init() {
 		API.addProvider(new ModuleProviderColorful());
+		API.addProvider(new ModuleProviderTapeReader());
 	}
 }

@@ -41,6 +41,13 @@ public class ModuleColorful extends ComputronicsModule {
 	}
 
 	@Override
+	public void onDisabled() {
+		super.onDisabled();
+		this.color = 0x6318;
+		sendData();
+	}
+
+	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 		this.color = nbt.getInteger("c");
@@ -58,6 +65,10 @@ public class ModuleColorful extends ComputronicsModule {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void render(boolean enabled, float partialTicks) {
+		if(!enabled) {
+			return;
+		}
+
 		RenderHelper.disableStandardItemLighting();
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 0.0F);
 
@@ -66,6 +77,7 @@ public class ModuleColorful extends ComputronicsModule {
 		GL11.glScalef(0.875f, 0.875f, 0.875f);
 		//int col = Color.HSBtoRGB((((System.currentTimeMillis() + (hashCode() % 30000)) % 30000) / 30000F), 1F, 1F) & 0xFFFFFF;
 		//GL11.glColor3ub((byte) ((col >> 16) & 0xFF), (byte) ((col >> 8) & 0xFF), (byte) (col & 0xFF));
+		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		GL11.glColor3ub((byte) (((color >> 10) & 0x1F) * 8), (byte) (((color >> 5) & 0x1F) * 8), (byte) ((color & 0x1F) * 8));
 		drawQuad();
 

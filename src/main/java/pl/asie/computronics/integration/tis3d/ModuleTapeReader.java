@@ -1,0 +1,508 @@
+package pl.asie.computronics.integration.tis3d;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import li.cil.tis3d.api.Casing;
+import li.cil.tis3d.api.Face;
+import li.cil.tis3d.api.Pipe;
+import li.cil.tis3d.api.Port;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import pl.asie.computronics.tile.TapeDriveState.State;
+import pl.asie.computronics.tile.TileTapeDrive;
+
+import java.util.HashMap;
+
+/**
+ * @author Vexatos
+ */
+public class ModuleTapeReader extends ComputronicsModule {
+
+	private enum Mode {
+		IDLE, WAITING, WRITING;
+		private static final Mode[] VALUES = values();
+	}
+
+	private final HashMap<String, Command> commandMap = new HashMap<String, Command>();
+
+	private abstract class Command {
+
+		protected final String uid;
+
+		protected Command(String uid) {
+			this.uid = uid;
+			if(commandMap.containsKey(uid)) {
+				throw new IllegalArgumentException("Attempt to add command with UID that has already been registered!");
+			}
+			commandMap.put(uid, this);
+		}
+
+		protected final String getUID() {
+			return this.uid;
+		}
+
+		protected abstract void process(TileTapeDrive tile);
+
+		protected abstract void finishWriting(TileTapeDrive tile, Port writtenPort);
+
+		protected void save(NBTTagCompound nbt) {
+		}
+
+		protected void load(NBTTagCompound nbt) {
+		}
+	}
+
+	/**
+	 * Command which never returns anything.
+	 */
+	private abstract class NeverWritingCommand extends Command {
+
+		private NeverWritingCommand(String uid) {
+			super(uid);
+		}
+
+		@Override
+		protected void finishWriting(TileTapeDrive tile, Port writtenPort) {
+		}
+	}
+
+	/**
+	 * Command which is finished after returning one value.
+	 */
+	private abstract class IdleAfterWritingCommand extends Command {
+
+		private IdleAfterWritingCommand(String uid) {
+			super(uid);
+		}
+
+		@Override
+		protected void finishWriting(TileTapeDrive tile, Port writtenPort) {
+			cancelWrite();
+			mode = Mode.IDLE;
+			command = null;
+			for(Port port : Port.VALUES) {
+				Pipe receivingPipe = getCasing().getReceivingPipe(getFace(), port);
+				if(!receivingPipe.isReading()) {
+					receivingPipe.beginRead();
+				}
+			}
+			sendData();
+		}
+	}
+
+	/**
+	 * Command which takes no argument and returns a value.
+	 */
+	private abstract class ImmediateReturnCommand extends IdleAfterWritingCommand {
+
+		private ImmediateReturnCommand(String uid) {
+			super(uid);
+		}
+
+		@Override
+		protected void process(TileTapeDrive tile) {
+			if(mode == Mode.IDLE) {
+				cancelRead();
+				mode = Mode.WRITING;
+				for(Port port : Port.VALUES) {
+					Pipe sendingPipe = getCasing().getSendingPipe(getFace(), port);
+					if(!sendingPipe.isWriting()) {
+						sendingPipe.beginWrite(getValue(tile));
+					}
+				}
+			}
+		}
+
+		protected abstract int getValue(TileTapeDrive tile);
+
+	}
+
+	/**
+	 * Command which takes a single argument and returns nothing.
+	 */
+	private abstract class SetterCommand extends NeverWritingCommand {
+
+		private SetterCommand(String uid) {
+			super(uid);
+		}
+
+		@Override
+		protected void process(TileTapeDrive tile) {
+			switch(mode) {
+				case IDLE: {
+					mode = Mode.WAITING;
+					break;
+				}
+				case WAITING: {
+					for(Port port : Port.VALUES) {
+						Pipe receivingPipe = getCasing().getReceivingPipe(getFace(), port);
+						if(!receivingPipe.isReading()) {
+							receivingPipe.beginRead();
+						}
+						if(receivingPipe.canTransfer()) {
+							setValue(tile, receivingPipe.read());
+							mode = Mode.IDLE;
+							command = null;
+							return;
+						}
+					}
+					break;
+				}
+			}
+		}
+
+		protected abstract void setValue(TileTapeDrive tile, int val);
+	}
+
+	private final Command[] COMMANDS = new Command[] {
+		new ImmediateReturnCommand("isEnd") { // isEnd
+			@Override
+			protected int getValue(TileTapeDrive tile) {
+				return tile.isEnd() ? 1 : 0;
+			}
+		},
+		new ImmediateReturnCommand("isReady") { // isReady
+			@Override
+			protected int getValue(TileTapeDrive tile) {
+				return tile.isReady() ? 1 : 0;
+			}
+		},
+		new ImmediateReturnCommand("getState") { // getState
+			@Override
+			protected int getValue(TileTapeDrive tile) {
+				return tile.getEnumState().ordinal();
+			}
+		},
+		new ImmediateReturnCommand("getSize") { // getSize relative to the last multiple of 1024
+			@Override
+			protected int getValue(TileTapeDrive tile) {
+				return tile.getSize() % 1024;
+			}
+		},
+		new ImmediateReturnCommand("getSize1024") { // getSize /1024 (in Kibibytes)
+			@Override
+			protected int getValue(TileTapeDrive tile) {
+				return tile.getSize() / 1024;
+			}
+		},
+		new SetterCommand("setSpeed") { // setSpeed, in percent, between 25 and 200
+			@Override
+			protected void setValue(TileTapeDrive tile, int val) {
+				tile.setSpeed((float) val / 100F);
+			}
+		},
+		new SetterCommand("setVolume") { // setVolume in percent, between 0 and 100
+			@Override
+			protected void setValue(TileTapeDrive tile, int val) {
+				tile.setVolume((float) val / 100F);
+			}
+		},
+		new SetterCommand("seek") { // seek
+			@Override
+			protected void setValue(TileTapeDrive tile, int val) {
+				tile.seek(val);
+			}
+		},
+		new SetterCommand("seek1024") { // seek * 1024
+			@Override
+			protected void setValue(TileTapeDrive tile, int val) {
+				tile.seek(val * 1024);
+			}
+		},
+		new ImmediateReturnCommand("read") { // read a single byte
+			@Override
+			protected int getValue(TileTapeDrive tile) {
+				return tile.read();
+			}
+		},
+		new Command("readMultiple") { // read a set number of bytes
+
+			private int byteQueue = 0;
+
+			@Override
+			protected void process(TileTapeDrive tile) {
+				switch(mode) {
+					case IDLE: {
+						mode = Mode.WAITING;
+						break;
+					}
+					case WAITING: {
+						for(Port port : Port.VALUES) {
+							Pipe receivingPipe = getCasing().getReceivingPipe(getFace(), port);
+							if(!receivingPipe.isReading()) {
+								receivingPipe.beginRead();
+							}
+							if(receivingPipe.canTransfer()) {
+								byteQueue = receivingPipe.read();
+								if(byteQueue < 1) {
+									mode = Mode.IDLE;
+									command = null;
+									sendData();
+								}
+								cancelRead();
+								mode = Mode.WRITING;
+								for(Port p : Port.VALUES) {
+									Pipe sendingPipe = getCasing().getSendingPipe(getFace(), p);
+									if(!sendingPipe.isWriting()) {
+										sendingPipe.beginWrite(tile.read());
+									}
+								}
+								return;
+							}
+						}
+						break;
+					}
+				}
+			}
+
+			@Override
+			protected void finishWriting(TileTapeDrive tile, Port writtenPort) {
+				cancelWrite();
+				if(--byteQueue > 0) {
+					for(Port port : Port.VALUES) {
+						Pipe sendingPipe = getCasing().getSendingPipe(getFace(), port);
+						if(!sendingPipe.isWriting()) {
+							sendingPipe.beginWrite(tile.read());
+						}
+					}
+				} else {
+					mode = Mode.IDLE;
+					command = null;
+					for(Port port : Port.VALUES) {
+						Pipe receivingPipe = getCasing().getReceivingPipe(getFace(), port);
+						if(!receivingPipe.isReading()) {
+							receivingPipe.beginRead();
+						}
+					}
+					sendData();
+				}
+			}
+
+			@Override
+			protected void save(NBTTagCompound nbt) {
+				super.save(nbt);
+				nbt.setInteger("bq", byteQueue);
+			}
+
+			@Override
+			protected void load(NBTTagCompound nbt) {
+				super.load(nbt);
+				if(nbt.hasKey("bq")) {
+					byteQueue = nbt.getInteger("bq");
+				}
+			}
+		},
+		new SetterCommand("write") { // write a single byte
+			@Override
+			protected void setValue(TileTapeDrive tile, int val) {
+				tile.write((byte) val);
+			}
+		},
+		new NeverWritingCommand("writeMultiple") { // write a number of bytes. First argument is the number of bytes to write
+
+			private int byteQueue = 0;
+
+			@Override
+			protected void process(TileTapeDrive tile) {
+				switch(mode) {
+					case IDLE: {
+						mode = Mode.WAITING;
+						break;
+					}
+					case WAITING: {
+						for(Port port : Port.VALUES) {
+							Pipe receivingPipe = getCasing().getReceivingPipe(getFace(), port);
+							if(!receivingPipe.isReading()) {
+								receivingPipe.beginRead();
+							}
+							if(receivingPipe.canTransfer()) {
+								byteQueue = receivingPipe.read();
+								if(byteQueue < 1) {
+									mode = Mode.IDLE;
+									command = null;
+									sendData();
+								}
+								mode = Mode.WRITING;
+							}
+						}
+						break;
+					}
+					case WRITING: {
+						for(Port port : Port.VALUES) {
+							Pipe receivingPipe = getCasing().getReceivingPipe(getFace(), port);
+							if(!receivingPipe.isReading()) {
+								receivingPipe.beginRead();
+							}
+							if(receivingPipe.canTransfer()) {
+								tile.write((byte) receivingPipe.read());
+								if(--byteQueue <= 0) {
+									mode = Mode.IDLE;
+									command = null;
+									sendData();
+								}
+							}
+						}
+						break;
+					}
+				}
+			}
+
+			@Override
+			protected void save(NBTTagCompound nbt) {
+				super.save(nbt);
+				nbt.setInteger("bq", byteQueue);
+			}
+
+			@Override
+			protected void load(NBTTagCompound nbt) {
+				super.load(nbt);
+				if(nbt.hasKey("bq")) {
+					byteQueue = nbt.getInteger("bq");
+				}
+			}
+		},
+		new SetterCommand("switchState") { // switchState
+			@Override
+			protected void setValue(TileTapeDrive tile, int val) {
+				if(val < 0 || val >= State.VALUES.length) {
+					return;
+				}
+				tile.switchState(State.VALUES[val % State.VALUES.length]);
+			}
+		}
+	};
+
+	private Command getCommand(int ordinal) {
+		return ordinal >= 0 && ordinal < COMMANDS.length ? COMMANDS[ordinal] : null;
+	}
+
+	protected ModuleTapeReader(Casing casing, Face face) {
+		super(casing, face);
+	}
+
+	private Mode mode = Mode.IDLE;
+	private Command command = null;
+
+	@Override
+	public void step() {
+		super.step();
+		switch(mode) {
+			case IDLE: {
+				TileTapeDrive tile = getTapeDrive();
+				if(tile != null) {
+					for(Port port : Port.VALUES) {
+						Pipe receivingPipe = this.getCasing().getReceivingPipe(this.getFace(), port);
+						if(!receivingPipe.isReading()) {
+							receivingPipe.beginRead();
+						}
+						if(receivingPipe.canTransfer()) {
+							command = getCommand(receivingPipe.read());
+							break;
+						}
+					}
+					if(command != null) {
+						command.process(tile);
+						sendData();
+					}
+				}
+				break;
+			}
+			case WAITING:
+			case WRITING: {
+				TileTapeDrive tile = getTapeDrive();
+				if(tile != null && command != null) {
+					command.process(tile);
+				} else {
+					cancelWrite();
+					mode = Mode.IDLE;
+					command = null;
+					for(Port port : Port.VALUES) {
+						Pipe receivingPipe = this.getCasing().getReceivingPipe(this.getFace(), port);
+						if(!receivingPipe.isReading()) {
+							receivingPipe.beginRead();
+						}
+					}
+					sendData();
+				}
+				break;
+			}
+		}
+
+	}
+
+	@Override
+	public void onWriteComplete(Port port) {
+		super.onWriteComplete(port);
+		if(command != null) {
+			command.finishWriting(getTapeDrive(), port);
+			command = null;
+		}
+	}
+
+	@Override
+	public void onDisabled() {
+		super.onDisabled();
+		mode = Mode.IDLE;
+		command = null;
+		sendData();
+	}
+
+	// ---
+
+	public TileTapeDrive getTapeDrive() {
+		TileEntity tile = getCasing().getCasingWorld().getTileEntity(
+			getCasing().getPositionX() + Face.toEnumFacing(getFace()).getFrontOffsetX(),
+			getCasing().getPositionY() + Face.toEnumFacing(getFace()).getFrontOffsetY(),
+			getCasing().getPositionZ() + Face.toEnumFacing(getFace()).getFrontOffsetZ()
+		);
+		return tile instanceof TileTapeDrive ? (TileTapeDrive) tile : null;
+	}
+
+	// ---
+
+	@Override
+	public void readFromNBT(NBTTagCompound nbt) {
+		super.readFromNBT(nbt);
+		if(nbt.hasKey("mode")) {
+			int modeTag = nbt.getInteger("mode");
+			if(modeTag >= 0 && modeTag < Mode.VALUES.length) {
+				this.mode = Mode.VALUES[modeTag];
+			}
+		}
+		if(nbt.hasKey("cmdUID")) {
+			Command cmd = commandMap.get(nbt.getString("cmdUID"));
+			if(cmd != null) {
+				command = cmd;
+				if(nbt.hasKey("cmdTag")) {
+					NBTTagCompound cmdTag = nbt.getCompoundTag("cmdTag");
+					command.load(cmdTag);
+				}
+			}
+		}
+	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound nbt) {
+		super.writeToNBT(nbt);
+		nbt.setInteger("mode", mode.ordinal());
+		if(command != null) {
+			nbt.setString("cmdUID", command.getUID());
+			NBTTagCompound cmdTag = new NBTTagCompound();
+			command.save(cmdTag);
+			nbt.setTag("cmdTag", cmdTag);
+		}
+	}
+
+	@Override
+	protected void sendData() {
+		// super.sendData();
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void render(boolean enabled, float partialTicks) {
+		/*if(!enabled) {
+			return;
+		}*/
+	}
+}

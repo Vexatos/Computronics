@@ -16,7 +16,9 @@ public class TapeDriveState {
 		STOPPED,
 		PLAYING,
 		REWINDING,
-		FORWARDING
+		FORWARDING;
+
+		public static final State[] VALUES = values();
 	}
 	
 	private State state = State.STOPPED;

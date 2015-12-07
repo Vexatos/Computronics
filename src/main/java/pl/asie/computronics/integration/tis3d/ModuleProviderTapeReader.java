@@ -10,15 +10,15 @@ import pl.asie.computronics.Computronics;
 /**
  * @author Vexatos
  */
-public class ModuleProviderColorful extends ModuleProviderBlock {
+public class ModuleProviderTapeReader extends ModuleProviderBlock {
 
 	@Override
 	public boolean worksWith(ItemStack stack, Casing casing, Face face, Block block) {
-		return block == Computronics.colorfulLamp;
+		return block == Computronics.tapeReader;
 	}
 
 	@Override
 	public Module createModule(ItemStack stack, Casing casing, Face face) {
-		return new ModuleColorful(casing, face);
+		return new ModuleTapeReader(casing, face);
 	}
 }
