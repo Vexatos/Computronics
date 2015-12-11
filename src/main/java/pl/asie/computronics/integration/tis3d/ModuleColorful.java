@@ -2,10 +2,10 @@ package pl.asie.computronics.integration.tis3d;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import li.cil.tis3d.api.Casing;
-import li.cil.tis3d.api.Face;
-import li.cil.tis3d.api.Pipe;
-import li.cil.tis3d.api.Port;
+import li.cil.tis3d.api.machine.Casing;
+import li.cil.tis3d.api.machine.Face;
+import li.cil.tis3d.api.machine.Pipe;
+import li.cil.tis3d.api.machine.Port;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.nbt.NBTTagCompound;

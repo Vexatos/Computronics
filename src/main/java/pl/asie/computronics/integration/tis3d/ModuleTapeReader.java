@@ -2,12 +2,15 @@ package pl.asie.computronics.integration.tis3d;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import li.cil.tis3d.api.Casing;
-import li.cil.tis3d.api.Face;
-import li.cil.tis3d.api.Pipe;
-import li.cil.tis3d.api.Port;
+import li.cil.tis3d.api.machine.Casing;
+import li.cil.tis3d.api.machine.Face;
+import li.cil.tis3d.api.machine.Pipe;
+import li.cil.tis3d.api.machine.Port;
+import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
 import pl.asie.computronics.tile.TapeDriveState.State;
 import pl.asie.computronics.tile.TileTapeDrive;
 
@@ -498,11 +501,27 @@ public class ModuleTapeReader extends ComputronicsModule {
 		// super.sendData();
 	}
 
+	private static final ResourceLocation BACK_ICON = new ResourceLocation("computronics:textures/blocks/tis3d/module_tape_reader_back.png");
+	private static final ResourceLocation OFF_ICON = new ResourceLocation("computronics:textures/blocks/tis3d/module_tape_reader_off.png");
+	private static final ResourceLocation ON_ICON = new ResourceLocation("computronics:textures/blocks/tis3d/module_tape_reader_on.png");
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void render(boolean enabled, float partialTicks) {
-		/*if(!enabled) {
+
+		bindTexture(BACK_ICON);
+		drawQuad();
+
+		if(!enabled) {
 			return;
-		}*/
+		}
+
+		RenderHelper.disableStandardItemLighting();
+		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 0.0F);
+
+		bindTexture(getTapeDrive() != null ? ON_ICON : OFF_ICON);
+		drawQuad();
+
+		RenderHelper.enableStandardItemLighting();
 	}
 }
