@@ -2,15 +2,19 @@ package pl.asie.computronics.integration.tis3d;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import li.cil.tis3d.api.FontRendererAPI;
 import li.cil.tis3d.api.machine.Casing;
 import li.cil.tis3d.api.machine.Face;
 import li.cil.tis3d.api.machine.Pipe;
 import li.cil.tis3d.api.machine.Port;
+import li.cil.tis3d.api.util.RenderUtil;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+import org.apache.commons.lang3.StringUtils;
+import org.lwjgl.opengl.GL11;
 import pl.asie.computronics.tile.TapeDriveState.State;
 import pl.asie.computronics.tile.TileTapeDrive;
 
@@ -502,6 +506,7 @@ public class ModuleTapeReader extends ComputronicsModule {
 	}
 
 	private static final ResourceLocation BACK_ICON = new ResourceLocation("computronics:textures/blocks/tis3d/module_tape_reader_back.png");
+	private static final ResourceLocation CENTER_ICON = new ResourceLocation("computronics:textures/blocks/tis3d/module_tape_reader_center.png");
 	private static final ResourceLocation OFF_ICON = new ResourceLocation("computronics:textures/blocks/tis3d/module_tape_reader_off.png");
 	private static final ResourceLocation ON_ICON = new ResourceLocation("computronics:textures/blocks/tis3d/module_tape_reader_on.png");
 
@@ -509,18 +514,35 @@ public class ModuleTapeReader extends ComputronicsModule {
 	@SideOnly(Side.CLIENT)
 	public void render(boolean enabled, float partialTicks) {
 
-		bindTexture(BACK_ICON);
-		drawQuad();
-
-		if(!enabled) {
-			return;
-		}
-
 		RenderHelper.disableStandardItemLighting();
-		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 0.0F);
+		int brightness = getCasing().getCasingWorld().getLightBrightnessForSkyBlocks(
+			getCasing().getPositionX() + Face.toEnumFacing(getFace()).getFrontOffsetX(),
+			getCasing().getPositionY() + Face.toEnumFacing(getFace()).getFrontOffsetY(),
+			getCasing().getPositionZ() + Face.toEnumFacing(getFace()).getFrontOffsetZ(), 0);
+		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, brightness % 65536, brightness / 65536);
 
-		bindTexture(getTapeDrive() != null ? ON_ICON : OFF_ICON);
-		drawQuad();
+		RenderUtil.bindTexture(BACK_ICON);
+		RenderUtil.drawQuad();
+
+		if(enabled) {
+			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 0.0F);
+
+			RenderUtil.bindTexture(CENTER_ICON);
+			RenderUtil.drawQuad();
+
+			final boolean hasTapeDrive = getTapeDrive() != null;
+
+			RenderUtil.bindTexture(hasTapeDrive ? ON_ICON : OFF_ICON);
+			RenderUtil.drawQuad();
+
+			if(!hasTapeDrive) {
+				String s = StringUtils.center("NO TAPE DRIVE", 16);
+				GL11.glTranslatef((s.length() + 1) / 64f, 3 / 16f, 0);
+				GL11.glScalef(1 / 128f, 1 / 128f, 1);
+
+				FontRendererAPI.drawString(s);
+			}
+		}
 
 		RenderHelper.enableStandardItemLighting();
 	}
