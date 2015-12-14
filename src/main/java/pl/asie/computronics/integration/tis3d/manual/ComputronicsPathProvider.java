@@ -10,7 +10,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import pl.asie.computronics.integration.tis3d.IntegrationTIS3D;
-import pl.asie.computronics.reference.Config;
 
 /**
  * @author Vexatos
@@ -28,8 +27,7 @@ public class ComputronicsPathProvider implements PathProvider {
 
 	private static TabIconRenderer findTabIconRenderer() {
 		if(IntegrationTIS3D.itemModules != null) {
-			int meta = Config.TIS3D_MODULE_TAPE_READER ? 1 : 0;
-			return new ItemStackTabIconRenderer(new ItemStack(IntegrationTIS3D.itemModules, 1, meta));
+			return new ItemStackTabIconRenderer(new ItemStack(IntegrationTIS3D.itemModules, 1, 1));
 		}
 		return new TextureTabIconRenderer(new ResourceLocation("computronics", "textures/items/tape_steel.png"));
 	}

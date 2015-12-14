@@ -94,6 +94,8 @@ item.computronics.relaySensor.name=Digitaler Relaissensor
 item.computronics.part_tape_track.name=Bandspur
 item.computronics.tape.ig.name=Intergalaktischer CDVR
 item.computronics.tape.name=Kasettenband
+item.computronics.module_colorful.name=Das Bunte Modul
+item.computronics.module_tape_reader.name=Kassettenlesemodul<
 
 itemGroup.tabComputronics=Computronics
 
