@@ -1,5 +1,10 @@
 ==== 1.6.1 ====
 
+  * ADDED: Support for TIS-3D!
+    - Added a Colorful Module to display any colour you want, akin to a Colorful Lamp.
+    - Added a Tape Reader Module which allows you to interface with an adjacent Tape Drive.
+    - Documented everything in the TIS-3D manual.
+    - Each module can be individually disabled in the config file.
   * FIXED: Crash when the `openComputersBees` config option was set to `false`.
 
 ==== 1.6.0 ====

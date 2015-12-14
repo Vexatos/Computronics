@@ -52,6 +52,9 @@ public class Config {
 	public static boolean CC_ALL_MULTI_PERIPHERALS = true;
 	public static boolean CC_ALWAYS_FIRST = true;
 
+	public static boolean TIS3D_MODULE_COLORFUL = true;
+	public static boolean TIS3D_MODULE_TAPE_READER = true;
+
 	public static String TAPE_LENGTHS;
 	public static boolean REDSTONE_REFRESH, CHATBOX_CREATIVE;
 
@@ -142,6 +145,11 @@ public class Config {
 				Computronics.log.info("Multiperipheral system for ComputerCraft engaged. Hooray!");
 				Computronics.log.info("Multiple mods registering peripherals for the same block now won't be a problem anymore.");
 			}
+		}
+
+		if(Mods.isLoaded(Mods.TIS3D)){
+			TIS3D_MODULE_COLORFUL = config.get("enable.tis3d", "colorfulModule", true).getBoolean(true);
+			TIS3D_MODULE_TAPE_READER = config.get("enable.tis3d", "tapeReaderModule", true).getBoolean(true);
 		}
 
 		// Radar

@@ -1,4 +1,4 @@
-package pl.asie.computronics.integration.tis3d;
+package pl.asie.computronics.integration.tis3d.module;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

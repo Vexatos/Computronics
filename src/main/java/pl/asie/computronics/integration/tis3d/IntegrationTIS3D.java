@@ -1,38 +1,69 @@
 package pl.asie.computronics.integration.tis3d;
 
 import cpw.mods.fml.common.Optional;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import cpw.mods.fml.common.registry.GameRegistry;
 import li.cil.tis3d.api.ModuleAPI;
-import li.cil.tis3d.api.prefab.client.SimpleModuleRenderer;
-import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.util.IIcon;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.MinecraftForgeClient;
-import net.minecraftforge.client.event.TextureStitchEvent;
-import net.minecraftforge.common.MinecraftForge;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.integration.tis3d.item.ItemModules;
+import pl.asie.computronics.integration.tis3d.manual.ComputronicsPathProvider;
+import pl.asie.computronics.integration.tis3d.module.ComputronicsModuleProvider;
+import pl.asie.computronics.integration.tis3d.module.ComputronicsModuleRenderer;
+import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
+import pl.asie.computronics.util.RecipeUtils;
+import pl.asie.lib.item.ItemMultiple;
 
 /**
  * @author Vexatos
  */
 public class IntegrationTIS3D {
 
+	public static ItemMultiple itemModules;
+
 	@Optional.Method(modid = Mods.TIS3D)
 	public void preInit() {
-		if(Computronics.proxy.isClient()) {
-			MinecraftForge.EVENT_BUS.register(new TextureLoader());
-			MinecraftForgeClient.registerItemRenderer(Computronics.itemParts, new SimpleModuleRenderer().setIgnoreLighting(true));
+		if(Config.TIS3D_MODULE_COLORFUL
+			|| Config.TIS3D_MODULE_TAPE_READER) {
+
+			itemModules = new ItemModules();
+			GameRegistry.registerItem(itemModules, "computronics.modules.tis3d");
+			if(Computronics.proxy.isClient()) {
+				//MinecraftForge.EVENT_BUS.register(new TextureLoader());
+				MinecraftForgeClient.registerItemRenderer(itemModules, new ComputronicsModuleRenderer().setIgnoreLighting(true));
+			}
 		}
 	}
 
 	@Optional.Method(modid = Mods.TIS3D)
 	public void init() {
-		ModuleAPI.addProvider(new ModuleProviderColorful());
-		ModuleAPI.addProvider(new ModuleProviderTapeReader());
+		ComputronicsPathProvider.initialize();
+		ModuleAPI.addProvider(new ComputronicsModuleProvider());
 	}
 
+	@Optional.Method(modid = Mods.TIS3D)
+	public void postInit() {
+		if(itemModules != null) {
+			if(Config.TIS3D_MODULE_COLORFUL) {
+				RecipeUtils.addShapedRecipe(new ItemStack(itemModules, 2, 0),
+					"PPP", "IGI", " R ",
+					'P', "paneGlassColorless",
+					'I', "ingotIron",
+					'R', "dustRedstone",
+					'G', "dustGlowstone");
+			}
+			if(Config.TIS3D_MODULE_TAPE_READER) {
+				RecipeUtils.addShapedRecipe(new ItemStack(itemModules, 2, 1),
+					"PPP", "IGI", " R ",
+					'P', "paneGlassColorless",
+					'I', "ingotIron",
+					'R', "dustRedstone",
+					'G', "gemDiamond");
+			}
+		}
+	}
+/*
 	public static class TextureLoader {
 
 		@SideOnly(Side.CLIENT)
@@ -67,5 +98,5 @@ public class IntegrationTIS3D {
 				this.icon = iconRegister.registerIcon("computronics:" + location);
 			}
 		}
-	}
+	}*/
 }

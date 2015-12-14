@@ -1,4 +1,4 @@
-package pl.asie.computronics.integration.tis3d;
+package pl.asie.computronics.integration.tis3d.module;
 
 import li.cil.tis3d.api.machine.Casing;
 import li.cil.tis3d.api.machine.Face;

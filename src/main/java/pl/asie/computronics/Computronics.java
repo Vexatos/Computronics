@@ -358,6 +358,10 @@ public class Computronics {
 			ActionProvider.initialize();
 			StatementParameters.initialize();
 		}
+
+		if(Mods.isLoaded(Mods.TIS3D) && tis3D != null) {
+			tis3D.postInit();
+		}
 	}
 
 	@EventHandler
