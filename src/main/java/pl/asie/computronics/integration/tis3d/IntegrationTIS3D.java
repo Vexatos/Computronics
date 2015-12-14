@@ -5,8 +5,10 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import li.cil.tis3d.api.ModuleAPI;
+import li.cil.tis3d.api.prefab.client.SimpleModuleRenderer;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.util.IIcon;
+import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
 import pl.asie.computronics.Computronics;
@@ -21,6 +23,7 @@ public class IntegrationTIS3D {
 	public void preInit() {
 		if(Computronics.proxy.isClient()) {
 			MinecraftForge.EVENT_BUS.register(new TextureLoader());
+			MinecraftForgeClient.registerItemRenderer(Computronics.itemParts, new SimpleModuleRenderer().setIgnoreLighting(true));
 		}
 	}
 
@@ -43,9 +46,8 @@ public class IntegrationTIS3D {
 		}
 
 		enum Textures {
-			TAPE_READER_BACK("drone_station_top"),
-			TAPE_READER_OFF("drone_station_bottom"),
-			TAPE_READER_ON("drone_station_side");
+			CASING("tis3d/casingModule"),
+			TAPE_READER_OFF("tape_drive_front");
 
 			@SideOnly(Side.CLIENT)
 			private IIcon icon;
@@ -62,7 +64,7 @@ public class IntegrationTIS3D {
 
 			@SideOnly(Side.CLIENT)
 			public void registerIcon(IIconRegister iconRegister) {
-				this.icon = iconRegister.registerIcon("computronics:buildcraft/pluggable/" + location);
+				this.icon = iconRegister.registerIcon("computronics:" + location);
 			}
 		}
 	}
