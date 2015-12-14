@@ -1,21 +1,16 @@
 package pl.asie.computronics;
 
-import java.io.IOException;
-import java.util.ArrayList;
-
+import cpw.mods.fml.client.registry.RenderingRegistry;
+import cpw.mods.fml.common.Optional;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
 import net.minecraft.world.ChunkPosition;
 import net.minecraft.world.World;
-
-import cpw.mods.fml.client.registry.RenderingRegistry;
-import cpw.mods.fml.common.Optional;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
-
+import pl.asie.computronics.api.audio.AudioPacketDFPWM;
 import pl.asie.computronics.api.audio.AudioPacketRegistry;
 import pl.asie.computronics.audio.AudioPacketClientHandlerDFPWM;
-import pl.asie.computronics.api.audio.AudioPacketDFPWM;
 import pl.asie.computronics.client.AudioCableRender;
 import pl.asie.computronics.client.LampRender;
 import pl.asie.computronics.client.SignalBoxRenderer;
@@ -25,7 +20,11 @@ import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.boom.SelfDestruct;
 import pl.asie.lib.network.Packet;
 
+import java.io.IOException;
+import java.util.ArrayList;
+
 public class ClientProxy extends CommonProxy {
+
 	@Override
 	public boolean isClient() {
 		return true;
@@ -35,7 +34,7 @@ public class ClientProxy extends CommonProxy {
 	public void registerAudioHandlers() {
 		super.registerAudioHandlers();
 		AudioPacketRegistry.INSTANCE.registerClientHandler(
-				AudioPacketDFPWM.class, new AudioPacketClientHandlerDFPWM()
+			AudioPacketDFPWM.class, new AudioPacketClientHandlerDFPWM()
 		);
 	}
 
@@ -59,7 +58,7 @@ public class ClientProxy extends CommonProxy {
 		}
 		if(Mods.isLoaded(Mods.OpenComputers)) {
 			registerOpenComputersRenderers();
-			if(Mods.hasVersion(Mods.Forestry, Mods.Versions.Forestry)) {
+			if(Computronics.forestry != null) {
 				Computronics.forestry.registerOCRenderers();
 			}
 		}
