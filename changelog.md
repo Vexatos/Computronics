@@ -1,3 +1,7 @@
+==== 1.6.1 ====
+
+  * FIXED: Crash when the `openComputersBees` config option was set to `false`.
+
 ==== 1.6.0 ====
 
   * ADDED: Audio Cables!
