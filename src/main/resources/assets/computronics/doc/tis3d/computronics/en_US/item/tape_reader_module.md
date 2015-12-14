@@ -2,7 +2,7 @@
 
 ![Storage issues no more.](item:computronics:computronics.modules.tis3d@1)
 
-The Tape Reader Module can interface with an adjacent Tape Drive, allowing data to be written to and read from the Cassette Tape inside. it also allows playing music from the tape provided the data on the tape is encoded as [DFPWM](http://wiki.vex.tty.sh/dfpwm).
+The Tape Reader Module can interface with an adjacent Tape Drive, allowing data to be written to and read from the Cassette Tape inside. It also allows playing music from the tape provided the data on the tape is encoded as [DFPWM](http://wiki.vex.tty.sh/dfpwm).
 
 Tapes come in varying lengths from 2 to 128 minutes, and can be used to store any type of information (storage space is roughly the number of minutes of DFPWM-encoded sound the tape can record divided by 4, in megabytes).
 
@@ -13,8 +13,8 @@ The following commands exist:
 * `0`: isEnd - Returns 1 if the tape drive is empty or the inserted tape has reached its end, 0 otherwise.
 * `1`: isReady - Returns 1 if there is a tape inserted, 0 otherwise.
 * `2`: getState - Returns the state the drive is currently in, as a number. Returned numbers are `0` if Tape Drive has stopped, `1` if the Tape Drive is currently playing, `2` if the Tape Drive is rewinding and `3` if the Tape Drive is forwarding.
-* `3`: getSize - Returns the size of the tape in bytes, relative to the last multiple of 1024
-* `4`: getSize in Kibibytes - Returns the size of the tape in kibibytes as an integer, rounded down. 
+* `3`: getSize - Returns the size of the tape in bytes modulo 1024.
+* `4`: getSize in kibibytes - Returns the size of the tape in kibibytes as an integer, rounded down. 
 * `5`: setSpeed - Sets the speed the drive plays at to the next value the module reads, in percent. Values between 25 and 200 are valid.
 * `6`: setVolume - Sets the volume of the Tape Drive to the next value the module reads, in percent. Values between 0 and 100 are valid.
 * `7`: seek - Seeks the next value the module reads (in bytes) on the tape. Negative values will seek backwards (i.e. rewind).
