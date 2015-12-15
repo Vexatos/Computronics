@@ -8,7 +8,6 @@ import li.cil.tis3d.api.machine.Pipe;
 import li.cil.tis3d.api.machine.Port;
 import li.cil.tis3d.api.util.RenderUtil;
 import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
@@ -70,7 +69,6 @@ public class ModuleColorful extends ComputronicsModule {
 			return;
 		}
 
-		RenderHelper.disableStandardItemLighting();
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 0.0F);
 
 		RenderUtil.bindTexture(LAMP_ICON);
@@ -78,12 +76,8 @@ public class ModuleColorful extends ComputronicsModule {
 		GL11.glScalef(0.875f, 0.875f, 0.875f);
 		//int col = Color.HSBtoRGB((((System.currentTimeMillis() + (hashCode() % 30000)) % 30000) / 30000F), 1F, 1F) & 0xFFFFFF;
 		//GL11.glColor3ub((byte) ((col >> 16) & 0xFF), (byte) ((col >> 8) & 0xFF), (byte) (col & 0xFF));
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		GL11.glColor3ub((byte) (((color >> 10) & 0x1F) * 8), (byte) (((color >> 5) & 0x1F) * 8), (byte) ((color & 0x1F) * 8));
 		RenderUtil.drawQuad();
-
-		RenderHelper.enableStandardItemLighting();
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
 		//bindTexture(front);
 		//drawQuad();

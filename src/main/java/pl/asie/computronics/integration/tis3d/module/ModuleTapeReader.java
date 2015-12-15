@@ -9,7 +9,6 @@ import li.cil.tis3d.api.machine.Pipe;
 import li.cil.tis3d.api.machine.Port;
 import li.cil.tis3d.api.util.RenderUtil;
 import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
@@ -514,13 +513,6 @@ public class ModuleTapeReader extends ComputronicsModule {
 	@SideOnly(Side.CLIENT)
 	public void render(boolean enabled, float partialTicks) {
 
-		RenderHelper.disableStandardItemLighting();
-		int brightness = getCasing().getCasingWorld().getLightBrightnessForSkyBlocks(
-			getCasing().getPositionX() + Face.toEnumFacing(getFace()).getFrontOffsetX(),
-			getCasing().getPositionY() + Face.toEnumFacing(getFace()).getFrontOffsetY(),
-			getCasing().getPositionZ() + Face.toEnumFacing(getFace()).getFrontOffsetZ(), 0);
-		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, brightness % 65536, brightness / 65536);
-
 		RenderUtil.bindTexture(BACK_ICON);
 		RenderUtil.drawQuad();
 
@@ -543,7 +535,5 @@ public class ModuleTapeReader extends ComputronicsModule {
 				FontRendererAPI.drawString(s);
 			}
 		}
-
-		RenderHelper.enableStandardItemLighting();
 	}
 }

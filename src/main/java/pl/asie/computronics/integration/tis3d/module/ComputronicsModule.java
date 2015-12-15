@@ -2,7 +2,7 @@ package pl.asie.computronics.integration.tis3d.module;
 
 import li.cil.tis3d.api.machine.Casing;
 import li.cil.tis3d.api.machine.Face;
-import li.cil.tis3d.api.prefab.AbstractModule;
+import li.cil.tis3d.api.prefab.module.AbstractModule;
 import net.minecraft.nbt.NBTTagCompound;
 
 /**
