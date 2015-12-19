@@ -17,7 +17,7 @@ import org.lwjgl.opengl.GL11;
  */
 public class ModuleColorful extends ComputronicsModule {
 
-	private int color = 0x6318;
+	private short color = 0x6318;
 
 	public ModuleColorful(Casing casing, Face face) {
 		super(casing, face);
@@ -32,7 +32,7 @@ public class ModuleColorful extends ComputronicsModule {
 				receivingPipe.beginRead();
 			}
 			if(receivingPipe.canTransfer()) {
-				this.color = receivingPipe.read() & 0x7FFF;
+				this.color = (short) (receivingPipe.read() & 0x7FFF);
 				this.cancelWrite();
 				receivingPipe.beginRead();
 				sendData();
@@ -50,13 +50,13 @@ public class ModuleColorful extends ComputronicsModule {
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-		this.color = nbt.getInteger("c");
+		this.color = nbt.getShort("c");
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-		nbt.setInteger("c", this.color);
+		nbt.setShort("c", this.color);
 	}
 
 	private static final ResourceLocation LAMP_ICON = new ResourceLocation("computronics:textures/blocks/lamp_layer_0.png");

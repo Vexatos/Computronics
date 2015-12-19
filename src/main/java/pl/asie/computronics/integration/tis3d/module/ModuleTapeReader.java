@@ -119,7 +119,7 @@ public class ModuleTapeReader extends ComputronicsModule {
 			}
 		}
 
-		protected abstract int getValue(TileTapeDrive tile);
+		protected abstract short getValue(TileTapeDrive tile);
 
 	}
 
@@ -157,73 +157,73 @@ public class ModuleTapeReader extends ComputronicsModule {
 			}
 		}
 
-		protected abstract void setValue(TileTapeDrive tile, int val);
+		protected abstract void setValue(TileTapeDrive tile, short val);
 	}
 
 	private final Command[] COMMANDS = new Command[] {
 		new ImmediateReturnCommand("isEnd") { // isEnd
 			@Override
-			protected int getValue(TileTapeDrive tile) {
-				return tile.isEnd() ? 1 : 0;
+			protected short getValue(TileTapeDrive tile) {
+				return (short) (tile.isEnd() ? 1 : 0);
 			}
 		},
 		new ImmediateReturnCommand("isReady") { // isReady
 			@Override
-			protected int getValue(TileTapeDrive tile) {
-				return tile.isReady() ? 1 : 0;
+			protected short getValue(TileTapeDrive tile) {
+				return (short) (tile.isReady() ? 1 : 0);
 			}
 		},
 		new ImmediateReturnCommand("getState") { // getState
 			@Override
-			protected int getValue(TileTapeDrive tile) {
-				return tile.getEnumState().ordinal();
+			protected short getValue(TileTapeDrive tile) {
+				return (short) tile.getEnumState().ordinal();
 			}
 		},
 		new ImmediateReturnCommand("getSize") { // getSize relative to the last multiple of 1024
 			@Override
-			protected int getValue(TileTapeDrive tile) {
-				return tile.getSize() % 1024;
+			protected short getValue(TileTapeDrive tile) {
+				return (short) (tile.getSize() % 1024);
 			}
 		},
 		new ImmediateReturnCommand("getSize1024") { // getSize /1024 (in Kibibytes)
 			@Override
-			protected int getValue(TileTapeDrive tile) {
-				return tile.getSize() / 1024;
+			protected short getValue(TileTapeDrive tile) {
+				return (short) (tile.getSize() / 1024);
 			}
 		},
 		new SetterCommand("setSpeed") { // setSpeed, in percent, between 25 and 200
 			@Override
-			protected void setValue(TileTapeDrive tile, int val) {
+			protected void setValue(TileTapeDrive tile, short val) {
 				tile.setSpeed((float) val / 100F);
 			}
 		},
 		new SetterCommand("setVolume") { // setVolume in percent, between 0 and 100
 			@Override
-			protected void setValue(TileTapeDrive tile, int val) {
+			protected void setValue(TileTapeDrive tile, short val) {
 				tile.setVolume((float) val / 100F);
 			}
 		},
 		new SetterCommand("seek") { // seek
 			@Override
-			protected void setValue(TileTapeDrive tile, int val) {
+			protected void setValue(TileTapeDrive tile, short val) {
 				tile.seek(val);
 			}
 		},
 		new SetterCommand("seek1024") { // seek * 1024
 			@Override
-			protected void setValue(TileTapeDrive tile, int val) {
+			protected void setValue(TileTapeDrive tile, short val) {
 				tile.seek(val * 1024);
 			}
 		},
 		new ImmediateReturnCommand("read") { // read a single byte
 			@Override
-			protected int getValue(TileTapeDrive tile) {
-				return tile.read();
+			protected short getValue(TileTapeDrive tile) {
+				return (short) tile.read();
 			}
 		},
 		new Command("readMultiple") { // read a set number of bytes
 
-			private int byteQueue = 0;
+			private short byteQueue = 0;
 
 			@Override
 			protected void process(TileTapeDrive tile) {
@@ -250,7 +250,7 @@ public class ModuleTapeReader extends ComputronicsModule {
 								for(Port p : Port.VALUES) {
 									Pipe sendingPipe = getCasing().getSendingPipe(getFace(), p);
 									if(!sendingPipe.isWriting()) {
-										sendingPipe.beginWrite(tile.read());
+										sendingPipe.beginWrite((short) tile.read());
 									}
 								}
 								return;
@@ -268,7 +268,7 @@ public class ModuleTapeReader extends ComputronicsModule {
 					for(Port port : Port.VALUES) {
 						Pipe sendingPipe = getCasing().getSendingPipe(getFace(), port);
 						if(!sendingPipe.isWriting()) {
-							sendingPipe.beginWrite(tile.read());
+							sendingPipe.beginWrite((short) tile.read());
 						}
 					}
 				} else {
@@ -287,26 +287,26 @@ public class ModuleTapeReader extends ComputronicsModule {
 			@Override
 			protected void save(NBTTagCompound nbt) {
 				super.save(nbt);
-				nbt.setInteger("bq", byteQueue);
+				nbt.setShort("bq", byteQueue);
 			}
 
 			@Override
 			protected void load(NBTTagCompound nbt) {
 				super.load(nbt);
 				if(nbt.hasKey("bq")) {
-					byteQueue = nbt.getInteger("bq");
+					byteQueue = nbt.getShort("bq");
 				}
 			}
 		},
 		new SetterCommand("write") { // write a single byte
 			@Override
-			protected void setValue(TileTapeDrive tile, int val) {
+			protected void setValue(TileTapeDrive tile, short val) {
 				tile.write((byte) val);
 			}
 		},
 		new NeverWritingCommand("writeMultiple") { // write a number of bytes. First argument is the number of bytes to write
 
-			private int byteQueue = 0;
+			private short byteQueue = 0;
 
 			@Override
 			protected void process(TileTapeDrive tile) {
@@ -356,20 +356,20 @@ public class ModuleTapeReader extends ComputronicsModule {
 			@Override
 			protected void save(NBTTagCompound nbt) {
 				super.save(nbt);
-				nbt.setInteger("bq", byteQueue);
+				nbt.setShort("bq", byteQueue);
 			}
 
 			@Override
 			protected void load(NBTTagCompound nbt) {
 				super.load(nbt);
 				if(nbt.hasKey("bq")) {
-					byteQueue = nbt.getInteger("bq");
+					byteQueue = nbt.getShort("bq");
 				}
 			}
 		},
 		new SetterCommand("switchState") { // switchState
 			@Override
-			protected void setValue(TileTapeDrive tile, int val) {
+			protected void setValue(TileTapeDrive tile, short val) {
 				if(val < 0 || val >= State.VALUES.length) {
 					return;
 				}
@@ -378,7 +378,7 @@ public class ModuleTapeReader extends ComputronicsModule {
 		}
 	};
 
-	private Command getCommand(int ordinal) {
+	private Command getCommand(short ordinal) {
 		return ordinal >= 0 && ordinal < COMMANDS.length ? COMMANDS[ordinal] : null;
 	}
 
