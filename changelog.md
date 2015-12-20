@@ -15,6 +15,7 @@
       - Now you can get and set the range of Vacuum Chests
       - Added `getProgress()` to most machines with progress
   * FIXED: Crash when the `openComputersBees` config option was set to `false`.
+  * FIXED: Updated OpenComputers integration (requires OpenComputers 1.5.20 now)
 
 ==== 1.6.0 ====
 
