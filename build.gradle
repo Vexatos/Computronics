@@ -89,6 +89,9 @@ dependencies {
 		exclude module: "Waila"
 		exclude module: "forestry_1.7.10"
 		exclude module: "OpenComputers"
+		exclude module: "CodeChickenLib"
+		exclude module: "CodeChickenCore"
+		exclude module: "EquivalentExchange3"
 	}
 	compile("net.sengir.forestry:forestry_1.7.10:${config.forestry.version}:dev") {
 		exclude module: "buildcraft"
