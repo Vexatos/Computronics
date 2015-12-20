@@ -20,8 +20,8 @@ import pl.asie.computronics.integration.CCMultiPeripheral;
 import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
 import pl.asie.computronics.reference.Names;
 
+import java.util.Collection;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Locale;
 
 /**
@@ -29,7 +29,7 @@ import java.util.Locale;
  */
 public class DriverTransceiver {
 
-	private static Object[] parseChannels(List<Channel> channelList) {
+	private static Object[] parseChannels(Collection<Channel> channelList) {
 		LinkedHashMap<Integer, String> channelMap = new LinkedHashMap<Integer, String>();
 		if(channelList != null) {
 			int i = 1;
@@ -42,7 +42,7 @@ public class DriverTransceiver {
 	}
 
 	private static Object[] getSendChannels(TileTransceiver tile, Object[] arguments) {
-		List<Channel> channelList;
+		Collection<Channel> channelList;
 		try {
 			channelList = tile.getSendChannels(ChannelType.valueOf(((String) arguments[0]).toUpperCase(Locale.ENGLISH)));
 		} catch(IllegalArgumentException e) {
@@ -52,7 +52,7 @@ public class DriverTransceiver {
 	}
 
 	private static Object[] setSendChannel(TileTransceiver tile, Object[] arguments) {
-		List<Channel> channels;
+		Collection<Channel> channels;
 		boolean shouldAdd = ((Boolean) arguments[2]);
 		try {
 			channels = shouldAdd
@@ -77,7 +77,7 @@ public class DriverTransceiver {
 	}
 
 	private static Object[] getReceiveChannels(TileTransceiver tile, Object[] arguments) {
-		List<Channel> channelList;
+		Collection<Channel> channelList;
 		try {
 			channelList = tile.getRecieveChannels(ChannelType.valueOf(((String) arguments[0]).toUpperCase(Locale.ENGLISH)));
 		} catch(IllegalArgumentException e) {
@@ -87,7 +87,7 @@ public class DriverTransceiver {
 	}
 
 	private static Object[] setReceiveChannel(TileTransceiver tile, Object[] arguments) {
-		List<Channel> channels;
+		Collection<Channel> channels;
 		boolean shouldAdd = ((Boolean) arguments[2]);
 		try {
 			channels = shouldAdd
@@ -112,7 +112,7 @@ public class DriverTransceiver {
 	}
 
 	private static Object[] addChannel(TileTransceiver tile, Object[] arguments) {
-		List<Channel> channels;
+		Collection<Channel> channels;
 		try {
 			channels = ServerChannelRegister.instance.getChannelsForType(ChannelType.valueOf(((String) arguments[0]).toUpperCase(Locale.ENGLISH)));
 		} catch(IllegalArgumentException e) {
@@ -133,7 +133,7 @@ public class DriverTransceiver {
 	}
 
 	private static Object[] removeChannel(TileTransceiver tile, Object[] arguments) {
-		List<Channel> channels;
+		Collection<Channel> channels;
 		try {
 			channels = ServerChannelRegister.instance.getChannelsForType(ChannelType.valueOf(((String) arguments[0]).toUpperCase(Locale.ENGLISH)));
 		} catch(IllegalArgumentException e) {
@@ -152,7 +152,7 @@ public class DriverTransceiver {
 	}
 
 	private static Object[] isChannelExisting(TileTransceiver tile, Object[] arguments) {
-		List<Channel> channels;
+		Collection<Channel> channels;
 		try {
 			channels = ServerChannelRegister.instance.getChannelsForType(ChannelType.valueOf(((String) arguments[0]).toUpperCase(Locale.ENGLISH)));
 		} catch(IllegalArgumentException e) {
@@ -169,7 +169,7 @@ public class DriverTransceiver {
 	}
 
 	private static Object[] getChannels(TileTransceiver tile, Object[] arguments) {
-		List<Channel> channelList;
+		Collection<Channel> channelList;
 		try {
 			channelList = ServerChannelRegister.instance.getChannelsForType(ChannelType.valueOf(((String) arguments[0]).toUpperCase(Locale.ENGLISH)));
 		} catch(IllegalArgumentException e) {
@@ -179,7 +179,7 @@ public class DriverTransceiver {
 	}
 
 	private static Object[] isSendChannel(TileTransceiver tile, Object[] arguments) {
-		List<Channel> channels;
+		Collection<Channel> channels;
 		try {
 			channels = tile.getSendChannels(ChannelType.valueOf(((String) arguments[0]).toUpperCase(Locale.ENGLISH)));
 		} catch(IllegalArgumentException e) {
@@ -196,7 +196,7 @@ public class DriverTransceiver {
 	}
 
 	private static Object[] isReceiveChannel(TileTransceiver tile, Object[] arguments) {
-		List<Channel> channels;
+		Collection<Channel> channels;
 		try {
 			channels = tile.getRecieveChannels(ChannelType.valueOf(((String) arguments[0]).toUpperCase(Locale.ENGLISH)));
 		} catch(IllegalArgumentException e) {

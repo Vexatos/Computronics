@@ -100,6 +100,15 @@
 
 ==== 1.5.0 ====
 
+  * ADDED: EnderIO 2.3 integration  for OpenComputers and ComputerCraft!
+    - Added support for the new Telepad
+      - Allows full control over the coordinates set as well as telepad activation
+    - Added support for the new Weather Obelisk
+      - Allows control over the weather, provided the Obelisk has the correct items.
+    - The Capacitor Bank now provides two additional functions, `getAverageInputPerTick()` and `getAverageOutputPerTick()`
+      - This allows you to monitor input and output of your energy network separately
+    - Now you can get and set the range of Vacuum Chests
+    - Added `getProgress()` to most machines with progress
   * ADDED: All Computronics blocks now support the OpenComputers API documentation in NotEnoughItems.
   * ADDED: OpenComputers Component Documentation for every function any Computronics block provides
   * ADDED: Support for the OpenComputers manual!

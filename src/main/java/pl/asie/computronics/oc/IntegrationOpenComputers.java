@@ -26,8 +26,12 @@ import pl.asie.computronics.integration.enderio.DriverHasExperience;
 import pl.asie.computronics.integration.enderio.DriverIOConfigurable;
 import pl.asie.computronics.integration.enderio.DriverPowerMonitor;
 import pl.asie.computronics.integration.enderio.DriverPowerStorage;
+import pl.asie.computronics.integration.enderio.DriverProgressTile;
 import pl.asie.computronics.integration.enderio.DriverRedstoneControllable;
+import pl.asie.computronics.integration.enderio.DriverTelepad;
 import pl.asie.computronics.integration.enderio.DriverTransceiver;
+import pl.asie.computronics.integration.enderio.DriverVacuumChest;
+import pl.asie.computronics.integration.enderio.DriverWeatherObelisk;
 import pl.asie.computronics.integration.factorization.DriverChargeConductor;
 import pl.asie.computronics.integration.flamingo.DriverFlamingo;
 import pl.asie.computronics.integration.forestry.IntegrationForestry;
@@ -208,12 +212,16 @@ public class IntegrationOpenComputers {
 				Driver.add(new DriverIOConfigurable.OCDriver());
 				Driver.add(new DriverHasExperience.OCDriver());
 				Driver.add(new DriverPowerStorage.OCDriver());
+				Driver.add(new DriverProgressTile.OCDriver());
 				Driver.add(new DriverAbstractMachine.OCDriver());
 				Driver.add(new DriverAbstractPoweredMachine.OCDriver());
 				Driver.add(new DriverPowerMonitor.OCDriver());
 				Driver.add(new DriverCapacitorBank.OCDriver());
 				Driver.add(new DriverCapacitorBankOld.OCDriver());
 				Driver.add(new DriverTransceiver.OCDriver());
+				Driver.add(new DriverVacuumChest.OCDriver());
+				Driver.add(new DriverWeatherObelisk.OCDriver());
+				Driver.add(new DriverTelepad.OCDriver());
 			}
 		}
 
