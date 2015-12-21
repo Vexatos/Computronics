@@ -108,7 +108,7 @@ public class IntegrationOpenComputers {
 				Computronics.forestry.preInitOC();
 			}
 		} else {
-			log.warn("Detected outdated version of Forestry, Forestry integration will not be enabled. Please update to Forestry 4.1.1 or later.");
+			log.warn("Detected outdated version of Forestry, Forestry integration will not be enabled. Please update to Forestry " + Mods.Versions.Forestry + " or later.");
 		}
 
 		if(Mods.isLoaded(Mods.BuildCraftTransport) && Mods.isLoaded(Mods.BuildCraftCore) && Config.BUILDCRAFT_STATION) {
