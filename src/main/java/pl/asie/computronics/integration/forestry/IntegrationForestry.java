@@ -101,7 +101,7 @@ public class IntegrationForestry {
 		if(shortMead != null) {
 			scummyA.requireResource(shortMead, 0);
 		}
-		scummyA.restrictBiomeType(Type.OCEAN)
+		scummyA.restrictBiomeType(Type.OCEAN, Type.HOT).restrictBiomeType(Type.OCEAN, Type.WET)
 			.requireNight()
 			.restrictTemperature(EnumTemperature.WARM, EnumTemperature.HELLISH)
 			.setIsSecret();
