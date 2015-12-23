@@ -107,6 +107,9 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 	@Override
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Class<? extends Environment> getEnvironment(ItemStack stack) {
+		if(!worksWith(stack)) {
+			return null;
+		}
 		switch(stack.getItemDamage()) {
 			case 0:
 				return RobotUpgradeCamera.class;
