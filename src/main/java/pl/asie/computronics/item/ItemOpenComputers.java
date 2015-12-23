@@ -3,8 +3,7 @@ package pl.asie.computronics.item;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import li.cil.oc.api.driver.EnvironmentAware;
-import li.cil.oc.api.driver.EnvironmentHost;
+import li.cil.oc.api.driver.EnvironmentProvider;
 import li.cil.oc.api.driver.Item;
 import li.cil.oc.api.driver.item.HostAware;
 import li.cil.oc.api.driver.item.Slot;
@@ -16,6 +15,7 @@ import li.cil.oc.api.internal.Microcontroller;
 import li.cil.oc.api.internal.Robot;
 import li.cil.oc.api.internal.Tablet;
 import li.cil.oc.api.network.Environment;
+import li.cil.oc.api.network.EnvironmentHost;
 import li.cil.oc.api.network.ManagedEnvironment;
 import li.cil.oc.client.KeyBindings;
 import li.cil.oc.util.ItemCosts;
@@ -54,7 +54,7 @@ import java.util.Set;
 	@Optional.Interface(iface = "li.cil.oc.api.driver.item.HostAware", modid = Mods.OpenComputers),
 	@Optional.Interface(iface = "li.cil.oc.api.driver.item.UpgradeRenderer", modid = Mods.OpenComputers)
 })
-public class ItemOpenComputers extends ItemMultiple implements Item, EnvironmentAware, HostAware, UpgradeRenderer, IItemWithDocumentation {
+public class ItemOpenComputers extends ItemMultiple implements Item, EnvironmentProvider, HostAware, UpgradeRenderer, IItemWithDocumentation {
 
 	public ItemOpenComputers() {
 		super(Mods.Computronics, new String[] {
@@ -106,7 +106,7 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 
 	@Override
 	@Optional.Method(modid = Mods.OpenComputers)
-	public Class<? extends Environment> providedEnvironment(ItemStack stack) {
+	public Class<? extends Environment> getEnvironment(ItemStack stack) {
 		switch(stack.getItemDamage()) {
 			case 0:
 				return RobotUpgradeCamera.class;

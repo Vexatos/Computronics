@@ -4,6 +4,8 @@ import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.event.FMLMissingMappingsEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import li.cil.oc.api.Driver;
+import li.cil.oc.api.driver.EnvironmentProvider;
+import li.cil.oc.api.driver.Item;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -54,7 +56,7 @@ import pl.asie.computronics.integration.railcraft.driver.track.DriverRoutingTrac
 import pl.asie.computronics.integration.redlogic.DriverLamp;
 import pl.asie.computronics.integration.storagedrawers.DriverDrawerGroup;
 import pl.asie.computronics.item.ItemOpenComputers;
-import pl.asie.computronics.oc.block.DriverBlockEnvironments;
+import pl.asie.computronics.oc.block.ComputronicsBlockEnvironmentProvider;
 import pl.asie.computronics.oc.manual.ComputronicsPathProvider;
 import pl.asie.computronics.reference.Compat;
 import pl.asie.computronics.reference.Config;
@@ -98,7 +100,8 @@ public class IntegrationOpenComputers {
 			|| Config.OC_UPGRADE_COLORFUL) {
 			itemOCParts = new ItemOpenComputers();
 			GameRegistry.registerItem(itemOCParts, "computronics.ocParts");
-			Driver.add(itemOCParts);
+			Driver.add((Item) itemOCParts);
+			Driver.add((EnvironmentProvider) itemOCParts);
 		}
 
 		// OpenComputers needs a hook in updateEntity in order to proprly register peripherals.
@@ -124,7 +127,7 @@ public class IntegrationOpenComputers {
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void init() {
 
-		Driver.add(new DriverBlockEnvironments());
+		Driver.add(new ComputronicsBlockEnvironmentProvider());
 		ComputronicsPathProvider.initialize();
 
 		if(colorfulUpgradeHandler == null) {
