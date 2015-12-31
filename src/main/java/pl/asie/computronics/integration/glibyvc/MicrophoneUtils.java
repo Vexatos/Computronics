@@ -28,7 +28,7 @@ public final class MicrophoneUtils {
         if (player == null) {
             return null;
         }
-        
+
         ItemStack mic = getMicrophone(player);
         if (mic != null && mic.hasTagCompound() && mic.getTagCompound().hasKey("w")) {
             World w = DimensionManager.getWorld(mic.getTagCompound().getInteger("w"));
@@ -38,7 +38,7 @@ public final class MicrophoneUtils {
                         mic.getTagCompound().getInteger("y"),
                         mic.getTagCompound().getInteger("z")
                 );
-                if (pos.squareDistanceTo(player.getPosition(1.0f)) <= Config.GLIBY_RECEIVER_DISTANCE * Config.GLIBY_RECEIVER_DISTANCE) {
+                if (pos.squareDistanceTo(player.posX, player.posY, player.posZ) <= Config.GLIBY_RECEIVER_DISTANCE * Config.GLIBY_RECEIVER_DISTANCE) {
                     TileEntity t = w.getTileEntity(
                             mic.getTagCompound().getInteger("x"),
                             mic.getTagCompound().getInteger("y"),

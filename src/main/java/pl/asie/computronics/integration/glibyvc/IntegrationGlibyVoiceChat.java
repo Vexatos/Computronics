@@ -134,12 +134,12 @@ public class IntegrationGlibyVoiceChat {
                 continue;
             }
 
-            Vec3 pPos = player.getPosition(1.0f);
+            Vec3 pPos = Vec3.createVectorHelper(player.posX, player.posY, player.posZ);
             float vTmp = 1.0f;
 
             for (int j = 0; j < receivers.size(); j++) {
                 IAudioReceiver receiver = receivers.get(j);
-                double dist = pPos.squareDistanceTo(receiver.getSoundX(), receiver.getSoundY(), receiver.getSoundZ());
+                double dist = pPos.squareDistanceTo(receiver.getSoundX() + 0.5, receiver.getSoundY() + 0.5, receiver.getSoundZ() + 0.5);
                 if (dist <= receiver.getSoundDistance() * receiver.getSoundDistance()) {
                     float playerDistance1 = (float) Math.sqrt(dist);
                     float distanceUsed1 = receiver.getSoundDistance();
@@ -156,6 +156,7 @@ public class IntegrationGlibyVoiceChat {
             }
 
             if (volume > 0.0f) {
+                System.out.println(speaker.getCommandSenderName() + " -> " + player.getCommandSenderName() + " @ " + volume);
                 streamManager.feedStreamToPlayer(stream, voiceData, (EntityPlayerMP) player, false);
             }
         }
