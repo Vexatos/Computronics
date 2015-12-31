@@ -1,8 +1,8 @@
 package pl.asie.computronics.reference;
 
-import cpw.mods.fml.common.versioning.ArtifactVersion;
-
 import java.util.HashMap;
+
+import cpw.mods.fml.common.versioning.ArtifactVersion;
 
 /**
  * List of used mod IDs
@@ -32,6 +32,7 @@ public class Mods {
 		Flamingo = "Flamingo",
 		Forestry = "Forestry",
 		FSP = "Steamcraft",
+        GlibyVoiceChat = "gvc",
 		GregTech = "gregtech",
 		MFR = "MineFactoryReloaded",
 		OpenBlocks = "OpenBlocks",

@@ -81,7 +81,7 @@ public class TileAudioCable extends TileEntityBase implements IAudioReceiver, IC
 
 		packetIds.add(packet.id);
 		for(int i = 0; i < 6; i++) {
-			ForgeDirection dir = ForgeDirection.getOrientation(i);
+			ForgeDirection dir = ForgeDirection.VALID_DIRECTIONS[i];
 			if(dir == side) {
 				continue;
 			}

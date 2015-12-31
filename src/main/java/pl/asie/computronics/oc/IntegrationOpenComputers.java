@@ -1,14 +1,17 @@
 package pl.asie.computronics.oc;
 
-import cpw.mods.fml.common.Optional;
-import cpw.mods.fml.common.event.FMLMissingMappingsEvent;
-import cpw.mods.fml.common.registry.GameRegistry;
-import li.cil.oc.api.Driver;
+import org.apache.logging.log4j.Logger;
+
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+
+import cpw.mods.fml.common.Optional;
+import cpw.mods.fml.common.event.FMLMissingMappingsEvent;
+import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraftforge.common.MinecraftForge;
-import org.apache.logging.log4j.Logger;
+
+import li.cil.oc.api.Driver;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.client.UpgradeRenderer;
 import pl.asie.computronics.integration.appeng.DriverSpatialIOPort;
@@ -56,7 +59,6 @@ import pl.asie.computronics.reference.Compat;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.RecipeUtils;
-
 import static pl.asie.computronics.Computronics.camera;
 import static pl.asie.computronics.Computronics.chatBox;
 import static pl.asie.computronics.Computronics.colorfulLamp;
@@ -83,7 +85,6 @@ public class IntegrationOpenComputers {
 
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void preInit() {
-
 		if(Config.OC_UPGRADE_CAMERA
 			|| Config.OC_UPGRADE_CHATBOX
 			|| Config.OC_UPGRADE_RADAR
@@ -119,7 +120,6 @@ public class IntegrationOpenComputers {
 
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void init() {
-
 		Driver.add(new DriverBlockEnvironments());
 		ComputronicsPathProvider.initialize();
 

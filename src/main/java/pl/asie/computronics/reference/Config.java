@@ -18,6 +18,8 @@ public class Config {
 	public static int TAPEDRIVE_DISTANCE = 24;
 	public static int TAPEDRIVE_BUFFER_MS = 750;
 	public static int RADAR_RANGE = 8;
+    public static int GLIBY_PLAYER_DISTANCE = 32;
+    public static int GLIBY_RECEIVER_DISTANCE = 80;
 	public static boolean RADAR_ONLY_DISTANCE = true;
 	public static boolean CIPHER_CAN_LOCK = true;
 	public static double CIPHER_ENERGY_STORAGE = 1600.0;
@@ -84,6 +86,11 @@ public class Config {
 
 		// Cipher Block
 		CIPHER_CAN_LOCK = config.getBoolean("canLock", "cipherblock", true, "Decides whether Cipher Blocks can or cannot be locked.");
+
+        if(Mods.isLoaded(Mods.GlibyVoiceChat)) {
+            GLIBY_PLAYER_DISTANCE = config.getInt("playerDistance", "microphone", GLIBY_PLAYER_DISTANCE, 0, Integer.MAX_VALUE, "The distance at which players can be heard talking to each other.");
+            GLIBY_RECEIVER_DISTANCE = config.getInt("microphoneMaxDistance", "microphone", GLIBY_RECEIVER_DISTANCE, 0, Integer.MAX_VALUE, "The maximum distance at which a microphone receiver is functional.");
+        }
 
 		if(Mods.isLoaded(Mods.OpenComputers)) {
 			//Advanced Cipher Block

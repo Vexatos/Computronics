@@ -14,6 +14,7 @@ tile.computronics.detector.name=Detector - Digital
 tile.computronics.ticketMachine.name=Ticket Machine
 tile.computronics.audiocable.name=Audio Cable
 tile.computronics.speaker.name=Speaker
+tile.computronics.microphoneReceiver.name=Microphone Receiver
 
 tooltip.computronics.chatBox.creative=NSA in a box!
 tooltip.computronics.cipher.advanced=For the Starchasers!
@@ -96,6 +97,7 @@ item.computronics.relaySensor.name=Digital Relay Sensor
 item.computronics.part_tape_track.name=Tape Track
 item.computronics.tape.ig.name=Intergalactical CDVR
 item.computronics.tape.name=Cassette Tape
+item.computronics.microphone.name=Microphone
 
 itemGroup.tabComputronics=Computronics
 
@@ -117,6 +119,8 @@ chat.computronics.cipher.locked=This Cipher Block is locked! You may not access 
 chat.computronics.colorful_upgrade.color=§6Color§f: %s
 chat.computronics.lamp.binary.on=RedNet mode set to Binary
 chat.computronics.lamp.binary.off=RedNet mode set to Normal
+chat.computronics.microphone.bound.false=Could not bind microphone to receiver!
+chat.computronics.microphone.bound.true=Microphone bound to receiver.
 chat.computronics.relay.notBound=Relay is currently not bound to any locomotive!
 chat.computronics.relay.unbound=Relay successfully unbound from locomotive!
 chat.computronics.sensor.bound=Relay successfully bound to locomotive!

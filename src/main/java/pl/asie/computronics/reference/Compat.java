@@ -8,6 +8,7 @@ import net.minecraftforge.common.config.Configuration;
 public class Compat {
 
 	public static final String
+        Gliby_Microphones = "enableGlibyVCMicrophones",
 		RedLogic_Lamps = "enableRedLogicLamps",
 		MFR_DSU = "enableDeepStorageUnit",
 		FSP_Steam_Transporter = "enableFlaxbeardSteamTransporters",
@@ -34,7 +35,11 @@ public class Compat {
 		this.config = config;
 	}
 
+    public boolean isCompatEnabled(String key, boolean def) {
+        return config.get(Compatibility, key, def).getBoolean(def);
+    }
+
 	public boolean isCompatEnabled(String key) {
-		return config.get(Compatibility, key, true).getBoolean(true);
+		return isCompatEnabled(key, true);
 	}
 }

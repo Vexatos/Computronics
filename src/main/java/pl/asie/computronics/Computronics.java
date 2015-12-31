@@ -56,6 +56,7 @@ import pl.asie.computronics.integration.buildcraft.statements.ActionProvider;
 import pl.asie.computronics.integration.buildcraft.statements.StatementParameters;
 import pl.asie.computronics.integration.buildcraft.statements.TriggerProvider;
 import pl.asie.computronics.integration.forestry.IntegrationForestry;
+import pl.asie.computronics.integration.glibyvc.IntegrationGlibyVoiceChat;
 import pl.asie.computronics.integration.gregtech.GregTechRecipes;
 import pl.asie.computronics.integration.railcraft.IntegrationRailcraft;
 import pl.asie.computronics.item.ItemTape;
@@ -275,6 +276,10 @@ public class Computronics {
 			opencomputers.preInit();
 		}
 
+        if (Mods.isLoaded(Mods.GlibyVoiceChat) && compat.isCompatEnabled(Compat.Gliby_Microphones, false)) {
+            IntegrationGlibyVoiceChat.instance.preInit();
+        }
+
 		proxy.registerAudioHandlers();
 	}
 
@@ -286,6 +291,10 @@ public class Computronics {
 			storageEventHandler = new TapeStorageEventHandler();
 			MinecraftForge.EVENT_BUS.register(storageEventHandler);
 		}
+
+        if (Mods.isLoaded(Mods.GlibyVoiceChat) && compat.isCompatEnabled(Compat.Gliby_Microphones, false)) {
+            IntegrationGlibyVoiceChat.instance.init();
+        }
 
 		FMLInterModComms.sendMessage(Mods.Waila, "register", "pl.asie.computronics.integration.waila.IntegrationWaila.register");
 
