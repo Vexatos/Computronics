@@ -21,6 +21,9 @@ public class ComputronicsModule extends AbstractModule {
 	}
 
 	protected void sendData() {
+		if(!isVisible()) {
+			return;
+		}
 		NBTTagCompound nbt = new NBTTagCompound();
 		this.writeToNBT(nbt);
 		this.getCasing().sendData(this.getFace(), nbt, (byte) 0);
