@@ -35,7 +35,7 @@ public class ModuleColorful extends ComputronicsModule {
 				this.color = (short) (receivingPipe.read() & 0x7FFF);
 				this.cancelWrite();
 				receivingPipe.beginRead();
-				sendData();
+				sendDataToClient();
 			}
 		}
 	}
@@ -44,7 +44,7 @@ public class ModuleColorful extends ComputronicsModule {
 	public void onDisabled() {
 		super.onDisabled();
 		this.color = 0x6318;
-		sendData();
+		sendDataToClient();
 	}
 
 	@Override

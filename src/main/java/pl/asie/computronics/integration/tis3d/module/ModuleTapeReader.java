@@ -92,7 +92,7 @@ public class ModuleTapeReader extends ComputronicsModule {
 					receivingPipe.beginRead();
 				}
 			}
-			sendData();
+			sendDataToClient();
 		}
 	}
 
@@ -243,7 +243,7 @@ public class ModuleTapeReader extends ComputronicsModule {
 								if(byteQueue < 1) {
 									mode = Mode.IDLE;
 									command = null;
-									sendData();
+									sendDataToClient();
 								}
 								cancelRead();
 								mode = Mode.WRITING;
@@ -280,7 +280,7 @@ public class ModuleTapeReader extends ComputronicsModule {
 							receivingPipe.beginRead();
 						}
 					}
-					sendData();
+					sendDataToClient();
 				}
 			}
 
@@ -326,7 +326,7 @@ public class ModuleTapeReader extends ComputronicsModule {
 								if(byteQueue < 1) {
 									mode = Mode.IDLE;
 									command = null;
-									sendData();
+									sendDataToClient();
 								}
 								mode = Mode.WRITING;
 							}
@@ -344,7 +344,7 @@ public class ModuleTapeReader extends ComputronicsModule {
 								if(--byteQueue <= 0) {
 									mode = Mode.IDLE;
 									command = null;
-									sendData();
+									sendDataToClient();
 								}
 							}
 						}
@@ -408,7 +408,7 @@ public class ModuleTapeReader extends ComputronicsModule {
 					}
 					if(command != null) {
 						command.process(tile);
-						sendData();
+						sendDataToClient();
 					}
 				}
 				break;
@@ -428,7 +428,7 @@ public class ModuleTapeReader extends ComputronicsModule {
 							receivingPipe.beginRead();
 						}
 					}
-					sendData();
+					sendDataToClient();
 				}
 				break;
 			}
@@ -450,7 +450,7 @@ public class ModuleTapeReader extends ComputronicsModule {
 		super.onDisabled();
 		mode = Mode.IDLE;
 		command = null;
-		sendData();
+		sendDataToClient();
 	}
 
 	// ---
@@ -500,8 +500,8 @@ public class ModuleTapeReader extends ComputronicsModule {
 	}
 
 	@Override
-	protected void sendData() {
-		// super.sendData();
+	protected void sendDataToClient() {
+		// super.sendDataToClient();
 	}
 
 	private static final ResourceLocation BACK_ICON = new ResourceLocation("computronics:textures/blocks/tis3d/module_tape_reader_back.png");
