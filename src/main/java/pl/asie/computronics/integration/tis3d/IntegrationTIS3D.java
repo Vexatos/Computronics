@@ -68,7 +68,7 @@ public class IntegrationTIS3D {
 					'G', "gemDiamond");
 			}
 			if(Config.TIS3D_MODULE_BOOM) {
-				RecipeUtils.addShapedRecipe(new ItemStack(itemModules, 2, 1),
+				RecipeUtils.addShapedRecipe(new ItemStack(itemModules, 2, 2),
 					"PPP", "IGI", " R ",
 					'P', "paneGlassColorless",
 					'I', "ingotIron",
