@@ -98,6 +98,7 @@ item.computronics.tape.ig.name=Intergalactical CDVR
 item.computronics.tape.name=Cassette Tape
 item.computronics.module_colorful.name=Colorful Module
 item.computronics.module_tape_reader.name=Tape Reader Module
+item.computronics.module_boom.name=Self-Destructing Module
 
 itemGroup.tabComputronics=Computronics
 

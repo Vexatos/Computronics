@@ -1,31 +1,34 @@
 package pl.asie.computronics.integration.tis3d;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.registry.GameRegistry;
 import li.cil.tis3d.api.ModuleAPI;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.MinecraftForgeClient;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.integration.tis3d.item.ItemModules;
 import pl.asie.computronics.integration.tis3d.manual.ComputronicsPathProvider;
-import pl.asie.computronics.integration.tis3d.module.ComputronicsModuleProvider;
 import pl.asie.computronics.integration.tis3d.module.ComputronicsModuleRenderer;
+import pl.asie.computronics.integration.tis3d.module.ModuleBoom.BoomHandler;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.RecipeUtils;
-import pl.asie.lib.item.ItemMultiple;
 
 /**
  * @author Vexatos
  */
 public class IntegrationTIS3D {
 
-	public static ItemMultiple itemModules;
+	public static ItemModules itemModules;
+	public static BoomHandler boomHandler;
 
 	@Optional.Method(modid = Mods.TIS3D)
 	public void preInit() {
 		if(Config.TIS3D_MODULE_COLORFUL
-			|| Config.TIS3D_MODULE_TAPE_READER) {
+			|| Config.TIS3D_MODULE_TAPE_READER
+			|| Config.TIS3D_MODULE_BOOM) {
 
 			itemModules = new ItemModules();
 			GameRegistry.registerItem(itemModules, "computronics.modules.tis3d");
@@ -34,12 +37,15 @@ public class IntegrationTIS3D {
 				MinecraftForgeClient.registerItemRenderer(itemModules, new ComputronicsModuleRenderer().setIgnoreLighting(true));
 			}
 		}
+		if(Config.OC_CARD_BOOM) {
+			FMLCommonHandler.instance().bus().register(boomHandler = new BoomHandler());
+		}
 	}
 
 	@Optional.Method(modid = Mods.TIS3D)
 	public void init() {
 		ComputronicsPathProvider.initialize();
-		ModuleAPI.addProvider(new ComputronicsModuleProvider());
+		ModuleAPI.addProvider(itemModules);
 	}
 
 	@Optional.Method(modid = Mods.TIS3D)
@@ -61,8 +67,17 @@ public class IntegrationTIS3D {
 					'R', "dustRedstone",
 					'G', "gemDiamond");
 			}
+			if(Config.TIS3D_MODULE_BOOM) {
+				RecipeUtils.addShapedRecipe(new ItemStack(itemModules, 2, 1),
+					"PPP", "IGI", " R ",
+					'P', "paneGlassColorless",
+					'I', "ingotIron",
+					'R', "dustRedstone",
+					'G', Blocks.tnt);
+			}
 		}
 	}
+
 /*
 	public static class TextureLoader {
 

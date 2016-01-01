@@ -3,13 +3,20 @@ package pl.asie.computronics.util.boom;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.ChunkPosition;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
+import pl.asie.computronics.Computronics;
+import pl.asie.computronics.network.Packets;
+import pl.asie.lib.network.Packet;
+
+import java.io.IOException;
 
 /**
  * @author Vexatos
@@ -70,7 +77,7 @@ public class SelfDestruct extends Explosion {
 						&& k == Math.round(Math.floor(explosionZ))) {
 						//This is the case.
 						TileEntity tile = this.worldObj.getTileEntity(i, j, k);
-						if(tile != null && tile instanceof IInventory) {
+						if(tile != null && !tile.isInvalid() && tile instanceof IInventory) {
 							IInventory inv = (IInventory) tile;
 							for(int slot = 0; slot < inv.getSizeInventory(); slot++) {
 								ItemStack stack = inv.getStackInSlot(slot);
@@ -81,6 +88,65 @@ public class SelfDestruct extends Explosion {
 						}
 					}
 					block.onBlockExploded(this.worldObj, i, j, k, this);
+				}
+			}
+		}
+	}
+
+	public static void goBoom(World world, double xPos, double yPos, double zPos) {
+		SelfDestruct explosion = new SelfDestruct(world, null, xPos, yPos, zPos, 4.0F);
+		explosion.isSmoking = true;
+		explosion.isFlaming = false;
+		explosion.doExplosionA();
+		explosion.doExplosionB(false);
+
+		int x = (int) xPos;
+		int y = (int) yPos;
+		int z = (int) zPos;
+
+		for(Object playerEntity : world.playerEntities) {
+			if(playerEntity instanceof EntityPlayerMP) {
+				EntityPlayerMP entityplayer = (EntityPlayerMP) playerEntity;
+
+				if(entityplayer.getDistanceSq(xPos, yPos, zPos) < 4096.0D) {
+					try {
+						Packet p = Computronics.packet.create(Packets.PACKET_COMPUTER_BOOM)
+							.writeDouble(xPos)
+							.writeDouble(yPos)
+							.writeDouble(zPos)
+							.writeFloat(4.0F);
+						p.writeInt(explosion.affectedBlockPositions.size());
+
+						{
+							byte j, k, l;
+							for(Object affectedBlockPosition1 : explosion.affectedBlockPositions) {
+								ChunkPosition chunkposition = (ChunkPosition) affectedBlockPosition1;
+								j = (byte) (chunkposition.chunkPosX - x);
+								k = (byte) (chunkposition.chunkPosY - y);
+								l = (byte) (chunkposition.chunkPosZ - z);
+								p.writeByte(j);
+								p.writeByte(k);
+								p.writeByte(l);
+							}
+						}
+
+						Vec3 motion = (Vec3) explosion.func_77277_b().get(entityplayer);
+						float motionX = 0;
+						float motionY = 0;
+						float motionZ = 0;
+						if(motion != null) {
+							motionY = (float) motion.xCoord;
+							motionX = (float) motion.yCoord;
+							motionZ = (float) motion.zCoord;
+						}
+						p.writeFloat(motionY);
+						p.writeFloat(motionX);
+						p.writeFloat(motionZ);
+
+						Computronics.packet.sendTo(p, entityplayer);
+					} catch(IOException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		}

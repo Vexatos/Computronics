@@ -33,7 +33,6 @@ public class ModuleColorful extends ComputronicsModule {
 			}
 			if(receivingPipe.canTransfer()) {
 				this.color = (short) (receivingPipe.read() & 0x7FFF);
-				this.cancelWrite();
 				receivingPipe.beginRead();
 				sendDataToClient();
 			}
@@ -50,7 +49,9 @@ public class ModuleColorful extends ComputronicsModule {
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-		this.color = nbt.getShort("c");
+		if(nbt.hasKey("c")) {
+			this.color = nbt.getShort("c");
+		}
 	}
 
 	@Override

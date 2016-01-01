@@ -12,7 +12,7 @@ import net.minecraft.nbt.NBTTagCompound;
  */
 public class ComputronicsModule extends AbstractModule implements BlockChangeAware {
 
-	protected ComputronicsModule(Casing casing, Face face) {
+	public ComputronicsModule(Casing casing, Face face) {
 		super(casing, face);
 	}
 
