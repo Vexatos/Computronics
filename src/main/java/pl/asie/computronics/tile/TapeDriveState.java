@@ -22,7 +22,8 @@ public class TapeDriveState {
 	}
 	
 	private State state = State.STOPPED;
-	private int codecId, codecTick;//, packetId;
+	private int codecId;//, packetId;
+    private long lastCodecTime;
 	protected int packetSize = 1024;
 	protected int soundVolume = 127;
 	private ITapeStorage storage;
@@ -63,8 +64,7 @@ public class TapeDriveState {
 			if(newState == State.PLAYING) { // Time to play again!
 				codecId = Computronics.instance.audio.newPlayer();
 				Computronics.instance.audio.getPlayer(codecId);
-				codecTick = 0;
-				//packetId = 0;
+				lastCodecTime = 0;
 			}
 		}
 		state = newState;
@@ -95,10 +95,11 @@ public class TapeDriveState {
 					if(storage.getPosition() >= storage.getSize() || storage.getPosition() < 0){
 						storage.setPosition(storage.getPosition());
 					}
-					if(codecTick % 5 == 0) {
-						codecTick++;
+                    long time = System.nanoTime();
+					if ((time - (250 * 1000000)) > lastCodecTime) {
+                        lastCodecTime += (250 * 1000000);
 						return createMusicPacket(source, worldObj, x, y, z);
-					} else codecTick++;
+					}
 				} break;
 				case REWINDING: {
 					int seeked = storage.seek(-2048);
