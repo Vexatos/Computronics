@@ -3,7 +3,16 @@ package pl.asie.computronics.tile;
 //import java.nio.file.FileSystem;
 
 import com.google.common.base.Charsets;
+
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
+
 import cpw.mods.fml.common.Optional;
+import net.minecraftforge.common.util.ForgeDirection;
+
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
@@ -14,12 +23,6 @@ import li.cil.oc.api.network.Component;
 import li.cil.oc.api.network.ManagedEnvironment;
 import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.Visibility;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.api.audio.AudioPacket;
 import pl.asie.computronics.api.audio.IAudioReceiver;
@@ -185,6 +188,10 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 	public int getSize() {
 		return (state.getStorage() != null ? state.getStorage().getSize() : 0);
 	}
+
+    public int getPosition() {
+        return state.getStorage() != null ? state.getStorage().getPosition() : 0;
+    }
 
 	public int seek(int bytes) {
 		return state.getStorage() != null ? state.getStorage().seek(bytes) : 0;
@@ -466,6 +473,12 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 		return new Object[] { getSize() };
 	}
 
+    @Callback(doc = "function():number; Returns the position of the tape, in bytes", direct = true)
+    @Optional.Method(modid = Mods.OpenComputers)
+    public Object[] getPosition(Context context, Arguments args) {
+        return new Object[] { getPosition() };
+    }
+
 	@Callback(doc = "function(label:string):string; Sets the label of the tape. "
 		+ "Returns the new label, or nil if there is no tape inserted")
 	@Optional.Method(modid = Mods.OpenComputers)
@@ -557,7 +570,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 	@Override
 	@Optional.Method(modid = Mods.ComputerCraft)
 	public String[] getMethodNames() {
-		return new String[] { "isEnd", "isReady", "getSize", "getLabel", "getState", "setLabel", "setSpeed", "setVolume", "seek", "read", "write", "play", "stop" };
+		return new String[] { "isEnd", "isReady", "getSize", "getLabel", "getState", "setLabel", "setSpeed", "setVolume", "seek", "read", "write", "play", "stop", "getPosition" };
 	}
 
 	@Override
@@ -601,6 +614,9 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 				switchState(State.STOPPED);
 				return new Object[] { state.getStorage() != null && this.getEnumState() == State.STOPPED };
 			}
+            case 13: { // getPosition
+                return new Object[]{ getPosition() };
+            }
 		}
 
 		// Argument type check

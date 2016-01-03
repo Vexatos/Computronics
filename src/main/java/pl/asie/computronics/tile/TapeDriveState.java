@@ -64,7 +64,7 @@ public class TapeDriveState {
 			if(newState == State.PLAYING) { // Time to play again!
 				codecId = Computronics.instance.audio.newPlayer();
 				Computronics.instance.audio.getPlayer(codecId);
-				lastCodecTime = 0;
+				lastCodecTime = System.nanoTime();
 			}
 		}
 		state = newState;

@@ -82,18 +82,20 @@ public class TileAudioCable extends TileEntityBase implements IAudioReceiver, IC
 		packetIds.add(packet.id);
 		for(int i = 0; i < 6; i++) {
 			ForgeDirection dir = ForgeDirection.getOrientation(i);
-			if(dir == side) {
+			if (dir == side) {
 				continue;
 			}
 
-			if(!worldObj.blockExists(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ)) {
-				continue;
-			}
+            if (connectsAudio(dir)) {
+                if (!worldObj.blockExists(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ)) {
+                    continue;
+                }
 
-			TileEntity tile = worldObj.getTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
-			if(tile instanceof IAudioReceiver && connectsAudio(dir)) {
-				((IAudioReceiver) tile).receivePacket(packet, dir.getOpposite());
-			}
+                TileEntity tile = worldObj.getTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
+                if (tile instanceof IAudioReceiver) {
+                    ((IAudioReceiver) tile).receivePacket(packet, dir.getOpposite());
+                }
+            }
 		}
 	}
 
