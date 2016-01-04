@@ -252,6 +252,11 @@ local function writeTape(path)
   repeat
     local bytes = file:read(block)
     if bytes and #bytes > 0 then
+      if not tape.isReady() then
+        io.stderr:write("\nError: Tape was removed during writing.\n")
+        file:close()
+        return
+      end
       term.setCursor(1, y)
       bytery = bytery + #bytes
       term.write("Read " .. tostring(bytery) .. " of " .. tostring(filesize) .. " bytes...")
