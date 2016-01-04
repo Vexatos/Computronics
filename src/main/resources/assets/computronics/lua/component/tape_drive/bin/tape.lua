@@ -109,20 +109,22 @@ local function pause()
 end
 
 local function speed(sp)
-  if not tonumber(sp) then
+  local s = tonumber(sp)
+  if not s or s < 0.25 or s > 2 then
     io.stderr:write("Speed needs to be a number between 0.25 and 2.0")
     return
   end
-  tape.setSpeed(tonumber(sp))
+  tape.setSpeed(s)
   print("Playback speed set to " .. sp)
 end
 
 local function volume(vol)
-  if not tonumber(vol) then
+  local v = tonumber(vol)
+  if not v or v < 0 or v > 1 then
     io.stderr:write("Volume needs to be a number between 0.0 and 1.0")
     return
   end
-  tape.setVolume(tonumber(vol))
+  tape.setVolume(v)
   print("Volume set to " .. vol)
 end
 
@@ -229,7 +231,7 @@ local function writeTape(path)
     local path = shell.resolve(path)
     filesize = fs.size(path)
     print("Path: " .. path)
-    file, msg = io.open(shell.resolve(path), "rb")
+    file, msg = io.open(path, "rb")
     if not file then
       io.stderr:write("Error: " .. msg)
       return

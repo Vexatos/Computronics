@@ -42,6 +42,7 @@ import pl.asie.computronics.integration.storagedrawers.DriverDrawerGroup;
 import pl.asie.computronics.reference.Compat;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
+import pl.asie.computronics.tile.TileTapeDrive;
 
 import static pl.asie.computronics.Computronics.itemTape;
 import static pl.asie.computronics.Computronics.peripheralRegistry;
@@ -181,6 +182,10 @@ public class IntegrationComputerCraft {
 				new MusicalTurtleUpgrade(config.get("turtleUpgradeIDs", "musical", 192).getInt()));
 			ComputerCraftAPI.registerTurtleUpgrade(
 				new ParticleTurtleUpgrade(config.get("turtleUpgradeIDs", "particle", 193).getInt()));
+		}
+
+		if(Computronics.tapeReader != null){
+			TileTapeDrive.initCCFilesystem();
 		}
 	}
 
