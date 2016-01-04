@@ -1,5 +1,6 @@
 ==== 1.6.1 ====
 
+  * ADDED: Built-in tape utility program for ComputerCraft to write songs to tapes and to play, stop, pause etc.
   * FIXED: Crash when the `openComputersBees` config option was set to `false`.
 
 ==== 1.6.0 ====
