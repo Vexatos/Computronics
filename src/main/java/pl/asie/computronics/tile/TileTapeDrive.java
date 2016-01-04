@@ -4,6 +4,9 @@ package pl.asie.computronics.tile;
 
 import com.google.common.base.Charsets;
 import cpw.mods.fml.common.Optional;
+import net.minecraftforge.common.util.ForgeDirection;
+
+import dan200.computercraft.api.filesystem.IMount;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
@@ -25,6 +28,7 @@ import pl.asie.computronics.api.audio.AudioPacket;
 import pl.asie.computronics.api.audio.IAudioReceiver;
 import pl.asie.computronics.api.audio.IAudioSource;
 import pl.asie.computronics.api.tape.IItemTapeStorage;
+import pl.asie.computronics.cc.ComputronicsFileMount;
 import pl.asie.computronics.network.Packets;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
@@ -33,6 +37,8 @@ import pl.asie.computronics.util.ColorUtils;
 import pl.asie.computronics.util.internal.IColorable;
 import pl.asie.lib.api.tile.IInventoryProvider;
 import pl.asie.lib.network.Packet;
+
+import java.util.HashMap;
 
 public class TileTapeDrive extends TileEntityPeripheralBase implements IInventoryProvider, IAudioSource {
 
@@ -85,8 +91,86 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 		}
 	}
 
+	private static Object cc_fs;
+	private static Object cc_fs_autorun; // dan200, why?
+	protected HashMap<IComputerAccess, String> computerMountPointsCC;
+	protected HashMap<IComputerAccess, String> computerMountPointsCC_autorun;
+
+	@Optional.Method(modid = Mods.ComputerCraft)
+	protected IMount cc_fs() {
+		return (IMount) cc_fs;
+	}
+
+	@Optional.Method(modid = Mods.ComputerCraft)
+	protected IMount cc_autorun_fs() {
+		return (IMount) cc_fs_autorun;
+	}
+
+	@Optional.Method(modid = Mods.ComputerCraft)
+	public static void initCCFilesystem() {
+		if(cc_fs == null) {
+			cc_fs = ComputronicsFileMount.createMount(Computronics.class, Mods.Computronics, "lua/peripheral/tape_drive/programs/tape_drive");
+			if(cc_fs == null) {
+				Computronics.log.error("Unable to create ComputerCraft mount for tape drive programs.");
+			}
+		}
+		if(cc_fs_autorun == null) {
+			cc_fs_autorun = ComputronicsFileMount.createMount(Computronics.class, Mods.Computronics, "lua/peripheral/tape_drive/autorun/tape_drive");
+			if(cc_fs == null) {
+				Computronics.log.error("Unable to create ComputerCraft mount for tape drive autorun program.");
+			}
+		}
+	}
+
+	@Override
+	@Optional.Method(modid = Mods.ComputerCraft)
+	public void attach(IComputerAccess computer) {
+		super.attach(computer);
+		if(computerMountPointsCC == null) {
+			computerMountPointsCC = new HashMap<IComputerAccess, String>(2);
+		}
+		IMount mount = cc_fs();
+		if(mount != null) {
+			String mountPoint = computer.mount("rom/programs/tape_drive", mount);
+			if(mountPoint != null) {
+				computerMountPointsCC.put(computer, mountPoint);
+			}
+		}
+		if(computerMountPointsCC_autorun == null) {
+			computerMountPointsCC_autorun = new HashMap<IComputerAccess, String>(2);
+		}
+		mount = cc_autorun_fs();
+		if(mount != null) {
+			String mountPoint = computer.mount("rom/autorun/tape_drive", mount);
+			if(mountPoint != null) {
+				computerMountPointsCC_autorun.put(computer, mountPoint);
+			}
+		}
+	}
+
+	@Override
+	@Optional.Method(modid = Mods.ComputerCraft)
+	public void detach(IComputerAccess computer) {
+		super.detach(computer);
+		if(computerMountPointsCC == null) {
+			computerMountPointsCC = new HashMap<IComputerAccess, String>(2);
+		}
+		String mountPoint = computerMountPointsCC.remove(computer);
+		if(mountPoint != null) {
+			computer.unmount(mountPoint);
+		}
+		if(computerMountPointsCC_autorun == null) {
+			computerMountPointsCC_autorun = new HashMap<IComputerAccess, String>(2);
+		}
+		mountPoint = computerMountPointsCC_autorun.remove(computer);
+		if(mountPoint != null) {
+			computer.unmount(mountPoint);
+		}
+	}
+
 	private Object oc_fs;
 
+	@Optional.Method(modid = Mods.OpenComputers)
 	protected ManagedEnvironment oc_fs() {
 		return (ManagedEnvironment) this.oc_fs;
 	}

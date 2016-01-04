@@ -14,6 +14,7 @@
         - This allows you to monitor input and output of your energy network separately
       - Now you can get and set the range of Vacuum Chests
       - Added `getProgress()` to most machines with progress
+  * ADDED: Built-in tape utility program for ComputerCraft to write songs to tapes and to play, stop, pause etc.
   * FIXED: Crash when the `openComputersBees` config option was set to `false`.
   * FIXED: Updated OpenComputers integration (requires OpenComputers 1.5.20 now)
 
