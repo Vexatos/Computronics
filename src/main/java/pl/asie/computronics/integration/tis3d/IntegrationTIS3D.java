@@ -1,16 +1,14 @@
 package pl.asie.computronics.integration.tis3d;
 
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Optional;
-import cpw.mods.fml.common.registry.GameRegistry;
 import li.cil.tis3d.api.ModuleAPI;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.integration.tis3d.item.ItemModules;
 import pl.asie.computronics.integration.tis3d.manual.ComputronicsPathProvider;
-import pl.asie.computronics.integration.tis3d.module.ComputronicsModuleRenderer;
 import pl.asie.computronics.integration.tis3d.module.ModuleBoom.BoomHandler;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
@@ -34,7 +32,7 @@ public class IntegrationTIS3D {
 			GameRegistry.registerItem(itemModules, "computronics.modules.tis3d");
 			if(Computronics.proxy.isClient()) {
 				//MinecraftForge.EVENT_BUS.register(new TextureLoader());
-				MinecraftForgeClient.registerItemRenderer(itemModules, new ComputronicsModuleRenderer().setIgnoreLighting(true));
+				//MinecraftForgeClient.registerItemRenderer(itemModules, new ComputronicsModuleRenderer().setIgnoreLighting(true));
 			}
 		}
 		if(Config.OC_CARD_BOOM) {

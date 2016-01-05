@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import net.minecraft.world.World;
 
-import cpw.mods.fml.common.registry.EntityRegistry;
+import net.minecraftforge.fml.common.registry.EntityRegistry;
 
 import pl.asie.computronics.api.audio.AudioPacketRegistry;
 import pl.asie.computronics.api.audio.AudioPacketDFPWM;

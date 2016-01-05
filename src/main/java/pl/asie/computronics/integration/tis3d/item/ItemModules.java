@@ -1,25 +1,23 @@
 package pl.asie.computronics.integration.tis3d.item;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import li.cil.tis3d.api.machine.Casing;
 import li.cil.tis3d.api.machine.Face;
 import li.cil.tis3d.api.module.Module;
 import li.cil.tis3d.api.module.ModuleProvider;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.integration.tis3d.IntegrationTIS3D;
 import pl.asie.computronics.integration.tis3d.manual.IModuleWithDocumentation;
 import pl.asie.computronics.integration.tis3d.module.ModuleBoom;
 import pl.asie.computronics.integration.tis3d.module.ModuleColorful;
 import pl.asie.computronics.integration.tis3d.module.ModuleTapeReader;
+import pl.asie.computronics.item.ItemMultiple;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
-import pl.asie.lib.item.ItemMultiple;
 
 import java.util.List;
 
@@ -54,16 +52,16 @@ public class ItemModules extends ItemMultiple implements ModuleProvider, IModule
 
 	//private IIcon tapeReaderBack, tapeReaderCenter, tapeReaderOff;
 
-	@SideOnly(Side.CLIENT)
+	/*@SideOnly(Side.CLIENT)
 	public void registerIcons(IIconRegister r) {
-		super.registerIcons(r);
+		super.registerIcons(r);*/
 		/*for(int i = 0; i < this.parts.length; ++i) {
 			this.partIcons[i] = r.registerIcon(this.mod + ":tis3d/" + this.parts[i]);
 		}
 		tapeReaderBack = r.registerIcon("computronics:tis3d/module_tape_reader_back");
 		tapeReaderCenter = r.registerIcon("computronics:module_tape_reader_center");
 		tapeReaderOff = r.registerIcon("computronics:module_tape_reader_off");*/
-	}
+	/*}
 
 	@Override
 	public boolean requiresMultipleRenderPasses() {
@@ -95,7 +93,7 @@ public class ItemModules extends ItemMultiple implements ModuleProvider, IModule
 			default: {
 				return super.getIconFromDamageForRenderPass(meta, pass);
 			}
-		}*/
+		}* /
 		return super.getIconFromDamageForRenderPass(meta, pass);
 	}
 
@@ -103,7 +101,7 @@ public class ItemModules extends ItemMultiple implements ModuleProvider, IModule
 	public IIcon getIconFromDamage(int meta) {
 		//return getIconFromDamageForRenderPass(meta, 0);
 		return super.getIconFromDamage(meta);
-	}
+	}*/
 
 	@Override
 	@SideOnly(Side.CLIENT)

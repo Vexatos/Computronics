@@ -1,8 +1,8 @@
 package pl.asie.computronics.oc;
 
-import cpw.mods.fml.common.Optional;
-import cpw.mods.fml.common.eventhandler.EventPriority;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import li.cil.oc.api.event.RobotAnalyzeEvent;
 import li.cil.oc.api.event.RobotRenderEvent;
 import li.cil.oc.api.internal.Agent;

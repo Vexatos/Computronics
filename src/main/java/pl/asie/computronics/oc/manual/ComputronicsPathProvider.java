@@ -9,6 +9,7 @@ import li.cil.oc.api.prefab.TextureTabIconRenderer;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import pl.asie.computronics.Computronics;
@@ -76,17 +77,17 @@ public class ComputronicsPathProvider implements PathProvider {
 	}
 
 	@Override
-	public String pathFor(World world, int x, int y, int z) {
+	public String pathFor(World world, BlockPos pos) {
 		if(world == null) {
 			return null;
 		}
-		Block block = world.getBlock(x, y, z);
+		Block block = world.getBlockState(pos).getBlock();
 		if(block != null && block instanceof IBlockWithDocumentation) {
 			return makePath("block",
 				block instanceof IBlockWithPrefix ?
-					((IBlockWithPrefix) block).getPrefix(world, x, y, z)
-						+ ((IBlockWithDocumentation) block).getDocumentationName(world, x, y, z)
-					: ((IBlockWithDocumentation) block).getDocumentationName(world, x, y, z));
+					((IBlockWithPrefix) block).getPrefix(world, pos)
+						+ ((IBlockWithDocumentation) block).getDocumentationName(world, pos)
+					: ((IBlockWithDocumentation) block).getDocumentationName(world, pos));
 		}
 		return null;
 	}

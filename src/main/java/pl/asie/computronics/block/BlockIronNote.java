@@ -1,6 +1,6 @@
 package pl.asie.computronics.block;
 
-import cpw.mods.fml.common.Optional;
+import net.minecraftforge.fml.common.Optional;
 import li.cil.oc.api.network.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;

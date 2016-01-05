@@ -1,6 +1,6 @@
 package pl.asie.computronics.integration.waila.providers;
 
-import cpw.mods.fml.common.Optional;
+import net.minecraftforge.fml.common.Optional;
 import li.cil.oc.api.network.Environment;
 import li.cil.oc.api.network.Node;
 import mcp.mobius.waila.api.IWailaConfigHandler;

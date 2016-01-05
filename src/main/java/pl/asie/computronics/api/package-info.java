@@ -5,4 +5,4 @@
 @API(apiVersion = "1.3", owner = "computronics", provides = "computronicsAPI")
 package pl.asie.computronics.api;
 
-import cpw.mods.fml.common.API;
+import net.minecraftforge.fml.common.API;

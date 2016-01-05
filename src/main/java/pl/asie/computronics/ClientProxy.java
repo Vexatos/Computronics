@@ -1,7 +1,7 @@
 package pl.asie.computronics;
 
-import cpw.mods.fml.client.registry.RenderingRegistry;
-import cpw.mods.fml.common.Optional;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
 import net.minecraft.world.ChunkPosition;

@@ -1,8 +1,8 @@
 package pl.asie.computronics.util.achievements;
 
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.PlayerEvent;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import gregtech.api.enums.ItemList;
 import mods.railcraft.common.carts.EntityLocomotiveElectric;
 import mods.railcraft.common.carts.EnumCart;

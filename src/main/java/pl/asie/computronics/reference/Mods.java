@@ -1,6 +1,6 @@
 package pl.asie.computronics.reference;
 
-import cpw.mods.fml.common.versioning.ArtifactVersion;
+import net.minecraftforge.fml.common.versioning.ArtifactVersion;
 
 import java.util.HashMap;
 

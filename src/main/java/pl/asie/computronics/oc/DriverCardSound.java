@@ -1,6 +1,6 @@
 package pl.asie.computronics.oc;
 
-import cpw.mods.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import li.cil.oc.api.Network;
 import li.cil.oc.api.driver.EnvironmentHost;
 import li.cil.oc.api.machine.Arguments;

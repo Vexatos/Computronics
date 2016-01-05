@@ -1,7 +1,5 @@
 package pl.asie.computronics.integration.tis3d.module;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import li.cil.tis3d.api.FontRendererAPI;
 import li.cil.tis3d.api.machine.Casing;
 import li.cil.tis3d.api.machine.Face;
@@ -12,6 +10,8 @@ import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.opengl.GL11;
 import pl.asie.computronics.tile.TapeDriveState.State;
@@ -456,11 +456,7 @@ public class ModuleTapeReader extends ComputronicsModule {
 	// ---
 
 	public TileTapeDrive getTapeDrive() {
-		TileEntity tile = getCasing().getCasingWorld().getTileEntity(
-			getCasing().getPositionX() + Face.toEnumFacing(getFace()).getFrontOffsetX(),
-			getCasing().getPositionY() + Face.toEnumFacing(getFace()).getFrontOffsetY(),
-			getCasing().getPositionZ() + Face.toEnumFacing(getFace()).getFrontOffsetZ()
-		);
+		TileEntity tile = getCasing().getCasingWorld().getTileEntity(getCasing().getPosition().offset(Face.toEnumFacing(getFace())));
 		return tile instanceof TileTapeDrive ? (TileTapeDrive) tile : null;
 	}
 

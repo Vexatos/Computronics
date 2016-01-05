@@ -1,6 +1,7 @@
 package pl.asie.computronics.oc.manual;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 
 /**
@@ -8,7 +9,7 @@ import net.minecraft.world.World;
  */
 public interface IBlockWithPrefix extends IBlockWithDocumentation {
 
-	public String getPrefix(World world, int x, int y, int z);
+	public String getPrefix(World world, BlockPos pos);
 
 	public String getPrefix(ItemStack stack);
 }

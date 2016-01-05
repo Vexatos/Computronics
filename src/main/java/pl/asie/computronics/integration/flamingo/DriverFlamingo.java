@@ -1,19 +1,20 @@
 package pl.asie.computronics.integration.flamingo;
 
 import com.reddit.user.koppeh.flamingo.TileEntityFlamingo;
-import dan200.computercraft.api.lua.ILuaContext;
-import dan200.computercraft.api.lua.LuaException;
-import dan200.computercraft.api.peripheral.IComputerAccess;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.ManagedEnvironment;
 import li.cil.oc.api.prefab.DriverTileEntity;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
-import pl.asie.computronics.integration.CCMultiPeripheral;
 import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
 import pl.asie.computronics.reference.Names;
+
+//import dan200.computercraft.api.lua.ILuaContext;
+//import dan200.computercraft.api.lua.LuaException;
+//import dan200.computercraft.api.peripheral.IComputerAccess;
+//import pl.asie.computronics.integration.CCMultiPeripheral;
 
 /**
  * @author Vexatos
@@ -35,7 +36,7 @@ public class DriverFlamingo {
 
 			@Callback(doc = "function(); Makes the Flamingo wiggle.")
 			public Object[] wiggle(Context c, Arguments a) {
-				tile.getWorldObj().addBlockEvent(tile.xCoord, tile.yCoord, tile.zCoord, tile.getBlockType(), 0, 0);
+				tile.getWorld().addBlockEvent(tile.getPos(), tile.getBlockType(), 0, 0);
 				return new Object[] {};
 			}
 
@@ -51,12 +52,12 @@ public class DriverFlamingo {
 		}
 
 		@Override
-		public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
-			return new InternalManagedEnvironment(((TileEntityFlamingo) world.getTileEntity(x, y, z)));
+		public ManagedEnvironment createEnvironment(World world, BlockPos pos) {
+			return new InternalManagedEnvironment(((TileEntityFlamingo) world.getTileEntity(pos)));
 		}
 	}
 
-	public static class CCDriver extends CCMultiPeripheral<TileEntityFlamingo> {
+	/*public static class CCDriver extends CCMultiPeripheral<TileEntityFlamingo> {
 
 		public CCDriver() {
 		}
@@ -96,5 +97,5 @@ public class DriverFlamingo {
 			}
 			return null;
 		}
-	}
+	}*/
 }

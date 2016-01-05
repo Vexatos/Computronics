@@ -1,17 +1,30 @@
 package pl.asie.computronics.oc;
 
-import cpw.mods.fml.common.Optional;
-import cpw.mods.fml.common.event.FMLMissingMappingsEvent;
-import cpw.mods.fml.common.registry.GameRegistry;
 import li.cil.oc.api.Driver;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.apache.logging.log4j.Logger;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.client.UpgradeRenderer;
-import pl.asie.computronics.integration.appeng.DriverSpatialIOPort;
+import pl.asie.computronics.integration.flamingo.DriverFlamingo;
+import pl.asie.computronics.item.ItemOpenComputers;
+import pl.asie.computronics.oc.block.DriverBlockEnvironments;
+import pl.asie.computronics.oc.manual.ComputronicsPathProvider;
+import pl.asie.computronics.reference.Compat;
+import pl.asie.computronics.reference.Config;
+import pl.asie.computronics.reference.Mods;
+import pl.asie.computronics.util.RecipeUtils;
+
+import static pl.asie.computronics.Computronics.camera;
+import static pl.asie.computronics.Computronics.chatBox;
+import static pl.asie.computronics.Computronics.colorfulLamp;
+import static pl.asie.computronics.Computronics.radar;
+
+/*import pl.asie.computronics.integration.appeng.DriverSpatialIOPort;
 import pl.asie.computronics.integration.armourersworkshop.DriverMannequin;
 import pl.asie.computronics.integration.betterstorage.DriverCrateStorageNew;
 import pl.asie.computronics.integration.betterstorage.DriverCrateStorageOld;
@@ -29,7 +42,7 @@ import pl.asie.computronics.integration.enderio.DriverPowerStorage;
 import pl.asie.computronics.integration.enderio.DriverRedstoneControllable;
 import pl.asie.computronics.integration.enderio.DriverTransceiver;
 import pl.asie.computronics.integration.factorization.DriverChargeConductor;
-import pl.asie.computronics.integration.flamingo.DriverFlamingo;
+
 import pl.asie.computronics.integration.forestry.IntegrationForestry;
 import pl.asie.computronics.integration.fsp.DriverSteamTransporter;
 import pl.asie.computronics.integration.gregtech.DriverBaseMetaTileEntity;
@@ -48,19 +61,7 @@ import pl.asie.computronics.integration.railcraft.driver.track.DriverPoweredTrac
 import pl.asie.computronics.integration.railcraft.driver.track.DriverPrimingTrack;
 import pl.asie.computronics.integration.railcraft.driver.track.DriverRoutingTrack;
 import pl.asie.computronics.integration.redlogic.DriverLamp;
-import pl.asie.computronics.integration.storagedrawers.DriverDrawerGroup;
-import pl.asie.computronics.item.ItemOpenComputers;
-import pl.asie.computronics.oc.block.DriverBlockEnvironments;
-import pl.asie.computronics.oc.manual.ComputronicsPathProvider;
-import pl.asie.computronics.reference.Compat;
-import pl.asie.computronics.reference.Config;
-import pl.asie.computronics.reference.Mods;
-import pl.asie.computronics.util.RecipeUtils;
-
-import static pl.asie.computronics.Computronics.camera;
-import static pl.asie.computronics.Computronics.chatBox;
-import static pl.asie.computronics.Computronics.colorfulLamp;
-import static pl.asie.computronics.Computronics.radar;
+import pl.asie.computronics.integration.storagedrawers.DriverDrawerGroup;*/
 
 /**
  * @author Vexatos
@@ -102,19 +103,19 @@ public class IntegrationOpenComputers {
 		// To ensure less TE ticks for those who don't use OC, we keep this tidbit around.
 		Config.MUST_UPDATE_TILE_ENTITIES = true;
 
-		if(Mods.hasVersion(Mods.Forestry, Mods.Versions.Forestry)) {
+		/*if(Mods.hasVersion(Mods.Forestry, Mods.Versions.Forestry)) {
 			if(Config.FORESTRY_BEES) {
 				Computronics.forestry = new IntegrationForestry();
 				Computronics.forestry.preInitOC();
 			}
 		} else {
 			log.warn("Detected outdated version of Forestry, Forestry integration will not be enabled. Please update to Forestry " + Mods.Versions.Forestry + " or later.");
-		}
+		}*/
 
-		if(Mods.isLoaded(Mods.BuildCraftTransport) && Mods.isLoaded(Mods.BuildCraftCore) && Config.BUILDCRAFT_STATION) {
+		/*if(Mods.isLoaded(Mods.BuildCraftTransport) && Mods.isLoaded(Mods.BuildCraftCore) && Config.BUILDCRAFT_STATION) {
 			Computronics.buildcraft = new IntegrationBuildCraft();
 			Computronics.buildcraft.preInitOC();
-		}
+		}*/
 	}
 
 	@Optional.Method(modid = Mods.OpenComputers)
@@ -129,11 +130,11 @@ public class IntegrationOpenComputers {
 
 		MinecraftForge.EVENT_BUS.register(colorfulUpgradeHandler);
 
-		if(Mods.isLoaded(Mods.RedLogic)) {
+		/*if(Mods.isLoaded(Mods.RedLogic)) {
 			if(compat.isCompatEnabled(Compat.RedLogic_Lamps)) {
 				Driver.add(new DriverLamp.OCDriver());
 			}
-		}
+		}*//*
 		if(Mods.isLoaded(Mods.BetterStorage)) {
 			if(compat.isCompatEnabled(Compat.BetterStorage_Crates)) {
 				try {
@@ -152,22 +153,22 @@ public class IntegrationOpenComputers {
 					//NO-OP
 				}
 			}
-		}
+		}*//*
 		if(Mods.isLoaded(Mods.StorageDrawers)) {
 			if(compat.isCompatEnabled(Compat.StorageDrawers)) {
 				Driver.add(new DriverDrawerGroup.OCDriver());
 			}
-		}
+		}*//*
 		if(Mods.isLoaded(Mods.FSP)) {
 			if(compat.isCompatEnabled(Compat.FSP_Steam_Transporter)) {
 				Driver.add(new DriverSteamTransporter.OCDriver());
 			}
-		}
+		}*//*
 		if(Mods.isLoaded(Mods.Factorization)) {
 			if(compat.isCompatEnabled(Compat.FZ_ChargePeripheral)) {
 				Driver.add(new DriverChargeConductor.OCDriver());
 			}
-		}
+		}*//*
 		if(Mods.isLoaded(Mods.Railcraft)) {
 			if(compat.isCompatEnabled(Compat.Railcraft_Routing)) {
 				Driver.add(new DriverPoweredTrack.OCDriver());
@@ -180,7 +181,7 @@ public class IntegrationOpenComputers {
 				Driver.add(new DriverLauncherTrack.OCDriver());
 				Driver.add(new DriverPrimingTrack.OCDriver());
 			}
-		}
+		}*//*
 		if(Mods.isLoaded(Mods.GregTech)) {
 			if(compat.isCompatEnabled(Compat.GregTech_Machines)) {
 				Driver.add(new DriverBaseMetaTileEntity());
@@ -191,17 +192,17 @@ public class IntegrationOpenComputers {
 			if(compat.isCompatEnabled(Compat.GregTech_DigitalChests)) {
 				Driver.add(new DriverDigitalChest());
 			}
-		}
+		}*//*
 		if(Mods.isLoaded(Mods.ArmourersWorkshop)) {
 			if(compat.isCompatEnabled(Compat.AW_Mannequins)) {
 				Driver.add(new DriverMannequin.OCDriver());
 			}
-		}
+		}*//*
 		if(Mods.isLoaded(Mods.AE2)) {
 			if(compat.isCompatEnabled(Compat.AE2_SpatialIO)) {
 				Driver.add(new DriverSpatialIOPort.OCDriver());
 			}
-		}
+		}*//*
 		if(Mods.isLoaded(Mods.EnderIO)) {
 			if(compat.isCompatEnabled(Compat.EnderIO)) {
 				Driver.add(new DriverRedstoneControllable.OCDriver());
@@ -215,23 +216,23 @@ public class IntegrationOpenComputers {
 				Driver.add(new DriverCapacitorBankOld.OCDriver());
 				Driver.add(new DriverTransceiver.OCDriver());
 			}
-		}
+		}*//*
 
 		if(Mods.API.hasAPI(Mods.API.DraconicEvolution)
 			&& compat.isCompatEnabled(Compat.DraconicEvolution)) {
 			Driver.add(new DriverExtendedRFStorage.OCDriver());
-		}
+		}*//*
 
 		if(Mods.API.hasAPI(Mods.API.Mekanism_Energy)
 			&& compat.isCompatEnabled(Compat.MekanismEnergy)) {
 			Driver.add(new DriverStrictEnergyStorage.OCDriver());
-		}
+		}*//*
 
 		if(Mods.hasVersion(Mods.API.BuildCraftTiles, Mods.Versions.BuildCraftTiles)) {
 			if(compat.isCompatEnabled(Compat.BuildCraft_Drivers)) {
 				Driver.add(new DriverHeatable.OCDriver());
 			}
-		}
+		}*/
 
 		if(Mods.isLoaded(Mods.Flamingo)) {
 			if(compat.isCompatEnabled(Compat.Flamingo)) {
@@ -239,13 +240,13 @@ public class IntegrationOpenComputers {
 			}
 		}
 
-		if(Computronics.forestry != null) {
+		/*if(Computronics.forestry != null) {
 			Computronics.forestry.initOC();
-		}
+		}*//*
 
 		if(Computronics.buildcraft != null) {
 			Computronics.buildcraft.initOC();
-		}
+		}*/
 	}
 
 	@Optional.Method(modid = Mods.OpenComputers)
@@ -341,12 +342,12 @@ public class IntegrationOpenComputers {
 				log.warn("Could not add Colorful Upgrade Recipe because Colorful Lamp is disabled in the config.");
 			}
 		}
-		if(Computronics.buildcraft != null) {
+		/*if(Computronics.buildcraft != null) {
 			Computronics.buildcraft.postInitOC();
-		}
+		}*/
 	}
 
-	public void remap(FMLMissingMappingsEvent event) {
+	/*public void remap(FMLMissingMappingsEvent event) {
 		for(FMLMissingMappingsEvent.MissingMapping mapping : event.get()) {
 			if(mapping.name.equals("computronics:computronics.robotUpgrade")) {
 				if(mapping.type == GameRegistry.Type.ITEM) {
@@ -354,5 +355,5 @@ public class IntegrationOpenComputers {
 				}
 			}
 		}
-	}
+	}*/
 }

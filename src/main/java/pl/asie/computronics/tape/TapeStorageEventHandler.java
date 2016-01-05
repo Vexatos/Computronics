@@ -1,6 +1,6 @@
 package pl.asie.computronics.tape;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import pl.asie.computronics.tile.TileTapeDrive;
 

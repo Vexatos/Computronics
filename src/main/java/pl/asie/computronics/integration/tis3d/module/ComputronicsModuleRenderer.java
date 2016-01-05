@@ -1,6 +1,5 @@
-package pl.asie.computronics.integration.tis3d.module;
+/*package pl.asie.computronics.integration.tis3d.module;
 
-import li.cil.tis3d.api.prefab.client.SimpleModuleRenderer;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 
@@ -8,7 +7,7 @@ import java.awt.*;
 
 /**
  * @author Vexatos
- */
+ * /
 public class ComputronicsModuleRenderer extends SimpleModuleRenderer {
 
 	@Override
@@ -30,7 +29,7 @@ public class ComputronicsModuleRenderer extends SimpleModuleRenderer {
 				RenderUtil.bindTexture(this.getTextureLocation(type, stack, data));
 				RenderUtil.drawQuad(icon.getMinU(), icon.getMinV(), icon.getMaxU(), icon.getMaxV());
 			}
-		}*/
+		}* /
 	}
 
 	private int getColorForRendering(ItemStack stack, int pass) {
@@ -64,4 +63,4 @@ public class ComputronicsModuleRenderer extends SimpleModuleRenderer {
 		}
 	}
 
-}
+}*/

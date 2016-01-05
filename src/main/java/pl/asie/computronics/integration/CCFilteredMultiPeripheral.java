@@ -1,4 +1,4 @@
-package pl.asie.computronics.integration;
+/*package pl.asie.computronics.integration;
 
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
@@ -11,7 +11,7 @@ import java.util.List;
 
 /**
  * @author Vexatos
- */
+ * /
 public abstract class CCFilteredMultiPeripheral<T> extends CCMultiPeripheral<T> {
 	protected final List<String> methods;
 	protected List<String> availableMethods;
@@ -58,4 +58,4 @@ public abstract class CCFilteredMultiPeripheral<T> extends CCMultiPeripheral<T> 
 		}
 		return call(computer, context, index, arguments);
 	}
-}
+}*/

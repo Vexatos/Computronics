@@ -7,6 +7,7 @@ import li.cil.tis3d.api.prefab.manual.ItemStackTabIconRenderer;
 import li.cil.tis3d.api.prefab.manual.ResourceContentProvider;
 import li.cil.tis3d.api.prefab.manual.TextureTabIconRenderer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import pl.asie.computronics.integration.tis3d.IntegrationTIS3D;
@@ -48,7 +49,7 @@ public class ComputronicsPathProvider implements PathProvider {
 	}
 
 	@Override
-	public String pathFor(World world, int x, int y, int z) {
+	public String pathFor(World world, BlockPos blockPos) {
 		return null;
 	}
 

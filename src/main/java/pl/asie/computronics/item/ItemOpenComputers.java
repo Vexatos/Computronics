@@ -1,8 +1,5 @@
 package pl.asie.computronics.item;
 
-import cpw.mods.fml.common.Optional;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import li.cil.oc.api.driver.EnvironmentAware;
 import li.cil.oc.api.driver.EnvironmentHost;
 import li.cil.oc.api.driver.Item;
@@ -21,13 +18,14 @@ import li.cil.oc.client.KeyBindings;
 import li.cil.oc.util.ItemCosts;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IIcon;
+import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.oc.DriverCardBoom;
 import pl.asie.computronics.oc.DriverCardFX;
@@ -42,7 +40,6 @@ import pl.asie.computronics.oc.manual.IItemWithDocumentation;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.StringUtil;
-import pl.asie.lib.item.ItemMultiple;
 
 import java.awt.*;
 import java.util.List;
@@ -250,9 +247,9 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 		}
 	}
 
-	private IIcon colorfulUpgradeCanvasIcon, colorfulUpgradeTopIcon;
+	//private IIcon colorfulUpgradeCanvasIcon, colorfulUpgradeTopIcon;
 
-	@SideOnly(Side.CLIENT)
+	/*@SideOnly(Side.CLIENT)
 	public void registerIcons(IIconRegister r) {
 		super.registerIcons(r);
 		colorfulUpgradeCanvasIcon = r.registerIcon("computronics:robot_upgrade_colorful_canvas");
@@ -287,7 +284,7 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 				return super.getIconFromDamageForRenderPass(meta, pass);
 			}
 		}
-	}
+	}*/
 
 	@Override
 	@SideOnly(Side.CLIENT)
@@ -319,7 +316,7 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 	@SuppressWarnings("unchecked")
 	public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean par4) {
 		{
-			FontRenderer font = Minecraft.getMinecraft().fontRenderer;
+			FontRenderer font = Minecraft.getMinecraft().fontRendererObj;
 			final String key = "item.computronics." + parts[stack.getItemDamage() % parts.length] + ".tip";
 			String tip = StringUtil.localize(key);
 			if(!tip.equals(key)) {

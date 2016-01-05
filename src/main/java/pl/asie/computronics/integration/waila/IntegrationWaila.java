@@ -2,8 +2,6 @@ package pl.asie.computronics.integration.waila;
 
 import mcp.mobius.waila.api.IWailaRegistrar;
 import pl.asie.computronics.block.BlockPeripheral;
-import pl.asie.computronics.integration.railcraft.block.BlockDigitalReceiverBox;
-import pl.asie.computronics.reference.Mods;
 
 public class IntegrationWaila {
 	public static void register(IWailaRegistrar reg) {

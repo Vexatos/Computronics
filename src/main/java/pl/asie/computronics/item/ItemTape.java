@@ -1,11 +1,11 @@
 package pl.asie.computronics.item;
 
-import cpw.mods.fml.common.Optional;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import dan200.computercraft.api.filesystem.IMount;
-import dan200.computercraft.api.media.IMedia;
-import dan200.computercraft.api.media.IMediaProvider;
+import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+//import dan200.computercraft.api.filesystem.IMount;
+//import dan200.computercraft.api.media.IMedia;
+//import dan200.computercraft.api.media.IMediaProvider;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;

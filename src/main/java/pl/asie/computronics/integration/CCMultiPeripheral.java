@@ -1,11 +1,11 @@
-package pl.asie.computronics.integration;
+/*package pl.asie.computronics.integration;
 
 import net.minecraft.world.World;
 import pl.asie.computronics.api.multiperipheral.ICombinedMultiPeripheral;
 
 /**
  * @author Vexatos
- */
+ * /
 public abstract class CCMultiPeripheral<T> extends CCTilePeripheral<T>
 	implements ICombinedMultiPeripheral {
 
@@ -20,4 +20,4 @@ public abstract class CCMultiPeripheral<T> extends CCTilePeripheral<T>
 	public int peripheralPriority() {
 		return 0;
 	}
-}
+}*/

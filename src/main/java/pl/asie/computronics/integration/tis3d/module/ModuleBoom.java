@@ -1,11 +1,11 @@
 package pl.asie.computronics.integration.tis3d.module;
 
-import cpw.mods.fml.common.Optional;
-import cpw.mods.fml.common.eventhandler.EventPriority;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import li.cil.tis3d.api.FontRendererAPI;
 import li.cil.tis3d.api.machine.Casing;
 import li.cil.tis3d.api.machine.Face;
@@ -134,7 +134,7 @@ public class ModuleBoom extends ComputronicsModule {
 			}
 			for(Casing casing : boomQueue) {
 				if(casing != null && casing.getCasingWorld() != null) {
-					SelfDestruct.goBoom(casing.getCasingWorld(), casing.getPositionX(), casing.getPositionY(), casing.getPositionZ());
+					SelfDestruct.goBoom(casing.getCasingWorld(), casing.getPosition());
 				}
 			}
 			boomQueue.clear();

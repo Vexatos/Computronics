@@ -1,7 +1,7 @@
 package pl.asie.computronics.integration;
 
-import cpw.mods.fml.common.Optional;
-import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import li.cil.oc.api.detail.ItemInfo;
 import mods.railcraft.common.items.ItemElectricMeter;
 import mods.railcraft.common.items.ItemRail;

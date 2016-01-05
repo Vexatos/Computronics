@@ -1,9 +1,10 @@
 package pl.asie.computronics.util;
 
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.reference.Config;
 
 public class Camera {
@@ -15,7 +16,7 @@ public class Camera {
 		// not initialized
 	}
 	
-	public boolean ray(World worldObj, float xCoord, float yCoord, float zCoord, ForgeDirection dir, float x, float y) {
+	public boolean ray(World worldObj, float xCoord, float yCoord, float zCoord, EnumFacing dir, float x, float y) {
 		hit = null;
 		if(x < -1.0F || x > 1.0F || y < -1.0F || y > 1.0F) return false;
 		if(dir != null) {
@@ -30,7 +31,6 @@ public class Camera {
 				case WEST: { xDirection = -1.0F; zDirection = x; xCoord -= 0.6F; } break;
 				case DOWN: { yDirection = -1.0F; xDirection = x; zDirection = y; yCoord -= 0.6F; } break;
 				case UP: { yDirection = 1.0F; xDirection = x; zDirection = y; yCoord += 0.6F; } break;
-				case UNKNOWN: return false;
 				default: return false;
 			}
 			world = worldObj;
@@ -39,15 +39,16 @@ public class Camera {
 			zPos = zCoord + 0.5f;
 			oxPos = xPos; oyPos = yPos; ozPos = zPos;
 			// A little workaround for the way I do things (skipping the block right in front, that is)
-			if(!world.isAirBlock((int)Math.floor(xPos), (int)Math.floor(yPos), (int)Math.floor(zPos))) {
-				hit = world.getBlock((int)Math.floor(xPos), (int)Math.floor(yPos), (int)Math.floor(zPos));
+			BlockPos pos = new BlockPos((int)Math.floor(xPos), (int)Math.floor(yPos), (int)Math.floor(zPos));
+			if(!world.isAirBlock(pos)) {
+				hit = world.getBlockState(pos).getBlock();
 				return true;
 			}
 					
 			// shoot ray
 			float steps = Config.CAMERA_DISTANCE;
-			Vec3 origin = Vec3.createVectorHelper(oxPos, oyPos, ozPos);
-			Vec3 target = Vec3.createVectorHelper(xPos + (xDirection * steps), yPos + (yDirection * steps), zPos + (zDirection * steps));
+			Vec3 origin = new Vec3(oxPos, oyPos, ozPos);
+			Vec3 target = new Vec3(xPos + (xDirection * steps), yPos + (yDirection * steps), zPos + (zDirection * steps));
 			MovingObjectPosition mop = world.rayTraceBlocks(origin, target);
 			if(mop !=  null) {
 				xPos = (float)mop.hitVec.xCoord;
@@ -58,7 +59,7 @@ public class Camera {
 							hit = mop.entityHit;
 						} break;
 					case BLOCK: {
-							hit = world.getBlock(mop.blockX, mop.blockY, mop.blockZ);
+							hit = world.getBlockState(mop.getBlockPos());
 						} break;
 					default: break;
 				}

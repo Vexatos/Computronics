@@ -1,14 +1,11 @@
 package pl.asie.computronics.util.cipher;
 
-import cpw.mods.fml.common.Optional;
-import dan200.computercraft.api.lua.ILuaContext;
-import dan200.computercraft.api.lua.ILuaObject;
-import dan200.computercraft.api.lua.LuaException;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.machine.Value;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.reference.Mods;
 
@@ -18,6 +15,10 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+//import dan200.computercraft.api.lua.ILuaContext;
+//import dan200.computercraft.api.lua.ILuaObject;
+//import dan200.computercraft.api.lua.LuaException;
+
 /**
  * @author Vexatos
  */
@@ -25,7 +26,7 @@ import java.util.concurrent.Future;
 	@Optional.Interface(iface = "li.cil.oc.api.machine.Value", modid = Mods.OpenComputers),
 	@Optional.Interface(iface = "dan200.computercraft.api.lua.ILuaObject", modid = Mods.ComputerCraft)
 })
-public class RSAValue implements Value, ILuaObject {
+public class RSAValue implements Value/*, ILuaObject*/ {
 
 	protected Map<Integer, String> publicKey;
 	protected Map<Integer, String> privateKey;
@@ -111,7 +112,7 @@ public class RSAValue implements Value, ILuaObject {
 		return new Object[] { publicKey != null && privateKey != null };
 	}
 
-	@Override
+	/*@Override
 	@Optional.Method(modid = Mods.ComputerCraft)
 	public String[] getMethodNames() {
 		return new String[] { "getKeys", "finished" };
@@ -141,7 +142,7 @@ public class RSAValue implements Value, ILuaObject {
 			throw new LuaException(e.getMessage());
 		}
 		return null;
-	}
+	}*/
 
 	@Override
 	@Optional.Method(modid = Mods.OpenComputers)
