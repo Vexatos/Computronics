@@ -11,7 +11,7 @@ buildscript {
 		}
 	}
 	dependencies {
-		classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+		classpath 'net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT'
 	}
 }
 
@@ -80,10 +80,10 @@ configurations {
 dependencies {
 	compile "li.cil.oc:OpenComputers:${config.oc.version}:dev"
 	compile "li.cil.tis3d:TIS-3D:${config.tis3d.version}:dev"
-	provided "net.industrial-craft:industrialcraft-2:${config.ic2.version}:dev"
-	provided "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech.version}:dev"
+	//provided "net.industrial-craft:industrialcraft-2:${config.ic2.version}:dev"
+	//provided "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech.version}:dev"
 	compile "mcp.mobius.waila:Waila:${config.waila.version}:dev"
-	compile("com.enderio:EnderIO:${config.enderio.version}:dev") {
+	/*compile("com.enderio:EnderIO:${config.enderio.version}:dev") {
 		exclude module: "appliedenergistics2"
 		exclude module: "buildcraft"
 		exclude module: "Waila"
@@ -92,14 +92,14 @@ dependencies {
 	compile("net.sengir.forestry:forestry_1.7.10:${config.forestry.version}:dev") {
 		exclude module: "buildcraft"
 		exclude module: "industrialcraft-2"
-	}
-	compile name: "buildcraft", version: "${config.buildcraft.version}", classifier: "dev"
-	compile("appeng:appliedenergistics2:${config.ae2.version}:dev") {
+	}*/
+	//compile name: "buildcraft", version: "${config.buildcraft.version}", classifier: "dev"
+	/*compile("appeng:appliedenergistics2:${config.ae2.version}:dev") {
 		transitive = false
-	}
-	compile("riskyken.armourersWorkshop:Armourers-Workshop:1.7.10-${config.am.version}:deobf"){
+	}*/
+	/*compile("riskyken.armourersWorkshop:Armourers-Workshop:1.7.10-${config.am.version}:deobf"){
 		transitive = false
-	}
+	}*/
 	//provided("com.bluepowermod:BluePower:${config.bluepower.version}:deobf") {
 	//	transitive = false
 	//}
