@@ -15,7 +15,7 @@ buildscript {
 	}
 }
 
-apply plugin: 'forge'
+apply plugin: 'net.minecraftforge.gradle.forge'
 
 file "build.properties" withReader {
 	def prop = new Properties()
@@ -44,7 +44,7 @@ repositories {
 		name "Mobius Repo"
 		url "http://mobiusstrip.eu/maven"
 	}
-	maven {
+	/*maven {
 		name 'CB Repo'
 		url "http://chickenbones.net/maven/"
 	}
@@ -67,19 +67,19 @@ repositories {
 	ivy {
 		name = "BuildCraft"
 		artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision]-[classifier].[ext]"
-	}
+	}*/
 }
 
-configurations {
+/*configurations {
 	provided
 	embedded
 	compile.extendsFrom provided, embedded
 	all*.exclude group: "codechicken"
-}
+}*/
 
 dependencies {
-	compile "li.cil.oc:OpenComputers:${config.oc.version}:dev"
-	compile "li.cil.tis3d:TIS-3D:${config.tis3d.version}:dev"
+	deobfCompile "li.cil.oc:OpenComputers:${config.oc.version}"
+	deobfCompile "li.cil.tis3d:TIS-3D:${config.tis3d.version}"
 	//provided "net.industrial-craft:industrialcraft-2:${config.ic2.version}:dev"
 	//provided "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech.version}:dev"
 	compile "mcp.mobius.waila:Waila:${config.waila.version}:dev"
@@ -111,6 +111,7 @@ dependencies {
 minecraft {
 	version = "${config.minecraft.version}-${config.forge.version}"
 	runDir = "eclipse"
+	mappings = "stable_20"
 
 	replaceIn "pl/asie/computronics/Computronics.java"
 	replace "@VERSION@", "${config.computronics.version}"
@@ -118,24 +119,45 @@ minecraft {
 
 sourceSets {
 	main {
-		output.resourcesDir = 'build/classes/main'
+		//output.resourcesDir = 'build/classes/main'
+		java {
+			exclude "pl/asie/computronics/api/multiperipheral/**"
+			exclude "pl/asie/computronics/cc/**"
+			exclude "pl/asie/computronics/integration/appeng/**"
+			exclude "pl/asie/computronics/integration/armourersworkshop/**"
+			exclude "pl/asie/computronics/integration/betterstorage/**"
+			exclude "pl/asie/computronics/integration/buildcraft/**"
+			exclude "pl/asie/computronics/integration/cofh/**"
+			exclude "pl/asie/computronics/integration/draconicevolution/**"
+			exclude "pl/asie/computronics/integration/enderio/**"
+			exclude "pl/asie/computronics/integration/factorization/**"
+			exclude "pl/asie/computronics/integration/forestry/**"
+			exclude "pl/asie/computronics/integration/fsp/**"
+			exclude "pl/asie/computronics/integration/gregtech/**"
+			exclude "pl/asie/computronics/integration/mekanism/**"
+			exclude "pl/asie/computronics/integration/mfr/**"
+			exclude "pl/asie/computronics/integration/railcraft/**"
+			exclude "pl/asie/computronics/integration/redlogic/**"
+		}
 	}
 }
 
-jar {
+/*jar {
 	exclude 'cofh/**'
-}
+}*/
 
-apply plugin: 'idea'
+//apply plugin: 'idea'
 idea {
 	module {
-		scopes.PROVIDED.plus += [configurations.provided]
+		//scopes.PROVIDED.plus += [configurations.provided]
 		outputDir = file('build/classes/main')
 	}
 }
 
 processResources
 	{
+		inputs.property "version", project.version
+		inputs.property "mcversion", project.minecraft.version
 		// replace stuff in mcmod.info, nothing else
 		from(sourceSets.main.resources.srcDirs) {
 			include 'mcmod.info'
