@@ -12,6 +12,8 @@ tile.computronics.locomotiveRelay.name=Digitales Lokomotivenrelais
 tile.computronics.digitalBox.name=Digitale Signalempfängerbox
 tile.computronics.detector.name=Detektor - Digital
 tile.computronics.ticketMachine.name=Ticketautomat
+tile.computronics.audiocable.name=Tonkabel
+tile.computronics.speaker.name=Lautsprecher
 
 tooltip.computronics.chatBox.creative=Die NSA für zu Hause!
 tooltip.computronics.cipher.advanced=Für die Starchaser!
@@ -88,6 +90,8 @@ item.computronics.card_boom.name=Selbstzerstörungskarte
 item.computronics.card_boom.tip=Jeder vernünftige Bösewicht braucht so etwas.
 item.computronics.robot_upgrade_colorful.name=Das Bunte Upgrade
 item.computronics.robot_upgrade_colorful.tip=Bunt, bunt, bunt, sind alle meine Kleider...
+item.computronics.rack_board_light.name=Serverschrank-Statusanzeige
+item.computronics.rack_board_light.tip=Fast so sperrig wie ihr Name
 item.computronics.for.combAcid.name=Kaustische Wabe
 item.computronics.for.dropAcid.name=Kaustischer Tropfen
 item.computronics.relaySensor.name=Digitaler Relaissensor

@@ -12,6 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import org.apache.logging.log4j.Logger;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.client.RackMountableRenderer;
 import pl.asie.computronics.client.UpgradeRenderer;
 import pl.asie.computronics.integration.appeng.DriverSpatialIOPort;
 import pl.asie.computronics.integration.armourersworkshop.DriverMannequin;
@@ -75,6 +76,7 @@ public class IntegrationOpenComputers {
 
 	public static ItemOpenComputers itemOCParts;
 	public static UpgradeRenderer upgradeRenderer;
+	public static RackMountableRenderer mountableRenderer;
 	public static ColorfulUpgradeHandler colorfulUpgradeHandler;
 
 	public IntegrationOpenComputers(Computronics computronics) {
@@ -93,7 +95,8 @@ public class IntegrationOpenComputers {
 			|| Config.OC_CARD_SPOOF
 			|| Config.OC_CARD_SOUND
 			|| Config.OC_CARD_BOOM
-			|| Config.OC_UPGRADE_COLORFUL) {
+			|| Config.OC_UPGRADE_COLORFUL
+			|| Config.OC_BOARD_LIGHT) {
 			itemOCParts = new ItemOpenComputers();
 			GameRegistry.registerItem(itemOCParts, "computronics.ocParts");
 			Driver.add((Item) itemOCParts);
@@ -342,6 +345,20 @@ public class IntegrationOpenComputers {
 					'f', li.cil.oc.api.Items.get("chamelium").createItemStack(1));
 			} else {
 				log.warn("Could not add Colorful Upgrade Recipe because Colorful Lamp is disabled in the config.");
+			}
+		}
+		if(Config.OC_BOARD_LIGHT) {
+			if(colorfulLamp != null) {
+				RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 8),
+					"oso", "gcg", "opo",
+					's', "paneGlassColorless",
+					'g', li.cil.oc.api.Items.get("chip1").createItemStack(1),
+					'c', new ItemStack(colorfulLamp, 1, 0),
+					'o', "obsidian",
+					'p', li.cil.oc.api.Items.get("printedCircuitBoard").createItemStack(1)
+				);
+			} else {
+				log.warn("Could not add Light Board Recipe because Colorful Lamp is disabled in the config.");
 			}
 		}
 		if(Computronics.buildcraft != null) {
