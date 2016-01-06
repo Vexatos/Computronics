@@ -2,10 +2,10 @@ package pl.asie.computronics.oc;
 
 import cpw.mods.fml.common.Optional;
 import li.cil.oc.api.Network;
-import li.cil.oc.api.driver.EnvironmentHost;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
+import li.cil.oc.api.network.EnvironmentHost;
 import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.Visibility;
 import li.cil.oc.api.prefab.ManagedEnvironment;
@@ -17,6 +17,7 @@ import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.ChatBoxUtils;
 
 public class RobotUpgradeChatBox extends ManagedEnvironment implements IChatListener {
+
 	private final EnvironmentHost container;
 	private int distance;
 	private String name = "";

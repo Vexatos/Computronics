@@ -4,6 +4,8 @@ import buildcraft.api.transport.PipeManager;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.registry.GameRegistry;
 import li.cil.oc.api.Driver;
+import li.cil.oc.api.driver.EnvironmentProvider;
+import li.cil.oc.api.driver.Item;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.MinecraftForgeClient;
@@ -31,7 +33,8 @@ public class IntegrationBuildCraft {
 		GameRegistry.registerItem(droneStationItem, "computronics.droneStation");
 		dockingUpgrade = new ItemDockingUpgrade();
 		GameRegistry.registerItem(dockingUpgrade, "computronics.dockingUpgrade");
-		Driver.add(dockingUpgrade);
+		Driver.add((Item) dockingUpgrade);
+		Driver.add((EnvironmentProvider) dockingUpgrade);
 		if(Computronics.proxy.isClient()) {
 			MinecraftForge.EVENT_BUS.register(new DroneStationRenderer.TextureHandler());
 		}
