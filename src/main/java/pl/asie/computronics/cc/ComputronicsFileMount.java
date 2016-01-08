@@ -140,14 +140,15 @@ public class ComputronicsFileMount implements IMount {
 		return null;
 	}
 
-	private static Constructor<?> jarMount;
+	private static final Constructor<?> jarMount;
 
 	static {
+		Constructor<?> constr = null;
 		try {
-			jarMount = Class.forName("dan200.computercraft.core.filesystem.JarMount").getConstructor(File.class, String.class);
+			constr = Class.forName("dan200.computercraft.core.filesystem.JarMount").getConstructor(File.class, String.class);
 		} catch(Exception e) {
 			Computronics.log.error("Unable to access ComputerCraft jar file mount", e);
-			jarMount = null;
 		}
+		jarMount = constr;
 	}
 }

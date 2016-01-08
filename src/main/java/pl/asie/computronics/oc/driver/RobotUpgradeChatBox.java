@@ -1,4 +1,4 @@
-package pl.asie.computronics.oc;
+package pl.asie.computronics.oc.driver;
 
 import cpw.mods.fml.common.Optional;
 import li.cil.oc.api.Network;

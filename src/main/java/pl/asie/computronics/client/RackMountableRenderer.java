@@ -11,7 +11,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import org.lwjgl.opengl.GL11;
 import pl.asie.computronics.item.ItemOpenComputers;
-import pl.asie.computronics.oc.DriverBoardLight;
+import pl.asie.computronics.oc.driver.DriverBoardLight;
 import pl.asie.computronics.reference.Mods;
 
 import java.util.Arrays;
@@ -23,10 +23,14 @@ import java.util.List;
 public class RackMountableRenderer {
 
 	private final ResourceLocation
-		lightBoardLights = new ResourceLocation("computronics", "textures/blocks/light_board_lights.png");
-	private IIcon lightBoard;
+		lightBoardLights = new ResourceLocation("computronics", "textures/blocks/light_board_lights.png"),
+		boomBoardActive = new ResourceLocation("computronics", "textures/blocks/boom_board_on.png"),
+		boomBoardTicking = new ResourceLocation("computronics", "textures/blocks/boom_board_ticking.png");
+	private IIcon
+		lightBoard,
+		boomBoard;
 
-	private static final List<Integer> mountables = Arrays.asList(8);
+	private static final List<Integer> mountables = Arrays.asList(8, 9);
 
 	@Optional.Method(modid = Mods.OpenComputers)
 	private boolean isRackMountable(ItemStack stack) {
@@ -52,19 +56,33 @@ public class RackMountableRenderer {
 				enableLight();
 				GL11.glEnable(GL11.GL_BLEND);
 				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-				for(DriverBoardLight.Light light : DriverBoardLight.Light.VALUES) {
-					boolean isActive = e.data.getBoolean("r_" + light.index);
+				for(int index = 1; index <= DriverBoardLight.Light.amount; index++) {
+					boolean isActive = e.data.getBoolean("r_" + index);
 					if(isActive) {
-						int color = e.data.getInteger("c_" + light.index);
+						int color = e.data.getInteger("c_" + index);
 						if(color < 0) {
 							return;
 						}
 						color = color & 0xFFFFFF;
 						GL11.glColor3ub((byte) ((color >> 16) & 0xFF), (byte) ((color >> 8) & 0xFF), (byte) (color & 0xFF));
-						float u0 = ((light.index - 1) * 3) / 16f;
+						float u0 = ((index - 1) * 3) / 16f;
 						float u1 = u0 + (3 / 16f);
 						e.renderOverlay(lightBoardLights, u0, u1);
 					}
+				}
+				GL11.glColor3f(1, 1, 1);
+				disableLight();
+				break;
+			}
+			case 9: {
+				enableLight();
+				GL11.glEnable(GL11.GL_BLEND);
+				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+				if(e.data.getBoolean("r")) {
+					e.renderOverlay(boomBoardActive);
+				}
+				if(e.data.getBoolean("t") && (e.rack.world().getTotalWorldTime() + e.rack.hashCode() + (e.mountable * 10)) % 20 < 10) {
+					e.renderOverlay(boomBoardTicking);
 				}
 				GL11.glColor3f(1, 1, 1);
 				disableLight();
@@ -106,6 +124,11 @@ public class RackMountableRenderer {
 		switch(stack.getItemDamage()) {
 			case 8: {
 				e.setFrontTextureOverride(lightBoard);
+				break;
+			}
+			case 9: {
+				e.setFrontTextureOverride(boomBoard);
+				break;
 			}
 		}
 	}
@@ -115,6 +138,7 @@ public class RackMountableRenderer {
 	public void textureHook(TextureStitchEvent.Pre e) {
 		if(e.map.getTextureType() == 0) {
 			lightBoard = e.map.registerIcon("computronics:light_board");
+			boomBoard = e.map.registerIcon("computronics:boom_board");
 		}
 	}
 }

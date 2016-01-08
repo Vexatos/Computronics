@@ -31,6 +31,7 @@ public class Config {
 	public static double COLORFUL_UPGRADE_COLOR_CHANGE_COST = 0.2;
 	public static double LIGHT_BOARD_COLOR_CHANGE_COST = 0.2;
 	public static double LIGHT_BOARD_COLOR_MAINTENANCE_COST = 0.02;
+	public static double BOOM_BOARD_MAINTENANCE_COST = 0.02;
 	public static String CHATBOX_PREFIX = "ChatBox";
 	public static double LOCOMOTIVE_RELAY_RANGE = 128.0;
 	public static double LOCOMOTIVE_RELAY_BASE_POWER = 20.0;
@@ -50,6 +51,7 @@ public class Config {
 	public static boolean OC_CARD_BOOM;
 	public static boolean OC_UPGRADE_COLORFUL;
 	public static boolean OC_BOARD_LIGHT;
+	public static boolean OC_BOARD_BOOM;
 
 	public static boolean CC_OPEN_MULTI_PERIPHERAL = true;
 	public static boolean CC_ALL_MULTI_PERIPHERALS = true;
@@ -106,6 +108,7 @@ public class Config {
 			OC_CARD_BOOM = config.get("enable.opencomputers", "boomCard", true).getBoolean(true);
 			OC_UPGRADE_COLORFUL = config.get("enable.opencomputers", "colorfulUpgrade", true).getBoolean(true);
 			OC_BOARD_LIGHT = config.get("enable.opencomputers", "lightBoard", true).getBoolean(true);
+			OC_BOARD_BOOM = config.get("enable.opencomputers", "boomBoard", true).getBoolean(true);
 
 			// Particle Card
 			FX_ENERGY_COST = convertRFtoOC(
@@ -125,6 +128,8 @@ public class Config {
 				config.getFloat("ocLightBoardColorChangeCost", "power", 2.0f, 0.0f, 10000.0f, "How much energy changing the color of a Light Board's light will cost"));
 			LIGHT_BOARD_COLOR_MAINTENANCE_COST = convertRFtoOC(
 				config.getFloat("ocLightBoardColorMaintenanceCost", "power", 0.2f, 0.0f, 10000.0f, "How much energy will be consumed per tick to keep a Light Board's light running. Note that this value is consumed for each active light on the board."));
+			BOOM_BOARD_MAINTENANCE_COST = convertRFtoOC(
+				config.getFloat("ocBoomBoardMaintenanceCost", "power", 0.2f, 0.0f, 10000.0f, "How much energy will be consumed per tick to keep a Server Self-Destructor active."));
 
 			if(Mods.isLoaded(Mods.Railcraft)) {
 				LOCOMOTIVE_RELAY_BASE_POWER = convertRFtoOC(

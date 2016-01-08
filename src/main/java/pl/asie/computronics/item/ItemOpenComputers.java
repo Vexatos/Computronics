@@ -30,16 +30,17 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 import pl.asie.computronics.Computronics;
-import pl.asie.computronics.oc.DriverBoardLight;
-import pl.asie.computronics.oc.DriverCardBoom;
-import pl.asie.computronics.oc.DriverCardFX;
-import pl.asie.computronics.oc.DriverCardSound;
-import pl.asie.computronics.oc.DriverCardSpoof;
 import pl.asie.computronics.oc.IntegrationOpenComputers;
-import pl.asie.computronics.oc.RobotUpgradeCamera;
-import pl.asie.computronics.oc.RobotUpgradeChatBox;
-import pl.asie.computronics.oc.RobotUpgradeColorful;
-import pl.asie.computronics.oc.RobotUpgradeRadar;
+import pl.asie.computronics.oc.driver.DriverBoardBoom;
+import pl.asie.computronics.oc.driver.DriverBoardLight;
+import pl.asie.computronics.oc.driver.DriverCardBoom;
+import pl.asie.computronics.oc.driver.DriverCardFX;
+import pl.asie.computronics.oc.driver.DriverCardSound;
+import pl.asie.computronics.oc.driver.DriverCardSpoof;
+import pl.asie.computronics.oc.driver.RobotUpgradeCamera;
+import pl.asie.computronics.oc.driver.RobotUpgradeChatBox;
+import pl.asie.computronics.oc.driver.RobotUpgradeColorful;
+import pl.asie.computronics.oc.driver.RobotUpgradeRadar;
 import pl.asie.computronics.oc.manual.IItemWithDocumentation;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
@@ -68,7 +69,8 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 			"card_beep",
 			"card_boom",
 			"robot_upgrade_colorful",
-			"rack_board_light"
+			"rack_board_light",
+			"rack_board_boom"
 		});
 		this.setCreativeTab(Computronics.tab);
 	}
@@ -103,7 +105,8 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 					&& Robot.class.isAssignableFrom(host);
 				break;
 			}
-			case 8: {
+			case 8:
+			case 9: {
 				works = works && Rack.class.isAssignableFrom(host);
 				break;
 			}
@@ -136,6 +139,8 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 				return RobotUpgradeColorful.class;
 			case 8:
 				return DriverBoardLight.class;
+			case 9:
+				return DriverBoardBoom.class;
 			default:
 				return null;
 		}
@@ -164,6 +169,8 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 				return new RobotUpgradeColorful(container);
 			case 8:
 				return container instanceof Rack ? new DriverBoardLight((Rack) container) : null;
+			case 9:
+				return container instanceof Rack ? new DriverBoardBoom((Rack) container) : null;
 			default:
 				return null;
 		}
@@ -191,6 +198,8 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 				return Slot.Upgrade;
 			case 8:
 				return Slot.RackMountable;
+			case 9:
+				return Slot.RackMountable;
 			default:
 				return Slot.None;
 		}
@@ -217,6 +226,8 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 			case 7:
 				return 1; // Tier 2
 			case 8:
+				return 0; // Tier 1
+			case 9:
 				return 0; // Tier 1
 			default:
 				return 0; // Tier 1 default
@@ -268,6 +279,9 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 		}
 		if(Config.OC_BOARD_LIGHT) {
 			list.add(new ItemStack(item, 1, 8));
+		}
+		if(Config.OC_BOARD_BOOM) {
+			list.add(new ItemStack(item, 1, 9));
 		}
 	}
 
@@ -397,6 +411,8 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 				return "colorful_upgrade";
 			case 8:
 				return "light_board";
+			case 9:
+				return "server_self_destructor";
 			default:
 				return "index";
 		}

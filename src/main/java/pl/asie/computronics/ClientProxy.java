@@ -72,12 +72,10 @@ public class ClientProxy extends CommonProxy {
 			y = p.readDouble(),
 			z = p.readDouble();
 		float force = p.readFloat();
+		boolean destroyBlocks = p.readByte() != 0;
 		Minecraft minecraft = Minecraft.getMinecraft();
 		SelfDestruct explosion = new SelfDestruct(minecraft.theWorld,
-			null, x,
-			y,
-			z,
-			force);
+			null, x, y, z, force, destroyBlocks);
 		int size = p.readInt();
 		ArrayList<ChunkPosition> list = new ArrayList<ChunkPosition>(size);
 		int i = (int) x;

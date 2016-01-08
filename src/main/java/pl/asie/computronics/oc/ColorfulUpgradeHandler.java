@@ -13,6 +13,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentTranslation;
 import org.lwjgl.opengl.GL11;
 import pl.asie.computronics.item.ItemOpenComputers;
+import pl.asie.computronics.oc.driver.RobotUpgradeColorful;
 import pl.asie.computronics.reference.Mods;
 
 import java.util.Locale;

@@ -7,8 +7,8 @@ local term = require("term")
 
 local args, options = shell.parse(...)
 
-if not component.isAvailable("self_destruct") then
-  io.stderr:write("This program requires a self-destructing card to run.\n")
+if not component.isAvailable("self_destruct") and not component.isAvailable("server_destruct") then
+  io.stderr:write("This program requires a self-destructing card or a server self-destructor to run.\n")
   return
 end
 
@@ -35,7 +35,7 @@ local function pretty(text)
 end
 
 local function explode(fuse)
-  local sd = component.self_destruct
+  local sd = component.isAvailable("self_destruct") and component.self_destruct or component.server_destruct
 
   if fuse <= 0 then
     io.stderr:write("Invalid number. Needs to be greater than 0.\n")

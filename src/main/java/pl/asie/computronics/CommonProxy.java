@@ -1,15 +1,13 @@
 package pl.asie.computronics;
 
-import java.io.IOException;
-
-import net.minecraft.world.World;
-
 import cpw.mods.fml.common.registry.EntityRegistry;
-
-import pl.asie.computronics.api.audio.AudioPacketRegistry;
+import net.minecraft.world.World;
 import pl.asie.computronics.api.audio.AudioPacketDFPWM;
+import pl.asie.computronics.api.audio.AudioPacketRegistry;
 import pl.asie.computronics.item.entity.EntityItemIndestructable;
 import pl.asie.lib.network.Packet;
+
+import java.io.IOException;
 
 public class CommonProxy {
 

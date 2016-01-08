@@ -1,4 +1,4 @@
-package pl.asie.computronics.oc;
+package pl.asie.computronics.oc.driver;
 
 import li.cil.oc.api.Network;
 import li.cil.oc.api.machine.Arguments;

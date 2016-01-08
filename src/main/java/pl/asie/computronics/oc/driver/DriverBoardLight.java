@@ -1,4 +1,4 @@
-package pl.asie.computronics.oc;
+package pl.asie.computronics.oc.driver;
 
 import li.cil.oc.api.Network;
 import li.cil.oc.api.component.RackBusConnectable;
@@ -11,6 +11,7 @@ import li.cil.oc.api.network.Visibility;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
+import pl.asie.computronics.oc.ManagedEnvironmentWithComponentConnector;
 import pl.asie.computronics.reference.Config;
 
 import java.util.EnumSet;
@@ -21,38 +22,47 @@ import java.util.EnumSet;
 public class DriverBoardLight extends ManagedEnvironmentWithComponentConnector implements RackMountable {
 
 	protected final Rack host;
-	private boolean needsUpdate;
+	protected boolean needsUpdate;
 
 	public DriverBoardLight(Rack host) {
 		this.host = host;
 		this.setNode(Network.newNode(this, Visibility.Network).
 			withComponent("light_board", Visibility.Network).
-			withConnector().
+			withConnector((Config.LIGHT_BOARD_COLOR_CHANGE_COST + Config.LIGHT_BOARD_COLOR_MAINTENANCE_COST) * 10).
 			create());
 	}
 
-	public enum Light {
-		One(1), Two(2), Three(3), Four(4), Five(5);
+	public final Light[] lights = Light.createLights();
 
-		protected int color = -1;
+	public static class Light {
+
+		protected int color = 0xC0C0C0;
 		protected boolean isActive = false;
 		public final int index;
-
-		public static final Light[] VALUES = values();
 
 		Light(int index) {
 			this.index = index;
 		}
 
-		public static Light getLight(int index) {
-			return index >= 0 && index < VALUES.length ? VALUES[index] : null;
+		public static final int amount = 5;
+
+		public static Light[] createLights() {
+			Light[] lights = new Light[amount];
+			for(int i = 0; i < amount; i++) {
+				lights[i] = new Light(i + 1);
+			}
+			return lights;
 		}
+	}
+
+	public Light getLight(int index) {
+		return index >= 0 && index < lights.length ? lights[index] : null;
 	}
 
 	@Override
 	public NBTTagCompound getData() {
 		NBTTagCompound tag = new NBTTagCompound();
-		for(Light light : Light.VALUES) {
+		for(Light light : lights) {
 			tag.setBoolean("r_" + light.index, light.isActive);
 			if(light.isActive) {
 				tag.setInteger("c_" + light.index, light.color);
@@ -76,7 +86,7 @@ public class DriverBoardLight extends ManagedEnvironmentWithComponentConnector i
 	}
 
 	private Light checkLight(int index) {
-		Light light = Light.getLight(index - 1);
+		Light light = getLight(index - 1);
 		if(light == null) {
 			throw new IllegalArgumentException("index out of range");
 		}
@@ -120,7 +130,7 @@ public class DriverBoardLight extends ManagedEnvironmentWithComponentConnector i
 
 	@Callback(doc = "function():number; Returns the number of lights on the board.", direct = true)
 	public Object[] getLightCount(Context context, Arguments args) {
-		return new Object[] { Light.VALUES.length };
+		return new Object[] { lights.length };
 	}
 
 	@Override
@@ -130,7 +140,7 @@ public class DriverBoardLight extends ManagedEnvironmentWithComponentConnector i
 
 	@Override
 	public void update() {
-		for(Light light : Light.VALUES) {
+		for(Light light : lights) {
 			if(light.isActive) {
 				if(!node.tryChangeBuffer(-Config.LIGHT_BOARD_COLOR_MAINTENANCE_COST)) {
 					setActive(light, false);
@@ -147,7 +157,7 @@ public class DriverBoardLight extends ManagedEnvironmentWithComponentConnector i
 	@Override
 	public void load(NBTTagCompound tag) {
 		super.load(tag);
-		for(Light light : Light.VALUES) {
+		for(Light light : lights) {
 			if(tag.hasKey("r_" + light.index)) {
 				setActive(light, tag.getBoolean("r_" + light.index));
 			}
@@ -160,7 +170,7 @@ public class DriverBoardLight extends ManagedEnvironmentWithComponentConnector i
 	@Override
 	public void save(NBTTagCompound tag) {
 		super.save(tag);
-		for(Light light : Light.VALUES) {
+		for(Light light : lights) {
 			tag.setBoolean("r_" + light.index, light.isActive);
 			if(light.isActive) {
 				tag.setInteger("c_" + light.index, light.color);

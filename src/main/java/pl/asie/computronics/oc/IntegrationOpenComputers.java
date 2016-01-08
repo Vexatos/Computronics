@@ -1,5 +1,6 @@
 package pl.asie.computronics.oc;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.event.FMLMissingMappingsEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -54,6 +55,7 @@ import pl.asie.computronics.integration.redlogic.DriverLamp;
 import pl.asie.computronics.integration.storagedrawers.DriverDrawerGroup;
 import pl.asie.computronics.item.ItemOpenComputers;
 import pl.asie.computronics.oc.block.ComputronicsBlockEnvironmentProvider;
+import pl.asie.computronics.oc.driver.DriverBoardBoom;
 import pl.asie.computronics.oc.manual.ComputronicsPathProvider;
 import pl.asie.computronics.reference.Compat;
 import pl.asie.computronics.reference.Config;
@@ -78,6 +80,7 @@ public class IntegrationOpenComputers {
 	public static UpgradeRenderer upgradeRenderer;
 	public static RackMountableRenderer mountableRenderer;
 	public static ColorfulUpgradeHandler colorfulUpgradeHandler;
+	public static DriverBoardBoom.BoomHandler boomBoardHandler;
 
 	public IntegrationOpenComputers(Computronics computronics) {
 		this.computronics = computronics;
@@ -96,7 +99,8 @@ public class IntegrationOpenComputers {
 			|| Config.OC_CARD_SOUND
 			|| Config.OC_CARD_BOOM
 			|| Config.OC_UPGRADE_COLORFUL
-			|| Config.OC_BOARD_LIGHT) {
+			|| Config.OC_BOARD_LIGHT
+			|| Config.OC_BOARD_BOOM) {
 			itemOCParts = new ItemOpenComputers();
 			GameRegistry.registerItem(itemOCParts, "computronics.ocParts");
 			Driver.add((Item) itemOCParts);
@@ -133,7 +137,12 @@ public class IntegrationOpenComputers {
 			colorfulUpgradeHandler = new ColorfulUpgradeHandler();
 		}
 
+		if(boomBoardHandler == null) {
+			boomBoardHandler = new DriverBoardBoom.BoomHandler();
+		}
+
 		MinecraftForge.EVENT_BUS.register(colorfulUpgradeHandler);
+		FMLCommonHandler.instance().bus().register(boomBoardHandler);
 
 		if(Mods.isLoaded(Mods.RedLogic)) {
 			if(compat.isCompatEnabled(Compat.RedLogic_Lamps)) {
@@ -359,6 +368,21 @@ public class IntegrationOpenComputers {
 				);
 			} else {
 				log.warn("Could not add Light Board Recipe because Colorful Lamp is disabled in the config.");
+			}
+		}
+		if(Config.OC_BOARD_BOOM) {
+			if(Config.OC_CARD_BOOM) {
+				RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 9),
+					"lsl", "gcg", "opo",
+					's', li.cil.oc.api.Items.get("chip1").createItemStack(1),
+					'g', new ItemStack(itemOCParts, 1, 6),
+					'c', Blocks.tnt,
+					'o', "obsidian",
+					'l', Items.gunpowder,
+					'p', li.cil.oc.api.Items.get("printedCircuitBoard").createItemStack(1)
+				);
+			} else {
+				log.warn("Could not add Server Self-Destructor Recipe because Self-Destructing Card is disabled in the config.");
 			}
 		}
 		if(Computronics.buildcraft != null) {

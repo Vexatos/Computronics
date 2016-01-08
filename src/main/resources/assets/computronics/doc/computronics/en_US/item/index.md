@@ -27,6 +27,7 @@ Keep in mind that some of these may not be available, depending on the recipe se
 ### Rack Mountables
 
 * [Light Board](light_board.md)
+* [Server Self-Destructor](server_self_destructor.md)
 
 # Items for other mods
 
