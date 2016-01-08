@@ -8,7 +8,7 @@
     - Each module can be individually disabled in the config file.
   * ADDED: EnderIO 2.3 integration  for OpenComputers and ComputerCraft! (Has actually existed since March 2015, just not in any official release)
       - Added support for the new Telepad
-        - Allows full control over the coordinates set as well as telepad activation
+        - Allows full control over the coordinates set (if allowed in the EnderIO config file) as well as telepad activation
       - Added support for the new Weather Obelisk
         - Allows control over the weather, provided the Obelisk has the correct items.
       - The Capacitor Bank now provides two additional functions, `getAverageInputPerTick()` and `getAverageOutputPerTick()`
