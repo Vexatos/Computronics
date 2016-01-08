@@ -57,16 +57,17 @@ public class RackMountableRenderer {
 				GL11.glEnable(GL11.GL_BLEND);
 				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 				for(int index = 1; index <= DriverBoardLight.Light.amount; index++) {
-					boolean isActive = e.data.getBoolean("r_" + index);
-					if(isActive) {
+					if(e.data.getBoolean("r_" + index)) {
 						int color = e.data.getInteger("c_" + index);
 						if(color < 0) {
-							return;
+							continue;
 						}
 						color = color & 0xFFFFFF;
 						GL11.glColor3ub((byte) ((color >> 16) & 0xFF), (byte) ((color >> 8) & 0xFF), (byte) (color & 0xFF));
-						float u0 = ((index - 1) * 3) / 16f;
-						float u1 = u0 + (3 / 16f);
+						//float u0 = ((index - 1) * 3) / 16f;
+						float u0 = ((index - 1) * 4) / 16f;
+						//float u1 = u0 + (3 / 16f);
+						float u1 = u0 + (4 / 16f);
 						e.renderOverlay(lightBoardLights, u0, u1);
 					}
 				}

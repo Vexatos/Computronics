@@ -125,7 +125,7 @@ public class Config {
 
 			// Colorful Upgrade
 			LIGHT_BOARD_COLOR_CHANGE_COST = convertRFtoOC(
-				config.getFloat("ocLightBoardColorChangeCost", "power", 2.0f, 0.0f, 10000.0f, "How much energy changing the color of a Light Board's light will cost"));
+				config.getFloat("ocLightBoardColorChangeCost", "power", 2.0f, 0.0f, 10000.0f, "How much energy changing the color or state of a Light Board's light will cost"));
 			LIGHT_BOARD_COLOR_MAINTENANCE_COST = convertRFtoOC(
 				config.getFloat("ocLightBoardColorMaintenanceCost", "power", 0.2f, 0.0f, 10000.0f, "How much energy will be consumed per tick to keep a Light Board's light running. Note that this value is consumed for each active light on the board."));
 			BOOM_BOARD_MAINTENANCE_COST = convertRFtoOC(

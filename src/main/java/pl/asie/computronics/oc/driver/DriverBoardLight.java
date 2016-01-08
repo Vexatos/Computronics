@@ -44,7 +44,7 @@ public class DriverBoardLight extends ManagedEnvironmentWithComponentConnector i
 			this.index = index;
 		}
 
-		public static final int amount = 5;
+		public static final int amount = 4;
 
 		public static Light[] createLights() {
 			Light[] lights = new Light[amount];
