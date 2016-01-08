@@ -128,7 +128,7 @@ public class DriverBoardLight extends ManagedEnvironmentWithComponentConnector i
 		return new Object[] { checkLight(args.checkInteger(0)).isActive };
 	}
 
-	@Callback(doc = "function():number; Returns the number of lights on the board.", direct = true)
+	@Callback(value = "light_count", doc = "This represents the number of lights on the board.", direct = true, getter = true)
 	public Object[] getLightCount(Context context, Arguments args) {
 		return new Object[] { lights.length };
 	}
