@@ -3,7 +3,7 @@
   * ADDED: Support for TIS-3D!
     - Added a Colorful Module to display any colour you want, akin to a Colorful Lamp.
     - Added a Tape Reader Module which allows you to interface with an adjacent Tape Drive.
-    - Added a Self-Destructing Module which allows you to dispose of your casingd with style.
+    - Added a Self-Destructing Module which allows you to dispose of your casings with style.
     - Documented everything in the TIS-3D manual.
     - Each module can be individually disabled in the config file.
   * ADDED: EnderIO 2.3 integration  for OpenComputers and ComputerCraft!
@@ -558,7 +558,7 @@ This is semi-officially known as "The Kodos Update".
 
   * Added: A rewrite of the Tape Drive mechanics.
     * Tape Drives now remember their state on unload (persistence!).
-    * [[http://i.imgur.com/FCFiPfd.png|A slick new GUI]] - makes it possible to use Tape Drives without computers!
+    * [A slick new GUI](http://i.imgur.com/FCFiPfd.png) - makes it possible to use Tape Drives without computers!
     * Tape Drive playback can be controlled with redstone.
   * Added: Tape Drives and Cameras can now be rotated with BuildCraft or compatible wrenches.
   * Added: Iron Note Blocks support the two noteblock sounds that are in the Minecraft assets/ folder but were never used ("pling" and "bass", respectively).
