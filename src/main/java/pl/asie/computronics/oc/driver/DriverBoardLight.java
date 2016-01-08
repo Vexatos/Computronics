@@ -36,7 +36,7 @@ public class DriverBoardLight extends ManagedEnvironmentWithComponentConnector i
 		this.host = host;
 		this.setNode(Network.newNode(this, Visibility.Network).
 			withComponent("light_board", Visibility.Network).
-			withConnector((Config.LIGHT_BOARD_COLOR_CHANGE_COST + Config.LIGHT_BOARD_COLOR_MAINTENANCE_COST) * 10).
+			withConnector().
 			create());
 		mode = Mode.Default;
 		lights = mode.createLights();
