@@ -16,6 +16,7 @@
       - Now you can get and set the range of Vacuum Chests
       - Added `getProgress()` to most machines with progress
   * ADDED: Built-in tape utility program for ComputerCraft to write songs to tapes and to play, stop, pause etc.
+  * ADDED: getPosition() to tape drives. No, I'm not joking. It's real. I'm sorry.
   * FIXED: Crash when the `openComputersBees` config option was set to `false`.
   * FIXED: Updated OpenComputers integration (requires OpenComputers 1.5.21 now)
 
