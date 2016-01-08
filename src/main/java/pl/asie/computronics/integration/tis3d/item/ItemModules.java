@@ -2,13 +2,21 @@ package pl.asie.computronics.integration.tis3d.item;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import li.cil.tis3d.api.machine.Casing;
+import li.cil.tis3d.api.machine.Face;
+import li.cil.tis3d.api.module.Module;
+import li.cil.tis3d.api.module.ModuleProvider;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.integration.tis3d.IntegrationTIS3D;
 import pl.asie.computronics.integration.tis3d.manual.IModuleWithDocumentation;
+import pl.asie.computronics.integration.tis3d.module.ModuleBoom;
+import pl.asie.computronics.integration.tis3d.module.ModuleColorful;
+import pl.asie.computronics.integration.tis3d.module.ModuleTapeReader;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.lib.item.ItemMultiple;
@@ -18,12 +26,13 @@ import java.util.List;
 /**
  * @author Vexatos
  */
-public class ItemModules extends ItemMultiple implements IModuleWithDocumentation {
+public class ItemModules extends ItemMultiple implements ModuleProvider, IModuleWithDocumentation {
 
 	public ItemModules() {
 		super(Mods.Computronics, new String[] {
 			"module_colorful",
-			"module_tape_reader"
+			"module_tape_reader",
+			"module_boom"
 		});
 		this.setCreativeTab(Computronics.tab);
 	}
@@ -37,6 +46,9 @@ public class ItemModules extends ItemMultiple implements IModuleWithDocumentatio
 		}
 		if(Config.TIS3D_MODULE_TAPE_READER) {
 			list.add(new ItemStack(item, 1, 1));
+		}
+		if(Config.TIS3D_MODULE_BOOM) {
+			list.add(new ItemStack(item, 1, 2));
 		}
 	}
 
@@ -61,11 +73,7 @@ public class ItemModules extends ItemMultiple implements IModuleWithDocumentatio
 	@Override
 	public int getRenderPasses(int meta) {
 		switch(meta) {
-			case 0:
-				return 1;
-			case 1:
-				return 1;
-			default:
+			default: // Nothing so far
 				return 1;
 		}
 	}
@@ -110,8 +118,29 @@ public class ItemModules extends ItemMultiple implements IModuleWithDocumentatio
 				return "colorful_module";
 			case 1:
 				return "tape_reader_module";
+			case 2:
+				return "self_destructing_module";
 			default:
 				return "index";
+		}
+	}
+
+	@Override
+	public boolean worksWith(ItemStack stack, Casing casing, Face face) {
+		return stack.getItem() != null && stack.getItem() == IntegrationTIS3D.itemModules;
+	}
+
+	@Override
+	public Module createModule(ItemStack stack, Casing casing, Face face) {
+		switch(stack.getItemDamage()) {
+			case 0:
+				return new ModuleColorful(casing, face);
+			case 1:
+				return new ModuleTapeReader(casing, face);
+			case 2:
+				return new ModuleBoom(casing, face);
+			default:
+				return null;
 		}
 	}
 }

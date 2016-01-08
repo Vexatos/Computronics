@@ -3,6 +3,7 @@
   * ADDED: Support for TIS-3D!
     - Added a Colorful Module to display any colour you want, akin to a Colorful Lamp.
     - Added a Tape Reader Module which allows you to interface with an adjacent Tape Drive.
+    - Added a Self-Destructing Module which allows you to dispose of your casingd with style.
     - Documented everything in the TIS-3D manual.
     - Each module can be individually disabled in the config file.
   * ADDED: EnderIO 2.3 integration  for OpenComputers and ComputerCraft!

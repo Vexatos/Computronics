@@ -382,7 +382,7 @@ public class ModuleTapeReader extends ComputronicsModule {
 		return ordinal >= 0 && ordinal < COMMANDS.length ? COMMANDS[ordinal] : null;
 	}
 
-	protected ModuleTapeReader(Casing casing, Face face) {
+	public ModuleTapeReader(Casing casing, Face face) {
 		super(casing, face);
 	}
 

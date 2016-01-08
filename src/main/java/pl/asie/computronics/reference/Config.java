@@ -54,6 +54,7 @@ public class Config {
 
 	public static boolean TIS3D_MODULE_COLORFUL = true;
 	public static boolean TIS3D_MODULE_TAPE_READER = true;
+	public static boolean TIS3D_MODULE_BOOM = true;
 
 	public static String TAPE_LENGTHS;
 	public static boolean REDSTONE_REFRESH, CHATBOX_CREATIVE;
@@ -147,9 +148,10 @@ public class Config {
 			}
 		}
 
-		if(Mods.isLoaded(Mods.TIS3D)){
+		if(Mods.isLoaded(Mods.TIS3D)) {
 			TIS3D_MODULE_COLORFUL = config.get("enable.tis3d", "colorfulModule", true).getBoolean(true);
 			TIS3D_MODULE_TAPE_READER = config.get("enable.tis3d", "tapeReaderModule", true).getBoolean(true);
+			TIS3D_MODULE_BOOM = config.get("enable.tis3d", "boomModule", true).getBoolean(true);
 		}
 
 		// Radar
