@@ -6,7 +6,7 @@
     - Added a Self-Destructing Module which allows you to dispose of your casings with style.
     - Documented everything in the TIS-3D manual.
     - Each module can be individually disabled in the config file.
-  * ADDED: EnderIO 2.3 integration  for OpenComputers and ComputerCraft!
+  * ADDED: EnderIO 2.3 integration  for OpenComputers and ComputerCraft! (Has actually existed since March 2015, just not in any official release)
       - Added support for the new Telepad
         - Allows full control over the coordinates set as well as telepad activation
       - Added support for the new Weather Obelisk
@@ -17,7 +17,7 @@
       - Added `getProgress()` to most machines with progress
   * ADDED: Built-in tape utility program for ComputerCraft to write songs to tapes and to play, stop, pause etc.
   * FIXED: Crash when the `openComputersBees` config option was set to `false`.
-  * FIXED: Updated OpenComputers integration (requires OpenComputers 1.5.20 now)
+  * FIXED: Updated OpenComputers integration (requires OpenComputers 1.5.21 now)
 
 ==== 1.6.0 ====
 
