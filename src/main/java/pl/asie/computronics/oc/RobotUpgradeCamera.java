@@ -1,11 +1,11 @@
 package pl.asie.computronics.oc;
 
 import li.cil.oc.api.Network;
+import li.cil.oc.api.driver.EnvironmentHost;
 import li.cil.oc.api.internal.Rotatable;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
-import li.cil.oc.api.network.EnvironmentHost;
 import li.cil.oc.api.network.Visibility;
 import li.cil.oc.api.prefab.ManagedEnvironment;
 import net.minecraft.util.Direction;
@@ -14,7 +14,6 @@ import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.util.Camera;
 
 public class RobotUpgradeCamera extends ManagedEnvironment {
-
 	private final EnvironmentHost entity;
 
 	public RobotUpgradeCamera(EnvironmentHost entity) {

@@ -1,12 +1,13 @@
 package pl.asie.computronics.integration.buildcraft.pluggable;
 
 import cpw.mods.fml.common.Optional;
-import li.cil.oc.api.driver.EnvironmentProvider;
+import li.cil.oc.api.driver.EnvironmentAware;
+import li.cil.oc.api.driver.EnvironmentHost;
 import li.cil.oc.api.driver.Item;
 import li.cil.oc.api.driver.item.HostAware;
 import li.cil.oc.api.driver.item.Slot;
 import li.cil.oc.api.internal.Drone;
-import li.cil.oc.api.network.EnvironmentHost;
+import li.cil.oc.api.network.Environment;
 import li.cil.oc.api.network.ManagedEnvironment;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -23,7 +24,7 @@ import pl.asie.lib.item.ItemMultiple;
 	@Optional.Interface(iface = "li.cil.oc.api.driver.EnvironmentAware", modid = Mods.OpenComputers),
 	@Optional.Interface(iface = "li.cil.oc.api.driver.item.HostAware", modid = Mods.OpenComputers)
 })
-public class ItemDockingUpgrade extends ItemMultiple implements Item, EnvironmentProvider, HostAware, IItemWithPrefix {
+public class ItemDockingUpgrade extends ItemMultiple implements Item, EnvironmentAware, HostAware, IItemWithPrefix {
 
 	public ItemDockingUpgrade() {
 		super(Mods.Computronics, new String[] {
@@ -33,8 +34,8 @@ public class ItemDockingUpgrade extends ItemMultiple implements Item, Environmen
 	}
 
 	@Override
-	public Class<?> getEnvironment(ItemStack stack) {
-		return worksWith(stack) ? DriverDockingUpgrade.class : null;
+	public Class<? extends Environment> providedEnvironment(ItemStack itemStack) {
+		return DriverDockingUpgrade.class;
 	}
 
 	@Override

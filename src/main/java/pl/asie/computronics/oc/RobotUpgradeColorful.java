@@ -1,12 +1,12 @@
 package pl.asie.computronics.oc;
 
 import li.cil.oc.api.Network;
+import li.cil.oc.api.driver.EnvironmentHost;
 import li.cil.oc.api.internal.Robot;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.ComponentConnector;
-import li.cil.oc.api.network.EnvironmentHost;
 import li.cil.oc.api.network.Visibility;
 import net.minecraft.nbt.NBTTagCompound;
 import pl.asie.computronics.reference.Config;
@@ -15,7 +15,6 @@ import pl.asie.computronics.reference.Config;
  * @author Vexatos
  */
 public class RobotUpgradeColorful extends ManagedEnvironmentWithComponentConnector {
-
 	private final EnvironmentHost host;
 	private int color = -1;
 	private boolean needsUpdate;
