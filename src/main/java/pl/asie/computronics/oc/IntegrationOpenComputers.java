@@ -133,16 +133,15 @@ public class IntegrationOpenComputers {
 		Driver.add(new ComputronicsBlockEnvironmentProvider());
 		ComputronicsPathProvider.initialize();
 
-		if(colorfulUpgradeHandler == null) {
+		if(colorfulUpgradeHandler == null && Config.OC_UPGRADE_COLORFUL) {
 			colorfulUpgradeHandler = new ColorfulUpgradeHandler();
+			MinecraftForge.EVENT_BUS.register(colorfulUpgradeHandler);
 		}
 
-		if(boomBoardHandler == null) {
+		if(boomBoardHandler == null && Config.OC_BOARD_BOOM) {
 			boomBoardHandler = new DriverBoardBoom.BoomHandler();
+			FMLCommonHandler.instance().bus().register(boomBoardHandler);
 		}
-
-		MinecraftForge.EVENT_BUS.register(colorfulUpgradeHandler);
-		FMLCommonHandler.instance().bus().register(boomBoardHandler);
 
 		if(Mods.isLoaded(Mods.RedLogic)) {
 			if(compat.isCompatEnabled(Compat.RedLogic_Lamps)) {

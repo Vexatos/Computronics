@@ -1,5 +1,7 @@
 package pl.asie.computronics.oc.driver;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import li.cil.oc.api.Network;
 import li.cil.oc.api.component.RackBusConnectable;
 import li.cil.oc.api.component.RackMountable;
@@ -8,11 +10,17 @@ import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.Visibility;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.IIcon;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.oc.ManagedEnvironmentWithComponentConnector;
 import pl.asie.computronics.reference.Config;
+import pl.asie.lib.integration.Integration;
 
 import java.util.EnumSet;
 
@@ -30,9 +38,9 @@ public class DriverBoardLight extends ManagedEnvironmentWithComponentConnector i
 			withComponent("light_board", Visibility.Network).
 			withConnector((Config.LIGHT_BOARD_COLOR_CHANGE_COST + Config.LIGHT_BOARD_COLOR_MAINTENANCE_COST) * 10).
 			create());
+		mode = Mode.Default;
+		lights = mode.createLights();
 	}
-
-	public final Light[] lights = Light.createLights();
 
 	public static class Light {
 
@@ -43,17 +51,135 @@ public class DriverBoardLight extends ManagedEnvironmentWithComponentConnector i
 		Light(int index) {
 			this.index = index;
 		}
+	}
 
-		public static final int amount = 4;
+	public enum Mode {
+		Default(4) {
+			@Override
+			public float getU0(int index) {
+				return ((index - 1) * 4) / 16f;
+			}
 
-		public static Light[] createLights() {
-			Light[] lights = new Light[amount];
-			for(int i = 0; i < amount; i++) {
+			@Override
+			public float getU1(int index, float u0) {
+				return u0 + (4 / 16f);
+			}
+		},
+		Regular(5) {
+			@Override
+			public float getU0(int index) {
+				return ((index - 1) * 3) / 16f;
+			}
+
+			@Override
+			public float getU1(int index, float u0) {
+				return u0 + (3 / 16f);
+			}
+		},
+		Five(10) {
+			@Override
+			public float getU0(int index) {
+				return (index <= 5 ? (1 + index) : (3 + index)) / 16f;
+			}
+
+			@Override
+			public float getU1(int index, float u0) {
+				return u0 + (1 / 16f);
+			}
+		},
+		Twelve(12) {
+			@Override
+			public float getU0(int index) {
+				return (index + 1) / 16f;
+			}
+
+			@Override
+			public float getU1(int index, float u0) {
+				return u0 + (1 / 16f);
+			}
+		},
+		Total(42) {
+			@Override
+			public float getU0(int index) {
+				return (((index - 1) % 14) + 1) / 16f;
+			}
+
+			@Override
+			public float getU1(int index, float u0) {
+				return u0 + (1 / 16f);
+			}
+
+			@Override
+			public float getV0(int index, float v0, float v1) {
+				index -= 1;
+				if(index >= 14) {
+					int diff = index / 14;
+					v0 += diff / 16f;
+				}
+				return v0;
+			}
+
+			@Override
+			public float getV1(int index, float v0, float v1) {
+				return v0 + (1 / 16f);
+			}
+
+			@Override
+			public Light[] createLights() {
+				Light[] lights = super.createLights();
+				for(Light light : lights) {
+					light.color = 0x111111;
+				}
+				return lights;
+			}
+		};
+
+		public final int index;
+		public final int lightcount;
+		public IIcon background;
+		public final ResourceLocation foreground;
+		public final String backgroundPath;
+		public static final Mode[] VALUES = values();
+
+		Mode(int lightcount) {
+			this.index = ordinal() + 1;
+			this.lightcount = lightcount;
+			this.foreground = new ResourceLocation("computronics", "textures/blocks/light_board/mode_" + index + "_lights.png");
+			this.backgroundPath = "computronics:light_board/mode_" + index;
+		}
+
+		public abstract float getU0(int index);
+
+		public abstract float getU1(int index, float u0);
+
+		public float getV0(int index, float v0, float v1) {
+			return v0;
+		}
+
+		public float getV1(int index, float v0, float v1) {
+			return v1;
+		}
+
+		public Light[] createLights() {
+			Light[] lights = new Light[this.lightcount];
+			for(int i = 0; i < this.lightcount; i++) {
 				lights[i] = new Light(i + 1);
 			}
 			return lights;
 		}
+
+		@SideOnly(Side.CLIENT)
+		public void registerIcons(IIconRegister ir) {
+			background = ir.registerIcon(backgroundPath);
+		}
+
+		public static Mode fromIndex(int index) {
+			return index > 0 && index <= VALUES.length ? VALUES[index - 1] : null;
+		}
 	}
+
+	public Mode mode;
+	public Light[] lights;
 
 	public Light getLight(int index) {
 		return index >= 0 && index < lights.length ? lights[index] : null;
@@ -62,6 +188,7 @@ public class DriverBoardLight extends ManagedEnvironmentWithComponentConnector i
 	@Override
 	public NBTTagCompound getData() {
 		NBTTagCompound tag = new NBTTagCompound();
+		tag.setInteger("m", mode.index);
 		for(Light light : lights) {
 			tag.setBoolean("r_" + light.index, light.isActive);
 			if(light.isActive) {
@@ -81,6 +208,17 @@ public class DriverBoardLight extends ManagedEnvironmentWithComponentConnector i
 	private void setActive(Light light, boolean active) {
 		if(light.isActive != active) {
 			light.isActive = active;
+			needsUpdate = true;
+		}
+	}
+
+	private void setMode(Mode mode) {
+		if(mode == null) {
+			mode = Mode.Default;
+		}
+		if(mode != this.mode) {
+			this.mode = mode;
+			this.lights = mode.createLights();
 			needsUpdate = true;
 		}
 	}
@@ -157,12 +295,15 @@ public class DriverBoardLight extends ManagedEnvironmentWithComponentConnector i
 	@Override
 	public void load(NBTTagCompound tag) {
 		super.load(tag);
-		for(Light light : lights) {
-			if(tag.hasKey("r_" + light.index)) {
-				setActive(light, tag.getBoolean("r_" + light.index));
-			}
-			if(tag.hasKey("c_" + light.index)) {
-				setColor(light, tag.getInteger("c_" + light.index));
+		if(tag.hasKey("m")) {
+			setMode(Mode.fromIndex(tag.getInteger("m")));
+			for(Light light : lights) {
+				if(tag.hasKey("r_" + light.index)) {
+					setActive(light, tag.getBoolean("r_" + light.index));
+				}
+				if(tag.hasKey("c_" + light.index)) {
+					setColor(light, tag.getInteger("c_" + light.index));
+				}
 			}
 		}
 	}
@@ -170,6 +311,7 @@ public class DriverBoardLight extends ManagedEnvironmentWithComponentConnector i
 	@Override
 	public void save(NBTTagCompound tag) {
 		super.save(tag);
+		tag.setInteger("m", mode.index);
 		for(Light light : lights) {
 			tag.setBoolean("r_" + light.index, light.isActive);
 			if(light.isActive) {
@@ -192,6 +334,22 @@ public class DriverBoardLight extends ManagedEnvironmentWithComponentConnector i
 
 	@Override
 	public boolean onActivate(EntityPlayer player, ForgeDirection side, float hitX, float hitY, float hitZ) {
+		final int
+			x = MathHelper.floor_double(host.xPosition()),
+			y = MathHelper.floor_double(host.yPosition()),
+			z = MathHelper.floor_double(host.zPosition());
+		ItemStack held = player.getHeldItem();
+		if(held != null && held.getItem() != null && Integration.isTool(held, player, x, y, z) && Integration.useTool(held, player, x, y, z)) {
+			int index = mode.index;
+			if(index >= Mode.VALUES.length) {
+				index = 0;
+			}
+			setMode(Mode.fromIndex(index + 1));
+			host.markChanged(host.indexOfMountable(this));
+			needsUpdate = false;
+			host.world().markBlockForUpdate(x, y, z);
+			return true;
+		}
 		return false;
 	}
 
