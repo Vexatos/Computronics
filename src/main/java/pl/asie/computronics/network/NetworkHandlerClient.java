@@ -38,7 +38,7 @@ public class NetworkHandlerClient extends MessageHandlerBase {
 		switch(command) {
 			case Packets.PACKET_TAPE_GUI_STATE: {
 				TileEntity entity = packet.readTileEntity();
-				State state = State.values()[packet.readUnsignedByte()];
+				State state = State.VALUES[packet.readUnsignedByte()];
 				if(entity instanceof TileTapeDrive) {
 					TileTapeDrive tile = (TileTapeDrive) entity;
 					tile.switchState(state);

@@ -10,6 +10,6 @@ public class DFPWMPlaybackManager extends StreamingPlaybackManager {
 	}
 
 	public StreamingAudioPlayer create() {
-		return new StreamingAudioPlayer(32768, false, false, Math.round(Config.TAPEDRIVE_BUFFER_MS / 250));
+		return new StreamingAudioPlayer(32768, false, false, Math.round(Config.TAPEDRIVE_BUFFER_MS / 250F));
 	}
 }

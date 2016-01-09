@@ -24,6 +24,20 @@ import java.util.Locale;
  */
 public class DriverCapacitorBank {
 
+	private static Object[] getAverageInputPerTick(TileCapBank tile) {
+		if(tile.getNetwork() != null) {
+			return new Object[] { tile.getNetwork().getAverageInputPerTick() };
+		}
+		return new Object[] { 0 };
+	}
+
+	private static Object[] getAverageOutputPerTick(TileCapBank tile) {
+		if(tile.getNetwork() != null) {
+			return new Object[] { tile.getNetwork().getAverageOutputPerTick() };
+		}
+		return new Object[] { 0 };
+	}
+
 	private static Object[] getAverageChangePerTick(TileCapBank tile) {
 		if(tile.getNetwork() != null) {
 			return new Object[] { tile.getNetwork().getAverageChangePerTick() };
@@ -103,6 +117,16 @@ public class DriverCapacitorBank {
 				return 4;
 			}
 
+			@Callback(doc = "function():number; Returns the average storage input per tick")
+			public Object[] getAverageInputPerTick(Context c, Arguments a) {
+				return DriverCapacitorBank.getAverageInputPerTick(tile);
+			}
+
+			@Callback(doc = "function():number; Returns the average storage output per tick")
+			public Object[] getAverageOutputPerTick(Context c, Arguments a) {
+				return DriverCapacitorBank.getAverageOutputPerTick(tile);
+			}
+
 			@Callback(doc = "function():number; Returns the average storage change per tick")
 			public Object[] getAverageChangePerTick(Context c, Arguments a) {
 				return DriverCapacitorBank.getAverageChangePerTick(tile);
@@ -180,34 +204,41 @@ public class DriverCapacitorBank {
 
 		@Override
 		public String[] getMethodNames() {
-			return new String[] { "getAverageChangePerTick", "setMaxInput", "setMaxOutput", "getInputMode", "getOutputMode", "setInputMode", "setOutputMode", "getRedstoneModeTable" };
+			return new String[] { "getAverageInputPerTick", "getAverageOutputPerTick", "getAverageChangePerTick", "setMaxInput", "setMaxOutput", "getInputMode", "getOutputMode", "setInputMode",
+				"setOutputMode", "getRedstoneModeTable" };
 		}
 
 		@Override
 		public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
 			switch(method) {
 				case 0: {
-					return DriverCapacitorBank.getAverageChangePerTick(tile);
+					return DriverCapacitorBank.getAverageInputPerTick(tile);
 				}
 				case 1: {
+					return DriverCapacitorBank.getAverageOutputPerTick(tile);
+				}
+				case 2: {
+					return DriverCapacitorBank.getAverageChangePerTick(tile);
+				}
+				case 3: {
 					if(arguments.length < 1 || !(arguments[0] instanceof Double)) {
 						throw new LuaException("first argument needs to be a number");
 					}
 					return DriverCapacitorBank.setMaxInput(tile, ((Double) arguments[0]).intValue());
 				}
-				case 2: {
+				case 4: {
 					if(arguments.length < 1 || !(arguments[0] instanceof Double)) {
 						throw new LuaException("first argument needs to be a number");
 					}
 					return DriverCapacitorBank.setMaxOutput(tile, ((Double) arguments[0]).intValue());
 				}
-				case 3: {
+				case 5: {
 					return DriverCapacitorBank.getRedstoneMode(tile, true);
 				}
-				case 4: {
+				case 6: {
 					return DriverCapacitorBank.getRedstoneMode(tile, false);
 				}
-				case 5: {
+				case 7: {
 					if(arguments.length < 1 || !(arguments[0] instanceof String)) {
 						throw new LuaException("first argument needs to be a string");
 					}
@@ -217,7 +248,7 @@ public class DriverCapacitorBank {
 						throw new LuaException(e.getMessage());
 					}
 				}
-				case 6: {
+				case 8: {
 					if(arguments.length < 1 || !(arguments[0] instanceof String)) {
 						throw new LuaException("first argument needs to be a string");
 					}
@@ -227,7 +258,7 @@ public class DriverCapacitorBank {
 						throw new LuaException(e.getMessage());
 					}
 				}
-				case 7: {
+				case 9: {
 					return DriverCapacitorBank.modes();
 				}
 			}

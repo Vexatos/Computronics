@@ -3,13 +3,6 @@ package pl.asie.computronics.tile;
 //import java.nio.file.FileSystem;
 
 import com.google.common.base.Charsets;
-
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
-
 import cpw.mods.fml.common.Optional;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -24,6 +17,12 @@ import li.cil.oc.api.network.Component;
 import li.cil.oc.api.network.ManagedEnvironment;
 import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.Visibility;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.api.audio.AudioPacket;
 import pl.asie.computronics.api.audio.IAudioReceiver;
@@ -42,6 +41,7 @@ import pl.asie.lib.network.Packet;
 import java.util.HashMap;
 
 public class TileTapeDrive extends TileEntityPeripheralBase implements IInventoryProvider, IAudioSource {
+
 	private final IAudioReceiver internalSpeaker = new IAudioReceiver() {
 		@Override
 		public boolean connectsAudio(ForgeDirection side) {
@@ -188,7 +188,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 		super.onConnect(node);
 
 		if(node == node()) {
-			if (oc_fs() != null) {
+			if(oc_fs() != null) {
 				node.connect(oc_fs().node());
 			}
 		}
@@ -197,9 +197,9 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 	@Override
 	@Optional.Method(modid = Mods.OpenComputers)
 	protected void onChunkUnload_OC() {
-		if (oc_fs() != null) {
+		if(oc_fs() != null) {
 			Node node = oc_fs().node();
-			if (node != null) {
+			if(node != null) {
 				node.remove();
 			}
 		}
@@ -210,9 +210,9 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 	@Override
 	@Optional.Method(modid = Mods.OpenComputers)
 	protected void invalidate_OC() {
-		if (oc_fs() != null) {
+		if(oc_fs() != null) {
 			Node node = oc_fs().node();
-			if (node != null) {
+			if(node != null) {
 				node.remove();
 			}
 		}
@@ -248,6 +248,55 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 			this.state.switchState(worldObj, xCoord, yCoord, zCoord, s);
 			this.sendState();
 		}
+	}
+
+	public void setSpeed(float speed) {
+		this.state.setSpeed(speed);
+	}
+
+	public void setVolume(float vol) {
+		this.state.setVolume(vol);
+	}
+
+	public boolean isEnd() {
+		return state.getStorage() == null || state.getStorage().getPosition() + state.packetSize > state.getStorage().getSize();
+	}
+
+	public boolean isReady() {
+		return state.getStorage() != null;
+	}
+
+	public int getSize() {
+		return (state.getStorage() != null ? state.getStorage().getSize() : 0);
+	}
+
+	public int seek(int bytes) {
+		return state.getStorage() != null ? state.getStorage().seek(bytes) : 0;
+	}
+
+	public int read() {
+		if(state.getStorage() != null) {
+			return state.getStorage().read(false) & 0xFF;
+		} else {
+			return 0;
+		}
+	}
+
+	public byte[] read(int amount) {
+		if(state.getStorage() != null) {
+			byte[] data = new byte[amount];
+			state.getStorage().read(data, false);
+			return data;
+		}
+		return null;
+	}
+
+	public void write(byte b) {
+		state.getStorage().write(b);
+	}
+
+	public int write(byte[] bytes) {
+		return state.getStorage().write(bytes);
 	}
 
 	@Override
@@ -417,7 +466,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
 		if(tag.hasKey("state")) {
-			this.state.setState(State.values()[tag.getByte("state")]);
+			this.state.setState(State.VALUES[tag.getByte("state")]);
 		}
 		if(tag.hasKey("sp")) {
 			this.state.packetSize = tag.getShort("sp");
@@ -477,7 +526,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 	public void readFromRemoteNBT(NBTTagCompound tag) {
 		super.readFromRemoteNBT(tag);
 		if(tag.hasKey("state")) {
-			this.state.setState(State.values()[tag.getByte("state")]);
+			this.state.setState(State.VALUES[tag.getByte("state")]);
 		}
 	}
 
@@ -486,23 +535,19 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 	@Callback(doc = "function():boolean; Returns true if the tape drive is empty or the inserted tape has reached its end", direct = true)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] isEnd(Context context, Arguments args) {
-		if(state.getStorage() != null) {
-			return new Object[] { state.getStorage().getPosition() + state.packetSize > state.getStorage().getSize() };
-		} else {
-			return new Object[] { true };
-		}
+		return new Object[] { isEnd() };
 	}
 
 	@Callback(doc = "function():boolean; Returns true if there is a tape inserted", direct = true)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] isReady(Context context, Arguments args) {
-		return new Object[] { state.getStorage() != null };
+		return new Object[] { isReady() };
 	}
 
 	@Callback(doc = "function():number; Returns the size of the tape, in bytes", direct = true)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] getSize(Context context, Arguments args) {
-		return new Object[] { (state.getStorage() != null ? state.getStorage().getSize() : 0) };
+		return new Object[] { getSize() };
 	}
 
 	@Callback(doc = "function(label:string):string; Sets the label of the tape. "
@@ -524,7 +569,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] seek(Context context, Arguments args) {
 		if(state.getStorage() != null) {
-			return new Object[] { state.getStorage().seek(args.checkInteger(0)) };
+			return new Object[] { seek(args.checkInteger(0)) };
 		}
 		return null;
 	}
@@ -536,11 +581,9 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 	public Object[] read(Context context, Arguments args) {
 		if(state.getStorage() != null) {
 			if(args.count() >= 1 && args.isInteger(0) && (args.checkInteger(0) >= 0)) {
-				byte[] data = new byte[args.checkInteger(0)];
-				state.getStorage().read(data, false);
-				return new Object[] { data };
+				return new Object[] { read(args.checkInteger(0)) };
 			} else {
-				return new Object[] { state.getStorage().read(false) & 0xFF };
+				return new Object[] { read() };
 			}
 		} else {
 			return null;
@@ -552,9 +595,9 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 	public Object[] write(Context context, Arguments args) {
 		if(state.getStorage() != null && args.count() >= 1) {
 			if(args.isInteger(0)) {
-				state.getStorage().write((byte) args.checkInteger(0));
+				write((byte) args.checkInteger(0));
 			} else if(args.isByteArray(0)) {
-				state.getStorage().write(args.checkByteArray(0));
+				write(args.checkByteArray(0));
 			} else {
 				throw new IllegalArgumentException("bad arguments #1 (number or string expected)");
 			}
@@ -610,17 +653,13 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 		// methods which don't take any arguments
 		switch(method) {
 			case 0: { // isEnd
-				if(state.getStorage() != null) {
-					return new Object[] { state.getStorage().getPosition() + state.packetSize > state.getStorage().getSize() };
-				} else {
-					return new Object[] { true };
-				}
+				return new Object[] { isEnd() };
 			}
 			case 1: { // isReady
-				return new Object[] { state.getStorage() != null };
+				return new Object[] { isReady() };
 			}
 			case 2: { // getSize
-				return new Object[] { (state.getStorage() != null ? state.getStorage().getSize() : 0) };
+				return new Object[] { getSize() };
 			}
 			case 3: { // getLabel
 				return new Object[] { (state.getStorage() != null ? storageName : null) };
@@ -631,7 +670,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 			case 9: { // read
 				if(arguments.length < 1) {
 					if(state.getStorage() != null) {
-						return new Object[] { state.getStorage().read(false) & 0xFF };
+						return new Object[] { read() };
 					} else {
 						return null;
 					}
@@ -691,7 +730,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 					return new Object[] { (state.getStorage() != null ? storageName : null) };
 				case 10: // write
 					if(state.getStorage() != null) {
-						return new Object[] { state.getStorage().write(((String) arguments[0]).getBytes(Charsets.UTF_8)) };
+						return new Object[] { write(((String) arguments[0]).getBytes(Charsets.UTF_8)) };
 					}
 					break;
 			}
@@ -717,16 +756,14 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 						if(i >= 256) {
 							i = 256;
 						}
-						byte[] data = new byte[i];
-						state.getStorage().read(data, false);
-						return new Object[] { new String(data, Charsets.UTF_8) };
+						return new Object[] { new String(read(i), Charsets.UTF_8) };
 					} else {
 						return null;
 					}
 				}
 				case 10: { // write
 					if(state.getStorage() != null) {
-						state.getStorage().write((byte) ((Number) arguments[0]).intValue());
+						write((byte) ((Number) arguments[0]).intValue());
 					}
 					break;
 				}

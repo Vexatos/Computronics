@@ -1,7 +1,24 @@
 ==== 1.6.1 ====
 
+  * ADDED: Support for TIS-3D!
+    - Added a Colorful Module to display any colour you want, akin to a Colorful Lamp.
+    - Added a Tape Reader Module which allows you to interface with an adjacent Tape Drive.
+    - Added a Self-Destructing Module which allows you to dispose of your casings with style.
+    - Documented everything in the TIS-3D manual.
+    - Each module can be individually disabled in the config file.
+  * ADDED: EnderIO 2.3 integration  for OpenComputers and ComputerCraft! (Has actually existed since March 2015, just not in any official release)
+      - Added support for the new Telepad
+        - Allows full control over the coordinates set (if allowed in the EnderIO config file) as well as telepad activation
+      - Added support for the new Weather Obelisk
+        - Allows control over the weather, provided the Obelisk has the correct items.
+      - The Capacitor Bank now provides two additional functions, `getAverageInputPerTick()` and `getAverageOutputPerTick()`
+        - This allows you to monitor input and output of your energy network separately
+      - Now you can get and set the range of Vacuum Chests
+      - Added `getProgress()` to most machines with progress
   * ADDED: Built-in tape utility program for ComputerCraft to write songs to tapes and to play, stop, pause etc.
+  * ADDED: getPosition() to tape drives. No, I'm not joking. It's real. I'm sorry.
   * FIXED: Crash when the `openComputersBees` config option was set to `false`.
+  * FIXED: Updated OpenComputers integration (requires OpenComputers 1.5.21 now)
 
 ==== 1.6.0 ====
 
@@ -542,7 +559,7 @@ This is semi-officially known as "The Kodos Update".
 
   * Added: A rewrite of the Tape Drive mechanics.
     * Tape Drives now remember their state on unload (persistence!).
-    * [[http://i.imgur.com/FCFiPfd.png|A slick new GUI]] - makes it possible to use Tape Drives without computers!
+    * [A slick new GUI](http://i.imgur.com/FCFiPfd.png) - makes it possible to use Tape Drives without computers!
     * Tape Drive playback can be controlled with redstone.
   * Added: Tape Drives and Cameras can now be rotated with BuildCraft or compatible wrenches.
   * Added: Iron Note Blocks support the two noteblock sounds that are in the Minecraft assets/ folder but were never used ("pling" and "bass", respectively).

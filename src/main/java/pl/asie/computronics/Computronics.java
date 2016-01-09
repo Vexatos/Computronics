@@ -1,21 +1,7 @@
 package pl.asie.computronics;
 
-import java.lang.reflect.Method;
-import java.util.Locale;
-import java.util.Random;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import com.google.common.collect.ImmutableList;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.tileentity.TileEntity;
-
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -30,8 +16,13 @@ import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
 import cpw.mods.fml.common.network.FMLEventChannel;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheralProvider;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheralRegistry;
 import pl.asie.computronics.audio.DFPWMPlaybackManager;
@@ -58,6 +49,7 @@ import pl.asie.computronics.integration.buildcraft.statements.TriggerProvider;
 import pl.asie.computronics.integration.forestry.IntegrationForestry;
 import pl.asie.computronics.integration.gregtech.GregTechRecipes;
 import pl.asie.computronics.integration.railcraft.IntegrationRailcraft;
+import pl.asie.computronics.integration.tis3d.IntegrationTIS3D;
 import pl.asie.computronics.item.ItemTape;
 import pl.asie.computronics.item.block.IBlockWithSpecialText;
 import pl.asie.computronics.item.block.ItemBlockWithSpecialText;
@@ -87,13 +79,19 @@ import pl.asie.lib.gui.managed.ManagedGuiHandler;
 import pl.asie.lib.item.ItemMultiple;
 import pl.asie.lib.network.PacketHandler;
 
+import java.lang.reflect.Method;
+import java.util.Locale;
+import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 @Mod(modid = Mods.Computronics, name = Mods.Computronics_NAME, version = "@VERSION@",
 	dependencies = "required-after:asielib@[0.4.5,);required-after:Forge@[10.13.2.1291,);"
-		+ "after:ComputerCraft;after:OpenComputers@[1.6.0,);"
+		+ "after:ComputerCraft;after:OpenComputers@[1.6.0,);after:tis3d@[0.8.2.61,);"
 		+ "before:OpenPeripheralCore@[1.1,);before:OpenPeripheralApi@[3.2,);"
 		+ "after:MineFactoryReloaded;after:RedLogic@[59.1.9,);after:ProjRed|Core;"
 		+ "after:BuildCraft|Core@[7.0.6,);after:Railcraft@[9.8.0.0,);"
-		+ "after:gregtech@[MC1710];after:EnderIO@[1.7.10_2.2.7,);"
+		+ "after:gregtech@[MC1710];after:EnderIO@[1.7.10-2.3,);"
 		+ "after:Forestry;after:Waila@[1.5.10,);"
 		+ "after:MekanismAPI|energy@[8.0.0,);after:Flamingo@[1.7.10-1.3,);"
 		+ "after:armourersWorkshop@[1.7.10-0.33,)")
@@ -135,6 +133,7 @@ public class Computronics {
 	public static IntegrationBuildCraft buildcraft;
 	public static IntegrationRailcraft railcraft;
 	public static IntegrationForestry forestry;
+	public static IntegrationTIS3D tis3D;
 
 	public static ItemTape itemTape;
 	public static ItemMultiple itemParts;
@@ -275,6 +274,11 @@ public class Computronics {
 			opencomputers.preInit();
 		}
 
+		if(Mods.isLoaded(Mods.TIS3D)) {
+			tis3D = new IntegrationTIS3D();
+			tis3D.preInit();
+		}
+
 		proxy.registerAudioHandlers();
 	}
 
@@ -302,6 +306,10 @@ public class Computronics {
 
 		if(Mods.API.hasAPI(Mods.API.BuildCraftBlueprints)) {
 			IntegrationBuildCraftBuilder.INSTANCE.init();
+		}
+
+		if(Mods.isLoaded(Mods.TIS3D) && tis3D != null) {
+			tis3D.init();
 		}
 
 		achievements = new ComputronicsAchievements();
@@ -349,6 +357,10 @@ public class Computronics {
 			TriggerProvider.initialize();
 			ActionProvider.initialize();
 			StatementParameters.initialize();
+		}
+
+		if(Mods.isLoaded(Mods.TIS3D) && tis3D != null) {
+			tis3D.postInit();
 		}
 	}
 
