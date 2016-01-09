@@ -104,7 +104,8 @@ public class IntegrationOpenComputers {
 			|| Config.OC_CARD_BOOM
 			|| Config.OC_UPGRADE_COLORFUL
 			|| Config.OC_BOARD_LIGHT
-			|| Config.OC_BOARD_BOOM) {
+			|| Config.OC_BOARD_BOOM
+			|| Config.OC_BOARD_CAPACITOR) {
 			itemOCParts = new ItemOpenComputers();
 			GameRegistry.registerItem(itemOCParts, "computronics.ocParts");
 			Driver.add((Item) itemOCParts);
@@ -391,6 +392,17 @@ public class IntegrationOpenComputers {
 			} else {
 				log.warn("Could not add Server Self-Destructor Recipe because Self-Destructing Card is disabled in the config.");
 			}
+		}
+		if(Config.OC_BOARD_CAPACITOR) {
+			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 10),
+				"lsl", "gcg", "opo",
+				's', li.cil.oc.api.Items.get("chip1").createItemStack(1),
+				'g', new ItemStack(itemOCParts, 1, 6),
+				'c', Blocks.tnt,
+				'o', "obsidian",
+				'l', Items.gunpowder,
+				'p', li.cil.oc.api.Items.get("printedCircuitBoard").createItemStack(1)
+			);
 		}
 		if(Computronics.buildcraft != null) {
 			Computronics.buildcraft.postInitOC();

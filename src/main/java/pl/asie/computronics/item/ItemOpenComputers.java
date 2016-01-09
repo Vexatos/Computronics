@@ -32,6 +32,7 @@ import net.minecraft.util.IIcon;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.oc.IntegrationOpenComputers;
 import pl.asie.computronics.oc.driver.DriverBoardBoom;
+import pl.asie.computronics.oc.driver.DriverBoardCapacitor;
 import pl.asie.computronics.oc.driver.DriverBoardLight;
 import pl.asie.computronics.oc.driver.DriverCardBoom;
 import pl.asie.computronics.oc.driver.DriverCardFX;
@@ -70,7 +71,8 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 			"card_boom",
 			"robot_upgrade_colorful",
 			"rack_board_light",
-			"rack_board_boom"
+			"rack_board_boom",
+			"rack_board_capacitor"
 		});
 		this.setCreativeTab(Computronics.tab);
 	}
@@ -106,7 +108,8 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 				break;
 			}
 			case 8:
-			case 9: {
+			case 9:
+			case 10: {
 				works = works && Rack.class.isAssignableFrom(host);
 				break;
 			}
@@ -141,6 +144,8 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 				return DriverBoardLight.class;
 			case 9:
 				return DriverBoardBoom.class;
+			case 10:
+				return DriverBoardCapacitor.class;
 			default:
 				return null;
 		}
@@ -171,6 +176,8 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 				return container instanceof Rack ? new DriverBoardLight((Rack) container) : null;
 			case 9:
 				return container instanceof Rack ? new DriverBoardBoom((Rack) container) : null;
+			case 10:
+				return container instanceof Rack ? new DriverBoardCapacitor((Rack) container) : null;
 			default:
 				return null;
 		}
@@ -197,8 +204,8 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 			case 7:
 				return Slot.Upgrade;
 			case 8:
-				return Slot.RackMountable;
 			case 9:
+			case 10:
 				return Slot.RackMountable;
 			default:
 				return Slot.None;
@@ -226,11 +233,41 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 			case 7:
 				return 1; // Tier 2
 			case 8:
-				return 0; // Tier 1
 			case 9:
+			case 10:
 				return 0; // Tier 1
 			default:
 				return 0; // Tier 1 default
+		}
+	}
+
+	@Override
+	public String getDocumentationName(ItemStack stack) {
+		switch(stack.getItemDamage()) {
+			case 0:
+				return "camera_upgrade";
+			case 1:
+				return "chat_upgrade";
+			case 2:
+				return "radar_upgrade";
+			case 3:
+				return "particle_card";
+			case 4:
+				return "spoofing_card";
+			case 5:
+				return "beep_card";
+			case 6:
+				return "self_destructing_card";
+			case 7:
+				return "colorful_upgrade";
+			case 8:
+				return "light_board";
+			case 9:
+				return "server_self_destructor";
+			case 10:
+				return "rack_capacitor";
+			default:
+				return "index";
 		}
 	}
 
@@ -282,6 +319,9 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 		}
 		if(Config.OC_BOARD_BOOM) {
 			list.add(new ItemStack(item, 1, 9));
+		}
+		if(Config.OC_BOARD_CAPACITOR) {
+			list.add(new ItemStack(item, 1, 10));
 		}
 	}
 
@@ -387,34 +427,6 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 					+ data.getCompoundTag("node").getString("address").substring(0, 13) + "..."
 					+ EnumChatFormatting.GRAY);
 			}
-		}
-	}
-
-	@Override
-	public String getDocumentationName(ItemStack stack) {
-		switch(stack.getItemDamage()) {
-			case 0:
-				return "camera_upgrade";
-			case 1:
-				return "chat_upgrade";
-			case 2:
-				return "radar_upgrade";
-			case 3:
-				return "particle_card";
-			case 4:
-				return "spoofing_card";
-			case 5:
-				return "beep_card";
-			case 6:
-				return "self_destructing_card";
-			case 7:
-				return "colorful_upgrade";
-			case 8:
-				return "light_board";
-			case 9:
-				return "server_self_destructor";
-			default:
-				return "index";
 		}
 	}
 

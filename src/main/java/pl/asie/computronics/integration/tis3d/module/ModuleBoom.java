@@ -134,7 +134,7 @@ public class ModuleBoom extends ComputronicsModule {
 			}
 			for(Casing casing : boomQueue) {
 				if(casing != null && casing.getCasingWorld() != null) {
-					SelfDestruct.goBoom(casing.getCasingWorld(), casing.getPositionX(), casing.getPositionY(), casing.getPositionZ());
+					SelfDestruct.goBoom(casing.getCasingWorld(), casing.getPositionX(), casing.getPositionY(), casing.getPositionZ(), true);
 				}
 			}
 			boomQueue.clear();

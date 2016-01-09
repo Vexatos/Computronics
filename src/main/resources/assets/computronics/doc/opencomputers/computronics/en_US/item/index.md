@@ -28,6 +28,7 @@ Keep in mind that some of these may not be available, depending on the recipe se
 
 * [Light Board](light_board.md)
 * [Server Self-Destructor](server_self_destructor.md)
+* [Rack Capacitor](rack_capacitor.md)
 
 # Items for other mods
 

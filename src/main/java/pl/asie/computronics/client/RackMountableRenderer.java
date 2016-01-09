@@ -27,9 +27,10 @@ public class RackMountableRenderer {
 		boomBoardActive = new ResourceLocation("computronics", "textures/blocks/boom_board_on.png"),
 		boomBoardTicking = new ResourceLocation("computronics", "textures/blocks/boom_board_ticking.png");
 	private IIcon
-		boomBoard;
+		boomBoard,
+		rackCapacitor;
 
-	private static final List<Integer> mountables = Arrays.asList(8, 9);
+	private static final List<Integer> mountables = Arrays.asList(8, 9, 10);
 
 	@Optional.Method(modid = Mods.OpenComputers)
 	private boolean isRackMountable(ItemStack stack) {
@@ -152,6 +153,10 @@ public class RackMountableRenderer {
 				e.setFrontTextureOverride(boomBoard);
 				break;
 			}
+			case 10: {
+				e.setFrontTextureOverride(rackCapacitor);
+				break;
+			}
 		}
 	}
 
@@ -163,6 +168,7 @@ public class RackMountableRenderer {
 				mode.registerIcons(e.map);
 			}
 			boomBoard = e.map.registerIcon("computronics:boom_board");
+			rackCapacitor = e.map.registerIcon("computronics:rack_capacitor");
 		}
 	}
 }

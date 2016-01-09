@@ -32,6 +32,7 @@ public class Config {
 	public static double LIGHT_BOARD_COLOR_CHANGE_COST = 0.2;
 	public static double LIGHT_BOARD_COLOR_MAINTENANCE_COST = 0.02;
 	public static double BOOM_BOARD_MAINTENANCE_COST = 0.02;
+	public static double RACK_CAPACITOR_CAPACITY = 7500;
 	public static String CHATBOX_PREFIX = "ChatBox";
 	public static double LOCOMOTIVE_RELAY_RANGE = 128.0;
 	public static double LOCOMOTIVE_RELAY_BASE_POWER = 20.0;
@@ -52,6 +53,7 @@ public class Config {
 	public static boolean OC_UPGRADE_COLORFUL;
 	public static boolean OC_BOARD_LIGHT;
 	public static boolean OC_BOARD_BOOM;
+	public static boolean OC_BOARD_CAPACITOR;
 
 	public static boolean CC_OPEN_MULTI_PERIPHERAL = true;
 	public static boolean CC_ALL_MULTI_PERIPHERALS = true;
@@ -113,6 +115,7 @@ public class Config {
 			OC_UPGRADE_COLORFUL = config.get("enable.opencomputers", "colorfulUpgrade", true).getBoolean(true);
 			OC_BOARD_LIGHT = config.get("enable.opencomputers", "lightBoard", true).getBoolean(true);
 			OC_BOARD_BOOM = config.get("enable.opencomputers", "boomBoard", true).getBoolean(true);
+			OC_BOARD_CAPACITOR = config.get("enable.opencomputers", "rackCapacitor", true).getBoolean(true);
 
 			// Particle Card
 			FX_ENERGY_COST = convertRFtoOC(
@@ -134,6 +137,8 @@ public class Config {
 				config.getFloat("ocLightBoardColorMaintenanceCost", "power", 0.2f, 0.0f, 10000.0f, "How much energy will be consumed per tick to keep a Light Board's light running. Note that this value is consumed for each active light on the board."));
 			BOOM_BOARD_MAINTENANCE_COST = convertRFtoOC(
 				config.getFloat("ocBoomBoardMaintenanceCost", "power", 0.2f, 0.0f, 10000.0f, "How much energy will be consumed per tick to keep a Server Self-Destructor active."));
+			RACK_CAPACITOR_CAPACITY = convertRFtoOC(
+				config.getFloat("ocRackCapacitorCapacity", "power", 7500f, 0.0f, 10000.0f, "How much energy a Rack Capacitor can store."));
 
 			if(Mods.isLoaded(Mods.Railcraft)) {
 				LOCOMOTIVE_RELAY_BASE_POWER = convertRFtoOC(
