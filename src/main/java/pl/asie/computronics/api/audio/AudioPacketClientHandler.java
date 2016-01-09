@@ -1,9 +1,9 @@
 package pl.asie.computronics.api.audio;
 
-import java.io.IOException;
-
 import pl.asie.lib.network.Packet;
 import pl.asie.lib.util.WorldUtils;
+
+import java.io.IOException;
 
 public abstract class AudioPacketClientHandler {
 	protected abstract void readData(Packet packet, int packetId, int sourceId) throws IOException;

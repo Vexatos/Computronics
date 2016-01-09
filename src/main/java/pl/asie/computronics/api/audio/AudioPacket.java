@@ -1,18 +1,17 @@
 package pl.asie.computronics.api.audio;
 
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.server.MinecraftServer;
+import pl.asie.computronics.Computronics;
+import pl.asie.computronics.network.Packets;
+import pl.asie.lib.network.Packet;
+
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.server.MinecraftServer;
-
-import pl.asie.computronics.Computronics;
-import pl.asie.computronics.network.Packets;
-import pl.asie.lib.network.Packet;
 
 public abstract class AudioPacket {
 	private static int _idGen;

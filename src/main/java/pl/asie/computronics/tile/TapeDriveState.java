@@ -1,15 +1,14 @@
 package pl.asie.computronics.tile;
 
-import java.util.Arrays;
-
 import net.minecraft.world.World;
-
 import pl.asie.computronics.Computronics;
-import pl.asie.computronics.api.tape.ITapeStorage;
 import pl.asie.computronics.api.audio.AudioPacket;
 import pl.asie.computronics.api.audio.AudioPacketDFPWM;
-import pl.asie.computronics.audio.AudioUtils;
 import pl.asie.computronics.api.audio.IAudioSource;
+import pl.asie.computronics.api.tape.ITapeStorage;
+import pl.asie.computronics.audio.AudioUtils;
+
+import java.util.Arrays;
 
 public class TapeDriveState {
 	public enum State {
