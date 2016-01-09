@@ -1,13 +1,9 @@
 package pl.asie.computronics.network;
 
-import java.io.IOException;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetHandler;
 import net.minecraft.tileentity.TileEntity;
-
-import javax.sound.sampled.AudioFormat;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.api.audio.AudioPacketClientHandler;
 import pl.asie.computronics.api.audio.AudioPacketRegistry;
@@ -17,6 +13,9 @@ import pl.asie.computronics.tile.TapeDriveState.State;
 import pl.asie.computronics.tile.TileTapeDrive;
 import pl.asie.lib.network.MessageHandlerBase;
 import pl.asie.lib.network.Packet;
+
+import javax.sound.sampled.AudioFormat;
+import java.io.IOException;
 
 public class NetworkHandlerClient extends MessageHandlerBase {
 	private static class CodecData {

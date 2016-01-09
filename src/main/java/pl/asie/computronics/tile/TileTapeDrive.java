@@ -4,8 +4,6 @@ package pl.asie.computronics.tile;
 
 import com.google.common.base.Charsets;
 import cpw.mods.fml.common.Optional;
-import net.minecraftforge.common.util.ForgeDirection;
-
 import dan200.computercraft.api.filesystem.IMount;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
