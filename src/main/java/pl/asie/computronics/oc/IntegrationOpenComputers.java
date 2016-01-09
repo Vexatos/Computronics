@@ -397,10 +397,10 @@ public class IntegrationOpenComputers {
 			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 10),
 				"lsl", "gcg", "opo",
 				's', li.cil.oc.api.Items.get("chip1").createItemStack(1),
-				'g', new ItemStack(itemOCParts, 1, 6),
-				'c', Blocks.tnt,
+				'g', "nuggetGold",
+				'c', li.cil.oc.api.Items.get("capacitor").createItemStack(1),
 				'o', "obsidian",
-				'l', Items.gunpowder,
+				'l', "ingotIron",
 				'p', li.cil.oc.api.Items.get("printedCircuitBoard").createItemStack(1)
 			);
 		}

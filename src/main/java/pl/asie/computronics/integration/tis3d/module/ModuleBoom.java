@@ -120,6 +120,7 @@ public class ModuleBoom extends ComputronicsModule {
 
 			FontRendererAPI.drawString(s);
 		}
+		GL11.glDisable(GL11.GL_BLEND);
 	}
 
 	public static class BoomHandler {

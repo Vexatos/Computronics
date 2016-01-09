@@ -47,12 +47,11 @@ public class RackMountableRenderer {
 			return;
 		}
 
-		if(e.data == null) {
-			return;
-		}
-		light = false;
 		switch(stack.getItemDamage()) {
 			case 8: {
+				if(e.data == null) {
+					return;
+				}
 				enableLight();
 				GL11.glEnable(GL11.GL_BLEND);
 				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -79,10 +78,14 @@ public class RackMountableRenderer {
 				}
 
 				GL11.glColor3f(1, 1, 1);
+				GL11.glDisable(GL11.GL_BLEND);
 				disableLight();
 				break;
 			}
 			case 9: {
+				if(e.data == null) {
+					return;
+				}
 				enableLight();
 				GL11.glEnable(GL11.GL_BLEND);
 				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -93,6 +96,7 @@ public class RackMountableRenderer {
 					e.renderOverlay(boomBoardTicking);
 				}
 				GL11.glColor3f(1, 1, 1);
+				GL11.glDisable(GL11.GL_BLEND);
 				disableLight();
 				break;
 			}
@@ -110,22 +114,14 @@ public class RackMountableRenderer {
 		t.draw();
 	}
 
-	private boolean light = false;
-
 	private void enableLight() {
-		if(!light) {
-			Minecraft.getMinecraft().entityRenderer.disableLightmap(0);
-			RenderHelper.disableStandardItemLighting();
-			light = true;
-		}
+		Minecraft.getMinecraft().entityRenderer.disableLightmap(0);
+		RenderHelper.disableStandardItemLighting();
 	}
 
 	private void disableLight() {
-		if(light) {
-			Minecraft.getMinecraft().entityRenderer.enableLightmap(0);
-			RenderHelper.enableStandardItemLighting();
-			light = false;
-		}
+		Minecraft.getMinecraft().entityRenderer.enableLightmap(0);
+		RenderHelper.enableStandardItemLighting();
 	}
 
 	@SubscribeEvent
@@ -136,12 +132,11 @@ public class RackMountableRenderer {
 			return;
 		}
 
-		if(e.data == null) {
-			return;
-		}
-		light = false;
 		switch(stack.getItemDamage()) {
 			case 8: {
+				if(e.data == null) {
+					return;
+				}
 				Mode mode = Mode.fromIndex(e.data.getInteger("m"));
 				if(mode == null) {
 					mode = Mode.Default;
