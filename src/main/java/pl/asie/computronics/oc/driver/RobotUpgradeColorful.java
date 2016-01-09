@@ -8,7 +8,6 @@ import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.EnvironmentHost;
 import li.cil.oc.api.network.Visibility;
 import net.minecraft.nbt.NBTTagCompound;
-import pl.asie.computronics.oc.ManagedEnvironmentWithComponentConnector;
 import pl.asie.computronics.reference.Config;
 
 /**

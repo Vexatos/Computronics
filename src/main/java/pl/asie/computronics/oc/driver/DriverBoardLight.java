@@ -3,8 +3,6 @@ package pl.asie.computronics.oc.driver;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import li.cil.oc.api.Network;
-import li.cil.oc.api.component.RackBusConnectable;
-import li.cil.oc.api.component.RackMountable;
 import li.cil.oc.api.internal.Rack;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
@@ -18,16 +16,13 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
-import pl.asie.computronics.oc.ManagedEnvironmentWithComponentConnector;
 import pl.asie.computronics.reference.Config;
 import pl.asie.lib.integration.Integration;
-
-import java.util.EnumSet;
 
 /**
  * @author Vexatos
  */
-public class DriverBoardLight extends ManagedEnvironmentWithComponentConnector implements RackMountable {
+public class DriverBoardLight extends RackMountableWithComponentConnector {
 
 	protected final Rack host;
 	protected boolean needsUpdate;
@@ -320,18 +315,6 @@ public class DriverBoardLight extends ManagedEnvironmentWithComponentConnector i
 		}
 	}
 
-	// Unused
-
-	@Override
-	public int getConnectableCount() {
-		return 0;
-	}
-
-	@Override
-	public RackBusConnectable getConnectableAt(int index) {
-		return null;
-	}
-
 	@Override
 	public boolean onActivate(EntityPlayer player, ForgeDirection side, float hitX, float hitY, float hitZ) {
 		final int
@@ -351,10 +334,5 @@ public class DriverBoardLight extends ManagedEnvironmentWithComponentConnector i
 			return true;
 		}
 		return false;
-	}
-
-	@Override
-	public EnumSet<State> getCurrentState() {
-		return EnumSet.noneOf(State.class);
 	}
 }

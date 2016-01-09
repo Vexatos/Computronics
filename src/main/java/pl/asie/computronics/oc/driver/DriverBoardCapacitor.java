@@ -1,25 +1,18 @@
 package pl.asie.computronics.oc.driver;
 
 import li.cil.oc.api.Network;
-import li.cil.oc.api.component.RackBusConnectable;
-import li.cil.oc.api.component.RackMountable;
 import li.cil.oc.api.internal.Rack;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.Visibility;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.util.ForgeDirection;
-import pl.asie.computronics.oc.ManagedEnvironmentWithComponentConnector;
 import pl.asie.computronics.reference.Config;
-
-import java.util.EnumSet;
 
 /**
  * @author Vexatos
  */
-public class DriverBoardCapacitor extends ManagedEnvironmentWithComponentConnector implements RackMountable {
+public class DriverBoardCapacitor extends RackMountableWithComponentConnector {
 
 	protected final Rack host;
 
@@ -44,25 +37,5 @@ public class DriverBoardCapacitor extends ManagedEnvironmentWithComponentConnect
 	@Override
 	public NBTTagCompound getData() {
 		return null;
-	}
-
-	@Override
-	public int getConnectableCount() {
-		return 0;
-	}
-
-	@Override
-	public RackBusConnectable getConnectableAt(int index) {
-		return null;
-	}
-
-	@Override
-	public boolean onActivate(EntityPlayer player, ForgeDirection side, float hitX, float hitY, float hitZ) {
-		return false;
-	}
-
-	@Override
-	public EnumSet<State> getCurrentState() {
-		return EnumSet.noneOf(State.class);
 	}
 }
