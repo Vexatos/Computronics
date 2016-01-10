@@ -1,16 +1,14 @@
 package pl.asie.computronics.block;
 
-import net.minecraftforge.fml.common.Optional;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import li.cil.oc.api.network.Environment;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.item.block.IBlockWithSpecialText;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TileCipherBlockAdvanced;
@@ -23,31 +21,14 @@ import java.util.List;
  */
 public class BlockCipherAdvanced extends BlockMachineSidedIcon implements IBlockWithSpecialText {
 
-	private IIcon mFront;
-
 	public BlockCipherAdvanced() {
-		super("cipher_advanced");
-		this.setBlockName("computronics.cipher_advanced");
+		super("cipher_advanced", Rotation.NONE);
+		//this.setBlockName("computronics.cipher_advanced");
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int i) {
+	public TileEntity createTileEntity(World world, IBlockState state) {
 		return new TileCipherBlockAdvanced();
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public IIcon getAbsoluteSideIcon(int sideNumber, int metadata) {
-		return sideNumber == 2 ? mFront : super.getAbsoluteSideIcon(sideNumber, metadata);
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister r) {
-		mSide = r.registerIcon("computronics:advanced/machine_side");
-		mTop = r.registerIcon("computronics:advanced/machine_top");
-		mBottom = r.registerIcon("computronics:advanced/machine_bottom");
-		mFront = r.registerIcon("computronics:advanced/cipher_front");
 	}
 
 	@Override
@@ -70,5 +51,10 @@ public class BlockCipherAdvanced extends BlockMachineSidedIcon implements IBlock
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Class<? extends Environment> getTileEntityClass(int meta) {
 		return TileCipherBlockAdvanced.class;
+	}
+
+	@Override
+	public String getDocumentationName(World world, BlockPos pos) {
+		return null;
 	}
 }

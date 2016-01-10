@@ -1,14 +1,16 @@
 package pl.asie.computronics.api.audio;
 
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
-import net.minecraftforge.common.util.ForgeDirection;
-
 public interface IAudioReceiver extends IAudioConnection {
+
 	World getSoundWorld();
-	int getSoundX();
-	int getSoundY();
-	int getSoundZ();
+
+	BlockPos getSoundPos();
+
 	int getSoundDistance();
-	void receivePacket(AudioPacket packet, ForgeDirection side);
+
+	void receivePacket(AudioPacket packet, EnumFacing side);
 }

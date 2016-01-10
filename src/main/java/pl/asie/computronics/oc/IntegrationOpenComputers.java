@@ -9,7 +9,7 @@ import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.apache.logging.log4j.Logger;
 import pl.asie.computronics.Computronics;
-import pl.asie.computronics.client.UpgradeRenderer;
+import pl.asie.computronics.oc.client.UpgradeRenderer;
 import pl.asie.computronics.integration.flamingo.DriverFlamingo;
 import pl.asie.computronics.item.ItemOpenComputers;
 import pl.asie.computronics.oc.block.DriverBlockEnvironments;

@@ -1,5 +1,6 @@
 package pl.asie.computronics.util;
 
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import pl.asie.computronics.util.internal.IColorable;
@@ -53,6 +54,10 @@ public class ColorUtils {
 			return colorValues.get(color);
 		}
 		return Color.White;
+	}
+
+	public static Color fromColor(EnumDyeColor color) {
+		return fromDyeMeta(color.getDyeDamage());
 	}
 
 	public static boolean isSameOrDefault(IColorable one, IColorable two) {

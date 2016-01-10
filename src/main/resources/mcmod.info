@@ -13,5 +13,20 @@
   "parent":"",
   "screenshots": [],
   "dependencies": []
+},
+{
+  "modid": "asielib",
+  "name": "asielib",
+  "description": "Utilities for asie's mods",
+  "version": "${asielib-version}",
+  "credits": "",
+  "logoFile": "",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": [ "asiekierka", "Vexatos" ],
+  "parent":"",
+  "screenshots": [],
+  "dependencies": []
 }
 ]

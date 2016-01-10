@@ -1,11 +1,5 @@
 package pl.asie.computronics.tile;
 
-import net.minecraftforge.fml.client.FMLClientHandler;
-import net.minecraftforge.fml.common.Optional;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-//import dan200.computercraft.api.peripheral.IComputerAccess;
-//import dan200.computercraft.api.peripheral.IPeripheral;
 import li.cil.oc.api.Network;
 import li.cil.oc.api.network.BlacklistedPeripheral;
 import li.cil.oc.api.network.Environment;
@@ -13,9 +7,11 @@ import li.cil.oc.api.network.Message;
 import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.Visibility;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
-import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
+import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.asie.computronics.audio.MachineSound;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.ColorUtils;
@@ -23,7 +19,9 @@ import pl.asie.computronics.util.internal.IColorable;
 import pl.asie.computronics.util.internal.IComputronicsPeripheral;
 import pl.asie.lib.tile.TileMachine;
 
-import java.util.ArrayList;
+//import dan200.computercraft.api.peripheral.IComputerAccess;
+//import dan200.computercraft.api.peripheral.IPeripheral;
+//import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
 
 // #######################################################
 //
@@ -33,11 +31,11 @@ import java.util.ArrayList;
 
 @Optional.InterfaceList({
 	@Optional.Interface(iface = "li.cil.oc.api.network.Environment", modid = Mods.OpenComputers),
-	@Optional.Interface(iface = "li.cil.oc.api.network.BlacklistedPeripheral", modid = Mods.OpenComputers),
-	@Optional.Interface(iface = "pl.asie.computronics.api.multiperipheral.IMultiPeripheral", modid = Mods.ComputerCraft)
+	@Optional.Interface(iface = "li.cil.oc.api.network.BlacklistedPeripheral", modid = Mods.OpenComputers)/*,
+	@Optional.Interface(iface = "pl.asie.computronics.api.multiperipheral.IMultiPeripheral", modid = Mods.ComputerCraft)*/
 })
 public abstract class TileEntityPeripheralBase extends TileMachine implements Environment,
-	IMultiPeripheral, IComputronicsPeripheral, BlacklistedPeripheral, IColorable {
+	/*IMultiPeripheral,*/ IComputronicsPeripheral, BlacklistedPeripheral, IColorable {
 
 	protected String peripheralName;
 
@@ -79,7 +77,7 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 	// Has to be an Object for getDeclaredFields to not error when
 	// called on this class without OpenComputers being present. Blame OpenPeripheral.
 	private Object node;
-	protected ArrayList<IComputerAccess> attachedComputersCC;
+	//protected ArrayList<IComputerAccess> attachedComputersCC;
 	protected boolean addedToNetwork = false;
 
 	@Override
@@ -115,8 +113,8 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 	}
 
 	@Override
-	public void updateEntity() {
-		super.updateEntity();
+	public void update() {
+		super.update();
 		if(!addedToNetwork) {
 			addedToNetwork = true;
 			if(Mods.isLoaded(Mods.OpenComputers)) {
@@ -188,7 +186,7 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 		}
 	}
 
-	@Override
+	/*@Override
 	@Optional.Method(modid = Mods.ComputerCraft)
 	public String getType() {
 		return peripheralName;
@@ -233,7 +231,7 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 	@Optional.Method(modid = Mods.ComputerCraft)
 	public int peripheralPriority() {
 		return 1;
-	}
+	}*/
 
 	protected int overlayColor = getDefaultColor();
 
@@ -269,7 +267,7 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 			this.overlayColor = getDefaultColor();
 		}
 		if(oldColor != this.overlayColor) {
-			this.worldObj.markBlockRangeForRenderUpdate(xCoord, yCoord, zCoord, xCoord, yCoord, zCoord);
+			this.worldObj.markBlockRangeForRenderUpdate(getPos(), getPos());
 		}
 	}
 
@@ -356,7 +354,7 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 		if(hasSound()) {
 			if(shouldPlaySound() && !isInvalid()) {
 				if(sound == null) {
-					sound = new MachineSound(getSoundRes(), xCoord + 0.5f, yCoord + 0.5f, zCoord + 0.5f, getVolume(), getPitch(), shouldRepeat());
+					sound = new MachineSound(getSoundRes(), getPos(), getVolume(), getPitch(), shouldRepeat());
 					FMLClientHandler.instance().getClient().getSoundHandler().playSound(sound);
 				}
 			} else if(sound != null) {

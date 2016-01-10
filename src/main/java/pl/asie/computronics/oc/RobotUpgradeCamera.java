@@ -8,12 +8,12 @@ import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.Visibility;
 import li.cil.oc.api.prefab.ManagedEnvironment;
-import net.minecraft.util.Direction;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
-import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.util.Camera;
 
 public class RobotUpgradeCamera extends ManagedEnvironment {
+
 	private final EnvironmentHost entity;
 
 	public RobotUpgradeCamera(EnvironmentHost entity) {
@@ -24,13 +24,12 @@ public class RobotUpgradeCamera extends ManagedEnvironment {
 	private final Camera camera = new Camera();
 	private static final int CALL_LIMIT = 15;
 
-	private ForgeDirection getFacingDirection() {
+	private EnumFacing getFacingDirection() {
 		if(entity instanceof Rotatable) {
 			return ((Rotatable) entity).facing();
 		} else {
 			int l = MathHelper.floor_double((double) (entity.world().getClosestPlayer(entity.xPosition(), entity.yPosition(), entity.zPosition(), 1.0D).rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-			l = Direction.directionToFacing[l];
-			return ForgeDirection.getOrientation(l);
+			return EnumFacing.getHorizontal(l);
 		}
 	}
 
@@ -60,7 +59,7 @@ public class RobotUpgradeCamera extends ManagedEnvironment {
 			y = (float) args.checkDouble(1);
 		}
 		camera.ray(entity.world(), (int) Math.floor(entity.xPosition()), (int) Math.floor(entity.yPosition()), (int) Math.floor(entity.zPosition()),
-			ForgeDirection.UP, x, y);
+			EnumFacing.UP, x, y);
 		return new Object[] { camera.getDistance() };
 	}
 
@@ -75,7 +74,7 @@ public class RobotUpgradeCamera extends ManagedEnvironment {
 			y = (float) args.checkDouble(1);
 		}
 		camera.ray(entity.world(), (int) Math.floor(entity.xPosition()), (int) Math.floor(entity.yPosition()), (int) Math.floor(entity.zPosition()),
-			ForgeDirection.DOWN, x, y);
+			EnumFacing.DOWN, x, y);
 		return new Object[] { camera.getDistance() };
 	}
 }

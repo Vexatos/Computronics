@@ -1,20 +1,20 @@
 package pl.asie.computronics.integration;
 
-import net.minecraftforge.fml.common.Optional;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import li.cil.oc.api.detail.ItemInfo;
-import mods.railcraft.common.items.ItemElectricMeter;
-import mods.railcraft.common.items.ItemRail;
-import mods.railcraft.common.items.RailcraftItem;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.RecipeUtils;
 import pl.asie.lib.util.color.RecipeColorizer;
+
+//import mods.railcraft.common.items.ItemElectricMeter;
+//import mods.railcraft.common.items.ItemRail;
+//import mods.railcraft.common.items.RailcraftItem;
 
 /**
  * @author Vexatos
@@ -67,9 +67,9 @@ public class ModRecipes {
 				'c', Computronics.cipher != null ? Computronics.cipher : Items.diamond, 'e', Items.ender_pearl, 'i', Items.iron_ingot,
 				'd', Computronics.cipher != null ? Items.diamond : Items.gold_ingot);
 		}
-		if(Mods.isLoaded(Mods.Railcraft) && Computronics.railcraft != null) {
+		/*if(Mods.isLoaded(Mods.Railcraft) && Computronics.railcraft != null) {
 			registerRailcraftRecipes();
-		}
+		}*/
 		if(Computronics.itemTape != null) {
 			// Tape recipes
 			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.itemTape, 1, 0),
@@ -119,7 +119,7 @@ public class ModRecipes {
 		return false;
 	}
 
-	@Optional.Method(modid = Mods.Railcraft)
+	/*@Optional.Method(modid = Mods.Railcraft)
 	protected void registerRailcraftRecipes() {
 		Item item = GameRegistry.findItem(Mods.Railcraft, "part.plate");
 		if(Computronics.railcraft.locomotiveRelay != null && Computronics.railcraft.relaySensor != null) {
@@ -157,5 +157,5 @@ public class ModRecipes {
 				'p', Blocks.piston,
 				'g', "paneGlassColorless");
 		}
-	}
+	}*/
 }

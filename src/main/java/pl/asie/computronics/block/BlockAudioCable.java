@@ -1,39 +1,37 @@
 package pl.asie.computronics.block;
 
-import java.util.ArrayList;
-
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IIcon;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.common.util.ForgeDirection;
-
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.client.AudioCableRender;
 import pl.asie.computronics.oc.manual.IBlockWithDocumentation;
 import pl.asie.computronics.tile.TileAudioCable;
 import pl.asie.computronics.util.ColorUtils;
+import pl.asie.computronics.util.internal.IColorable;
 import pl.asie.lib.block.BlockBase;
 
 public class BlockAudioCable extends BlockBase implements IBlockWithDocumentation {
-	private IIcon mCable;
+
 	private int connectionMask = 0x3f;
 	private int ImmibisMicroblocks_TransformableBlockMarker;
 
 	public BlockAudioCable() {
-		super(Material.iron, Computronics.instance);
+		super(Material.iron, Computronics.instance, Rotation.NONE);
 		this.setCreativeTab(Computronics.tab);
-		this.setBlockName("computronics.audiocable");
+		//this.setBlockName("computronics.audiocable");
 	}
 
 	public void setRenderMask(int m) {
@@ -55,115 +53,76 @@ public class BlockAudioCable extends BlockBase implements IBlockWithDocumentatio
 	}
 
 	@Override
-	public int getRenderColor(int meta) {
+	public int getRenderColor(IBlockState state) {
 		return ColorUtils.Color.LightGray.color;
 	}
 
 	@Override
-	public int colorMultiplier(IBlockAccess world, int x, int y, int z) {
-		TileEntity tile = world.getTileEntity(x, y, z);
-		if(tile instanceof TileAudioCable) {
-			return ((TileAudioCable) tile).getColor();
+	public int colorMultiplier(IBlockAccess world, BlockPos pos, int renderPass) {
+		TileEntity tile = world.getTileEntity(pos);
+		if(tile instanceof IColorable) {
+			return ((IColorable) tile).getColor();
 		}
-		return getRenderColor(world.getBlockMetadata(x, y, z));
+		return getRenderColor(world.getBlockState(pos));
 	}
 
 	@Override
-	public boolean recolourBlock(World world, int x, int y, int z, ForgeDirection side, int colour) {
-		TileEntity tile = world.getTileEntity(x, y, z);
-		if(tile instanceof TileAudioCable) {
-			((TileAudioCable) tile).setColor(ColorUtils.fromWoolMeta(colour).color);
-			world.markBlockForUpdate(x, y, z);
+	public boolean recolorBlock(World world, BlockPos pos, EnumFacing side, EnumDyeColor color) {
+		TileEntity tile = world.getTileEntity(pos);
+		if(tile instanceof IColorable && ((IColorable) tile).canBeColored()) {
+			((IColorable) tile).setColor(ColorUtils.fromColor(color).color);
+			world.markBlockForUpdate(pos);
 			return true;
 		}
-		return super.recolourBlock(world, x, y, z, side, colour);
+		return super.recolorBlock(world, pos, side, color);
 	}
 
 	// Collision box magic
 
 	@Override
-	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z) {
-		doSetBlockBoundsBasedOnState(world, x, y, z);
-		return super.getCollisionBoundingBoxFromPool(world, x, y, z);
+	public AxisAlignedBB getCollisionBoundingBox(World world, BlockPos pos, IBlockState state) {
+		setBlockBoundsBasedOnState(world, pos);
+		return super.getCollisionBoundingBox(world, pos, state);
 	}
 
 	@Override
-	public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z) {
-		//doSetBlockBoundsBasedOnState(world, x, y, z);
-		return super.getSelectedBoundingBoxFromPool(world, x, y, z);
-	}
-
-	@Override
-	public final void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z) {
-		synchronized(this) {
-			this.doSetBlockBoundsBasedOnState(world, x, y, z);
-		}
+	public final void setBlockBoundsBasedOnState(IBlockAccess world, BlockPos pos) {
+		setBlockBounds(BoundingBox.getBox(neighbors(world, pos)));
 	}
 
 	/**
-	 * @author Sangar, Vexatos
+	 * @author Sangar, Vexatos, asie
 	 */
+	@SuppressWarnings("PointlessBitwiseExpression")
 	private static class BoundingBox {
-		private static AxisAlignedBB[] bounds;
-		private static final AxisAlignedBB DEFAULT_BOX = AxisAlignedBB.getBoundingBox(0, 0, 0, 1, 1, 1);
+
+		private static final AxisAlignedBB[] bounds = new AxisAlignedBB[0x40];
+
+		static {
+			for(int mask = 0; mask < 0x40; ++mask) {
+				bounds[mask] = AxisAlignedBB.fromBounds(
+					((mask & (1 << 4)) != 0 ? 0 : 0.375),
+					((mask & (1 << 0)) != 0 ? 0 : 0.375),
+					((mask & (1 << 2)) != 0 ? 0 : 0.375),
+					((mask & (1 << 5)) != 0 ? 1 : 0.375),
+					((mask & (1 << 1)) != 0 ? 1 : 0.375),
+					((mask & (1 << 3)) != 0 ? 1 : 0.375)
+				);
+			}
+		}
 
 		private static AxisAlignedBB getBox(int msk) {
-			if(bounds == null) {
-				setupBounds();
-			}
-			if(msk < 0 || msk >= bounds.length || bounds[msk] == null) {
-				return DEFAULT_BOX.copy();
-			}
-			return bounds[msk].copy();
-		}
-
-		private static void setupBounds() {
-			ArrayList<AxisAlignedBB> newbounds = new ArrayList<AxisAlignedBB>(0xFF >> 2);
-			for(int mask = 0; mask <= 0xFF >> 2; ++mask) {
-				AxisAlignedBB bounds = AxisAlignedBB.getBoundingBox(-0.195, -0.195, -0.195, 0.195, 0.195, 0.195);
-				for(ForgeDirection side : ForgeDirection.VALID_DIRECTIONS) {
-					if((side.flag & mask) != 0) {
-						if(side.offsetX < 0) {
-							bounds.minX += side.offsetX * 0.375;
-						} else {
-							bounds.maxX += side.offsetX * 0.375;
-						}
-						if(side.offsetY < 0) {
-							bounds.minY += side.offsetY * 0.375;
-						} else {
-							bounds.maxY += side.offsetY * 0.375;
-						}
-						if(side.offsetZ < 0) {
-							bounds.minZ += side.offsetZ * 0.375;
-						} else {
-							bounds.maxZ += side.offsetZ * 0.375;
-						}
-					}
-				}
-				bounds.setBounds(
-					clamp(bounds.minX + 0.5), clamp(bounds.minY + 0.5), clamp(bounds.minZ + 0.5),
-					clamp(bounds.maxX + 0.5), clamp(bounds.maxY + 0.5), clamp(bounds.maxZ + 0.5));
-				newbounds.add(bounds);
-			}
-			bounds = newbounds.toArray(new AxisAlignedBB[newbounds.size()]);
-		}
-
-		private static double clamp(double val) {
-			return Math.min(Math.max(val, 0D), 1D);
+			return bounds[msk];
 		}
 	}
 
-	protected void doSetBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z) {
-		setBlockBounds(BoundingBox.getBox(neighbors(world, x, y, z)));
-	}
-
-	private int neighbors(IBlockAccess world, int x, int y, int z) {
+	private int neighbors(IBlockAccess world, BlockPos pos) {
 		int result = 0;
-		TileEntity tile = world.getTileEntity(x, y, z);
+		TileEntity tile = world.getTileEntity(pos);
 		if(tile instanceof TileAudioCable) {
-			for(ForgeDirection side : ForgeDirection.VALID_DIRECTIONS) {
+			for(EnumFacing side : EnumFacing.VALUES) {
 				if(((TileAudioCable) tile).connectsAudio(side)) {
-					result |= side.flag;
+					result |= 1 << side.ordinal();
 				}
 			}
 		}
@@ -172,13 +131,6 @@ public class BlockAudioCable extends BlockBase implements IBlockWithDocumentatio
 
 	protected void setBlockBounds(AxisAlignedBB bounds) {
 		setBlockBounds((float) bounds.minX, (float) bounds.minY, (float) bounds.minZ, (float) bounds.maxX, (float) bounds.maxY, (float) bounds.maxZ);
-	}
-
-	@Override
-	public MovingObjectPosition collisionRayTrace(World world, int x, int y, int z, Vec3 start, Vec3 end) {
-		synchronized(this) {
-			return super.collisionRayTrace(world, x, y, z, start, end);
-		}
 	}
 
 	/*@Override

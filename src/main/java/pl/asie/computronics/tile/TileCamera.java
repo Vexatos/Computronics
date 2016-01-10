@@ -3,10 +3,12 @@ package pl.asie.computronics.tile;
 /*//import dan200.computercraft.api.lua.ILuaContext;
 //import dan200.computercraft.api.lua.LuaException;
 //import dan200.computercraft.api.peripheral.IComputerAccess;*/
+
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.reference.Config;
@@ -14,6 +16,7 @@ import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.Camera;
 
 public class TileCamera extends TileEntityPeripheralBase {
+
 	private static final int CALL_LIMIT = 20;
 	private final Camera camera = new Camera();
 	private final Camera cameraRedstone = new Camera();
@@ -23,17 +26,12 @@ public class TileCamera extends TileEntityPeripheralBase {
 		super("camera");
 	}
 
-	@Override
-	public boolean canUpdate() {
-		return true;
-	}
-
-	private ForgeDirection getFacingDirection() {
-		return Computronics.camera.getFacingDirection(worldObj, xCoord, yCoord, zCoord);
+	private EnumFacing getFacingDirection() {
+		return Computronics.camera.getFacingDirection(worldObj, getPos());
 	}
 
 	@Override
-	public int requestCurrentRedstoneValue(int side) {
+	public int requestCurrentRedstoneValue(EnumFacing side) {
 		double distance = cameraRedstone.getDistance();
 		if(distance > 0.0) {
 			return 15 - (int) Math.min(15, Math.round(distance / 2D));
@@ -43,11 +41,12 @@ public class TileCamera extends TileEntityPeripheralBase {
 	}
 
 	@Override
-	public void updateEntity() {
-		super.updateEntity();
+	public void update() {
+		super.update();
 		if(tick % 20 == 0 && Config.REDSTONE_REFRESH) {
-			cameraRedstone.ray(worldObj, xCoord, yCoord, zCoord, getFacingDirection(), 0.0f, 0.0f);
-			this.worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, this.getBlockType());
+			BlockPos pos = getPos();
+			cameraRedstone.ray(worldObj, pos.getX(), pos.getY(), pos.getZ(), getFacingDirection(), 0.0f, 0.0f);
+			this.worldObj.notifyBlockOfStateChange(this.pos, this.getBlockType());
 		}
 		tick++;
 	}
@@ -64,11 +63,12 @@ public class TileCamera extends TileEntityPeripheralBase {
 			x = (float) args.checkDouble(0);
 			y = (float) args.checkDouble(1);
 		}
-		camera.ray(worldObj, xCoord, yCoord, zCoord, getFacingDirection(), x, y);
+		BlockPos pos = getPos();
+		camera.ray(worldObj, pos.getX(), pos.getY(), pos.getZ(), getFacingDirection(), x, y);
 		return new Object[] { camera.getDistance() };
 	}
 
-	@Override
+	/*@Override
 	@Optional.Method(modid = Mods.ComputerCraft)
 	public String[] getMethodNames() {
 		return new String[] { "distance" };
@@ -98,5 +98,5 @@ public class TileCamera extends TileEntityPeripheralBase {
 			}
 		}
 		return null;
-	}
+	}*/
 }

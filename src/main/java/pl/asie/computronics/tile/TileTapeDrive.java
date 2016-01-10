@@ -2,14 +2,6 @@ package pl.asie.computronics.tile;
 
 //import java.nio.file.FileSystem;
 
-import com.google.common.base.Charsets;
-import net.minecraftforge.fml.common.Optional;
-import net.minecraftforge.common.util.ForgeDirection;
-
-//import dan200.computercraft.api.filesystem.IMount;
-//import dan200.computercraft.api.lua.ILuaContext;
-//import dan200.computercraft.api.lua.LuaException;
-//import dan200.computercraft.api.peripheral.IComputerAccess;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
@@ -21,30 +13,34 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.api.audio.AudioPacket;
 import pl.asie.computronics.api.audio.IAudioReceiver;
 import pl.asie.computronics.api.audio.IAudioSource;
 import pl.asie.computronics.api.tape.IItemTapeStorage;
-import pl.asie.computronics.cc.ComputronicsFileMount;
 import pl.asie.computronics.network.Packets;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TapeDriveState.State;
 import pl.asie.computronics.util.ColorUtils;
 import pl.asie.computronics.util.internal.IColorable;
-import pl.asie.lib.api.tile.IInventoryProvider;
 import pl.asie.lib.network.Packet;
 
-import java.util.HashMap;
+//import dan200.computercraft.api.filesystem.IMount;
+//import dan200.computercraft.api.lua.ILuaContext;
+//import dan200.computercraft.api.lua.LuaException;
+//import dan200.computercraft.api.peripheral.IComputerAccess;
+//import pl.asie.computronics.cc.ComputronicsFileMount;
 
-public class TileTapeDrive extends TileEntityPeripheralBase implements IInventoryProvider, IAudioSource {
+public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSource {
 
 	private final IAudioReceiver internalSpeaker = new IAudioReceiver() {
 		@Override
-		public boolean connectsAudio(ForgeDirection side) {
+		public boolean connectsAudio(EnumFacing side) {
 			return true;
 		}
 
@@ -54,18 +50,8 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 		}
 
 		@Override
-		public int getSoundX() {
-			return xCoord;
-		}
-
-		@Override
-		public int getSoundY() {
-			return yCoord;
-		}
-
-		@Override
-		public int getSoundZ() {
-			return zCoord;
+		public BlockPos getSoundPos() {
+			return getPos();
 		}
 
 		@Override
@@ -74,7 +60,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 		}
 
 		@Override
-		public void receivePacket(AudioPacket packet, ForgeDirection direction) {
+		public void receivePacket(AudioPacket packet, EnumFacing direction) {
 			packet.addReceiver(this);
 		}
 	};
@@ -91,7 +77,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 		}
 	}
 
-	private static Object cc_fs;
+	/*private static Object cc_fs;
 	private static Object cc_fs_autorun; // dan200, why?
 	protected HashMap<IComputerAccess, String> computerMountPointsCC;
 	protected HashMap<IComputerAccess, String> computerMountPointsCC_autorun;
@@ -166,7 +152,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 		if(mountPoint != null) {
 			computer.unmount(mountPoint);
 		}
-	}
+	}*/
 
 	private Object oc_fs;
 
@@ -245,7 +231,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 	public void switchState(State s) {
 		//System.out.println("Switchy switch to " + s.name());
 		if(this.getEnumState() != s) {
-			this.state.switchState(worldObj, xCoord, yCoord, zCoord, s);
+			this.state.switchState(worldObj, getPos(), s);
 			this.sendState();
 		}
 	}
@@ -300,15 +286,14 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 	}
 
 	@Override
-	public void updateEntity() {
-		super.updateEntity();
+	public void update() {
+		super.update();
 		State st = getEnumState();
-		AudioPacket pkt = state.update(this, worldObj, xCoord, yCoord, zCoord);
+		AudioPacket pkt = state.update(this, worldObj, getPos());
 		if(pkt != null) {
 			int receivers = 0;
-			for(int i = 0; i < 6; i++) {
-				ForgeDirection dir = ForgeDirection.getOrientation(i);
-				TileEntity tile = worldObj.getTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
+			for(EnumFacing dir : EnumFacing.VALUES) {
+				TileEntity tile = worldObj.getTileEntity(getPos().offset(dir));
 				if(tile instanceof IAudioReceiver) {
 					if(tile instanceof IColorable && ((IColorable) tile).canBeColored()
 						&& !ColorUtils.isSameOrDefault(this, (IColorable) tile)) {
@@ -320,7 +305,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 			}
 
 			if(receivers == 0) {
-				internalSpeaker.receivePacket(pkt, ForgeDirection.UNKNOWN);
+				internalSpeaker.receivePacket(pkt, null);
 			}
 
 			pkt.sendPacket();
@@ -342,11 +327,6 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 			}
 			storageName = label;
 		}
-	}
-
-	@Override
-	public boolean canUpdate() {
-		return true;
 	}
 
 	@Override
@@ -439,14 +419,16 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 		if(this.getStackInSlot(0) == null) {
 			if(state.getStorage() != null) { // Tape was inserted
 				// Play eject sound
-				worldObj.playSoundEffect(xCoord, yCoord, zCoord, "computronics:tape_eject", 1, 0);
+				BlockPos pos = getPos();
+				worldObj.playSoundEffect(pos.getX(), pos.getY(), pos.getZ(), "computronics:tape_eject", 1, 0);
 			}
 			unloadStorage();
 		} else {
 			loadStorage();
 			if(this.getStackInSlot(0).getItem() instanceof IItemTapeStorage) {
 				// Play insert sound
-				worldObj.playSoundEffect(xCoord, yCoord, zCoord, "computronics:tape_insert", 1, 0);
+				BlockPos pos = getPos();
+				worldObj.playSoundEffect(pos.getX(), pos.getY(), pos.getZ(), "computronics:tape_insert", 1, 0);
 			}
 		}
 	}
@@ -637,7 +619,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 	public Object[] getState(Context context, Arguments args) {
 		return new Object[] { state.getState().toString() };
 	}
-
+/*
 	@Override
 	@Optional.Method(modid = Mods.ComputerCraft)
 	public String[] getMethodNames() {
@@ -773,14 +755,14 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 		// catch all other methods
 		return null;
 	}
-
+*/
 	@Override
 	public int getSourceId() {
 		return state.getId();
 	}
 
 	@Override
-	public boolean connectsAudio(ForgeDirection side) {
+	public boolean connectsAudio(EnumFacing side) {
 		return true;
 	}
 }

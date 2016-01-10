@@ -9,9 +9,11 @@ import pl.asie.computronics.network.Packets;
 import pl.asie.computronics.tile.TapeDriveState.State;
 import pl.asie.computronics.tile.TileTapeDrive;
 import pl.asie.computronics.util.StringUtil;
-import pl.asie.lib.block.ContainerBase;
+import pl.asie.lib.gui.container.ContainerBase;
 import pl.asie.lib.gui.GuiBase;
 import pl.asie.lib.network.Packet;
+
+import java.io.IOException;
 
 public class GuiTapePlayer extends GuiBase {
 	private static final int BUTTON_START_X = 48;
@@ -84,7 +86,7 @@ public class GuiTapePlayer extends GuiBase {
 	}
 
 	@Override
-	public void mouseClicked(int x, int y, int mb) {
+	public void mouseClicked(int x, int y, int mb)throws IOException {
 		super.mouseClicked(x, y, mb);
 		if(mb == 0) {
 			for(Button button: Button.values()) {
@@ -99,10 +101,10 @@ public class GuiTapePlayer extends GuiBase {
 	}
 	
 	@Override
-	public void mouseMovedOrUp(int x, int y, int which) {
-		super.mouseMovedOrUp(x, y, which);
-		if(which >= 0 && buttonMouse != null) {
-			this.mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0F));
+	public void mouseReleased(int x, int y, int button) {
+		super.mouseReleased(x, y, button);
+		if(button == 0 && buttonMouse != null) {
+			this.mc.getSoundHandler().playSound(PositionedSoundRecord.create(new ResourceLocation("gui.button.press"), 1.0F));
 			handleButtonPress(buttonMouse);
 			buttonMouse = null;
 		}
@@ -110,7 +112,7 @@ public class GuiTapePlayer extends GuiBase {
 	
 	// Uses NBT data.
 	private String getLabel() {
-		ItemStack stack = (ItemStack)this.container.getInventory().get(0);
+		ItemStack stack = this.container.getInventory().get(0);
 		if(stack != null && stack.getItem() instanceof ItemTape) {
 			String label = StringUtil.localize("tooltip.computronics.tape.unnamed");
 			if(stack.getTagCompound() != null && stack.getTagCompound().hasKey("label")) label = stack.getTagCompound().getString("label");

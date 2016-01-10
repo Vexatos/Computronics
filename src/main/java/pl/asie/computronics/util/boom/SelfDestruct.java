@@ -73,12 +73,7 @@ public class SelfDestruct extends Explosion {
 					TileEntity tile = this.worldObj.getTileEntity(blockpos);
 					if(tile != null && !tile.isInvalid() && tile instanceof IInventory) {
 						IInventory inv = (IInventory) tile;
-						for(int slot = 0; slot < inv.getSizeInventory(); slot++) {
-							ItemStack stack = inv.getStackInSlot(slot);
-							if(stack != null && stack.stackSize > 0) {
-								inv.setInventorySlotContents(slot, null);
-							}
-						}
+						inv.clear();
 					}
 				}
 				if(block.canDropFromExplosion(this)) {

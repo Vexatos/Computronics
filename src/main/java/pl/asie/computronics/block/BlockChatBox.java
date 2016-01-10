@@ -1,59 +1,58 @@
 package pl.asie.computronics.block;
 
-import net.minecraftforge.fml.common.Optional;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import li.cil.oc.api.network.Environment;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.properties.PropertyBool;
+import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.item.block.IBlockWithSpecialText;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TileChatBox;
 import pl.asie.computronics.util.StringUtil;
-import pl.asie.lib.block.TileEntityBase;
+import pl.asie.lib.tile.TileEntityBase;
 
 import java.util.List;
 
 public class BlockChatBox extends BlockMachineSidedIcon implements IBlockWithSpecialText {
 
-	private IIcon mSide;
+	public static final PropertyBool CREATIVE = PropertyBool.create("creative");
 
 	public BlockChatBox() {
-		super("chatbox");
+		super("chatbox", Rotation.FOUR);
 		this.setCreativeTab(Computronics.tab);
-		this.setIconName("computronics:chatbox");
-		this.setBlockName("computronics.chatBox");
-		this.setRotation(Rotation.FOUR);
+		this.setDefaultState(this.blockState.getBaseState().withProperty(rotation.FACING, EnumFacing.NORTH).withProperty(CREATIVE, false));
+		//this.setIconName("computronics:chatbox");
+		//this.setBlockName("computronics.chatBox");
+		//this.setRotation(Rotation.FOUR);
 	}
 
 	// I'm such a cheater.
 	@Override
-	public int getRenderColor(int meta) {
-		return meta >= 8 ? 0xFF60FF : 0xFFFFFF;
+	public int getRenderColor(IBlockState state) {
+		return state.getValue(CREATIVE) ? 0xFF60FF : 0xFFFFFF;
 	}
 
 	// Cheaters never win! ~ jaquadro
 	@Override
-	public int colorMultiplier(IBlockAccess world, int x, int y, int z) {
-		int meta = world.getBlockMetadata(x, y, z);
-		if(meta >= 8) {
-			return getRenderColor(meta);
-		}
-		return super.colorMultiplier(world, x, y, z);
+	public int colorMultiplier(IBlockAccess world, BlockPos pos, int renderPass) {
+		IBlockState state = world.getBlockState(pos);
+		return state.getValue(CREATIVE) ? getRenderColor(state) : super.colorMultiplier(world, pos, renderPass);
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int metadata) {
+	public TileEntity createTileEntity(World world, IBlockState state) {
 		return new TileChatBox();
 	}
 
@@ -67,25 +66,30 @@ public class BlockChatBox extends BlockMachineSidedIcon implements IBlockWithSpe
 	}
 
 	@Override
-	public int damageDropped(int metadata) {
-		return metadata & (~7);
+	public IBlockState getStateFromMeta(int meta) {
+		return super.getStateFromMeta(meta).withProperty(CREATIVE, (meta & 0x10) != 0);
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public IIcon getAbsoluteSideIcon(int sideNumber, int metadata) {
-		return mSide;
+	public int getMetaFromState(IBlockState state) {
+		return super.getMetaFromState(state) | (state.getValue(CREATIVE) ? 0x10 : 0);
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister r) {
-		super.registerBlockIcons(r);
-		mSide = r.registerIcon("computronics:chatbox_side");
+	public int damageDropped(IBlockState state) {
+		return getMetaFromState(state) & (~7);
 	}
 
 	@Override
-	public boolean emitsRedstone(IBlockAccess world, int x, int y, int z, int side) {
+	protected BlockState createBlockState() {
+		return new BlockState(this,
+			rotation.FACING,
+			CREATIVE
+		);
+	}
+
+	@Override
+	public boolean emitsRedstone(IBlockAccess world, BlockPos pos, EnumFacing side) {
 		return Config.REDSTONE_REFRESH;
 	}
 
@@ -95,12 +99,12 @@ public class BlockChatBox extends BlockMachineSidedIcon implements IBlockWithSpe
 	}
 
 	@Override
-	public int getComparatorInputOverride(World world, int x, int y, int z, int side) {
-		TileEntity tile = world.getTileEntity(x, y, z);
+	public int getComparatorInputOverride(World world, BlockPos pos) {
+		TileEntity tile = world.getTileEntity(pos);
 		if(tile instanceof TileEntityBase) {
-			return ((TileEntityBase) tile).requestCurrentRedstoneValue(side);
+			return ((TileEntityBase) tile).requestCurrentRedstoneValue(null);
 		}
-		return super.getComparatorInputOverride(world, x, y, z, side);
+		return super.getComparatorInputOverride(world, pos);
 	}
 
 	@Override

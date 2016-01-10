@@ -1,4 +1,4 @@
-package pl.asie.computronics.client;
+package pl.asie.computronics.oc.client;
 
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -15,7 +15,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.opengl.GL11;
-import pl.asie.computronics.client.model.ModelRadar;
+import pl.asie.computronics.oc.client.model.ModelRadar;
 import pl.asie.computronics.item.ItemOpenComputers;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.internal.Triple;
@@ -38,7 +38,7 @@ public class UpgradeRenderer {
 		upgradeChatBox = new ResourceLocation("computronics", "textures/models/UpgradeChatBox.png"),
 		beepCard = new ResourceLocation("computronics", "textures/models/CardBeep.png");
 
-	AxisAlignedBB bounds = AxisAlignedBB.getBoundingBox(-0.1, -0.1, -0.1, 0.1, 0.1, 0.1);
+	AxisAlignedBB bounds = AxisAlignedBB.fromBounds(-0.1, -0.1, -0.1, 0.1, 0.1, 0.1);
 
 	private static final List<Integer> upgrades = Arrays.asList(1, 2, 5);
 
@@ -231,7 +231,7 @@ public class UpgradeRenderer {
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void onPlayerTickPre(RenderPlayerEvent.Pre e) {
-		String name = e.entityPlayer.getCommandSenderName();
+		String name = e.entityPlayer.getName();
 		if(PetRenderer.hidden().contains(name) || !entitledPlayers.containsKey(name)) {
 			return;
 		}

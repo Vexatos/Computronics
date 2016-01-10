@@ -1,6 +1,6 @@
 package pl.asie.computronics.gui;
 
-import pl.asie.lib.block.ContainerBase;
+import pl.asie.lib.gui.container.ContainerBase;
 import pl.asie.lib.gui.GuiBase;
 
 public class GuiCipherBlock extends GuiBase {
