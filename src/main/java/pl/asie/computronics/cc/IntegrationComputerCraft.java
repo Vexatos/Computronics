@@ -1,44 +1,44 @@
 package pl.asie.computronics.cc;
 
-import cpw.mods.fml.common.Optional;
+import net.minecraftforge.fml.common.Optional;
 import dan200.computercraft.api.ComputerCraftAPI;
 import net.minecraftforge.common.config.Configuration;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.cc.multiperipheral.MultiPeripheralProvider;
-import pl.asie.computronics.integration.appeng.DriverSpatialIOPort;
-import pl.asie.computronics.integration.armourersworkshop.DriverMannequin;
-import pl.asie.computronics.integration.buildcraft.DriverHeatable;
-import pl.asie.computronics.integration.cofh.DriverEnergyProvider;
-import pl.asie.computronics.integration.cofh.DriverEnergyReceiver;
-import pl.asie.computronics.integration.draconicevolution.DriverExtendedRFStorage;
-import pl.asie.computronics.integration.enderio.DriverAbstractMachine;
-import pl.asie.computronics.integration.enderio.DriverAbstractPoweredMachine;
-import pl.asie.computronics.integration.enderio.DriverCapacitorBank;
-import pl.asie.computronics.integration.enderio.DriverCapacitorBankOld;
-import pl.asie.computronics.integration.enderio.DriverHasExperience;
-import pl.asie.computronics.integration.enderio.DriverIOConfigurable;
-import pl.asie.computronics.integration.enderio.DriverPowerMonitor;
-import pl.asie.computronics.integration.enderio.DriverPowerStorage;
-import pl.asie.computronics.integration.enderio.DriverRedstoneControllable;
-import pl.asie.computronics.integration.enderio.DriverTransceiver;
-import pl.asie.computronics.integration.factorization.DriverChargeConductor;
+//import pl.asie.computronics.integration.appeng.DriverSpatialIOPort;
+//import pl.asie.computronics.integration.armourersworkshop.DriverMannequin;
+//import pl.asie.computronics.integration.buildcraft.DriverHeatable;
+//import pl.asie.computronics.integration.cofh.DriverEnergyProvider;
+//import pl.asie.computronics.integration.cofh.DriverEnergyReceiver;
+//import pl.asie.computronics.integration.draconicevolution.DriverExtendedRFStorage;
+//import pl.asie.computronics.integration.enderio.DriverAbstractMachine;
+//import pl.asie.computronics.integration.enderio.DriverAbstractPoweredMachine;
+//import pl.asie.computronics.integration.enderio.DriverCapacitorBank;
+//import pl.asie.computronics.integration.enderio.DriverCapacitorBankOld;
+//import pl.asie.computronics.integration.enderio.DriverHasExperience;
+//import pl.asie.computronics.integration.enderio.DriverIOConfigurable;
+//import pl.asie.computronics.integration.enderio.DriverPowerMonitor;
+//import pl.asie.computronics.integration.enderio.DriverPowerStorage;
+//import pl.asie.computronics.integration.enderio.DriverRedstoneControllable;
+//import pl.asie.computronics.integration.enderio.DriverTransceiver;
+//import pl.asie.computronics.integration.factorization.DriverChargeConductor;
 import pl.asie.computronics.integration.flamingo.DriverFlamingo;
-import pl.asie.computronics.integration.fsp.DriverSteamTransporter;
-import pl.asie.computronics.integration.mekanism.DriverStrictEnergyStorage;
-import pl.asie.computronics.integration.mfr.DriverDeepStorageUnit;
-import pl.asie.computronics.integration.railcraft.driver.DriverBoilerFirebox;
-import pl.asie.computronics.integration.railcraft.driver.DriverElectricGrid;
-import pl.asie.computronics.integration.railcraft.driver.DriverRoutingDetector;
-import pl.asie.computronics.integration.railcraft.driver.DriverRoutingSwitch;
-import pl.asie.computronics.integration.railcraft.driver.DriverSteamTurbine;
-import pl.asie.computronics.integration.railcraft.driver.track.DriverLauncherTrack;
-import pl.asie.computronics.integration.railcraft.driver.track.DriverLimiterTrack;
-import pl.asie.computronics.integration.railcraft.driver.track.DriverLocomotiveTrack;
-import pl.asie.computronics.integration.railcraft.driver.track.DriverPoweredTrack;
-import pl.asie.computronics.integration.railcraft.driver.track.DriverPrimingTrack;
-import pl.asie.computronics.integration.railcraft.driver.track.DriverRoutingTrack;
-import pl.asie.computronics.integration.redlogic.DriverLamp;
-import pl.asie.computronics.integration.storagedrawers.DriverDrawerGroup;
+//import pl.asie.computronics.integration.fsp.DriverSteamTransporter;
+//import pl.asie.computronics.integration.mekanism.DriverStrictEnergyStorage;
+//import pl.asie.computronics.integration.mfr.DriverDeepStorageUnit;
+//import pl.asie.computronics.integration.railcraft.driver.DriverBoilerFirebox;
+//import pl.asie.computronics.integration.railcraft.driver.DriverElectricGrid;
+//import pl.asie.computronics.integration.railcraft.driver.DriverRoutingDetector;
+//import pl.asie.computronics.integration.railcraft.driver.DriverRoutingSwitch;
+//import pl.asie.computronics.integration.railcraft.driver.DriverSteamTurbine;
+//import pl.asie.computronics.integration.railcraft.driver.track.DriverLauncherTrack;
+//import pl.asie.computronics.integration.railcraft.driver.track.DriverLimiterTrack;
+//import pl.asie.computronics.integration.railcraft.driver.track.DriverLocomotiveTrack;
+//import pl.asie.computronics.integration.railcraft.driver.track.DriverPoweredTrack;
+//import pl.asie.computronics.integration.railcraft.driver.track.DriverPrimingTrack;
+//import pl.asie.computronics.integration.railcraft.driver.track.DriverRoutingTrack;
+//import pl.asie.computronics.integration.redlogic.DriverLamp;
+//import pl.asie.computronics.integration.storagedrawers.DriverDrawerGroup;
 import pl.asie.computronics.reference.Compat;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
@@ -66,7 +66,7 @@ public class IntegrationComputerCraft {
 
 	@Optional.Method(modid = Mods.ComputerCraft)
 	public void init() {
-		if(Mods.isLoaded(Mods.RedLogic)) {
+		/*if(Mods.isLoaded(Mods.RedLogic)) {
 			if(compat.isCompatEnabled(Compat.RedLogic_Lamps)) {
 				registerMultiPeripheralProvider(new DriverLamp.CCDriver());
 			}
@@ -155,7 +155,7 @@ public class IntegrationComputerCraft {
 			if(compat.isCompatEnabled(Compat.BuildCraft_Drivers)) {
 				registerMultiPeripheralProvider(new DriverHeatable.CCDriver());
 			}
-		}
+		}*/
 
 		if(Mods.isLoaded(Mods.Flamingo)) {
 			if(compat.isCompatEnabled(Compat.Flamingo)) {

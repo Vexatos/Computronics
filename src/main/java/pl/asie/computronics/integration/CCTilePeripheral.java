@@ -1,5 +1,6 @@
-/*package pl.asie.computronics.integration;
+package pl.asie.computronics.integration;
 
+import net.minecraft.util.BlockPos;
 import net.minecraftforge.fml.common.Optional;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
@@ -11,25 +12,23 @@ import pl.asie.computronics.reference.Mods;
 
 /**
  * @author Vexatos
- * /
+ */
 @Optional.Interface(iface = "li.cil.oc.api.network.BlacklistedPeripheral", modid = Mods.OpenComputers)
 public abstract class CCTilePeripheral<T> implements IPeripheral, IPeripheralProvider, BlacklistedPeripheral {
 	protected T tile;
 	protected IBlockAccess w;
-	protected int x, y, z;
+	protected BlockPos pos;
 	protected String name;
 
 	public CCTilePeripheral() {
 
 	}
 
-	public CCTilePeripheral(T tile, final String name, World world, int x, int y, int z) {
+	public CCTilePeripheral(T tile, final String name, World world, BlockPos pos) {
 		this.tile = tile;
 		this.name = name;
 		this.w = world;
-		this.x = x;
-		this.y = y;
-		this.z = z;
+		this.pos = pos;
 	}
 
 	@Override
@@ -57,7 +56,7 @@ public abstract class CCTilePeripheral<T> implements IPeripheral, IPeripheralPro
 		}
 		if(this.getClass().isInstance(other)) {
 			CCTilePeripheral o = this.getClass().cast(other);
-			if(w == o.w && x == o.x && z == o.z && y == o.y) {
+			if(w == o.w && pos.equals(o.pos)) {
 				return true;
 			}
 		}
@@ -70,4 +69,4 @@ public abstract class CCTilePeripheral<T> implements IPeripheral, IPeripheralPro
 	public boolean isPeripheralBlacklisted() {
 		return true;
 	}
-}*/
+}

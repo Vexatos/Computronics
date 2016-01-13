@@ -6,15 +6,17 @@ import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.ManagedEnvironment;
 import li.cil.oc.api.prefab.DriverTileEntity;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
+import pl.asie.computronics.integration.CCMultiPeripheral;
 import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
 import pl.asie.computronics.reference.Names;
 
-//import dan200.computercraft.api.lua.ILuaContext;
-//import dan200.computercraft.api.lua.LuaException;
-//import dan200.computercraft.api.peripheral.IComputerAccess;
-//import pl.asie.computronics.integration.CCMultiPeripheral;
+import dan200.computercraft.api.lua.ILuaContext;
+import dan200.computercraft.api.lua.LuaException;
+import dan200.computercraft.api.peripheral.IComputerAccess;
 
 /**
  * @author Vexatos
@@ -57,13 +59,13 @@ public class DriverFlamingo {
 		}
 	}
 
-	/*public static class CCDriver extends CCMultiPeripheral<TileEntityFlamingo> {
+	public static class CCDriver extends CCMultiPeripheral<TileEntityFlamingo> {
 
 		public CCDriver() {
 		}
 
-		public CCDriver(TileEntityFlamingo tile, World world, int x, int y, int z) {
-			super(tile, Names.Flamingo_Flamingo, world, x, y, z);
+		public CCDriver(TileEntityFlamingo tile, World world, BlockPos pos) {
+			super(tile, Names.Flamingo_Flamingo, world, pos);
 		}
 
 		@Override
@@ -72,10 +74,10 @@ public class DriverFlamingo {
 		}
 
 		@Override
-		public CCMultiPeripheral getPeripheral(World world, int x, int y, int z, int side) {
-			TileEntity te = world.getTileEntity(x, y, z);
+		public CCMultiPeripheral getPeripheral(World world, BlockPos pos, EnumFacing side) {
+			TileEntity te = world.getTileEntity(pos);
 			if(te != null && te instanceof TileEntityFlamingo) {
-				return new CCDriver((TileEntityFlamingo) te, world, x, y, z);
+				return new CCDriver((TileEntityFlamingo) te, world, pos);
 			}
 			return null;
 		}
@@ -89,7 +91,7 @@ public class DriverFlamingo {
 		public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
 			switch(method) {
 				case 0: {
-					tile.getWorldObj().addBlockEvent(tile.xCoord, tile.yCoord, tile.zCoord, tile.getBlockType(), 0, 0);
+					tile.getWorld().addBlockEvent(tile.getPos(), tile.getBlockType(), 0, 0);
 				}
 				case 1: {
 					return new Object[] { tile.wiggleStrength };
@@ -97,5 +99,5 @@ public class DriverFlamingo {
 			}
 			return null;
 		}
-	}*/
+	}
 }

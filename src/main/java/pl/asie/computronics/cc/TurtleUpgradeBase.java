@@ -6,16 +6,18 @@ import dan200.computercraft.api.turtle.TurtleCommandResult;
 import dan200.computercraft.api.turtle.TurtleSide;
 import dan200.computercraft.api.turtle.TurtleUpgradeType;
 import dan200.computercraft.api.turtle.TurtleVerb;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 
 public abstract class TurtleUpgradeBase implements ITurtleUpgrade {
-	private int upgradeID;
+	private ResourceLocation upgradeID;
 	
-	public TurtleUpgradeBase(int id) {
-		upgradeID = id;
+	public TurtleUpgradeBase(String id) {
+		upgradeID = new ResourceLocation("computronics", id);
 	}
 	
 	@Override
-	public int getUpgradeID() {
+	public ResourceLocation getUpgradeID() {
 		return upgradeID;
 	}
 
@@ -26,11 +28,16 @@ public abstract class TurtleUpgradeBase implements ITurtleUpgrade {
 
 	@Override
 	public TurtleCommandResult useTool(ITurtleAccess turtle, TurtleSide side,
-			TurtleVerb verb, int direction) {
+			TurtleVerb verb, EnumFacing direction) {
 		return null;
 	}
 
 	@Override
 	public void update(ITurtleAccess turtle, TurtleSide side) {
+	}
+
+	@Override
+	public int getLegacyUpgradeID() {
+		return -1;
 	}
 }

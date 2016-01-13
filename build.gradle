@@ -122,8 +122,6 @@ sourceSets {
 	main {
 		//output.resourcesDir = 'build/classes/main'
 		java {
-			exclude "pl/asie/computronics/api/multiperipheral/**"
-			exclude "pl/asie/computronics/cc/**"
 			exclude "pl/asie/computronics/client/**"
 			exclude "pl/asie/computronics/integration/appeng/**"
 			exclude "pl/asie/computronics/integration/armourersworkshop/**"

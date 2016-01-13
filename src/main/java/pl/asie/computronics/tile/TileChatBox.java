@@ -1,9 +1,10 @@
 package pl.asie.computronics.tile;
 
+import net.minecraft.util.BlockPos;
 import net.minecraftforge.fml.common.Optional;
-//import dan200.computercraft.api.lua.ILuaContext;
-//import dan200.computercraft.api.lua.LuaException;
-//import dan200.computercraft.api.peripheral.IComputerAccess;
+import dan200.computercraft.api.lua.ILuaContext;
+import dan200.computercraft.api.lua.LuaException;
+import dan200.computercraft.api.peripheral.IComputerAccess;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
@@ -11,6 +12,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.event.ServerChatEvent;
 import pl.asie.computronics.api.chat.ChatAPI;
 import pl.asie.computronics.api.chat.IChatListener;
+import pl.asie.computronics.block.BlockChatBox;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.ChatBoxUtils;
@@ -39,17 +41,18 @@ public class TileChatBox extends TileEntityPeripheralBase implements IChatListen
 	}
 
 	public boolean isCreative() {
-		return Config.CHATBOX_CREATIVE && worldObj != null && worldObj.blockExists(xCoord, yCoord, zCoord)
-			&& worldObj.getBlockMetadata(xCoord, yCoord, zCoord) >= 8;
+		BlockPos pos = getPos();
+		return Config.CHATBOX_CREATIVE && worldObj != null && worldObj.isBlockLoaded(pos)
+			&& worldObj.getBlockState(pos).getValue(BlockChatBox.CREATIVE);
 	}
 
 	@Override
-	public void updateEntity() {
-		super.updateEntity();
+	public void update() {
+		super.update();
 		if(Config.REDSTONE_REFRESH && ticksUntilOff > 0) {
 			ticksUntilOff--;
 			if(ticksUntilOff == 0 || mustRefresh) {
-				this.worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, this.getBlockType());
+				this.worldObj.notifyBlockOfStateChange(getPos(), this.getBlockType());
 			}
 		}
 	}

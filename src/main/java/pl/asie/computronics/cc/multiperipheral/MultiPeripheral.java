@@ -1,6 +1,7 @@
 package pl.asie.computronics.cc.multiperipheral;
 
-import cpw.mods.fml.common.Optional;
+import net.minecraft.util.BlockPos;
+import net.minecraftforge.fml.common.Optional;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
@@ -30,7 +31,7 @@ public class MultiPeripheral implements IPeripheral, BlacklistedPeripheral {
 	private String[] methodNames;
 
 	private World world;
-	private int x, y, z;
+	private BlockPos pos;
 
 	public MultiPeripheral(ArrayList<IMultiPeripheral> peripherals) {
 		this.initialize(peripherals);
@@ -60,12 +61,10 @@ public class MultiPeripheral implements IPeripheral, BlacklistedPeripheral {
 		this.methodNames = m.toArray(new String[m.size()]);
 	}
 
-	public MultiPeripheral(ArrayList<IMultiPeripheral> periphs, World world, int x, int y, int z) {
+	public MultiPeripheral(ArrayList<IMultiPeripheral> periphs, World world, BlockPos pos) {
 		this(periphs);
 		this.world = world;
-		this.x = x;
-		this.y = y;
-		this.z = z;
+		this.pos = pos;
 	}
 
 	@Override
@@ -126,7 +125,7 @@ public class MultiPeripheral implements IPeripheral, BlacklistedPeripheral {
 		}
 		if(this.getClass().isInstance(other)) {
 			MultiPeripheral o = this.getClass().cast(other);
-			if(world == o.world && x == o.x && z == o.z && y == o.y) {
+			if(world == o.world && pos.equals(o.pos)) {
 				return true;
 			}
 		}

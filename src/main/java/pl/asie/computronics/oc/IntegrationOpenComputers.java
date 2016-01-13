@@ -101,7 +101,7 @@ public class IntegrationOpenComputers {
 		// OpenComputers needs a hook in updateEntity in order to proprly register peripherals.
 		// Fixes Iron Note Block, among others.
 		// To ensure less TE ticks for those who don't use OC, we keep this tidbit around.
-		Config.MUST_UPDATE_TILE_ENTITIES = true;
+		//Config.MUST_UPDATE_TILE_ENTITIES = true;
 
 		/*if(Mods.hasVersion(Mods.Forestry, Mods.Versions.Forestry)) {
 			if(Config.FORESTRY_BEES) {

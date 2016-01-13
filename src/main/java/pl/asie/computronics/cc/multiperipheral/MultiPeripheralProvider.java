@@ -1,14 +1,10 @@
 package pl.asie.computronics.cc.multiperipheral;
 
-import cpw.mods.fml.common.Optional;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheralProvider;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
-import openperipheral.api.ApiAccess;
-import openperipheral.api.architecture.cc.IComputerCraftObjectsFactory;
-import openperipheral.api.peripheral.IOpenPeripheral;
-import openperipheral.api.peripheral.IPeripheralBlacklist;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
@@ -19,6 +15,11 @@ import pl.asie.computronics.reference.Mods;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+
+//import openperipheral.api.ApiAccess;
+//import openperipheral.api.architecture.cc.IComputerCraftObjectsFactory;
+//import openperipheral.api.peripheral.IOpenPeripheral;
+//import openperipheral.api.peripheral.IPeripheralBlacklist;
 
 /**
  * @author Vexatos
@@ -33,30 +34,30 @@ public class MultiPeripheralProvider implements IPeripheralProvider {
 	}
 
 	@Override
-	public IPeripheral getPeripheral(World world, int x, int y, int z, int side) {
+	public IPeripheral getPeripheral(World world, BlockPos pos, EnumFacing side) {
 		ArrayList<IMultiPeripheral> periphs = new ArrayList<IMultiPeripheral>();
 		for(IMultiPeripheralProvider peripheralProvider : this.peripheralProviders) {
-			IMultiPeripheral p = peripheralProvider.getPeripheral(world, x, y, z, side);
+			IMultiPeripheral p = peripheralProvider.getPeripheral(world, pos, side);
 			if(p != null) {
 				periphs.add(p);
 			}
 		}
 		if(Config.CC_ALL_MULTI_PERIPHERALS) {
-			getAllPeripherals(periphs, world, x, y, z, side);
+			getAllPeripherals(periphs, world, pos, side);
 		}
-		if(Mods.isLoaded(Mods.OpenPeripheral) && Config.CC_OPEN_MULTI_PERIPHERAL) {
+		/*if(Mods.isLoaded(Mods.OpenPeripheral) && Config.CC_OPEN_MULTI_PERIPHERAL) { TODO OpenPeripheral
 			IMultiPeripheral peripheral = getOpenPeripheral(world, x, y, z);
 			if(peripheral != null) {
 				periphs.add(peripheral);
 			}
-		}
+		}*/
 		if(!periphs.isEmpty()) {
-			return new MultiPeripheral(periphs, world, x, y, z);
+			return new MultiPeripheral(periphs, world, pos);
 		}
 		return null;
 	}
 
-	@Optional.Method(modid = Mods.OpenPeripheral)
+	/*@Optional.Method(modid = Mods.OpenPeripheral) TODO OpenPeripheral
 	private IMultiPeripheral getOpenPeripheral(World world, int x, int y, int z) {
 		TileEntity tile = world.getTileEntity(x, y, z);
 		try {
@@ -76,7 +77,7 @@ public class MultiPeripheralProvider implements IPeripheralProvider {
 			log.error("An error occured trying to get OpenPeripheral peripherals", t);
 		}
 		return null;
-	}
+	}*/
 
 	private List<IPeripheralProvider> ccPeripheralProviders;
 	private boolean ccErrored = false;
@@ -133,13 +134,13 @@ public class MultiPeripheralProvider implements IPeripheralProvider {
 		for(Object ccperiph : ccperiphs) {
 			if(ccperiph != null && ccperiph instanceof IPeripheralProvider
 				&& !(ccperiph instanceof MultiPeripheralProvider)
-				&& !(Mods.isLoaded(Mods.OpenPeripheral) && isOpenPeripheral(ccperiph))) {
+				&& !(Mods.isLoaded(Mods.OpenPeripheral) /*&& isOpenPeripheral(ccperiph) TODO OpenPeripheral*/)) {
 				ccPeripheralProviders.add((IPeripheralProvider) ccperiph);
 			}
 		}
 	}
 
-	private void getAllPeripherals(ArrayList<IMultiPeripheral> periphs, World world, int x, int y, int z, int side) {
+	private void getAllPeripherals(ArrayList<IMultiPeripheral> periphs, World world, BlockPos pos, EnumFacing side) {
 		if(ccErrored) {
 			return;
 		}
@@ -150,7 +151,7 @@ public class MultiPeripheralProvider implements IPeripheralProvider {
 			for(IPeripheralProvider peripheralProvider : ccPeripheralProviders) {
 				if(peripheralProvider != null) {
 					try {
-						IPeripheral peripheral = peripheralProvider.getPeripheral(world, x, y, z, side);
+						IPeripheral peripheral = peripheralProvider.getPeripheral(world, pos, side);
 						if(peripheral != null) {
 							periphs.add(new DefaultMultiPeripheral(peripheral));
 						}
@@ -174,10 +175,10 @@ public class MultiPeripheralProvider implements IPeripheralProvider {
 		}
 	}
 
-	@Optional.Method(modid = Mods.OpenPeripheral)
+	/*@Optional.Method(modid = Mods.OpenPeripheral) TODO OpenPeripheral
 	private boolean isOpenPeripheral(Object ccperiph) {
 		// I guess I have to do it this way
 		return ccperiph != null
 			&& (ccperiph instanceof IOpenPeripheral || ccperiph.getClass().getName().startsWith("openperipheral"));
-	}
+	}*/
 }

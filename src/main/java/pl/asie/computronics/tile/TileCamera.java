@@ -1,9 +1,8 @@
 package pl.asie.computronics.tile;
 
-/*//import dan200.computercraft.api.lua.ILuaContext;
-//import dan200.computercraft.api.lua.LuaException;
-//import dan200.computercraft.api.peripheral.IComputerAccess;*/
-
+import dan200.computercraft.api.lua.ILuaContext;
+import dan200.computercraft.api.lua.LuaException;
+import dan200.computercraft.api.peripheral.IComputerAccess;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
@@ -68,7 +67,7 @@ public class TileCamera extends TileEntityPeripheralBase {
 		return new Object[] { camera.getDistance() };
 	}
 
-	/*@Override
+	@Override
 	@Optional.Method(modid = Mods.ComputerCraft)
 	public String[] getMethodNames() {
 		return new String[] { "distance" };
@@ -93,10 +92,11 @@ public class TileCamera extends TileEntityPeripheralBase {
 					y = ((Double) arguments[1]).floatValue();
 					//};
 				}
-				camera.ray(worldObj, xCoord, yCoord, zCoord, getFacingDirection(), x, y);
+				BlockPos pos = getPos();
+				camera.ray(worldObj, pos.getX(), pos.getY(), pos.getZ(), getFacingDirection(), x, y);
 				return new Object[] { camera.getDistance() };
 			}
 		}
 		return null;
-	}*/
+	}
 }

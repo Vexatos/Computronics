@@ -1,6 +1,6 @@
-package pl.asie.computronics.cc.multiperipheral;
+/*package pl.asie.computronics.cc.multiperipheral;
 
-import cpw.mods.fml.common.Optional;
+import net.minecraftforge.fml.common.Optional;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import li.cil.oc.api.network.BlacklistedPeripheral;
 import openperipheral.api.peripheral.IBrokenOpenPeripheral;
@@ -9,7 +9,7 @@ import pl.asie.computronics.reference.Mods;
 
 /**
  * @author Vexatos
- */
+ * /
 @Optional.Interface(iface = "li.cil.oc.api.network.BlacklistedPeripheral", modid = Mods.OpenComputers)
 public class OpenMultiPeripheral extends WrappedMultiPeripheral implements BlacklistedPeripheral {
 	private final boolean derped;
@@ -35,4 +35,4 @@ public class OpenMultiPeripheral extends WrappedMultiPeripheral implements Black
 	public boolean isPeripheralBlacklisted() {
 		return true;
 	}
-}
+}*/

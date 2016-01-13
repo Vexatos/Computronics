@@ -2,6 +2,7 @@ package pl.asie.computronics.tile;
 
 //import java.nio.file.FileSystem;
 
+import com.google.common.base.Charsets;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
@@ -30,11 +31,13 @@ import pl.asie.computronics.util.ColorUtils;
 import pl.asie.computronics.util.internal.IColorable;
 import pl.asie.lib.network.Packet;
 
-//import dan200.computercraft.api.filesystem.IMount;
-//import dan200.computercraft.api.lua.ILuaContext;
-//import dan200.computercraft.api.lua.LuaException;
-//import dan200.computercraft.api.peripheral.IComputerAccess;
-//import pl.asie.computronics.cc.ComputronicsFileMount;
+import dan200.computercraft.api.filesystem.IMount;
+import dan200.computercraft.api.lua.ILuaContext;
+import dan200.computercraft.api.lua.LuaException;
+import dan200.computercraft.api.peripheral.IComputerAccess;
+import pl.asie.computronics.cc.ComputronicsFileMount;
+
+import java.util.HashMap;
 
 public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSource {
 
@@ -77,7 +80,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 		}
 	}
 
-	/*private static Object cc_fs;
+	private static Object cc_fs;
 	private static Object cc_fs_autorun; // dan200, why?
 	protected HashMap<IComputerAccess, String> computerMountPointsCC;
 	protected HashMap<IComputerAccess, String> computerMountPointsCC_autorun;
@@ -152,7 +155,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 		if(mountPoint != null) {
 			computer.unmount(mountPoint);
 		}
-	}*/
+	}
 
 	private Object oc_fs;
 
@@ -619,7 +622,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 	public Object[] getState(Context context, Arguments args) {
 		return new Object[] { state.getState().toString() };
 	}
-/*
+
 	@Override
 	@Optional.Method(modid = Mods.ComputerCraft)
 	public String[] getMethodNames() {
@@ -755,7 +758,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 		// catch all other methods
 		return null;
 	}
-*/
+
 	@Override
 	public int getSourceId() {
 		return state.getId();

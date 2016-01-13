@@ -6,9 +6,9 @@ import net.minecraft.world.World;
 
 import net.minecraftforge.common.util.ForgeDirection;
 
-//import dan200.computercraft.api.lua.ILuaContext;
-//import dan200.computercraft.api.lua.LuaException;
-//import dan200.computercraft.api.peripheral.IComputerAccess;
+import dan200.computercraft.api.lua.ILuaContext;
+import dan200.computercraft.api.lua.LuaException;
+import dan200.computercraft.api.peripheral.IComputerAccess;
 import pl.asie.computronics.api.audio.AudioPacket;
 import pl.asie.computronics.api.audio.IAudioReceiver;
 import pl.asie.computronics.api.audio.IAudioSource;

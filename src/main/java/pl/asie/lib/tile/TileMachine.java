@@ -16,7 +16,7 @@ import pl.asie.lib.api.tile.IBundledRedstoneProvider;
 	@Optional.Interface(iface = "mods.immibis.redlogic.api.wiring.IConnectable", modid = Mods.RedLogic)
 })*/
 public class TileMachine extends TileEntityBase implements
-	/*IConnectable,*/ ISidedInventory, ITickable /* RedLogic */ {
+	/*IConnectable,*/ ISidedInventory /* RedLogic */ {
 
 	private IBattery battery;
 	private IBundledRedstoneProvider brP;
@@ -50,9 +50,8 @@ public class TileMachine extends TileEntityBase implements
 		super.validate();
 	}
 
-	@Override
-	public void update() {
-		/*if(!didInitIC2) {
+	/*public void update() {
+		if(!didInitIC2) {
 			if(Mods.isLoaded(Mods.IC2) && this.battery != null) {
 				this.initIC();
 			}
@@ -63,8 +62,8 @@ public class TileMachine extends TileEntityBase implements
 				this.initICClassic();
 			}
 			didInitIC2C = true; // Just so this check won't be done every tick.
-		}*/
-	}
+		}
+	}*/
 
 	@Override
 	public void invalidate() {

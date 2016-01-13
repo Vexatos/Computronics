@@ -50,11 +50,6 @@ public class TileEntityBase extends TileEntity {
 	public void onBlockDestroy() {
 	}
 
-	// Redstone management (TODO: Move to TileMachine)
-	public void onRedstoneSignal(int signal) {
-
-	}
-
 	protected int oldRedstoneSignal = -1;
 
 	public int getOldRedstoneSignal() {

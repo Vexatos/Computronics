@@ -1,17 +1,21 @@
 package pl.asie.computronics.tile;
 
+import dan200.computercraft.api.peripheral.IComputerAccess;
+import dan200.computercraft.api.peripheral.IPeripheral;
 import li.cil.oc.api.Network;
 import li.cil.oc.api.network.BlacklistedPeripheral;
 import li.cil.oc.api.network.Environment;
 import li.cil.oc.api.network.Message;
 import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.Visibility;
+import li.cil.oc.common.tileentity.traits.TileEntity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
 import pl.asie.computronics.audio.MachineSound;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.ColorUtils;
@@ -19,8 +23,8 @@ import pl.asie.computronics.util.internal.IColorable;
 import pl.asie.computronics.util.internal.IComputronicsPeripheral;
 import pl.asie.lib.tile.TileMachine;
 
-//import dan200.computercraft.api.peripheral.IComputerAccess;
-//import dan200.computercraft.api.peripheral.IPeripheral;
+import java.util.ArrayList;
+
 //import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
 
 // #######################################################
@@ -31,11 +35,11 @@ import pl.asie.lib.tile.TileMachine;
 
 @Optional.InterfaceList({
 	@Optional.Interface(iface = "li.cil.oc.api.network.Environment", modid = Mods.OpenComputers),
-	@Optional.Interface(iface = "li.cil.oc.api.network.BlacklistedPeripheral", modid = Mods.OpenComputers)/*,
-	@Optional.Interface(iface = "pl.asie.computronics.api.multiperipheral.IMultiPeripheral", modid = Mods.ComputerCraft)*/
+	@Optional.Interface(iface = "li.cil.oc.api.network.BlacklistedPeripheral", modid = Mods.OpenComputers),
+	@Optional.Interface(iface = "pl.asie.computronics.api.multiperipheral.IMultiPeripheral", modid = Mods.ComputerCraft)
 })
 public abstract class TileEntityPeripheralBase extends TileMachine implements Environment,
-	/*IMultiPeripheral,*/ IComputronicsPeripheral, BlacklistedPeripheral, IColorable {
+	IMultiPeripheral, IComputronicsPeripheral, BlacklistedPeripheral, IColorable {
 
 	protected String peripheralName;
 
@@ -77,7 +81,7 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 	// Has to be an Object for getDeclaredFields to not error when
 	// called on this class without OpenComputers being present. Blame OpenPeripheral.
 	private Object node;
-	//protected ArrayList<IComputerAccess> attachedComputersCC;
+	protected ArrayList<IComputerAccess> attachedComputersCC;
 	protected boolean addedToNetwork = false;
 
 	@Override
@@ -113,14 +117,15 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 	}
 
 	@Override
-	public void update() {
-		super.update();
-		if(!addedToNetwork) {
-			addedToNetwork = true;
-			if(Mods.isLoaded(Mods.OpenComputers)) {
-				addToNetwork_OC();
-			}
+	public void onLoad() {
+		super.onLoad();
+		if(Mods.isLoaded(Mods.OpenComputers)) {
+			addToNetwork_OC();
 		}
+	}
+
+	public void update() {
+		//super.update();
 		if(worldObj.isRemote && hasSound()) {
 			updateSound();
 		}
@@ -186,7 +191,7 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 		}
 	}
 
-	/*@Override
+	@Override
 	@Optional.Method(modid = Mods.ComputerCraft)
 	public String getType() {
 		return peripheralName;
@@ -220,8 +225,8 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 		}
 		if(other instanceof TileEntity) {
 			TileEntity tother = (TileEntity) other;
-			return tother.getWorldObj().equals(worldObj)
-				&& tother.xCoord == this.xCoord && tother.yCoord == this.yCoord && tother.zCoord == this.zCoord;
+			return tother.getWorld().equals(worldObj)
+				&& tother.getPos().equals(this.getPos());
 		}
 
 		return false;
@@ -231,7 +236,7 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 	@Optional.Method(modid = Mods.ComputerCraft)
 	public int peripheralPriority() {
 		return 1;
-	}*/
+	}
 
 	protected int overlayColor = getDefaultColor();
 

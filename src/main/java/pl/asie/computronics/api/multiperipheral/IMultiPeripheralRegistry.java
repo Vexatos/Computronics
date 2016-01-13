@@ -6,7 +6,7 @@ package pl.asie.computronics.api.multiperipheral;
  * <p/>
  * You need to send a method registering your instances of
  * {@link pl.asie.computronics.api.multiperipheral.IMultiPeripheralProvider}
- * using {@link cpw.mods.fml.common.event.FMLInterModComms#sendMessage}.
+ * using {@link net.minecraftforge.fml.common.event.FMLInterModComms#sendMessage}.
  * <p/>
  * Note that method sent must have the following
  * signature:

@@ -59,8 +59,6 @@ public class Config {
 	public static String TAPE_LENGTHS;
 	public static boolean REDSTONE_REFRESH, CHATBOX_CREATIVE;
 
-	public static boolean MUST_UPDATE_TILE_ENTITIES = false;
-
 	public Config(FMLPreInitializationEvent event) {
 		config = new Configuration(event.getSuggestedConfigurationFile());
 		config.load();
