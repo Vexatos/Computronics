@@ -4,10 +4,12 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.registry.GameRegistry;
 import li.cil.tis3d.api.ModuleAPI;
+import li.cil.tis3d.api.SerialAPI;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.MinecraftForgeClient;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.integration.flamingo.DriverFlamingo;
 import pl.asie.computronics.integration.tis3d.item.ItemModules;
 import pl.asie.computronics.integration.tis3d.manual.ComputronicsPathProvider;
 import pl.asie.computronics.integration.tis3d.module.ComputronicsModuleRenderer;
@@ -46,6 +48,10 @@ public class IntegrationTIS3D {
 	public void init() {
 		ComputronicsPathProvider.initialize();
 		ModuleAPI.addProvider(itemModules);
+
+		if(Mods.isLoaded(Mods.Flamingo)) {
+			SerialAPI.addProvider(new DriverFlamingo.TISInterfaceProvider());
+		}
 	}
 
 	@Optional.Method(modid = Mods.TIS3D)

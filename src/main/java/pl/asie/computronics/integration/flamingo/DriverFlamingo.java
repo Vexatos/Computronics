@@ -9,10 +9,15 @@ import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.ManagedEnvironment;
 import li.cil.oc.api.prefab.DriverTileEntity;
+import li.cil.tis3d.api.serial.SerialInterface;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import pl.asie.computronics.integration.CCMultiPeripheral;
 import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
+import pl.asie.computronics.integration.tis3d.serial.TileInterfaceProvider;
+import pl.asie.computronics.integration.tis3d.serial.TileSerialInterface;
 import pl.asie.computronics.reference.Names;
 
 /**
@@ -95,6 +100,52 @@ public class DriverFlamingo {
 				}
 			}
 			return null;
+		}
+	}
+
+	public static class TISInterfaceProvider extends TileInterfaceProvider {
+
+		public TISInterfaceProvider() {
+			super(TileEntityFlamingo.class, "flamingo", "protocols/computronics/flamingo.md");
+		}
+
+		public static class InternalSerialInterface extends TileSerialInterface<TileEntityFlamingo> {
+
+			public InternalSerialInterface(TileEntityFlamingo tile) {
+				super(tile);
+			}
+
+			@Override
+			public boolean canWrite() {
+				return true;
+			}
+
+			@Override
+			public void write(short value) {
+				tile.getWorldObj().addBlockEvent(tile.xCoord, tile.yCoord, tile.zCoord, tile.getBlockType(), 0, 0);
+			}
+
+			@Override
+			public boolean canRead() {
+				return true;
+			}
+
+			@Override
+			public short peek() {
+				return (short) MathHelper.floor_float(tile.wiggleStrength);
+			}
+		}
+
+		@Override
+		public SerialInterface interfaceFor(World world, int x, int y, int z, EnumFacing side) {
+			return new InternalSerialInterface((TileEntityFlamingo) world.getTileEntity(x, y, z));
+		}
+
+		@Override
+		protected boolean isStillValid(World world, int x, int y, int z, EnumFacing side, SerialInterface serialInterface, TileEntity tile) {
+			return tile instanceof TileEntityFlamingo
+				&& serialInterface instanceof InternalSerialInterface
+				&& ((InternalSerialInterface) serialInterface).isTileEqual(tile);
 		}
 	}
 }
