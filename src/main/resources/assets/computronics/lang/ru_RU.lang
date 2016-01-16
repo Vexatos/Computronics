@@ -64,8 +64,8 @@ tooltip.computronics.waila.lamp.red=Красный: %s
 tooltip.computronics.waila.lamp.green=Зелёный: %s
 tooltip.computronics.waila.lamp.blue=Синий: %s
 
-tooltip.computronics.manual.tab.blocks=Computronics: Блоки
-tooltip.computronics.manual.tab.items=Computronics: Предметы
+tooltip.computronics.manual.oc.tab.blocks=Computronics: Блоки
+tooltip.computronics.manual.oc.tab.items=Computronics: Предметы
 
 option.computronics.enableOCAddress=Адрес компонента
 option.computronics.enableTape=Вставленная лента
