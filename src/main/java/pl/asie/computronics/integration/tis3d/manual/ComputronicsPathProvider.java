@@ -20,9 +20,9 @@ public class ComputronicsPathProvider implements PathProvider {
 		ManualAPI.addProvider(new ComputronicsPathProvider());
 		ManualAPI.addProvider(new ResourceContentProvider("computronics", "doc/tis3d/"));
 		/*ManualAPI.addTab(findTabIconRenderer(),
-			"tooltip.computronics.manual.tab.blocks", "computronics/%LANGUAGE%/block/index.md");*/
+			"tooltip.computronics.manual.tis3d.tab.blocks", "computronics/%LANGUAGE%/block/index.md");*/
 		ManualAPI.addTab(findTabIconRenderer(),
-			"tooltip.computronics.manual.tab.items", "computronics/%LANGUAGE%/item/index.md");
+			"tooltip.computronics.manual.tis3d.tab.items", "computronics/%LANGUAGE%/item/index.md");
 	}
 
 	private static TabIconRenderer findTabIconRenderer() {
