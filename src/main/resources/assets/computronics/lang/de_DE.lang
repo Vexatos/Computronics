@@ -69,6 +69,7 @@ tooltip.computronics.waila.lamp.blue=Blau: %s
 tooltip.computronics.manual.oc.tab.blocks=Computronics: Blöcke
 tooltip.computronics.manual.oc.tab.items=Computronics: Items
 
+tooltip.computronics.manual.tis3d.tab.items=Computronics: Items
 tooltip.computronics.manual.tis3d.port.flamingo=Pinker Flamingo
 
 option.computronics.enableOCAddress=Komponentenaddresse

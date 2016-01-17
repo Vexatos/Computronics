@@ -309,7 +309,7 @@ public class Computronics {
 		}
 
 		if(Mods.isLoaded(Mods.TIS3D) && tis3D != null) {
-			tis3D.init();
+			tis3D.init(compat);
 		}
 
 		achievements = new ComputronicsAchievements();

@@ -14,6 +14,7 @@ import pl.asie.computronics.integration.tis3d.item.ItemModules;
 import pl.asie.computronics.integration.tis3d.manual.ComputronicsPathProvider;
 import pl.asie.computronics.integration.tis3d.module.ComputronicsModuleRenderer;
 import pl.asie.computronics.integration.tis3d.module.ModuleBoom.BoomHandler;
+import pl.asie.computronics.reference.Compat;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.RecipeUtils;
@@ -45,11 +46,12 @@ public class IntegrationTIS3D {
 	}
 
 	@Optional.Method(modid = Mods.TIS3D)
-	public void init() {
+	public void init(Compat compat) {
 		ComputronicsPathProvider.initialize();
 		ModuleAPI.addProvider(itemModules);
 
 		if(Mods.isLoaded(Mods.Flamingo)) {
+			if(compat.isCompatEnabled(Compat.Flamingo))
 			SerialAPI.addProvider(new DriverFlamingo.TISInterfaceProvider());
 		}
 	}

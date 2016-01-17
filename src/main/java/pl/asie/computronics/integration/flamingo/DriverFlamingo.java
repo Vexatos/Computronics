@@ -12,7 +12,6 @@ import li.cil.oc.api.prefab.DriverTileEntity;
 import li.cil.tis3d.api.serial.SerialInterface;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import pl.asie.computronics.integration.CCMultiPeripheral;
 import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
@@ -24,6 +23,10 @@ import pl.asie.computronics.reference.Names;
  * @author Vexatos
  */
 public class DriverFlamingo {
+
+	private static void wiggle(TileEntityFlamingo tile) {
+		tile.getWorldObj().addBlockEvent(tile.xCoord, tile.yCoord, tile.zCoord, tile.getBlockType(), 0, 0);
+	}
 
 	public static class OCDriver extends DriverTileEntity {
 
@@ -40,7 +43,7 @@ public class DriverFlamingo {
 
 			@Callback(doc = "function(); Makes the Flamingo wiggle.")
 			public Object[] wiggle(Context c, Arguments a) {
-				tile.getWorldObj().addBlockEvent(tile.xCoord, tile.yCoord, tile.zCoord, tile.getBlockType(), 0, 0);
+				DriverFlamingo.wiggle(tile);
 				return new Object[] {};
 			}
 
@@ -93,7 +96,7 @@ public class DriverFlamingo {
 		public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
 			switch(method) {
 				case 0: {
-					tile.getWorldObj().addBlockEvent(tile.xCoord, tile.yCoord, tile.zCoord, tile.getBlockType(), 0, 0);
+					DriverFlamingo.wiggle(tile);
 				}
 				case 1: {
 					return new Object[] { tile.wiggleStrength };
@@ -106,7 +109,7 @@ public class DriverFlamingo {
 	public static class TISInterfaceProvider extends TileInterfaceProvider {
 
 		public TISInterfaceProvider() {
-			super(TileEntityFlamingo.class, "flamingo", "protocols/computronics/flamingo.md");
+			super(TileEntityFlamingo.class, "flamingo", "flamingo.md");
 		}
 
 		public static class InternalSerialInterface extends TileSerialInterface<TileEntityFlamingo> {
@@ -122,17 +125,17 @@ public class DriverFlamingo {
 
 			@Override
 			public void write(short value) {
-				tile.getWorldObj().addBlockEvent(tile.xCoord, tile.yCoord, tile.zCoord, tile.getBlockType(), 0, 0);
+				DriverFlamingo.wiggle(tile);
 			}
 
 			@Override
 			public boolean canRead() {
-				return true;
+				return false;
 			}
 
 			@Override
 			public short peek() {
-				return (short) MathHelper.floor_float(tile.wiggleStrength);
+				return 0;
 			}
 		}
 

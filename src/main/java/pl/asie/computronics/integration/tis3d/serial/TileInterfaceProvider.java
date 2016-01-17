@@ -28,13 +28,13 @@ public abstract class TileInterfaceProvider implements SerialInterfaceProvider {
 			// the class in question is not present.
 			return false;
 		}
-		final TileEntity tileEntity = world.getTileEntity(x, y, z);
-		return tileEntity != null && tileClass.isAssignableFrom(tileEntity.getClass());
+		final TileEntity tile = world.getTileEntity(x, y, z);
+		return tile != null && tileClass.isInstance(tile);
 	}
 
 	@Override
 	public SerialProtocolDocumentationReference getDocumentationReference() {
-		return new SerialProtocolDocumentationReference(name, link);
+		return new SerialProtocolDocumentationReference("tooltip.computronics.manual.tis3d.port." + name, "protocols/computronics/" + link);
 	}
 
 	protected abstract boolean isStillValid(World world, int x, int y, int z, EnumFacing side, SerialInterface serialInterface, TileEntity tile);

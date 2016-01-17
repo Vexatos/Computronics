@@ -4,6 +4,7 @@
     - Added a Colorful Module to display any colour you want, akin to a Colorful Lamp.
     - Added a Tape Reader Module which allows you to interface with an adjacent Tape Drive.
     - Added a Self-Destructing Module which allows you to dispose of your casings with style.
+    - Added a Serial Interface for Flamingos to make them wiggle.
     - Documented everything in the TIS-3D manual.
     - Each module can be individually disabled in the config file.
   * ADDED: EnderIO 2.3 integration  for OpenComputers and ComputerCraft! (Has actually existed since March 2015, just not in any official release)
