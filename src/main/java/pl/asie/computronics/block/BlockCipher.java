@@ -23,7 +23,7 @@ import pl.asie.computronics.tile.TileCipherBlock;
 public class BlockCipher extends BlockPeripheral /*implements IRedNetOmniNode*/ {
 
 	public BlockCipher() {
-		super("cipher", Rotation.NONE);
+		super("cipher", Rotation.FOUR);
 		this.setUnlocalizedName("computronics.cipher");
 		this.setGuiProvider(Computronics.guiCipher);
 	}

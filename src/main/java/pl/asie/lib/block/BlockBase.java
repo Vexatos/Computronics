@@ -57,7 +57,9 @@ public abstract class BlockBase extends Block /*implements
 		this.setHardness(2.0F);
 		this.parent = parent;
 		this.blockState = this.createActualBlockState();
-		this.setDefaultState(this.blockState.getBaseState().withProperty(rotation.FACING, EnumFacing.NORTH));
+		this.setDefaultState(rotation != Rotation.NONE ?
+			this.blockState.getBaseState().withProperty(rotation.FACING, EnumFacing.NORTH)
+			: this.blockState.getBaseState());
 	}
 
 	@Override
@@ -67,16 +69,43 @@ public abstract class BlockBase extends Block /*implements
 
 	@Override
 	protected BlockState createBlockState() {
-		return new BlockState(this,
-			Rotation.SIX.FACING
-		);
+		return new BlockState(this);
 	}
 
 	protected BlockState createActualBlockState() {
-		return new BlockState(this,
+		return rotation != Rotation.NONE ? new BlockState(this,
 			rotation.FACING
-		);
+		) : createBlockState();
 	}
+
+	@Override
+	public IBlockState getStateFromMeta(int meta) {
+		IBlockState state = this.getDefaultState();
+		switch(rotation) {
+			case FOUR:
+				return state.withProperty(rotation.FACING, EnumFacing.getHorizontal(meta));
+			case SIX:
+				return state.withProperty(rotation.FACING, EnumFacing.getFront(meta));
+		}
+		return state;
+	}
+
+	@Override
+	public int getMetaFromState(IBlockState state) {
+		switch(rotation) {
+			case FOUR:
+				return state.getValue(rotation.FACING).getHorizontalIndex();
+			case SIX:
+				return state.getValue(rotation.FACING).getIndex();
+		}
+		return 0;
+	}
+
+	@Override
+	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
+		return super.getActualState(state, world, pos);
+	}
+
 	// Handler: Redstone
 
 	public boolean emitsRedstone(IBlockAccess world, BlockPos pos, EnumFacing side) {
@@ -116,22 +145,6 @@ public abstract class BlockBase extends Block /*implements
 				((TileMachine) tile).onProjectRedBundledInputChanged();
 			}
 		}*/
-	}
-
-	@Override
-	public IBlockState getStateFromMeta(int meta) {
-		return this.getDefaultState().withProperty(rotation.FACING, EnumFacing.getFront(meta));
-	}
-
-	@Override
-	public int getMetaFromState(IBlockState state) {
-		return state.getValue(rotation.FACING).ordinal();
-	}
-
-	@Override
-	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
-		//TODO
-		return super.getActualState(state, world, pos);
 	}
 
 	@Override

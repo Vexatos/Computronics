@@ -1,0 +1,6 @@
+{
+    "parent": "tis3d:item/module.obj",
+    "textures": {
+        "layer1": "computronics:items/module_colorful"
+    }
+}

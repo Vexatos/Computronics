@@ -1,0 +1,21 @@
+{
+    "forge_marker": 1,
+    "defaults": {
+        "textures": {
+            "side": "computronics:blocks/chatbox_side",
+            "bottom": "computronics:blocks/machine_bottom",
+            "top": "computronics:blocks/machine_top",
+            "particle": "computronics:blocks/chatbox_side"
+        },
+        "model": "computronics:chat_box",
+        "transform": "forge:default-block"
+    },
+    "variants": {
+        "normal": [{ }],
+        "inventory": [{ }],
+        "creative": {
+            "true": { },
+            "false": { }
+        }
+    }
+}

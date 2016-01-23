@@ -1,0 +1,6 @@
+{
+    "parent": "computronics:block/base",
+    "textures": {
+        "north": "#front"
+    }
+}

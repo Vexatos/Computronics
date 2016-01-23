@@ -1,0 +1,14 @@
+{
+    "forge_marker": 1,
+    "defaults": {
+        "textures": {
+            "side": "computronics:blocks/radar_side"
+        },
+        "model": "computronics:base",
+        "transform": "forge:default-block"
+    },
+    "variants": {
+        "normal": [{ }],
+        "inventory": [{ }]
+    }
+}

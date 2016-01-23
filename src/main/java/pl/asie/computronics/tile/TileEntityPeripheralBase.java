@@ -15,6 +15,7 @@ import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.asie.computronics.Computronics;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
 import pl.asie.computronics.audio.MachineSound;
 import pl.asie.computronics.oc.IntegrationOpenComputers;
@@ -134,7 +135,7 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 
 	@Optional.Method(modid = Mods.OpenComputers)
 	protected void addToNetwork_OC() {
-		IntegrationOpenComputers.eventHandler.schedule(this);
+		Computronics.opencomputers.scheduleForNetworkJoin(this);
 		this.onOCNetworkCreation();
 	}
 

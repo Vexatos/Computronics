@@ -5,6 +5,7 @@ import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -30,9 +31,9 @@ public class BlockChatBox extends BlockPeripheral implements IBlockWithSpecialTe
 	public static final PropertyBool CREATIVE = PropertyBool.create("creative");
 
 	public BlockChatBox() {
-		super("chatbox", Rotation.FOUR);
+		super("chatbox", Rotation.NONE);
 		this.setCreativeTab(Computronics.tab);
-		this.setDefaultState(this.blockState.getBaseState().withProperty(rotation.FACING, EnumFacing.NORTH).withProperty(CREATIVE, false));
+		this.setDefaultState(this.blockState.getBaseState().withProperty(CREATIVE, false));
 		this.setUnlocalizedName("computronics.chatBox");
 	}
 
@@ -65,23 +66,22 @@ public class BlockChatBox extends BlockPeripheral implements IBlockWithSpecialTe
 
 	@Override
 	public IBlockState getStateFromMeta(int meta) {
-		return super.getStateFromMeta(meta).withProperty(CREATIVE, (meta & 0x10) != 0);
+		return super.getStateFromMeta(meta).withProperty(CREATIVE, (meta & ~7) != 0);
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state) {
-		return super.getMetaFromState(state) | (state.getValue(CREATIVE) ? 0x10 : 0);
+		return super.getMetaFromState(state) | (state.getValue(CREATIVE) ? 8 : 0);
 	}
 
 	@Override
 	public int damageDropped(IBlockState state) {
-		return getMetaFromState(state) & (~7);
+		return getMetaFromState(state);
 	}
 
 	@Override
 	protected BlockState createActualBlockState() {
 		return new BlockState(this,
-			rotation.FACING,
 			CREATIVE
 		);
 	}

@@ -9,6 +9,7 @@ import li.cil.oc.api.machine.Context;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.Optional;
+import pl.asie.computronics.Computronics;
 import pl.asie.computronics.block.BlockColorfulLamp;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.LampUtil;
@@ -38,14 +39,19 @@ public class TileColorfulLamp extends TileEntityPeripheralBase /*IBundledTile, I
 	@Override
 	public void onLoad() {
 		super.onLoad();
-		IBlockState state = worldObj.getBlockState(getPos());
-		if(state.getBlock() instanceof BlockColorfulLamp) {
-			if(LampUtil.shouldColorLight()) {
-				setLightValue(state, color);
-			} else {
-				setLightValue(state, color == 0 ? 0 : 15);
+		Computronics.serverTickHandler.schedule(new Runnable() {
+			@Override
+			public void run() {
+				IBlockState state = worldObj.getBlockState(getPos());
+				if(state.getBlock() instanceof BlockColorfulLamp) {
+					if(LampUtil.shouldColorLight()) {
+						setLightValue(state, color);
+					} else {
+						setLightValue(state, color == 0 ? 0 : 15);
+					}
+				}
 			}
-		}
+		});
 	}
 
 	public int getLampColor() {

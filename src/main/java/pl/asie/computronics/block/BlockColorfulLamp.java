@@ -54,7 +54,6 @@ public class BlockColorfulLamp extends BlockPeripheral /*implements IRedNetInput
 	@Override
 	protected BlockState createActualBlockState() {
 		return new BlockState(this,
-			rotation.FACING,
 			BRIGHTNESS
 		);
 	}
@@ -74,7 +73,7 @@ public class BlockColorfulLamp extends BlockPeripheral /*implements IRedNetInput
 
 	@Override
 	public int colorMultiplier(IBlockAccess world, BlockPos pos, int pass) {
-		if(pass != 1) {
+		if(pass != 0) {
 			return super.colorMultiplier(world, pos, pass);
 		}
 		TileEntity tile = world.getTileEntity(pos);

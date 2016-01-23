@@ -1,0 +1,16 @@
+{
+    "forge_marker": 1,
+    "defaults": {
+        "textures": { },
+        "model": "tis3d:module.obj"
+    },
+    "variants": {
+        "normal": [{ }],
+        "inventory": [
+            {
+                "transform": "forge:default-block",
+                "textures": { "layer1": "computronics:items/module_boom" }
+            }
+        ]
+    }
+}

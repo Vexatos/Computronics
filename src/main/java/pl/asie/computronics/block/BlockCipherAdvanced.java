@@ -38,7 +38,7 @@ public class BlockCipherAdvanced extends BlockPeripheral implements IBlockWithSp
 	@SuppressWarnings("unchecked")
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean wat) {
-		list.add(EnumChatFormatting.GRAY + StringUtil.localize("tooltip.computronics.cipher.advanced"));
+		list.add(StringUtil.localize("tooltip.computronics.cipher.advanced"));
 	}
 
 	@Override

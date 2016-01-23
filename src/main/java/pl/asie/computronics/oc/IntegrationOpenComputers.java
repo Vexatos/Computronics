@@ -1,9 +1,11 @@
 package pl.asie.computronics.oc;
 
 import li.cil.oc.api.Driver;
+import li.cil.oc.api.Network;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -78,7 +80,6 @@ public class IntegrationOpenComputers {
 	private final Logger log;
 
 	public static ItemOpenComputers itemOCParts;
-	public static OCEventHandler eventHandler;
 	public static UpgradeRenderer upgradeRenderer;
 	public static ColorfulUpgradeHandler colorfulUpgradeHandler;
 
@@ -100,11 +101,10 @@ public class IntegrationOpenComputers {
 			|| Config.OC_CARD_BOOM
 			|| Config.OC_UPGRADE_COLORFUL) {
 			itemOCParts = new ItemOpenComputers();
-			GameRegistry.registerItem(itemOCParts, "ocParts");
+			GameRegistry.registerItem(itemOCParts, "oc_parts");
+			itemOCParts.registerItemModels();
 			Driver.add(itemOCParts);
 		}
-
-		MinecraftForge.EVENT_BUS.register(eventHandler = new OCEventHandler());
 
 		// OpenComputers needs a hook in updateEntity in order to proprly register peripherals.
 		// Fixes Iron Note Block, among others.
@@ -357,6 +357,17 @@ public class IntegrationOpenComputers {
 		/*if(Computronics.buildcraft != null) {
 			Computronics.buildcraft.postInitOC();
 		}*/
+	}
+
+	public void scheduleForNetworkJoin(final TileEntity tile) {
+		if(!tile.isInvalid() && !tile.getWorld().isRemote) {
+			Computronics.serverTickHandler.schedule(new Runnable() {
+				@Override
+				public void run() {
+					Network.joinOrCreateNetwork(tile);
+				}
+			});
+		}
 	}
 
 	/*public void remap(FMLMissingMappingsEvent event) {

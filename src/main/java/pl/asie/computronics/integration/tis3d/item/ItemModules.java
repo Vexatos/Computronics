@@ -4,7 +4,9 @@ import li.cil.tis3d.api.machine.Casing;
 import li.cil.tis3d.api.machine.Face;
 import li.cil.tis3d.api.module.Module;
 import li.cil.tis3d.api.module.ModuleProvider;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
@@ -49,6 +51,25 @@ public class ItemModules extends ItemMultiple implements ModuleProvider, IModule
 		if(Config.TIS3D_MODULE_BOOM) {
 			list.add(new ItemStack(item, 1, 2));
 		}
+	}
+
+	public void registerItemModels() {
+		if(!Computronics.proxy.isClient()) {
+			return;
+		}
+		if(Config.TIS3D_MODULE_COLORFUL) {
+			registerItemModel(0);
+		}
+		/*if(Config.TIS3D_MODULE_TAPE_READER) {
+			registerItemModel(1);
+		}*/
+		if(Config.TIS3D_MODULE_BOOM) {
+			registerItemModel(2);
+		}
+	}
+
+	private void registerItemModel(int meta){
+		Computronics.proxy.registerItemModel(this, meta, "computronics:tis3d/" + parts[meta]);
 	}
 
 	//private IIcon tapeReaderBack, tapeReaderCenter, tapeReaderOff;

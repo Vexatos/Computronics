@@ -53,6 +53,7 @@ import pl.asie.computronics.tile.TileIronNote;
 import pl.asie.computronics.tile.TileRadar;
 import pl.asie.computronics.util.achievements.ComputronicsAchievements;
 import pl.asie.computronics.util.chat.ChatHandler;
+import pl.asie.computronics.util.event.ServerTickHandler;
 import pl.asie.lib.block.BlockBase;
 import pl.asie.lib.gui.managed.IGuiProvider;
 import pl.asie.lib.gui.managed.ManagedGuiHandler;
@@ -97,6 +98,7 @@ public class Computronics {
 	public static ManagedGuiHandler gui;
 	public static PacketHandler packet;
 	public static ExecutorService rsaThreads;
+	public static ServerTickHandler serverTickHandler;
 
 	@SidedProxy(clientSide = "pl.asie.computronics.ClientProxy", serverSide = "pl.asie.computronics.CommonProxy")
 	public static CommonProxy proxy;
@@ -144,6 +146,7 @@ public class Computronics {
 	private void registerBlockWithTileEntity(BlockBase block, Class<? extends ItemBlock> itemBlock, Class<? extends TileEntity> tile, String name) {
 		GameRegistry.registerBlock(block, itemBlock, name);
 		GameRegistry.registerTileEntity(tile, name);
+		proxy.registerItemModel(block, 0, "computronics:" + name);
 		//System.out.println("Registering " + name + " as TE " + tile.getCanonicalName());
 		FMLInterModComms.sendMessage(Mods.AE2, "whitelist-spatial", tile.getCanonicalName());
 		//IntegrationBuildCraftBuilder.INSTANCE.registerBlockBaseSchematic(block); TODO BuildCraft
@@ -152,6 +155,8 @@ public class Computronics {
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		log = LogManager.getLogger(Mods.Computronics);
+
+		MinecraftForge.EVENT_BUS.register(serverTickHandler = new ServerTickHandler());
 
 		config = new Config(event);
 
@@ -166,7 +171,7 @@ public class Computronics {
 
 		if(isEnabled("ironNoteBlock", true)) {
 			ironNote = new BlockIronNote();
-			registerBlockWithTileEntity(ironNote, TileIronNote.class, "ironNoteBlock");
+			registerBlockWithTileEntity(ironNote, TileIronNote.class, "iron_note_block");
 		}
 		if(isEnabled("camera", true)) {
 			camera = new BlockCamera();
@@ -175,7 +180,8 @@ public class Computronics {
 
 		if(isEnabled("chatBox", true)) {
 			chatBox = new BlockChatBox();
-			registerBlockWithTileEntity(chatBox, TileChatBox.class, "chatBox");
+			registerBlockWithTileEntity(chatBox, TileChatBox.class, "chat_box");
+			proxy.registerItemModel(chatBox, 8, "computronics:chat_box");
 		}
 
 		if(isEnabled("cipher", true)) {
@@ -198,7 +204,7 @@ public class Computronics {
 
 		if(isEnabled("lamp", true)) {
 			colorfulLamp = new BlockColorfulLamp();
-			registerBlockWithTileEntity(colorfulLamp, TileColorfulLamp.class, "colorfulLamp");
+			registerBlockWithTileEntity(colorfulLamp, TileColorfulLamp.class, "colorful_lamp");
 		}
 
 		/*if(Mods.isLoaded(Mods.Railcraft)) {

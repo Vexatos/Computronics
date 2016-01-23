@@ -1,7 +1,11 @@
 package pl.asie.computronics;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.item.Item;
 import net.minecraft.util.BlockPos;
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.oc.IntegrationOpenComputers;
@@ -23,6 +27,15 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void registerEntities() {
 		super.registerEntities();
+	}
+
+	@Override
+	public void registerItemModel(Item item, int meta, String name) {
+		if(name.contains("#")) {
+			ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(name.split("#")[0], name.split("#")[1]));
+		} else {
+			ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(name, "inventory"));
+		}
 	}
 
 	@Override

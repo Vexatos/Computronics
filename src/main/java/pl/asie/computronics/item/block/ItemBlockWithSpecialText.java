@@ -19,13 +19,12 @@ public class ItemBlockWithSpecialText extends ItemBlock {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean wat) {
+	public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean advanced) {
 		if(this.specialBlock != null) {
-			this.specialBlock.addInformation(stack, player, list, wat);
+			this.specialBlock.addInformation(stack, player, list, advanced);
 		} else {
-			super.addInformation(stack, player, list, wat);
+			super.addInformation(stack, player, list, advanced);
 		}
 	}
 
@@ -35,5 +34,10 @@ public class ItemBlockWithSpecialText extends ItemBlock {
 			return this.specialBlock.getUnlocalizedName(stack);
 		}
 		return super.getUnlocalizedName(stack);
+	}
+
+	@Override
+	public int getMetadata(int damage) {
+		return damage;
 	}
 }

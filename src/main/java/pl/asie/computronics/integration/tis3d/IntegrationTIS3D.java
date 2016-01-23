@@ -6,7 +6,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import pl.asie.computronics.Computronics;
 import pl.asie.computronics.integration.tis3d.item.ItemModules;
 import pl.asie.computronics.integration.tis3d.manual.ComputronicsPathProvider;
 import pl.asie.computronics.integration.tis3d.module.ModuleBoom.BoomHandler;
@@ -30,10 +29,11 @@ public class IntegrationTIS3D {
 
 			itemModules = new ItemModules();
 			GameRegistry.registerItem(itemModules, "modules.tis3d");
-			if(Computronics.proxy.isClient()) {
+			itemModules.registerItemModels();
+			/*if(Computronics.proxy.isClient()) {
 				//MinecraftForge.EVENT_BUS.register(new TextureLoader());
 				//MinecraftForgeClient.registerItemRenderer(itemModules, new ComputronicsModuleRenderer().setIgnoreLighting(true));
-			}
+			}*/
 		}
 		if(Config.OC_CARD_BOOM) {
 			MinecraftForge.EVENT_BUS.register(boomHandler = new BoomHandler());
