@@ -12,6 +12,8 @@ tile.computronics.locomotiveRelay.name=Digitales Lokomotivenrelais
 tile.computronics.digitalBox.name=Digitale Signalempfängerbox
 tile.computronics.detector.name=Detektor - Digital
 tile.computronics.ticketMachine.name=Ticketautomat
+tile.computronics.audiocable.name=Tonkabel
+tile.computronics.speaker.name=Lautsprecher
 
 tooltip.computronics.chatBox.creative=Die NSA für zu Hause!
 tooltip.computronics.cipher.advanced=Für die Starchaser!
@@ -95,7 +97,8 @@ item.computronics.part_tape_track.name=Bandspur
 item.computronics.tape.ig.name=Intergalaktischer CDVR
 item.computronics.tape.name=Kasettenband
 item.computronics.module_colorful.name=Das Bunte Modul
-item.computronics.module_tape_reader.name=Kassettenlesemodul<
+item.computronics.module_tape_reader.name=Kassettenlesemodul
+item.computronics.module_boom.name=Selbstzerstörungsmodul
 
 itemGroup.tabComputronics=Computronics
 

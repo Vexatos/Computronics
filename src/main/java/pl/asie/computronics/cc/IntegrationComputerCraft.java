@@ -131,12 +131,16 @@ public class IntegrationComputerCraft {
 				registerMultiPeripheralProvider(new DriverIOConfigurable.CCDriver());
 				registerMultiPeripheralProvider(new DriverHasExperience.CCDriver());
 				registerMultiPeripheralProvider(new DriverPowerStorage.CCDriver());
+				registerMultiPeripheralProvider(new DriverProgressTile.CCDriver());
 				registerMultiPeripheralProvider(new DriverAbstractMachine.CCDriver());
 				registerMultiPeripheralProvider(new DriverAbstractPoweredMachine.CCDriver());
 				registerMultiPeripheralProvider(new DriverPowerMonitor.CCDriver());
 				registerMultiPeripheralProvider(new DriverCapacitorBank.CCDriver());
 				registerMultiPeripheralProvider(new DriverCapacitorBankOld.CCDriver());
 				registerMultiPeripheralProvider(new DriverTransceiver.CCDriver());
+				registerMultiPeripheralProvider(new DriverVacuumChest.CCDriver());
+				registerMultiPeripheralProvider(new DriverWeatherObelisk.CCDriver());
+				registerMultiPeripheralProvider(new DriverTelepad.CCDriver());
 			}
 		}
 

@@ -1,5 +1,7 @@
 package pl.asie.computronics.client;
 
+import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
+import cpw.mods.fml.client.registry.RenderingRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
@@ -8,6 +10,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fml.client.registry.ISimpleBlockRenderingHandler;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL11;
 import pl.asie.computronics.block.BlockAudioCable;
 import pl.asie.computronics.tile.TileAudioCable;
