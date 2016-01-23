@@ -5,7 +5,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
@@ -23,7 +22,7 @@ public class BlockCipherAdvanced extends BlockPeripheral implements IBlockWithSp
 
 	public BlockCipherAdvanced() {
 		super("cipher_advanced", Rotation.NONE);
-		//this.setBlockName("computronics.cipher_advanced");
+		this.setUnlocalizedName("computronics.cipher_advanced");
 	}
 
 	@Override

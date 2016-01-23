@@ -8,9 +8,9 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.asie.lib.gui.GuiBase;
 import pl.asie.lib.gui.container.ContainerBase;
 import pl.asie.lib.tile.TileEntityBase;
-import pl.asie.lib.gui.GuiBase;
 
 /**
  * @author Vexatos

@@ -1,6 +1,5 @@
 package pl.asie.computronics.oc;
 
-import net.minecraftforge.fml.common.network.NetworkRegistry;
 import li.cil.oc.api.Network;
 import li.cil.oc.api.driver.EnvironmentHost;
 import li.cil.oc.api.machine.Arguments;
@@ -12,6 +11,7 @@ import li.cil.oc.api.prefab.ManagedEnvironment;
 import li.cil.oc.util.Audio;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.network.Packets;
 import pl.asie.computronics.reference.Config;

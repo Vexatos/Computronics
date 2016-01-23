@@ -1,6 +1,5 @@
 package pl.asie.computronics.oc;
 
-import net.minecraftforge.fml.common.Optional;
 import li.cil.oc.api.Network;
 import li.cil.oc.api.driver.EnvironmentHost;
 import li.cil.oc.api.machine.Arguments;
@@ -10,6 +9,7 @@ import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.Visibility;
 import li.cil.oc.api.prefab.ManagedEnvironment;
 import net.minecraftforge.event.ServerChatEvent;
+import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.api.chat.ChatAPI;
 import pl.asie.computronics.api.chat.IChatListener;
 import pl.asie.computronics.reference.Config;

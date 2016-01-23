@@ -1,7 +1,7 @@
 package pl.asie.computronics.gui;
 
-import pl.asie.lib.gui.container.ContainerBase;
 import pl.asie.lib.gui.GuiBase;
+import pl.asie.lib.gui.container.ContainerBase;
 
 public class GuiOneSlot extends GuiBase {
 	public GuiOneSlot(ContainerBase container) {

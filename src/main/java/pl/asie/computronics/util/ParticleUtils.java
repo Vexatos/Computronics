@@ -1,8 +1,8 @@
 package pl.asie.computronics.util;
 
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.network.Packets;
 import pl.asie.lib.network.Packet;

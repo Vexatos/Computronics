@@ -33,9 +33,7 @@ public class BlockChatBox extends BlockPeripheral implements IBlockWithSpecialTe
 		super("chatbox", Rotation.FOUR);
 		this.setCreativeTab(Computronics.tab);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(rotation.FACING, EnumFacing.NORTH).withProperty(CREATIVE, false));
-		//this.setIconName("computronics:chatbox");
-		//this.setBlockName("computronics.chatBox");
-		//this.setRotation(Rotation.FOUR);
+		this.setUnlocalizedName("computronics.chatBox");
 	}
 
 	// I'm such a cheater.
@@ -81,7 +79,7 @@ public class BlockChatBox extends BlockPeripheral implements IBlockWithSpecialTe
 	}
 
 	@Override
-	protected BlockState createBlockState() {
+	protected BlockState createActualBlockState() {
 		return new BlockState(this,
 			rotation.FACING,
 			CREATIVE

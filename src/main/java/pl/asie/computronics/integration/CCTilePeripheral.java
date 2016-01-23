@@ -1,13 +1,13 @@
 package pl.asie.computronics.integration;
 
-import net.minecraft.util.BlockPos;
-import net.minecraftforge.fml.common.Optional;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheralProvider;
 import li.cil.oc.api.network.BlacklistedPeripheral;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.reference.Mods;
 
 /**

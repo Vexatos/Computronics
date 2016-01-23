@@ -1,7 +1,5 @@
 package pl.asie.computronics.oc.client;
 
-import net.minecraftforge.fml.common.Optional;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import li.cil.oc.api.driver.item.UpgradeRenderer.MountPointName;
 import li.cil.oc.api.event.RobotRenderEvent;
 import li.cil.oc.api.event.RobotRenderEvent.MountPoint;
@@ -13,10 +11,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.opengl.GL11;
-import pl.asie.computronics.oc.client.model.ModelRadar;
 import pl.asie.computronics.item.ItemOpenComputers;
+import pl.asie.computronics.oc.client.model.ModelRadar;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.internal.Triple;
 

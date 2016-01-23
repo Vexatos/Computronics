@@ -1,7 +1,7 @@
 package pl.asie.computronics.api.multiperipheral;
 
-import net.minecraftforge.fml.common.Optional;
 import dan200.computercraft.api.peripheral.IPeripheral;
+import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.reference.Mods;
 
 /**

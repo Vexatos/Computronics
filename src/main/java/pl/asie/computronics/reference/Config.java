@@ -1,7 +1,7 @@
 package pl.asie.computronics.reference;
 
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import pl.asie.computronics.Computronics;
 import pl.asie.lib.util.EnergyConverter;
 

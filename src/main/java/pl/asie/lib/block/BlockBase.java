@@ -32,7 +32,7 @@ public abstract class BlockBase extends Block /*implements
 	IBlockInfo, IDebugableBlock */ {
 
 	public enum Rotation {
-		NONE(PropertyDirection.create("facing", Collections.singleton(EnumFacing.DOWN))),
+		NONE(PropertyDirection.create("facing", Collections.singleton(EnumFacing.NORTH))),
 		FOUR(PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL)),
 		SIX(PropertyDirection.create("facing"));
 
@@ -48,16 +48,35 @@ public abstract class BlockBase extends Block /*implements
 	private final Object parent;
 	private int gui = -1;
 	protected IGuiProvider guiProvider;
+	protected final BlockState blockState;
 
 	public BlockBase(Material material, Object parent, Rotation rotation) {
 		super(material);
 		this.setCreativeTab(CreativeTabs.tabMisc);
 		this.rotation = rotation;
-		this.setDefaultState(this.blockState.getBaseState().withProperty(rotation.FACING, EnumFacing.NORTH));
 		this.setHardness(2.0F);
 		this.parent = parent;
+		this.blockState = this.createActualBlockState();
+		this.setDefaultState(this.blockState.getBaseState().withProperty(rotation.FACING, EnumFacing.NORTH));
 	}
 
+	@Override
+	public BlockState getBlockState() {
+		return this.blockState;
+	}
+
+	@Override
+	protected BlockState createBlockState() {
+		return new BlockState(this,
+			Rotation.SIX.FACING
+		);
+	}
+
+	protected BlockState createActualBlockState() {
+		return new BlockState(this,
+			rotation.FACING
+		);
+	}
 	// Handler: Redstone
 
 	public boolean emitsRedstone(IBlockAccess world, BlockPos pos, EnumFacing side) {
@@ -254,13 +273,6 @@ public abstract class BlockBase extends Block /*implements
 		super.onBlockAdded(world, pos, state);
 		//this.setDefaultRotation(world, pos, state);
 	}*/
-
-	@Override
-	protected BlockState createBlockState() {
-		return new BlockState(this,
-			rotation.FACING
-		);
-	}
 
 	// GUI handling
 

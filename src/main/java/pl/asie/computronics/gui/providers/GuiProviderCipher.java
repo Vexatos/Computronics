@@ -1,16 +1,16 @@
 package pl.asie.computronics.gui.providers;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.world.World;
 import pl.asie.computronics.gui.GuiCipherBlock;
 import pl.asie.computronics.gui.container.ContainerCipherBlock;
-import pl.asie.lib.gui.container.ContainerBase;
-import pl.asie.lib.tile.TileEntityBase;
 import pl.asie.lib.gui.GuiBase;
+import pl.asie.lib.gui.container.ContainerBase;
 import pl.asie.lib.gui.managed.LegacyGuiProvider;
+import pl.asie.lib.tile.TileEntityBase;
 
 /**
  * @author Vexatos

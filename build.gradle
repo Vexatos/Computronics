@@ -24,7 +24,7 @@ file "build.properties" withReader {
 }
 
 version = "${config.minecraft.version}-${config.computronics.version}"
-asielib.version = "${config.minecraft.version}-${config.asielib.version}"
+def asielib_version = "${config.minecraft.version}-${config.asielib.version}"
 group = "pl.asie.computronics" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "Computronics"
 
@@ -116,6 +116,9 @@ minecraft {
 
 	replaceIn "pl/asie/computronics/Computronics.java"
 	replace "@VERSION@", "${config.computronics.version}"
+
+	replaceIn "pl/asie/lib/AsieLibMod.java"
+	replace "@AL_VERSION@", "${config.asielib.version}"
 }
 
 sourceSets {
@@ -163,7 +166,7 @@ processResources
 			include 'mcmod.info'
 
 			// replace version and mcversion
-			expand 'version': project.version, 'mcversion': project.minecraft.version, 'asielib-version': project.asielib.version
+			expand 'version': project.version, 'mcversion': project.minecraft.version, 'asielib-version': asielib_version
 		}
 
 		// copy everything else, thats not the mcmod.info

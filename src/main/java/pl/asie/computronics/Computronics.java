@@ -2,6 +2,11 @@ package pl.asie.computronics;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -9,18 +14,12 @@ import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLInterModComms;
-import net.minecraftforge.fml.common.event.FMLMissingMappingsEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerAboutToStartEvent;
 import net.minecraftforge.fml.common.network.FMLEventChannel;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.MinecraftForge;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheralProvider;
@@ -36,14 +35,6 @@ import pl.asie.computronics.cc.IntegrationComputerCraft;
 import pl.asie.computronics.cc.multiperipheral.MultiPeripheralRegistry;
 import pl.asie.computronics.gui.providers.GuiProviderCipher;
 import pl.asie.computronics.integration.ModRecipes;
-//import pl.asie.computronics.integration.buildcraft.IntegrationBuildCraft;
-//import pl.asie.computronics.integration.buildcraft.IntegrationBuildCraftBuilder;
-//import pl.asie.computronics.integration.buildcraft.statements.ActionProvider;
-//import pl.asie.computronics.integration.buildcraft.statements.StatementParameters;
-//import pl.asie.computronics.integration.buildcraft.statements.TriggerProvider;
-//import pl.asie.computronics.integration.forestry.IntegrationForestry;
-//import pl.asie.computronics.integration.gregtech.GregTechRecipes;
-//import pl.asie.computronics.integration.railcraft.IntegrationRailcraft;
 import pl.asie.computronics.integration.tis3d.IntegrationTIS3D;
 import pl.asie.computronics.item.block.IBlockWithSpecialText;
 import pl.asie.computronics.item.block.ItemBlockWithSpecialText;
@@ -65,7 +56,6 @@ import pl.asie.computronics.util.chat.ChatHandler;
 import pl.asie.lib.block.BlockBase;
 import pl.asie.lib.gui.managed.IGuiProvider;
 import pl.asie.lib.gui.managed.ManagedGuiHandler;
-import pl.asie.lib.item.ItemMultiple;
 import pl.asie.lib.network.PacketHandler;
 
 import java.lang.reflect.Method;
@@ -74,8 +64,17 @@ import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+//import pl.asie.computronics.integration.buildcraft.IntegrationBuildCraft;
+//import pl.asie.computronics.integration.buildcraft.IntegrationBuildCraftBuilder;
+//import pl.asie.computronics.integration.buildcraft.statements.ActionProvider;
+//import pl.asie.computronics.integration.buildcraft.statements.StatementParameters;
+//import pl.asie.computronics.integration.buildcraft.statements.TriggerProvider;
+//import pl.asie.computronics.integration.forestry.IntegrationForestry;
+//import pl.asie.computronics.integration.gregtech.GregTechRecipes;
+//import pl.asie.computronics.integration.railcraft.IntegrationRailcraft;
+
 @Mod(modid = Mods.Computronics, name = Mods.Computronics_NAME, version = "@VERSION@",
-	dependencies = "required-after:asielib@[0.4.5,);required-after:Forge@[10.13.2.1291,);"
+	dependencies = "required-after:asielib;required-after:Forge@[11.15.0.1663,);"
 		+ "after:ComputerCraft;after:OpenComputers@[1.5.18,);after:tis3d@[0.8.0.57,);"
 		+ "before:OpenPeripheralCore@[1.1,);before:OpenPeripheralApi@[3.2,);"
 		+ "after:MineFactoryReloaded;after:RedLogic@[59.1.9,);after:ProjRed|Core;"
@@ -271,7 +270,8 @@ public class Computronics {
 
 		/*if(Mods.isLoaded(Mods.GregTech) && Config.GREGTECH_RECIPES) {
 			//ModRecipes.instance = new GregTechRecipes();
-		} else*/ {
+		} else*/
+		{
 			ModRecipes.instance = new ModRecipes();
 		}
 		if(ModRecipes.instance != null) {

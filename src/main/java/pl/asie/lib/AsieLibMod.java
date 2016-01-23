@@ -3,7 +3,6 @@ package pl.asie.lib;
 import com.google.common.collect.ImmutableList;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -18,14 +17,13 @@ import pl.asie.lib.api.AsieLibAPI;
 import pl.asie.lib.api.tool.IToolRegistry;
 import pl.asie.lib.integration.Integration;
 import pl.asie.lib.integration.tool.ToolProviders;
-import pl.asie.lib.network.PacketHandler;
 import pl.asie.lib.reference.Mods;
 import pl.asie.lib.tweak.enchantment.EnchantmentTweak;
 
 import java.lang.reflect.Method;
 import java.util.Random;
 
-@Mod(modid = Mods.AsieLib, name = Mods.AsieLib_NAME, version = "@VERSION@",
+@Mod(modid = Mods.AsieLib, name = Mods.AsieLib_NAME, version = "@AL_VERSION@",
 	dependencies = "required-after:Forge@[10.13.2.1236,);after:gregtech@[MC1710];"
 		+ "after:CoFHAPI|block@[1.7.10R1.0.0,);after:CoFHAPI|energy@[1.7.10R1.0.0,);"
 		+ "after:CoFHAPI|tileentity@[1.7.10R1.0.0,);after:CoFHAPI|item@[1.7.10R1.0.0,)")

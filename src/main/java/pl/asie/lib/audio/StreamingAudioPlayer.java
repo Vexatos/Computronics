@@ -1,23 +1,20 @@
 package pl.asie.lib.audio;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.SoundCategory;
+import net.minecraft.util.Vec3;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.openal.AL10;
+import pl.asie.lib.AsieLibMod;
+
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
-
-import org.lwjgl.BufferUtils;
-import org.lwjgl.openal.AL10;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.SoundCategory;
-import net.minecraft.util.Vec3;
-
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
-import pl.asie.lib.AsieLibMod;
 
 public class StreamingAudioPlayer extends DFPWM {
 	public class SourceEntry {

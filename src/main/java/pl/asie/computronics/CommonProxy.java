@@ -1,13 +1,11 @@
 package pl.asie.computronics;
 
-import java.io.IOException;
-
 import net.minecraft.world.World;
-
 import net.minecraftforge.fml.common.registry.EntityRegistry;
-
 import pl.asie.computronics.item.entity.EntityItemIndestructable;
 import pl.asie.lib.network.Packet;
+
+import java.io.IOException;
 
 public class CommonProxy {
 

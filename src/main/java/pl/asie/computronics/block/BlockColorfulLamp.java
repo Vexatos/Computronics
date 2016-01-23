@@ -25,7 +25,7 @@ import pl.asie.lib.integration.Integration;
 })*/
 public class BlockColorfulLamp extends BlockPeripheral /*implements IRedNetInputNode*/ {
 
-	public static final PropertyInteger BRIGHTNESS = PropertyInteger.create("color", 0, 0x7fff);
+	public static final PropertyInteger BRIGHTNESS = PropertyInteger.create("color", 0, 15);
 
 	public BlockColorfulLamp() {
 		super("colorful_lamp", Rotation.NONE);
@@ -55,7 +55,7 @@ public class BlockColorfulLamp extends BlockPeripheral /*implements IRedNetInput
 	}
 
 	@Override
-	protected BlockState createBlockState() {
+	protected BlockState createActualBlockState() {
 		return new BlockState(this,
 			rotation.FACING,
 			BRIGHTNESS

@@ -1,10 +1,10 @@
 package pl.asie.lib;
 
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetHandler;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import pl.asie.lib.network.MessageHandlerBase;
 import pl.asie.lib.network.Packet;
 
