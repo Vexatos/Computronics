@@ -4,7 +4,7 @@
         "textures": {
             "all": "computronics:blocks/iron_note_block"
         },
-        "model": "cube_all",
+        "model": "computronics:base_cube_all",
         "transform": "forge:default-block"
     },
     "variants": {

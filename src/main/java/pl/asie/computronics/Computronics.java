@@ -36,8 +36,7 @@ import pl.asie.computronics.cc.multiperipheral.MultiPeripheralRegistry;
 import pl.asie.computronics.gui.providers.GuiProviderCipher;
 import pl.asie.computronics.integration.ModRecipes;
 import pl.asie.computronics.integration.tis3d.IntegrationTIS3D;
-import pl.asie.computronics.item.block.IBlockWithSpecialText;
-import pl.asie.computronics.item.block.ItemBlockWithSpecialText;
+import pl.asie.computronics.item.block.ComputronicsItemBlock;
 import pl.asie.computronics.network.NetworkHandlerClient;
 import pl.asie.computronics.network.NetworkHandlerServer;
 import pl.asie.computronics.oc.IntegrationOpenComputers;
@@ -127,7 +126,7 @@ public class Computronics {
 
 	public static CreativeTabs tab = new CreativeTabs("tabComputronics") {
 		public Item getTabIconItem() {
-			return new ItemBlock(colorfulLamp);
+			return Item.getItemFromBlock(colorfulLamp);
 		}
 	};
 
@@ -136,11 +135,7 @@ public class Computronics {
 	}
 
 	private void registerBlockWithTileEntity(BlockBase block, Class<? extends TileEntity> tile, String name) {
-		if(block instanceof IBlockWithSpecialText) {
-			registerBlockWithTileEntity(block, ItemBlockWithSpecialText.class, tile, name);
-		} else {
-			registerBlockWithTileEntity(block, ItemBlock.class, tile, name);
-		}
+		registerBlockWithTileEntity(block, ComputronicsItemBlock.class, tile, name);
 	}
 
 	private void registerBlockWithTileEntity(BlockBase block, Class<? extends ItemBlock> itemBlock, Class<? extends TileEntity> tile, String name) {

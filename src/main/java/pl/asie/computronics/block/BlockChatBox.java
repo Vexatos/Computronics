@@ -5,7 +5,6 @@ import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -17,6 +16,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.item.block.IBlockWithDifferentColors;
 import pl.asie.computronics.item.block.IBlockWithSpecialText;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
@@ -26,7 +26,7 @@ import pl.asie.lib.tile.TileEntityBase;
 
 import java.util.List;
 
-public class BlockChatBox extends BlockPeripheral implements IBlockWithSpecialText {
+public class BlockChatBox extends BlockPeripheral implements IBlockWithSpecialText, IBlockWithDifferentColors {
 
 	public static final PropertyBool CREATIVE = PropertyBool.create("creative");
 
@@ -51,13 +51,17 @@ public class BlockChatBox extends BlockPeripheral implements IBlockWithSpecialTe
 	}
 
 	@Override
+	public int getColorFromItemStack(ItemStack stack, int pass) {
+		return (stack.getItemDamage() & 8) != 0 ? 0xFF60FF : 0xFFFFFF;
+	}
+
+	@Override
 	public TileEntity createTileEntity(World world, IBlockState state) {
 		return new TileChatBox();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public void getSubBlocks(Item item, CreativeTabs creativeTabs, List blockList) {
+	public void getSubBlocks(Item item, CreativeTabs creativeTabs, List<ItemStack> blockList) {
 		blockList.add(new ItemStack(item, 1, 0));
 		if(Config.CHATBOX_CREATIVE) {
 			blockList.add(new ItemStack(item, 1, 8));
@@ -66,7 +70,7 @@ public class BlockChatBox extends BlockPeripheral implements IBlockWithSpecialTe
 
 	@Override
 	public IBlockState getStateFromMeta(int meta) {
-		return super.getStateFromMeta(meta).withProperty(CREATIVE, (meta & ~7) != 0);
+		return super.getStateFromMeta(meta).withProperty(CREATIVE, (meta & 8) != 0);
 	}
 
 	@Override

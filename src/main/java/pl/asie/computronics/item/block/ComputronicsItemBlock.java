@@ -7,15 +7,20 @@ import net.minecraft.item.ItemStack;
 
 import java.util.List;
 
-public class ItemBlockWithSpecialText extends ItemBlock {
+public class ComputronicsItemBlock extends ItemBlock {
 
 	private IBlockWithSpecialText specialBlock;
+	private IBlockWithDifferentColors coloredBlock;
 
-	public ItemBlockWithSpecialText(Block block) {
+	public ComputronicsItemBlock(Block block) {
 		super(block);
 		if(block instanceof IBlockWithSpecialText) {
 			this.specialBlock = (IBlockWithSpecialText) block;
 			this.setHasSubtypes(specialBlock.hasSubTypes());
+		}
+		if(block instanceof IBlockWithDifferentColors) {
+			this.coloredBlock = ((IBlockWithDifferentColors) block);
+			this.setHasSubtypes(coloredBlock.hasSubTypes());
 		}
 	}
 
@@ -39,5 +44,13 @@ public class ItemBlockWithSpecialText extends ItemBlock {
 	@Override
 	public int getMetadata(int damage) {
 		return damage;
+	}
+
+	@Override
+	public int getColorFromItemStack(ItemStack stack, int pass) {
+		if(this.coloredBlock != null) {
+			return this.coloredBlock.getColorFromItemStack(stack, pass);
+		}
+		return super.getColorFromItemStack(stack, pass);
 	}
 }

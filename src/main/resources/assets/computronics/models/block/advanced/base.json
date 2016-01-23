@@ -1,5 +1,5 @@
 {
-    "parent": "block/cube_bottom_top",
+    "parent": "computronics:block/base_cube_machine",
     "textures": {
         "side": "computronics:blocks/advanced/machine_side",
         "bottom": "computronics:blocks/advanced/machine_bottom",

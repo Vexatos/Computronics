@@ -2,14 +2,23 @@
     "forge_marker": 1,
     "defaults": {
         "textures": { },
-        "model": "tis3d:item/module.obj"
+        "model": "tis3d:module.obj"
     },
     "variants": {
         "normal": [{ }],
         "inventory": [
             {
                 "transform": "forge:default-block",
-                "textures": { "casing:Module": "computronics:items/module_colorful" }
+                "textures": { "#casing:Module": "tis3d:items/module_colorful" },
+                "submodel": {
+                    "normal": [{ }],
+                    "inventory": [
+                        {
+                            "model": "tis3d:module.obj",
+                            "transform": "forge:default-block"
+                        }
+                    ]
+                }
             }
         ]
     }

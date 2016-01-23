@@ -78,7 +78,8 @@ public class BlockColorfulLamp extends BlockPeripheral /*implements IRedNetInput
 		}
 		TileEntity tile = world.getTileEntity(pos);
 		if(tile instanceof TileColorfulLamp) {
-			return ((TileColorfulLamp) tile).getLampColor();
+			int color = ((TileColorfulLamp) tile).getLampColor();
+			return (color & (0x1F << 10)) << 9 | (color & (0x1F << 5)) << 6 | ((color & 0x1F) << 3);
 		}
 		return super.colorMultiplier(world, pos, pass);
 	}
