@@ -25,8 +25,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheralProvider;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheralRegistry;
-import pl.asie.computronics.audio.DFPWMPlaybackManager;
-import pl.asie.computronics.block.BlockAudioCable;
 import pl.asie.computronics.block.BlockCamera;
 import pl.asie.computronics.block.BlockChatBox;
 import pl.asie.computronics.block.BlockCipher;
@@ -34,23 +32,19 @@ import pl.asie.computronics.block.BlockCipherAdvanced;
 import pl.asie.computronics.block.BlockColorfulLamp;
 import pl.asie.computronics.block.BlockIronNote;
 import pl.asie.computronics.block.BlockRadar;
-import pl.asie.computronics.block.BlockSpeaker;
-import pl.asie.computronics.block.BlockTapeReader;
 import pl.asie.computronics.cc.IntegrationComputerCraft;
 import pl.asie.computronics.cc.multiperipheral.MultiPeripheralRegistry;
 import pl.asie.computronics.gui.providers.GuiProviderCipher;
-import pl.asie.computronics.gui.providers.GuiProviderTapeDrive;
 import pl.asie.computronics.integration.ModRecipes;
-import pl.asie.computronics.integration.buildcraft.IntegrationBuildCraft;
-import pl.asie.computronics.integration.buildcraft.IntegrationBuildCraftBuilder;
-import pl.asie.computronics.integration.buildcraft.statements.ActionProvider;
-import pl.asie.computronics.integration.buildcraft.statements.StatementParameters;
-import pl.asie.computronics.integration.buildcraft.statements.TriggerProvider;
-import pl.asie.computronics.integration.forestry.IntegrationForestry;
-import pl.asie.computronics.integration.gregtech.GregTechRecipes;
-import pl.asie.computronics.integration.railcraft.IntegrationRailcraft;
+//import pl.asie.computronics.integration.buildcraft.IntegrationBuildCraft;
+//import pl.asie.computronics.integration.buildcraft.IntegrationBuildCraftBuilder;
+//import pl.asie.computronics.integration.buildcraft.statements.ActionProvider;
+//import pl.asie.computronics.integration.buildcraft.statements.StatementParameters;
+//import pl.asie.computronics.integration.buildcraft.statements.TriggerProvider;
+//import pl.asie.computronics.integration.forestry.IntegrationForestry;
+//import pl.asie.computronics.integration.gregtech.GregTechRecipes;
+//import pl.asie.computronics.integration.railcraft.IntegrationRailcraft;
 import pl.asie.computronics.integration.tis3d.IntegrationTIS3D;
-import pl.asie.computronics.item.ItemTape;
 import pl.asie.computronics.item.block.IBlockWithSpecialText;
 import pl.asie.computronics.item.block.ItemBlockWithSpecialText;
 import pl.asie.computronics.network.NetworkHandlerClient;
@@ -59,9 +53,6 @@ import pl.asie.computronics.oc.IntegrationOpenComputers;
 import pl.asie.computronics.reference.Compat;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
-import pl.asie.computronics.tape.StorageManager;
-import pl.asie.computronics.tape.TapeStorageEventHandler;
-import pl.asie.computronics.tile.TileAudioCable;
 import pl.asie.computronics.tile.TileCamera;
 import pl.asie.computronics.tile.TileChatBox;
 import pl.asie.computronics.tile.TileCipherBlock;
@@ -69,8 +60,6 @@ import pl.asie.computronics.tile.TileCipherBlockAdvanced;
 import pl.asie.computronics.tile.TileColorfulLamp;
 import pl.asie.computronics.tile.TileIronNote;
 import pl.asie.computronics.tile.TileRadar;
-import pl.asie.computronics.tile.TileSpeaker;
-import pl.asie.computronics.tile.TileTapeDrive;
 import pl.asie.computronics.util.achievements.ComputronicsAchievements;
 import pl.asie.computronics.util.chat.ChatHandler;
 import pl.asie.lib.block.BlockBase;
@@ -106,20 +95,14 @@ public class Computronics {
 
 	@Instance(value = Mods.Computronics)
 	public static Computronics instance;
-	public static StorageManager storage;
-	public static TapeStorageEventHandler storageEventHandler;
 	public static ManagedGuiHandler gui;
 	public static PacketHandler packet;
-	public DFPWMPlaybackManager audio;
 	public static ExecutorService rsaThreads;
 
 	@SidedProxy(clientSide = "pl.asie.computronics.ClientProxy", serverSide = "pl.asie.computronics.CommonProxy")
 	public static CommonProxy proxy;
 
 	public static BlockIronNote ironNote;
-	public static BlockTapeReader tapeReader;
-	public static BlockAudioCable audioCable;
-	public static BlockSpeaker speaker;
 	public static BlockCamera camera;
 	public static BlockChatBox chatBox;
 	public static BlockCipher cipher;
@@ -130,16 +113,11 @@ public class Computronics {
 	public static IntegrationOpenComputers opencomputers;
 	public static IntegrationComputerCraft computercraft;
 
-	public static IntegrationBuildCraft buildcraft;
-	public static IntegrationRailcraft railcraft;
-	public static IntegrationForestry forestry;
+	//public static IntegrationBuildCraft buildcraft;
+	//public static IntegrationRailcraft railcraft;
+	//public static IntegrationForestry forestry;
 	public static IntegrationTIS3D tis3D;
 
-	public static ItemTape itemTape;
-	public static ItemMultiple itemParts;
-	public static ItemMultiple itemPartsGreg;
-
-	public static IGuiProvider guiTapeDrive;
 	public static IGuiProvider guiCipher;
 
 	public ComputronicsAchievements achievements;
@@ -148,7 +126,7 @@ public class Computronics {
 
 	public static CreativeTabs tab = new CreativeTabs("tabComputronics") {
 		public Item getTabIconItem() {
-			return itemTape;
+			return new ItemBlock(colorfulLamp);
 		}
 	};
 
@@ -169,7 +147,7 @@ public class Computronics {
 		GameRegistry.registerTileEntity(tile, name);
 		//System.out.println("Registering " + name + " as TE " + tile.getCanonicalName());
 		FMLInterModComms.sendMessage(Mods.AE2, "whitelist-spatial", tile.getCanonicalName());
-		IntegrationBuildCraftBuilder.INSTANCE.registerBlockBaseSchematic(block);
+		//IntegrationBuildCraftBuilder.INSTANCE.registerBlockBaseSchematic(block); TODO BuildCraft
 	}
 
 	@EventHandler
@@ -178,7 +156,6 @@ public class Computronics {
 
 		config = new Config(event);
 
-		audio = new DFPWMPlaybackManager(proxy.isClient());
 		packet = new PacketHandler(Mods.Computronics, new NetworkHandlerClient(), new NetworkHandlerServer());
 
 		compat = new Compat(this.config.config);
@@ -192,24 +169,6 @@ public class Computronics {
 			ironNote = new BlockIronNote();
 			registerBlockWithTileEntity(ironNote, TileIronNote.class, "computronics.ironNoteBlock");
 		}
-
-		if(isEnabled("audioCable", true)) {
-			audioCable = new BlockAudioCable();
-			registerBlockWithTileEntity(audioCable, TileAudioCable.class, "computronics.audioCable");
-		}
-
-		if(isEnabled("speaker", true)) {
-			speaker = new BlockSpeaker();
-			registerBlockWithTileEntity(speaker, TileSpeaker.class, "computronics.speaker");
-		}
-
-		if(isEnabled("tape", true)) {
-			guiTapeDrive = new GuiProviderTapeDrive();
-			gui.registerGuiProvider(Computronics.guiTapeDrive);
-			tapeReader = new BlockTapeReader();
-			registerBlockWithTileEntity(tapeReader, TileTapeDrive.class, "computronics.tapeReader");
-		}
-
 		if(isEnabled("camera", true)) {
 			camera = new BlockCamera();
 			registerBlockWithTileEntity(camera, TileCamera.class, "computronics.camera");
@@ -243,26 +202,10 @@ public class Computronics {
 			registerBlockWithTileEntity(colorfulLamp, TileColorfulLamp.class, "computronics.colorfulLamp");
 		}
 
-		if(isEnabled("tape", true)) {
-			itemTape = new ItemTape(Config.TAPE_LENGTHS);
-			GameRegistry.registerItem(itemTape, "computronics.tape");
-
-			if(Mods.isLoaded(Mods.GregTech)) {
-				itemPartsGreg = new ItemMultiple(Mods.Computronics, new String[] { "reelChromoxide" });
-				itemPartsGreg.setCreativeTab(tab);
-				GameRegistry.registerItem(itemPartsGreg, "computronics.gt_parts");
-				proxy.registerEntities();
-			}
-
-			itemParts = new ItemMultiple(Mods.Computronics, new String[] { "part_tape_track" });
-			itemParts.setCreativeTab(tab);
-			GameRegistry.registerItem(itemParts, "computronics.parts");
-		}
-
-		if(Mods.isLoaded(Mods.Railcraft)) {
+		/*if(Mods.isLoaded(Mods.Railcraft)) {
 			railcraft = new IntegrationRailcraft();
 			railcraft.preInit(config.config);
-		}
+		}*/
 
 		if(Mods.isLoaded(Mods.ComputerCraft)) {
 			computercraft = new IntegrationComputerCraft(this);
@@ -278,18 +221,11 @@ public class Computronics {
 			tis3D = new IntegrationTIS3D();
 			tis3D.preInit();
 		}
-
-		proxy.registerAudioHandlers();
 	}
 
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
 		MinecraftForge.EVENT_BUS.register(new ChatHandler());
-
-		if(tapeReader != null) {
-			storageEventHandler = new TapeStorageEventHandler();
-			MinecraftForge.EVENT_BUS.register(storageEventHandler);
-		}
 
 		FMLInterModComms.sendMessage(Mods.Waila, "register", "pl.asie.computronics.integration.waila.IntegrationWaila.register");
 
@@ -304,16 +240,16 @@ public class Computronics {
 			opencomputers.init();
 		}
 
-		if(Mods.API.hasAPI(Mods.API.BuildCraftBlueprints)) {
+		/*if(Mods.API.hasAPI(Mods.API.BuildCraftBlueprints)) { TODO BuildCraft
 			IntegrationBuildCraftBuilder.INSTANCE.init();
-		}
+		}*/
 
 		if(Mods.isLoaded(Mods.TIS3D) && tis3D != null) {
 			tis3D.init();
 		}
 
-		achievements = new ComputronicsAchievements();
-		achievements.initialize();
+		//achievements = new ComputronicsAchievements(); TODO Railcraft
+		//achievements.initialize();
 
 		config.save();
 		proxy.registerRenderers();
@@ -333,9 +269,9 @@ public class Computronics {
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
 
-		if(Mods.isLoaded(Mods.GregTech) && Config.GREGTECH_RECIPES) {
-			ModRecipes.instance = new GregTechRecipes();
-		} else {
+		/*if(Mods.isLoaded(Mods.GregTech) && Config.GREGTECH_RECIPES) {
+			//ModRecipes.instance = new GregTechRecipes();
+		} else*/ {
 			ModRecipes.instance = new ModRecipes();
 		}
 		if(ModRecipes.instance != null) {
@@ -345,19 +281,19 @@ public class Computronics {
 		}
 
 		// Mod compat - GregTech
-		if(itemTape != null && Mods.isLoaded(Mods.GregTech) && itemPartsGreg != null) {
+		/*if(itemTape != null && Mods.isLoaded(Mods.GregTech) && itemPartsGreg != null) { TODO GregTech
 			GregTechRecipes.registerGregTechTapeRecipes();
-		}
+		}*/
 
 		if(Mods.isLoaded(Mods.OpenComputers)) {
 			opencomputers.postInit();
 		}
 
-		if(Mods.API.hasAPI(Mods.API.BuildCraftStatements)) {
+		/*if(Mods.API.hasAPI(Mods.API.BuildCraftStatements)) { TODO BuildCraft
 			TriggerProvider.initialize();
 			ActionProvider.initialize();
 			StatementParameters.initialize();
-		}
+		}*/
 
 		if(Mods.isLoaded(Mods.TIS3D) && tis3D != null) {
 			tis3D.postInit();
@@ -366,16 +302,9 @@ public class Computronics {
 
 	@EventHandler
 	public void serverStart(FMLServerAboutToStartEvent event) {
-		Computronics.storage = new StorageManager();
+		//Computronics.storage = new StorageManager();
 		if(Mods.isLoaded(Mods.ComputerCraft)) {
 			computercraft.serverStart();
-		}
-	}
-
-	@EventHandler
-	public void remap(FMLMissingMappingsEvent event) {
-		if(Mods.isLoaded(Mods.OpenComputers)) {
-			opencomputers.remap(event);
 		}
 	}
 

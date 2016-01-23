@@ -1,6 +1,5 @@
 package pl.asie.computronics.tile;
 
-import net.minecraftforge.fml.common.Optional;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
@@ -12,6 +11,8 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
+import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.cc.CCRadarProxy;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
@@ -31,11 +32,6 @@ public class TileRadar extends TileEntityPeripheralBase implements IBatteryProvi
 		this.registerBattery(new BatteryBasic(EnergyConverter.convertEnergy(Config.RADAR_ENERGY_COST_OC * Config.RADAR_RANGE * 3.5, "OC", "RF")));
 	}
 
-	@Override
-	public boolean canUpdate() {
-		return Config.MUST_UPDATE_TILE_ENTITIES;
-	}
-
 	private int getDistance(Arguments args) {
 		if(args.isInteger(0)) {
 			return args.checkInteger(0);
@@ -49,8 +45,9 @@ public class TileRadar extends TileEntityPeripheralBase implements IBatteryProvi
 		if(distance < 1) {
 			distance = 1;
 		}
+		final BlockPos pos = getPos();
 		return AxisAlignedBB.
-			getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 1, zCoord + 1).
+			fromBounds(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1).
 			expand(distance, distance, distance);
 	}
 
@@ -72,8 +69,8 @@ public class TileRadar extends TileEntityPeripheralBase implements IBatteryProvi
 		if(((Connector) node()).tryChangeBuffer(0 - energyNeeded)
 			|| extractFromBattery(energyNeeded)) {
 			AxisAlignedBB bounds = getBounds(distance);
-			entities.addAll(RadarUtils.getEntities(worldObj, xCoord, yCoord, zCoord, bounds, EntityPlayer.class));
-			entities.addAll(RadarUtils.getEntities(worldObj, xCoord, yCoord, zCoord, bounds, EntityLiving.class));
+			entities.addAll(RadarUtils.getEntities(worldObj, getPos(), bounds, EntityPlayer.class));
+			entities.addAll(RadarUtils.getEntities(worldObj, getPos(), bounds, EntityLiving.class));
 			context.pause(0.5);
 		}
 		// The returned array is treated as a tuple, meaning if we return the
@@ -94,7 +91,7 @@ public class TileRadar extends TileEntityPeripheralBase implements IBatteryProvi
 		if(((Connector) node()).tryChangeBuffer(0 - energyNeeded)
 			|| extractFromBattery(energyNeeded)) {
 			AxisAlignedBB bounds = getBounds(distance);
-			entities.addAll(RadarUtils.getEntities(worldObj, xCoord, yCoord, zCoord, bounds, EntityPlayer.class));
+			entities.addAll(RadarUtils.getEntities(worldObj, getPos(), bounds, EntityPlayer.class));
 			context.pause(0.5);
 		}
 		return new Object[] { RadarUtils.convertSetToMap(entities) };
@@ -109,7 +106,7 @@ public class TileRadar extends TileEntityPeripheralBase implements IBatteryProvi
 		if(((Connector) node()).tryChangeBuffer(0 - energyNeeded)
 			|| extractFromBattery(energyNeeded)) {
 			AxisAlignedBB bounds = getBounds(distance);
-			entities.addAll(RadarUtils.getEntities(worldObj, xCoord, yCoord, zCoord, bounds, EntityLiving.class));
+			entities.addAll(RadarUtils.getEntities(worldObj, getPos(), bounds, EntityLiving.class));
 			context.pause(0.5);
 		}
 		return new Object[] { RadarUtils.convertSetToMap(entities) };
@@ -124,7 +121,7 @@ public class TileRadar extends TileEntityPeripheralBase implements IBatteryProvi
 		if(((Connector) node()).tryChangeBuffer(0 - energyNeeded)
 			|| extractFromBattery(energyNeeded)) {
 			AxisAlignedBB bounds = getBounds(distance);
-			entities.addAll(RadarUtils.getItems(worldObj, xCoord, yCoord, zCoord, bounds, EntityItem.class));
+			entities.addAll(RadarUtils.getItems(worldObj, getPos(), bounds, EntityItem.class));
 			context.pause(0.5);
 		}
 		return new Object[] { RadarUtils.convertSetToMap(entities) };
@@ -141,6 +138,6 @@ public class TileRadar extends TileEntityPeripheralBase implements IBatteryProvi
 	public Object[] callMethod(IComputerAccess computer, ILuaContext context,
 		int method, Object[] arguments) throws LuaException,
 		InterruptedException {
-		return CCRadarProxy.callMethod(worldObj, xCoord, yCoord, zCoord, computer, context, method, arguments, this);
+		return CCRadarProxy.callMethod(worldObj, getPos(), computer, context, method, arguments, this);
 	}
 }

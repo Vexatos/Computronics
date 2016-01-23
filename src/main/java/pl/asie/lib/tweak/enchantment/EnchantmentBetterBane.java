@@ -4,14 +4,16 @@ import net.minecraft.enchantment.EnchantmentDamage;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 
 /**
  * @author Vexatos
  */
 public class EnchantmentBetterBane extends EnchantmentDamage {
+
 	public EnchantmentBetterBane(int p_i1923_1_) {
-		super(p_i1923_1_, 2, 2);
+		super(p_i1923_1_, new ResourceLocation("bane_of_arthropods_better"), 2, 2);
 	}
 
 	@Override
@@ -21,8 +23,8 @@ public class EnchantmentBetterBane extends EnchantmentDamage {
 	}
 
 	@Override
-	public void func_151368_a(EntityLivingBase attacker, Entity target, int level) {
-		super.func_151368_a(attacker, target, 5);
+	public void onEntityDamaged(EntityLivingBase attacker, Entity target, int level) {
+		super.onEntityDamaged(attacker, target, 5);
 	}
 
 	@Override

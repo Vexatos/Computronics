@@ -1,54 +1,49 @@
 package pl.asie.computronics.block;
 
-import net.minecraftforge.fml.common.Optional;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import li.cil.oc.api.network.Environment;
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.properties.PropertyInteger;
+import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
-import pl.asie.computronics.Computronics;
-import pl.asie.computronics.client.LampRender;
+import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TileColorfulLamp;
-import pl.asie.computronics.util.LampUtil;
 import pl.asie.lib.integration.Integration;
-import powercrystals.minefactoryreloaded.api.rednet.IRedNetInputNode;
-import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
+//import powercrystals.minefactoryreloaded.api.rednet.IRedNetInputNode;
+//import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
 
-@Optional.InterfaceList({
+/*@Optional.InterfaceList({
 	@Optional.Interface(iface = "powercrystals.minefactoryreloaded.api.rednet.IRedNetInputNode", modid = Mods.MFR)
-})
-public class BlockColorfulLamp extends BlockPeripheral implements IRedNetInputNode {
+})*/
+public class BlockColorfulLamp extends BlockPeripheral /*implements IRedNetInputNode*/ {
 
-	public IIcon m0, m1;
+	public static final PropertyInteger BRIGHTNESS = PropertyInteger.create("color", 0, 0x7fff);
 
 	public BlockColorfulLamp() {
-		super("colorful_lamp");
-		this.setCreativeTab(Computronics.tab);
-		this.setBlockName("computronics.colorfulLamp");
-		this.setRotation(Rotation.NONE);
-		this.lightValue = 15;
+		super("colorful_lamp", Rotation.NONE);
+		this.setUnlocalizedName("computronics.colorfulLamp");
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World arg0, int arg1) {
+	public TileEntity createTileEntity(World world, IBlockState state) {
 		return new TileColorfulLamp();
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float _x, float _y, float _z) {
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
 		if(!world.isRemote && Mods.isLoaded(Mods.MFR) && player.isSneaking()) {
-			TileEntity tile = world.getTileEntity(x, y, z);
+			TileEntity tile = world.getTileEntity(pos);
 			if(tile instanceof TileColorfulLamp) {
 				ItemStack held = player.getCurrentEquippedItem();
-				if(held != null && held.getItem() != null && Integration.isTool(held, player, x, y, z) && Integration.useTool(held, player, x, y, z)) {
+				if(held != null && held.getItem() != null && Integration.isTool(held, player, pos) && Integration.useTool(held, player, pos)) {
 					TileColorfulLamp lamp = (TileColorfulLamp) tile;
 					lamp.setBinaryMode(!lamp.isBinaryMode());
 					player.addChatMessage(new ChatComponentTranslation("chat.computronics.lamp.binary." + (lamp.isBinaryMode() ? "on" : "off")));
@@ -56,59 +51,48 @@ public class BlockColorfulLamp extends BlockPeripheral implements IRedNetInputNo
 				}
 			}
 		}
-		return super.onBlockActivated(world, x, y, z, player, side, _x, _y, _z);
+		return super.onBlockActivated(world, pos, state, player, side, hitX, hitY, hitZ);
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister r) {
-		m0 = r.registerIcon("computronics:lamp_layer_0");
-		m1 = r.registerIcon("computronics:lamp_layer_1");
+	protected BlockState createBlockState() {
+		return new BlockState(this,
+			rotation.FACING,
+			BRIGHTNESS
+		);
 	}
 
 	@Override
-	public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
-		TileEntity tile = world.getTileEntity(x, y, z);
+	public void onNeighborBlockChange(World world, BlockPos pos, IBlockState state, Block block) {
+		/*TileEntity tile = world.getTileEntity(x, y, z);
 		if(Mods.isLoaded(Mods.ProjectRed) && tile instanceof TileColorfulLamp) {
 			((TileColorfulLamp) tile).onProjectRedBundledInputChanged();
-		}
-	}
-
-	public void setLightValue(int value) {
-		if(LampUtil.shouldColorLight()) {
-			//Bit-shift all the things!
-			int r = (((value & 0x7C00) >>> 10) / 2),
-				g = (((value & 0x03E0) >>> 5) / 2),
-				b = ((value & 0x001F) / 2);
-			r = value > 0x7FFF ? 15 : r < 0 ? 0 : r > 15 ? 15 : r;
-			g = value > 0x7FFF ? 15 : g < 0 ? 0 : g > 15 ? 15 : g;
-			b = value > 0x7FFF ? 15 : b < 0 ? 0 : b > 15 ? 15 : b;
-			int brightness = Math.max(Math.max(r, g), b);
-			this.lightValue = brightness | ((b << 15) + (g << 10) + (r << 5));
-		} else {
-			this.lightValue = value;
-		}
+		}*/
 	}
 
 	@Override
+	public int getLightValue(IBlockAccess world, BlockPos pos) {
+		return world.getBlockState(pos).getValue(BRIGHTNESS);
+	}
+
+	@Override
+	public int colorMultiplier(IBlockAccess world, BlockPos pos, int pass) {
+		if(pass != 1) {
+			return super.colorMultiplier(world, pos, pass);
+		}
+		TileEntity tile = world.getTileEntity(pos);
+		if(tile instanceof TileColorfulLamp) {
+			return ((TileColorfulLamp) tile).getLampColor();
+		}
+		return super.colorMultiplier(world, pos, pass);
+	}
+/*@Override
 	@SideOnly(Side.CLIENT)
 	public int getRenderType() {
 		return LampRender.id();
-	}
+	}*/
 
-	private int renderingPass = 0;
-
-	public void setRenderingPass(int i) {
-		renderingPass = i & 1;
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public IIcon getIcon(int side, int meta) {
-		return renderingPass == 1 ? m1 : m0;
-	}
-
-	@Override
+	/*@Override
 	@Optional.Method(modid = Mods.MFR)
 	public RedNetConnectionType getConnectionType(World world, int x, int y,
 		int z, ForgeDirection side) {
@@ -143,7 +127,7 @@ public class BlockColorfulLamp extends BlockPeripheral implements IRedNetInputNo
 		if(tile instanceof TileColorfulLamp && !((TileColorfulLamp) tile).isBinaryMode()) {
 			((TileColorfulLamp) tile).setLampColor(inputValue & 0x7FFF);
 		}
-	}
+	}*/
 
 	@Override
 	@Optional.Method(modid = Mods.OpenComputers)

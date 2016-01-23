@@ -1,4 +1,4 @@
-package pl.asie.computronics.integration.tis3d.module;
+/*package pl.asie.computronics.integration.tis3d.module;
 
 import li.cil.tis3d.api.FontRendererAPI;
 import li.cil.tis3d.api.machine.Casing;
@@ -15,13 +15,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.opengl.GL11;
 import pl.asie.computronics.tile.TapeDriveState.State;
-import pl.asie.computronics.tile.TileTapeDrive;
 
 import java.util.HashMap;
 
 /**
  * @author Vexatos
- */
+ * /
 public class ModuleTapeReader extends ComputronicsModule {
 
 	private enum Mode {
@@ -60,7 +59,7 @@ public class ModuleTapeReader extends ComputronicsModule {
 
 	/**
 	 * Command which never returns anything.
-	 */
+	 * /
 	private abstract class NeverWritingCommand extends Command {
 
 		private NeverWritingCommand(String uid) {
@@ -74,7 +73,7 @@ public class ModuleTapeReader extends ComputronicsModule {
 
 	/**
 	 * Command which is finished after returning one value.
-	 */
+	 * /
 	private abstract class IdleAfterWritingCommand extends Command {
 
 		private IdleAfterWritingCommand(String uid) {
@@ -98,7 +97,7 @@ public class ModuleTapeReader extends ComputronicsModule {
 
 	/**
 	 * Command which takes no argument and returns a value.
-	 */
+	 * /
 	private abstract class ImmediateReturnCommand extends IdleAfterWritingCommand {
 
 		private ImmediateReturnCommand(String uid) {
@@ -125,7 +124,7 @@ public class ModuleTapeReader extends ComputronicsModule {
 
 	/**
 	 * Command which takes a single argument and returns nothing.
-	 */
+	 * /
 	private abstract class SetterCommand extends NeverWritingCommand {
 
 		private SetterCommand(String uid) {
@@ -532,4 +531,4 @@ public class ModuleTapeReader extends ComputronicsModule {
 			}
 		}
 	}
-}
+}*/

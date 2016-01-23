@@ -1,21 +1,11 @@
 package pl.asie.computronics;
 
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
-import net.minecraftforge.fml.common.Optional;
 import net.minecraft.client.Minecraft;
-import net.minecraft.item.Item;
-import net.minecraft.world.ChunkPosition;
-import net.minecraft.world.World;
-import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraft.util.BlockPos;
 import net.minecraftforge.common.MinecraftForge;
-import pl.asie.computronics.api.audio.AudioPacketDFPWM;
-import pl.asie.computronics.api.audio.AudioPacketRegistry;
-import pl.asie.computronics.audio.AudioPacketClientHandlerDFPWM;
-import pl.asie.computronics.client.AudioCableRender;
-import pl.asie.computronics.client.LampRender;
-import pl.asie.computronics.client.SignalBoxRenderer;
-import pl.asie.computronics.oc.client.UpgradeRenderer;
+import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.oc.IntegrationOpenComputers;
+import pl.asie.computronics.oc.client.UpgradeRenderer;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.boom.SelfDestruct;
 import pl.asie.lib.network.Packet;
@@ -31,14 +21,6 @@ public class ClientProxy extends CommonProxy {
 	}
 
 	@Override
-	public void registerAudioHandlers() {
-		super.registerAudioHandlers();
-		AudioPacketRegistry.INSTANCE.registerClientHandler(
-			AudioPacketDFPWM.class, new AudioPacketClientHandlerDFPWM()
-		);
-	}
-
-	@Override
 	public void registerEntities() {
 		super.registerEntities();
 	}
@@ -46,21 +28,18 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void registerRenderers() {
 		if(Computronics.colorfulLamp != null) {
-			RenderingRegistry.registerBlockHandler(new LampRender());
+			//RenderingRegistry.registerBlockHandler(new LampRender()); TODO Proper Lamp Renderer
 		}
-		if(Computronics.audioCable != null) {
-			RenderingRegistry.registerBlockHandler(new AudioCableRender());
-		}
-		if(Computronics.railcraft != null && Computronics.railcraft.digitalBox != null) {
+		/*if(Computronics.railcraft != null && Computronics.railcraft.digitalBox != null) {
 			SignalBoxRenderer renderer = new SignalBoxRenderer();
 			RenderingRegistry.registerBlockHandler(renderer);
 			MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(renderer.getBlock()), renderer.getItemRenderer());
-		}
+		}*/
 		if(Mods.isLoaded(Mods.OpenComputers)) {
 			registerOpenComputersRenderers();
-			if(Computronics.forestry != null) {
+			/*if(Computronics.forestry != null) {
 				Computronics.forestry.registerOCRenderers();
-			}
+			}*/
 		}
 	}
 
@@ -78,7 +57,7 @@ public class ClientProxy extends CommonProxy {
 			z,
 			force);
 		int size = p.readInt();
-		ArrayList<ChunkPosition> list = new ArrayList<ChunkPosition>(size);
+		ArrayList<BlockPos> list = new ArrayList<BlockPos>(size);
 		int i = (int) x;
 		int j = (int) y;
 		int k = (int) z;
@@ -88,21 +67,23 @@ public class ClientProxy extends CommonProxy {
 				j1 = p.readByte() + i;
 				k1 = p.readByte() + j;
 				l1 = p.readByte() + k;
-				list.add(new ChunkPosition(j1, k1, l1));
+				list.add(new BlockPos(j1, k1, l1));
 			}
 		}
-		explosion.affectedBlockPositions = list;
+
+		explosion.getAffectedBlockPositions().clear();
+		explosion.getAffectedBlockPositions().addAll(list);
 		explosion.doExplosionB(true);
 		minecraft.thePlayer.motionX += (double) p.readFloat();
 		minecraft.thePlayer.motionY += (double) p.readFloat();
 		minecraft.thePlayer.motionZ += (double) p.readFloat();
 	}
 
-	@Override
+	/*@Override
 	@Optional.Method(modid = Mods.Forestry)
-	public void spawnSwarmParticle(World worldObj, double xPos, double yPos, double zPos, int color) {
+	public void spawnSwarmParticle(World worldObj, double xPos, double yPos, double zPos, int color) { TODO Forestry
 		Computronics.forestry.spawnSwarmParticle(worldObj, xPos, yPos, zPos, color);
-	}
+	}*/
 
 	@Optional.Method(modid = Mods.OpenComputers)
 	private void registerOpenComputersRenderers() {

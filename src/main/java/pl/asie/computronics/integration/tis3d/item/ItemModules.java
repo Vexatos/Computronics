@@ -14,7 +14,7 @@ import pl.asie.computronics.integration.tis3d.IntegrationTIS3D;
 import pl.asie.computronics.integration.tis3d.manual.IModuleWithDocumentation;
 import pl.asie.computronics.integration.tis3d.module.ModuleBoom;
 import pl.asie.computronics.integration.tis3d.module.ModuleColorful;
-import pl.asie.computronics.integration.tis3d.module.ModuleTapeReader;
+//import pl.asie.computronics.integration.tis3d.module.ModuleTapeReader;
 import pl.asie.computronics.item.ItemMultiple;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
@@ -42,9 +42,9 @@ public class ItemModules extends ItemMultiple implements ModuleProvider, IModule
 		if(Config.TIS3D_MODULE_COLORFUL) {
 			list.add(new ItemStack(item, 1, 0));
 		}
-		if(Config.TIS3D_MODULE_TAPE_READER) {
+		/*if(Config.TIS3D_MODULE_TAPE_READER) {
 			list.add(new ItemStack(item, 1, 1));
-		}
+		}*/
 		if(Config.TIS3D_MODULE_BOOM) {
 			list.add(new ItemStack(item, 1, 2));
 		}
@@ -115,7 +115,8 @@ public class ItemModules extends ItemMultiple implements ModuleProvider, IModule
 			case 0:
 				return "colorful_module";
 			case 1:
-				return "tape_reader_module";
+				//return "tape_reader_module";
+				return null;
 			case 2:
 				return "self_destructing_module";
 			default:
@@ -134,7 +135,8 @@ public class ItemModules extends ItemMultiple implements ModuleProvider, IModule
 			case 0:
 				return new ModuleColorful(casing, face);
 			case 1:
-				return new ModuleTapeReader(casing, face);
+				//return new ModuleTapeReader(casing, face);
+				return null; //TODO Tape Drive
 			case 2:
 				return new ModuleBoom(casing, face);
 			default:

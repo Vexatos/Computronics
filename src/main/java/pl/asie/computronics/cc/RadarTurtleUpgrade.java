@@ -1,6 +1,5 @@
 package pl.asie.computronics.cc;
 
-import net.minecraftforge.fml.common.Optional;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
@@ -8,12 +7,14 @@ import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.turtle.ITurtleAccess;
 import dan200.computercraft.api.turtle.TurtleSide;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
+import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.reference.Mods;
 
 public class RadarTurtleUpgrade extends TurtleUpgradeBase {
+
 	private static class RadarTurtlePeripheral extends TurtlePeripheralBase {
+
 		public RadarTurtlePeripheral(ITurtleAccess access) {
 			super(access);
 		}
@@ -24,22 +25,23 @@ public class RadarTurtleUpgrade extends TurtleUpgradeBase {
 		}
 
 		@Override
-		@Optional.Method(modid= Mods.ComputerCraft)
+		@Optional.Method(modid = Mods.ComputerCraft)
 		public String[] getMethodNames() {
 			return CCRadarProxy.getMethodNames();
 		}
 
 		@Override
-		@Optional.Method(modid=Mods.ComputerCraft)
+		@Optional.Method(modid = Mods.ComputerCraft)
 		public Object[] callMethod(IComputerAccess computer,
-				ILuaContext context, int method, Object[] arguments)
-				throws LuaException, InterruptedException {
-			return CCRadarProxy.callMethod(access.getWorld(), access.getPosition().posX, access.getPosition().posY, access.getPosition().posZ,
-					computer, context, method, arguments, access);
+			ILuaContext context, int method, Object[] arguments)
+			throws LuaException, InterruptedException {
+			return CCRadarProxy.callMethod(access.getWorld(), access.getPosition(),
+				computer, context, method, arguments, access);
 		}
-		
+
 	}
-	public RadarTurtleUpgrade(int id) {
+
+	public RadarTurtleUpgrade(String id) {
 		super(id);
 	}
 
@@ -56,10 +58,5 @@ public class RadarTurtleUpgrade extends TurtleUpgradeBase {
 	@Override
 	public IPeripheral createPeripheral(ITurtleAccess turtle, TurtleSide side) {
 		return new RadarTurtlePeripheral(turtle);
-	}
-
-	@Override
-	public IIcon getIcon(ITurtleAccess turtle, TurtleSide side) {
-		return Computronics.radar.getIcon(2, 0);
 	}
 }

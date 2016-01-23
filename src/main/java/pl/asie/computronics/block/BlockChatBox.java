@@ -25,7 +25,7 @@ import pl.asie.lib.tile.TileEntityBase;
 
 import java.util.List;
 
-public class BlockChatBox extends BlockMachineSidedIcon implements IBlockWithSpecialText {
+public class BlockChatBox extends BlockPeripheral implements IBlockWithSpecialText {
 
 	public static final PropertyBool CREATIVE = PropertyBool.create("creative");
 

@@ -3,6 +3,7 @@ package pl.asie.computronics.integration.tis3d;
 import li.cil.tis3d.api.ModuleAPI;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -25,7 +26,7 @@ public class IntegrationTIS3D {
 	@Optional.Method(modid = Mods.TIS3D)
 	public void preInit() {
 		if(Config.TIS3D_MODULE_COLORFUL
-			|| Config.TIS3D_MODULE_TAPE_READER
+			//|| Config.TIS3D_MODULE_TAPE_READER TODO Tape Drives
 			|| Config.TIS3D_MODULE_BOOM) {
 
 			itemModules = new ItemModules();
@@ -36,7 +37,7 @@ public class IntegrationTIS3D {
 			}
 		}
 		if(Config.OC_CARD_BOOM) {
-			FMLCommonHandler.instance().bus().register(boomHandler = new BoomHandler());
+			MinecraftForge.EVENT_BUS.register(boomHandler = new BoomHandler());
 		}
 	}
 
@@ -57,14 +58,14 @@ public class IntegrationTIS3D {
 					'R', "dustRedstone",
 					'G', "dustGlowstone");
 			}
-			if(Config.TIS3D_MODULE_TAPE_READER) {
+			/*if(Config.TIS3D_MODULE_TAPE_READER) { TODO Tape Drives
 				RecipeUtils.addShapedRecipe(new ItemStack(itemModules, 2, 1),
 					"PPP", "IGI", " R ",
 					'P', "paneGlassColorless",
 					'I', "ingotIron",
 					'R', "dustRedstone",
 					'G', "gemDiamond");
-			}
+			}*/
 			if(Config.TIS3D_MODULE_BOOM) {
 				RecipeUtils.addShapedRecipe(new ItemStack(itemModules, 2, 2),
 					"PPP", "IGI", " R ",

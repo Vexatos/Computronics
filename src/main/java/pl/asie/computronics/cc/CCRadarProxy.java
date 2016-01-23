@@ -1,6 +1,5 @@
 package pl.asie.computronics.cc;
 
-import net.minecraftforge.fml.common.Optional;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
@@ -9,7 +8,9 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TileRadar;
@@ -20,12 +21,13 @@ import java.util.Map;
 import java.util.Set;
 
 public class CCRadarProxy {
-	private static AxisAlignedBB getBounds(int xCoord, int yCoord, int zCoord, int d) {
+
+	private static AxisAlignedBB getBounds(BlockPos pos, int d) {
 		int distance = Math.min(d, Config.RADAR_RANGE);
 		if(distance < 1) {
 			distance = 1;
 		}
-		return AxisAlignedBB.fromBounds(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 1, zCoord + 1).
+		return AxisAlignedBB.fromBounds(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1).
 			expand(distance, distance, distance);
 	}
 
@@ -35,7 +37,7 @@ public class CCRadarProxy {
 	}
 
 	@Optional.Method(modid = Mods.ComputerCraft)
-	public static Object[] callMethod(World worldObj, int xCoord, int yCoord, int zCoord, IComputerAccess computer, ILuaContext context,
+	public static Object[] callMethod(World worldObj, BlockPos pos, IComputerAccess computer, ILuaContext context,
 		int method, Object[] arguments, Object powerProvider) throws LuaException,
 		InterruptedException {
 		int distance = Config.RADAR_RANGE;
@@ -62,16 +64,16 @@ public class CCRadarProxy {
 			return null;
 		}
 
-		AxisAlignedBB bounds = getBounds(xCoord, yCoord, zCoord, distance);
+		AxisAlignedBB bounds = getBounds(pos, distance);
 		Set<Map> entities = new HashSet<Map>();
 		if(method == 0 || method == 1) {
-			entities.addAll(RadarUtils.getEntities(worldObj, xCoord, yCoord, zCoord, bounds, EntityPlayer.class));
+			entities.addAll(RadarUtils.getEntities(worldObj, pos, bounds, EntityPlayer.class));
 		}
 		if(method == 0 || method == 2) {
-			entities.addAll(RadarUtils.getEntities(worldObj, xCoord, yCoord, zCoord, bounds, EntityLiving.class));
+			entities.addAll(RadarUtils.getEntities(worldObj, pos, bounds, EntityLiving.class));
 		}
 		if(method == 3) {
-			entities.addAll(RadarUtils.getItems(worldObj, xCoord, yCoord, zCoord, bounds, EntityItem.class));
+			entities.addAll(RadarUtils.getItems(worldObj, pos, bounds, EntityItem.class));
 		}
 
 		return new Object[] { RadarUtils.convertSetToMap(entities) };

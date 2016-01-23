@@ -1,41 +1,41 @@
 package pl.asie.computronics.block;
 
-import net.minecraftforge.fml.common.Optional;
 import li.cil.oc.api.network.Environment;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TileIronNote;
-import pl.asie.computronics.util.NoteUtils;
-import powercrystals.minefactoryreloaded.api.rednet.IRedNetInputNode;
-import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
+//import powercrystals.minefactoryreloaded.api.rednet.IRedNetInputNode;
+//import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
 
-@Optional.InterfaceList({
+/*@Optional.InterfaceList({
 	@Optional.Interface(iface = "powercrystals.minefactoryreloaded.api.rednet.IRedNetInputNode", modid = Mods.MFR)
-})
-public class BlockIronNote extends BlockPeripheral implements IRedNetInputNode {
+})*/
+public class BlockIronNote extends BlockPeripheral /*implements IRedNetInputNode*/ {
+
 	public BlockIronNote() {
-		super("iron_noteblock");
-		this.setIconName("computronics:noteblock");
-		this.setBlockName("computronics.ironNoteBlock");
+		super("iron_noteblock", Rotation.NONE);
+		this.setUnlocalizedName("computronics.ironNoteBlock");
 	}
-	
+
 	@Override
-	public TileEntity createNewTileEntity(World world, int metadata) {
+	public TileEntity createTileEntity(World world, IBlockState state) {
 		return new TileIronNote();
 	}
-	
+
 	@Override
-	public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
-		TileEntity tile = world.getTileEntity(x, y, z);
+	public void onNeighborBlockChange(World world, BlockPos pos, IBlockState state, Block block) {
+		/*TileEntity tile = world.getTileEntity(pos);
 		if(Mods.isLoaded(Mods.ProjectRed))
-			((TileIronNote)tile).onProjectRedBundledInputChanged();
+			((TileIronNote)tile).onProjectRedBundledInputChanged();*/
 	}
 
 
-	@Override
+	/*@Override
 	@Optional.Method(modid=Mods.MFR)
 	public RedNetConnectionType getConnectionType(World world, int x, int y,
 			int z, ForgeDirection side) {
@@ -56,10 +56,10 @@ public class BlockIronNote extends BlockPeripheral implements IRedNetInputNode {
 				NoteUtils.playNote(world, x, y, z, -1, i);
 			inputValue >>= 1;
 		}
-	}
+	}*/
 
 	@Override
-	@Optional.Method(modid= Mods.OpenComputers)
+	@Optional.Method(modid = Mods.OpenComputers)
 	public Class<? extends Environment> getTileEntityClass(int meta) {
 		return TileIronNote.class;
 	}

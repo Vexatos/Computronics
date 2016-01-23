@@ -8,6 +8,7 @@ import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.Connector;
 import li.cil.oc.api.network.Visibility;
 import li.cil.oc.api.prefab.ManagedEnvironment;
+import net.minecraft.util.EnumParticleTypes;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.util.ParticleUtils;
 
@@ -34,9 +35,19 @@ public class DriverCardFX extends ManagedEnvironment {
 		+ "Spawns a particle effect at the specified relative coordinates optionally with the specified velocity", direct = true, limit = 16)
 	public Object[] spawn(Context context, Arguments args) {
 		String name = args.checkString(0);
+		EnumParticleTypes particle = null;
 
 		if(name.length() > Short.MAX_VALUE) {
 			return new Object[] { false, "name too long" };
+		}
+		for(EnumParticleTypes type : EnumParticleTypes.values()) {
+			if(type.getParticleName().equals(name)) {
+				particle = type;
+				break;
+			}
+		}
+		if(particle == null) {
+			return new Object[] { false, "invalid particle type" };
 		}
 		double xOffset = args.checkDouble(1);
 		double yOffset = args.checkDouble(2);
@@ -59,7 +70,7 @@ public class DriverCardFX extends ManagedEnvironment {
 				vz = args.checkDouble(6);
 			}
 
-			ParticleUtils.sendParticlePacket(name, container.world(), x, y, z, vx, vy, vz);
+			ParticleUtils.sendParticlePacket(particle, container.world(), x, y, z, vx, vy, vz);
 			return new Object[] { true };
 		}
 		return new Object[] { false };

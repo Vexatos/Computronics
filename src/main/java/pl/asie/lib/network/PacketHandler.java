@@ -1,5 +1,6 @@
 package pl.asie.lib.network;
 
+import net.minecraft.util.BlockPos;
 import net.minecraftforge.fml.common.network.FMLEmbeddedChannel;
 import net.minecraftforge.fml.common.network.FMLOutboundHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
@@ -67,7 +68,8 @@ public class PacketHandler {
     
 	public void sendToAllAround(Packet packet, TileEntity entity,
 			double d) {
-		this.sendToAllAround(packet, new TargetPoint(entity.getWorldObj().provider.dimensionId, entity.xCoord, entity.yCoord, entity.zCoord, d));
+		final BlockPos pos = entity.getPos();
+		this.sendToAllAround(packet, new TargetPoint(entity.getWorld().provider.getDimensionId(), pos.getX(), pos.getY(), pos.getZ(), d));
 	}
 	
 	public void sendToAllAround(Packet packet, Entity entity,

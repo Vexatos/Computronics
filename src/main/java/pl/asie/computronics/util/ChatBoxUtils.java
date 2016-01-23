@@ -3,6 +3,7 @@ package pl.asie.computronics.util;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
@@ -25,7 +26,7 @@ public class ChatBoxUtils {
 					continue;
 				}
 				EntityPlayer player = (EntityPlayer) o;
-				if(sendToAll || (player.worldObj.provider.dimensionId == worldObj.provider.dimensionId
+				if(sendToAll || (player.worldObj.provider.getDimensionId() == worldObj.provider.getDimensionId()
 					&& player.getDistanceSq(xCoord, yCoord, zCoord) < distance * distance)) {
 					player.addChatMessage(component.createCopy());
 				}
@@ -43,6 +44,7 @@ public class ChatBoxUtils {
 		if(te == null) {
 			return;
 		}
-		sendChatMessage(te.getWorldObj(), te.xCoord, te.yCoord, te.zCoord, d, prefix, string, sendToAll);
+		final BlockPos pos = te.getPos();
+		sendChatMessage(te.getWorld(), pos.getX(), pos.getY(), pos.getZ(), d, prefix, string, sendToAll);
 	}
 }

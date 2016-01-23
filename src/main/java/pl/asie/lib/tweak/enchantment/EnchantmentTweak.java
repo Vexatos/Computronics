@@ -26,12 +26,12 @@ public class EnchantmentTweak {
 
 	public static void registerBaneEnchantment(int enchID) {
 		if(!(enchID < 0 || enchID >= 256)) {
-			if(Enchantment.enchantmentsList[enchID] == null) {
+			if(Enchantment.getEnchantmentById(enchID) == null) {
 				bane = new EnchantmentBetterBane(244);
 				return;
 			}
 			for(int i = enchID; i < 256; i++) {
-				if(Enchantment.enchantmentsList[i] == null) {
+				if(Enchantment.getEnchantmentById(i) == null) {
 					AsieLibMod.log.info("Enchantment ID " + enchID + " already occupied, using " + i + " instead");
 					bane = new EnchantmentBetterBane(i);
 					return;

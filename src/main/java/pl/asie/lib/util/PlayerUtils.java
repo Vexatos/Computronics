@@ -22,7 +22,7 @@ public class PlayerUtils {
 			if(o instanceof EntityPlayer) {
 				EntityPlayer target = (EntityPlayer)o;
 				//AsieLibMod.log.info("Server player found: " + target.toString());
-				if(target.getCommandSenderName().equals(name)) return target;
+				if(target.getName().equals(name)) return target;
 			}
 		}
 		//AsieLibMod.log.info(" [2] could not find player " + name + " on server");

@@ -3,10 +3,12 @@ package pl.asie.lib.util.color;
 import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeHooks;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +72,7 @@ public class RecipeColorizer implements IRecipe
                     if (!stack.getItem().equals(Items.dye))
                        return null;
 
-                    float[] itemColor = EntitySheep.fleeceColorTable[15 - stack.getItemDamage()];
+                    float[] itemColor = EntitySheep.func_175513_a(EnumDyeColor.byDyeDamage(stack.getItemDamage()));
                     int red = (int)(itemColor[0] * 255.0F);
                     int green = (int)(itemColor[1] * 255.0F);
                     int blue = (int)(itemColor[2] * 255.0F);
@@ -126,4 +128,9 @@ public class RecipeColorizer implements IRecipe
     {
         return null;
     }
+
+	@Override
+	public ItemStack[] getRemainingItems(InventoryCrafting inv) {
+		return ForgeHooks.defaultRecipeGetRemainingItems(inv);
+	}
 }

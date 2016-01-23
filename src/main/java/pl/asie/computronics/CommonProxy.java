@@ -6,8 +6,6 @@ import net.minecraft.world.World;
 
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 
-import pl.asie.computronics.api.audio.AudioPacketRegistry;
-import pl.asie.computronics.api.audio.AudioPacketDFPWM;
 import pl.asie.computronics.item.entity.EntityItemIndestructable;
 import pl.asie.lib.network.Packet;
 
@@ -15,10 +13,6 @@ public class CommonProxy {
 
 	public boolean isClient() {
 		return false;
-	}
-
-	public void registerAudioHandlers() {
-		AudioPacketRegistry.INSTANCE.registerType(AudioPacketDFPWM.class);
 	}
 
 	public void registerEntities() {

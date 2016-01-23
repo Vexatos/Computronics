@@ -1,32 +1,33 @@
 package pl.asie.computronics.tile;
 
-import net.minecraftforge.fml.common.Optional;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
-import mods.immibis.redlogic.api.wiring.IBundledEmitter;
-import mods.immibis.redlogic.api.wiring.IBundledUpdatable;
-import mods.immibis.redlogic.api.wiring.IConnectable;
-import mods.immibis.redlogic.api.wiring.IWire;
-import mrtjp.projectred.api.IBundledTile;
-import mrtjp.projectred.api.ProjectRedAPI;
-import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.block.BlockColorfulLamp;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.LampUtil;
 
-@Optional.InterfaceList({
+import static pl.asie.computronics.block.BlockColorfulLamp.BRIGHTNESS;
+
+//import mods.immibis.redlogic.api.wiring.IBundledEmitter;
+//import mods.immibis.redlogic.api.wiring.IBundledUpdatable;
+//import mods.immibis.redlogic.api.wiring.IConnectable;
+//import mods.immibis.redlogic.api.wiring.IWire;
+//import mrtjp.projectred.api.IBundledTile;
+//import mrtjp.projectred.api.ProjectRedAPI;
+
+/*@Optional.InterfaceList({
 	@Optional.Interface(iface = "mods.immibis.redlogic.api.wiring.IBundledUpdatable", modid = Mods.RedLogic),
 	@Optional.Interface(iface = "mods.immibis.redlogic.api.wiring.IConnectable", modid = Mods.RedLogic),
 	@Optional.Interface(iface = "mrtjp.projectred.api.IBundledTile", modid = Mods.ProjectRed)
-})
-public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundledTile, IBundledUpdatable, IConnectable {
+})*/
+public class TileColorfulLamp extends TileEntityPeripheralBase /*IBundledTile, IBundledUpdatable, IConnectable*/ {
 
 	public TileColorfulLamp() {
 		super("colorful_lamp");
@@ -34,19 +35,16 @@ public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundl
 
 	private int color = 0x6318;
 
-	private boolean initialized = false;
-
 	@Override
-	public void updateEntity() {
-		super.updateEntity();
-		Block block = worldObj.getBlock(xCoord, yCoord, zCoord);
-		if(!initialized && block instanceof BlockColorfulLamp) {
+	public void onLoad() {
+		super.update();
+		IBlockState state = worldObj.getBlockState(getPos());
+		if(state.getBlock() instanceof BlockColorfulLamp) {
 			if(LampUtil.shouldColorLight()) {
-				((BlockColorfulLamp) block).setLightValue(color);
+				setLightValue(state, color);
 			} else {
-				((BlockColorfulLamp) block).setLightValue(color == 0 ? 0 : 15);
+				setLightValue(state, color == 0 ? 0 : 15);
 			}
-			initialized = true;
 		}
 	}
 
@@ -54,17 +52,33 @@ public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundl
 		return color;
 	}
 
+	public void setLightValue(IBlockState state, int value) {
+		if(LampUtil.shouldColorLight()) {
+			//Bit-shift all the things!
+			int r = (((value & 0x7C00) >>> 10) / 2),
+				g = (((value & 0x03E0) >>> 5) / 2),
+				b = ((value & 0x001F) / 2);
+			r = value > 0x7FFF ? 15 : r < 0 ? 0 : r > 15 ? 15 : r;
+			g = value > 0x7FFF ? 15 : g < 0 ? 0 : g > 15 ? 15 : g;
+			b = value > 0x7FFF ? 15 : b < 0 ? 0 : b > 15 ? 15 : b;
+			int brightness = Math.max(Math.max(r, g), b);
+			state.withProperty(BRIGHTNESS, brightness | ((b << 15) + (g << 10) + (r << 5)));
+		} else {
+			state.withProperty(BRIGHTNESS, value);
+		}
+	}
+
 	public void setLampColor(int color) {
 		this.color = color & 0x7FFF;
-		if(worldObj.getBlock(xCoord, yCoord, zCoord) instanceof BlockColorfulLamp) {
+		if(worldObj.getBlockState(getPos()).getBlock() instanceof BlockColorfulLamp) {
 			if(LampUtil.shouldColorLight()) {
-				((BlockColorfulLamp) worldObj.getBlock(xCoord, yCoord, zCoord)).setLightValue(this.color);
+				setLightValue(worldObj.getBlockState(getPos()), this.color);
 			} else {
-				((BlockColorfulLamp) worldObj.getBlock(xCoord, yCoord, zCoord)).setLightValue(color == 0 ? 0 : 15);
+				setLightValue(worldObj.getBlockState(getPos()), color == 0 ? 0 : 15);
 			}
 		}
 		this.markDirty();
-		this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		this.worldObj.markBlockForUpdate(pos);
 	}
 
 	@Callback(doc = "function():number; Returns the current lamp color", direct = true)
@@ -136,8 +150,8 @@ public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundl
 	public void setBinaryMode(boolean mode) {
 		this.binaryMode = mode;
 		this.markDirty();
-		this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-		this.worldObj.notifyBlockChange(xCoord, yCoord, zCoord, getBlockType());
+		this.worldObj.markBlockForUpdate(getPos());
+		this.worldObj.notifyBlockOfStateChange(getPos(), getBlockType());
 	}
 
 	@Override
@@ -164,7 +178,7 @@ public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundl
 			this.color = 0;
 		}
 		if(oldColor != this.color) {
-			this.worldObj.markBlockRangeForRenderUpdate(xCoord, yCoord, zCoord, xCoord, yCoord, zCoord);
+			this.worldObj.markBlockRangeForRenderUpdate(getPos(), getPos());
 		}
 	}
 
@@ -183,7 +197,7 @@ public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundl
 		}
 	}
 
-	@Override
+	/*@Override
 	@Optional.Method(modid = Mods.ProjectRed)
 	public byte[] getBundledSignal(int side) {
 		return null;
@@ -232,5 +246,5 @@ public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundl
 				}
 			}
 		}
-	}
+	}*/
 }

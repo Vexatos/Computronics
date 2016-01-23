@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 public class RobotUpgradeRadar extends ManagedEnvironment {
+
 	private final EnvironmentHost container;
 	private static final int CALL_LIMIT = 15;
 
@@ -42,7 +43,7 @@ public class RobotUpgradeRadar extends ManagedEnvironment {
 			distance = 1;
 		}
 		return AxisAlignedBB.
-			getBoundingBox((float) container.xPosition(), (float) container.yPosition(), (float) container.zPosition(), (float) container.xPosition() + 1, (float) container.yPosition() + 1, (float) container.zPosition() + 1).
+			fromBounds((float) container.xPosition(), (float) container.yPosition(), (float) container.zPosition(), (float) container.xPosition() + 1, (float) container.yPosition() + 1, (float) container.zPosition() + 1).
 			expand(distance, distance, distance);
 	}
 
@@ -52,8 +53,8 @@ public class RobotUpgradeRadar extends ManagedEnvironment {
 		int distance = getDistance(args);
 		if(((Connector) this.node()).tryChangeBuffer(0 - (Config.RADAR_ENERGY_COST_OC * distance * 1.75))) {
 			AxisAlignedBB bounds = getBounds(distance);
-			entities.addAll(RadarUtils.getEntities(container.world(), (int) container.xPosition(), (int) container.yPosition(), (int) container.zPosition(), bounds, EntityPlayer.class));
-			entities.addAll(RadarUtils.getEntities(container.world(), (int) container.xPosition(), (int) container.yPosition(), (int) container.zPosition(), bounds, EntityLiving.class));
+			entities.addAll(RadarUtils.getEntities(container.world(), container.xPosition(), container.yPosition(), container.zPosition(), bounds, EntityPlayer.class));
+			entities.addAll(RadarUtils.getEntities(container.world(), container.xPosition(), container.yPosition(), container.zPosition(), bounds, EntityLiving.class));
 			context.pause(0.5);
 		}
 		// The returned array is treated as a tuple, meaning if we return the

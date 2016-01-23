@@ -13,7 +13,7 @@ public class NetworkHandlerClient extends MessageHandlerBase {
 	public void onMessage(Packet packet, INetHandler handler, EntityPlayer player, int command)
 		throws IOException {
 		switch(command) {
-			case Packets.NICKNAME_CHANGE: {
+			/*case Packets.NICKNAME_CHANGE: {
 				String username = packet.readString();
 				String nickname = packet.readString();
 				AsieLibMod.nick.setNickname(username, nickname);
@@ -27,7 +27,7 @@ public class NetworkHandlerClient extends MessageHandlerBase {
 					AsieLibMod.nick.setNickname(username, nickname);
 				}
 				break;
-			}
+			}*/
 			/*case Packets.SPAWN_PARTICLE:{
 				double x = packet.readFloat();
 				double y = packet.readFloat();

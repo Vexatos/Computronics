@@ -49,20 +49,20 @@ public class RayTracer {
 
 	protected MovingObjectPosition rayTrace(EntityLivingBase entity, double distance) {
 		Entity target;
-		final Vec3 position = Vec3.createVectorHelper(entity.posX, entity.posY, entity.posZ);
+		final Vec3 position = new Vec3(entity.posX, entity.posY, entity.posZ);
 		if(entity.getEyeHeight() != 0.12F) {
-			position.yCoord += entity.getEyeHeight();
+			position.addVector(0, entity.getEyeHeight(), 0);
 		}
 
 		Vec3 look = entity.getLookVec();
 
 		for(double i = 1.0; i < distance; i += 0.2) {
 			Vec3 search = position.addVector(look.xCoord * i, look.yCoord * i, look.zCoord * i);
-			AxisAlignedBB searchBox = AxisAlignedBB.getBoundingBox(
+			AxisAlignedBB searchBox = AxisAlignedBB.fromBounds(
 				search.xCoord - 0.1, search.yCoord - 0.1, search.zCoord - 0.1,
 				search.xCoord + 0.1, search.yCoord + 0.1, search.zCoord + 0.1);
 			MovingObjectPosition blockCheck = entity.worldObj.rayTraceBlocks(
-				Vec3.createVectorHelper(position.xCoord, position.yCoord, position.zCoord), search, false);
+				new Vec3(position.xCoord, position.yCoord, position.zCoord), search, false);
 			if(blockCheck != null && blockCheck.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
 				/*double d1 = position.squareDistanceTo(blockCheck.hitVec);
 				double d2 = position.squareDistanceTo(search);*/
@@ -94,8 +94,8 @@ public class RayTracer {
 		Entity entity = null;
 		if(entityList.size() > 1) {
 			for(Entity e : entityList) {
-				if(entity == null || position.squareDistanceTo(e.posX, e.posY, e.posZ)
-					< position.squareDistanceTo(entity.posX, entity.posY, entity.posZ)) {
+				if(entity == null || position.squareDistanceTo(new Vec3(e.posX, e.posY, e.posZ))
+					< position.squareDistanceTo(new Vec3(entity.posX, entity.posY, entity.posZ))) {
 					entity = e;
 				}
 			}

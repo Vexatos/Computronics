@@ -1,5 +1,6 @@
 package pl.asie.lib.network;
 
+import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.internal.FMLProxyPacket;
 import io.netty.buffer.ByteBuf;
@@ -24,7 +25,7 @@ public class PacketChannelHandler extends MessageToMessageCodec<FMLProxyPacket, 
 	@Override
 	protected void encode(ChannelHandlerContext ctx, Packet msg,
 			List<Object> out) throws Exception {
-        ByteBuf buffer = Unpooled.buffer();
+		PacketBuffer buffer = new PacketBuffer(Unpooled.buffer());
         msg.toBytes(buffer);
         FMLProxyPacket proxy = new FMLProxyPacket(buffer, ctx.channel().attr(NetworkRegistry.FML_CHANNEL).get());
         out.add(proxy);

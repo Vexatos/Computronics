@@ -1,51 +1,47 @@
 package pl.asie.computronics.tile;
 
-import net.minecraftforge.fml.common.Optional;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import pl.asie.computronics.Computronics;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.world.ILockableContainer;
+import net.minecraft.world.LockCode;
+import net.minecraftforge.fml.common.Optional;
+import pl.asie.computronics.gui.container.ContainerCipherBlock;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
-import pl.asie.lib.api.tile.IBundledRedstoneProvider;
 import pl.asie.lib.util.Base64;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-public class TileCipherBlock extends TileEntityPeripheralBase implements /*IBundledRedstoneProvider,*/ ISidedInventory {
+public class TileCipherBlock extends TileEntityPeripheralBase implements /*IBundledRedstoneProvider,*/ ISidedInventory, ILockableContainer {
+
 	private byte[] key = new byte[32];
 	private byte[] iv = new byte[16];
 	private SecretKeySpec skey;
 	private Cipher cipher;
-	private boolean isLocked = false;
 
 	public TileCipherBlock() {
 		super("cipher");
 		this.createInventory(6);
-		this.registerBundledRedstone(this);
+		//this.registerBundledRedstone(this);
 		try {
 			cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	public boolean isLocked() {
-		return isLocked;
-	}
-
-	@Override
-	public boolean canUpdate() {
-		return Config.MUST_UPDATE_TILE_ENTITIES;
 	}
 
 	public void updateKey() {
@@ -135,14 +131,14 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements /*IBund
 	@Callback(doc = "function():boolean; Returns whether the block is currently locked", direct = true)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] isLocked(Context context, Arguments args) throws Exception {
-		return new Object[] { isLocked };
+		return new Object[] { isLocked() };
 	}
 
 	@Callback(doc = "function(locked:boolean); Sets whether the block is currently locked")
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] setLocked(Context context, Arguments args) throws Exception {
 		if(args.count() == 1 && args.isBoolean(0)) {
-			this.isLocked = args.checkBoolean(0);
+			this.setLocked(args.checkBoolean(0));
 		}
 		return null;
 	}
@@ -168,10 +164,10 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements /*IBund
 						return new Object[] { decrypt(message) };
 				}
 			} else if(arguments.length == 1 && (arguments[0] instanceof Boolean) && method == 3) {
-				this.isLocked = (Boolean) arguments[0];
+				this.setLocked((Boolean) arguments[0]);
 				return null;
 			} else if(method == 2) {
-				return new Object[] { this.isLocked };
+				return new Object[] { this.isLocked() };
 			}
 		} catch(Exception e) {
 			throw new LuaException(e.getMessage());
@@ -199,7 +195,7 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements /*IBund
 		}
 		return key;
 	}
-
+/*
 	public int redNetSingleOutput = 0;
 	public int[] redNetMultiOutput = new int[16];
 
@@ -238,9 +234,9 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements /*IBund
 		for(int i = 0; i < redNetMultiOutput.length; i++) {
 			redNetMultiOutput[i] ^= key;
 		}
-	}
+	}*/
 
-	private byte[] getBundledOutput() {
+	/*private byte[] getBundledOutput() {
 		int output = getBundledXORKey() ^ bundledXORData;
 		byte[] out = new byte[16];
 		for(int i = 0; i < 16; i++) {
@@ -252,26 +248,30 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements /*IBund
 
 	public void updateOutputWires() {
 		worldObj.notifyBlockChange(xCoord, yCoord, zCoord, this.getBlockType());
-	}
+	}*/
 
 	@Override
 	public void onSlotUpdate(int slot) {
 		updateKey();
-		updateOutputWires();
+		//updateOutputWires();
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
 		if(tag.hasKey("cb_l") && Config.CIPHER_CAN_LOCK) {
-			isLocked = tag.getBoolean("cb_l");
+			this.forceLocked = tag.getBoolean("cb_l");
 		}
+		this.code = LockCode.fromNBT(tag);
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
-		if(isLocked) {
+		if(this.code != null) {
+			this.code.toNBT(tag);
+		}
+		if(this.forceLocked) {
 			tag.setBoolean("cb_l", true);
 		}
 	}
@@ -282,7 +282,7 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements /*IBund
 		data.removeTag("cb_l");
 	}
 
-	@Override
+	/*@Override
 	public boolean canBundledConnectTo(int arg0, int arg1) {
 		int s = Computronics.cipher.relToAbs(5, blockMetadata);
 		return (arg0 == s || arg0 == (s ^ 1));
@@ -307,13 +307,13 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements /*IBund
 			}
 			updateOutputWires();
 		}
-	}
+	}*/
 
 	// Security
 
 	@Override
 	public ItemStack getStackInSlot(int slot) {
-		if(isLocked) {
+		if(isLocked()) {
 			return null;
 		} else {
 			return super.getStackInSlot(slot);
@@ -322,27 +322,64 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements /*IBund
 
 	@Override
 	public void setInventorySlotContents(int slot, ItemStack stack) {
-		if(!isLocked) {
+		if(!isLocked()) {
 			super.setInventorySlotContents(slot, stack);
 		}
 	}
 
 	@Override
-	public boolean canInsertItem(int slot, ItemStack item, int side) {
-		return !isLocked && slot == side;
+	public boolean canInsertItem(int slot, ItemStack item, EnumFacing side) {
+		return !isLocked() && slot == side.ordinal();
 	}
 
 	@Override
-	public boolean canExtractItem(int slot, ItemStack item, int side) {
-		return !isLocked && slot == side;
+	public boolean canExtractItem(int slot, ItemStack item, EnumFacing side) {
+		return !isLocked() && slot == side.ordinal();
 	}
 
 	@Override
-	public int[] getAccessibleSlotsFromSide(int side) {
-		if(isLocked) {
+	public int[] getSlotsForFace(EnumFacing side) {
+		if(isLocked()) {
 			return new int[] {};
 		} else {
-			return new int[] { side };
+			return new int[] { side.ordinal() };
 		}
+	}
+
+	@Override
+	public boolean isUseableByPlayer(EntityPlayer player) {
+		return !isLocked() && super.isUseableByPlayer(player);
+	}
+
+	private boolean forceLocked;
+
+	public boolean isLocked() {
+		return this.forceLocked || (this.code != null && !this.code.isEmpty());
+	}
+
+	public void setLocked(boolean locked) {
+		this.forceLocked = locked;
+	}
+
+	private LockCode code = LockCode.EMPTY_CODE;
+
+	@Override
+	public void setLockCode(LockCode code) {
+		this.code = code;
+	}
+
+	@Override
+	public LockCode getLockCode() {
+		return this.code;
+	}
+
+	@Override
+	public Container createContainer(InventoryPlayer playerInventory, EntityPlayer playerIn) {
+		return new ContainerCipherBlock(this, playerInventory);
+	}
+
+	@Override
+	public String getGuiID() {
+		return "computronics:cipher";
 	}
 }

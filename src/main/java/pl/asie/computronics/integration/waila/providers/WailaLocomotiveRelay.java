@@ -1,4 +1,4 @@
-package pl.asie.computronics.integration.waila.providers;
+/*package pl.asie.computronics.integration.waila.providers;
 
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
@@ -15,7 +15,7 @@ import java.util.List;
 
 /**
  * @author Vexatos
- */
+ * /
 public class WailaLocomotiveRelay extends ComputronicsWailaProvider {
 
 	@Override
@@ -40,4 +40,4 @@ public class WailaLocomotiveRelay extends ComputronicsWailaProvider {
 		}
 		return tag;
 	}
-}
+}*/

@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * @author Vexatos
  */
-public class BlockCipherAdvanced extends BlockMachineSidedIcon implements IBlockWithSpecialText {
+public class BlockCipherAdvanced extends BlockPeripheral implements IBlockWithSpecialText {
 
 	public BlockCipherAdvanced() {
 		super("cipher_advanced", Rotation.NONE);
@@ -51,10 +51,5 @@ public class BlockCipherAdvanced extends BlockMachineSidedIcon implements IBlock
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Class<? extends Environment> getTileEntityClass(int meta) {
 		return TileCipherBlockAdvanced.class;
-	}
-
-	@Override
-	public String getDocumentationName(World world, BlockPos pos) {
-		return null;
 	}
 }

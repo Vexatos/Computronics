@@ -133,7 +133,7 @@ public class DriverCardSound extends ManagedEnvironment {
 
 	private static void sendSound(World world, double x, double y, double z, HashMap<Integer, Integer> freqMap) throws Exception {
 		Packet packet = Computronics.packet.create(Packets.PACKET_COMPUTER_BEEP)
-			.writeInt(world.provider.dimensionId)
+			.writeInt(world.provider.getDimensionId())
 			.writeInt((int) Math.floor(x))
 			.writeInt((int) Math.floor(y))
 			.writeInt((int) Math.floor(z))
@@ -143,7 +143,7 @@ public class DriverCardSound extends ManagedEnvironment {
 				.writeShort((short) (int) e.getValue());
 		}
 		Computronics.packet.sendToAllAround(packet, new NetworkRegistry.TargetPoint(
-			world.provider.dimensionId,
+			world.provider.getDimensionId(),
 			(int) Math.floor(x),
 			(int) Math.floor(y),
 			(int) Math.floor(z), 16));
@@ -167,7 +167,7 @@ public class DriverCardSound extends ManagedEnvironment {
 
 	private static boolean isInDimension(EntityPlayer player, int dimension) {
 		return player != null && player.worldObj != null && player.worldObj.provider != null
-			&& player.worldObj.provider.dimensionId == dimension;
+			&& player.worldObj.provider.getDimensionId() == dimension;
 	}
 
 }

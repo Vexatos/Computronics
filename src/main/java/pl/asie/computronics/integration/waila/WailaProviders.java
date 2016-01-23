@@ -2,14 +2,9 @@ package pl.asie.computronics.integration.waila;
 
 import pl.asie.computronics.block.BlockColorfulLamp;
 import pl.asie.computronics.block.BlockPeripheral;
-import pl.asie.computronics.block.BlockTapeReader;
-import pl.asie.computronics.integration.railcraft.block.BlockDigitalReceiverBox;
-import pl.asie.computronics.integration.railcraft.block.BlockLocomotiveRelay;
 import pl.asie.computronics.integration.waila.providers.IComputronicsWailaProvider;
 import pl.asie.computronics.integration.waila.providers.WailaColorfulLamp;
-import pl.asie.computronics.integration.waila.providers.WailaLocomotiveRelay;
 import pl.asie.computronics.integration.waila.providers.WailaPeripheral;
-import pl.asie.computronics.integration.waila.providers.WailaTapeDrive;
 import pl.asie.computronics.reference.Mods;
 
 import java.util.ArrayList;
@@ -26,10 +21,10 @@ public class WailaProviders {
 	static void initialize() {
 		newProvider(new WailaPeripheral(), BlockPeripheral.class);
 		if(Mods.isLoaded(Mods.Railcraft)) {
-			newProvider(new WailaPeripheral(), BlockDigitalReceiverBox.class);
-			newProvider(new WailaLocomotiveRelay(), BlockLocomotiveRelay.class);
+			//newProvider(new WailaPeripheral(), BlockDigitalReceiverBox.class);
+			//newProvider(new WailaLocomotiveRelay(), BlockLocomotiveRelay.class);
 		}
-		newProvider(new WailaTapeDrive(), BlockTapeReader.class);
+		//newProvider(new WailaTapeDrive(), BlockTapeReader.class);
 		newProvider(new WailaColorfulLamp(), BlockColorfulLamp.class);
 	}
 

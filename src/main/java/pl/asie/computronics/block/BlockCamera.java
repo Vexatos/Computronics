@@ -13,11 +13,11 @@ import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TileCamera;
 import pl.asie.lib.tile.TileEntityBase;
 
-public class BlockCamera extends BlockMachineSidedIcon {
+public class BlockCamera extends BlockPeripheral {
 
 	public BlockCamera() {
 		super("camera", Rotation.SIX);
-		//this.setBlockName("computronics.camera");
+		this.setUnlocalizedName("computronics.camera");
 	}
 
 	@Override

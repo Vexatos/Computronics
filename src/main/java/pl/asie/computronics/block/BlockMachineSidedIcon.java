@@ -1,4 +1,4 @@
-package pl.asie.computronics.block;
+/*package pl.asie.computronics.block;
 
 public abstract class BlockMachineSidedIcon extends BlockPeripheral {
 
@@ -9,10 +9,10 @@ public abstract class BlockMachineSidedIcon extends BlockPeripheral {
 		/*this.sidingType = sidingType;
 		if(sidingType.equals("bundled") && !Mods.isLoaded(Mods.RedLogic) && !Mods.isLoaded(Mods.ProjectRed)) {
 			this.sidingType = "";
-		}*/
+		}
 	}
 
 	public BlockMachineSidedIcon(String documentationName, Rotation rotation) {
-		this("", documentationName, rotation);
+		super(documentationName, rotation);
 	}
-}
+}*/

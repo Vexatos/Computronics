@@ -8,9 +8,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IChatComponent;
-import net.minecraft.util.ITickable;
 import pl.asie.lib.api.tile.IBattery;
-import pl.asie.lib.api.tile.IBundledRedstoneProvider;
 
 /*@Optional.InterfaceList({
 	@Optional.Interface(iface = "mods.immibis.redlogic.api.wiring.IConnectable", modid = Mods.RedLogic)
@@ -19,7 +17,7 @@ public class TileMachine extends TileEntityBase implements
 	/*IConnectable,*/ ISidedInventory /* RedLogic */ {
 
 	private IBattery battery;
-	private IBundledRedstoneProvider brP;
+	//private IBundledRedstoneProvider brP;
 	private ItemStack[] items;
 
 	public TileMachine() {
@@ -29,13 +27,13 @@ public class TileMachine extends TileEntityBase implements
 		return battery;
 	}
 
-	public IBundledRedstoneProvider getBundledRedstoneProvider() {
+	/*public IBundledRedstoneProvider getBundledRedstoneProvider() {
 		return brP;
 	}
 
 	protected void registerBundledRedstone(IBundledRedstoneProvider brP) {
 		this.brP = brP;
-	}
+	}*/
 
 	protected void registerBattery(IBattery p) {
 		this.battery = p;

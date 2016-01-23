@@ -1,6 +1,8 @@
 package pl.asie.computronics.tile;
 
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ITickable;
 import net.minecraftforge.fml.common.Optional;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
@@ -17,7 +19,7 @@ import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.ChatBoxUtils;
 
-public class TileChatBox extends TileEntityPeripheralBase implements IChatListener {
+public class TileChatBox extends TileEntityPeripheralBase implements IChatListener, ITickable {
 
 	private int distance;
 	private boolean hasDistance = false;
@@ -31,13 +33,8 @@ public class TileChatBox extends TileEntityPeripheralBase implements IChatListen
 	}
 
 	@Override
-	public int requestCurrentRedstoneValue(int side) {
+	public int requestCurrentRedstoneValue(EnumFacing side) {
 		return (ticksUntilOff > 0) ? 15 : 0;
-	}
-
-	@Override
-	public boolean canUpdate() {
-		return Config.MUST_UPDATE_TILE_ENTITIES || Config.REDSTONE_REFRESH;
 	}
 
 	public boolean isCreative() {
@@ -79,10 +76,10 @@ public class TileChatBox extends TileEntityPeripheralBase implements IChatListen
 	}
 
 	public void receiveChatMessage(ServerChatEvent event) {
-		if(!worldObj.blockExists(xCoord, yCoord, zCoord)) {
+		if(!worldObj.isBlockLoaded(getPos())) {
 			return;
 		}
-		if(Config.CHATBOX_MAGIC && !isCreative() && (event.player.worldObj != this.worldObj || event.player.getDistanceSq(xCoord, yCoord, zCoord) > distance * distance)) {
+		if(Config.CHATBOX_MAGIC && !isCreative() && (event.player.worldObj != this.worldObj || event.player.getDistanceSq(getPos()) > distance * distance)) {
 			return;
 		}
 

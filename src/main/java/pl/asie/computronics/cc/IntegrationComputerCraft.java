@@ -1,10 +1,18 @@
 package pl.asie.computronics.cc;
 
-import net.minecraftforge.fml.common.Optional;
 import dan200.computercraft.api.ComputerCraftAPI;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.cc.multiperipheral.MultiPeripheralProvider;
+import pl.asie.computronics.integration.flamingo.DriverFlamingo;
+import pl.asie.computronics.reference.Compat;
+import pl.asie.computronics.reference.Config;
+import pl.asie.computronics.reference.Mods;
+
+import static pl.asie.computronics.Computronics.peripheralRegistry;
+import static pl.asie.computronics.Computronics.registerMultiPeripheralProvider;
+
 //import pl.asie.computronics.integration.appeng.DriverSpatialIOPort;
 //import pl.asie.computronics.integration.armourersworkshop.DriverMannequin;
 //import pl.asie.computronics.integration.buildcraft.DriverHeatable;
@@ -22,7 +30,6 @@ import pl.asie.computronics.cc.multiperipheral.MultiPeripheralProvider;
 //import pl.asie.computronics.integration.enderio.DriverRedstoneControllable;
 //import pl.asie.computronics.integration.enderio.DriverTransceiver;
 //import pl.asie.computronics.integration.factorization.DriverChargeConductor;
-import pl.asie.computronics.integration.flamingo.DriverFlamingo;
 //import pl.asie.computronics.integration.fsp.DriverSteamTransporter;
 //import pl.asie.computronics.integration.mekanism.DriverStrictEnergyStorage;
 //import pl.asie.computronics.integration.mfr.DriverDeepStorageUnit;
@@ -39,14 +46,6 @@ import pl.asie.computronics.integration.flamingo.DriverFlamingo;
 //import pl.asie.computronics.integration.railcraft.driver.track.DriverRoutingTrack;
 //import pl.asie.computronics.integration.redlogic.DriverLamp;
 //import pl.asie.computronics.integration.storagedrawers.DriverDrawerGroup;
-import pl.asie.computronics.reference.Compat;
-import pl.asie.computronics.reference.Config;
-import pl.asie.computronics.reference.Mods;
-import pl.asie.computronics.tile.TileTapeDrive;
-
-import static pl.asie.computronics.Computronics.itemTape;
-import static pl.asie.computronics.Computronics.peripheralRegistry;
-import static pl.asie.computronics.Computronics.registerMultiPeripheralProvider;
 
 /**
  * @author Vexatos
@@ -169,24 +168,24 @@ public class IntegrationComputerCraft {
 
 		ComputerCraftAPI.registerPeripheralProvider(multiPeripheralProvider);
 
-		if(itemTape != null) {
+		/*if(itemTape != null) {
 			ComputerCraftAPI.registerMediaProvider(itemTape);
-		}
+		}*/
 
 		if(computronics.isEnabled("ccTurtleUpgrades", true)) {
 			ComputerCraftAPI.registerTurtleUpgrade(
-				new SpeakingTurtleUpgrade(config.get("turtleUpgradeIDs", "speaking", 190).getInt()));
+				new SpeakingTurtleUpgrade("computronics.turtle_speaking"));
 			ComputerCraftAPI.registerTurtleUpgrade(
-				new RadarTurtleUpgrade(config.get("turtleUpgradeIDs", "radar", 191).getInt()));
+				new RadarTurtleUpgrade("computronics.turtle_radar"));
 			ComputerCraftAPI.registerTurtleUpgrade(
-				new MusicalTurtleUpgrade(config.get("turtleUpgradeIDs", "musical", 192).getInt()));
+				new MusicalTurtleUpgrade("computronics.turtle_noteblock"));
 			ComputerCraftAPI.registerTurtleUpgrade(
-				new ParticleTurtleUpgrade(config.get("turtleUpgradeIDs", "particle", 193).getInt()));
+				new ParticleTurtleUpgrade("computronics.turtle_fx"));
 		}
 
-		if(Computronics.tapeReader != null){
+		/*if(Computronics.tapeReader != null){
 			TileTapeDrive.initCCFilesystem();
-		}
+		}*/
 	}
 
 	public void serverStart() {
