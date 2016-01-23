@@ -17,6 +17,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
 import pl.asie.computronics.audio.MachineSound;
+import pl.asie.computronics.oc.IntegrationOpenComputers;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.ColorUtils;
 import pl.asie.computronics.util.internal.IColorable;
@@ -133,7 +134,7 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 
 	@Optional.Method(modid = Mods.OpenComputers)
 	protected void addToNetwork_OC() {
-		Network.joinOrCreateNetwork(this);
+		IntegrationOpenComputers.eventHandler.schedule(this);
 		this.onOCNetworkCreation();
 	}
 

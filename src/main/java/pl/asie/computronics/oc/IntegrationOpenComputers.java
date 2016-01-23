@@ -73,6 +73,7 @@ public class IntegrationOpenComputers {
 	private final Logger log;
 
 	public static ItemOpenComputers itemOCParts;
+	public static OCEventHandler eventHandler;
 	public static UpgradeRenderer upgradeRenderer;
 	public static ColorfulUpgradeHandler colorfulUpgradeHandler;
 
@@ -97,6 +98,8 @@ public class IntegrationOpenComputers {
 			GameRegistry.registerItem(itemOCParts, "computronics.ocParts");
 			Driver.add(itemOCParts);
 		}
+
+		MinecraftForge.EVENT_BUS.register(eventHandler = new OCEventHandler());
 
 		// OpenComputers needs a hook in updateEntity in order to proprly register peripherals.
 		// Fixes Iron Note Block, among others.

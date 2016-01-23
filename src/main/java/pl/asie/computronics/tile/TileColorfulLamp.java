@@ -37,7 +37,7 @@ public class TileColorfulLamp extends TileEntityPeripheralBase /*IBundledTile, I
 
 	@Override
 	public void onLoad() {
-		super.update();
+		super.onLoad();
 		IBlockState state = worldObj.getBlockState(getPos());
 		if(state.getBlock() instanceof BlockColorfulLamp) {
 			if(LampUtil.shouldColorLight()) {
@@ -131,9 +131,9 @@ public class TileColorfulLamp extends TileEntityPeripheralBase /*IBundledTile, I
 		if(color < 0) {
 			color = 0;
 		}
-		if(tag.hasKey("binaryMode")) {
+		/*if(tag.hasKey("binaryMode")) {
 			this.binaryMode = tag.getBoolean("binaryMode");
-		}
+		}*/
 	}
 
 	@Override
@@ -141,7 +141,7 @@ public class TileColorfulLamp extends TileEntityPeripheralBase /*IBundledTile, I
 		return false;
 	}
 
-	private boolean binaryMode = false;
+	/*private boolean binaryMode = false;
 
 	public boolean isBinaryMode() {
 		return this.binaryMode;
@@ -152,13 +152,13 @@ public class TileColorfulLamp extends TileEntityPeripheralBase /*IBundledTile, I
 		this.markDirty();
 		this.worldObj.markBlockForUpdate(getPos());
 		this.worldObj.notifyBlockOfStateChange(getPos(), getBlockType());
-	}
+	}*/
 
 	@Override
 	public void writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
 		tag.setShort("clc", (short) (color & 32767));
-		tag.setBoolean("binaryMode", this.binaryMode);
+		//tag.setBoolean("binaryMode", this.binaryMode);
 	}
 
 	@Override

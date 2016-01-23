@@ -46,7 +46,7 @@ public class TileCamera extends TileEntityPeripheralBase implements ITickable {
 		if(tick % 20 == 0 && Config.REDSTONE_REFRESH) {
 			BlockPos pos = getPos();
 			cameraRedstone.ray(worldObj, pos.getX(), pos.getY(), pos.getZ(), getFacingDirection(), 0.0f, 0.0f);
-			this.worldObj.notifyBlockOfStateChange(this.pos, this.getBlockType());
+			this.worldObj.notifyNeighborsOfStateChange(this.pos, this.getBlockType());
 		}
 		tick++;
 	}
