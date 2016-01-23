@@ -99,7 +99,7 @@ public class IntegrationOpenComputers {
 			|| Config.OC_CARD_BOOM
 			|| Config.OC_UPGRADE_COLORFUL) {
 			itemOCParts = new ItemOpenComputers();
-			GameRegistry.registerItem(itemOCParts, "computronics.ocParts");
+			GameRegistry.registerItem(itemOCParts, "ocParts");
 			Driver.add(itemOCParts);
 		}
 

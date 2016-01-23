@@ -14,7 +14,7 @@ public class CommonProxy {
 	}
 
 	public void registerEntities() {
-		EntityRegistry.registerModEntity(EntityItemIndestructable.class, "computronics.itemTape", 1, Computronics.instance, 64, 20, true);
+		EntityRegistry.registerModEntity(EntityItemIndestructable.class, "itemTape", 1, Computronics.instance, 64, 20, true);
 	}
 
 	public void registerRenderers() {

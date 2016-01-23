@@ -166,39 +166,39 @@ public class Computronics {
 
 		if(isEnabled("ironNoteBlock", true)) {
 			ironNote = new BlockIronNote();
-			registerBlockWithTileEntity(ironNote, TileIronNote.class, "computronics.ironNoteBlock");
+			registerBlockWithTileEntity(ironNote, TileIronNote.class, "ironNoteBlock");
 		}
 		if(isEnabled("camera", true)) {
 			camera = new BlockCamera();
-			registerBlockWithTileEntity(camera, TileCamera.class, "computronics.camera");
+			registerBlockWithTileEntity(camera, TileCamera.class, "camera");
 		}
 
 		if(isEnabled("chatBox", true)) {
 			chatBox = new BlockChatBox();
-			registerBlockWithTileEntity(chatBox, TileChatBox.class, "computronics.chatBox");
+			registerBlockWithTileEntity(chatBox, TileChatBox.class, "chatBox");
 		}
 
 		if(isEnabled("cipher", true)) {
 			guiCipher = new GuiProviderCipher();
 			gui.registerGuiProvider(Computronics.guiCipher);
 			cipher = new BlockCipher();
-			registerBlockWithTileEntity(cipher, TileCipherBlock.class, "computronics.cipher");
+			registerBlockWithTileEntity(cipher, TileCipherBlock.class, "cipher");
 		}
 
 		if(isEnabled("cipher_advanced", true)) {
 			cipher_advanced = new BlockCipherAdvanced();
-			registerBlockWithTileEntity(cipher_advanced, TileCipherBlockAdvanced.class, "computronics.cipher_advanced");
+			registerBlockWithTileEntity(cipher_advanced, TileCipherBlockAdvanced.class, "cipher_advanced");
 			rsaThreads = Executors.newFixedThreadPool(2, new ThreadFactoryBuilder().setPriority(Thread.MIN_PRIORITY).build());
 		}
 
 		if(isEnabled("radar", true)) {
 			radar = new BlockRadar();
-			registerBlockWithTileEntity(radar, TileRadar.class, "computronics.radar");
+			registerBlockWithTileEntity(radar, TileRadar.class, "radar");
 		}
 
 		if(isEnabled("lamp", true)) {
 			colorfulLamp = new BlockColorfulLamp();
-			registerBlockWithTileEntity(colorfulLamp, TileColorfulLamp.class, "computronics.colorfulLamp");
+			registerBlockWithTileEntity(colorfulLamp, TileColorfulLamp.class, "colorfulLamp");
 		}
 
 		/*if(Mods.isLoaded(Mods.Railcraft)) {

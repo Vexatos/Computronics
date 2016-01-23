@@ -29,7 +29,7 @@ public class IntegrationTIS3D {
 			|| Config.TIS3D_MODULE_BOOM) {
 
 			itemModules = new ItemModules();
-			GameRegistry.registerItem(itemModules, "computronics.modules.tis3d");
+			GameRegistry.registerItem(itemModules, "modules.tis3d");
 			if(Computronics.proxy.isClient()) {
 				//MinecraftForge.EVENT_BUS.register(new TextureLoader());
 				//MinecraftForgeClient.registerItemRenderer(itemModules, new ComputronicsModuleRenderer().setIgnoreLighting(true));

@@ -22,7 +22,7 @@ import pl.asie.computronics.tile.TileColorfulLamp;
 })*/
 public class BlockColorfulLamp extends BlockPeripheral /*implements IRedNetInputNode*/ {
 
-	public static final PropertyInteger BRIGHTNESS = PropertyInteger.create("color", 0, 15);
+	public static final PropertyInteger BRIGHTNESS = PropertyInteger.create("brightness", 0, 15);
 
 	public BlockColorfulLamp() {
 		super("colorful_lamp", Rotation.NONE);
