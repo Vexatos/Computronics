@@ -116,7 +116,7 @@ dependencies {
 minecraft {
 	version = "${config.minecraft.version}-${config.forge.version}"
 	runDir = "eclipse"
-	mappings = "stable_20"
+	mappings = config.mappings
 
 	replaceIn "pl/asie/computronics/Computronics.java"
 	replace "@VERSION@", "${config.computronics.version}"
@@ -145,6 +145,13 @@ sourceSets {
 			exclude "pl/asie/computronics/integration/mfr/**"
 			exclude "pl/asie/computronics/integration/railcraft/**"
 			exclude "pl/asie/computronics/integration/redlogic/**"
+
+			exclude "pl/asie/lib/integration/buildcraft/**"
+			exclude "pl/asie/lib/integration/tool/appeng/**"
+			exclude "pl/asie/lib/integration/tool/buildcraft/**"
+			exclude "pl/asie/lib/integration/tool/cofh/**"
+			exclude "pl/asie/lib/integration/tool/enderio/**"
+			exclude "pl/asie/lib/integration/tool/mekanism/**"
 		}
 	}
 }
@@ -170,7 +177,7 @@ processResources
 			include 'mcmod.info'
 
 			// replace version and mcversion
-			expand 'version': project.version, 'mcversion': project.minecraft.version, 'asielib-version': asielib_version
+			expand 'version': project.version, 'mcversion': project.minecraft.version, 'asielib_version': asielib_version
 		}
 
 		// copy everything else, thats not the mcmod.info

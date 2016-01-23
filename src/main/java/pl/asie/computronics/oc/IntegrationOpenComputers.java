@@ -10,6 +10,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.apache.logging.log4j.Logger;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.integration.flamingo.DriverFlamingo;
+import pl.asie.computronics.integration.storagedrawers.DriverDrawerGroup;
 import pl.asie.computronics.item.ItemOpenComputers;
 import pl.asie.computronics.oc.block.DriverBlockEnvironments;
 import pl.asie.computronics.oc.client.UpgradeRenderer;
@@ -160,12 +161,12 @@ public class IntegrationOpenComputers {
 					//NO-OP
 				}
 			}
-		}*//*
+		}*/
 		if(Mods.isLoaded(Mods.StorageDrawers)) {
 			if(compat.isCompatEnabled(Compat.StorageDrawers)) {
 				Driver.add(new DriverDrawerGroup.OCDriver());
 			}
-		}*//*
+		}/*
 		if(Mods.isLoaded(Mods.FSP)) {
 			if(compat.isCompatEnabled(Compat.FSP_Steam_Transporter)) {
 				Driver.add(new DriverSteamTransporter.OCDriver());

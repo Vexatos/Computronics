@@ -11,6 +11,8 @@ import li.cil.oc.api.network.ManagedEnvironment;
 import li.cil.oc.api.prefab.DriverTileEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import pl.asie.computronics.integration.CCMultiPeripheral;
 import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
@@ -89,8 +91,8 @@ public class DriverDrawerGroup {
 		}
 
 		@Override
-		public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
-			return new InternalManagedEnvironment(((IDrawerGroup) world.getTileEntity(x, y, z)));
+		public ManagedEnvironment createEnvironment(World world, BlockPos pos) {
+			return new InternalManagedEnvironment(((IDrawerGroup) world.getTileEntity(pos)));
 		}
 	}
 
@@ -99,8 +101,8 @@ public class DriverDrawerGroup {
 		public CCDriver() {
 		}
 
-		public CCDriver(IDrawerGroup tile, World world, int x, int y, int z) {
-			super(tile, Names.StorageDrawers_DrawerGroup, world, x, y, z);
+		public CCDriver(IDrawerGroup tile, World world, BlockPos pos) {
+			super(tile, Names.StorageDrawers_DrawerGroup, world, pos);
 		}
 
 		@Override
@@ -109,10 +111,10 @@ public class DriverDrawerGroup {
 		}
 
 		@Override
-		public CCMultiPeripheral getPeripheral(World world, int x, int y, int z, int side) {
-			TileEntity te = world.getTileEntity(x, y, z);
+		public CCMultiPeripheral getPeripheral(World world, BlockPos pos, EnumFacing side) {
+			TileEntity te = world.getTileEntity(pos);
 			if(te != null && te instanceof IDrawerGroup) {
-				return new CCDriver((IDrawerGroup) te, world, x, y, z);
+				return new CCDriver((IDrawerGroup) te, world, pos);
 			}
 			return null;
 		}
