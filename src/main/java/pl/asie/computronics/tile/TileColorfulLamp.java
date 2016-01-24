@@ -8,6 +8,8 @@ import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.block.BlockColorfulLamp;
@@ -68,10 +70,15 @@ public class TileColorfulLamp extends TileEntityPeripheralBase /*IBundledTile, I
 			g = value > 0x7FFF ? 15 : g < 0 ? 0 : g > 15 ? 15 : g;
 			b = value > 0x7FFF ? 15 : b < 0 ? 0 : b > 15 ? 15 : b;
 			int brightness = Math.max(Math.max(r, g), b);
-			state.withProperty(BRIGHTNESS, brightness | ((b << 15) + (g << 10) + (r << 5)));
+			worldObj.setBlockState(getPos(), state.withProperty(BRIGHTNESS, brightness | ((b << 15) + (g << 10) + (r << 5))));
 		} else {
-			state.withProperty(BRIGHTNESS, value);
+			worldObj.setBlockState(getPos(), state.withProperty(BRIGHTNESS, value));
 		}
+	}
+
+	@Override
+	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
+		return oldState.getBlock() != newState.getBlock();
 	}
 
 	public void setLampColor(int color) {
@@ -84,7 +91,8 @@ public class TileColorfulLamp extends TileEntityPeripheralBase /*IBundledTile, I
 			}
 		}
 		this.markDirty();
-		this.worldObj.markBlockForUpdate(pos);
+		this.worldObj.markBlockForUpdate(getPos());
+		worldObj.notifyBlockOfStateChange(getPos(), getBlockType());
 	}
 
 	@Callback(doc = "function():number; Returns the current lamp color", direct = true)

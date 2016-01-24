@@ -22,6 +22,7 @@ public class ServerTickHandler {
 		for(Runnable task : taskQueue) {
 			task.run();
 		}
+		taskQueue.clear();
 	}
 
 	public void schedule(Runnable task) {

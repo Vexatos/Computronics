@@ -2,6 +2,7 @@ package pl.asie.computronics.block;
 
 import li.cil.oc.api.network.Environment;
 import net.minecraft.block.Block;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
@@ -9,8 +10,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumWorldBlockLayer;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.property.ExtendedBlockState;
+import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TileColorfulLamp;
@@ -53,8 +57,8 @@ public class BlockColorfulLamp extends BlockPeripheral /*implements IRedNetInput
 
 	@Override
 	protected BlockState createActualBlockState() {
-		return new BlockState(this,
-			BRIGHTNESS
+		return new ExtendedBlockState(this,
+			new IProperty[]{BRIGHTNESS}, new IUnlistedProperty[]{}
 		);
 	}
 
@@ -69,6 +73,21 @@ public class BlockColorfulLamp extends BlockPeripheral /*implements IRedNetInput
 	@Override
 	public int getLightValue(IBlockAccess world, BlockPos pos) {
 		return world.getBlockState(pos).getValue(BRIGHTNESS);
+	}
+
+	@Override
+	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos) {
+		TileEntity tile =world.getTileEntity(pos);
+		if (tile instanceof TileColorfulLamp) {
+			return state.withProperty(BRIGHTNESS, ((TileColorfulLamp) tile).getLampColor() == 0 ? 0 : 15);
+		} else {
+			return state;
+		}
+	}
+
+	@Override
+	public boolean canRenderInLayer(EnumWorldBlockLayer layer) {
+		return true;
 	}
 
 	@Override

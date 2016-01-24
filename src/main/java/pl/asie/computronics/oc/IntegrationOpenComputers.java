@@ -359,6 +359,7 @@ public class IntegrationOpenComputers {
 		}*/
 	}
 
+	@Optional.Method(modid = Mods.OpenComputers)
 	public void scheduleForNetworkJoin(final TileEntity tile) {
 		if(!tile.isInvalid() && !tile.getWorld().isRemote) {
 			Computronics.serverTickHandler.schedule(new Runnable() {

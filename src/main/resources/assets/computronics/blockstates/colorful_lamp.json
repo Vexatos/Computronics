@@ -1,12 +1,13 @@
 {
     "forge_marker": 1,
     "defaults": {
-        "textures": {
-            "overlay": "computronics:blocks/lamp_layer_0",
-            "frame": "computronics:blocks/lamp_layer_1"
-        },
-        "model": "computronics:colorful_lamp",
-        "transform": "forge:default-block"
+        "model": "forge:multi-layer",
+        "transform": "forge:default-block",
+        "custom": {
+            "base": "computronics:colorful_lamp#overlay",
+            "Solid": "computronics:colorful_lamp#overlay",
+            "Mipped Cutout": "computronics:colorful_lamp#frame"
+        }
     },
     "variants": {
         "normal": [{ }],
@@ -28,6 +29,22 @@
             "13": { },
             "14": { },
             "15": { }
-        }
+        },
+        "overlay": [
+            {
+                "model": "computronics:base_cube_all_no_ao",
+                "textures": {
+                    "all": "computronics:blocks/lamp_layer_0"
+                }
+            }
+        ],
+        "frame": [
+            {
+                "model": "cube_all",
+                "textures": {
+                    "all": "computronics:blocks/lamp_layer_1"
+                }
+            }
+        ]
     }
 }

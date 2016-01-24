@@ -1,0 +1,4 @@
+{
+    "parent": "computronics:block/base_cube_all",
+    "ambientocclusion": false
+}

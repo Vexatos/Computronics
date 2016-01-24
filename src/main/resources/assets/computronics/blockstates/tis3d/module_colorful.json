@@ -1,25 +1,24 @@
 {
     "forge_marker": 1,
     "defaults": {
-        "textures": { },
-        "model": "tis3d:module.obj"
+        "model": "forge:multi-layer",
+        "transform": "forge:default-block",
+        "custom": {
+            "base": "computronics:tis3d/module_colorful#base",
+            "Solid": "computronics:tis3d/module_colorful#base",
+            "Mipped Cutout": "computronics:tis3d/module_colorful#overlay"
+        }
     },
     "variants": {
         "normal": [{ }],
-        "inventory": [
-            {
-                "transform": "forge:default-block",
-                "textures": { "#casing:Module": "tis3d:items/module_colorful" },
-                "submodel": {
-                    "normal": [{ }],
-                    "inventory": [
-                        {
-                            "model": "tis3d:module.obj",
-                            "transform": "forge:default-block"
-                        }
-                    ]
-                }
-            }
-        ]
+        "inventory": [{ }],
+        "base": {
+            "model": "tis3d:module.obj",
+            "textures": { "#casing:Module": "tis3d:blocks/casingModule" }
+        },
+        "overlay": {
+            "model": "tis3d:module.obj",
+            "textures": { "#casing:Module": "computronics:items/module_colorful" }
+        }
     }
 }
