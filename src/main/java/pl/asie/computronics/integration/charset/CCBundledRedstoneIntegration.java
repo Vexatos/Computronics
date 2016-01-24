@@ -103,9 +103,6 @@ public class CCBundledRedstoneIntegration implements IBundledRedstoneProvider {
 
 		@Override
 		public byte[] getBundledSignal() {
-			for(EnumFacing value : EnumFacing.VALUES) {
-				System.out.println(ComputerCraftAPI.getBundledRedstoneOutput(tile.getWorld(), tile.getPos(), value.ordinal())); //TODO change once API is fixed
-			}
 			int out = ComputerCraft.getDefaultBundledRedstoneOutput(tile.getWorld(), tile.getPos(), side);
 			if(out < 0) {
 				return new byte[16];
@@ -145,7 +142,7 @@ public class CCBundledRedstoneIntegration implements IBundledRedstoneProvider {
 			return capability != null &&
 				(capability == CHARSET_EMITTER ||
 					capability == CHARSET_RECEIVER
-						&& ComputerCraftAPI.getBundledRedstoneOutput(tile.getWorld(), tile.getPos(), facing.ordinal()) >= 0);
+						&& ComputerCraft.getDefaultBundledRedstoneOutput(tile.getWorld(), tile.getPos(), facing) >= 0);
 		}
 
 		@Override
