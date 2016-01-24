@@ -9,6 +9,8 @@ import li.cil.oc.api.machine.Context;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.Computronics;
@@ -93,6 +95,8 @@ public class TileColorfulLamp extends TileEntityPeripheralBase /*IBundledTile, I
 		this.markDirty();
 		this.worldObj.markBlockForUpdate(getPos());
 		worldObj.notifyBlockOfStateChange(getPos(), getBlockType());
+		worldObj.checkLight(getPos());
+		worldObj.markBlockRangeForRenderUpdate(pos.add(-1,-1,-1), pos.add(1,1,1));
 	}
 
 	@Callback(doc = "function():number; Returns the current lamp color", direct = true)

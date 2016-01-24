@@ -19,12 +19,6 @@
                     "all": "tis3d:blocks/casingModule"
                 },
                 "transform": {
-                    "gui": {
-                        "rotation": { "y": 180 }
-                    },
-                    "fixed": {
-                        "rotation": { "y": 90 }
-                    },
                     "translation": [0.5, 0, 0],
                     "scale": [1, 0.875, 0.875]
                 }
@@ -37,14 +31,8 @@
                     "overlay": "computronics:items/module_colorful"
                 },
                 "transform": {
-                    "gui": {
-                        "rotation": { "y": 180 }
-                    },
-                    "fixed": {
-                        "rotation": { "y": 90 }
-                    },
                     "translation": [0.5, 0, 0],
-                    "scale": [1, 0.875, 0.875]
+                    "scale": [1, 0.875,0.875]
                 }
             }
         ]

@@ -31,6 +31,7 @@ public class BlockColorfulLamp extends BlockPeripheral /*implements IRedNetInput
 	public BlockColorfulLamp() {
 		super("colorful_lamp", Rotation.NONE);
 		this.setUnlocalizedName("computronics.colorfulLamp");
+		this.setDefaultState(this.blockState.getBaseState().withProperty(BRIGHTNESS, 0));
 	}
 
 	@Override
@@ -58,7 +59,7 @@ public class BlockColorfulLamp extends BlockPeripheral /*implements IRedNetInput
 	@Override
 	protected BlockState createActualBlockState() {
 		return new ExtendedBlockState(this,
-			new IProperty[]{BRIGHTNESS}, new IUnlistedProperty[]{}
+			new IProperty[] { BRIGHTNESS }, new IUnlistedProperty[] {}
 		);
 	}
 
@@ -72,13 +73,29 @@ public class BlockColorfulLamp extends BlockPeripheral /*implements IRedNetInput
 
 	@Override
 	public int getLightValue(IBlockAccess world, BlockPos pos) {
-		return world.getBlockState(pos).getValue(BRIGHTNESS);
+		TileEntity tile = world.getTileEntity(pos);
+		if(tile instanceof TileColorfulLamp) {
+			int color = ((TileColorfulLamp) tile).getLampColor();
+			//this.lightValue = world.getBlockState(pos).getValue(BRIGHTNESS);
+			this.lightValue = color == 0 ? 0 : 15; //TODO do this
+			if(world instanceof World) {
+				((World) world).notifyLightSet(pos);
+				((World) world).markBlockRangeForRenderUpdate(pos.add(-1, -1, -1), pos.add(1, 1, 1));
+			}
+			return this.lightValue;
+		}
+		return this.lightValue = world.getBlockState(pos).getValue(BRIGHTNESS);
+	}
+
+	@Override
+	public int getLightOpacity() {
+		return super.getLightOpacity();
 	}
 
 	@Override
 	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos) {
-		TileEntity tile =world.getTileEntity(pos);
-		if (tile instanceof TileColorfulLamp) {
+		TileEntity tile = world.getTileEntity(pos);
+		if(tile instanceof TileColorfulLamp) {
 			return state.withProperty(BRIGHTNESS, ((TileColorfulLamp) tile).getLampColor() == 0 ? 0 : 15);
 		} else {
 			return state;
@@ -87,7 +104,7 @@ public class BlockColorfulLamp extends BlockPeripheral /*implements IRedNetInput
 
 	@Override
 	public boolean canRenderInLayer(EnumWorldBlockLayer layer) {
-		return true;
+		return layer == EnumWorldBlockLayer.CUTOUT_MIPPED || super.canRenderInLayer(layer);
 	}
 
 	@Override

@@ -128,9 +128,16 @@ public class ItemModules extends ItemMultiple implements ModuleProvider, IModule
 	@SideOnly(Side.CLIENT)
 	public int getColorFromItemStack(ItemStack stack, int pass) {
 		switch(stack.getItemDamage()) {
-			case 7: {
+			case 0: {
 				if(pass == 1) {
 					return Color.HSBtoRGB((((System.currentTimeMillis() + (stack.hashCode() % 30000)) % 30000) / 30000F), 1F, 1F) & 0xFFFFFF;
+				}
+			}
+			case 2: {
+				if(pass == 1) {
+					int red = 0x44;
+					red = red + (int) ((0xFF - red) * ((Math.sin(System.currentTimeMillis() / 5000D * 2D * Math.PI) + 1D) / 2D));
+					return (red << 16);
 				}
 			}
 			default: {

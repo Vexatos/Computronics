@@ -12,6 +12,11 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
+import pl.asie.computronics.Computronics;
+import pl.asie.computronics.network.Packets;
+import pl.asie.lib.network.Packet;
+
+import java.io.IOException;
 
 /**
  * @author Vexatos
@@ -102,13 +107,13 @@ public class SelfDestruct extends Explosion {
 				EntityPlayerMP entityplayer = (EntityPlayerMP) playerEntity;
 
 				if(entityplayer.getDistanceSq(xPos, yPos, zPos) < 4096.0D) {
-					/*try { //TODO
+					try {
 						Packet p = Computronics.packet.create(Packets.PACKET_COMPUTER_BOOM)
 							.writeDouble(xPos)
 							.writeDouble(yPos)
 							.writeDouble(zPos)
 							.writeFloat(4.0F);
-						p.writeInt(explosion.affectedBlockPositions.size());
+						p.writeInt(explosion.getAffectedBlockPositions().size());
 
 						{
 							byte j, k, l;
@@ -138,7 +143,7 @@ public class SelfDestruct extends Explosion {
 						Computronics.packet.sendTo(p, entityplayer);
 					} catch(IOException e) {
 						e.printStackTrace();
-					}*/
+					}
 				}
 			}
 		}

@@ -4,7 +4,8 @@
             "from": [0, 0, 0],
             "to": [1, 16, 16],
             "faces": {
-                "west": { "texture": "#overlay", "cullface": "west", "tintindex": 0 }
+                "west": { "texture": "#overlay", "cullface": "west", "tintindex": 1 },
+                "east": { "texture": "#overlay", "cullface": "east", "tintindex": 1 }
             }
         }
     ]
