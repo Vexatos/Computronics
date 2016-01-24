@@ -28,6 +28,7 @@ public class Mods {
 		BetterStorage = "betterstorage",
 		BuildCraftCore = "BuildCraft|Core",
 		BuildCraftTransport = "BuildCraft|Transport",
+		CharsetAudio = "CharsetAudio",
 		EnderIO = "EnderIO",
 		Factorization = "factorization",
 		Flamingo = "Flamingo",

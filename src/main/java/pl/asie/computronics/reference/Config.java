@@ -53,7 +53,7 @@ public class Config {
 	public static boolean CC_ALWAYS_FIRST = true;
 
 	public static boolean TIS3D_MODULE_COLORFUL = true;
-	//public static boolean TIS3D_MODULE_TAPE_READER = true; TODO Tape Drive
+	//public static boolean TIS3D_MODULE_TAPE_READER = true; //TODO Charset Audio
 	public static boolean TIS3D_MODULE_BOOM = true;
 
 	public static String TAPE_LENGTHS;
@@ -148,8 +148,10 @@ public class Config {
 
 		if(Mods.isLoaded(Mods.TIS3D)) {
 			TIS3D_MODULE_COLORFUL = config.get("enable.tis3d", "colorfulModule", true).getBoolean(true);
-			//TIS3D_MODULE_TAPE_READER = config.get("enable.tis3d", "tapeReaderModule", true).getBoolean(true); TODO Tape Drive
 			TIS3D_MODULE_BOOM = config.get("enable.tis3d", "boomModule", true).getBoolean(true);
+			/*if(Mods.isLoaded(Mods.CharsetAudio)) {
+				TIS3D_MODULE_TAPE_READER = config.get("enable.tis3d.charset_audio", "tapeReaderModule", true).getBoolean(true);
+			}*/ //TODO Charset Audio
 		}
 
 		// Radar

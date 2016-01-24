@@ -1,5 +1,6 @@
 package pl.asie.computronics.integration.charset;
 
+import pl.asie.computronics.integration.charset.wires.IntegrationCharsetWires;
 import pl.asie.computronics.reference.Mods;
 
 /**
@@ -7,12 +8,17 @@ import pl.asie.computronics.reference.Mods;
  */
 public class IntegrationCharset {
 
-	public static CCBundledRedstoneIntegration bundledRedstone;
+	public static IntegrationCharsetWires wires;
+	// public static IntegrationCharsetAudio audio; //TODO Charset Audio
 
 	public void preInit() {
-		if(Mods.isLoaded(Mods.ComputerCraft)) {
-			bundledRedstone = new CCBundledRedstoneIntegration();
+		if(Mods.API.hasAPI(Mods.API.CharsetWires)) {
+			wires = new IntegrationCharsetWires();
+			wires.preInit();
 		}
+		/*if(Mods.isLoaded(Mods.CharsetAudio)) { //TODO Charset Audio
+			audio = new IntegrationCharsetAudio();
+			audio.preInit();
+		}*/
 	}
-
 }

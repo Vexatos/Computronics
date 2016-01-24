@@ -14,7 +14,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.opengl.GL11;
-import pl.asie.computronics.tile.TapeDriveState.State;
+import pl.asie.charset.audio.tape.PartTapeDrive;
 
 import java.util.HashMap;
 
@@ -46,9 +46,9 @@ public class ModuleTapeReader extends ComputronicsModule {
 			return this.uid;
 		}
 
-		protected abstract void process(TileTapeDrive tile);
+		protected abstract void process(PartTapeDrive tile);
 
-		protected abstract void finishWriting(TileTapeDrive tile, Port writtenPort);
+		protected abstract void finishWriting(PartTapeDrive tile, Port writtenPort);
 
 		protected void save(NBTTagCompound nbt) {
 		}
@@ -67,7 +67,7 @@ public class ModuleTapeReader extends ComputronicsModule {
 		}
 
 		@Override
-		protected void finishWriting(TileTapeDrive tile, Port writtenPort) {
+		protected void finishWriting(PartTapeDrive tile, Port writtenPort) {
 		}
 	}
 
@@ -81,7 +81,7 @@ public class ModuleTapeReader extends ComputronicsModule {
 		}
 
 		@Override
-		protected void finishWriting(TileTapeDrive tile, Port writtenPort) {
+		protected void finishWriting(PartTapeDrive tile, Port writtenPort) {
 			cancelWrite();
 			mode = Mode.IDLE;
 			command = null;
@@ -105,7 +105,7 @@ public class ModuleTapeReader extends ComputronicsModule {
 		}
 
 		@Override
-		protected void process(TileTapeDrive tile) {
+		protected void process(PartTapeDrive tile) {
 			if(mode == Mode.IDLE) {
 				cancelRead();
 				mode = Mode.WRITING;
@@ -118,7 +118,7 @@ public class ModuleTapeReader extends ComputronicsModule {
 			}
 		}
 
-		protected abstract short getValue(TileTapeDrive tile);
+		protected abstract short getValue(PartTapeDrive tile);
 
 	}
 
@@ -132,7 +132,7 @@ public class ModuleTapeReader extends ComputronicsModule {
 		}
 
 		@Override
-		protected void process(TileTapeDrive tile) {
+		protected void process(PartTapeDrive tile) {
 			switch(mode) {
 				case IDLE: {
 					mode = Mode.WAITING;
@@ -156,25 +156,25 @@ public class ModuleTapeReader extends ComputronicsModule {
 			}
 		}
 
-		protected abstract void setValue(TileTapeDrive tile, short val);
+		protected abstract void setValue(PartTapeDrive tile, short val);
 	}
 
 	private final Command[] COMMANDS = new Command[] {
 		new ImmediateReturnCommand("isEnd") { // isEnd
 			@Override
-			protected short getValue(TileTapeDrive tile) {
+			protected short getValue(PartTapeDrive tile) {
 				return (short) (tile.isEnd() ? 1 : 0);
 			}
 		},
 		new ImmediateReturnCommand("isReady") { // isReady
 			@Override
-			protected short getValue(TileTapeDrive tile) {
+			protected short getValue(PartTapeDrive tile) {
 				return (short) (tile.isReady() ? 1 : 0);
 			}
 		},
 		new ImmediateReturnCommand("getState") { // getState
 			@Override
-			protected short getValue(TileTapeDrive tile) {
+			protected short getValue(PartTapeDrive tile) {
 				return (short) tile.getEnumState().ordinal();
 			}
 		},
@@ -531,4 +531,5 @@ public class ModuleTapeReader extends ComputronicsModule {
 			}
 		}
 	}
-}*/
+}
+*/

@@ -223,10 +223,8 @@ public class Computronics {
 			tis3D.preInit();
 		}
 
-		if(Mods.API.hasAPI(Mods.API.CharsetWires)) {
-			charset = new IntegrationCharset();
-			charset.preInit();
-		}
+		charset = new IntegrationCharset();
+		charset.preInit();
 	}
 
 	@EventHandler

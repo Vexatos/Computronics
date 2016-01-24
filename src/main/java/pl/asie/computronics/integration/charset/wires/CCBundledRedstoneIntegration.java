@@ -1,4 +1,4 @@
-package pl.asie.computronics.integration.charset;
+package pl.asie.computronics.integration.charset.wires;
 
 import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.api.ComputerCraftAPI;
@@ -34,15 +34,15 @@ public class CCBundledRedstoneIntegration implements IBundledRedstoneProvider {
 	private static void onBundledEmitterrInject(Capability<IBundledEmitter> c) {
 		Computronics.log.info("Adding Charset Bundled Cable support to ComputerCraft. Bundled Cables can now transmit ComputerCraft bundled signals!");
 		CHARSET_EMITTER = c;
-		IntegrationCharset.bundledRedstone.register();
+		IntegrationCharsetWires.bundledRedstone.register();
 	}
 
 	@CapabilityInject(IBundledReceiver.class)
 	private static void onBundledReceiverInject(Capability<IBundledReceiver> c) {
 		Computronics.log.info("Adding Charset Bundled Cable support to ComputerCraft. ComputerCraft can now read values from Bundled Cables!");
 		CHARSET_RECEIVER = c;
-		ComputerCraftAPI.registerBundledRedstoneProvider(IntegrationCharset.bundledRedstone);
-		IntegrationCharset.bundledRedstone.register();
+		ComputerCraftAPI.registerBundledRedstoneProvider(IntegrationCharsetWires.bundledRedstone);
+		IntegrationCharsetWires.bundledRedstone.register();
 	}
 
 	private boolean registered = false;

@@ -1,4 +1,4 @@
-package pl.asie.computronics.integration.charset;
+package pl.asie.computronics.integration.charset.wires;
 
 import pl.asie.charset.api.wires.IBundledEmitter;
 import pl.asie.charset.api.wires.IBundledReceiver;

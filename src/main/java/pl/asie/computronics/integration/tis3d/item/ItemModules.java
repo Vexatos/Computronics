@@ -21,8 +21,6 @@ import pl.asie.computronics.reference.Mods;
 import java.awt.*;
 import java.util.List;
 
-//import pl.asie.computronics.integration.tis3d.module.ModuleTapeReader;
-
 /**
  * @author Vexatos
  */
@@ -46,7 +44,7 @@ public class ItemModules extends ItemMultiple implements ModuleProvider, IModule
 		}
 		/*if(Config.TIS3D_MODULE_TAPE_READER) {
 			list.add(new ItemStack(item, 1, 1));
-		}*/
+		}*/ //TODO Charset Audio
 		if(Config.TIS3D_MODULE_BOOM) {
 			list.add(new ItemStack(item, 1, 2));
 		}
@@ -61,7 +59,7 @@ public class ItemModules extends ItemMultiple implements ModuleProvider, IModule
 		}
 		/*if(Config.TIS3D_MODULE_TAPE_READER) {
 			registerItemModel(1);
-		}*/
+		}*///TODO Charset Audio
 		if(Config.TIS3D_MODULE_BOOM) {
 			registerItemModel(2);
 		}
@@ -70,59 +68,6 @@ public class ItemModules extends ItemMultiple implements ModuleProvider, IModule
 	private void registerItemModel(int meta) {
 		Computronics.proxy.registerItemModel(this, meta, "computronics:tis3d/" + parts[meta]);
 	}
-
-	//private IIcon tapeReaderBack, tapeReaderCenter, tapeReaderOff;
-
-	/*@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister r) {
-		super.registerIcons(r);*/
-		/*for(int i = 0; i < this.parts.length; ++i) {
-			this.partIcons[i] = r.registerIcon(this.mod + ":tis3d/" + this.parts[i]);
-		}
-		tapeReaderBack = r.registerIcon("computronics:tis3d/module_tape_reader_back");
-		tapeReaderCenter = r.registerIcon("computronics:module_tape_reader_center");
-		tapeReaderOff = r.registerIcon("computronics:module_tape_reader_off");*/
-	/*}
-
-	@Override
-	public boolean requiresMultipleRenderPasses() {
-		return true;
-	}
-
-	@Override
-	public int getRenderPasses(int meta) {
-		switch(meta) {
-			default: // Nothing so far
-				return 1;
-		}
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public IIcon getIconFromDamageForRenderPass(int meta, int pass) {
-		/*switch(meta) {
-			case 1: {
-				switch(pass) {
-					case 1:
-						return tapeReaderBack;
-					case 2:
-						return tapeReaderCenter;
-					case 3:
-						return tapeReaderOff;
-				}
-			}
-			default: {
-				return super.getIconFromDamageForRenderPass(meta, pass);
-			}
-		}* /
-		return super.getIconFromDamageForRenderPass(meta, pass);
-	}
-
-	@SideOnly(Side.CLIENT)
-	public IIcon getIconFromDamage(int meta) {
-		//return getIconFromDamageForRenderPass(meta, 0);
-		return super.getIconFromDamage(meta);
-	}*/
 
 	@Override
 	@SideOnly(Side.CLIENT)
@@ -152,8 +97,7 @@ public class ItemModules extends ItemMultiple implements ModuleProvider, IModule
 			case 0:
 				return "colorful_module";
 			case 1:
-				//return "tape_reader_module";
-				return null;
+				return "tape_reader_module";
 			case 2:
 				return "self_destructing_module";
 			default:
@@ -172,8 +116,8 @@ public class ItemModules extends ItemMultiple implements ModuleProvider, IModule
 			case 0:
 				return new ModuleColorful(casing, face);
 			case 1:
-				//return new ModuleTapeReader(casing, face);
-				return null; //TODO Tape Drive
+				//return new ModuleTapeReader(casing, face); TODO Charset Audio
+				return null;
 			case 2:
 				return new ModuleBoom(casing, face);
 			default:
