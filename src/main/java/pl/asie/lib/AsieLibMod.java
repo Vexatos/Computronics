@@ -46,7 +46,7 @@ public class AsieLibMod extends AsieLibAPI {
 	public void preInit(FMLPreInitializationEvent event) {
 		AsieLibAPI.instance = this;
 		ToolProviders.registerToolProviders();
-		log = LogManager.getLogger(Mods.AsieLib);
+		log = event.getModLog();
 
 		config = new Configuration(event.getSuggestedConfigurationFile());
 		config.load();

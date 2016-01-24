@@ -50,6 +50,7 @@ public class Mods {
 			BuildCraftBlueprints = "BuildCraftAPI|blueprints",
 			BuildCraftStatements = "BuildCraftAPI|statements",
 			BuildCraftTiles = "BuildCraftAPI|tiles",
+			CharsetWires = "CharsetAPI|Wires",
 			CoFHAPI_Energy = "CoFHAPI|energy",
 			DraconicEvolution = "DraconicEvolution|API",
 			Gendustry = "gendustryAPI",

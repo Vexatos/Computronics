@@ -95,8 +95,6 @@ public class TileColorfulLamp extends TileEntityPeripheralBase /*IBundledTile, I
 		this.markDirty();
 		this.worldObj.markBlockForUpdate(getPos());
 		worldObj.notifyBlockOfStateChange(getPos(), getBlockType());
-		worldObj.checkLight(getPos());
-		worldObj.markBlockRangeForRenderUpdate(pos.add(-1,-1,-1), pos.add(1,1,1));
 	}
 
 	@Callback(doc = "function():number; Returns the current lamp color", direct = true)

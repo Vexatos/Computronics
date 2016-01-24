@@ -20,7 +20,6 @@ import net.minecraftforge.fml.common.event.FMLServerAboutToStartEvent;
 import net.minecraftforge.fml.common.network.FMLEventChannel;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheralProvider;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheralRegistry;
@@ -35,6 +34,7 @@ import pl.asie.computronics.cc.IntegrationComputerCraft;
 import pl.asie.computronics.cc.multiperipheral.MultiPeripheralRegistry;
 import pl.asie.computronics.gui.providers.GuiProviderCipher;
 import pl.asie.computronics.integration.ModRecipes;
+import pl.asie.computronics.integration.charset.IntegrationCharset;
 import pl.asie.computronics.integration.tis3d.IntegrationTIS3D;
 import pl.asie.computronics.item.block.ComputronicsItemBlock;
 import pl.asie.computronics.network.NetworkHandlerClient;
@@ -74,7 +74,7 @@ import java.util.concurrent.Executors;
 //import pl.asie.computronics.integration.railcraft.IntegrationRailcraft;
 
 @Mod(modid = Mods.Computronics, name = Mods.Computronics_NAME, version = "@VERSION@",
-	dependencies = "required-after:asielib;required-after:Forge@[11.15.0.1715,);"
+	dependencies = "required-after:asielib;required-after:Forge@[11.15.0.1718,);"
 		+ "after:ComputerCraft;after:OpenComputers@[1.5.18,);after:tis3d@[0.8.0.57,);"
 		+ "before:OpenPeripheralCore@[1.1,);before:OpenPeripheralApi@[3.2,);"
 		+ "after:MineFactoryReloaded;after:RedLogic@[59.1.9,);after:ProjRed|Core;"
@@ -117,6 +117,7 @@ public class Computronics {
 	//public static IntegrationRailcraft railcraft;
 	//public static IntegrationForestry forestry;
 	public static IntegrationTIS3D tis3D;
+	public static IntegrationCharset charset;
 
 	public static IGuiProvider guiCipher;
 
@@ -149,7 +150,7 @@ public class Computronics {
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-		log = LogManager.getLogger(Mods.Computronics);
+		log = event.getModLog();
 
 		MinecraftForge.EVENT_BUS.register(serverTickHandler = new ServerTickHandler());
 
@@ -220,6 +221,11 @@ public class Computronics {
 		if(Mods.isLoaded(Mods.TIS3D)) {
 			tis3D = new IntegrationTIS3D();
 			tis3D.preInit();
+		}
+
+		if(Mods.API.hasAPI(Mods.API.CharsetWires)) {
+			charset = new IntegrationCharset();
+			charset.preInit();
 		}
 	}
 

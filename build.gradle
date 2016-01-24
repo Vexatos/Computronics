@@ -1,26 +1,26 @@
 buildscript {
-	repositories {
-		mavenCentral()
-		maven {
-			name = "forge"
-			url = "http://files.minecraftforge.net/maven"
-		}
-		maven {
-			name = "sonatype"
-			url = "https://oss.sonatype.org/content/repositories/snapshots/"
-		}
-	}
-	dependencies {
-		classpath 'net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT'
-	}
+    repositories {
+        mavenCentral()
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+        maven {
+            name = "sonatype"
+            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT'
+    }
 }
 
 apply plugin: 'net.minecraftforge.gradle.forge'
 
 file "build.properties" withReader {
-	def prop = new Properties()
-	prop.load(it)
-	ext.config = new ConfigSlurper().parse prop
+    def prop = new Properties()
+    prop.load(it)
+    ext.config = new ConfigSlurper().parse prop
 }
 
 version = "${config.minecraft.version}-${config.computronics.version}"
@@ -29,46 +29,46 @@ group = "pl.asie.computronics" // http://maven.apache.org/guides/mini/guide-nami
 archivesBaseName = "Computronics"
 
 if (JavaVersion.current().isJava8Compatible()) {
-	allprojects {
-		tasks.withType(Javadoc) {
-			options.addStringOption('Xdoclint:none', '-quiet')
-		}
-	}
+    allprojects {
+        tasks.withType(Javadoc) {
+            options.addStringOption('Xdoclint:none', '-quiet')
+        }
+    }
 }
 
 repositories {
-	maven {
-		name = "OC repo"
-		url = "http://maven.cil.li/"
-	}
-	maven {
-		name "Mobius Repo"
-		url "http://mobiusstrip.eu/maven"
-	}
-	/*maven {
-		name 'CB Repo'
-		url "http://chickenbones.net/maven/"
-	}
-	maven {
-		name 'tterrag Repo'
-		url "http://maven.tterrag.com/"
-	}
-	maven {
-		name = "Forestry and IC2 repo"
-		url = "http://maven.ic2.player.to/"
-	}
-	maven {
-		name = "Bluepower Repo"
-		url = "http://maven.bluepowermod.com/"
-	}
-	maven {
-		name = "RX14's Repo"
-		url = "http://mvn.rx14.co.uk/repo/"
+    maven {
+        name = "OC repo"
+        url = "http://maven.cil.li/"
     }
-	ivy {
-		name = "BuildCraft"
-		artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision]-[classifier].[ext]"
-	}*/
+    maven {
+        name "Mobius Repo"
+        url "http://mobiusstrip.eu/maven"
+    }
+    /*maven {
+        name 'CB Repo'
+        url "http://chickenbones.net/maven/"
+    }
+    maven {
+        name 'tterrag Repo'
+        url "http://maven.tterrag.com/"
+    }
+    maven {
+        name = "Forestry and IC2 repo"
+        url = "http://maven.ic2.player.to/"
+    }
+    maven {
+        name = "Bluepower Repo"
+        url = "http://maven.bluepowermod.com/"
+    }
+    maven {
+        name = "RX14's Repo"
+        url = "http://mvn.rx14.co.uk/repo/"
+    }
+    ivy {
+        name = "BuildCraft"
+        artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision]-[classifier].[ext]"
+    }*/
 }
 
 /*configurations {
@@ -79,81 +79,82 @@ repositories {
 }*/
 
 dependencies {
-	deobfCompile "li.cil.oc:OpenComputers:${config.oc.version}"
-	deobfCompile "li.cil.tis3d:TIS-3D:${config.tis3d.version}"
-	//provided "net.industrial-craft:industrialcraft-2:${config.ic2.version}:dev"
-	//provided "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech.version}:dev"
-	compile "mcp.mobius.waila:Waila:${config.waila.version}:dev"
-	/*compile("com.enderio:EnderIO:${config.enderio.version}:dev") {
-		exclude module: "appliedenergistics2"
-		exclude module: "buildcraft"
-		exclude module: "Waila"
-		exclude module: "forestry_1.7.10"
-		exclude module: "OpenComputers"
-		exclude module: "CodeChickenLib"
-		exclude module: "CodeChickenCore"
-		exclude module: "EquivalentExchange3"
-	}
-	compile("net.sengir.forestry:forestry_1.7.10:${config.forestry.version}:dev") {
-		exclude module: "buildcraft"
-		exclude module: "industrialcraft-2"
-	}*/
-	//compile name: "buildcraft", version: "${config.buildcraft.version}", classifier: "dev"
-	/*compile("appeng:appliedenergistics2:${config.ae2.version}:dev") {
-		transitive = false
-	}*/
-	/*compile("riskyken.armourersWorkshop:Armourers-Workshop:1.7.10-${config.am.version}:deobf"){
-		transitive = false
-	}*/
-	//provided("com.bluepowermod:BluePower:${config.bluepower.version}:deobf") {
-	//	transitive = false
-	//}
-	//provided("qmunity:QmunityLib:${config.qmunitylib.version}:deobf") {
-	//	transitive = false
-	//}
+    deobfCompile "li.cil.oc:OpenComputers:${config.oc.version}"
+    deobfCompile "li.cil.tis3d:TIS-3D:${config.tis3d.version}"
+    //provided "net.industrial-craft:industrialcraft-2:${config.ic2.version}:dev"
+    //provided "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech.version}:dev"
+    compile "mcp.mobius.waila:Waila:${config.waila.version}:dev"
+    /*compile("com.enderio:EnderIO:${config.enderio.version}:dev") {
+        exclude module: "appliedenergistics2"
+        exclude module: "buildcraft"
+        exclude module: "Waila"
+        exclude module: "forestry_1.7.10"
+        exclude module: "OpenComputers"
+        exclude module: "CodeChickenLib"
+        exclude module: "CodeChickenCore"
+        exclude module: "EquivalentExchange3"
+    }
+    compile("net.sengir.forestry:forestry_1.7.10:${config.forestry.version}:dev") {
+        exclude module: "buildcraft"
+        exclude module: "industrialcraft-2"
+    }*/
+    //compile name: "buildcraft", version: "${config.buildcraft.version}", classifier: "dev"
+    /*compile("appeng:appliedenergistics2:${config.ae2.version}:dev") {
+        transitive = false
+    }*/
+    /*compile("riskyken.armourersWorkshop:Armourers-Workshop:1.7.10-${config.am.version}:deobf"){
+        transitive = false
+    }*/
+    //provided("com.bluepowermod:BluePower:${config.bluepower.version}:deobf") {
+    //	transitive = false
+    //}
+    //provided("qmunity:QmunityLib:${config.qmunitylib.version}:deobf") {
+    //	transitive = false
+    //}
+    compile fileTree(dir: "libs", includes: ['*.jar', '*.zip'])
 }
 
 minecraft {
-	version = "${config.minecraft.version}-${config.forge.version}"
-	runDir = "eclipse"
-	mappings = config.mappings
+    version = "${config.minecraft.version}-${config.forge.version}"
+    runDir = "eclipse"
+    mappings = config.mappings
 
-	replaceIn "pl/asie/computronics/Computronics.java"
-	replace "@VERSION@", "${config.computronics.version}"
+    replaceIn "pl/asie/computronics/Computronics.java"
+    replace "@VERSION@", "${config.computronics.version}"
 
-	replaceIn "pl/asie/lib/AsieLibMod.java"
-	replace "@AL_VERSION@", "${config.asielib.version}"
+    replaceIn "pl/asie/lib/AsieLibMod.java"
+    replace "@AL_VERSION@", "${config.asielib.version}"
 }
 
 sourceSets {
-	main {
-		//output.resourcesDir = 'build/classes/main'
-		java {
-			exclude "pl/asie/computronics/client/**"
-			exclude "pl/asie/computronics/integration/appeng/**"
-			exclude "pl/asie/computronics/integration/armourersworkshop/**"
-			exclude "pl/asie/computronics/integration/betterstorage/**"
-			exclude "pl/asie/computronics/integration/buildcraft/**"
-			exclude "pl/asie/computronics/integration/cofh/**"
-			exclude "pl/asie/computronics/integration/draconicevolution/**"
-			exclude "pl/asie/computronics/integration/enderio/**"
-			exclude "pl/asie/computronics/integration/factorization/**"
-			exclude "pl/asie/computronics/integration/forestry/**"
-			exclude "pl/asie/computronics/integration/fsp/**"
-			exclude "pl/asie/computronics/integration/gregtech/**"
-			exclude "pl/asie/computronics/integration/mekanism/**"
-			exclude "pl/asie/computronics/integration/mfr/**"
-			exclude "pl/asie/computronics/integration/railcraft/**"
-			exclude "pl/asie/computronics/integration/redlogic/**"
+    main {
+        //output.resourcesDir = 'build/classes/main'
+        java {
+            exclude "pl/asie/computronics/client/**"
+            exclude "pl/asie/computronics/integration/appeng/**"
+            exclude "pl/asie/computronics/integration/armourersworkshop/**"
+            exclude "pl/asie/computronics/integration/betterstorage/**"
+            exclude "pl/asie/computronics/integration/buildcraft/**"
+            exclude "pl/asie/computronics/integration/cofh/**"
+            exclude "pl/asie/computronics/integration/draconicevolution/**"
+            exclude "pl/asie/computronics/integration/enderio/**"
+            exclude "pl/asie/computronics/integration/factorization/**"
+            exclude "pl/asie/computronics/integration/forestry/**"
+            exclude "pl/asie/computronics/integration/fsp/**"
+            exclude "pl/asie/computronics/integration/gregtech/**"
+            exclude "pl/asie/computronics/integration/mekanism/**"
+            exclude "pl/asie/computronics/integration/mfr/**"
+            exclude "pl/asie/computronics/integration/railcraft/**"
+            exclude "pl/asie/computronics/integration/redlogic/**"
 
-			exclude "pl/asie/lib/integration/buildcraft/**"
-			exclude "pl/asie/lib/integration/tool/appeng/**"
-			exclude "pl/asie/lib/integration/tool/buildcraft/**"
-			exclude "pl/asie/lib/integration/tool/cofh/**"
-			exclude "pl/asie/lib/integration/tool/enderio/**"
-			exclude "pl/asie/lib/integration/tool/mekanism/**"
-		}
-	}
+            exclude "pl/asie/lib/integration/buildcraft/**"
+            exclude "pl/asie/lib/integration/tool/appeng/**"
+            exclude "pl/asie/lib/integration/tool/buildcraft/**"
+            exclude "pl/asie/lib/integration/tool/cofh/**"
+            exclude "pl/asie/lib/integration/tool/enderio/**"
+            exclude "pl/asie/lib/integration/tool/mekanism/**"
+        }
+    }
 }
 
 /*jar {
@@ -162,52 +163,52 @@ sourceSets {
 
 //apply plugin: 'idea'
 idea {
-	module {
-		//scopes.PROVIDED.plus += [configurations.provided]
-		outputDir = file('build/classes/main')
-	}
+    module {
+        //scopes.PROVIDED.plus += [configurations.provided]
+        outputDir = file('build/classes/main')
+    }
 }
 
 processResources
-	{
-		inputs.property "version", project.version
-		inputs.property "mcversion", project.minecraft.version
-		// replace stuff in mcmod.info, nothing else
-		from(sourceSets.main.resources.srcDirs) {
-			include 'mcmod.info'
+        {
+            inputs.property "version", project.version
+            inputs.property "mcversion", project.minecraft.version
+            // replace stuff in mcmod.info, nothing else
+            from(sourceSets.main.resources.srcDirs) {
+                include 'mcmod.info'
 
-			// replace version and mcversion
-			expand 'version': project.version, 'mcversion': project.minecraft.version, 'asielib_version': asielib_version
-		}
+                // replace version and mcversion
+                expand 'version': project.version, 'mcversion': project.minecraft.version, 'asielib_version': asielib_version
+            }
 
-		// copy everything else, thats not the mcmod.info
-		from(sourceSets.main.resources.srcDirs) {
-			exclude 'mcmod.info'
-		}
-	}
+            // copy everything else, thats not the mcmod.info
+            from(sourceSets.main.resources.srcDirs) {
+                exclude 'mcmod.info'
+            }
+        }
 
 //For Building
 
 def libDir = './build/libs'
 
 task deobfJar(type: Jar) {
-	description = 'Creates a jar file containing the non-obfuscated class files'
-	classifier = 'deobf'
-	destinationDir = file(libDir)
-	from sourceSets.main.output.classesDir
-	exclude 'cofh/**'
+    description = 'Creates a jar file containing the non-obfuscated class files'
+    classifier = 'deobf'
+    destinationDir = file(libDir)
+    from sourceSets.main.output.classesDir
+    exclude 'cofh/**'
 }
 
 task apiZip(type: Zip) {
-	description = 'Creates a zip file containing the API source files only'
-	classifier = 'api'
-	destinationDir = file(libDir)
-	from sourceSets.main.allSource
-	include 'pl/asie/**/api/**'
+    description = 'Creates a zip file containing the API source files only'
+    classifier = 'api'
+    destinationDir = file(libDir)
+    from sourceSets.main.allSource
+    include 'pl/asie/**/api/**'
 }
 
 task makeJars << {
-	description = 'Creates the mod files'
+    description = 'Creates the mod files'
 }
 
 makeJars.dependsOn clean, build, deobfJar, apiZip
