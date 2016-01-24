@@ -4,9 +4,7 @@ import li.cil.tis3d.api.machine.Casing;
 import li.cil.tis3d.api.machine.Face;
 import li.cil.tis3d.api.module.Module;
 import li.cil.tis3d.api.module.ModuleProvider;
-import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
@@ -20,6 +18,7 @@ import pl.asie.computronics.item.ItemMultiple;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 
+import java.awt.*;
 import java.util.List;
 
 //import pl.asie.computronics.integration.tis3d.module.ModuleTapeReader;
@@ -68,7 +67,7 @@ public class ItemModules extends ItemMultiple implements ModuleProvider, IModule
 		}
 	}
 
-	private void registerItemModel(int meta){
+	private void registerItemModel(int meta) {
 		Computronics.proxy.registerItemModel(this, meta, "computronics:tis3d/" + parts[meta]);
 	}
 
@@ -128,7 +127,16 @@ public class ItemModules extends ItemMultiple implements ModuleProvider, IModule
 	@Override
 	@SideOnly(Side.CLIENT)
 	public int getColorFromItemStack(ItemStack stack, int pass) {
-		return super.getColorFromItemStack(stack, pass);
+		switch(stack.getItemDamage()) {
+			case 7: {
+				if(pass == 1) {
+					return Color.HSBtoRGB((((System.currentTimeMillis() + (stack.hashCode() % 30000)) % 30000) / 30000F), 1F, 1F) & 0xFFFFFF;
+				}
+			}
+			default: {
+				return super.getColorFromItemStack(stack, pass);
+			}
+		}
 	}
 
 	@Override

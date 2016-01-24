@@ -12,13 +12,41 @@
     "variants": {
         "normal": [{ }],
         "inventory": [{ }],
-        "base": {
-            "model": "tis3d:module.obj",
-            "textures": { "#casing:Module": "tis3d:blocks/casingModule" }
-        },
-        "overlay": {
-            "model": "tis3d:module.obj",
-            "textures": { "#casing:Module": "computronics:items/module_colorful" }
-        }
+        "base": [
+            {
+                "model": "computronics:tis3d/module",
+                "textures": {
+                    "all": "tis3d:blocks/casingModule"
+                },
+                "transform": {
+                    "gui": {
+                        "rotation": { "y": 180 }
+                    },
+                    "fixed": {
+                        "rotation": { "y": 90 }
+                    },
+                    "translation": [0.5, 0, 0],
+                    "scale": [1, 0.875, 0.875]
+                }
+            }
+        ],
+        "overlay": [
+            {
+                "model": "computronics:tis3d/module_overlay",
+                "textures": {
+                    "overlay": "computronics:items/module_colorful"
+                },
+                "transform": {
+                    "gui": {
+                        "rotation": { "y": 180 }
+                    },
+                    "fixed": {
+                        "rotation": { "y": 90 }
+                    },
+                    "translation": [0.5, 0, 0],
+                    "scale": [1, 0.875, 0.875]
+                }
+            }
+        ]
     }
 }
