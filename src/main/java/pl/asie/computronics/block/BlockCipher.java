@@ -49,7 +49,13 @@ public class BlockCipher extends BlockPeripheral /*implements IRedNetOmniNode*/ 
 	}
 
 	@Override
+	public boolean supportsBundledRedstone() {
+		return true;
+	}
+
+	@Override
 	public void onNeighborBlockChange(World world, BlockPos pos, IBlockState state, Block block) {
+		super.onNeighborBlockChange(world, pos, state, block);
 		/*TileEntity tile = world.getTileEntity(pos);
 		if(Mods.isLoaded(Mods.ProjectRed))
 			((TileCipherBlock)tile).onProjectRedBundledInputChanged();*/

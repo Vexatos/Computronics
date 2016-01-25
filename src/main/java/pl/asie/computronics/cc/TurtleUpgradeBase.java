@@ -15,6 +15,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.vecmath.Matrix4f;
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class TurtleUpgradeBase implements ITurtleUpgrade {
 
@@ -52,6 +54,18 @@ public abstract class TurtleUpgradeBase implements ITurtleUpgrade {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public Pair<IBakedModel, Matrix4f> getModel(ITurtleAccess turtle, TurtleSide side) {
-		return Pair.of(Minecraft.getMinecraft().getRenderItem().getItemModelMesher().getItemModel(getCraftingItem()), null); // TODO
+		return Pair.of(Minecraft.getMinecraft().getRenderItem().getItemModelMesher().getItemModel(getCraftingItem()), getStandardBlockMatrixForSide(side));
+	}
+
+	private static final Map<TurtleSide, Matrix4f> standardBlockMatrixMap;
+
+	static {
+		standardBlockMatrixMap = new HashMap<TurtleSide, Matrix4f>();
+		standardBlockMatrixMap.put(TurtleSide.Left, new Matrix4f(0.0F, 0.0F, -1.0F, 1.0F, 1.0F, 0.0F, 0.0F, 0.5F, 0.0F, -1.0F, 0.0F, 1.40625F, 0.0F, 0.0F, 0.0F, 2F));
+		standardBlockMatrixMap.put(TurtleSide.Right, new Matrix4f(0.0F, 0.0F, -1.0F, 2.0F, 1.0F, 0.0F, 0.0F, 0.5F, 0.0F, -1.0F, 0.0F, 1.40625F, 0.0F, 0.0F, 0.0F, 2F));
+	}
+
+	protected Matrix4f getStandardBlockMatrixForSide(TurtleSide side) {
+		return standardBlockMatrixMap.get(side);
 	}
 }

@@ -10,13 +10,13 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.block.BlockColorfulLamp;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.LampUtil;
+import pl.asie.lib.api.tile.IBundledRedstoneProvider;
 
 import static pl.asie.computronics.block.BlockColorfulLamp.BRIGHTNESS;
 
@@ -32,7 +32,7 @@ import static pl.asie.computronics.block.BlockColorfulLamp.BRIGHTNESS;
 	@Optional.Interface(iface = "mods.immibis.redlogic.api.wiring.IConnectable", modid = Mods.RedLogic),
 	@Optional.Interface(iface = "mrtjp.projectred.api.IBundledTile", modid = Mods.ProjectRed)
 })*/
-public class TileColorfulLamp extends TileEntityPeripheralBase /*IBundledTile, IBundledUpdatable, IConnectable*/ {
+public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundledRedstoneProvider/*IBundledTile, IBundledUpdatable, IConnectable*/ {
 
 	public TileColorfulLamp() {
 		super("colorful_lamp");
@@ -76,11 +76,6 @@ public class TileColorfulLamp extends TileEntityPeripheralBase /*IBundledTile, I
 		} else {
 			worldObj.setBlockState(getPos(), state.withProperty(BRIGHTNESS, value));
 		}
-	}
-
-	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
-		return oldState.getBlock() != newState.getBlock();
 	}
 
 	public void setLampColor(int color) {
@@ -211,6 +206,26 @@ public class TileColorfulLamp extends TileEntityPeripheralBase /*IBundledTile, I
 		} else {
 			return false;
 		}
+	}
+
+	@Override
+	public boolean canBundledConnectToInput(EnumFacing side) {
+		return true;
+	}
+
+	@Override
+	public boolean canBundledConnectToOutput(EnumFacing side) {
+		return false;
+	}
+
+	@Override
+	public byte[] getBundledOutput(EnumFacing side) {
+		return new byte[16];
+	}
+
+	@Override
+	public void onBundledInputChange(EnumFacing side, byte[] data) {
+		parseBundledInput(data);
 	}
 
 	/*@Override

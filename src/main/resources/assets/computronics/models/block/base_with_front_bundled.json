@@ -1,0 +1,12 @@
+{
+    "parent": "computronics:block/base_cube",
+    "textures": {
+        "particle": "computronics:blocks/machine_side",
+        "down": "computronics:blocks/machine_bottom",
+        "up": "computronics:blocks/machine_top",
+        "north": "#front",
+        "east": "computronics:blocks/machine_side_bundled_input",
+        "south": "computronics:blocks/machine_side",
+        "west": "computronics:blocks/machine_side_bundled_output"
+    }
+}

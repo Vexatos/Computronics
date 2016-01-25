@@ -2,6 +2,8 @@ package pl.asie.lib.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
@@ -17,11 +19,13 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import pl.asie.lib.reference.Mods;
 import pl.asie.lib.gui.managed.IGuiProvider;
 import pl.asie.lib.integration.Integration;
 import pl.asie.lib.tile.TileEntityBase;
 import pl.asie.lib.util.ItemUtils;
 
+import java.util.ArrayList;
 import java.util.Collections;
 
 /*@Optional.InterfaceList({
@@ -30,6 +34,8 @@ import java.util.Collections;
 })*/
 public abstract class BlockBase extends Block /*implements
 	IBlockInfo, IDebugableBlock */ {
+
+	public static final PropertyBool BUNDLED = PropertyBool.create("bundled");
 
 	public enum Rotation {
 		NONE(PropertyDirection.create("facing", Collections.singleton(EnumFacing.NORTH))),
@@ -44,7 +50,7 @@ public abstract class BlockBase extends Block /*implements
 	}
 
 	//private Rotation rotation = Rotation.NONE;
-	protected final Rotation rotation;
+	public final Rotation rotation;
 	private final Object parent;
 	private int gui = -1;
 	protected IGuiProvider guiProvider;
@@ -57,9 +63,19 @@ public abstract class BlockBase extends Block /*implements
 		this.setHardness(2.0F);
 		this.parent = parent;
 		this.blockState = this.createActualBlockState();
-		this.setDefaultState(rotation != Rotation.NONE ?
-			this.blockState.getBaseState().withProperty(rotation.FACING, EnumFacing.NORTH)
-			: this.blockState.getBaseState());
+		this.setDefaultState(this.createDefaultState());
+	}
+
+	protected IBlockState createDefaultState() {
+		IBlockState state = this.blockState.getBaseState();
+		if(rotation != Rotation.NONE) {
+			state = state.withProperty(rotation.FACING, EnumFacing.NORTH);
+		}
+		return state;
+	}
+
+	public boolean supportsBundledRedstone() {
+		return false;
 	}
 
 	@Override
@@ -73,9 +89,23 @@ public abstract class BlockBase extends Block /*implements
 	}
 
 	protected BlockState createActualBlockState() {
-		return rotation != Rotation.NONE ? new BlockState(this,
-			rotation.FACING
-		) : createBlockState();
+		final ArrayList<IProperty> properties = new ArrayList<IProperty>();
+		if(rotation != Rotation.NONE) {
+			properties.add(rotation.FACING);
+		}
+		if(this.supportsBundledRedstone()) {
+			properties.add(BUNDLED);
+		}
+		return new BlockState(this, properties.toArray(new IProperty[properties.size()]));
+	}
+
+	@Override
+	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
+		IBlockState actualState = super.getActualState(state, world, pos);
+		if(this.supportsBundledRedstone()) {
+			actualState = actualState.withProperty(BUNDLED, Mods.hasBundledRedstoneMod());
+		}
+		return actualState;
 	}
 
 	@Override
@@ -99,11 +129,6 @@ public abstract class BlockBase extends Block /*implements
 				return state.getValue(rotation.FACING).getIndex();
 		}
 		return 0;
-	}
-
-	@Override
-	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
-		return super.getActualState(state, world, pos);
 	}
 
 	// Handler: Redstone

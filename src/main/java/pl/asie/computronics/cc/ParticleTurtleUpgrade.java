@@ -55,17 +55,11 @@ public class ParticleTurtleUpgrade extends TurtleUpgradeBase {
 			}
 
 			String name = (String) arguments[0];
-			EnumParticleTypes particle = null;
 
 			if(name.length() > Short.MAX_VALUE) {
 				return new Object[] { false, "name too long" };
 			}
-			for(EnumParticleTypes type : EnumParticleTypes.values()) {
-				if(type.getParticleName().equals(name)) {
-					particle = type;
-					break;
-				}
-			}
+			EnumParticleTypes particle = ParticleUtils.getParticleType(name);
 			if(particle == null) {
 				return new Object[] { false, "invalid particle type" };
 			}
@@ -120,6 +114,6 @@ public class ParticleTurtleUpgrade extends TurtleUpgradeBase {
 		} else {
 			stack = new ItemStack(Blocks.glass, 1, 0);
 		}
-		return Pair.of(Minecraft.getMinecraft().getRenderItem().getItemModelMesher().getItemModel(stack), null);
+		return Pair.of(Minecraft.getMinecraft().getRenderItem().getItemModelMesher().getItemModel(stack), getStandardBlockMatrixForSide(side));
 	}
 }

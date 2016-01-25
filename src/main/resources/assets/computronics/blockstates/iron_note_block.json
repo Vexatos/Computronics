@@ -9,6 +9,10 @@
     },
     "variants": {
         "normal": [{ }],
-        "inventory": [{ }]
+        "inventory": [{ }],
+        "bundled": {
+            "true":{},
+            "false":{}
+        }
     }
 }

@@ -35,17 +35,11 @@ public class DriverCardFX extends ManagedEnvironment {
 		+ "Spawns a particle effect at the specified relative coordinates optionally with the specified velocity", direct = true, limit = 16)
 	public Object[] spawn(Context context, Arguments args) {
 		String name = args.checkString(0);
-		EnumParticleTypes particle = null;
 
 		if(name.length() > Short.MAX_VALUE) {
 			return new Object[] { false, "name too long" };
 		}
-		for(EnumParticleTypes type : EnumParticleTypes.values()) {
-			if(type.getParticleName().equals(name)) {
-				particle = type;
-				break;
-			}
-		}
+		EnumParticleTypes particle = ParticleUtils.getParticleType(name);
 		if(particle == null) {
 			return new Object[] { false, "invalid particle type" };
 		}

@@ -17,16 +17,18 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.world.ILockableContainer;
 import net.minecraft.world.LockCode;
 import net.minecraftforge.fml.common.Optional;
+import pl.asie.computronics.Computronics;
 import pl.asie.computronics.gui.container.ContainerCipherBlock;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
+import pl.asie.lib.api.tile.IBundledRedstoneProvider;
 import pl.asie.lib.util.Base64;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-public class TileCipherBlock extends TileEntityPeripheralBase implements /*IBundledRedstoneProvider,*/ ISidedInventory, ILockableContainer {
+public class TileCipherBlock extends TileEntityPeripheralBase implements IBundledRedstoneProvider, ISidedInventory, ILockableContainer {
 
 	private byte[] key = new byte[32];
 	private byte[] iv = new byte[16];
@@ -236,24 +238,24 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements /*IBund
 		}
 	}*/
 
-	/*private byte[] getBundledOutput() {
+	private byte[] getBundledOutput() {
 		int output = getBundledXORKey() ^ bundledXORData;
 		byte[] out = new byte[16];
 		for(int i = 0; i < 16; i++) {
-			out[i] = (output & 1) > 0 ? (byte) 255 : 0;
+			out[i] = (output & 1) > 0 ? (byte) 15 : 0;
 			output >>= 1;
 		}
 		return out;
 	}
 
 	public void updateOutputWires() {
-		worldObj.notifyBlockChange(xCoord, yCoord, zCoord, this.getBlockType());
-	}*/
+		worldObj.notifyNeighborsOfStateChange(getPos(), getBlockType());
+	}
 
 	@Override
 	public void onSlotUpdate(int slot) {
 		updateKey();
-		//updateOutputWires();
+		updateOutputWires();
 	}
 
 	@Override
@@ -282,16 +284,19 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements /*IBund
 		data.removeTag("cb_l");
 	}
 
-	/*@Override
-	public boolean canBundledConnectTo(int arg0, int arg1) {
-		int s = Computronics.cipher.relToAbs(5, blockMetadata);
-		return (arg0 == s || arg0 == (s ^ 1));
+	@Override
+	public boolean canBundledConnectToInput(EnumFacing side) {
+		return side == worldObj.getBlockState(getPos()).getValue(Computronics.cipher.rotation.FACING).rotateY();
 	}
 
 	@Override
-	public byte[] getBundledOutput(int side, int arg1) {
-		blockMetadata = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
-		if(side == (Computronics.cipher.relToAbs(5, blockMetadata))) {
+	public boolean canBundledConnectToOutput(EnumFacing side) {
+		return side == worldObj.getBlockState(getPos()).getValue(Computronics.cipher.rotation.FACING).rotateYCCW();
+	}
+
+	@Override
+	public byte[] getBundledOutput(EnumFacing side) {
+		if(side == worldObj.getBlockState(getPos()).getValue(Computronics.cipher.rotation.FACING).rotateYCCW()) {
 			return getBundledOutput();
 		} else {
 			return null;
@@ -299,15 +304,15 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements /*IBund
 	}
 
 	@Override
-	public void onBundledInputChange(int arg0, int arg1, byte[] data) {
-		if(data != null && arg0 == Computronics.cipher.relToAbs(4, blockMetadata)) {
+	public void onBundledInputChange(EnumFacing side, byte[] data) {
+		if(data != null && side == worldObj.getBlockState(getPos()).getValue(Computronics.cipher.rotation.FACING).rotateY()) {
 			bundledXORData = 0;
 			for(int i = 0; i < 16; i++) {
 				bundledXORData |= (data[i] != 0) ? (1 << i) : 0;
 			}
 			updateOutputWires();
 		}
-	}*/
+	}
 
 	// Security
 

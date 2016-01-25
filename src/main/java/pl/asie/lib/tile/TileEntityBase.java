@@ -1,11 +1,14 @@
 package pl.asie.lib.tile;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.world.World;
 
 public class TileEntityBase extends TileEntity {
 
@@ -21,6 +24,11 @@ public class TileEntityBase extends TileEntity {
 	public boolean isUseableByPlayer(EntityPlayer player) {
 		return this.worldObj.getTileEntity(getPos()) == this
 			&& player.getDistanceSq(getPos().add(0.5, 0.5, 0.5)) <= 64.0D;
+	}
+
+	@Override
+	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
+		return oldState.getBlock() != newState.getBlock();
 	}
 
 	// Remote NBT data management

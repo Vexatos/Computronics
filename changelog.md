@@ -1,24 +1,32 @@
 ==== 1.6.1 ====
 
+This version comes with a 1.8.9 port in addition to many additions.
+
   * ADDED: Support for TIS-3D!
     - Added a Colorful Module to display any colour you want, akin to a Colorful Lamp.
-    - Added a Tape Reader Module which allows you to interface with an adjacent Tape Drive.
+    - [1.7.10] Added a Tape Reader Module which allows you to interface with an adjacent Tape Drive.
     - Added a Self-Destructing Module which allows you to dispose of your casings with style.
     - Documented everything in the TIS-3D manual.
     - Each module can be individually disabled in the config file.
-  * ADDED: EnderIO 2.3 integration  for OpenComputers and ComputerCraft! (Has actually existed since March 2015, just not in any official release)
-      - Added support for the new Telepad
-        - Allows full control over the coordinates set (if allowed in the EnderIO config file) as well as telepad activation
-      - Added support for the new Weather Obelisk
-        - Allows control over the weather, provided the Obelisk has the correct items.
-      - The Capacitor Bank now provides two additional functions, `getAverageInputPerTick()` and `getAverageOutputPerTick()`
-        - This allows you to monitor input and output of your energy network separately
-      - Now you can get and set the range of Vacuum Chests
-      - Added `getProgress()` to most machines with progress
-  * ADDED: Built-in tape utility program for ComputerCraft to write songs to tapes and to play, stop, pause etc.
-  * ADDED: getPosition() to tape drives. No, I'm not joking. It's real. I'm sorry.
-  * FIXED: Crash when the `openComputersBees` config option was set to `false`.
+  * [1.7.10] ADDED: EnderIO 2.3 integration  for OpenComputers and ComputerCraft! (It has actually existed since March 2015, just not in any official release)
+    - Added support for the new Telepad
+      - Allows full control over the coordinates set (if allowed in the EnderIO config file) as well as telepad activation
+    - Added support for the new Weather Obelisk
+      - Allows control over the weather, provided the Obelisk has the correct items.
+    - The Capacitor Bank now provides two additional functions, `getAverageInputPerTick()` and `getAverageOutputPerTick()`
+      - This allows you to monitor input and output of your energy network separately
+    - Now you can get and set the range of Vacuum Chests
+    - Added `getProgress()` to most machines with progress
+  * [1.7.10] ADDED: Built-in tape utility program for ComputerCraft to write songs to tapes and to play, stop, pause etc.
+  * [1.7.10] ADDED: getPosition() to tape drives. No, I'm not joking. It's real. I'm sorry.
+  * [1.7.10] FIXED: Crash when the `openComputersBees` config option was set to `false`.
   * FIXED: Updated OpenComputers integration (requires OpenComputers 1.5.21 now)
+
+  * [1.8.9] Ported the mod to 1.8.9! Everything is resource-pack ready!
+  	- Mods supported right now are ComputerCraft, OpenComputers, TIS-3D, Flamingo, Storage Drawers, Charset and WAILA. 
+  * [1.8.9] Added Charset Wires Bundled Cable support for ComputerCraft.
+  * [1.8.9] Added Charset Wires Bundled Cable support for Computronics.
+  * [1.8.9] The Tape Drive has been moved over to asie's new mod, Charset Audio. This means it no longer is in Computronics, but this mod will add support for it once the API is done.
 
 ==== 1.6.0 ====
 

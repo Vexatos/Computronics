@@ -85,9 +85,12 @@ public class BlockChatBox extends BlockPeripheral implements IBlockWithSpecialTe
 
 	@Override
 	protected BlockState createActualBlockState() {
-		return new BlockState(this,
-			CREATIVE
-		);
+		return new BlockState(this, CREATIVE);
+	}
+
+	@Override
+	protected IBlockState createDefaultState() {
+		return super.createDefaultState().withProperty(CREATIVE, false);
 	}
 
 	@Override

@@ -34,15 +34,15 @@ public class CCBundledRedstoneIntegration implements IBundledRedstoneProvider {
 	private static void onBundledEmitterrInject(Capability<IBundledEmitter> c) {
 		Computronics.log.info("Adding Charset Bundled Cable support to ComputerCraft. Bundled Cables can now transmit ComputerCraft bundled signals!");
 		CHARSET_EMITTER = c;
-		IntegrationCharsetWires.bundledRedstone.register();
+		IntegrationCharsetWires.bundledRedstoneCC.register();
 	}
 
 	@CapabilityInject(IBundledReceiver.class)
 	private static void onBundledReceiverInject(Capability<IBundledReceiver> c) {
 		Computronics.log.info("Adding Charset Bundled Cable support to ComputerCraft. ComputerCraft can now read values from Bundled Cables!");
 		CHARSET_RECEIVER = c;
-		ComputerCraftAPI.registerBundledRedstoneProvider(IntegrationCharsetWires.bundledRedstone);
-		IntegrationCharsetWires.bundledRedstone.register();
+		ComputerCraftAPI.registerBundledRedstoneProvider(IntegrationCharsetWires.bundledRedstoneCC);
+		IntegrationCharsetWires.bundledRedstoneCC.register();
 	}
 
 	private boolean registered = false;
@@ -54,7 +54,7 @@ public class CCBundledRedstoneIntegration implements IBundledRedstoneProvider {
 		}
 	}
 
-	private static final ResourceLocation charsetBundledRedstoneID = new ResourceLocation("computronics", "cc_charset_bundled_redstone");
+	private static final ResourceLocation charsetBundledRedstoneID = new ResourceLocation("computronics", "charset_bundled_rs_cc");
 
 	@SubscribeEvent
 	@Optional.Method(modid = Mods.ComputerCraft)

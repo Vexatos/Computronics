@@ -31,8 +31,10 @@ public class Mods {
 
 	//Other APIs
 	public static class API {
+
 		public static final String
 			BuildCraftTools = "BuildCraftAPI|tools",
+			CharsetWires = "CharsetAPI|Wires",
 			CoFHBlocks = "CoFHAPI|block",
 			CoFHEnergy = "CoFHAPI|energy",
 			CoFHItems = "CoFHAPI|item",
@@ -91,5 +93,16 @@ public class Mods {
 			checkedEnergyMods = true;
 		}
 		return hasEnergyMod;
+	}
+
+	private static boolean checkedBundledMods = false;
+	private static boolean hasBundledMod = false;
+
+	public static boolean hasBundledRedstoneMod() {
+		if(!checkedBundledMods) {
+			hasBundledMod = API.hasAPI(API.CharsetWires);
+			checkedBundledMods = true;
+		}
+		return hasBundledMod;
 	}
 }

@@ -87,6 +87,10 @@ public class Mods {
 		return pl.asie.lib.reference.Mods.hasEnergyMod();
 	}
 
+	public static boolean hasBundledRedstoneMod() {
+		return pl.asie.lib.reference.Mods.hasBundledRedstoneMod();
+	}
+
 	private static final HashMap<String, Boolean> loadedClasses = new HashMap<String, Boolean>();
 
 	public static boolean isClassLoaded(String className) {

@@ -7,6 +7,8 @@ import mods.immibis.redlogic.api.wiring.IConnectable;
 import mrtjp.projectred.api.IBundledTile;
 import pl.asie.lib.reference.Mods;*/
 
+import net.minecraft.util.EnumFacing;
+
 /*@Optional.InterfaceList({
 	@Optional.Interface(iface = "mods.immibis.redlogic.api.wiring.IBundledEmitter", modid = Mods.RedLogic),
 	@Optional.Interface(iface = "mods.immibis.redlogic.api.wiring.IBundledUpdatable", modid = Mods.RedLogic),
@@ -14,7 +16,8 @@ import pl.asie.lib.reference.Mods;*/
 	@Optional.Interface(iface = "mrtjp.projectred.api.IBundledTile", modid = Mods.ProjectRed)
 })*/
 public interface IBundledRedstoneProvider /*extends IBundledEmitter, IBundledUpdatable, IConnectable, IBundledTile*/ {
-	public boolean canBundledConnectTo(int side, int face);
-	public byte[] getBundledOutput(int side, int face);
-	public void onBundledInputChange(int side, int face, byte[] data);
+	public boolean canBundledConnectToInput(EnumFacing side);
+	public boolean canBundledConnectToOutput(EnumFacing side);
+	public byte[] getBundledOutput(EnumFacing side);
+	public void onBundledInputChange(EnumFacing side, byte[] data);
 }

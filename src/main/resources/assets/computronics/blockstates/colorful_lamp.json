@@ -30,6 +30,10 @@
             "14": { },
             "15": { }
         },
+        "bundled": {
+            "true":{},
+            "false":{}
+        },
         "overlay": [
             {
                 "model": "computronics:base_cube_all_no_ao",

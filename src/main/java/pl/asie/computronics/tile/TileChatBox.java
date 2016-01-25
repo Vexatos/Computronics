@@ -6,10 +6,12 @@ import dan200.computercraft.api.peripheral.IComputerAccess;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.world.World;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.api.chat.ChatAPI;
@@ -35,6 +37,11 @@ public class TileChatBox extends TileEntityPeripheralBase implements IChatListen
 	@Override
 	public int requestCurrentRedstoneValue(EnumFacing side) {
 		return (ticksUntilOff > 0) ? 15 : 0;
+	}
+
+	@Override
+	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
+		return oldState != newState;
 	}
 
 	public boolean isCreative() {

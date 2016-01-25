@@ -2,7 +2,6 @@ package pl.asie.computronics.block;
 
 import li.cil.oc.api.network.Environment;
 import net.minecraft.block.Block;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
@@ -13,8 +12,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumWorldBlockLayer;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.property.ExtendedBlockState;
-import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TileColorfulLamp;
@@ -31,7 +28,6 @@ public class BlockColorfulLamp extends BlockPeripheral /*implements IRedNetInput
 	public BlockColorfulLamp() {
 		super("colorful_lamp", Rotation.NONE);
 		this.setUnlocalizedName("computronics.colorfulLamp");
-		this.setDefaultState(this.blockState.getBaseState().withProperty(BRIGHTNESS, 0));
 	}
 
 	@Override
@@ -58,9 +54,12 @@ public class BlockColorfulLamp extends BlockPeripheral /*implements IRedNetInput
 
 	@Override
 	protected BlockState createActualBlockState() {
-		return new ExtendedBlockState(this,
-			new IProperty[] { BRIGHTNESS }, new IUnlistedProperty[] {}
-		);
+		return new BlockState(this, BUNDLED, BRIGHTNESS);
+	}
+
+	@Override
+	protected IBlockState createDefaultState() {
+		return super.createDefaultState().withProperty(BRIGHTNESS, 0);
 	}
 
 	@Override
@@ -69,6 +68,7 @@ public class BlockColorfulLamp extends BlockPeripheral /*implements IRedNetInput
 		if(Mods.isLoaded(Mods.ProjectRed) && tile instanceof TileColorfulLamp) {
 			((TileColorfulLamp) tile).onProjectRedBundledInputChanged();
 		}*/
+		super.onNeighborBlockChange(world, pos, state, block);
 	}
 
 	@Override
@@ -118,6 +118,11 @@ public class BlockColorfulLamp extends BlockPeripheral /*implements IRedNetInput
 			return (color & (0x1F << 10)) << 9 | (color & (0x1F << 5)) << 6 | ((color & 0x1F) << 3);
 		}
 		return super.colorMultiplier(world, pos, pass);
+	}
+
+	@Override
+	public boolean supportsBundledRedstone() {
+		return true;
 	}
 /*@Override
 	@SideOnly(Side.CLIENT)

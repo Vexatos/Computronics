@@ -6,9 +6,11 @@ import dan200.computercraft.api.peripheral.IComputerAccess;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.NoteUtils;
+import pl.asie.lib.api.tile.IBundledRedstoneProvider;
 
 //import mods.immibis.redlogic.api.wiring.IBundledEmitter;
 //import mods.immibis.redlogic.api.wiring.IBundledUpdatable;
@@ -22,7 +24,7 @@ import pl.asie.computronics.util.NoteUtils;
 	@Optional.Interface(iface = "mods.immibis.redlogic.api.wiring.IConnectable", modid = Mods.RedLogic),
 	@Optional.Interface(iface = "mrtjp.projectred.api.IBundledTile", modid = Mods.ProjectRed)
 })*/
-public class TileIronNote extends TileEntityPeripheralBase /*implements IBundledTile, IBundledUpdatable, IConnectable*/ {
+public class TileIronNote extends TileEntityPeripheralBase implements IBundledRedstoneProvider /*implements IBundledTile, IBundledUpdatable, IConnectable*/ {
 
 	public TileIronNote() {
 		super("iron_noteblock");
@@ -92,6 +94,26 @@ public class TileIronNote extends TileEntityPeripheralBase /*implements IBundled
 				}
 			}
 		}
+	}
+
+	@Override
+	public boolean canBundledConnectToInput(EnumFacing side) {
+		return true;
+	}
+
+	@Override
+	public boolean canBundledConnectToOutput(EnumFacing side) {
+		return false;
+	}
+
+	@Override
+	public byte[] getBundledOutput(EnumFacing side) {
+		return new byte[16];
+	}
+
+	@Override
+	public void onBundledInputChange(EnumFacing side, byte[] data) {
+		parseBundledInput(data);
 	}
 
 	/*@Override
