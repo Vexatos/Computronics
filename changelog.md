@@ -26,7 +26,7 @@ This version comes with a 1.8.9 port in addition to many additions.
   	- Mods supported right now are ComputerCraft, OpenComputers, TIS-3D, Flamingo, Storage Drawers, Charset and WAILA. 
   * [1.8.9] Added Charset Wires Bundled Cable support for ComputerCraft.
   * [1.8.9] Added Charset Wires Bundled Cable support for Computronics.
-  * [1.8.9] The Tape Drive has been moved over to asie's new mod, Charset Audio. This means it no longer is in Computronics, but this mod will add support for it once the API is done.
+  * [1.8.9] The Tape Drive and all related Audio stuff has been moved over to asie's new mod, Charset Audio. This means it no longer is in Computronics, but this mod will add support for it once the API is done.
 
 ==== 1.6.0 ====
 

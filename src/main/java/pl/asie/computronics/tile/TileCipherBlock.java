@@ -286,12 +286,12 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements IBundle
 
 	@Override
 	public boolean canBundledConnectToInput(EnumFacing side) {
-		return side == worldObj.getBlockState(getPos()).getValue(Computronics.cipher.rotation.FACING).rotateY();
+		return worldObj != null && side == worldObj.getBlockState(getPos()).getValue(Computronics.cipher.rotation.FACING).rotateY();
 	}
 
 	@Override
 	public boolean canBundledConnectToOutput(EnumFacing side) {
-		return side == worldObj.getBlockState(getPos()).getValue(Computronics.cipher.rotation.FACING).rotateYCCW();
+		return worldObj != null && side == worldObj.getBlockState(getPos()).getValue(Computronics.cipher.rotation.FACING).rotateYCCW();
 	}
 
 	@Override

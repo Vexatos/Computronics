@@ -8,9 +8,11 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import pl.asie.charset.api.wires.IBundledEmitter;
 import pl.asie.charset.api.wires.IBundledReceiver;
+import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.internal.IComputronicsPeripheral;
 import pl.asie.lib.api.tile.IBundledRedstoneProvider;
 
@@ -40,6 +42,16 @@ public class ComputronicsBundledRedstoneIntegration {
 
 	public boolean isReceiver(ICapabilityProvider tile, EnumFacing side) {
 		return tile.hasCapability(CHARSET_RECEIVER, side);
+	}
+
+	@Optional.Method(modid = Mods.API.CharsetWires)
+	public IBundledEmitter getEmitter(ICapabilityProvider tile, EnumFacing side) {
+		return tile.getCapability(CHARSET_EMITTER, side);
+	}
+
+	@Optional.Method(modid = Mods.API.CharsetWires)
+	public IBundledReceiver getReceiver(ICapabilityProvider tile, EnumFacing side) {
+		return tile.getCapability(CHARSET_RECEIVER, side);
 	}
 
 	private boolean registered = false;

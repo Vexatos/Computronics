@@ -58,6 +58,16 @@ public class BlockColorfulLamp extends BlockPeripheral /*implements IRedNetInput
 	}
 
 	@Override
+	public IBlockState getStateFromMeta(int meta) {
+		return super.getStateFromMeta(meta).withProperty(BRIGHTNESS, meta);
+	}
+
+	@Override
+	public int getMetaFromState(IBlockState state) {
+		return super.getMetaFromState(state) | state.getValue(BRIGHTNESS);
+	}
+
+	@Override
 	protected IBlockState createDefaultState() {
 		return super.createDefaultState().withProperty(BRIGHTNESS, 0);
 	}
@@ -73,17 +83,17 @@ public class BlockColorfulLamp extends BlockPeripheral /*implements IRedNetInput
 
 	@Override
 	public int getLightValue(IBlockAccess world, BlockPos pos) {
-		TileEntity tile = world.getTileEntity(pos);
+		/*TileEntity tile = world.getTileEntity(pos);
 		if(tile instanceof TileColorfulLamp) {
 			int color = ((TileColorfulLamp) tile).getLampColor();
 			//this.lightValue = world.getBlockState(pos).getValue(BRIGHTNESS);
-			this.lightValue = color == 0 ? 0 : 15; //TODO do this
+			this.lightValue = color == 0 ? 0 : 15;
 			if(world instanceof World) {
 				((World) world).notifyLightSet(pos);
 				((World) world).markBlockRangeForRenderUpdate(pos.add(-1, -1, -1), pos.add(1, 1, 1));
 			}
 			return this.lightValue;
-		}
+		}*/
 		return this.lightValue = world.getBlockState(pos).getValue(BRIGHTNESS);
 	}
 

@@ -353,7 +353,7 @@ public abstract class BlockBase extends Block /*implements
 			world.setBlockState(pos, state.withProperty(rotation.FACING, side), 3);
 			return true;
 		} else if(rotation == Rotation.FOUR) {
-			world.setBlockState(pos, state.withProperty(rotation.FACING, f.rotateAround(EnumFacing.Axis.Y)), 3);
+			world.setBlockState(pos, state.withProperty(rotation.FACING, f.rotateY()), 3);
 			return true;
 		}
 		return false;

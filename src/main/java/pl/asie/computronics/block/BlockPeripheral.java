@@ -1,5 +1,6 @@
 package pl.asie.computronics.block;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -64,6 +65,11 @@ public abstract class BlockPeripheral extends BlockBase implements IComputronics
 			return true;
 		}
 		return super.recolorBlock(world, pos, side, color);
+	}
+
+	@Override
+	public void onNeighborBlockChange(World world, BlockPos pos, IBlockState state, Block block) {
+		super.onNeighborBlockChange(world, pos, state, block);
 	}
 
 	@Override
