@@ -82,7 +82,8 @@ import java.util.concurrent.Executors;
 		+ "after:gregtech@[MC1710];after:EnderIO@[1.7.10-2.3,);"
 		+ "after:Forestry;after:Waila@[1.5.10,);"
 		+ "after:MekanismAPI|energy@[8.0.0,);after:Flamingo@[1.7.10-1.3,);"
-		+ "after:armourersWorkshop@[1.7.10-0.33,)")
+		+ "after:armourersWorkshop@[1.7.10-0.33,);"
+		+ "after:CharsetAPI|Wires@[0.3,)")
 public class Computronics {
 
 	public Config config;
