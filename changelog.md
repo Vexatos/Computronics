@@ -8,6 +8,10 @@ This version comes with a 1.8.9 port in addition to many additions.
     - Added a Self-Destructing Module which allows you to dispose of your casings with style.
     - Documented everything in the TIS-3D manual.
     - Each module can be individually disabled in the config file.
+  * ADDED: OpenComputers 1.6 integration (requires OpenComputers 1.6.0 now)
+    - Added a Light Board to put into Server Racks. Allows controlling coloured lights in various layouts.
+    - Added a Server Self-Destructor in case you don't need your servers anymore.
+    - Added a Rack Capacitor which is a Capacitor you can put into a Rack. Ingenious. It also provides a component that gives you the amount of energy stored in that capacitor.
   * [1.7.10] ADDED: EnderIO 2.3 integration  for OpenComputers and ComputerCraft! (It has actually existed since March 2015, just not in any official release)
     - Added support for the new Telepad
       - Allows full control over the coordinates set (if allowed in the EnderIO config file) as well as telepad activation

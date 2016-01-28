@@ -25,10 +25,12 @@ public class SelfDestruct extends Explosion {
 
 	protected World worldObj;
 	protected float explosionSize;
+	private boolean destroyBlocks;
 
-	public SelfDestruct(World world, Entity exploder, double x, double y, double z, float size) {
+	public SelfDestruct(World world, Entity exploder, double x, double y, double z, float size, boolean destroyBlocks) {
 		super(world, exploder, x, y, z, size, false, true);
 		this.worldObj = world;
+		this.destroyBlocks = destroyBlocks;
 		this.explosionSize = size;
 	}
 
@@ -84,17 +86,19 @@ public class SelfDestruct extends Explosion {
 					block.dropBlockAsItemWithChance(this.worldObj, blockpos, this.worldObj.getBlockState(blockpos), 1.0F / this.explosionSize, 0);
 				}
 
-				block.onBlockExploded(this.worldObj, blockpos, this);
+				if(destroyBlocks){
+					block.onBlockExploded(this.worldObj, blockpos, this);
+				}
 			}
 		}
 	}
 
-	public static void goBoom(World world, BlockPos pos) {
-		goBoom(world, pos.getX(), pos.getY(), pos.getZ());
+	public static void goBoom(World world, BlockPos pos, boolean destroyBlocks) {
+		goBoom(world, pos.getX(), pos.getY(), pos.getZ(), destroyBlocks);
 	}
 
-	public static void goBoom(World world, double xPos, double yPos, double zPos) {
-		SelfDestruct explosion = new SelfDestruct(world, null, xPos, yPos, zPos, 4.0F);
+	public static void goBoom(World world, double xPos, double yPos, double zPos, boolean destroyBlocks) {
+		SelfDestruct explosion = new SelfDestruct(world, null, xPos, yPos, zPos, 4.0F, destroyBlocks);
 		explosion.doExplosionA();
 		explosion.doExplosionB(false);
 
@@ -112,7 +116,8 @@ public class SelfDestruct extends Explosion {
 							.writeDouble(xPos)
 							.writeDouble(yPos)
 							.writeDouble(zPos)
-							.writeFloat(4.0F);
+							.writeFloat(4.0F)
+							.writeByte((byte) (destroyBlocks ? 1 : 0));
 						p.writeInt(explosion.getAffectedBlockPositions().size());
 
 						{

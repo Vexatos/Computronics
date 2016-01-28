@@ -5,7 +5,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetHandler;
 import net.minecraft.util.EnumParticleTypes;
 import pl.asie.computronics.Computronics;
-import pl.asie.computronics.oc.DriverCardSound;
+import pl.asie.computronics.oc.driver.DriverCardSound;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.lib.network.MessageHandlerBase;
 import pl.asie.lib.network.Packet;

@@ -8,19 +8,27 @@ Keep in mind that some of these may not be available, depending on the recipe se
 
 * [Cassette Tape](tape.md)
 
-## Upgrades
+## Components
+
+### Upgrades
 
 * [Camera Upgrade](camera_upgrade.md)
 * [Chat Upgrade](chat_upgrade.md)
 * [Radar Upgrade](radar_upgrade.md)
 * [Colorful Upgrade](colorful_upgrade.md)
 
-## Cards
+### Cards
 
 * [Particle Effects Card](particle_card.md)
 * [Spoofing Card](spoofing_card.md)
 * [Beep Card](beep_card.md)
 * [Self-Destructing Card](self_destructing_card.md)
+
+### Rack Mountables
+
+* [Light Board](light_board.md)
+* [Server Self-Destructor](server_self_destructor.md)
+* [Rack Capacitor](rack_capacitor.md)
 
 # Items for other mods
 

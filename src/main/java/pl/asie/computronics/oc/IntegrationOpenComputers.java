@@ -1,6 +1,8 @@
 package pl.asie.computronics.oc;
 
 import li.cil.oc.api.Driver;
+import li.cil.oc.api.driver.EnvironmentProvider;
+import li.cil.oc.api.driver.Item;
 import li.cil.oc.api.Network;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -11,6 +13,9 @@ import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.apache.logging.log4j.Logger;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.client.RackMountableRenderer;
+import pl.asie.computronics.client.UpgradeRenderer;
+import pl.asie.computronics.integration.appeng.DriverSpatialIOPort;
 import pl.asie.computronics.integration.flamingo.DriverFlamingo;
 import pl.asie.computronics.integration.storagedrawers.DriverDrawerGroup;
 import pl.asie.computronics.item.ItemOpenComputers;
@@ -67,7 +72,21 @@ import pl.asie.computronics.integration.railcraft.driver.track.DriverLocomotiveT
 import pl.asie.computronics.integration.railcraft.driver.track.DriverPoweredTrack;
 import pl.asie.computronics.integration.railcraft.driver.track.DriverPrimingTrack;
 import pl.asie.computronics.integration.railcraft.driver.track.DriverRoutingTrack;
-import pl.asie.computronics.integration.redlogic.DriverLamp;
+import pl.asie.computronics.integration.redlogic.DriverLamp;*/
+import pl.asie.computronics.integration.storagedrawers.DriverDrawerGroup;
+import pl.asie.computronics.item.ItemOpenComputers;
+import pl.asie.computronics.oc.block.ComputronicsBlockEnvironmentProvider;
+import pl.asie.computronics.oc.driver.DriverBoardBoom;
+import pl.asie.computronics.oc.manual.ComputronicsPathProvider;
+import pl.asie.computronics.reference.Compat;
+import pl.asie.computronics.reference.Config;
+import pl.asie.computronics.reference.Mods;
+import pl.asie.computronics.util.RecipeUtils;
+
+import static pl.asie.computronics.Computronics.camera;
+import static pl.asie.computronics.Computronics.chatBox;
+import static pl.asie.computronics.Computronics.colorfulLamp;
+import static pl.asie.computronics.Computronics.radar;
 import pl.asie.computronics.integration.storagedrawers.DriverDrawerGroup;*/
 
 /**
@@ -81,7 +100,9 @@ public class IntegrationOpenComputers {
 
 	public static ItemOpenComputers itemOCParts;
 	public static UpgradeRenderer upgradeRenderer;
+	public static RackMountableRenderer mountableRenderer;
 	public static ColorfulUpgradeHandler colorfulUpgradeHandler;
+	public static DriverBoardBoom.BoomHandler boomBoardHandler;
 
 	public IntegrationOpenComputers(Computronics computronics) {
 		this.computronics = computronics;
@@ -99,11 +120,15 @@ public class IntegrationOpenComputers {
 			|| Config.OC_CARD_SPOOF
 			|| Config.OC_CARD_SOUND
 			|| Config.OC_CARD_BOOM
-			|| Config.OC_UPGRADE_COLORFUL) {
+			|| Config.OC_UPGRADE_COLORFUL
+			|| Config.OC_BOARD_LIGHT
+			|| Config.OC_BOARD_BOOM
+			|| Config.OC_BOARD_CAPACITOR) {
 			itemOCParts = new ItemOpenComputers();
 			GameRegistry.registerItem(itemOCParts, "oc_parts");
 			itemOCParts.registerItemModels();
-			Driver.add(itemOCParts);
+			Driver.add((Item) itemOCParts);
+			Driver.add((EnvironmentProvider) itemOCParts);
 		}
 
 		// OpenComputers needs a hook in updateEntity in order to proprly register peripherals.
@@ -129,14 +154,18 @@ public class IntegrationOpenComputers {
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void init() {
 
-		Driver.add(new DriverBlockEnvironments());
+		Driver.add(new ComputronicsBlockEnvironmentProvider());
 		ComputronicsPathProvider.initialize();
 
-		if(colorfulUpgradeHandler == null) {
+		if(colorfulUpgradeHandler == null && Config.OC_UPGRADE_COLORFUL) {
 			colorfulUpgradeHandler = new ColorfulUpgradeHandler();
+			MinecraftForge.EVENT_BUS.register(colorfulUpgradeHandler);
 		}
 
-		MinecraftForge.EVENT_BUS.register(colorfulUpgradeHandler);
+		if(boomBoardHandler == null && Config.OC_BOARD_BOOM) {
+			boomBoardHandler = new DriverBoardBoom.BoomHandler();
+			MinecraftForge.EVENT_BUS.register(boomBoardHandler);
+		}
 
 		/*if(Mods.isLoaded(Mods.RedLogic)) {
 			if(compat.isCompatEnabled(Compat.RedLogic_Lamps)) {
@@ -353,6 +382,46 @@ public class IntegrationOpenComputers {
 			} else {
 				log.warn("Could not add Colorful Upgrade Recipe because Colorful Lamp is disabled in the config.");
 			}
+		}
+		if(Config.OC_BOARD_LIGHT) {
+			if(colorfulLamp != null) {
+				RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 8),
+					"oso", "gcg", "opo",
+					's', "paneGlassColorless",
+					'g', li.cil.oc.api.Items.get("chip1").createItemStack(1),
+					'c', new ItemStack(colorfulLamp, 1, 0),
+					'o', "obsidian",
+					'p', li.cil.oc.api.Items.get("printedCircuitBoard").createItemStack(1)
+				);
+			} else {
+				log.warn("Could not add Light Board Recipe because Colorful Lamp is disabled in the config.");
+			}
+		}
+		if(Config.OC_BOARD_BOOM) {
+			if(Config.OC_CARD_BOOM) {
+				RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 9),
+					"lsl", "gcg", "opo",
+					's', li.cil.oc.api.Items.get("chip1").createItemStack(1),
+					'g', new ItemStack(itemOCParts, 1, 6),
+					'c', Blocks.tnt,
+					'o', "obsidian",
+					'l', Items.gunpowder,
+					'p', li.cil.oc.api.Items.get("printedCircuitBoard").createItemStack(1)
+				);
+			} else {
+				log.warn("Could not add Server Self-Destructor Recipe because Self-Destructing Card is disabled in the config.");
+			}
+		}
+		if(Config.OC_BOARD_CAPACITOR) {
+			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 10),
+				"lsl", "gcg", "opo",
+				's', li.cil.oc.api.Items.get("chip1").createItemStack(1),
+				'g', "nuggetGold",
+				'c', li.cil.oc.api.Items.get("capacitor").createItemStack(1),
+				'o', "obsidian",
+				'l', "ingotIron",
+				'p', li.cil.oc.api.Items.get("printedCircuitBoard").createItemStack(1)
+			);
 		}
 		/*if(Computronics.buildcraft != null) {
 			Computronics.buildcraft.postInitOC();
