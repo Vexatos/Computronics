@@ -6,6 +6,7 @@ This version comes with a 1.8.9 port in addition to many additions.
     - Added a Colorful Module to display any colour you want, akin to a Colorful Lamp.
     - [1.7.10] Added a Tape Reader Module which allows you to interface with an adjacent Tape Drive.
     - Added a Self-Destructing Module which allows you to dispose of your casings with style.
+    - Added a Serial Interface for Flamingos to make them wiggle.
     - Documented everything in the TIS-3D manual.
     - Each module can be individually disabled in the config file.
   * ADDED: OpenComputers 1.6 integration (requires OpenComputers 1.6.0 now)
