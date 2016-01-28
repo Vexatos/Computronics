@@ -27,7 +27,7 @@ import pl.asie.computronics.reference.Names;
 public class DriverFlamingo {
 
 	private static void wiggle(TileEntityFlamingo tile) {
-		tile.getWorldObj().addBlockEvent(tile.xCoord, tile.yCoord, tile.zCoord, tile.getBlockType(), 0, 0);
+		tile.getWorld().addBlockEvent(tile.getPos(), tile.getBlockType(), 0, 0);
 	}
 
 	public static class OCDriver extends DriverTileEntity {
@@ -142,12 +142,12 @@ public class DriverFlamingo {
 		}
 
 		@Override
-		public SerialInterface interfaceFor(World world, int x, int y, int z, EnumFacing side) {
-			return new InternalSerialInterface((TileEntityFlamingo) world.getTileEntity(x, y, z));
+		public SerialInterface interfaceFor(World world, BlockPos pos, EnumFacing side) {
+			return new InternalSerialInterface((TileEntityFlamingo) world.getTileEntity(pos));
 		}
 
 		@Override
-		protected boolean isStillValid(World world, int x, int y, int z, EnumFacing side, SerialInterface serialInterface, TileEntity tile) {
+		protected boolean isStillValid(World world, BlockPos pos, EnumFacing side, SerialInterface serialInterface, TileEntity tile) {
 			return tile instanceof TileEntityFlamingo
 				&& serialInterface instanceof InternalSerialInterface
 				&& ((InternalSerialInterface) serialInterface).isTileEqual(tile);
