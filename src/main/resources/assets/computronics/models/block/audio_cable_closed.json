@@ -1,0 +1,12 @@
+{
+    "elements": [
+        {
+            "from": [ 5, 11, 5 ],
+            "to": [ 11, 11, 11 ],
+            "faces": {
+                "down": { "texture": "#cable", "tintindex": 0 },
+                "up": { "texture": "#cable", "tintindex": 0 }
+            }
+        }
+    ]
+}

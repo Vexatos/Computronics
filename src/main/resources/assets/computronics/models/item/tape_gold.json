@@ -1,0 +1,6 @@
+{
+    "parent": "computronics:item/tape",
+    "textures": {
+        "layer0": "computronics:items/tape_gold"
+    }
+}

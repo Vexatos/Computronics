@@ -36,7 +36,7 @@ public abstract class BlockPeripheral extends BlockBase implements IComputronics
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
 		TileEntity tile = world.getTileEntity(pos);
-		if(tile instanceof TileEntityPeripheralBase && ((TileEntityPeripheralBase) tile).canBeColored()) {
+		if(tile instanceof TileEntityPeripheralBase && ((TileEntityPeripheralBase) tile).canBeColored() && player.getHeldItem() != null) {
 			Color color = ColorUtils.getColor(player.getHeldItem());
 			if(color != null) {
 				((TileEntityPeripheralBase) tile).setColor(color.color);

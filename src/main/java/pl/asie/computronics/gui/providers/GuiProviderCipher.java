@@ -18,12 +18,12 @@ import pl.asie.lib.tile.TileEntityBase;
 public class GuiProviderCipher extends LegacyGuiProvider {
 	@Override
 	@SideOnly(Side.CLIENT)
-	protected GuiBase makeGuiBase(int i, EntityPlayer entityPlayer, World world, BlockPos pos, TileEntityBase tile) {
+	protected GuiBase makeGuiBase(int guiID, EntityPlayer entityPlayer, World world, BlockPos pos, TileEntityBase tile) {
 		return new GuiCipherBlock(makeContainerBase(guiID, entityPlayer, world, pos, tile));
 	}
 
 	@Override
-	protected ContainerBase makeContainerBase(int i, EntityPlayer entityPlayer, World world, BlockPos pos, TileEntityBase tile) {
+	protected ContainerBase makeContainerBase(int guiID, EntityPlayer entityPlayer, World world, BlockPos pos, TileEntityBase tile) {
 		return new ContainerCipherBlock(tile, entityPlayer.inventory);
 	}
 }

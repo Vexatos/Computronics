@@ -219,8 +219,7 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	@SuppressWarnings("unchecked")
-	public void getSubItems(net.minecraft.item.Item item, CreativeTabs tabs, List list) {
+	public void getSubItems(net.minecraft.item.Item item, CreativeTabs tabs, List<ItemStack> list) {
 		if(Config.OC_UPGRADE_CAMERA) {
 			list.add(new ItemStack(item, 1, 0));
 		}
@@ -374,40 +373,6 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 			default:
 				return "index";
 		}
-	}
-
-	public void registerItemModels() {
-		if(!Computronics.proxy.isClient()) {
-			return;
-		}
-		if(Config.OC_UPGRADE_CAMERA) {
-			registerItemModel(0);
-		}
-		if(Config.OC_UPGRADE_CHATBOX) {
-			registerItemModel(1);
-		}
-		if(Config.OC_UPGRADE_RADAR) {
-			registerItemModel(2);
-		}
-		if(Config.OC_CARD_FX) {
-			registerItemModel(3);
-		}
-		if(Config.OC_CARD_SPOOF) {
-			registerItemModel(4);
-		}
-		if(Config.OC_CARD_SOUND) {
-			registerItemModel(5);
-		}
-		if(Config.OC_CARD_BOOM) {
-			registerItemModel(6);
-		}
-		if(Config.OC_UPGRADE_COLORFUL) {
-			registerItemModel(7);
-		}
-	}
-
-	private void registerItemModel(int meta){
-		Computronics.proxy.registerItemModel(this, meta, "computronics:" + parts[meta]);
 	}
 
 	@Override

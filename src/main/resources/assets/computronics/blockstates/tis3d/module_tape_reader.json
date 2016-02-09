@@ -1,0 +1,40 @@
+{
+    "forge_marker": 1,
+    "defaults": {
+        "model": "forge:multi-layer",
+        "transform": "forge:default-block",
+        "custom": {
+            "base": "computronics:tis3d/module_tape_reader#base",
+            "Solid": "computronics:tis3d/module_tape_reader#base",
+            "Mipped Cutout": "computronics:tis3d/module_tape_reader#overlay"
+        }
+    },
+    "variants": {
+        "normal": [{ }],
+        "inventory": [{ }],
+        "base": [
+            {
+                "model": "computronics:tis3d/module",
+                "textures": {
+                    "all": "tis3d:blocks/casingModule"
+                },
+                "transform": {
+                    "translation": [0.5, 0, 0],
+                    "scale": [1, 0.875, 0.875]
+                }
+            }
+        ],
+        "overlay": [
+            {
+                "model": "computronics:tis3d/module_overlay",
+                "textures": {
+                    "overlay": "computronics:items/module_tape_reader"
+                },
+                "transform": {
+                    "translation": [0.5, 0, 0],
+                    "scale": [1, 0.875,0.875]
+                }
+            }
+        ]
+    }
+}

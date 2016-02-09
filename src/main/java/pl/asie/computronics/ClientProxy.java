@@ -8,6 +8,9 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Optional;
+import pl.asie.computronics.api.audio.AudioPacketDFPWM;
+import pl.asie.computronics.api.audio.AudioPacketRegistry;
+import pl.asie.computronics.audio.AudioPacketClientHandlerDFPWM;
 import pl.asie.computronics.oc.IntegrationOpenComputers;
 import pl.asie.computronics.oc.client.UpgradeRenderer;
 import pl.asie.computronics.reference.Mods;
@@ -22,6 +25,14 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public boolean isClient() {
 		return true;
+	}
+
+	@Override
+	public void registerAudioHandlers() {
+		super.registerAudioHandlers();
+		AudioPacketRegistry.INSTANCE.registerClientHandler(
+			AudioPacketDFPWM.class, new AudioPacketClientHandlerDFPWM()
+		);
 	}
 
 	@Override

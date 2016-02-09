@@ -1,0 +1,6 @@
+{
+    "parent": "computronics:item/flat",
+    "textures": {
+        "layer0": "computronics:items/part_tape_track"
+    }
+}

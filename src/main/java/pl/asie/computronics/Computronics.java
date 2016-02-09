@@ -20,9 +20,12 @@ import net.minecraftforge.fml.common.event.FMLServerAboutToStartEvent;
 import net.minecraftforge.fml.common.network.FMLEventChannel;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheralProvider;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheralRegistry;
+import pl.asie.computronics.audio.DFPWMPlaybackManager;
+import pl.asie.computronics.block.BlockAudioCable;
 import pl.asie.computronics.block.BlockCamera;
 import pl.asie.computronics.block.BlockChatBox;
 import pl.asie.computronics.block.BlockCipher;
@@ -30,12 +33,17 @@ import pl.asie.computronics.block.BlockCipherAdvanced;
 import pl.asie.computronics.block.BlockColorfulLamp;
 import pl.asie.computronics.block.BlockIronNote;
 import pl.asie.computronics.block.BlockRadar;
+import pl.asie.computronics.block.BlockSpeaker;
+import pl.asie.computronics.block.BlockTapeReader;
 import pl.asie.computronics.cc.IntegrationComputerCraft;
 import pl.asie.computronics.cc.multiperipheral.MultiPeripheralRegistry;
 import pl.asie.computronics.gui.providers.GuiProviderCipher;
+import pl.asie.computronics.gui.providers.GuiProviderTapeDrive;
 import pl.asie.computronics.integration.ModRecipes;
 import pl.asie.computronics.integration.charset.IntegrationCharset;
 import pl.asie.computronics.integration.tis3d.IntegrationTIS3D;
+import pl.asie.computronics.item.ItemMultiple;
+import pl.asie.computronics.item.ItemTape;
 import pl.asie.computronics.item.block.ComputronicsItemBlock;
 import pl.asie.computronics.network.NetworkHandlerClient;
 import pl.asie.computronics.network.NetworkHandlerServer;
@@ -43,6 +51,9 @@ import pl.asie.computronics.oc.IntegrationOpenComputers;
 import pl.asie.computronics.reference.Compat;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
+import pl.asie.computronics.tape.StorageManager;
+import pl.asie.computronics.tape.TapeStorageEventHandler;
+import pl.asie.computronics.tile.TileAudioCable;
 import pl.asie.computronics.tile.TileCamera;
 import pl.asie.computronics.tile.TileChatBox;
 import pl.asie.computronics.tile.TileCipherBlock;
@@ -50,6 +61,8 @@ import pl.asie.computronics.tile.TileCipherBlockAdvanced;
 import pl.asie.computronics.tile.TileColorfulLamp;
 import pl.asie.computronics.tile.TileIronNote;
 import pl.asie.computronics.tile.TileRadar;
+import pl.asie.computronics.tile.TileSpeaker;
+import pl.asie.computronics.tile.TileTapeDrive;
 import pl.asie.computronics.util.achievements.ComputronicsAchievements;
 import pl.asie.computronics.util.chat.ChatHandler;
 import pl.asie.computronics.util.event.ServerTickHandler;
@@ -83,20 +96,23 @@ import java.util.concurrent.Executors;
 		+ "after:Forestry;after:Waila@[1.5.10,);"
 		+ "after:MekanismAPI|energy@[8.0.0,);after:Flamingo@[1.7.10-1.3,);"
 		+ "after:armourersWorkshop@[1.7.10-0.33,);"
-		+ "after:CharsetAPI|Wires@[0.3,)")
+		+ "before:CharsetAPI|Wires@[0.3,);before:CharsetWires")
 public class Computronics {
 
 	public Config config;
 	public Compat compat;
 	public static Random rand = new Random();
-	public static Logger log;
+	public static Logger log = LogManager.getLogger(Mods.Computronics);
 
 	public static FMLEventChannel channel;
 
 	@Instance(value = Mods.Computronics)
 	public static Computronics instance;
+	public static StorageManager storage;
+	public static TapeStorageEventHandler storageEventHandler;
 	public static ManagedGuiHandler gui;
 	public static PacketHandler packet;
+	public DFPWMPlaybackManager audio;
 	public static ExecutorService rsaThreads;
 	public static ServerTickHandler serverTickHandler;
 
@@ -104,6 +120,9 @@ public class Computronics {
 	public static CommonProxy proxy;
 
 	public static BlockIronNote ironNote;
+	public static BlockTapeReader tapeReader;
+	public static BlockAudioCable audioCable;
+	public static BlockSpeaker speaker;
 	public static BlockCamera camera;
 	public static BlockChatBox chatBox;
 	public static BlockCipher cipher;
@@ -120,6 +139,11 @@ public class Computronics {
 	public static IntegrationTIS3D tis3D;
 	public static IntegrationCharset charset;
 
+	public static ItemTape itemTape;
+	public static ItemMultiple itemParts;
+	//public static ItemMultiple itemPartsGreg;
+
+	public static IGuiProvider guiTapeDrive;
 	public static IGuiProvider guiCipher;
 
 	public ComputronicsAchievements achievements;
@@ -128,7 +152,7 @@ public class Computronics {
 
 	public static CreativeTabs tab = new CreativeTabs("tabComputronics") {
 		public Item getTabIconItem() {
-			return Item.getItemFromBlock(colorfulLamp);
+			return itemTape;
 		}
 	};
 
@@ -157,6 +181,8 @@ public class Computronics {
 
 		config = new Config(event);
 
+		audio = new DFPWMPlaybackManager(proxy.isClient());
+
 		packet = new PacketHandler(Mods.Computronics, new NetworkHandlerClient(), new NetworkHandlerServer());
 
 		compat = new Compat(this.config.config);
@@ -170,6 +196,24 @@ public class Computronics {
 			ironNote = new BlockIronNote();
 			registerBlockWithTileEntity(ironNote, TileIronNote.class, "iron_note_block");
 		}
+
+		if(isEnabled("audioCable", true)) {
+			audioCable = new BlockAudioCable();
+			registerBlockWithTileEntity(audioCable, TileAudioCable.class, "audio_cable");
+		}
+
+		if(isEnabled("speaker", true)) {
+			speaker = new BlockSpeaker();
+			registerBlockWithTileEntity(speaker, TileSpeaker.class, "speaker");
+		}
+
+		if(isEnabled("tape", true)) {
+			guiTapeDrive = new GuiProviderTapeDrive();
+			gui.registerGuiProvider(Computronics.guiTapeDrive);
+			tapeReader = new BlockTapeReader();
+			registerBlockWithTileEntity(tapeReader, TileTapeDrive.class, "tape_reader");
+		}
+
 		if(isEnabled("camera", true)) {
 			camera = new BlockCamera();
 			registerBlockWithTileEntity(camera, TileCamera.class, "camera");
@@ -204,6 +248,24 @@ public class Computronics {
 			registerBlockWithTileEntity(colorfulLamp, TileColorfulLamp.class, "colorful_lamp");
 		}
 
+		if(isEnabled("tape", true)) {
+			itemTape = new ItemTape(Config.TAPE_LENGTHS);
+			GameRegistry.registerItem(itemTape, "tape");
+			itemTape.registerItemModels();
+
+			/*if(Mods.isLoaded(Mods.GregTech)) { TODO GregTech
+				itemPartsGreg = new ItemMultiple(Mods.Computronics, new String[] { "reelChromoxide" });
+				itemPartsGreg.setCreativeTab(tab);
+				GameRegistry.registerItem(itemPartsGreg, "computronics.gt_parts");
+				proxy.registerEntities();
+			}*/
+
+			itemParts = new ItemMultiple(Mods.Computronics, new String[] { "part_tape_track" });
+			itemParts.setCreativeTab(tab);
+			GameRegistry.registerItem(itemParts, "parts");
+			itemParts.registerItemModels();
+		}
+
 		/*if(Mods.isLoaded(Mods.Railcraft)) {
 			railcraft = new IntegrationRailcraft();
 			railcraft.preInit(config.config);
@@ -226,11 +288,18 @@ public class Computronics {
 
 		charset = new IntegrationCharset();
 		charset.preInit();
+
+		proxy.registerAudioHandlers();
 	}
 
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
 		MinecraftForge.EVENT_BUS.register(new ChatHandler());
+
+		if(tapeReader != null) {
+			storageEventHandler = new TapeStorageEventHandler();
+			MinecraftForge.EVENT_BUS.register(storageEventHandler);
+		}
 
 		FMLInterModComms.sendMessage(Mods.Waila, "register", "pl.asie.computronics.integration.waila.IntegrationWaila.register");
 
@@ -253,8 +322,8 @@ public class Computronics {
 			tis3D.init();
 		}
 
-		//achievements = new ComputronicsAchievements(); TODO Railcraft
-		//achievements.initialize();
+		achievements = new ComputronicsAchievements();
+		achievements.initialize();
 
 		config.save();
 		proxy.registerRenderers();
@@ -308,7 +377,7 @@ public class Computronics {
 
 	@EventHandler
 	public void serverStart(FMLServerAboutToStartEvent event) {
-		//Computronics.storage = new StorageManager();
+		Computronics.storage = new StorageManager();
 		if(Mods.isLoaded(Mods.ComputerCraft)) {
 			computercraft.serverStart();
 		}

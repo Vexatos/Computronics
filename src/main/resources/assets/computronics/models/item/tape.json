@@ -1,0 +1,6 @@
+{
+    "parent": "computronics:item/flat",
+    "textures": {
+        "layer1": "computronics:items/tape_cover"
+    }
+}

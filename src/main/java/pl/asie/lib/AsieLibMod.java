@@ -11,7 +11,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLInterModComms;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import org.apache.logging.log4j.LogManager;
+import net.minecraftforge.oredict.RecipeSorter;
 import org.apache.logging.log4j.Logger;
 import pl.asie.lib.api.AsieLibAPI;
 import pl.asie.lib.api.tool.IToolRegistry;
@@ -19,6 +19,7 @@ import pl.asie.lib.integration.Integration;
 import pl.asie.lib.integration.tool.ToolProviders;
 import pl.asie.lib.reference.Mods;
 import pl.asie.lib.tweak.enchantment.EnchantmentTweak;
+import pl.asie.lib.util.color.RecipeColorizer;
 
 import java.lang.reflect.Method;
 import java.util.Random;
@@ -77,6 +78,8 @@ public class AsieLibMod extends AsieLibAPI {
 		if(config.get("tweaks", "dyeItemNamesInAnvil", true).getBoolean(true)) {
 			MinecraftForge.EVENT_BUS.register(new AnvilDyeTweak());
 		}
+
+		RecipeSorter.register("asielib:colorizer", RecipeColorizer.class, RecipeSorter.Category.SHAPELESS, "after:forge:shapelessore");
 	}
 
 	@EventHandler

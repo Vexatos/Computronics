@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.oredict.RecipeSorter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +33,7 @@ public class RecipeColorizer implements IRecipe
     public boolean matches(InventoryCrafting crafting, World par2World)
     {
         ItemStack targetStack = null;
-        ArrayList dyeList = new ArrayList();
+        ArrayList<ItemStack> dyeList = new ArrayList<ItemStack>();
 
         for (int i = 0; i < crafting.getSizeInventory(); i++) {
             ItemStack stack = crafting.getStackInSlot(i);
