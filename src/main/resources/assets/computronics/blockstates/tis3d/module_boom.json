@@ -14,7 +14,7 @@
         "inventory": [{ }],
         "base": [
             {
-                "model": "computronics:tis3d/module",
+                "model": "tis3d:module",
                 "textures": {
                     "all": "tis3d:blocks/casingModule"
                 },
@@ -26,7 +26,7 @@
         ],
         "overlay": [
             {
-                "model": "computronics:tis3d/module_overlay",
+                "model": "tis3d:moduleOverlay",
                 "textures": {
                     "overlay": "computronics:items/module_boom"
                 },

@@ -1,6 +1,6 @@
 # Tape Reader Module
 
-![Storage issues no more.](item:computronics:computronics.modules.tis3d@1)
+![Storage issues no more.](item:computronics:modules.tis3d@1)
 
 The Tape Reader Module can interface with an adjacent Tape Drive, allowing data to be written to and read from the Cassette Tape inside. It also allows playing music from the tape provided the data on the tape is encoded as [DFPWM](http://wiki.vex.tty.sh/dfpwm).
 

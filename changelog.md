@@ -20,7 +20,7 @@ This version comes with a 1.8.9 port in addition to many additions.
   * [1.7.10] ADDED: Built-in tape utility program for ComputerCraft to write songs to tapes and to play, stop, pause etc.
   * [1.7.10] ADDED: getPosition() to tape drives. No, I'm not joking. It's real. I'm sorry.
   * [1.7.10] FIXED: Crash when the `openComputersBees` config option was set to `false`.
-  * FIXED: Updated OpenComputers integration (requires OpenComputers 1.5.21 now)
+  * FIXED: Updated OpenComputers integration
 
   * [1.8.9] Ported the mod to 1.8.9! Everything is resource-pack ready!
   	- Mods supported right now are ComputerCraft, OpenComputers, TIS-3D, Flamingo, Storage Drawers, Charset and WAILA. 

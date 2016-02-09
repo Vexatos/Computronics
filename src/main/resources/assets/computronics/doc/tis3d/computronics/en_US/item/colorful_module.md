@@ -1,6 +1,6 @@
 # Colorful Module
 
-![Way too pretty.](item:computronics:computronics.modules.tis3d@0)
+![Way too pretty.](item:computronics:modules.tis3d@0)
 
 While active, the Colorful Module continously reads values from all four of its ports. It then sets its color to the value it received.
 
