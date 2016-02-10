@@ -51,8 +51,9 @@ public class IntegrationTIS3D {
 		ModuleAPI.addProvider(itemModules);
 
 		if(Mods.isLoaded(Mods.Flamingo)) {
-			if(compat.isCompatEnabled(Compat.Flamingo))
-			SerialAPI.addProvider(new DriverFlamingo.TISInterfaceProvider());
+			if(compat.isCompatEnabled(Compat.Flamingo)) {
+				SerialAPI.addProvider(new DriverFlamingo.TISInterfaceProvider());
+			}
 		}
 	}
 
