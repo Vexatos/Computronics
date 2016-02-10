@@ -6,6 +6,7 @@ This version comes with a 1.8.9 port in addition to many additions.
     - Added a Colorful Module to display any colour you want, akin to a Colorful Lamp.
     - [1.7.10] Added a Tape Reader Module which allows you to interface with an adjacent Tape Drive.
     - Added a Self-Destructing Module which allows you to dispose of your casings with style.
+    - Added a Serial Interface for Flamingos to make them wiggle.
     - Documented everything in the TIS-3D manual.
     - Each module can be individually disabled in the config file.
   * [1.7.10] ADDED: EnderIO 2.3 integration  for OpenComputers and ComputerCraft! (It has actually existed since March 2015, just not in any official release)
@@ -20,6 +21,7 @@ This version comes with a 1.8.9 port in addition to many additions.
   * [1.7.10] ADDED: Built-in tape utility program for ComputerCraft to write songs to tapes and to play, stop, pause etc.
   * [1.7.10] ADDED: getPosition() to tape drives. No, I'm not joking. It's real. I'm sorry.
   * [1.7.10] FIXED: Crash when the `openComputersBees` config option was set to `false`.
+  * [1.7.10] FIXED: Digital Locomotive Relay trying to consume OpenComputers energy even if called from ComputerCraft
   * FIXED: Updated OpenComputers integration
 
   * [1.8.9] Ported the mod to 1.8.9! Everything is resource-pack ready!

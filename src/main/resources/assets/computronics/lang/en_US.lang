@@ -66,8 +66,11 @@ tooltip.computronics.waila.lamp.red=Red: %s
 tooltip.computronics.waila.lamp.green=Green: %s
 tooltip.computronics.waila.lamp.blue=Blue: %s
 
-tooltip.computronics.manual.tab.blocks=Computronics: Blocks
-tooltip.computronics.manual.tab.items=Computronics: Items
+tooltip.computronics.manual.oc.tab.blocks=Computronics: Blocks
+tooltip.computronics.manual.oc.tab.items=Computronics: Items
+
+tooltip.computronics.manual.tis3d.tab.items=Computronics: Items
+tooltip.computronics.manual.tis3d.port.flamingo=Pink Flamingo
 
 option.computronics.enableOCAddress=Component address
 option.computronics.enableTape=Inserted tape
