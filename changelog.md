@@ -19,6 +19,7 @@
   * ADDED: Built-in tape utility program for ComputerCraft to write songs to tapes and to play, stop, pause etc.
   * ADDED: getPosition() to tape drives. No, I'm not joking. It's real. I'm sorry.
   * FIXED: Crash when the `openComputersBees` config option was set to `false`.
+  * FIXED: Digital Locomotive Relay trying to consume OpenComputers energy even if called from ComputerCraft
   * FIXED: Updated OpenComputers integration (requires OpenComputers 1.5.21 now)
 
 ==== 1.6.0 ====
