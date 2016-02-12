@@ -17,10 +17,10 @@ import java.util.List;
  * @author asie
  */
 /*@Optional.InterfaceList({
-	@Optional.Interface(iface = "gregtech.api.interfaces.tileentity.IGregTechDeviceInformation", modid = Mods.GregTech),
+	//@Optional.Interface(iface = "gregtech.api.interfaces.tileentity.IGregTechDeviceInformation", modid = Mods.GregTech),
 	@Optional.Interface(iface = "cofh.api.tileentity.ITileInfo", modid = Mods.API.CoFHTileEntities)
 })*/
 public interface IInformationProvider /*extends ITileInfo, IGregTechDeviceInformation*/ {
 
-	public void getInformation(EntityPlayer player, EnumFacing side, List<String> info, boolean debug);
+	void getInformation(EntityPlayer player, EnumFacing side, List<String> info, boolean debug);
 }
