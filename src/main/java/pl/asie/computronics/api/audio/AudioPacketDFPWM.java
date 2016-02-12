@@ -1,8 +1,8 @@
 package pl.asie.computronics.api.audio;
 
-import java.io.IOException;
-
 import pl.asie.lib.network.Packet;
+
+import java.io.IOException;
 
 /**
  * NOTE: Using this packet type requires Computronics to be present!

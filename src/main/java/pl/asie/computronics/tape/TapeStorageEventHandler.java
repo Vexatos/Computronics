@@ -1,7 +1,7 @@
 package pl.asie.computronics.tape;
 
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import pl.asie.computronics.tile.TileTapeDrive;
 
 /**

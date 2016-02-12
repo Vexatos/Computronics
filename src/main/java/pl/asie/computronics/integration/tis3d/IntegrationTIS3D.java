@@ -7,8 +7,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.client.MinecraftForgeClient;
-import pl.asie.computronics.Computronics;
 import pl.asie.computronics.integration.flamingo.DriverFlamingo;
 import pl.asie.computronics.integration.tis3d.item.ItemModules;
 import pl.asie.computronics.integration.tis3d.manual.ComputronicsPathProvider;

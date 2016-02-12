@@ -9,8 +9,8 @@ import pl.asie.computronics.network.Packets;
 import pl.asie.computronics.tile.TapeDriveState.State;
 import pl.asie.computronics.tile.TileTapeDrive;
 import pl.asie.computronics.util.StringUtil;
-import pl.asie.lib.gui.container.ContainerBase;
 import pl.asie.lib.gui.GuiBase;
+import pl.asie.lib.gui.container.ContainerBase;
 import pl.asie.lib.network.Packet;
 
 import java.io.IOException;

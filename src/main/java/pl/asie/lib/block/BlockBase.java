@@ -19,9 +19,9 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import pl.asie.lib.reference.Mods;
 import pl.asie.lib.gui.managed.IGuiProvider;
 import pl.asie.lib.integration.Integration;
+import pl.asie.lib.reference.Mods;
 import pl.asie.lib.tile.TileEntityBase;
 import pl.asie.lib.util.ItemUtils;
 
