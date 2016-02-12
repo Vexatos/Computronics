@@ -20,7 +20,8 @@
   * ADDED: getPosition() to tape drives. No, I'm not joking. It's real. I'm sorry.
   * FIXED: Crash when the `openComputersBees` config option was set to `false`.
   * FIXED: Digital Locomotive Relay trying to consume OpenComputers energy even if called from ComputerCraft
-  * FIXED: Updated OpenComputers integration (requires OpenComputers 1.5.21 now)
+  * FIXED: Updated OpenComputers integration
+  * FIXED: Removed explicit dependency on GregTech 5. Computronics will launch with GregTech 6 now (but there is no integration yet).
 
 ==== 1.6.0 ====
 

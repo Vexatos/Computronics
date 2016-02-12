@@ -91,7 +91,7 @@ import java.util.concurrent.Executors;
 		+ "before:OpenPeripheralCore@[1.1,);before:OpenPeripheralApi@[3.2,);"
 		+ "after:MineFactoryReloaded;after:RedLogic@[59.1.9,);after:ProjRed|Core;"
 		+ "after:BuildCraft|Core@[7.0.6,);after:Railcraft@[9.8.0.0,);"
-		+ "after:gregtech@[MC1710];after:EnderIO@[1.7.10-2.3,);"
+		+ "after:gregtech;after:EnderIO@[1.7.10-2.3,);"
 		+ "after:Forestry;after:Waila@[1.5.10,);"
 		+ "after:MekanismAPI|energy@[8.0.0,);after:Flamingo@[1.7.10-1.3,);"
 		+ "after:armourersWorkshop@[1.7.10-0.33,)")
@@ -247,7 +247,7 @@ public class Computronics {
 			itemTape = new ItemTape(Config.TAPE_LENGTHS);
 			GameRegistry.registerItem(itemTape, "computronics.tape");
 
-			if(Mods.isLoaded(Mods.GregTech)) {
+			if(Mods.hasVersion(Mods.GregTech, Mods.Versions.GregTech5)) {
 				itemPartsGreg = new ItemMultiple(Mods.Computronics, new String[] { "reelChromoxide" });
 				itemPartsGreg.setCreativeTab(tab);
 				GameRegistry.registerItem(itemPartsGreg, "computronics.gt_parts");
@@ -333,7 +333,7 @@ public class Computronics {
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
 
-		if(Mods.isLoaded(Mods.GregTech) && Config.GREGTECH_RECIPES) {
+		if(Mods.hasVersion(Mods.GregTech, Mods.Versions.GregTech5) && Config.GREGTECH_RECIPES) {
 			ModRecipes.instance = new GregTechRecipes();
 		} else {
 			ModRecipes.instance = new ModRecipes();
@@ -345,7 +345,7 @@ public class Computronics {
 		}
 
 		// Mod compat - GregTech
-		if(itemTape != null && Mods.isLoaded(Mods.GregTech) && itemPartsGreg != null) {
+		if(itemTape != null && Mods.hasVersion(Mods.GregTech, Mods.Versions.GregTech5) && itemPartsGreg != null) {
 			GregTechRecipes.registerGregTechTapeRecipes();
 		}
 

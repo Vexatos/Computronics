@@ -185,7 +185,7 @@ public class IntegrationOpenComputers {
 				Driver.add(new DriverPrimingTrack.OCDriver());
 			}
 		}
-		if(Mods.isLoaded(Mods.GregTech)) {
+		if(Mods.hasVersion(Mods.GregTech, Mods.Versions.GregTech5)) {
 			if(compat.isCompatEnabled(Compat.GregTech_Machines)) {
 				Driver.add(new DriverBaseMetaTileEntity());
 				Driver.add(new DriverDeviceInformation());

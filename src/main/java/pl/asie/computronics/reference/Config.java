@@ -180,7 +180,7 @@ public class Config {
 		}
 
 		// GregTech recipe mode
-		if(Mods.isLoaded(Mods.GregTech)) {
+		if(Mods.hasVersion(Mods.GregTech, Mods.Versions.GregTech5)) {
 			GREGTECH_RECIPES = config.getBoolean("gtRecipeMode", "recipes", true, "Set this to true to enable GregTech-style recipes");
 		}
 	}
