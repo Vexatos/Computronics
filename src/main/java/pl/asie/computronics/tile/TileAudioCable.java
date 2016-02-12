@@ -85,14 +85,16 @@ public class TileAudioCable extends TileEntityBase implements IAudioReceiver, IC
 				continue;
 			}
 
-			if(!worldObj.isBlockLoaded(getPos().offset(dir))) {
-				continue;
-			}
+            if (connectsAudio(dir)) {
+                if (!worldObj.isBlockLoaded(getPos().offset(dir))) {
+                    continue;
+                }
 
-			TileEntity tile = worldObj.getTileEntity(getPos().offset(dir));
-			if(tile instanceof IAudioReceiver && connectsAudio(dir)) {
-				((IAudioReceiver) tile).receivePacket(packet, dir.getOpposite());
-			}
+                TileEntity tile = worldObj.getTileEntity(getPos().offset(dir));
+                if (tile instanceof IAudioReceiver) {
+                    ((IAudioReceiver) tile).receivePacket(packet, dir.getOpposite());
+                }
+            }
 		}
 	}
 

@@ -260,6 +260,10 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 		return (state.getStorage() != null ? state.getStorage().getSize() : 0);
 	}
 
+    public int getPosition() {
+        return state.getStorage() != null ? state.getStorage().getPosition() : 0;
+    }
+
 	public int seek(int bytes) {
 		return state.getStorage() != null ? state.getStorage().seek(bytes) : 0;
 	}
@@ -537,6 +541,12 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 		return new Object[] { getSize() };
 	}
 
+    @Callback(doc = "function():number; Returns the position of the tape, in bytes", direct = true)
+    @Optional.Method(modid = Mods.OpenComputers)
+    public Object[] getPosition(Context context, Arguments args) {
+        return new Object[] { getPosition() };
+    }
+
 	@Callback(doc = "function(label:string):string; Sets the label of the tape. "
 		+ "Returns the new label, or nil if there is no tape inserted")
 	@Optional.Method(modid = Mods.OpenComputers)
@@ -628,7 +638,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 	@Override
 	@Optional.Method(modid = Mods.ComputerCraft)
 	public String[] getMethodNames() {
-		return new String[] { "isEnd", "isReady", "getSize", "getLabel", "getState", "setLabel", "setSpeed", "setVolume", "seek", "read", "write", "play", "stop" };
+		return new String[] { "isEnd", "isReady", "getSize", "getLabel", "getState", "setLabel", "setSpeed", "setVolume", "seek", "read", "write", "play", "stop", "getPosition" };
 	}
 
 	@Override
@@ -672,6 +682,9 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 				switchState(State.STOPPED);
 				return new Object[] { state.getStorage() != null && this.getEnumState() == State.STOPPED };
 			}
+            case 13: { // getPosition
+                return new Object[]{ getPosition() };
+            }
 		}
 
 		// Argument type check
