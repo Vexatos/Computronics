@@ -13,7 +13,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
-import pl.asie.computronics.tile.TileRadar;
 import pl.asie.computronics.util.RadarUtils;
 
 import java.util.HashSet;
@@ -54,9 +53,7 @@ public class CCRadarProxy {
 			energyNeeded *= 2.0;
 		}
 
-		if(powerProvider instanceof TileRadar && !((TileRadar) powerProvider).extractFromBattery(energyNeeded)) {
-			return null;
-		} else if(powerProvider instanceof ITurtleAccess
+		if(powerProvider instanceof ITurtleAccess
 			&& ((ITurtleAccess) powerProvider).isFuelNeeded()
 			&& !((ITurtleAccess) powerProvider).consumeFuel(
 			(int) Math.ceil(energyNeeded)
