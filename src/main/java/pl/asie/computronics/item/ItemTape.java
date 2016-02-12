@@ -131,7 +131,7 @@ public class ItemTape extends Item implements IItemTapeStorage, IMedia, IMediaPr
 	@SideOnly(Side.CLIENT)
 	public void getSubItems(Item item, CreativeTabs tabs, List<ItemStack> list) {
 		for(int i = 0; i < TAPE_COUNT; i++) {
-			if((i == 7 || i == 9) && !Mods.isLoaded(Mods.GregTech)) {
+			if((i == 7 || i == 9) && !Mods.hasVersion(Mods.GregTech, Mods.Versions.GregTech5)) {
 				//Do nothing. If we return here, we lose all new tapes.
 				continue;
 			}
