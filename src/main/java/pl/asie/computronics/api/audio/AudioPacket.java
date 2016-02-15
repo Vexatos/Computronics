@@ -4,7 +4,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.BlockPos;
 import pl.asie.computronics.Computronics;
-import pl.asie.computronics.network.Packets;
+import pl.asie.computronics.network.PacketType;
 import pl.asie.lib.network.Packet;
 
 import java.io.IOException;
@@ -74,7 +74,7 @@ public abstract class AudioPacket {
 				}
 
 				if(receiversLocal.size() > 0) {
-					Packet pkt = Computronics.packet.create(Packets.PACKET_AUDIO_DATA)
+					Packet pkt = Computronics.packet.create(PacketType.AUDIO_DATA.ordinal())
 						.writeShort((short) AudioPacketRegistry.INSTANCE.getId(this.getClass()))
 						.writeInt(id).writeInt(source.getSourceId());
 

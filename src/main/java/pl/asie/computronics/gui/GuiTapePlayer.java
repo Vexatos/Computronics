@@ -5,7 +5,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.item.ItemTape;
-import pl.asie.computronics.network.Packets;
+import pl.asie.computronics.network.PacketType;
 import pl.asie.computronics.tile.TapeDriveState.State;
 import pl.asie.computronics.tile.TileTapeDrive;
 import pl.asie.computronics.util.StringUtil;
@@ -49,7 +49,7 @@ public class GuiTapePlayer extends GuiBase {
 	public void setState(State state) {
 		if(this.container.getEntity() != null) {
 			try {
-				Packet packet = Computronics.packet.create(Packets.PACKET_TAPE_GUI_STATE)
+				Packet packet = Computronics.packet.create(PacketType.TAPE_GUI_STATE.ordinal())
 						.writeTileLocation(this.container.getEntity())
 						.writeByte((byte)state.ordinal());
 				Computronics.packet.sendToServer(packet);

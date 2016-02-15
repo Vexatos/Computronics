@@ -2,13 +2,18 @@
 
 This version comes with a 1.8.9 port in addition to many additions.
 
+  * ADDED: Noise Card!
+    - An upgraded Beep Card with slightly different syntax
+    - Can play square waves, sine waves, triangle waves and sawtooth waves!
   * ADDED: Support for TIS-3D!
     - Added a Colorful Module to display any colour you want, akin to a Colorful Lamp.
-    - [1.7.10] Added a Tape Reader Module which allows you to interface with an adjacent Tape Drive.
+    - Added a Tape Reader Module which allows you to interface with an adjacent Tape Drive.
     - Added a Self-Destructing Module which allows you to dispose of your casings with style.
     - Added a Serial Interface for Flamingos to make them wiggle.
     - Documented everything in the TIS-3D manual.
     - Each module can be individually disabled in the config file.
+  * ADDED: getPosition() to tape drives. No, I'm not joking. It's real. I'm sorry.
+  * ADDED: Built-in tape utility program for ComputerCraft to write songs to tapes and to play, stop, pause etc.
   * [1.7.10] ADDED: EnderIO 2.3 integration  for OpenComputers and ComputerCraft! (It has actually existed since March 2015, just not in any official release)
     - Added support for the new Telepad
       - Allows full control over the coordinates set (if allowed in the EnderIO config file) as well as telepad activation
@@ -18,8 +23,6 @@ This version comes with a 1.8.9 port in addition to many additions.
       - This allows you to monitor input and output of your energy network separately
     - Now you can get and set the range of Vacuum Chests
     - Added `getProgress()` to most machines with progress
-  * [1.7.10] ADDED: Built-in tape utility program for ComputerCraft to write songs to tapes and to play, stop, pause etc.
-  * [1.7.10] ADDED: getPosition() to tape drives. No, I'm not joking. It's real. I'm sorry.
   * [1.7.10] FIXED: Crash when the `openComputersBees` config option was set to `false`.
   * [1.7.10] FIXED: Digital Locomotive Relay trying to consume OpenComputers energy even if called from ComputerCraft
   * [1.7.10] FIXED: Updated OpenComputers integration

@@ -303,14 +303,10 @@ public class Computronics {
 
 		FMLInterModComms.sendMessage(Mods.Waila, "register", "pl.asie.computronics.integration.waila.IntegrationWaila.register");
 
-		config.setCategoryComment("power", "Every value related to energy in this section uses RF as the base power unit.");
-
 		if(Mods.isLoaded(Mods.ComputerCraft)) {
-			config.setCategoryComment(Compat.Compatibility, "Set anything here to false to prevent Computronics from adding the respective Peripherals and Drivers");
 			computercraft.init();
 		}
 		if(Mods.isLoaded(Mods.OpenComputers)) {
-			config.setCategoryComment(Compat.Compatibility, "Set anything here to false to prevent Computronics from adding the respective Peripherals and Drivers");
 			opencomputers.init();
 		}
 
@@ -325,8 +321,8 @@ public class Computronics {
 		achievements = new ComputronicsAchievements();
 		achievements.initialize();
 
+		proxy.init();
 		config.save();
-		proxy.registerRenderers();
 	}
 
 	/**
@@ -343,9 +339,9 @@ public class Computronics {
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
 
-		/*if(Mods.hasVersion(Mods.GregTech, Mods.Versions.GregTech5) && Config.GREGTECH_RECIPES) {
-			//ModRecipes.instance = new GregTechRecipes();
-		} else*/
+		/*if(Mods.hasVersion(Mods.GregTech, Mods.Versions.GregTech5) && Config.GREGTECH_RECIPES) { TODO GregTech
+			ModRecipes.instance = new GregTechRecipes();
+		} else */
 		{
 			ModRecipes.instance = new ModRecipes();
 		}

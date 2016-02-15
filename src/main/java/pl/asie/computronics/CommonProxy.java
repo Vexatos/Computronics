@@ -33,7 +33,7 @@ public class CommonProxy {
 		registerItemModel(Item.getItemFromBlock(block), meta, name);
 	}
 
-	public void registerRenderers() {
+	public void init() {
 		//NO-OP
 	}
 

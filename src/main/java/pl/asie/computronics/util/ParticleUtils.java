@@ -4,7 +4,7 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import pl.asie.computronics.Computronics;
-import pl.asie.computronics.network.Packets;
+import pl.asie.computronics.network.PacketType;
 import pl.asie.lib.network.Packet;
 
 import java.util.HashMap;
@@ -14,7 +14,7 @@ public class ParticleUtils {
 
 	public static void sendParticlePacket(EnumParticleTypes particle, World worldObj, double x, double y, double z, double vx, double vy, double vz) {
 		try {
-			Packet pkt = Computronics.packet.create(Packets.PACKET_PARTICLE_SPAWN)
+			Packet pkt = Computronics.packet.create(PacketType.PARTICLE_SPAWN.ordinal())
 				.writeFloat((float) x).writeFloat((float) y).writeFloat((float) z)
 				.writeFloat((float) vx).writeFloat((float) vy).writeFloat((float) vz)
 				.writeInt(particle.getParticleID());
