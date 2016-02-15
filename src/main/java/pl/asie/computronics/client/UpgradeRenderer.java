@@ -40,7 +40,7 @@ public class UpgradeRenderer {
 
 	AxisAlignedBB bounds = AxisAlignedBB.getBoundingBox(-0.1, -0.1, -0.1, 0.1, 0.1, 0.1);
 
-	private static final List<Integer> upgrades = Arrays.asList(1, 2, 5);
+	private static final List<Integer> upgrades = Arrays.asList(1, 2, 5, 8);
 
 	@Optional.Method(modid = Mods.OpenComputers)
 	private boolean isUpgrade(ItemStack stack) {
@@ -60,7 +60,8 @@ public class UpgradeRenderer {
 					: availableMountPoints.contains(MountPointName.TopLeft) ? MountPointName.TopLeft
 					: MountPointName.Any;
 			}
-			case 5: {
+			case 5:
+			case 8: {
 				return availableMountPoints.contains(MountPointName.BottomFront) ? MountPointName.BottomFront
 					: availableMountPoints.contains(MountPointName.BottomBack) ? MountPointName.BottomBack
 					: MountPointName.Any;
@@ -113,7 +114,8 @@ public class UpgradeRenderer {
 				}
 				break;
 			}
-			case 5: {
+			case 5:
+			case 8: {
 				tm.bindTexture(beepCard);
 				drawSimpleBlock(mountPoint, 0, true);
 				break;

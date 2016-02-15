@@ -86,6 +86,7 @@ item.computronics.robot_upgrade_camera.name=Camera Upgrade
 item.computronics.robot_upgrade_chatbox.name=Chat Upgrade
 item.computronics.robot_upgrade_radar.name=Radar Upgrade
 item.computronics.card_beep.name=Beep Card
+item.computronics.card_noise.name=Noise Card
 item.computronics.card_fx.name=Particle Effects Card
 item.computronics.card_spoof.name=Spoofing Card
 item.computronics.card_spoof.tip=Works just like a Network Card, but allows specifying the sending address

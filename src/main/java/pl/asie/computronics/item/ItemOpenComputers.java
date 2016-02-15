@@ -34,9 +34,10 @@ import pl.asie.computronics.oc.IntegrationOpenComputers;
 import pl.asie.computronics.oc.driver.DriverBoardBoom;
 import pl.asie.computronics.oc.driver.DriverBoardCapacitor;
 import pl.asie.computronics.oc.driver.DriverBoardLight;
+import pl.asie.computronics.oc.driver.DriverCardBeep;
 import pl.asie.computronics.oc.driver.DriverCardBoom;
 import pl.asie.computronics.oc.driver.DriverCardFX;
-import pl.asie.computronics.oc.driver.DriverCardSound;
+import pl.asie.computronics.oc.driver.DriverCardNoise;
 import pl.asie.computronics.oc.driver.DriverCardSpoof;
 import pl.asie.computronics.oc.driver.RobotUpgradeCamera;
 import pl.asie.computronics.oc.driver.RobotUpgradeChatBox;
@@ -70,6 +71,7 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 			"card_beep",
 			"card_boom",
 			"robot_upgrade_colorful",
+			"card_noise",
 			"rack_board_light",
 			"rack_board_boom",
 			"rack_board_capacitor"
@@ -107,9 +109,9 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 					&& Robot.class.isAssignableFrom(host);
 				break;
 			}
-			case 8:
 			case 9:
-			case 10: {
+			case 10:
+			case 11: {
 				works = works && Rack.class.isAssignableFrom(host);
 				break;
 			}
@@ -135,16 +137,18 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 			case 4:
 				return DriverCardSpoof.class;
 			case 5:
-				return DriverCardSound.class;
+				return DriverCardBeep.class;
 			case 6:
 				return DriverCardBoom.class;
 			case 7:
 				return RobotUpgradeColorful.class;
 			case 8:
-				return DriverBoardLight.class;
+				return DriverCardNoise.class;
 			case 9:
-				return DriverBoardBoom.class;
+				return DriverBoardLight.class;
 			case 10:
+				return DriverBoardBoom.class;
+			case 11:
 				return DriverBoardCapacitor.class;
 			default:
 				return null;
@@ -167,16 +171,18 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 			case 4:
 				return new DriverCardSpoof(container);
 			case 5:
-				return new DriverCardSound(container);
+				return new DriverCardBeep(container);
 			case 6:
 				return new DriverCardBoom(container);
 			case 7:
 				return new RobotUpgradeColorful(container);
 			case 8:
-				return container instanceof Rack ? new DriverBoardLight((Rack) container) : null;
+				return new DriverCardNoise(container);
 			case 9:
-				return container instanceof Rack ? new DriverBoardBoom((Rack) container) : null;
+				return container instanceof Rack ? new DriverBoardLight((Rack) container) : null;
 			case 10:
+				return container instanceof Rack ? new DriverBoardBoom((Rack) container) : null;
+			case 11:
 				return container instanceof Rack ? new DriverBoardCapacitor((Rack) container) : null;
 			default:
 				return null;
@@ -204,8 +210,10 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 			case 7:
 				return Slot.Upgrade;
 			case 8:
+				return Slot.Card;
 			case 9:
 			case 10:
+			case 11:
 				return Slot.RackMountable;
 			default:
 				return Slot.None;
@@ -233,8 +241,10 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 			case 7:
 				return 1; // Tier 2
 			case 8:
+				return 2; // Tier 3
 			case 9:
 			case 10:
+			case 11:
 				return 0; // Tier 1
 			default:
 				return 0; // Tier 1 default
@@ -261,10 +271,12 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 			case 7:
 				return "colorful_upgrade";
 			case 8:
-				return "light_board";
+				return "noise_card";
 			case 9:
-				return "server_self_destructor";
+				return "light_board";
 			case 10:
+				return "server_self_destructor";
+			case 11:
 				return "rack_capacitor";
 			default:
 				return "index";
@@ -305,7 +317,7 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 		if(Config.OC_CARD_SPOOF) {
 			list.add(new ItemStack(item, 1, 4));
 		}
-		if(Config.OC_CARD_SOUND) {
+		if(Config.OC_CARD_BEEP) {
 			list.add(new ItemStack(item, 1, 5));
 		}
 		if(Config.OC_CARD_BOOM) {
@@ -314,14 +326,17 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 		if(Config.OC_UPGRADE_COLORFUL) {
 			list.add(new ItemStack(item, 1, 7));
 		}
-		if(Config.OC_BOARD_LIGHT) {
+		if(Config.OC_CARD_NOISE) {
 			list.add(new ItemStack(item, 1, 8));
 		}
-		if(Config.OC_BOARD_BOOM) {
+		if(Config.OC_BOARD_LIGHT) {
 			list.add(new ItemStack(item, 1, 9));
 		}
-		if(Config.OC_BOARD_CAPACITOR) {
+		if(Config.OC_BOARD_BOOM) {
 			list.add(new ItemStack(item, 1, 10));
+		}
+		if(Config.OC_BOARD_CAPACITOR) {
+			list.add(new ItemStack(item, 1, 11));
 		}
 	}
 

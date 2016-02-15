@@ -1,5 +1,8 @@
 ==== 1.6.1 ====
 
+  * ADDED: Noise Card!
+    - An upgraded Beep Card with slightly different syntax
+    - Can play square waves, sine waves, triangle waves and sawtooth waves!
   * ADDED: Support for TIS-3D!
     - Added a Colorful Module to display any colour you want, akin to a Colorful Lamp.
     - Added a Tape Reader Module which allows you to interface with an adjacent Tape Drive.
@@ -23,6 +26,9 @@
   * ADDED: Built-in tape utility program for ComputerCraft to write songs to tapes and to play, stop, pause etc.
   * ADDED: getPosition() to tape drives. No, I'm not joking. It's real. I'm sorry.
   * FIXED: Crash when the `openComputersBees` config option was set to `false`.
+  * FIXED: Digital Locomotive Relay trying to consume OpenComputers energy even if called from ComputerCraft
+  * FIXED: Updated OpenComputers integration
+  * FIXED: Removed explicit dependency on GregTech 5. Computronics will launch with GregTech 6 now (but there is no integration yet).
 
 ==== 1.6.0 ====
 

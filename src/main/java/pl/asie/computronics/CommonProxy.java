@@ -23,7 +23,7 @@ public class CommonProxy {
 		EntityRegistry.registerModEntity(EntityItemIndestructable.class, "computronics.itemTape", 1, Computronics.instance, 64, 20, true);
 	}
 
-	public void registerRenderers() {
+	public void init() {
 		//NO-OP
 	}
 

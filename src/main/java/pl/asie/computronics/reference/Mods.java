@@ -66,7 +66,8 @@ public class Mods {
 		public static final String
 			BuildCraftTiles = "[1.1,)",
 			Forestry = "[4.2.0,)",
-			Gendustry = "[2.0.0,)";
+			Gendustry = "[2.0.0,)",
+			GregTech5 = "[MC1710]";
 	}
 
 	public static boolean isLoaded(String name) {

@@ -13,7 +13,7 @@ import net.minecraft.world.ChunkPosition;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import pl.asie.computronics.Computronics;
-import pl.asie.computronics.network.Packets;
+import pl.asie.computronics.network.PacketType;
 import pl.asie.lib.network.Packet;
 
 import java.io.IOException;
@@ -114,7 +114,7 @@ public class SelfDestruct extends Explosion {
 
 				if(entityplayer.getDistanceSq(xPos, yPos, zPos) < 4096.0D) {
 					try {
-						Packet p = Computronics.packet.create(Packets.PACKET_COMPUTER_BOOM)
+						Packet p = Computronics.packet.create(PacketType.COMPUTER_BOOM.ordinal())
 							.writeDouble(xPos)
 							.writeDouble(yPos)
 							.writeDouble(zPos)
