@@ -1,0 +1,261 @@
+package pl.asie.computronics.util.beep;
+
+import com.google.common.base.Throwables;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.audio.SoundCategory;
+import net.minecraft.util.ResourceLocation;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.openal.AL;
+import org.lwjgl.openal.AL10;
+import org.lwjgl.openal.OpenALException;
+import pl.asie.computronics.Computronics;
+import pl.asie.computronics.reference.Config;
+
+import java.nio.ByteBuffer;
+import java.util.HashSet;
+import java.util.Set;
+
+/**
+ * @author Sangar, Vexatos
+ */
+public class Audio {
+
+	private final int sampleRate;
+
+	private final int amplitude;
+
+	private final float maxDistance;
+
+	private final Set<Source> sources = new HashSet<Source>();
+
+	private float volume() {
+		return Minecraft.getMinecraft().gameSettings.getSoundLevel(SoundCategory.BLOCKS);
+	}
+
+	private boolean disableAudio = false;
+
+	public void play(float x, float y, float z, AudioType type, int frequencyInHz, int durationInMilliseconds) {
+		play(x, y, z, ".", type, frequencyInHz, durationInMilliseconds);
+	}
+
+	public void play(float x, float y, float z, String pattern, AudioType type) {
+		play(x, y, z, pattern, type, 1000, 200);
+	}
+
+	public void play(float x, float y, float z, String pattern, AudioType type, int frequencyInHz) {
+		play(x, y, z, pattern, type, frequencyInHz, 200);
+	}
+
+	public void play(float x, float y, float z, String pattern, AudioType type, int frequencyInHz, int durationInMilliseconds) {
+		Minecraft mc = Minecraft.getMinecraft();
+		float distanceBasedGain = ((float) Math.max(0, 1 - mc.thePlayer.getDistance(x, y, z) / maxDistance));
+		float gain = distanceBasedGain * volume();
+		if(gain <= 0 || amplitude <= 0) {
+			return;
+		}
+
+		if(disableAudio) {
+			// Fallback audio generation, using built-in Minecraft sound. This can be
+			// necessary on certain systems with audio cards that do not have enough
+			// memory. May still fail, but at least we can say we tried!
+			// Valid range is 20-2000Hz, clamp it to that and get a relative value.
+			// MC's pitch system supports a minimum pitch of 0.5, however, so up it
+			// by that.
+			float clampedFrequency = Math.min(Math.max(frequencyInHz - 20, 0), 1980) / 1980f + 0.5f;
+			int delay = 0;
+			for(char ch : pattern.toCharArray()) {
+				PositionedSoundRecord record = new PositionedSoundRecord(new ResourceLocation("note.harp"), gain, clampedFrequency, x, y, z);
+				if(delay == 0) {
+					mc.getSoundHandler().playSound(record);
+				} else {
+					mc.getSoundHandler().playDelayedSound(record, delay);
+				}
+				delay += Math.max((ch == '.' ? durationInMilliseconds : 2 * durationInMilliseconds) * 20 / 1000, 1);
+			}
+		} else {
+			if(AL.isCreated()) {
+				char[] chars = pattern.toCharArray();
+				int[] sampleCounts = new int[chars.length];
+				for(int i = 0; i < chars.length; i++) {
+					sampleCounts[i] = (chars[i] == '.' ? durationInMilliseconds : 2 * durationInMilliseconds) * sampleRate / 1000;
+				}
+
+				// 50ms pause between pattern parts.
+				int pauseSampleCount = 50 * sampleRate / 1000;
+				int sampleSum = 0;
+				for(int i : sampleCounts) {
+					sampleSum += i;
+				}
+				ByteBuffer data = BufferUtils.createByteBuffer(sampleSum + (sampleCounts.length - 1) * pauseSampleCount);
+				float step = frequencyInHz / ((float) sampleRate);
+				float offset = 0f;
+				for(int sampleCount : sampleCounts) {
+					for(int sample = 0; sample < sampleCount; sample++) {
+						//double angle = 2 * Math.PI * offset;
+						//int value = ((byte) (Math.signum(Math.sin(angle)) * amplitude())) ^ 0x80;
+						int value = ((byte) (type.generate(offset) * amplitude)) ^ 0x80;
+						offset += step;
+						if(offset > 1) {
+							offset -= 1;
+						}
+						data.put((byte) value);
+					}
+					if(data.hasRemaining()) {
+						for(int sample = 0; sample < pauseSampleCount; sample++) {
+							data.put((byte) 127);
+						}
+					}
+				}
+				data.rewind();
+
+				// Watch out for sound cards running out of memory... this apparently
+				// really does happen. I'm assuming this is due to too many sounds being
+				// kept loaded, since from what I can see OC's releasing its audio
+				// memory as it should.
+				try {
+					synchronized(sources) {
+						sources.add(new Source(x, y, z, data, gain));
+					}
+				} catch(LessUselessOpenALException e) {
+					if(e.errorCode == AL10.AL_OUT_OF_MEMORY) {
+						// Well... let's just stop here.
+						Computronics.log.info("Couldn't play computer speaker sound because your sound card ran out of memory. Either your sound card is just really low-end, or there are just too many sounds in use already by other mods. Disabling computer speakers to avoid spamming your log file now.");
+						disableAudio = true;
+					} else {
+						Computronics.log.warn("Error playing computer speaker sound.", e);
+					}
+				}
+			}
+		}
+	}
+
+	private void update() {
+		if(!disableAudio) {
+			synchronized(sources) {
+				Set<Source> toRemove = new HashSet<Source>();
+				for(Source source : sources) {
+					if(source.checkFinished()) {
+						toRemove.add(source);
+					}
+				}
+				sources.removeAll(toRemove);
+			}
+
+			// Clear error stack.
+			if(AL.isCreated()) {
+				try {
+					AL10.alGetError();
+				} catch(UnsatisfiedLinkError e) {
+					Computronics.log.warn("Negotiations with OpenAL broke down, disabling sounds.");
+					disableAudio = true;
+				}
+			}
+		}
+	}
+
+	private class Source {
+
+		private int source;
+		private int buffer;
+
+		Source(float x, float y, float z, ByteBuffer data, float gain) {
+
+			// Clear error stack.
+			AL10.alGetError();
+
+			int buffer = AL10.alGenBuffers();
+			checkALError();
+
+			try {
+				AL10.alBufferData(buffer, AL10.AL_FORMAT_MONO8, data, sampleRate);
+				checkALError();
+
+				int source = AL10.alGenSources();
+				checkALError();
+
+				try {
+					AL10.alSourceQueueBuffers(source, buffer);
+					checkALError();
+
+					AL10.alSource3f(source, AL10.AL_POSITION, x, y, z);
+					AL10.alSourcef(source, AL10.AL_REFERENCE_DISTANCE, maxDistance);
+					AL10.alSourcef(source, AL10.AL_MAX_DISTANCE, maxDistance);
+					AL10.alSourcef(source, AL10.AL_GAIN, gain * 0.3f);
+					checkALError();
+
+					AL10.alSourcePlay(source);
+					checkALError();
+
+					this.source = source;
+					this.buffer = buffer;
+				} catch(Throwable t) {
+					AL10.alDeleteSources(source);
+					Throwables.propagate(t);
+				}
+			} catch(Throwable t) {
+				AL10.alDeleteBuffers(buffer);
+				Throwables.propagate(t);
+			}
+		}
+
+		public boolean checkFinished() {
+			if(AL10.alGetSourcei(source, AL10.AL_SOURCE_STATE) != AL10.AL_PLAYING) {
+				AL10.alDeleteSources(source);
+				AL10.alDeleteBuffers(buffer);
+				return true;
+			}
+			return false;
+		}
+	}
+
+	// Having the error code in an accessible way is really cool, you know.
+	class LessUselessOpenALException extends OpenALException {
+
+		final int errorCode;
+
+		LessUselessOpenALException(int errorCode) {
+			super(errorCode);
+			this.errorCode = errorCode;
+		}
+
+	}
+
+	// Custom implementation of Util.checkALError() that uses our custom exception.
+	void checkALError() {
+		int errorCode = AL10.alGetError();
+		if(errorCode != AL10.AL_NO_ERROR) {
+			throw new LessUselessOpenALException(errorCode);
+		}
+	}
+
+	private Audio() {
+		sampleRate = Config.SOUND_SAMPLE_RATE;
+		amplitude = Config.SOUND_VOLUME;
+		maxDistance = Config.SOUND_RADIUS;
+	}
+
+	@SubscribeEvent
+	public void onTick(ClientTickEvent e) {
+		update();
+	}
+
+	private static Audio INSTANCE;
+
+	public static void init() {
+		if(INSTANCE == null) {
+			INSTANCE = new Audio();
+			FMLCommonHandler.instance().bus().register(INSTANCE);
+		}
+	}
+
+	public static Audio instance() {
+		if(INSTANCE == null) {
+			init();
+		}
+		return INSTANCE;
+	}
+}

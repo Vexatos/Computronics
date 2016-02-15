@@ -1,5 +1,8 @@
 ==== 1.6.1 ====
 
+  * ADDED: Noise Card!
+    - An upgraded Beep Card with slightly different syntax
+    - Can play square waves, sine waves, triangle waves and sawtooth waves!
   * ADDED: Support for TIS-3D!
     - Added a Colorful Module to display any colour you want, akin to a Colorful Lamp.
     - Added a Tape Reader Module which allows you to interface with an adjacent Tape Drive.

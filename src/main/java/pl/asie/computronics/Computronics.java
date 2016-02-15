@@ -293,14 +293,10 @@ public class Computronics {
 
 		FMLInterModComms.sendMessage(Mods.Waila, "register", "pl.asie.computronics.integration.waila.IntegrationWaila.register");
 
-		config.setCategoryComment("power", "Every value related to energy in this section uses RF as the base power unit.");
-
 		if(Mods.isLoaded(Mods.ComputerCraft)) {
-			config.setCategoryComment(Compat.Compatibility, "Set anything here to false to prevent Computronics from adding the respective Peripherals and Drivers");
 			computercraft.init();
 		}
 		if(Mods.isLoaded(Mods.OpenComputers)) {
-			config.setCategoryComment(Compat.Compatibility, "Set anything here to false to prevent Computronics from adding the respective Peripherals and Drivers");
 			opencomputers.init();
 		}
 
@@ -315,8 +311,8 @@ public class Computronics {
 		achievements = new ComputronicsAchievements();
 		achievements.initialize();
 
+		proxy.init();
 		config.save();
-		proxy.registerRenderers();
 	}
 
 	/**

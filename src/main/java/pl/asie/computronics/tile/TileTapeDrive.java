@@ -27,7 +27,7 @@ import pl.asie.computronics.api.audio.IAudioReceiver;
 import pl.asie.computronics.api.audio.IAudioSource;
 import pl.asie.computronics.api.tape.IItemTapeStorage;
 import pl.asie.computronics.cc.ComputronicsFileMount;
-import pl.asie.computronics.network.Packets;
+import pl.asie.computronics.network.PacketType;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TapeDriveState.State;
@@ -225,7 +225,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 			return;
 		}
 		try {
-			Packet packet = Computronics.packet.create(Packets.PACKET_TAPE_GUI_STATE)
+			Packet packet = Computronics.packet.create(PacketType.TAPE_GUI_STATE.ordinal())
 				.writeTileLocation(this)
 				.writeByte((byte) state.getState().ordinal());
 			//.writeByte((byte)soundVolume);

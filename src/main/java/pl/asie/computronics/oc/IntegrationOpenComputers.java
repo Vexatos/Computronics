@@ -93,9 +93,10 @@ public class IntegrationOpenComputers {
 			|| Config.OC_UPGRADE_RADAR
 			|| Config.OC_CARD_FX
 			|| Config.OC_CARD_SPOOF
-			|| Config.OC_CARD_SOUND
+			|| Config.OC_CARD_BEEP
 			|| Config.OC_CARD_BOOM
-			|| Config.OC_UPGRADE_COLORFUL) {
+			|| Config.OC_UPGRADE_COLORFUL
+			|| Config.OC_CARD_NOISE) {
 			itemOCParts = new ItemOpenComputers();
 			GameRegistry.registerItem(itemOCParts, "computronics.ocParts");
 			Driver.add(itemOCParts);
@@ -317,7 +318,7 @@ public class IntegrationOpenComputers {
 				'p', li.cil.oc.api.Items.get("printedCircuitBoard").createItemStack(1),
 				'l', Items.brick);
 		}
-		if(Config.OC_CARD_SOUND) {
+		if(Config.OC_CARD_BEEP) {
 			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 5),
 				" l ", "mb ", " f ",
 				'm', li.cil.oc.api.Items.get("chip2").createItemStack(1),
@@ -348,6 +349,15 @@ public class IntegrationOpenComputers {
 			} else {
 				log.warn("Could not add Colorful Upgrade Recipe because Colorful Lamp is disabled in the config.");
 			}
+		}
+		if(Config.OC_CARD_NOISE) {
+			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 8),
+				" l ", "mbn", " f ",
+				'm', li.cil.oc.api.Items.get("chip2").createItemStack(1),
+				'f', li.cil.oc.api.Items.get("alu").createItemStack(1),
+				'b', new ItemStack(itemOCParts, 1, 5),
+				'l', li.cil.oc.api.Items.get("chip3").createItemStack(1),
+				'n', "nuggetGold");
 		}
 		if(Computronics.buildcraft != null) {
 			Computronics.buildcraft.postInitOC();
