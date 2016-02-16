@@ -183,14 +183,15 @@ public class DriverCardNoise extends DriverCardSoundBase {
 			int totalDelay = 0;
 			for(ChannelEntry entry : channel.entries) {
 				int ticksToAdd = (entry.initialDelay + entry.freqPair.duration) / 1000 * 20;
-				if(currentTickTime + totalDelay <= ticksRemaining) {
+				int totalDelayTicks = totalDelay / 1000 * 20;
+				if(currentTickTime + totalDelayTicks <= ticksRemaining) {
 					continue;
 				}
-				expirationList[i] = currentTickTime + totalDelay + ticksToAdd;
+				expirationList[i] = currentTickTime + totalDelayTicks + ticksToAdd;
 				channelSendBuffer[i].addEntry(entry.freqPair.frequency, entry.freqPair.duration, entry.initialDelay + totalDelay);
-				totalDelay += ticksToAdd;
+				totalDelay += entry.initialDelay + entry.freqPair.duration;
 			}
-			longest = Math.max(longest, Math.max(50, Math.min(5000, (totalDelay / 20D))));
+			longest = Math.max(longest, Math.max(50, Math.min(5000, (totalDelay / 1000D))));
 		}
 		Object[] error = tryConsumeEnergy(Config.SOUND_ENERGY_COST * getNonNullCount(channelSendBuffer) * longest, "process");
 		if(error != null) {
