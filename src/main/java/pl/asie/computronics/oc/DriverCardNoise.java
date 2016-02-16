@@ -86,16 +86,24 @@ public class DriverCardNoise extends DriverCardSoundBase {
 		return new Object[] { getActiveChannelCount() };
 	}
 
-	@Callback(doc = "function(channels:table):boolean; table must have 8 or fewer entries. Each entry must be a table containing a frequency and a duration as values; plays each frequency for the specified duration.", direct = true, limit = 1)
+	@Callback(doc = "function():boolean; returns true if the card is not already processing a command", direct = true)
+	public Object[] isReady(Context context, Arguments args) {
+		return new Object[] { sendBuffer != null };
+	}
+
+	@Callback(doc = "function(channels:table):boolean; table must have 8 or fewer entries. Each entry must be a table containing a frequency and a duration as values; plays each frequency for the specified duration. Returns true on success.", direct = true, limit = 10)
 	public Object[] play(Context context, Arguments args) throws Exception {
+		if(sendBuffer != null) {
+			return new Object[] { false, "already processing" };
+		}
 		Map map = args.checkTable(0);
 		if(map.size() > 8) {
 			return new Object[] { false, "table must not contain more than 8 frequencies" };
 		}
 		FreqPair[] freqPairs = new FreqPair[8];
 		double longest = 0.0;
-		for(int i = 1; i <= 8; i++) {
-			Object freqDurPair = map.get(i);
+		for(int channel = 1; channel <= 8; channel++) {
+			Object freqDurPair = map.get(channel);
 			if(freqDurPair == null) {
 				continue;
 			} else if(!(freqDurPair instanceof Map)) {
@@ -108,12 +116,12 @@ public class DriverCardNoise extends DriverCardSoundBase {
 			}
 			Object freqObj = freqDurMap.get(1);
 			if(!(freqObj instanceof Number)) {
-				throw new IllegalArgumentException("frequency " + String.valueOf(freqObj) + " on channel " + String.valueOf(i) + " is not a number");
+				throw new IllegalArgumentException("frequency " + String.valueOf(freqObj) + " on channel " + String.valueOf(channel) + " is not a number");
 			}
 			//Object durObj = map.get(freqObj);
 			Object durObj = freqDurMap.get(2);
 			if(durObj != null && !(durObj instanceof Number)) {
-				throw new IllegalArgumentException("duration '" + String.valueOf(durObj) + " on channel " + String.valueOf(i) + " is not a number");
+				throw new IllegalArgumentException("duration '" + String.valueOf(durObj) + " on channel " + String.valueOf(channel) + " is not a number");
 			}
 			int frequency = ((Number) freqObj).intValue();
 			if(frequency < 20 || frequency > 2000) {
@@ -123,9 +131,10 @@ public class DriverCardNoise extends DriverCardSoundBase {
 			int durationInMilliseconds = Math.max(50, Math.min(5000, (int) (duration * 1000)));
 			longest = Math.max(longest, Math.max(50, Math.min(5000, (duration * 1000))));
 			long time = host.world().getTotalWorldTime() + (long) (durationInMilliseconds / 1000 * 20);
-			if(expirationList[i] == null) {
-				expirationList[i] = time;
-				freqPairs[i] = new FreqPair(frequency, durationInMilliseconds);
+			int index = channel - 1;
+			if(expirationList[index] == null) {
+				expirationList[index] = time;
+				freqPairs[index] = new FreqPair(frequency, durationInMilliseconds);
 			}
 		}
 		return tryQueueSound(freqPairs, new Object[] { true }, Config.SOUND_ENERGY_COST * getNonNullCount(freqPairs) * (longest / 1000D), playMethodName);

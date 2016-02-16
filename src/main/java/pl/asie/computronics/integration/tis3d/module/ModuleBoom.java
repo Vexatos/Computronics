@@ -129,7 +129,7 @@ public class ModuleBoom extends ComputronicsModule {
 		@SubscribeEvent(priority = EventPriority.HIGH)
 		@Optional.Method(modid = Mods.TIS3D)
 		public void onServerTick(TickEvent.ServerTickEvent e) {
-			if(boomQueue.isEmpty()) {
+			if(e.phase != TickEvent.Phase.START || boomQueue.isEmpty()) {
 				return;
 			}
 			for(Casing casing : boomQueue) {

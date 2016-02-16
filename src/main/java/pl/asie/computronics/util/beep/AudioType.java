@@ -6,30 +6,30 @@ package pl.asie.computronics.util.beep;
 public enum AudioType {
 	Square {
 		@Override
-		protected double generate(float pos) {
+		public double generate(float pos) {
 			return Math.signum(Sine.generate(pos));
 		}
 	},
 	Sine {
 		@Override
-		protected double generate(float pos) {
+		public double generate(float pos) {
 			return Math.sin(2 * Math.PI * pos);
 		}
 	},
 	Triangle {
 		@Override
-		protected double generate(float pos) {
+		public double generate(float pos) {
 			return 1.0 - (Math.abs(pos - 0.5) * 4.0);
 		}
 	},
 	Sawtooth {
 		@Override
-		protected double generate(float pos) {
+		public double generate(float pos) {
 			return (2 * pos) - 1;
 		}
 	};
 
-	protected abstract double generate(float pos);
+	public abstract double generate(float pos);
 
 	public static final AudioType[] VALUES = values();
 

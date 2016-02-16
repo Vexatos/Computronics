@@ -34,7 +34,7 @@ public class DriverCardBeep extends DriverCardSoundBase {
 		return new Object[] { getActiveChannelCount() };
 	}
 
-	@Callback(doc = "function(frequencyDurationTable:table):boolean; table needs to contain frequency-duration pairs; plays each frequency for the specified duration.", direct = true, limit = 1)
+	@Callback(doc = "function(frequencyDurationTable:table):boolean; table needs to contain frequency-duration pairs; plays each frequency for the specified duration. Returns true on success.", direct = true, limit = 10)
 	public Object[] beep(Context context, Arguments args) throws Exception {
 		Map map = args.checkTable(0);
 		if(map.size() > 8) {
