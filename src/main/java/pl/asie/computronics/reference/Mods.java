@@ -55,7 +55,8 @@ public class Mods {
 			CoFHAPI_Energy = "CoFHAPI|energy",
 			DraconicEvolution = "DraconicEvolution|API",
 			Gendustry = "gendustryAPI",
-			Mekanism_Energy = "MekanismAPI|energy";
+			Mekanism_Energy = "MekanismAPI|energy",
+			NoteBetter = "notebetter|api";
 
 		public static boolean hasAPI(String name) {
 			return pl.asie.lib.reference.Mods.API.hasAPI(name);
