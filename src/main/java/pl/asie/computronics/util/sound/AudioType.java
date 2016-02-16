@@ -1,4 +1,4 @@
-package pl.asie.computronics.util.beep;
+package pl.asie.computronics.util.sound;
 
 /**
  * @author Vexatos
@@ -7,7 +7,7 @@ public enum AudioType {
 	Square {
 		@Override
 		public double generate(float pos) {
-			return Math.signum(Sine.generate(pos));
+			return Math.signum(Sine.generate(pos)) * 0.5;
 		}
 	},
 	Sine {

@@ -7,7 +7,7 @@ import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.Visibility;
 import pl.asie.computronics.reference.Config;
-import pl.asie.computronics.util.beep.AudioType;
+import pl.asie.computronics.util.sound.AudioType;
 
 import java.util.Map;
 

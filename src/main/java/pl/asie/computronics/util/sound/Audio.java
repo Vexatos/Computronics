@@ -1,4 +1,4 @@
-package pl.asie.computronics.util.beep;
+package pl.asie.computronics.util.sound;
 
 import com.google.common.base.Throwables;
 import cpw.mods.fml.common.FMLCommonHandler;

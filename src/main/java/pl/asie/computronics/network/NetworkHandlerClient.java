@@ -8,6 +8,7 @@ import pl.asie.computronics.Computronics;
 import pl.asie.computronics.api.audio.AudioPacketClientHandler;
 import pl.asie.computronics.api.audio.AudioPacketRegistry;
 import pl.asie.computronics.oc.DriverCardBeep;
+import pl.asie.computronics.oc.DriverCardNoise;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TapeDriveState.State;
 import pl.asie.computronics.tile.TileTapeDrive;
@@ -18,7 +19,9 @@ import javax.sound.sampled.AudioFormat;
 import java.io.IOException;
 
 public class NetworkHandlerClient extends MessageHandlerBase {
+
 	private static class CodecData {
+
 		public final int x, y, z;
 		public final byte[] data;
 
@@ -52,7 +55,7 @@ public class NetworkHandlerClient extends MessageHandlerBase {
 			case AUDIO_DATA: {
 				int handlerId = packet.readShort();
 				AudioPacketClientHandler packetHandler = AudioPacketRegistry.INSTANCE.getClientHandler(handlerId);
-				if (packetHandler != null) {
+				if(packetHandler != null) {
 					packetHandler.receivePacket(packet);
 				}
 			}
@@ -76,6 +79,12 @@ public class NetworkHandlerClient extends MessageHandlerBase {
 			case COMPUTER_BEEP: {
 				if(Mods.isLoaded(Mods.OpenComputers)) {
 					DriverCardBeep.onSound(packet, player);
+				}
+			}
+			break;
+			case COMPUTER_NOISE: {
+				if(Mods.isLoaded(Mods.OpenComputers)) {
+					DriverCardNoise.onSound(packet, player);
 				}
 			}
 			break;
