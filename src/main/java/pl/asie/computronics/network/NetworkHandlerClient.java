@@ -9,6 +9,7 @@ import pl.asie.computronics.Computronics;
 import pl.asie.computronics.api.audio.AudioPacketClientHandler;
 import pl.asie.computronics.api.audio.AudioPacketRegistry;
 import pl.asie.computronics.oc.DriverCardSoundBase;
+import pl.asie.computronics.oc.DriverCardNoise;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TapeDriveState.State;
 import pl.asie.computronics.tile.TileTapeDrive;
@@ -79,6 +80,12 @@ public class NetworkHandlerClient extends MessageHandlerBase {
 			case COMPUTER_BEEP: {
 				if(Mods.isLoaded(Mods.OpenComputers)) {
 					DriverCardSoundBase.onSound(packet, player);
+				}
+			}
+			break;
+			case COMPUTER_NOISE: {
+				if(Mods.isLoaded(Mods.OpenComputers)) {
+					DriverCardNoise.onSound(packet, player);
 				}
 			}
 			break;

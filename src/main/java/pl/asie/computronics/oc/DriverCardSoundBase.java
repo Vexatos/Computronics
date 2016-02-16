@@ -10,8 +10,8 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.network.PacketType;
 import pl.asie.computronics.reference.Config;
-import pl.asie.computronics.util.beep.Audio;
-import pl.asie.computronics.util.beep.AudioType;
+import pl.asie.computronics.util.sound.Audio;
+import pl.asie.computronics.util.sound.AudioType;
 import pl.asie.lib.network.Packet;
 
 import java.io.IOException;
@@ -72,9 +72,9 @@ public abstract class DriverCardSoundBase extends ManagedEnvironment {
 		}
 	}
 
-	protected static <T> int getNonNullCount(T[] array) {
+	protected static <E, T extends Iterable<E>> int getNonNullCount(T array) {
 		int c = 0;
-		for(T e : array) {
+		for(E e : array) {
 			if(e != null) {
 				++c;
 			}
@@ -82,13 +82,31 @@ public abstract class DriverCardSoundBase extends ManagedEnvironment {
 		return c;
 	}
 
-	protected Object[] tryQueueSound(FreqPair[] freqPairs, Object[] result, double v, String methodName) throws Exception {
+	protected static <E> int getNonNullCount(E[] array) {
+		int c = 0;
+		for(E e : array) {
+			if(e != null) {
+				++c;
+			}
+		}
+		return c;
+	}
+
+	protected Object[] tryConsumeEnergy(double v, String methodName) {
 		if(this.node() instanceof Connector) {
 			int power = this.tryConsumeEnergy(v);
 			if(power < 0) {
 				return new Object[] { false, power + ": " + methodName + ": not enough energy available: required"
 					+ v + ", found " + ((Connector) node()).globalBuffer() };
 			}
+		}
+		return null;
+	}
+
+	protected Object[] tryQueueSound(FreqPair[] freqPairs, Object[] result, double v, String methodName) throws Exception {
+		Object[] error = tryConsumeEnergy(v, methodName);
+		if(error != null) {
+			return error;
 		}
 		if(sendBuffer == null) {
 			sendBuffer = freqPairs;
