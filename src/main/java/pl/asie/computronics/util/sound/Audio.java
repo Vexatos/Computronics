@@ -1,4 +1,4 @@
-package pl.asie.computronics.util.beep;
+package pl.asie.computronics.util.sound;
 
 import com.google.common.base.Throwables;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -51,6 +51,14 @@ public class Audio {
 	}
 
 	public void play(float x, float y, float z, String pattern, AudioType type, int frequencyInHz, int durationInMilliseconds) {
+		play(x, y, z, pattern, type, frequencyInHz, durationInMilliseconds, 0);
+	}
+
+	public void play(float x, float y, float z, AudioType type, int frequencyInHz, int durationInMilliseconds, int initialDelayInMilliseconds) {
+		play(x, y, z, ".", type, frequencyInHz, durationInMilliseconds, initialDelayInMilliseconds);
+	}
+
+	public void play(float x, float y, float z, String pattern, AudioType type, int frequencyInHz, int durationInMilliseconds, int initialDelayInMilliseconds) {
 		Minecraft mc = Minecraft.getMinecraft();
 		float distanceBasedGain = ((float) Math.max(0, 1 - mc.thePlayer.getDistance(x, y, z) / maxDistance));
 		float gain = distanceBasedGain * volume();
@@ -90,7 +98,14 @@ public class Audio {
 				for(int i : sampleCounts) {
 					sampleSum += i;
 				}
-				ByteBuffer data = BufferUtils.createByteBuffer(sampleSum + (sampleCounts.length - 1) * pauseSampleCount);
+				int initialDelay = initialDelayInMilliseconds * sampleRate / 1000;
+
+				ByteBuffer data = BufferUtils.createByteBuffer(initialDelay + sampleSum + (sampleCounts.length - 1) * pauseSampleCount);
+
+				// Add the initial delay
+				for(int sample = 0; sample < initialDelay; sample++) {
+					data.put((byte) 127);
+				}
 				float step = frequencyInHz / ((float) sampleRate);
 				float offset = 0f;
 				for(int sampleCount : sampleCounts) {

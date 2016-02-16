@@ -7,6 +7,7 @@ import net.minecraft.tileentity.TileEntity;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.api.audio.AudioPacketClientHandler;
 import pl.asie.computronics.api.audio.AudioPacketRegistry;
+import pl.asie.computronics.oc.driver.DriverCardNoise;
 import pl.asie.computronics.oc.driver.DriverCardSoundBase;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TapeDriveState.State;
@@ -78,6 +79,12 @@ public class NetworkHandlerClient extends MessageHandlerBase {
 			case COMPUTER_BEEP: {
 				if(Mods.isLoaded(Mods.OpenComputers)) {
 					DriverCardSoundBase.onSound(packet, player);
+				}
+			}
+			break;
+			case COMPUTER_NOISE: {
+				if(Mods.isLoaded(Mods.OpenComputers)) {
+					DriverCardNoise.onSound(packet, player);
 				}
 			}
 			break;

@@ -18,8 +18,8 @@ import pl.asie.computronics.client.SignalBoxRenderer;
 import pl.asie.computronics.client.UpgradeRenderer;
 import pl.asie.computronics.oc.IntegrationOpenComputers;
 import pl.asie.computronics.reference.Mods;
-import pl.asie.computronics.util.beep.Audio;
 import pl.asie.computronics.util.boom.SelfDestruct;
+import pl.asie.computronics.util.sound.Audio;
 import pl.asie.lib.network.Packet;
 
 import java.io.IOException;
