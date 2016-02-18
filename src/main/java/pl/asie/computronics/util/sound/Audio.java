@@ -16,7 +16,10 @@ import pl.asie.computronics.Computronics;
 import pl.asie.computronics.reference.Config;
 
 import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
+import java.util.ArrayDeque;
 import java.util.HashSet;
+import java.util.Queue;
 import java.util.Set;
 
 /**
@@ -148,16 +151,18 @@ public class Audio {
 		}
 	}
 
+	private final Set<Source> toRemove = new HashSet<Source>();
+
 	private void update() {
 		if(!disableAudio) {
 			synchronized(sources) {
-				Set<Source> toRemove = new HashSet<Source>();
 				for(Source source : sources) {
 					if(source.checkFinished()) {
 						toRemove.add(source);
 					}
 				}
 				sources.removeAll(toRemove);
+				toRemove.clear();
 			}
 
 			// Clear error stack.
@@ -175,26 +180,51 @@ public class Audio {
 	private class Source {
 
 		private int source;
-		private int buffer;
+		private IntBuffer[] buffers;
+		private final Queue<ByteBuffer> bufferData;
 
 		Source(float x, float y, float z, ByteBuffer data, float gain) {
 
 			// Clear error stack.
 			AL10.alGetError();
 
-			int buffer = AL10.alGenBuffers();
+			buffers = new IntBuffer[2];
+			buffers[0] = BufferUtils.createIntBuffer(1);
+			buffers[1] = BufferUtils.createIntBuffer(1);
+			AL10.alGenBuffers(buffers[0]);
 			checkALError();
 
+			bufferData = new ArrayDeque<ByteBuffer>(data.capacity() / (2 * sampleRate));
+			for(int i = 0; i * 2 * sampleRate < data.capacity(); i++) {
+				/*ByteBuffer buf = ByteBuffer.allocateDirect(Math.min(2 * sampleRate, bytes.length - (i * 2 * sampleRate)));
+				buf.put(bytes, i * 2 * sampleRate, buf.capacity());
+				buf.rewind();
+				bufferData.add(buf);*/
+				data.limit(i * 2 * sampleRate + Math.min(2 * sampleRate, data.capacity() - (i * 2 * sampleRate)));
+				data.position(i * 2 * sampleRate);
+				bufferData.add(data.slice());
+			}
+
 			try {
-				AL10.alBufferData(buffer, AL10.AL_FORMAT_MONO8, data, sampleRate);
+				AL10.alBufferData(buffers[0].get(0), AL10.AL_FORMAT_MONO8, bufferData.poll(), sampleRate);
 				checkALError();
+				if(!bufferData.isEmpty()) {
+					AL10.alGenBuffers(buffers[1]);
+					checkALError();
+					AL10.alBufferData(buffers[1].get(0), AL10.AL_FORMAT_MONO8, bufferData.poll(), sampleRate);
+					checkALError();
+				}
 
 				int source = AL10.alGenSources();
 				checkALError();
 
 				try {
-					AL10.alSourceQueueBuffers(source, buffer);
+					AL10.alSourceQueueBuffers(source, buffers[0]);
 					checkALError();
+					if(AL10.alIsBuffer(buffers[1].get(0))) {
+						AL10.alSourceQueueBuffers(source, buffers[1]);
+						checkALError();
+					}
 
 					AL10.alSource3f(source, AL10.AL_POSITION, x, y, z);
 					AL10.alSourcef(source, AL10.AL_REFERENCE_DISTANCE, maxDistance);
@@ -206,21 +236,44 @@ public class Audio {
 					checkALError();
 
 					this.source = source;
-					this.buffer = buffer;
+					//this.buffers = buffer;
 				} catch(Throwable t) {
 					AL10.alDeleteSources(source);
 					Throwables.propagate(t);
 				}
 			} catch(Throwable t) {
-				AL10.alDeleteBuffers(buffer);
+				for(IntBuffer b : buffers) {
+					if(AL10.alIsBuffer(b.get(0))) {
+						AL10.alDeleteBuffers(b);
+					}
+				}
 				Throwables.propagate(t);
 			}
 		}
 
+		private int index = 0;
+
 		public boolean checkFinished() {
+			if(AL10.alGetSourcei(source, AL10.AL_BUFFERS_PROCESSED) > 0) {
+				int oldIndex = index;
+				AL10.alSourceUnqueueBuffers(source, buffers[oldIndex]);
+				checkALError();
+				ByteBuffer buf = bufferData.poll();
+				if(buf != null) {
+					AL10.alBufferData(buffers[oldIndex].get(0), AL10.AL_FORMAT_MONO8, buf, sampleRate);
+					AL10.alSourceQueueBuffers(source, buffers[oldIndex]);
+					checkALError();
+					index = (index + 1) % 2;
+				}
+				return false;
+			}
 			if(AL10.alGetSourcei(source, AL10.AL_SOURCE_STATE) != AL10.AL_PLAYING) {
 				AL10.alDeleteSources(source);
-				AL10.alDeleteBuffers(buffer);
+				for(IntBuffer buffer : buffers) {
+					if(AL10.alIsBuffer(buffer.get(0))) {
+						AL10.alDeleteBuffers(buffer);
+					}
+				}
 				return true;
 			}
 			return false;
