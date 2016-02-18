@@ -194,14 +194,14 @@ public class Audio {
 			AL10.alGenBuffers(buffers[0]);
 			checkALError();
 
-			bufferData = new ArrayDeque<ByteBuffer>(data.capacity() / (2 * sampleRate));
-			for(int i = 0; i * 2 * sampleRate < data.capacity(); i++) {
+			bufferData = new ArrayDeque<ByteBuffer>(data.capacity() / sampleRate);
+			for(int i = 0; i * sampleRate < data.capacity(); i++) {
 				/*ByteBuffer buf = ByteBuffer.allocateDirect(Math.min(2 * sampleRate, bytes.length - (i * 2 * sampleRate)));
 				buf.put(bytes, i * 2 * sampleRate, buf.capacity());
 				buf.rewind();
 				bufferData.add(buf);*/
-				data.limit(i * 2 * sampleRate + Math.min(2 * sampleRate, data.capacity() - (i * 2 * sampleRate)));
-				data.position(i * 2 * sampleRate);
+				data.limit(i * sampleRate + Math.min(sampleRate, data.capacity() - (i * sampleRate)))
+					.position(i * sampleRate);
 				bufferData.add(data.slice());
 			}
 
