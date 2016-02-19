@@ -26,17 +26,16 @@ public class AudioPacketClientHandlerDFPWM extends AudioPacketClientHandler {
 		}
 
 		codec.setSampleRate(sampleRate);
-		codec.lastPacketId = packetId;
+		//codec.lastPacketId = packetId;
 
-		codec.queueData(audio);
+		codec.push(audio);
 	}
 
 	@Override
 	protected void playData(int packetId, int codecId, int x, int y, int z, int distance, byte volume) {
 		StreamingAudioPlayer codec = Computronics.instance.audio.getPlayer(codecId);
 
-		codec.setDistance((float) distance);
-		codec.setVolume(volume / 127.0F);
-		codec.playPacket(x, y, z);
+		codec.setHearing((float) distance, volume / 127.0F);
+		codec.play(x, y, z);
 	}
 }

@@ -123,10 +123,10 @@ public class NoteUtils {
 			if(s.equals(instrument)) {
 				return "note." + instrument;
 			}
-			if(Config.NOTEBETTER_ANY_INSTRUMENT && Mods.API.hasAPI(Mods.API.NoteBetter)) {
-				if(NoteBetterAPI.isNoteBetterInstrument(instrument)) {
-					return instrument;
-				}
+		}
+		if(Config.NOTEBETTER_ANY_INSTRUMENT && Mods.API.hasAPI(Mods.API.NoteBetter)) {
+			if(NoteBetterAPI.isNoteBetterInstrument(instrument)) {
+				return instrument;
 			}
 		}
 		throw new IllegalArgumentException("invalid instrument: " + instrument);

@@ -44,4 +44,8 @@ public class CommonProxy {
 	public void spawnSwarmParticle(World worldObj, double xPos, double yPos, double zPos, int color) {
 		//NO-OP
 	}
+
+	public void onServerStop() {
+
+	}
 }

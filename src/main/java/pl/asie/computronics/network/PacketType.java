@@ -14,6 +14,6 @@ public enum PacketType {
 	public static final PacketType[] VALUES = values();
 
 	public static PacketType of(int index) {
-		return index > 0 && index < VALUES.length ? VALUES[index] : null;
+		return index >= 0 && index < VALUES.length ? VALUES[index] : null;
 	}
 }
