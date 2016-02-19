@@ -14,6 +14,7 @@ import org.lwjgl.openal.AL10;
 import org.lwjgl.openal.OpenALException;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.reference.Config;
+import pl.asie.computronics.util.sound.AudioUtil.Wave;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -41,7 +42,7 @@ public class Audio {
 
 	private boolean disableAudio = false;
 
-	public void play(float x, float y, float z, AudioType type, int frequencyInHz, int durationInMilliseconds) {
+	public void play(float x, float y, float z, AudioType type, float frequencyInHz, int durationInMilliseconds) {
 		play(x, y, z, ".", type, frequencyInHz, durationInMilliseconds);
 	}
 
@@ -49,19 +50,28 @@ public class Audio {
 		play(x, y, z, pattern, type, 1000, 200);
 	}
 
-	public void play(float x, float y, float z, String pattern, AudioType type, int frequencyInHz) {
+	public void play(float x, float y, float z, String pattern, AudioType type, float frequencyInHz) {
 		play(x, y, z, pattern, type, frequencyInHz, 200);
 	}
 
-	public void play(float x, float y, float z, String pattern, AudioType type, int frequencyInHz, int durationInMilliseconds) {
+	public void play(float x, float y, float z, String pattern, AudioType type, float frequencyInHz, int durationInMilliseconds) {
 		play(x, y, z, pattern, type, frequencyInHz, durationInMilliseconds, 0);
 	}
 
-	public void play(float x, float y, float z, AudioType type, int frequencyInHz, int durationInMilliseconds, int initialDelayInMilliseconds) {
+	public void play(float x, float y, float z, AudioType type, float frequencyInHz, int durationInMilliseconds, int initialDelayInMilliseconds) {
 		play(x, y, z, ".", type, frequencyInHz, durationInMilliseconds, initialDelayInMilliseconds);
 	}
 
-	public void play(float x, float y, float z, String pattern, AudioType type, int frequencyInHz, int durationInMilliseconds, int initialDelayInMilliseconds) {
+	void performModulation(float index, Wave carrier, Wave modulator) {
+		modulator.offset += modulator.frequencyInHz / ((float) sampleRate);
+		if(modulator.offset > 1) {
+			modulator.offset -= 1;
+		}
+		double deviation = modulator.type.generate(modulator.offset) * index * modulator.frequencyInHz;
+		carrier.offset += (carrier.frequencyInHz + deviation) / ((float) sampleRate);
+	}
+
+	public void play(float x, float y, float z, String pattern, AudioType type, float frequencyInHz, int durationInMilliseconds, int initialDelayInMilliseconds) {
 		Minecraft mc = Minecraft.getMinecraft();
 		float distanceBasedGain = ((float) Math.max(0, 1 - mc.thePlayer.getDistance(x, y, z) / maxDistance));
 		float gain = distanceBasedGain * volume();

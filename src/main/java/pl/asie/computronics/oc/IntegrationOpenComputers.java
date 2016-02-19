@@ -357,7 +357,7 @@ public class IntegrationOpenComputers {
 				'f', li.cil.oc.api.Items.get("alu").createItemStack(1),
 				'b', new ItemStack(itemOCParts, 1, 5),
 				'l', li.cil.oc.api.Items.get("chip3").createItemStack(1),
-				'n', "nuggetGold");
+				'n', "gemQuartz");
 		}
 		if(Computronics.buildcraft != null) {
 			Computronics.buildcraft.postInitOC();

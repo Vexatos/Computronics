@@ -8,6 +8,7 @@ import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.Visibility;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.util.sound.AudioType;
+import pl.asie.computronics.util.sound.Channel;
 
 import java.util.Map;
 
@@ -43,7 +44,7 @@ public class DriverCardBeep extends DriverCardSoundBase {
 		if(getActiveChannelCount() + map.size() > 8) {
 			return new Object[] { false, "already too many sounds playing, maximum is 8" };
 		}
-		FreqPair[] freqPairs = new FreqPair[8];
+		Channel.FreqPair[] freqPairs = new Channel.FreqPair[8];
 		double longest = 0.0;
 		for(Object entryObj : map.entrySet()) {
 			if(entryObj instanceof Map.Entry) {
@@ -56,7 +57,7 @@ public class DriverCardBeep extends DriverCardSoundBase {
 				if(durObj != null && !(durObj instanceof Number)) {
 					throw new IllegalArgumentException("duration '" + String.valueOf(durObj) + "' is not a number");
 				}
-				int frequency = ((Number) freqObj).intValue();
+				double frequency = ((Number) freqObj).doubleValue();
 				if(frequency < 20 || frequency > 2000) {
 					throw new IllegalArgumentException("invalid frequency, must be in [20, 2000]");
 				}
@@ -67,7 +68,7 @@ public class DriverCardBeep extends DriverCardSoundBase {
 				for(int i = 0; i < expirationList.length; i++) {
 					if(expirationList[i] == null) {
 						expirationList[i] = time;
-						freqPairs[i] = new FreqPair(frequency, durationInMilliseconds);
+						freqPairs[i] = new Channel.FreqPair((float) frequency, durationInMilliseconds);
 						break;
 					}
 				}
