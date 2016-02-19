@@ -10,13 +10,14 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.NoteBlockEvent;
 import net.minecraftforge.fml.common.Optional;
+import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 
 public class NoteUtils {
 
 	private static final String[] instruments = new String[] { "harp", "bd", "snare", "hat", "bassattack", "pling", "bass" };
 
-	public static void playNote(World worldObj, BlockPos pos, String instrument, int note, float volume) {
+	public static void playNoteRaw(World worldObj, BlockPos pos, String instrument, int note, float volume) {
 		float f = (float) Math.pow(2.0D, (double) (note - 12) / 12.0D);
 
 		int xCoord = pos.getX();
@@ -27,8 +28,12 @@ public class NoteUtils {
 		ParticleUtils.sendParticlePacket(EnumParticleTypes.NOTE, worldObj, (double) xCoord + 0.5D, (double) yCoord + 1.2D, (double) zCoord + 0.5D, (double) note / 24.0D, 1.0D, 0.0D);
 	}
 
+	public static void playNote(World worldObj, BlockPos pos, String instrument, int note, float volume) {
+		playNoteRaw(worldObj, pos, checkInstrument(instrument), note, volume);
+	}
+
 	public static void playNote(World worldObj, BlockPos pos, String instrument, int note) {
-		playNote(worldObj, pos, "note." + instrument, note, 3.0F);
+		playNoteRaw(worldObj, pos, checkInstrument(instrument), note, 3.0F);
 	}
 
 	public static void playNote(World worldObj, BlockPos pos, int instrument, int note) {
@@ -77,7 +82,7 @@ public class NoteUtils {
 			s = instruments[instrument];
 		}
 
-		playNote(worldObj, pos, "note." + s, note, volume < 0 ? 3.0F : volume);
+		playNote(worldObj, pos, s, note, volume < 0 ? 3.0F : volume);
 	}
 
 	@Optional.Method(modid = Mods.API.NoteBetter)
@@ -87,7 +92,7 @@ public class NoteUtils {
 			ResourceLocation soundEvent = instr.getSoundEvent();
 			if(soundEvent != null) {
 				// TODO Note Block Event
-				playNote(world, pos, soundEvent.toString(), note, volume < 0 ? instr.getVolume() : volume);
+				playNoteRaw(world, pos, soundEvent.toString(), note, volume < 0 ? instr.getVolume() : volume);
 			}
 			// soundEvent == null means play no sound, so we are returning true, i.e. cancelling here.
 			return true;
@@ -111,5 +116,19 @@ public class NoteUtils {
 			}
 		}
 		return toVolume(index + 1, value);
+	}
+
+	public static String checkInstrument(String instrument) {
+		for(String s : instruments) {
+			if(s.equals(instrument)) {
+				return "note." + instrument;
+			}
+			if(Config.NOTEBETTER_ANY_INSTRUMENT && Mods.API.hasAPI(Mods.API.NoteBetter)) {
+				if(NoteBetterAPI.isNoteBetterInstrument(instrument)) {
+					return instrument;
+				}
+			}
+		}
+		throw new IllegalArgumentException("invalid instrument: " + instrument);
 	}
 }

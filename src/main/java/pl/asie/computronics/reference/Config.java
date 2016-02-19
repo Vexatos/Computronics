@@ -38,6 +38,7 @@ public class Config {
 	public static boolean NON_OC_RECIPES = false;
 	public static boolean FORESTRY_BEES = true;
 	public static boolean BUILDCRAFT_STATION = true;
+	public static boolean NOTEBETTER_ANY_INSTRUMENT = false;
 
 	public static int SOUND_SAMPLE_RATE = 44100;
 	public static int SOUND_VOLUME = 32;
@@ -190,6 +191,10 @@ public class Config {
 		// GregTech recipe mode
 		if(Mods.hasVersion(Mods.GregTech, Mods.Versions.GregTech5)) {
 			GREGTECH_RECIPES = config.getBoolean("gtRecipeMode", "recipes", true, "Set this to true to enable GregTech-style recipes");
+		}
+
+		if(Mods.API.hasAPI(Mods.API.NoteBetter)) {
+			NOTEBETTER_ANY_INSTRUMENT = config.getBoolean("acceptNoteBetterInstruments", "ironnote", false, "Set this to true if you want the Iron Note Block to be able to accept NoteBetter instrument names for playing directly. With it set to false you will still be able to play NoteBetter sounds by placing the appropriate block below it.");
 		}
 
 		config.setCategoryComment("power", "Every value related to energy in this section uses RF as the base power unit.");

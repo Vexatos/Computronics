@@ -10,6 +10,7 @@ import pl.asie.computronics.integration.storagedrawers.DriverDrawerGroup;
 import pl.asie.computronics.reference.Compat;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
+import pl.asie.computronics.tile.TileTapeDrive;
 
 import static pl.asie.computronics.Computronics.peripheralRegistry;
 import static pl.asie.computronics.Computronics.registerMultiPeripheralProvider;
@@ -188,9 +189,9 @@ public class IntegrationComputerCraft {
 				new ParticleTurtleUpgrade("computronics.turtle_fx"));
 		}
 
-		/*if(Computronics.tapeReader != null){
+		if(Computronics.tapeReader != null){
 			TileTapeDrive.initCCFilesystem();
-		}*/
+		}
 	}
 
 	public void serverStart() {
