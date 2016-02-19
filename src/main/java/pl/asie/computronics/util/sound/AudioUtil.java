@@ -108,6 +108,9 @@ public class AudioUtil {
 		}
 
 		public double getModifiedValue(State state, double value) {
+			if(phase == null) {
+				return 0;
+			}
 			if(state.gate == Gate.Closed && phase != Phase.Release) {
 				phase = Phase.Release;
 				progress = 0;
@@ -115,14 +118,14 @@ public class AudioUtil {
 			switch(phase) {
 				case Attack: {
 					value = value * (progress / attackDuration);
-					if(++progress > attackDuration) {
+					if(++progress >= attackDuration) {
 						nextPhase(state);
 					}
 					return value;
 				}
 				case Decay: {
 					value = value * (((attenuation - 1) * (progress / decayDuration)) + 1);
-					if(++progress > decayDuration) {
+					if(++progress >= decayDuration) {
 						nextPhase(state);
 					}
 					return value;
@@ -132,9 +135,9 @@ public class AudioUtil {
 				}
 				case Release: {
 					value = value * (((-attenuation) * (progress / releaseDuration)) + attenuation);
-					if(++progress > releaseDuration) {
+					if(++progress >= releaseDuration) {
 						phase = null;
-						state.envelope = null;
+						progress = 0;
 					}
 					return value;
 				}
