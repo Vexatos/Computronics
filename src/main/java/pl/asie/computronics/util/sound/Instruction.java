@@ -91,6 +91,9 @@ public abstract class Instruction {
 
 		@Override
 		public void encounter(List<State> states, State state) {
+			if(state.isFreqMod) {
+				return;
+			}
 			if(state.freqMod != null) {
 				State mstate = states.get(state.freqMod.modulatorIndex);
 				if(mstate != null) {
@@ -134,6 +137,9 @@ public abstract class Instruction {
 
 		@Override
 		public void encounter(List<State> states, State state) {
+			if(state.isAmpMod) {
+				return;
+			}
 			if(state.ampMod != null) {
 				State mstate = states.get(state.ampMod.modulatorIndex);
 				if(mstate != null) {

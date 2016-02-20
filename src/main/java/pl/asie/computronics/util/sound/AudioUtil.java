@@ -12,31 +12,35 @@ public class AudioUtil {
 	public enum Gate {
 		Open {
 			@Override
-			public int getValue(List<State> states, State state, int baseAmplitude) {
+			public double getValue(List<State> states, State state) {
 				if(state.isAmpMod || state.isFreqMod) {
 					return 0;
 				}
 				double value = state.wave.type.generate(state.wave.offset);
-				if(state.freqMod != null) {
+				state.wave.offset += state.wave.frequencyInHz / ((float) Config.SOUND_SAMPLE_RATE);
+				if(state.wave.offset > 1) {
+					state.wave.offset -= 1;
+				}
+				if(state.freqMod != null && !state.isFreqMod) {
 					value = state.freqMod.getModifiedValue(states, state, value);
 				}
-				if(state.ampMod != null) {
+				if(state.ampMod != null && !state.isAmpMod) {
 					value = state.ampMod.getModifiedValue(states, state, value);
 				}
 				if(state.envelope != null) {
 					value = state.envelope.getModifiedValue(state, value);
 				}
-				return ((byte) (value * baseAmplitude)) ^ 0x80;
+				return value;
 			}
 		},
 		Closed {
 			@Override
-			public int getValue(List<State> states, State state, int baseAmplitude) {
+			public double getValue(List<State> states, State state) {
 				return 0;
 			}
 		};
 
-		public abstract int getValue(List<State> states, State state, int baseAmplitude);
+		public abstract double getValue(List<State> states, State state);
 	}
 
 	public static abstract class Modulation {
@@ -60,13 +64,8 @@ public class AudioUtil {
 			if(mstate.gate == Gate.Closed) {
 				return value;
 			}
-			Wave modulator = mstate.wave;
 			Wave carrier = state.wave;
-			modulator.offset += modulator.frequencyInHz / ((float) Config.SOUND_SAMPLE_RATE);
-			if(modulator.offset > 1) {
-				modulator.offset -= 1;
-			}
-			double deviation = modulator.type.generate(modulator.offset) * index * modulator.frequencyInHz;
+			double deviation = mstate.gate.getValue(states, mstate) * index * mstate.wave.frequencyInHz;
 			carrier.offset += (carrier.frequencyInHz + deviation) / ((float) Config.SOUND_SAMPLE_RATE);
 			return value;
 		}
@@ -87,7 +86,7 @@ public class AudioUtil {
 				return value;
 			}
 			Wave modulator = mstate.wave;
-			return value * (1 + modulator.type.generate(mstate.wave.offset));
+			return value * (1 + mstate.gate.getValue(states, mstate));
 		}
 	}
 
@@ -175,8 +174,8 @@ public class AudioUtil {
 
 		public boolean isFreqMod, isAmpMod;
 
-		public State(Wave wave, int channelIndex) {
-			this.wave = wave;
+		public State(int channelIndex) {
+			this.wave = new Wave();
 			this.channelIndex = channelIndex;
 		}
 	}
@@ -186,6 +185,10 @@ public class AudioUtil {
 		public float frequencyInHz;
 		public float offset;
 		public AudioType type;
+
+		public Wave() {
+
+		}
 
 		public Wave(float frequencyInHz, float offset, AudioType type) {
 			this.frequencyInHz = frequencyInHz;
