@@ -9,15 +9,19 @@ public class NoteUtils {
 
 	private static final String[] instruments = new String[] { "harp", "bd", "snare", "hat", "bassattack", "pling", "bass" };
 
-	public static void playNote(World worldObj, int xCoord, int yCoord, int zCoord, String instrument, int note, float volume) {
+	public static void playNoteRaw(World worldObj, int xCoord, int yCoord, int zCoord, String instrument, int note, float volume) {
 		float f = (float) Math.pow(2.0D, (double) (note - 12) / 12.0D);
 
-		worldObj.playSoundEffect((double) xCoord + 0.5D, (double) yCoord + 0.5D, (double) zCoord + 0.5D, "note." + instrument, volume, f);
+		worldObj.playSoundEffect((double) xCoord + 0.5D, (double) yCoord + 0.5D, (double) zCoord + 0.5D, instrument, volume, f);
 		ParticleUtils.sendParticlePacket("note", worldObj, (double) xCoord + 0.5D, (double) yCoord + 1.2D, (double) zCoord + 0.5D, (double) note / 24.0D, 1.0D, 0.0D);
 	}
 
+	public static void playNote(World worldObj, int xCoord, int yCoord, int zCoord, String instrument, int note, float volume) {
+		playNoteRaw(worldObj, xCoord, yCoord, zCoord, instrument, note, volume);
+	}
+
 	public static void playNote(World worldObj, int xCoord, int yCoord, int zCoord, String instrument, int note) {
-		playNote(worldObj, xCoord, yCoord, zCoord, instrument, note, 3.0F);
+		playNoteRaw(worldObj, xCoord, yCoord, zCoord, checkInstrument(instrument), note, 3.0F);
 	}
 
 	public static void playNote(World worldObj, int xCoord, int yCoord, int zCoord, int instrument, int note) {
@@ -80,5 +84,14 @@ public class NoteUtils {
 			}
 		}
 		return toVolume(index + 1, value);
+	}
+
+	public static String checkInstrument(String instrument) {
+		for(String s : instruments) {
+			if(s.equals(instrument)) {
+				return "note." + instrument;
+			}
+		}
+		throw new IllegalArgumentException("invalid instrument: " + instrument);
 	}
 }

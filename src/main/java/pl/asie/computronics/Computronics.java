@@ -13,6 +13,7 @@ import cpw.mods.fml.common.event.FMLMissingMappingsEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
+import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 import cpw.mods.fml.common.network.FMLEventChannel;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -366,6 +367,12 @@ public class Computronics {
 		if(Mods.isLoaded(Mods.ComputerCraft)) {
 			computercraft.serverStart();
 		}
+	}
+
+	@EventHandler
+	public void serverStop(FMLServerStoppedEvent event) {
+		storage = null;
+		proxy.onServerStop();
 	}
 
 	@EventHandler
