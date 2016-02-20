@@ -46,10 +46,10 @@ public class AudioUtil {
 
 	public static class FrequencyModulation extends Modulation {
 
-		private final int modulatorIndex;
-		private final int index;
+		public final int modulatorIndex;
+		public final float index;
 
-		public FrequencyModulation(int modulatorIndex, int index) {
+		public FrequencyModulation(int modulatorIndex, float index) {
 			this.modulatorIndex = modulatorIndex;
 			this.index = index;
 		}
@@ -74,7 +74,7 @@ public class AudioUtil {
 
 	public static class AmplitudeModulation extends Modulation {
 
-		private final int modulatorIndex;
+		public final int modulatorIndex;
 
 		public AmplitudeModulation(int modulatorIndex) {
 			this.modulatorIndex = modulatorIndex;
