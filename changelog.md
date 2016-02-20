@@ -14,6 +14,7 @@ This version comes with a 1.8.9 port in addition to many additions.
     - Each module can be individually disabled in the config file.
   * ADDED: getPosition() to tape drives. No, I'm not joking. It's real. I'm sorry.
   * ADDED: Built-in tape utility program for ComputerCraft to write songs to tapes and to play, stop, pause etc.
+  * FIXED: Iron Note Blocks now properly error when used with instrument names.
   * [1.7.10] ADDED: EnderIO 2.3 integration  for OpenComputers and ComputerCraft! (It has actually existed since March 2015, just not in any official release)
     - Added support for the new Telepad
       - Allows full control over the coordinates set (if allowed in the EnderIO config file) as well as telepad activation
@@ -31,9 +32,9 @@ This version comes with a 1.8.9 port in addition to many additions.
   * [1.8.9] Ported the mod to 1.8.9! Everything is resource-pack ready!
   	- Mods supported right now are ComputerCraft, OpenComputers, TIS-3D, Flamingo, Storage Drawers, Charset and WAILA. 
   	- asielib is no longer needed as a separate download, it is included in this mod.
-  * [1.8.9] Added Charset Wires Bundled Cable support for ComputerCraft.
-  * [1.8.9] Added Charset Wires Bundled Cable support for Computronics.
-  * [1.8.9] Added support for NoteBetter to the Iron Note Block and the Musical Turtle Upgrade.
+  * [1.8.9] ADDED: Charset Wires Bundled Cable support for ComputerCraft.
+  * [1.8.9] ADDED: Charset Wires Bundled Cable support for Computronics.
+  * [1.8.9] ADDED: Support for NoteBetter to the Iron Note Block and the Musical Turtle Upgrade.
 
 ==== 1.6.0 ====
 
