@@ -153,6 +153,7 @@ public class NoteUtils {
 				if(instrumentID > 0 && instrumentID < instruments.length) {
 					instrument = instruments[instrumentID];
 				}
+				instrument = "note." + instrument;
 			}
 			if(instrument != null) {
 				playNoteRaw(worldObj, pos, instrument, note, volume);
