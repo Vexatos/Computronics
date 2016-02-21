@@ -72,6 +72,11 @@ public class ClientProxy extends CommonProxy {
 	}
 
 	@Override
+	public void onServerStop() {
+		Computronics.instance.audio.removeAll();
+	}
+
+	@Override
 	public void goBoom(Packet p) throws IOException {
 		double
 			x = p.readDouble(),

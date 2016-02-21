@@ -313,11 +313,9 @@ public class DriverCardNoise extends DriverCardSoundBase {
 
 	protected void sendSound(World world, double x, double y, double z, ChannelData[] channels) throws Exception {
 		final int size = Math.min(channels.length, 8);
-		short modes = 0;
 		byte hits = 0;
 		for(int i = 0; i < size; i++) {
 			if(channels[i] != null) {
-				modes |= (getMode(i).ordinal() & 3) << (i * 2);
 				hits |= 1 << i;
 			}
 		}
@@ -326,14 +324,16 @@ public class DriverCardNoise extends DriverCardSoundBase {
 			.writeInt(MathHelper.floor_double(x))
 			.writeInt(MathHelper.floor_double(y))
 			.writeInt(MathHelper.floor_double(z))
-			.writeShort(modes)
 			.writeByte(hits);
 		for(ChannelData channel : channels) {
 			if(channel != null) {
 				packet.writeByte((byte) channel.entries.size());
-				for(ChannelEntry entry : channel.entries) {
+				for(int i = 0; i < channel.entries.size(); i++) {
+					ChannelEntry entry = channel.entries.get(i);
 					if(entry != null && entry.freqPair != null) {
-						packet.writeShort((short) entry.freqPair.frequency)
+						packet
+							.writeByte((byte) getMode(i).ordinal())
+							.writeShort((short) entry.freqPair.frequency)
 							.writeShort((short) entry.freqPair.duration)
 							.writeShort((short) entry.initialDelay);
 					}
@@ -353,15 +353,14 @@ public class DriverCardNoise extends DriverCardSoundBase {
 			int x = packet.readInt();
 			int y = packet.readInt();
 			int z = packet.readInt();
-			short modes = packet.readShort();
 			int hits = packet.readUnsignedByte();
 			for(int i = 0; i < 8; i++) {
 				if(((hits >> i) & 1) == 1) {
 					int entries = packet.readUnsignedByte();
 					for(int j = 0; j < entries; j++) {
+						AudioType type = AudioType.fromIndex(packet.readUnsignedByte());
 						short frequency = packet.readShort();
 						short duration = packet.readShort();
-						AudioType type = AudioType.fromIndex((modes >> (i * 2)) & 3);
 						short initialDelay = packet.readShort();
 						Audio.instance().play(x + 0.5f, y + 0.5f, z + 0.5f, type, frequency & 0xFFFF, duration & 0xFFFF, initialDelay);
 					}
