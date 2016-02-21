@@ -30,7 +30,7 @@ public class RackMountableRenderer {
 		boomBoard,
 		rackCapacitor;
 
-	private static final List<Integer> mountables = Arrays.asList(8, 9, 10);
+	private static final List<Integer> mountables = Arrays.asList(9, 10, 11);
 
 	@Optional.Method(modid = Mods.OpenComputers)
 	private boolean isRackMountable(ItemStack stack) {
@@ -48,7 +48,7 @@ public class RackMountableRenderer {
 		}
 
 		switch(stack.getItemDamage()) {
-			case 8: {
+			case 9: {
 				if(e.data == null) {
 					return;
 				}
@@ -82,7 +82,7 @@ public class RackMountableRenderer {
 				disableLight();
 				break;
 			}
-			case 9: {
+			case 10: {
 				if(e.data == null) {
 					return;
 				}
@@ -133,7 +133,7 @@ public class RackMountableRenderer {
 		}
 
 		switch(stack.getItemDamage()) {
-			case 8: {
+			case 9: {
 				if(e.data == null) {
 					return;
 				}
@@ -144,11 +144,11 @@ public class RackMountableRenderer {
 				e.setFrontTextureOverride(mode.background);
 				break;
 			}
-			case 9: {
+			case 10: {
 				e.setFrontTextureOverride(boomBoard);
 				break;
 			}
-			case 10: {
+			case 11: {
 				e.setFrontTextureOverride(rackCapacitor);
 				break;
 			}
