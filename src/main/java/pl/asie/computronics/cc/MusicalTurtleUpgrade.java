@@ -57,7 +57,9 @@ public class MusicalTurtleUpgrade extends TurtleUpgradeBase {
 					}
 				}
 				if(task != null) {
-					noteBuffer.add(task);
+					synchronized(noteBuffer) {
+						noteBuffer.add(task);
+					}
 				}
 			} catch(IllegalArgumentException e) {
 				throw new LuaException(e.getMessage());

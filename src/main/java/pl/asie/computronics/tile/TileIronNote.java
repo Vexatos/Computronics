@@ -69,7 +69,9 @@ public class TileIronNote extends TileEntityPeripheralBase implements IBundledRe
 			}
 		}
 		if(task != null) {
-			noteBuffer.add(task);
+			synchronized(noteBuffer) {
+				noteBuffer.add(task);
+			}
 		}
 		return null;
 	}
@@ -103,7 +105,9 @@ public class TileIronNote extends TileEntityPeripheralBase implements IBundledRe
 				}
 			}
 			if(task != null) {
-				noteBuffer.add(task);
+				synchronized(noteBuffer) {
+					noteBuffer.add(task);
+				}
 			}
 		} catch(IllegalArgumentException e) {
 			throw new LuaException(e.getMessage());
