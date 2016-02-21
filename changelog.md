@@ -15,6 +15,7 @@ This version comes with a 1.8.9 port in addition to many additions.
   * ADDED: getPosition() to tape drives. No, I'm not joking. It's real. I'm sorry.
   * ADDED: Built-in tape utility program for ComputerCraft to write songs to tapes and to play, stop, pause etc.
   * FIXED: Iron Note Blocks now properly error when used with instrument names.
+  * FIXED: Tape program not displaying information properly if file size is larger than tape size
   * [1.7.10] ADDED: EnderIO 2.3 integration  for OpenComputers and ComputerCraft! (It has actually existed since March 2015, just not in any official release)
     - Added support for the new Telepad
       - Allows full control over the coordinates set (if allowed in the EnderIO config file) as well as telepad activation
