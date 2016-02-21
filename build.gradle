@@ -195,7 +195,7 @@ task deobfJar(type: Jar) {
     description = 'Creates a jar file containing the non-obfuscated class files'
     classifier = 'deobf'
     destinationDir = file(libDir)
-    from sourceSets.main.output.classesDir
+    from sourceSets.main.output
     exclude 'cofh/**'
 }
 
