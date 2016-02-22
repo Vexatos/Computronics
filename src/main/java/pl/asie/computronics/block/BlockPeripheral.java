@@ -13,9 +13,9 @@ import pl.asie.computronics.oc.block.IComputronicsEnvironmentBlock;
 import pl.asie.computronics.oc.manual.IBlockWithDocumentation;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TileEntityPeripheralBase;
-import pl.asie.computronics.util.ColorUtils;
-import pl.asie.computronics.util.ColorUtils.Color;
 import pl.asie.lib.block.BlockBase;
+import pl.asie.lib.util.ColorUtils;
+import pl.asie.lib.util.ColorUtils.Color;
 
 @Optional.InterfaceList({
 	@Optional.Interface(iface = "pl.asie.computronics.oc.block.IComputronicsEnvironmentBlock", modid = Mods.OpenComputers)

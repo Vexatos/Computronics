@@ -8,9 +8,9 @@ import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.api.audio.AudioPacket;
 import pl.asie.computronics.api.audio.IAudioConnection;
 import pl.asie.computronics.api.audio.IAudioReceiver;
-import pl.asie.computronics.util.ColorUtils;
-import pl.asie.computronics.util.internal.IColorable;
 import pl.asie.lib.block.TileEntityBase;
+import pl.asie.lib.util.ColorUtils;
+import pl.asie.lib.util.internal.IColorable;
 
 public class TileAudioCable extends TileEntityBase implements IAudioReceiver, IColorable {
 	private final TIntHashSet packetIds = new TIntHashSet();

@@ -18,8 +18,8 @@ import pl.asie.computronics.Computronics;
 import pl.asie.computronics.client.AudioCableRender;
 import pl.asie.computronics.oc.manual.IBlockWithDocumentation;
 import pl.asie.computronics.tile.TileAudioCable;
-import pl.asie.computronics.util.ColorUtils;
 import pl.asie.lib.block.BlockBase;
+import pl.asie.lib.util.ColorUtils;
 
 import java.util.ArrayList;
 
