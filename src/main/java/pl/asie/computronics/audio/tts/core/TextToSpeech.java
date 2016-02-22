@@ -33,7 +33,7 @@ import pl.asie.computronics.Computronics;
 import pl.asie.computronics.audio.tts.BlockTTSBox;
 import pl.asie.computronics.audio.tts.TileTTSBox;
 import pl.asie.computronics.audio.tts.synth.SynthesizeTask;
-import pl.asie.computronics.network.Packets;
+import pl.asie.computronics.network.PacketType;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.lib.AsieLibMod;
 import pl.asie.lib.network.Packet;
@@ -157,7 +157,7 @@ public class TextToSpeech {
 													sndSys.activate(name);
 													sndSys.play(name);
 													playingSounds.add(new SoundPos(name, result.dimID, result.x, result.y, result.z));
-													Packet packet = Computronics.packet.create(Packets.PACKET_TTS)
+													Packet packet = Computronics.packet.create(PacketType.TTS.ordinal())
 														.writeTileLocation(tile)
 														.writeInt(time);
 													Computronics.packet.sendToServer(packet);

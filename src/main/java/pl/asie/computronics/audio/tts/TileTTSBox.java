@@ -10,7 +10,7 @@ import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import net.minecraft.nbt.NBTTagCompound;
 import pl.asie.computronics.Computronics;
-import pl.asie.computronics.network.Packets;
+import pl.asie.computronics.network.PacketType;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TileEntityPeripheralBase;
@@ -50,7 +50,7 @@ public class TileTTSBox extends TileEntityPeripheralBase {
 	}
 
 	private Object[] sendNewText(String text) throws IOException {
-		Packet packet = Computronics.packet.create(Packets.PACKET_TTS).writeTileLocation(this).writeString(text);
+		Packet packet = Computronics.packet.create(PacketType.TTS.ordinal()).writeTileLocation(this).writeString(text);
 		Computronics.packet.sendToAllAround(packet, this, Config.TAPEDRIVE_DISTANCE);
 		return new Object[] { true };
 	}
@@ -97,24 +97,6 @@ public class TileTTSBox extends TileEntityPeripheralBase {
 			}
 		}
 		return null;
-	}
-
-	@Override
-	@Optional.Method(modid = Mods.NedoComputers)
-	public boolean connectable(int side) {
-		return false;
-	}
-
-	@Override
-	@Optional.Method(modid = Mods.NedoComputers)
-	public short busRead(int addr) {
-		return 0;
-	}
-
-	@Override
-	@Optional.Method(modid = Mods.NedoComputers)
-	public void busWrite(int addr, short data) {
-
 	}
 
 	@Override
