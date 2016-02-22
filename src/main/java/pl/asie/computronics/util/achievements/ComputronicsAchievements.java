@@ -9,6 +9,7 @@ import net.minecraftforge.common.AchievementPage;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
+import pl.asie.computronics.Computronics;
 
 import java.util.HashMap;
 
@@ -65,15 +66,15 @@ public class ComputronicsAchievements {
 	}
 
 	private void initializeAchievements() {
-		/*if(Computronics.itemTape != null) {
+		if(Computronics.itemTape != null) {
 			this.registerAchievement(EnumAchievements.Tape, 0, 0, new ItemStack(Computronics.itemTape, 1, 0), null, false, true);
 			this.registerAchievement(EnumAchievements.Tape_Star, 4, 0, new ItemStack(Computronics.itemTape, 1, 8), this.getAchievement(EnumAchievements.Tape), false, false);
 
-			if(Mods.hasVersion(Mods.GregTech, Mods.Versions.GregTech5)) {
+			/*if(Mods.hasVersion(Mods.GregTech, Mods.Versions.GregTech5)) { TODO GregTech
 				this.registerAchievement(EnumAchievements.Tape_IG, 8, 2, new ItemStack(Computronics.itemTape, 1, 9), this.getAchievement(EnumAchievements.Tape_Star), true, false);
 				this.registerAchievement(EnumAchievements.Tape_IG_Dropped, 8, 10, ItemList.IC2_Scrap.get(1), this.getAchievement(EnumAchievements.Tape_IG), true, false);
-			}
-		}*/
+			}*/
+		}
 
 		/*if(Mods.isLoaded(Mods.Railcraft)) {
 			RailcraftAchievements.initializeRCAchievements();
@@ -113,7 +114,7 @@ public class ComputronicsAchievements {
 		if(player == null || stack == null) {
 			return;
 		}
-		/*if(Computronics.itemTape != null && stack.getItem() == Computronics.itemTape) {
+		if(Computronics.itemTape != null && stack.getItem() == Computronics.itemTape) {
 			switch(stack.getItemDamage()) {
 				case 9: {
 					this.triggerAchievement(player, EnumAchievements.Tape_IG);
@@ -129,8 +130,8 @@ public class ComputronicsAchievements {
 					break;
 				}
 			}
-		} else*/
-		/*if(Mods.isLoaded(Mods.Railcraft)) { TODO Railcraft
+		} /*else
+		if(Mods.isLoaded(Mods.Railcraft)) { TODO Railcraft
 			RailcraftAchievements.onCrafting(stack, player);
 		}*/
 	}
