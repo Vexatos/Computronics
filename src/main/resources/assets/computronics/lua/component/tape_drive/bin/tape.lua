@@ -15,18 +15,19 @@ end
 
 local function printUsage()
   print("Usage:")
-  print("'tape play' to start playing a tape")
-  print("'tape pause' to pause playing the tape")
-  print("'tape stop' to stop playing and rewind the tape")
-  print("'tape rewind' to rewind the tape")
-  print("'tape label [name]' to label the tape, leave 'name' empty to get current label")
-  print("'tape speed <speed>' to set the playback speed. Needs to be between 0.25 and 2.0")
-  print("'tape volume <volume>' to set the volume of the tape. Needs to be between 0.0 and 1.0")
-  print("'tape write <path/of/audio/file>' to write to the tape from a file")
-  print("'tape write <URL>' to write from a URL")
+  print(" - 'tape play' to start playing a tape")
+  print(" - 'tape pause' to pause playing the tape")
+  print(" - 'tape stop' to stop playing and rewind the tape")
+  print(" - 'tape rewind' to rewind the tape")
+  print(" - 'tape label [name]' to label the tape, leave 'name' empty to get current label")
+  print(" - 'tape speed <speed>' to set the playback speed. Needs to be between 0.25 and 2.0")
+  print(" - 'tape volume <volume>' to set the volume of the tape. Needs to be between 0.0 and 1.0")
+  print(" - 'tape write <path/of/audio/file>' to write to the tape from a file")
+  print(" - 'tape write <URL>' to write from a URL")
   print("Other options:")
-  print("'--address=<address>' to use a specific tape drive")
-  print("'--b=<bytes>' to specify the size of the chunks the program will write to a tape")
+  print(" '--address=<address>' to use a specific tape drive")
+  print(" '--b=<bytes>' to specify the size of the chunks the program will write to a tape")
+  print(" '-y' to not ask for confirmation before starting to write")
   return
 end
 
@@ -109,20 +110,22 @@ local function pause()
 end
 
 local function speed(sp)
-  if not tonumber(sp) then
+  local s = tonumber(sp)
+  if not s or s < 0.25 or s > 2 then
     io.stderr:write("Speed needs to be a number between 0.25 and 2.0")
     return
   end
-  tape.setSpeed(tonumber(sp))
+  tape.setSpeed(s)
   print("Playback speed set to " .. sp)
 end
 
 local function volume(vol)
-  if not tonumber(vol) then
+  local v = tonumber(vol)
+  if not v or v < 0 or v > 1 then
     io.stderr:write("Volume needs to be a number between 0.0 and 1.0")
     return
   end
-  tape.setVolume(tonumber(vol))
+  tape.setVolume(v)
   print("Volume set to " .. vol)
 end
 
@@ -142,6 +145,17 @@ local function writeTape(path)
       io.stderr:write("option --b is not a number.\n")
       return
     end
+  end
+  if not options.y then
+    print("Are you sure you want to write to this tape?")
+    print("Type `y` to confirm, `n` to cancel.")
+    repeat
+      local response = io.read()
+      if response and response:lower():sub(1, 1) == "n" then
+        print("Canceled.")
+        return
+      end
+    until response and response:lower():sub(1, 1) == "y"
   end
   local bytery = 0 --For the progress indicator
   local filesize = tape.getSize()
@@ -229,7 +243,7 @@ local function writeTape(path)
     local path = shell.resolve(path)
     filesize = fs.size(path)
     print("Path: " .. path)
-    file, msg = io.open(shell.resolve(path), "rb")
+    file, msg = io.open(path, "rb")
     if not file then
       io.stderr:write("Error: " .. msg)
       return
@@ -242,20 +256,25 @@ local function writeTape(path)
 
   if filesize > tape.getSize() then
     term.setCursor(1, y)
-    io.stderr:write("Error: File is too large for tape, shortening file")
-    y = y + 1
+    io.stderr:write("Warning: File is too large for tape, shortening file\n")
+    _, y = term.getCursor()
     filesize = tape.getSize()
   end
 
   repeat
     local bytes = file:read(block)
     if bytes and #bytes > 0 then
+      if not tape.isReady() then
+        io.stderr:write("\nError: Tape was removed during writing.\n")
+        file:close()
+        return
+      end
       term.setCursor(1, y)
       bytery = bytery + #bytes
-      term.write("Read " .. tostring(bytery) .. " of " .. tostring(filesize) .. " bytes...")
+      term.write("Read " .. tostring(math.min(bytery, filesize)) .. " of " .. tostring(filesize) .. " bytes...")
       tape.write(bytes)
     end
-  until not bytes
+  until not bytes or bytery > filesize
   file:close()
   tape.stop()
   tape.seek(-tape.getSize())

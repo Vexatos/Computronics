@@ -39,7 +39,7 @@ public class DriverLauncherTrack {
 
 	public static class OCDriver extends DriverTileEntity {
 
-		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TrackLauncher> {
+		public static class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TrackLauncher> {
 
 			public InternalManagedEnvironment(TrackLauncher tile) {
 				super(tile, Names.Railcraft_LauncherTrack);
@@ -76,6 +76,7 @@ public class DriverLauncherTrack {
 	}
 
 	public static class CCDriver extends CCMultiPeripheral<TrackLauncher> {
+
 		public CCDriver() {
 		}
 
@@ -99,11 +100,11 @@ public class DriverLauncherTrack {
 
 		@Override
 		public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
-			switch(method){
-				case 0:{
+			switch(method) {
+				case 0: {
 					return DriverLauncherTrack.getForce(tile);
 				}
-				case 1:{
+				case 1: {
 					if(arguments.length < 1 || !(arguments[0] instanceof Double)) {
 						throw new LuaException("first argument needs to be a number");
 					}

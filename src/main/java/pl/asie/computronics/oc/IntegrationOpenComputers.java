@@ -26,8 +26,12 @@ import pl.asie.computronics.integration.enderio.DriverHasExperience;
 import pl.asie.computronics.integration.enderio.DriverIOConfigurable;
 import pl.asie.computronics.integration.enderio.DriverPowerMonitor;
 import pl.asie.computronics.integration.enderio.DriverPowerStorage;
+import pl.asie.computronics.integration.enderio.DriverProgressTile;
 import pl.asie.computronics.integration.enderio.DriverRedstoneControllable;
+import pl.asie.computronics.integration.enderio.DriverTelepad;
 import pl.asie.computronics.integration.enderio.DriverTransceiver;
+import pl.asie.computronics.integration.enderio.DriverVacuumChest;
+import pl.asie.computronics.integration.enderio.DriverWeatherObelisk;
 import pl.asie.computronics.integration.factorization.DriverChargeConductor;
 import pl.asie.computronics.integration.flamingo.DriverFlamingo;
 import pl.asie.computronics.integration.forestry.IntegrationForestry;
@@ -55,6 +59,7 @@ import pl.asie.computronics.oc.manual.ComputronicsPathProvider;
 import pl.asie.computronics.reference.Compat;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
+import pl.asie.computronics.util.RecipeUtils;
 
 import static pl.asie.computronics.Computronics.camera;
 import static pl.asie.computronics.Computronics.chatBox;
@@ -88,9 +93,10 @@ public class IntegrationOpenComputers {
 			|| Config.OC_UPGRADE_RADAR
 			|| Config.OC_CARD_FX
 			|| Config.OC_CARD_SPOOF
-			|| Config.OC_CARD_SOUND
+			|| Config.OC_CARD_BEEP
 			|| Config.OC_CARD_BOOM
-			|| Config.OC_UPGRADE_COLORFUL) {
+			|| Config.OC_UPGRADE_COLORFUL
+			|| Config.OC_CARD_NOISE) {
 			itemOCParts = new ItemOpenComputers();
 			GameRegistry.registerItem(itemOCParts, "computronics.ocParts");
 			Driver.add(itemOCParts);
@@ -101,9 +107,13 @@ public class IntegrationOpenComputers {
 		// To ensure less TE ticks for those who don't use OC, we keep this tidbit around.
 		Config.MUST_UPDATE_TILE_ENTITIES = true;
 
-		if(Mods.isLoaded(Mods.Forestry) && Config.FORESTRY_BEES) {
-			Computronics.forestry = new IntegrationForestry();
-			Computronics.forestry.preInitOC();
+		if(Mods.hasVersion(Mods.Forestry, Mods.Versions.Forestry)) {
+			if(Config.FORESTRY_BEES) {
+				Computronics.forestry = new IntegrationForestry();
+				Computronics.forestry.preInitOC();
+			}
+		} else {
+			log.warn("Detected outdated version of Forestry, Forestry integration will not be enabled. Please update to Forestry " + Mods.Versions.Forestry + " or later.");
 		}
 
 		if(Mods.isLoaded(Mods.BuildCraftTransport) && Mods.isLoaded(Mods.BuildCraftCore) && Config.BUILDCRAFT_STATION) {
@@ -176,7 +186,7 @@ public class IntegrationOpenComputers {
 				Driver.add(new DriverPrimingTrack.OCDriver());
 			}
 		}
-		if(Mods.isLoaded(Mods.GregTech)) {
+		if(Mods.hasVersion(Mods.GregTech, Mods.Versions.GregTech5)) {
 			if(compat.isCompatEnabled(Compat.GregTech_Machines)) {
 				Driver.add(new DriverBaseMetaTileEntity());
 				Driver.add(new DriverDeviceInformation());
@@ -203,12 +213,16 @@ public class IntegrationOpenComputers {
 				Driver.add(new DriverIOConfigurable.OCDriver());
 				Driver.add(new DriverHasExperience.OCDriver());
 				Driver.add(new DriverPowerStorage.OCDriver());
+				Driver.add(new DriverProgressTile.OCDriver());
 				Driver.add(new DriverAbstractMachine.OCDriver());
 				Driver.add(new DriverAbstractPoweredMachine.OCDriver());
 				Driver.add(new DriverPowerMonitor.OCDriver());
 				Driver.add(new DriverCapacitorBank.OCDriver());
 				Driver.add(new DriverCapacitorBankOld.OCDriver());
 				Driver.add(new DriverTransceiver.OCDriver());
+				Driver.add(new DriverVacuumChest.OCDriver());
+				Driver.add(new DriverWeatherObelisk.OCDriver());
+				Driver.add(new DriverTelepad.OCDriver());
 			}
 		}
 
@@ -222,7 +236,7 @@ public class IntegrationOpenComputers {
 			Driver.add(new DriverStrictEnergyStorage.OCDriver());
 		}
 
-		if(Mods.API.hasVersion(Mods.API.BuildCraftTiles, "[1.1,)")) {
+		if(Mods.hasVersion(Mods.API.BuildCraftTiles, Mods.Versions.BuildCraftTiles)) {
 			if(compat.isCompatEnabled(Compat.BuildCraft_Drivers)) {
 				Driver.add(new DriverHeatable.OCDriver());
 			}
@@ -247,11 +261,11 @@ public class IntegrationOpenComputers {
 	public void postInit() {
 		if(Config.OC_UPGRADE_CAMERA) {
 			if(camera != null) {
-				GameRegistry.addShapedRecipe(new ItemStack(itemOCParts, 1, 0),
+				RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 0),
 					"mcm", 'c',
 					new ItemStack(camera, 1, 0),
 					'm', li.cil.oc.api.Items.get("chip2").createItemStack(1));
-				GameRegistry.addShapedRecipe(new ItemStack(itemOCParts, 1, 0),
+				RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 0),
 					"m", "c", "m",
 					'c', new ItemStack(camera, 1, 0),
 					'm', li.cil.oc.api.Items.get("chip2").createItemStack(1));
@@ -261,11 +275,11 @@ public class IntegrationOpenComputers {
 		}
 		if(Config.OC_UPGRADE_CHATBOX) {
 			if(chatBox != null) {
-				GameRegistry.addShapedRecipe(new ItemStack(itemOCParts, 1, 1),
+				RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 1),
 					"mcm", 'c',
 					new ItemStack(chatBox, 1, 0),
 					'm', li.cil.oc.api.Items.get("chip2").createItemStack(1));
-				GameRegistry.addShapedRecipe(new ItemStack(itemOCParts, 1, 1),
+				RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 1),
 					"m", "c", "m",
 					'c', new ItemStack(chatBox, 1, 0),
 					'm', li.cil.oc.api.Items.get("chip2").createItemStack(1));
@@ -275,11 +289,11 @@ public class IntegrationOpenComputers {
 		}
 		if(Config.OC_UPGRADE_RADAR) {
 			if(radar != null) {
-				GameRegistry.addShapedRecipe(new ItemStack(itemOCParts, 1, 2),
+				RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 2),
 					"mcm", 'c',
 					new ItemStack(radar, 1, 0),
 					'm', li.cil.oc.api.Items.get("chip3").createItemStack(1));
-				GameRegistry.addShapedRecipe(new ItemStack(itemOCParts, 1, 2),
+				RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 2),
 					"m", "c", "m",
 					'c', new ItemStack(radar, 1, 0),
 					'm', li.cil.oc.api.Items.get("chip3").createItemStack(1));
@@ -288,7 +302,7 @@ public class IntegrationOpenComputers {
 			}
 		}
 		if(Config.OC_CARD_FX) {
-			GameRegistry.addShapedRecipe(new ItemStack(itemOCParts, 1, 3),
+			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 3),
 				"mf", " b",
 				'm', li.cil.oc.api.Items.get("chip2").createItemStack(1),
 				'f', Items.firework_charge,
@@ -296,7 +310,7 @@ public class IntegrationOpenComputers {
 
 		}
 		if(Config.OC_CARD_SPOOF) {
-			GameRegistry.addShapedRecipe(new ItemStack(itemOCParts, 1, 4),
+			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 4),
 				"mfl", "pb ", "   ",
 				'm', li.cil.oc.api.Items.get("ram2").createItemStack(1),
 				'f', li.cil.oc.api.Items.get("chip2").createItemStack(1),
@@ -304,8 +318,8 @@ public class IntegrationOpenComputers {
 				'p', li.cil.oc.api.Items.get("printedCircuitBoard").createItemStack(1),
 				'l', Items.brick);
 		}
-		if(Config.OC_CARD_SOUND) {
-			GameRegistry.addShapedRecipe(new ItemStack(itemOCParts, 1, 5),
+		if(Config.OC_CARD_BEEP) {
+			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 5),
 				" l ", "mb ", " f ",
 				'm', li.cil.oc.api.Items.get("chip2").createItemStack(1),
 				'f', Computronics.ironNote,
@@ -313,7 +327,7 @@ public class IntegrationOpenComputers {
 				'l', li.cil.oc.api.Items.get("cu").createItemStack(1));
 		}
 		if(Config.OC_CARD_BOOM) {
-			GameRegistry.addShapedRecipe(new ItemStack(itemOCParts, 1, 6),
+			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 6),
 				"mf", "fb",
 				'm', li.cil.oc.api.Items.get("cu").createItemStack(1),
 				'f', Blocks.tnt,
@@ -322,12 +336,12 @@ public class IntegrationOpenComputers {
 		}
 		if(Config.OC_UPGRADE_COLORFUL) {
 			if(colorfulLamp != null) {
-				GameRegistry.addShapedRecipe(new ItemStack(itemOCParts, 1, 7),
+				RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 7),
 					" f ", "mcm", " f ", 'c',
 					new ItemStack(colorfulLamp, 1, 0),
 					'm', li.cil.oc.api.Items.get("chip2").createItemStack(1),
 					'f', li.cil.oc.api.Items.get("chamelium").createItemStack(1));
-				GameRegistry.addShapedRecipe(new ItemStack(itemOCParts, 1, 7),
+				RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 7),
 					" m ", "fcf", " m ",
 					'c', new ItemStack(colorfulLamp, 1, 0),
 					'm', li.cil.oc.api.Items.get("chip2").createItemStack(1),
@@ -335,6 +349,15 @@ public class IntegrationOpenComputers {
 			} else {
 				log.warn("Could not add Colorful Upgrade Recipe because Colorful Lamp is disabled in the config.");
 			}
+		}
+		if(Config.OC_CARD_NOISE) {
+			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 8),
+				" l ", "mbn", " f ",
+				'm', li.cil.oc.api.Items.get("chip2").createItemStack(1),
+				'f', li.cil.oc.api.Items.get("alu").createItemStack(1),
+				'b', new ItemStack(itemOCParts, 1, 5),
+				'l', li.cil.oc.api.Items.get("chip3").createItemStack(1),
+				'n', "nuggetGold");
 		}
 		if(Computronics.buildcraft != null) {
 			Computronics.buildcraft.postInitOC();

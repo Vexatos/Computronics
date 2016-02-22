@@ -16,6 +16,7 @@ import pl.asie.computronics.reference.Names;
 public class DriverEnergyReceiver {
 
 	public static class CCDriver extends CCMultiPeripheral<IEnergyReceiver> {
+
 		public CCDriver() {
 		}
 

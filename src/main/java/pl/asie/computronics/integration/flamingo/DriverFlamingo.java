@@ -9,10 +9,14 @@ import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.ManagedEnvironment;
 import li.cil.oc.api.prefab.DriverTileEntity;
+import li.cil.tis3d.api.serial.SerialInterface;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import pl.asie.computronics.integration.CCMultiPeripheral;
 import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
+import pl.asie.computronics.integration.tis3d.serial.TileInterfaceProvider;
+import pl.asie.computronics.integration.tis3d.serial.TileSerialInterface;
 import pl.asie.computronics.reference.Names;
 
 /**
@@ -20,9 +24,13 @@ import pl.asie.computronics.reference.Names;
  */
 public class DriverFlamingo {
 
+	private static void wiggle(TileEntityFlamingo tile) {
+		tile.getWorldObj().addBlockEvent(tile.xCoord, tile.yCoord, tile.zCoord, tile.getBlockType(), 0, 0);
+	}
+
 	public static class OCDriver extends DriverTileEntity {
 
-		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TileEntityFlamingo> {
+		public static class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TileEntityFlamingo> {
 
 			public InternalManagedEnvironment(TileEntityFlamingo tile) {
 				super(tile, Names.Flamingo_Flamingo);
@@ -35,7 +43,7 @@ public class DriverFlamingo {
 
 			@Callback(doc = "function(); Makes the Flamingo wiggle.")
 			public Object[] wiggle(Context c, Arguments a) {
-				tile.getWorldObj().addBlockEvent(tile.xCoord, tile.yCoord, tile.zCoord, tile.getBlockType(), 0, 0);
+				DriverFlamingo.wiggle(tile);
 				return new Object[] {};
 			}
 
@@ -88,13 +96,59 @@ public class DriverFlamingo {
 		public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
 			switch(method) {
 				case 0: {
-					tile.getWorldObj().addBlockEvent(tile.xCoord, tile.yCoord, tile.zCoord, tile.getBlockType(), 0, 0);
+					DriverFlamingo.wiggle(tile);
 				}
 				case 1: {
 					return new Object[] { tile.wiggleStrength };
 				}
 			}
 			return null;
+		}
+	}
+
+	public static class TISInterfaceProvider extends TileInterfaceProvider {
+
+		public TISInterfaceProvider() {
+			super(TileEntityFlamingo.class, "flamingo", "flamingo.md");
+		}
+
+		public static class InternalSerialInterface extends TileSerialInterface<TileEntityFlamingo> {
+
+			public InternalSerialInterface(TileEntityFlamingo tile) {
+				super(tile);
+			}
+
+			@Override
+			public boolean canWrite() {
+				return true;
+			}
+
+			@Override
+			public void write(short value) {
+				DriverFlamingo.wiggle(tile);
+			}
+
+			@Override
+			public boolean canRead() {
+				return false;
+			}
+
+			@Override
+			public short peek() {
+				return 0;
+			}
+		}
+
+		@Override
+		public SerialInterface interfaceFor(World world, int x, int y, int z, EnumFacing side) {
+			return new InternalSerialInterface((TileEntityFlamingo) world.getTileEntity(x, y, z));
+		}
+
+		@Override
+		protected boolean isStillValid(World world, int x, int y, int z, EnumFacing side, SerialInterface serialInterface, TileEntity tile) {
+			return tile instanceof TileEntityFlamingo
+				&& serialInterface instanceof InternalSerialInterface
+				&& ((InternalSerialInterface) serialInterface).isTileEqual(tile);
 		}
 	}
 }

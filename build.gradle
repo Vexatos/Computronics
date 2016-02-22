@@ -83,6 +83,7 @@ configurations {
 
 dependencies {
 	compile "li.cil.oc:OpenComputers:${config.oc.version}:dev"
+	compile "li.cil.tis3d:TIS-3D:${config.tis3d.version}:dev"
 	provided "net.industrial-craft:industrialcraft-2:${config.ic2.version}:dev"
 	provided "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech.version}:dev"
 	compile "mcp.mobius.waila:Waila:${config.waila.version}:dev"
@@ -91,6 +92,10 @@ dependencies {
 		exclude module: "buildcraft"
 		exclude module: "Waila"
 		exclude module: "forestry_1.7.10"
+		exclude module: "OpenComputers"
+		exclude module: "CodeChickenLib"
+		exclude module: "CodeChickenCore"
+		exclude module: "EquivalentExchange3"
 	}
 	compile("net.sengir.forestry:forestry_1.7.10:${config.forestry.version}:dev") {
 		exclude module: "buildcraft"

@@ -30,6 +30,7 @@ import java.util.HashMap;
  * @author Vexatos
  */
 public class ComputronicsAchievements {
+
 	public HashMap<String, Achievement> achievementMap = new HashMap<String, Achievement>();
 
 	private enum EnumAchievements {
@@ -43,7 +44,7 @@ public class ComputronicsAchievements {
 
 		String key;
 
-		private EnumAchievements(String key) {
+		EnumAchievements(String key) {
 			this.key = key;
 		}
 
@@ -67,7 +68,7 @@ public class ComputronicsAchievements {
 			this.registerAchievement(EnumAchievements.Tape, 0, 0, new ItemStack(Computronics.itemTape, 1, 0), null, false, true);
 			this.registerAchievement(EnumAchievements.Tape_Star, 4, 0, new ItemStack(Computronics.itemTape, 1, 8), this.getAchievement(EnumAchievements.Tape), false, false);
 
-			if(Mods.isLoaded(Mods.GregTech)) {
+			if(Mods.hasVersion(Mods.GregTech, Mods.Versions.GregTech5)) {
 				this.registerAchievement(EnumAchievements.Tape_IG, 8, 2, new ItemStack(Computronics.itemTape, 1, 9), this.getAchievement(EnumAchievements.Tape_Star), true, false);
 				this.registerAchievement(EnumAchievements.Tape_IG_Dropped, 8, 10, ItemList.IC2_Scrap.get(1), this.getAchievement(EnumAchievements.Tape_IG), true, false);
 			}

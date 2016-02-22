@@ -24,12 +24,12 @@ public class DriverMannequin {
 
 	private static final HashMap<String, Part> parts = new HashMap<String, Part>();
 
-	private static enum Part {
+	private enum Part {
 		head, chest, left_arm, right_arm, left_leg, right_leg;
 
 		private static final Part[] VALUES = values();
 
-		private Part() {
+		Part() {
 			parts.put(this.name().toLowerCase(Locale.ENGLISH), this);
 		}
 
@@ -161,7 +161,7 @@ public class DriverMannequin {
 
 	public static class OCDriver extends DriverTileEntity {
 
-		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TileEntityMannequin> {
+		public static class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TileEntityMannequin> {
 
 			public InternalManagedEnvironment(TileEntityMannequin tile) {
 				super(tile, Names.AW_Mannequin);

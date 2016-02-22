@@ -38,7 +38,7 @@ public class DriverPrimingTrack {
 
 	public static class OCDriver extends DriverTileEntity {
 
-		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TrackPriming> {
+		public static class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TrackPriming> {
 
 			public InternalManagedEnvironment(TrackPriming tile) {
 				super(tile, Names.Railcraft_PrimingTrack);
@@ -75,6 +75,7 @@ public class DriverPrimingTrack {
 	}
 
 	public static class CCDriver extends CCMultiPeripheral<TrackPriming> {
+
 		public CCDriver() {
 		}
 
@@ -98,11 +99,11 @@ public class DriverPrimingTrack {
 
 		@Override
 		public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
-			switch(method){
-				case 0:{
+			switch(method) {
+				case 0: {
 					return DriverPrimingTrack.getFuse(tile);
 				}
-				case 1:{
+				case 1: {
 					if(arguments.length < 1 || !(arguments[0] instanceof Double)) {
 						throw new LuaException("first argument needs to be a number");
 					}

@@ -2,6 +2,8 @@ package pl.asie.computronics;
 
 import cpw.mods.fml.common.registry.EntityRegistry;
 import net.minecraft.world.World;
+import pl.asie.computronics.api.audio.AudioPacketDFPWM;
+import pl.asie.computronics.api.audio.AudioPacketRegistry;
 import pl.asie.computronics.item.entity.EntityItemIndestructable;
 import pl.asie.lib.network.Packet;
 
@@ -13,11 +15,15 @@ public class CommonProxy {
 		return false;
 	}
 
+	public void registerAudioHandlers() {
+		AudioPacketRegistry.INSTANCE.registerType(AudioPacketDFPWM.class);
+	}
+
 	public void registerEntities() {
 		EntityRegistry.registerModEntity(EntityItemIndestructable.class, "computronics.itemTape", 1, Computronics.instance, 64, 20, true);
 	}
 
-	public void registerRenderers() {
+	public void init() {
 		//NO-OP
 	}
 
@@ -27,5 +33,9 @@ public class CommonProxy {
 
 	public void spawnSwarmParticle(World worldObj, double xPos, double yPos, double zPos, int color) {
 		//NO-OP
+	}
+
+	public void onServerStop() {
+
 	}
 }

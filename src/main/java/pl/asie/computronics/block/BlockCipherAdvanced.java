@@ -28,7 +28,6 @@ public class BlockCipherAdvanced extends BlockMachineSidedIcon implements IBlock
 	public BlockCipherAdvanced() {
 		super("cipher_advanced");
 		this.setBlockName("computronics.cipher_advanced");
-		this.setNoNedoComputers(true);
 	}
 
 	@Override

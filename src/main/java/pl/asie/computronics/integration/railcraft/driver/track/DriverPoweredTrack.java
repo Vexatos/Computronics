@@ -33,7 +33,7 @@ public class DriverPoweredTrack {
 
 	public static class OCDriver extends DriverTileEntity {
 
-		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<ITrackPowered> {
+		public static class InternalManagedEnvironment extends ManagedEnvironmentOCTile<ITrackPowered> {
 
 			public InternalManagedEnvironment(ITrackPowered tile) {
 				super(tile, Names.Railcraft_PoweredTrack);
@@ -69,6 +69,7 @@ public class DriverPoweredTrack {
 	}
 
 	public static class CCDriver extends CCMultiPeripheral<ITrackPowered> {
+
 		public CCDriver() {
 		}
 

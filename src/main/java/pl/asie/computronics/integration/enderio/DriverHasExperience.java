@@ -22,7 +22,7 @@ public class DriverHasExperience {
 
 	public static class OCDriver extends DriverTileEntity {
 
-		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<IHaveExperience> {
+		public static class InternalManagedEnvironment extends ManagedEnvironmentOCTile<IHaveExperience> {
 
 			public InternalManagedEnvironment(IHaveExperience tile) {
 				super(tile, Names.EnderIO_ExperienceTile);
@@ -90,14 +90,14 @@ public class DriverHasExperience {
 
 		@Override
 		public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
-			switch(method){
-				case 0:{
+			switch(method) {
+				case 0: {
 					return new Object[] { tile.getContainer().getExperienceTotal() };
 				}
-				case 1:{
+				case 1: {
 					return new Object[] { tile.getContainer().getExperienceLevel() };
 				}
-				case 2:{
+				case 2: {
 					return new Object[] { tile.getContainer().getMaximumExperiance() };
 				}
 			}

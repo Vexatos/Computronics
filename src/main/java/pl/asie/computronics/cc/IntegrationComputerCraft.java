@@ -19,8 +19,12 @@ import pl.asie.computronics.integration.enderio.DriverHasExperience;
 import pl.asie.computronics.integration.enderio.DriverIOConfigurable;
 import pl.asie.computronics.integration.enderio.DriverPowerMonitor;
 import pl.asie.computronics.integration.enderio.DriverPowerStorage;
+import pl.asie.computronics.integration.enderio.DriverProgressTile;
 import pl.asie.computronics.integration.enderio.DriverRedstoneControllable;
+import pl.asie.computronics.integration.enderio.DriverTelepad;
 import pl.asie.computronics.integration.enderio.DriverTransceiver;
+import pl.asie.computronics.integration.enderio.DriverVacuumChest;
+import pl.asie.computronics.integration.enderio.DriverWeatherObelisk;
 import pl.asie.computronics.integration.factorization.DriverChargeConductor;
 import pl.asie.computronics.integration.flamingo.DriverFlamingo;
 import pl.asie.computronics.integration.fsp.DriverSteamTransporter;
@@ -42,6 +46,7 @@ import pl.asie.computronics.integration.storagedrawers.DriverDrawerGroup;
 import pl.asie.computronics.reference.Compat;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
+import pl.asie.computronics.tile.TileTapeDrive;
 
 import static pl.asie.computronics.Computronics.itemTape;
 import static pl.asie.computronics.Computronics.peripheralRegistry;
@@ -131,12 +136,16 @@ public class IntegrationComputerCraft {
 				registerMultiPeripheralProvider(new DriverIOConfigurable.CCDriver());
 				registerMultiPeripheralProvider(new DriverHasExperience.CCDriver());
 				registerMultiPeripheralProvider(new DriverPowerStorage.CCDriver());
+				registerMultiPeripheralProvider(new DriverProgressTile.CCDriver());
 				registerMultiPeripheralProvider(new DriverAbstractMachine.CCDriver());
 				registerMultiPeripheralProvider(new DriverAbstractPoweredMachine.CCDriver());
 				registerMultiPeripheralProvider(new DriverPowerMonitor.CCDriver());
 				registerMultiPeripheralProvider(new DriverCapacitorBank.CCDriver());
 				registerMultiPeripheralProvider(new DriverCapacitorBankOld.CCDriver());
 				registerMultiPeripheralProvider(new DriverTransceiver.CCDriver());
+				registerMultiPeripheralProvider(new DriverVacuumChest.CCDriver());
+				registerMultiPeripheralProvider(new DriverWeatherObelisk.CCDriver());
+				registerMultiPeripheralProvider(new DriverTelepad.CCDriver());
 			}
 		}
 
@@ -150,7 +159,7 @@ public class IntegrationComputerCraft {
 			registerMultiPeripheralProvider(new DriverStrictEnergyStorage.CCDriver());
 		}
 
-		if(Mods.API.hasVersion(Mods.API.BuildCraftTiles, "[1.1,)")) {
+		if(Mods.hasVersion(Mods.API.BuildCraftTiles, Mods.Versions.BuildCraftTiles)) {
 			if(compat.isCompatEnabled(Compat.BuildCraft_Drivers)) {
 				registerMultiPeripheralProvider(new DriverHeatable.CCDriver());
 			}
@@ -181,6 +190,10 @@ public class IntegrationComputerCraft {
 				new MusicalTurtleUpgrade(config.get("turtleUpgradeIDs", "musical", 192).getInt()));
 			ComputerCraftAPI.registerTurtleUpgrade(
 				new ParticleTurtleUpgrade(config.get("turtleUpgradeIDs", "particle", 193).getInt()));
+		}
+
+		if(Computronics.tapeReader != null){
+			TileTapeDrive.initCCFilesystem();
 		}
 	}
 

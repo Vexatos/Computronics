@@ -14,26 +14,31 @@ import pl.asie.lib.network.Packet;
 import java.io.IOException;
 
 public class NetworkHandlerServer extends MessageHandlerBase {
+
 	@Override
 	public void onMessage(Packet packet, INetHandler handler, EntityPlayer player, int command)
 		throws IOException {
-		switch(command) {
-			case Packets.PACKET_TAPE_GUI_STATE: {
+		PacketType type = PacketType.of(command);
+		if(type == null) {
+			return;
+		}
+		switch(type) {
+			case TAPE_GUI_STATE: {
 				TileEntity entity = packet.readTileEntityServer();
-				State state = State.values()[packet.readUnsignedByte()];
+				State state = State.VALUES[packet.readUnsignedByte()];
 				if(entity instanceof TileTapeDrive) {
 					TileTapeDrive tile = (TileTapeDrive) entity;
 					tile.switchState(state);
 				}
 			}
 			break;
-			case Packets.PACKET_TICKET_SYNC: {
+			case TICKET_SYNC: {
 				if(Mods.isLoaded(Mods.Railcraft)) {
 					Computronics.railcraft.onMessageRailcraft(packet, player, true);
 				}
 			}
 			break;
-			case Packets.PACKET_TICKET_PRINT: {
+			case TICKET_PRINT: {
 				if(Mods.isLoaded(Mods.Railcraft)) {
 					Computronics.railcraft.printTicket(packet, player, true);
 				}

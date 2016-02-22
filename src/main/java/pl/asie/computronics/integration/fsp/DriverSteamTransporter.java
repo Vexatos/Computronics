@@ -17,8 +17,11 @@ import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
 import pl.asie.computronics.reference.Names;
 
 public class DriverSteamTransporter {
+
 	public static class OCDriver extends DriverTileEntity {
-		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<ISteamTransporter> {
+
+		public static class InternalManagedEnvironment extends ManagedEnvironmentOCTile<ISteamTransporter> {
+
 			public InternalManagedEnvironment(ISteamTransporter tile) {
 				super(tile, Names.FSP_SteamTransporter);
 			}
@@ -77,7 +80,7 @@ public class DriverSteamTransporter {
 		public Object[] callMethod(IComputerAccess computer, ILuaContext context,
 			int method, Object[] arguments) throws LuaException,
 			InterruptedException {
-			switch(method){
+			switch(method) {
 				case 0:
 					return new Object[] { (double) tile.getPressure() };
 				case 1:

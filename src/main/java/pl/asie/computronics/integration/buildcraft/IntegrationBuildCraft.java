@@ -14,6 +14,7 @@ import pl.asie.computronics.integration.buildcraft.pluggable.DroneStationRendere
 import pl.asie.computronics.integration.buildcraft.pluggable.ItemDockingUpgrade;
 import pl.asie.computronics.integration.buildcraft.pluggable.ItemDroneStation;
 import pl.asie.computronics.reference.Mods;
+import pl.asie.computronics.util.RecipeUtils;
 
 /**
  * @author Vexatos
@@ -51,7 +52,7 @@ public class IntegrationBuildCraft {
 		if(robotStation == null || robotStation.getItem() == null) {
 			robotStation = new ItemStack(Items.ender_pearl, 1, 0);
 		}
-		GameRegistry.addShapedRecipe(new ItemStack(droneStationItem, 1, 0),
+		RecipeUtils.addShapedRecipe(new ItemStack(droneStationItem, 1, 0),
 			" a ", "tst", " c ", 's', robotStation, 'a', li.cil.oc.api.Items.get("chip1").createItemStack(1),
 			'c', li.cil.oc.api.Items.get("cable").createItemStack(1), 't', li.cil.oc.api.Items.get("transistor").createItemStack(1)
 		);
@@ -59,7 +60,7 @@ public class IntegrationBuildCraft {
 		if(pipe == null || pipe.getItem() == null) {
 			pipe = li.cil.oc.api.Items.get("cable").createItemStack(1);
 		}
-		GameRegistry.addShapedRecipe(new ItemStack(dockingUpgrade, 1, 0),
+		RecipeUtils.addShapedRecipe(new ItemStack(dockingUpgrade, 1, 0),
 			" a ", "tst", " c ", 's', new ItemStack(droneStationItem, 1, 0), 'a', li.cil.oc.api.Items.get("chip1").createItemStack(1),
 			'c', pipe, 't', li.cil.oc.api.Items.get("transistor").createItemStack(1)
 		);

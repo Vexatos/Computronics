@@ -8,12 +8,17 @@ import net.minecraft.world.ChunkPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
+import pl.asie.computronics.api.audio.AudioPacketDFPWM;
+import pl.asie.computronics.api.audio.AudioPacketRegistry;
+import pl.asie.computronics.audio.AudioPacketClientHandlerDFPWM;
+import pl.asie.computronics.client.AudioCableRender;
 import pl.asie.computronics.client.LampRender;
 import pl.asie.computronics.client.SignalBoxRenderer;
 import pl.asie.computronics.client.UpgradeRenderer;
 import pl.asie.computronics.oc.IntegrationOpenComputers;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.boom.SelfDestruct;
+import pl.asie.computronics.util.sound.Audio;
 import pl.asie.lib.network.Packet;
 
 import java.io.IOException;
@@ -27,26 +32,47 @@ public class ClientProxy extends CommonProxy {
 	}
 
 	@Override
+	public void registerAudioHandlers() {
+		super.registerAudioHandlers();
+		AudioPacketRegistry.INSTANCE.registerClientHandler(
+			AudioPacketDFPWM.class, new AudioPacketClientHandlerDFPWM()
+		);
+	}
+
+	@Override
 	public void registerEntities() {
 		super.registerEntities();
 	}
 
 	@Override
+	public void init() {
+		Audio.init();
+		registerRenderers();
+	}
+
 	public void registerRenderers() {
 		if(Computronics.colorfulLamp != null) {
 			RenderingRegistry.registerBlockHandler(new LampRender());
 		}
-		if(Computronics.railcraft != null) {
+		if(Computronics.audioCable != null) {
+			RenderingRegistry.registerBlockHandler(new AudioCableRender());
+		}
+		if(Computronics.railcraft != null && Computronics.railcraft.digitalBox != null) {
 			SignalBoxRenderer renderer = new SignalBoxRenderer();
 			RenderingRegistry.registerBlockHandler(renderer);
 			MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(renderer.getBlock()), renderer.getItemRenderer());
 		}
 		if(Mods.isLoaded(Mods.OpenComputers)) {
 			registerOpenComputersRenderers();
-			if(Mods.isLoaded(Mods.Forestry)) {
+			if(Computronics.forestry != null) {
 				Computronics.forestry.registerOCRenderers();
 			}
 		}
+	}
+
+	@Override
+	public void onServerStop() {
+		Computronics.instance.audio.removeAll();
 	}
 
 	@Override

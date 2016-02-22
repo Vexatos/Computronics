@@ -18,7 +18,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.integration.railcraft.gui.slot.PaperSlotFilter;
-import pl.asie.computronics.network.Packets;
+import pl.asie.computronics.network.PacketType;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TileEntityPeripheralBase;
@@ -76,7 +76,7 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 			i |= isPrintLocked() ? 1 << 2 : 0;
 			i |= isActive ? 1 << 3 : 0;
 
-			Packet packet = Computronics.packet.create(Packets.PACKET_TICKET_SYNC)
+			Packet packet = Computronics.packet.create(PacketType.TICKET_SYNC.ordinal())
 				.writeTileLocation(this)
 				.writeInt(i)
 				.writeInt(selectedSlot);
@@ -712,24 +712,6 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 		tag.setBoolean("isActive", isActive);
 	}
 
-	@Override
-	@Optional.Method(modid = Mods.NedoComputers)
-	public boolean connectable(int side) {
-		return false;
-	}
-
-	@Override
-	@Optional.Method(modid = Mods.NedoComputers)
-	public short busRead(int addr) {
-		return 0;
-	}
-
-	@Override
-	@Optional.Method(modid = Mods.NedoComputers)
-	public void busWrite(int addr, short data) {
-
-	}
-
 	// Security
 
 	@Override
@@ -759,6 +741,6 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 
 	@Override
 	public int[] getAccessibleSlotsFromSide(int side) {
-		return ACCESSIBLE_SLOTS;
+		return ACCESSIBLE_SLOTS.clone();
 	}
 }

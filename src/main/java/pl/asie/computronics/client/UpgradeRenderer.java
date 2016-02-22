@@ -1,6 +1,5 @@
 package pl.asie.computronics.client;
 
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -41,7 +40,7 @@ public class UpgradeRenderer {
 
 	AxisAlignedBB bounds = AxisAlignedBB.getBoundingBox(-0.1, -0.1, -0.1, 0.1, 0.1, 0.1);
 
-	private static final List<Integer> upgrades = Arrays.asList(1, 2, 5);
+	private static final List<Integer> upgrades = Arrays.asList(1, 2, 5, 8);
 
 	@Optional.Method(modid = Mods.OpenComputers)
 	private boolean isUpgrade(ItemStack stack) {
@@ -61,7 +60,8 @@ public class UpgradeRenderer {
 					: availableMountPoints.contains(MountPointName.TopLeft) ? MountPointName.TopLeft
 					: MountPointName.Any;
 			}
-			case 5: {
+			case 5:
+			case 8: {
 				return availableMountPoints.contains(MountPointName.BottomFront) ? MountPointName.BottomFront
 					: availableMountPoints.contains(MountPointName.BottomBack) ? MountPointName.BottomBack
 					: MountPointName.Any;
@@ -114,7 +114,8 @@ public class UpgradeRenderer {
 				}
 				break;
 			}
-			case 5: {
+			case 5:
+			case 8: {
 				tm.bindTexture(beepCard);
 				drawSimpleBlock(mountPoint, 0, true);
 				break;
@@ -122,15 +123,15 @@ public class UpgradeRenderer {
 		}
 	}
 
-	@Optional.Method(modid = Mods.OpenComputers)
+	/*@Optional.Method(modid = Mods.OpenComputers)
 	private void drawSimpleBlock(MountPoint mountPoint) {
 		drawSimpleBlock(mountPoint, 0);
-	}
+	}*/
 
-	@Optional.Method(modid = Mods.OpenComputers)
+	/*@Optional.Method(modid = Mods.OpenComputers)
 	private void drawSimpleBlock(MountPoint mountPoint, float frontOffset) {
 		drawSimpleBlock(mountPoint, frontOffset, false);
-	}
+	}*/
 
 	//Mostly stolen from Sangar, like most of the things in this class.
 	//Stolen with permission.

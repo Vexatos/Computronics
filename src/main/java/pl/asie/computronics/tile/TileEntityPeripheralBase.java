@@ -12,7 +12,6 @@ import li.cil.oc.api.network.Environment;
 import li.cil.oc.api.network.Message;
 import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.Visibility;
-import nedocomputers.api.INedoPeripheral;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
@@ -20,6 +19,7 @@ import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
 import pl.asie.computronics.audio.MachineSound;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.ColorUtils;
+import pl.asie.computronics.util.internal.IColorable;
 import pl.asie.computronics.util.internal.IComputronicsPeripheral;
 import pl.asie.lib.tile.TileMachine;
 
@@ -34,11 +34,10 @@ import java.util.ArrayList;
 @Optional.InterfaceList({
 	@Optional.Interface(iface = "li.cil.oc.api.network.Environment", modid = Mods.OpenComputers),
 	@Optional.Interface(iface = "li.cil.oc.api.network.BlacklistedPeripheral", modid = Mods.OpenComputers),
-	@Optional.Interface(iface = "pl.asie.computronics.api.multiperipheral.IMultiPeripheral", modid = Mods.ComputerCraft),
-	@Optional.Interface(iface = "nedocomputers.api.INedoPeripheral", modid = Mods.NedoComputers)
+	@Optional.Interface(iface = "pl.asie.computronics.api.multiperipheral.IMultiPeripheral", modid = Mods.ComputerCraft)
 })
 public abstract class TileEntityPeripheralBase extends TileMachine implements Environment,
-	IMultiPeripheral, IComputronicsPeripheral, INedoPeripheral, BlacklistedPeripheral {
+	IMultiPeripheral, IComputronicsPeripheral, BlacklistedPeripheral, IColorable {
 
 	protected String peripheralName;
 
@@ -116,17 +115,23 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 	}
 
 	@Override
-	@Optional.Method(modid = Mods.OpenComputers)
 	public void updateEntity() {
 		super.updateEntity();
 		if(!addedToNetwork) {
 			addedToNetwork = true;
-			Network.joinOrCreateNetwork(this);
-			this.onOCNetworkCreation();
+			if(Mods.isLoaded(Mods.OpenComputers)) {
+				addToNetwork_OC();
+			}
 		}
 		if(worldObj.isRemote && hasSound()) {
 			updateSound();
 		}
+	}
+
+	@Optional.Method(modid = Mods.OpenComputers)
+	protected void addToNetwork_OC() {
+		Network.joinOrCreateNetwork(this);
+		this.onOCNetworkCreation();
 	}
 
 	@Optional.Method(modid = Mods.OpenComputers)
@@ -135,23 +140,35 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 	}
 
 	@Override
-	@Optional.Method(modid = Mods.OpenComputers)
 	public void onChunkUnload() {
 		super.onChunkUnload();
+		if(Mods.isLoaded(Mods.OpenComputers)) {
+			onChunkUnload_OC();
+		}
+	}
+
+	@Override
+	public void invalidate() {
+		super.invalidate();
+		if(Mods.isLoaded(Mods.OpenComputers)) {
+			invalidate_OC();
+		}
+		if(worldObj.isRemote && hasSound()) {
+			updateSound();
+		}
+	}
+
+	@Optional.Method(modid = Mods.OpenComputers)
+	protected void onChunkUnload_OC() {
 		if(node() != null) {
 			node().remove();
 		}
 	}
 
-	@Override
 	@Optional.Method(modid = Mods.OpenComputers)
-	public void invalidate() {
-		super.invalidate();
+	protected void invalidate_OC() {
 		if(node() != null) {
 			node().remove();
-		}
-		if(worldObj.isRemote && hasSound()) {
-			updateSound();
 		}
 	}
 
@@ -218,51 +235,25 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 		return 1;
 	}
 
-	@Override
-	@Optional.Method(modid = Mods.NedoComputers)
-	public boolean connectable(int side) {
-		return true;
-	}
-
-	protected int nedoBusID = 0;
+	protected int overlayColor = getDefaultColor();
 
 	@Override
-	@Optional.Method(modid = Mods.NedoComputers)
-	public int getBusId() {
-		return nedoBusID;
-	}
-
-	@Override
-	@Optional.Method(modid = Mods.NedoComputers)
-	public void setBusId(int id) {
-		nedoBusID = id;
-	}
-
-	@Optional.Method(modid = Mods.NedoComputers)
-	public void readFromNBT_NC(final NBTTagCompound nbt) {
-		if(nbt.hasKey("nc:bus")) {
-			nedoBusID = nbt.getShort("nc:bus");
-		}
-	}
-
-	@Optional.Method(modid = Mods.NedoComputers)
-	public void writeToNBT_NC(final NBTTagCompound nbt) {
-		if(nedoBusID != 0) {
-			nbt.setShort("nc:bus", (short) nedoBusID);
-		}
-	}
-
-	protected int overlayColor = ColorUtils.Colors.White.color;
-
 	public int getColor() {
 		return overlayColor;
 	}
 
+	@Override
+	public int getDefaultColor() {
+		return ColorUtils.Color.White.color;
+	}
+
+	@Override
 	public void setColor(int color) {
 		this.overlayColor = color;
 		this.markDirty();
 	}
 
+	@Override
 	public boolean canBeColored() {
 		return true;
 	}
@@ -275,7 +266,7 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 			overlayColor = nbt.getInteger("computronics:color");
 		}
 		if(this.overlayColor < 0) {
-			this.overlayColor = ColorUtils.Colors.White.color;
+			this.overlayColor = getDefaultColor();
 		}
 		if(oldColor != this.overlayColor) {
 			this.worldObj.markBlockRangeForRenderUpdate(xCoord, yCoord, zCoord, xCoord, yCoord, zCoord);
@@ -285,7 +276,7 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 	@Override
 	public void writeToRemoteNBT(NBTTagCompound nbt) {
 		super.writeToRemoteNBT(nbt);
-		if(overlayColor != ColorUtils.Colors.White.color) {
+		if(overlayColor != getDefaultColor()) {
 			nbt.setInteger("computronics:color", overlayColor);
 		}
 	}
@@ -297,27 +288,21 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 			overlayColor = nbt.getInteger("computronics:color");
 		}
 		if(this.overlayColor < 0) {
-			this.overlayColor = ColorUtils.Colors.White.color;
+			this.overlayColor = getDefaultColor();
 		}
 		if(Mods.isLoaded(Mods.OpenComputers)) {
 			readFromNBT_OC(nbt);
-		}
-		if(Mods.isLoaded(Mods.NedoComputers)) {
-			readFromNBT_NC(nbt);
 		}
 	}
 
 	@Override
 	public void writeToNBT(final NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-		if(overlayColor != ColorUtils.Colors.White.color) {
+		if(overlayColor != getDefaultColor()) {
 			nbt.setInteger("computronics:color", overlayColor);
 		}
 		if(Mods.isLoaded(Mods.OpenComputers)) {
 			writeToNBT_OC(nbt);
-		}
-		if(Mods.isLoaded(Mods.NedoComputers)) {
-			writeToNBT_NC(nbt);
 		}
 	}
 

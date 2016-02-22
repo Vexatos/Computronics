@@ -27,7 +27,7 @@ public enum Triggers implements ITriggerExternal {
 	private IComputronicsTrigger trigger;
 	private IIcon icon;
 
-	private Triggers(String tag, IComputronicsTrigger trigger) {
+	Triggers(String tag, IComputronicsTrigger trigger) {
 		this.tag = tag;
 		this.trigger = trigger;
 	}

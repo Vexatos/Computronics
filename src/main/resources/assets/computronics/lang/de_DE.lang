@@ -8,11 +8,12 @@ tile.computronics.cipher.name=Chiffrierblock
 tile.computronics.cipher_advanced.name=Asymmetrischer Chiffrierblock
 tile.computronics.radar.name=Radarblock
 tile.computronics.colorfulLamp.name=Farbenfrohe Lampe
-tile.computronics.eepromReader.name=EEPROM-Lesegerät
 tile.computronics.locomotiveRelay.name=Digitales Lokomotivenrelais
 tile.computronics.digitalBox.name=Digitale Signalempfängerbox
 tile.computronics.detector.name=Detektor - Digital
 tile.computronics.ticketMachine.name=Ticketautomat
+tile.computronics.audiocable.name=Tonkabel
+tile.computronics.speaker.name=Lautsprecher
 
 tooltip.computronics.chatBox.creative=Die NSA für zu Hause!
 tooltip.computronics.cipher.advanced=Für die Starchaser!
@@ -65,11 +66,13 @@ tooltip.computronics.waila.lamp.red=Rot: %s
 tooltip.computronics.waila.lamp.green=Grün: %s
 tooltip.computronics.waila.lamp.blue=Blau: %s
 
-tooltip.computronics.manual.tab.blocks=Computronics: Blöcke
-tooltip.computronics.manual.tab.items=Computronics: Items
+tooltip.computronics.manual.oc.tab.blocks=Computronics: Blöcke
+tooltip.computronics.manual.oc.tab.items=Computronics: Items
+
+tooltip.computronics.manual.tis3d.tab.items=Computronics: Items
+tooltip.computronics.manual.tis3d.port.flamingo=Pinker Flamingo
 
 option.computronics.enableOCAddress=Komponentenaddresse
-option.computronics.enableNCAddress=NedoComputers Bus ID
 option.computronics.enableTape=Enthaltene Kassette
 option.computronics.enableTapeName=Kassettenname
 option.computronics.enableDriveState=Kassettenspielerstatus
@@ -82,7 +85,8 @@ item.computronics.dockingStation.name=Dronen-Dockingstation
 item.computronics.robot_upgrade_camera.name=Kamera-Upgrade
 item.computronics.robot_upgrade_chatbox.name=Chat-Upgrade
 item.computronics.robot_upgrade_radar.name=Radar-Upgrade
-item.computronics.card_beep.name=Piepsende Karte
+item.computronics.card_beep.name=Piepende Karte
+item.computronics.card_noise.name=Lärmende Karte
 item.computronics.card_fx.name=Partikeleffektkarte
 item.computronics.card_spoof.name=Spoofing-Karte
 item.computronics.card_spoof.tip=Funktioniert wie eine Netzwerkkarte, aber erlaubt es, die Sendeaddresse festzulegen
@@ -96,6 +100,9 @@ item.computronics.relaySensor.name=Digitaler Relaissensor
 item.computronics.part_tape_track.name=Bandspur
 item.computronics.tape.ig.name=Intergalaktischer CDVR
 item.computronics.tape.name=Kasettenband
+item.computronics.module_colorful.name=Das Bunte Modul
+item.computronics.module_tape_reader.name=Kassettenlesemodul
+item.computronics.module_boom.name=Selbstzerstörungsmodul
 
 itemGroup.tabComputronics=Computronics
 

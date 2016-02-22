@@ -11,7 +11,9 @@ import net.minecraft.world.World;
 import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
 
 public class DriverDeviceInformation extends DriverTileEntity {
-	public class ManagedEnvironmentInfo extends ManagedEnvironmentOCTile<IGregTechDeviceInformation> {
+
+	public static class ManagedEnvironmentInfo extends ManagedEnvironmentOCTile<IGregTechDeviceInformation> {
+
 		public ManagedEnvironmentInfo(IGregTechDeviceInformation tile,
 			String name) {
 			super(tile, name);

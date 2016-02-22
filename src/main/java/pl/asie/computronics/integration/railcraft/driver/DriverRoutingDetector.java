@@ -36,7 +36,7 @@ public class DriverRoutingDetector {
 			if(!((DetectorRouting) tile.getDetector()).isSecure()) {
 				List<List<String>> pages = ItemRoutingTable.getPages(((DetectorRouting) tile.getDetector()).getInventory().getStackInSlot(0));
 				if(pages == null) {
-					return new Object[] { false, "no valid routing table found"};
+					return new Object[] { false, "no valid routing table found" };
 				}
 				LinkedHashMap<Integer, String> pageMap = new LinkedHashMap<Integer, String>();
 				int i = 1;
@@ -65,8 +65,8 @@ public class DriverRoutingDetector {
 				List<List<String>> pages = new ArrayList<List<String>>();
 				pages.add(new ArrayList<String>());
 				int pageIndex = 0;
-				for(Object key : pageMap.keySet()) {
-					Object line = pageMap.get(key);
+				for(Object line : pageMap.values()) {
+					//Object line = pageMap.get(key);
 					if(line instanceof String) {
 						if(((String) line).toLowerCase().equals("{newline}")) {
 							pages.add(new ArrayList<String>());
@@ -110,7 +110,8 @@ public class DriverRoutingDetector {
 	}
 
 	public static class OCDriver extends DriverTileEntity {
-		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TileDetector> {
+
+		public static class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TileDetector> {
 
 			public InternalManagedEnvironment(TileDetector detector) {
 				super(detector, Names.Railcraft_RoutingDetector);

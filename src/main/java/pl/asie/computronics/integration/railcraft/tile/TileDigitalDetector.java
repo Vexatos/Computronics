@@ -10,6 +10,7 @@ import li.cil.oc.api.network.SidedEnvironment;
 import mods.railcraft.api.carts.CartTools;
 import mods.railcraft.common.carts.EntityLocomotive;
 import mods.railcraft.common.carts.EnumCart;
+import mods.railcraft.common.carts.ICartType;
 import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.nbt.NBTTagCompound;
@@ -112,8 +113,8 @@ public class TileDigitalDetector extends TileEntityPeripheralBase
 	}
 
 	private void appendCartType(ArrayList<Object> info, EntityMinecart cart) {
-		EnumCart type = EnumCart.fromCart(cart);
-		info.add(type != null ? type.name().toLowerCase(Locale.ENGLISH) : "unknown");
+		ICartType type = EnumCart.fromCart(cart);
+		info.add(type != null ? type.getTag().toLowerCase(Locale.ENGLISH) : "unknown");
 		String entityName = cart.func_95999_t();
 		info.add(entityName != null ? entityName : "");
 	}
@@ -178,20 +179,5 @@ public class TileDigitalDetector extends TileEntityPeripheralBase
 	@Override
 	public boolean canConnectPeripheralOnSide(int side) {
 		return ForgeDirection.getOrientation(side) == this.direction;
-	}
-
-	@Override
-	public boolean connectable(int side) {
-		return false;
-	}
-
-	@Override
-	public short busRead(int addr) {
-		return 0;
-	}
-
-	@Override
-	public void busWrite(int addr, short data) {
-
 	}
 }

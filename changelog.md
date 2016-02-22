@@ -1,7 +1,55 @@
+==== 1.6.1 ====
+
+  * ADDED: Noise Card!
+    - An upgraded Beep Card with slightly different syntax
+    - Can play square waves, sine waves, triangle waves and sawtooth waves!
+  * ADDED: Support for TIS-3D!
+    - Added a Colorful Module to display any colour you want, akin to a Colorful Lamp.
+    - Added a Tape Reader Module which allows you to interface with an adjacent Tape Drive.
+    - Added a Self-Destructing Module which allows you to dispose of your casings with style.
+    - Added a Serial Interface for Flamingos to make them wiggle.
+    - Documented everything in the TIS-3D manual.
+    - Each module can be individually disabled in the config file.
+  * ADDED: EnderIO 2.3 integration  for OpenComputers and ComputerCraft! (Has actually existed since March 2015, just not in any official release)
+      - Added support for the new Telepad
+        - Allows full control over the coordinates set (if allowed in the EnderIO config file) as well as telepad activation
+      - Added support for the new Weather Obelisk
+        - Allows control over the weather, provided the Obelisk has the correct items.
+      - The Capacitor Bank now provides two additional functions, `getAverageInputPerTick()` and `getAverageOutputPerTick()`
+        - This allows you to monitor input and output of your energy network separately
+      - Now you can get and set the range of Vacuum Chests
+      - Added `getProgress()` to most machines with progress
+  * ADDED: Built-in tape utility program for ComputerCraft to write songs to tapes and to play, stop, pause etc.
+  * ADDED: getPosition() to tape drives. No, I'm not joking. It's real. I'm sorry.
+  * FIXED: Crash when the `openComputersBees` config option was set to `false`.
+  * FIXED: Digital Locomotive Relay trying to consume OpenComputers energy even if called from ComputerCraft
+  * FIXED: Updated OpenComputers integration
+  * FIXED: Removed explicit dependency on GregTech 5. Computronics will launch with GregTech 6 now (but there is no integration yet).
+  * FIXED: Tape program not displaying information properly if file size is larger than tape size
+
+==== 1.6.0 ====
+
+  * ADDED: Audio Cables!
+    - Connects audio players (like Tape Drives) to audio receivers (Like Speakers)
+    - If you connect one to a Tape Drive, it will stop playing itself and instead send the sound across the cables.
+    - Can be coloured. When coloured, they won't connect to cables with a different colour and won't connect to coloured audio senders/receivers with a different colour.
+    - They also support Immibis' Microblocks for separation, if you like covering up your cabling.
+  * ADDED: Speakers!
+    - Can be connected to Tape Drives or Cables
+    - Plays any sound it receives through the cables
+    - Allows you to play sound in multiple places at once using only a single Tape Drive.
+  * ADDED: Audio API!
+    - Now you can create your own audio packets! Sort of - it's a bit rough around the edges.
+  * CHANGED: NedoComputers is no longer supported. Removed the EEPROM Reader and any kind of NedoComputers support there was.
+  * FIXED: More crashes related to invalid crafting recipes.
+
 ==== 1.5.9 ====
 
   * ADDED: New config option (disabled by default) to make the normal Chat Box have no range limit and work interdimensionally unless you specify a distance.
   * CHANGED: The Creative Chat Box can now send messages interdimensionally and has no range limit anymore unless you specify a distance.
+  * FIXED: Various crashes related to invalid crafting recipes.
+  * FIXED: Crash when disabling the Digital Signal Receiver Box.
+  * FIXED: Updated Railcraft integration to version 9.8.0.0; requires Railcraft 9.8.0.0 now.
 
 ==== 1.5.8 ====
 
@@ -518,7 +566,7 @@ This is semi-officially known as "The Kodos Update".
 
   * Added: A rewrite of the Tape Drive mechanics.
     * Tape Drives now remember their state on unload (persistence!).
-    * [[http://i.imgur.com/FCFiPfd.png|A slick new GUI]] - makes it possible to use Tape Drives without computers!
+    * [A slick new GUI](http://i.imgur.com/FCFiPfd.png) - makes it possible to use Tape Drives without computers!
     * Tape Drive playback can be controlled with redstone.
   * Added: Tape Drives and Cameras can now be rotated with BuildCraft or compatible wrenches.
   * Added: Iron Note Blocks support the two noteblock sounds that are in the Minecraft assets/ folder but were never used ("pling" and "bass", respectively).

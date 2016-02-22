@@ -35,7 +35,7 @@ public class DriverIOConfigurable {
 		} catch(IllegalArgumentException e) {
 			throw new IllegalArgumentException("No valid IO mode given");
 		}
-		return new Object[] { };
+		return new Object[] {};
 	}
 
 	private static Object[] modes() {
@@ -49,7 +49,7 @@ public class DriverIOConfigurable {
 
 	public static class OCDriver extends DriverTileEntity {
 
-		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<IIoConfigurable> {
+		public static class InternalManagedEnvironment extends ManagedEnvironmentOCTile<IIoConfigurable> {
 
 			public InternalManagedEnvironment(IIoConfigurable tile) {
 				super(tile, Names.EnderIO_IOConfigurable);

@@ -29,9 +29,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.oc.DriverCardBeep;
 import pl.asie.computronics.oc.DriverCardBoom;
 import pl.asie.computronics.oc.DriverCardFX;
-import pl.asie.computronics.oc.DriverCardSound;
+import pl.asie.computronics.oc.DriverCardNoise;
 import pl.asie.computronics.oc.DriverCardSpoof;
 import pl.asie.computronics.oc.IntegrationOpenComputers;
 import pl.asie.computronics.oc.RobotUpgradeCamera;
@@ -66,6 +67,7 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 			"card_beep",
 			"card_boom",
 			"robot_upgrade_colorful",
+			"card_noise"
 		});
 		this.setCreativeTab(Computronics.tab);
 	}
@@ -119,11 +121,13 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 			case 4:
 				return DriverCardSpoof.class;
 			case 5:
-				return DriverCardSound.class;
+				return DriverCardBeep.class;
 			case 6:
 				return DriverCardBoom.class;
 			case 7:
 				return RobotUpgradeColorful.class;
+			case 8:
+				return DriverCardNoise.class;
 			default:
 				return null;
 		}
@@ -145,11 +149,13 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 			case 4:
 				return new DriverCardSpoof(container);
 			case 5:
-				return new DriverCardSound(container);
+				return new DriverCardBeep(container);
 			case 6:
 				return new DriverCardBoom(container);
 			case 7:
 				return new RobotUpgradeColorful(container);
+			case 8:
+				return new DriverCardNoise(container);
 			default:
 				return null;
 		}
@@ -175,6 +181,8 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 				return Slot.Card;
 			case 7:
 				return Slot.Upgrade;
+			case 8:
+				return Slot.Card;
 			default:
 				return Slot.None;
 		}
@@ -200,6 +208,8 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 				return 0; // Tier 1
 			case 7:
 				return 1; // Tier 2
+			case 8:
+				return 2; // Tier 3
 			default:
 				return 0; // Tier 1 default
 		}
@@ -239,7 +249,7 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 		if(Config.OC_CARD_SPOOF) {
 			list.add(new ItemStack(item, 1, 4));
 		}
-		if(Config.OC_CARD_SOUND) {
+		if(Config.OC_CARD_BEEP) {
 			list.add(new ItemStack(item, 1, 5));
 		}
 		if(Config.OC_CARD_BOOM) {
@@ -247,6 +257,9 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 		}
 		if(Config.OC_UPGRADE_COLORFUL) {
 			list.add(new ItemStack(item, 1, 7));
+		}
+		if(Config.OC_CARD_NOISE) {
+			list.add(new ItemStack(item, 1, 8));
 		}
 	}
 
@@ -374,6 +387,8 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 				return "self_destructing_card";
 			case 7:
 				return "colorful_upgrade";
+			case 8:
+				return "noise_card";
 			default:
 				return "index";
 		}

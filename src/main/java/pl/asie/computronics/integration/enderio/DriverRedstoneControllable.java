@@ -34,7 +34,7 @@ public class DriverRedstoneControllable {
 		} catch(IllegalArgumentException e) {
 			throw new IllegalArgumentException("No valid Redstone mode given");
 		}
-		return new Object[] { };
+		return new Object[] {};
 	}
 
 	private static Object[] modes() {
@@ -48,7 +48,7 @@ public class DriverRedstoneControllable {
 
 	public static class OCDriver extends DriverTileEntity {
 
-		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<IRedstoneModeControlable> {
+		public static class InternalManagedEnvironment extends ManagedEnvironmentOCTile<IRedstoneModeControlable> {
 
 			public InternalManagedEnvironment(IRedstoneModeControlable tile) {
 				super(tile, Names.EnderIO_RedstoneTile);

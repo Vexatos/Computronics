@@ -17,7 +17,7 @@ import pl.asie.computronics.util.ParticleUtils;
 import java.util.Random;
 
 public class ParticleTurtleUpgrade extends TurtleUpgradeBase {
-	private class ParticleTurtlePeripheral extends TurtlePeripheralBase {
+	private static class ParticleTurtlePeripheral extends TurtlePeripheralBase {
 		public ParticleTurtlePeripheral(ITurtleAccess access) {
 			super(access);
 		}

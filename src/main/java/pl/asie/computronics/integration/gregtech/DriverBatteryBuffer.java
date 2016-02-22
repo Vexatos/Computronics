@@ -20,7 +20,8 @@ import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
  */
 public class DriverBatteryBuffer extends DriverTileEntity {
 
-	public class ManagedEnvironmentBatteryBuffer extends ManagedEnvironmentOCTile<BaseMetaTileEntity> {
+	public static class ManagedEnvironmentBatteryBuffer extends ManagedEnvironmentOCTile<BaseMetaTileEntity> {
+
 		public ManagedEnvironmentBatteryBuffer(BaseMetaTileEntity tile, String name) {
 			super(tile, name);
 		}
