@@ -19,8 +19,8 @@ import pl.asie.computronics.Computronics;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
 import pl.asie.computronics.audio.MachineSound;
 import pl.asie.computronics.reference.Mods;
-import pl.asie.computronics.util.ColorUtils;
-import pl.asie.computronics.util.internal.IColorable;
+import pl.asie.lib.util.ColorUtils;
+import pl.asie.lib.util.internal.IColorable;
 import pl.asie.computronics.util.internal.IComputronicsPeripheral;
 import pl.asie.lib.tile.TileMachine;
 

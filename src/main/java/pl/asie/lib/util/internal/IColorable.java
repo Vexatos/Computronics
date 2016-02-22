@@ -1,4 +1,4 @@
-package pl.asie.computronics.util.internal;
+package pl.asie.lib.util.internal;
 
 /**
  * @author Vexatos

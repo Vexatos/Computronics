@@ -19,8 +19,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.oc.manual.IBlockWithDocumentation;
 import pl.asie.computronics.tile.TileAudioCable;
-import pl.asie.computronics.util.ColorUtils;
-import pl.asie.computronics.util.internal.IColorable;
+import pl.asie.lib.util.ColorUtils;
+import pl.asie.lib.util.internal.IColorable;
 import pl.asie.lib.block.BlockBase;
 
 public class BlockAudioCable extends BlockBase implements IBlockWithDocumentation {
