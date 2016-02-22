@@ -10,9 +10,9 @@ import net.minecraft.world.World;
 import pl.asie.computronics.api.audio.AudioPacket;
 import pl.asie.computronics.api.audio.IAudioConnection;
 import pl.asie.computronics.api.audio.IAudioReceiver;
+import pl.asie.lib.tile.TileEntityBase;
 import pl.asie.lib.util.ColorUtils;
 import pl.asie.lib.util.internal.IColorable;
-import pl.asie.lib.tile.TileEntityBase;
 
 public class TileAudioCable extends TileEntityBase implements IAudioReceiver, IColorable, ITickable {
 
