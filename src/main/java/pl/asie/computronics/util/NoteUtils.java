@@ -9,31 +9,31 @@ public class NoteUtils {
 
 	private static final String[] instruments = new String[] { "harp", "bd", "snare", "hat", "bassattack", "pling", "bass" };
 
-	public static void playNoteRaw(World worldObj, int xCoord, int yCoord, int zCoord, String instrument, int note, float volume) {
+	public static void playNoteRaw(World world, int x, int y, int z, String instrument, int note, float volume) {
 		float f = (float) Math.pow(2.0D, (double) (note - 12) / 12.0D);
 
-		worldObj.playSoundEffect((double) xCoord + 0.5D, (double) yCoord + 0.5D, (double) zCoord + 0.5D, instrument, volume, f);
-		ParticleUtils.sendParticlePacket("note", worldObj, (double) xCoord + 0.5D, (double) yCoord + 1.2D, (double) zCoord + 0.5D, (double) note / 24.0D, 1.0D, 0.0D);
+		world.playSoundEffect((double) x + 0.5D, (double) y + 0.5D, (double) z + 0.5D, instrument, volume, f);
+		ParticleUtils.sendParticlePacket("note", world, (double) x + 0.5D, (double) y + 1.2D, (double) z + 0.5D, (double) note / 24.0D, 1.0D, 0.0D);
 	}
 
-	public static void playNote(World worldObj, int xCoord, int yCoord, int zCoord, String instrument, int note, float volume) {
-		playNoteRaw(worldObj, xCoord, yCoord, zCoord, instrument, note, volume);
+	public static NoteTask playNote(World world, int x, int y, int z, String instrument, int note, float volume) {
+		return new NoteTask(checkInstrument(instrument), note, volume);
 	}
 
-	public static void playNote(World worldObj, int xCoord, int yCoord, int zCoord, String instrument, int note) {
-		playNoteRaw(worldObj, xCoord, yCoord, zCoord, checkInstrument(instrument), note, 3.0F);
+	public static NoteTask playNote(World world, int x, int y, int z, String instrument, int note) {
+		return new NoteTask(checkInstrument(instrument), note, 3.0F);
 	}
 
-	public static void playNote(World worldObj, int xCoord, int yCoord, int zCoord, int instrument, int note) {
-		playNote(worldObj, xCoord, yCoord, zCoord, instrument, note, 3.0F);
+	public static NoteTask playNote(World world, int x, int y, int z, int instrument, int note) {
+		return playNote(world, x, y, z, instrument, note, -1F);
 	}
 
-	public static void playNote(World worldObj, int xCoord, int yCoord, int zCoord, int instrument, int note, float volume) {
+	public static NoteTask playNote(World world, int x, int y, int z, int instrument, int note, final float volume) {
 		if(instrument < 0) {
 			// Get default instrument
 			byte b0 = 0;
-			if(yCoord > 0) {
-				Material m = worldObj.getBlock(xCoord, yCoord - 1, zCoord).getMaterial();
+			if(y > 0) {
+				Material m = world.getBlock(x, y - 1, z).getMaterial();
 				if(m == Material.rock) {
 					b0 = 1;
 				}
@@ -52,9 +52,9 @@ public class NoteUtils {
 		instrument %= 7;
 
 		if(instrument <= 4) {
-			NoteBlockEvent.Play e = new NoteBlockEvent.Play(worldObj, xCoord, yCoord, zCoord, 32767, note, instrument);
+			NoteBlockEvent.Play e = new NoteBlockEvent.Play(world, x, y, z, 32767, note, instrument);
 			if(MinecraftForge.EVENT_BUS.post(e)) {
-				return;
+				return null;
 			}
 			instrument = e.instrument.ordinal();
 			note = e.getVanillaNoteId();
@@ -65,7 +65,7 @@ public class NoteUtils {
 			s = instruments[instrument];
 		}
 
-		playNote(worldObj, xCoord, yCoord, zCoord, s, note, volume);
+		return playNote(world, x, y, z, s, note, volume < 0 ? 3.0F : volume);
 	}
 
 	public static float toVolume(int index, double value) {
@@ -93,5 +93,24 @@ public class NoteUtils {
 			}
 		}
 		throw new IllegalArgumentException("invalid instrument: " + instrument);
+	}
+
+	public static class NoteTask {
+
+		private final String instrument;
+		private final int note;
+		private final float volume;
+
+		public NoteTask(String instrument, int note, float volume) {
+			this.instrument = instrument;
+			this.note = note;
+			this.volume = volume;
+		}
+
+		public void play(World worldObj, int x, int y, int z) {
+			if(instrument != null) {
+				playNoteRaw(worldObj, x, y, z, instrument, note, volume);
+			}
+		}
 	}
 }
