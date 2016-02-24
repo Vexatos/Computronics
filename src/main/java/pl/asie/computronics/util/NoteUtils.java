@@ -51,21 +51,7 @@ public class NoteUtils {
 		}
 		instrument %= 7;
 
-		if(instrument <= 4) {
-			NoteBlockEvent.Play e = new NoteBlockEvent.Play(world, x, y, z, 32767, note, instrument);
-			if(MinecraftForge.EVENT_BUS.post(e)) {
-				return null;
-			}
-			instrument = e.instrument.ordinal();
-			note = e.getVanillaNoteId();
-		}
-
-		String s = instruments[0];
-		if(instrument > 0 && instrument < instruments.length) {
-			s = instruments[instrument];
-		}
-
-		return playNote(world, x, y, z, s, note, volume < 0 ? 3.0F : volume);
+		return new NoteTask(instrument, note, volume < 0 ? 3.0F : volume);
 	}
 
 	public static float toVolume(int index, double value) {
@@ -97,8 +83,9 @@ public class NoteUtils {
 
 	public static class NoteTask {
 
-		private final String instrument;
-		private final int note;
+		private String instrument;
+		private int instrumentID = -1;
+		private int note;
 		private final float volume;
 
 		public NoteTask(String instrument, int note, float volume) {
@@ -107,9 +94,30 @@ public class NoteUtils {
 			this.volume = volume;
 		}
 
-		public void play(World worldObj, int x, int y, int z) {
+		public NoteTask(int instrumentID, int note, float volume) {
+			this.instrumentID = instrumentID;
+			this.note = note;
+			this.volume = volume;
+		}
+
+		public void play(World world, int x, int y, int z) {
+			if(instrument == null && instrumentID >= 0) {
+				if(instrumentID <= 4) {
+					NoteBlockEvent.Play e = new NoteBlockEvent.Play(world, x, y, z, 32767, note, instrumentID);
+					if(MinecraftForge.EVENT_BUS.post(e)) {
+						return;
+					}
+					instrumentID = e.instrument.ordinal();
+					note = e.getVanillaNoteId();
+				}
+
+				instrument = instruments[0];
+				if(instrumentID > 0 && instrumentID < instruments.length) {
+					instrument = instruments[instrumentID];
+				}
+			}
 			if(instrument != null) {
-				playNoteRaw(worldObj, x, y, z, instrument, note, volume);
+				playNoteRaw(world, x, y, z, instrument, note, volume);
 			}
 		}
 	}
