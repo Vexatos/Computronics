@@ -32,10 +32,9 @@ public class MassiveSignalController extends SignalController {
 	}
 
 	public void setAspectFor(WorldCoordinate coord, SignalAspect aspect) {
-		SignalReceiver receiver = getReceiverAt(coord);
-		if(receiver != null && this.aspects.get(coord) != aspect) {
+		if(this.aspects.get(coord) != aspect) {
 			this.aspects.put(coord, aspect);
-			this.updateReceiver(coord, receiver);
+			this.updateReceiver(coord);
 		}
 	}
 
