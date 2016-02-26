@@ -1,6 +1,5 @@
 package pl.asie.computronics.integration.railcraft.signalling;
 
-import com.google.common.collect.HashMultimap;
 import mods.railcraft.api.core.WorldCoordinate;
 import mods.railcraft.api.signals.SignalAspect;
 import mods.railcraft.api.signals.SignalController;
@@ -9,8 +8,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.Constants;
-import pl.asie.computronics.util.collect.InvertibleMultimap;
-import pl.asie.computronics.util.collect.SimpleInvertibleMultimap;
+import pl.asie.computronics.util.collect.SimpleInvertibleDualMap;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,7 +19,7 @@ import java.util.Map;
 public class MassiveSignalReceiver extends SignalReceiver {
 
 	private final Map<WorldCoordinate, SignalAspect> aspects = new HashMap<WorldCoordinate, SignalAspect>();
-	private final InvertibleMultimap<String, WorldCoordinate> signalNames = SimpleInvertibleMultimap.create();
+	private final SimpleInvertibleDualMap<String, WorldCoordinate> signalNames = SimpleInvertibleDualMap.create();
 
 	public MassiveSignalReceiver(String locTag, TileEntity tile) {
 		super(locTag, tile, 32);
@@ -68,16 +66,14 @@ public class MassiveSignalReceiver extends SignalReceiver {
 		super.loadNBT(data);
 		NBTTagList list = data.getTagList("aspects", Constants.NBT.TAG_COMPOUND);
 
-		HashMultimap<String, WorldCoordinate> map = HashMultimap.create();
 		for(byte entry = 0; entry < list.tagCount(); ++entry) {
 			NBTTagCompound tag = list.getCompoundTagAt(entry);
 			int[] c = tag.getIntArray("coords");
 			WorldCoordinate coord = new WorldCoordinate(c[0], c[1], c[2], c[3]);
 			this.aspects.put(coord, SignalAspect.fromOrdinal(data.getByte("aspect")));
 			if(tag.hasKey("name")) {
-				map.put(tag.getString("name"), coord);
+				signalNames.put(tag.getString("name"), coord);
 			}
 		}
-		signalNames.putAll(map);
 	}
 }
