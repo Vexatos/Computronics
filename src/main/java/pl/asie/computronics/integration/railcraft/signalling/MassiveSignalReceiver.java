@@ -1,5 +1,8 @@
 package pl.asie.computronics.integration.railcraft.signalling;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Multimap;
 import mods.railcraft.api.core.WorldCoordinate;
 import mods.railcraft.api.signals.SignalAspect;
 import mods.railcraft.api.signals.SignalController;
@@ -8,8 +11,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.Constants;
-import pl.asie.computronics.util.collect.InvertibleMultimap;
-import pl.asie.computronics.util.collect.SimpleInvertibleMultiMap;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +21,8 @@ import java.util.Map;
 public class MassiveSignalReceiver extends SignalReceiver {
 
 	private final Map<WorldCoordinate, SignalAspect> aspects = new HashMap<WorldCoordinate, SignalAspect>();
-	private final InvertibleMultimap<String, WorldCoordinate> signalNames = SimpleInvertibleMultiMap.create();
+	private final Multimap<String, WorldCoordinate> signalNames = HashMultimap.create();
+	private final Map<WorldCoordinate, String> signalNamesInverted = Maps.newHashMap();
 
 	public MassiveSignalReceiver(String locTag, TileEntity tile) {
 		super(locTag, tile, 32);
@@ -54,7 +56,7 @@ public class MassiveSignalReceiver extends SignalReceiver {
 			WorldCoordinate key = entry.getKey();
 			tag.setIntArray("coords", new int[] { key.dimension, key.x, key.y, key.z });
 			tag.setByte("aspect", (byte) entry.getValue().ordinal());
-			String s = signalNames.inverse().get(key);
+			String s = signalNamesInverted.get(key);
 			if(s != null) {
 				tag.setString("name", s);
 			}
@@ -73,8 +75,13 @@ public class MassiveSignalReceiver extends SignalReceiver {
 			WorldCoordinate coord = new WorldCoordinate(c[0], c[1], c[2], c[3]);
 			this.aspects.put(coord, SignalAspect.fromOrdinal(data.getByte("aspect")));
 			if(tag.hasKey("name")) {
-				this.signalNames.put(tag.getString("name"), coord);
+				putName(tag.getString("name"), coord);
 			}
 		}
+	}
+
+	private void putName(String name, WorldCoordinate coord) {
+		this.signalNames.put(name, coord);
+		this.signalNamesInverted.put(coord, name);
 	}
 }
