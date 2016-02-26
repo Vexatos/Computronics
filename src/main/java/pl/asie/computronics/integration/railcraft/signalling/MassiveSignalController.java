@@ -8,6 +8,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.Constants;
+import pl.asie.computronics.util.collect.SimpleInvertibleDualMap;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +20,7 @@ public class MassiveSignalController extends SignalController {
 
 	private boolean needsInit;
 	private final Map<WorldCoordinate, SignalAspect> aspects = new HashMap<WorldCoordinate, SignalAspect>();
+	private final SimpleInvertibleDualMap<String, WorldCoordinate> signalNames = SimpleInvertibleDualMap.create();
 
 	public MassiveSignalController(String locTag, TileEntity tile) {
 		super(locTag, tile, 32);
@@ -82,6 +84,10 @@ public class MassiveSignalController extends SignalController {
 			WorldCoordinate key = entry.getKey();
 			tag.setIntArray("coords", new int[] { key.dimension, key.x, key.y, key.z });
 			tag.setByte("aspect", (byte) entry.getValue().ordinal());
+			String s = signalNames.inverse().get(key);
+			if(s != null) {
+				tag.setString("name", s);
+			}
 			list.appendTag(tag);
 		}
 		data.setTag("aspects", list);
@@ -94,7 +100,11 @@ public class MassiveSignalController extends SignalController {
 		for(byte entry = 0; entry < list.tagCount(); ++entry) {
 			NBTTagCompound tag = list.getCompoundTagAt(entry);
 			int[] c = tag.getIntArray("coords");
-			this.aspects.put(new WorldCoordinate(c[0], c[1], c[2], c[3]), SignalAspect.fromOrdinal(data.getByte("aspect")));
+			WorldCoordinate coord = new WorldCoordinate(c[0], c[1], c[2], c[3]);
+			this.aspects.put(coord, SignalAspect.fromOrdinal(data.getByte("aspect")));
+			if(tag.hasKey("name")) {
+				signalNames.put(tag.getString("name"), coord);
+			}
 		}
 	}
 }
