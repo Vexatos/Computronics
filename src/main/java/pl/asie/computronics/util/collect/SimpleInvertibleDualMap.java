@@ -50,7 +50,10 @@ public class SimpleInvertibleDualMap<K, V> {
 	}
 
 	public boolean put(K key, V value) {
-		inverse.put(value, key);
+		K oldKey = inverse.put(value, key);
+		if(oldKey != null){
+			map.remove(oldKey, value);
+		}
 		return map.put(key, value);
 	}
 
