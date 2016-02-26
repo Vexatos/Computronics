@@ -24,6 +24,8 @@ public class MassiveSignalController extends SignalController {
 	private boolean needsInit;
 	private final Map<WorldCoordinate, SignalAspect> aspects = new HashMap<WorldCoordinate, SignalAspect>();
 	private final SimpleInvertibleDualMap<String, WorldCoordinate> signalNames = SimpleInvertibleDualMap.create();
+	private SignalAspect visualAspect;
+	private SignalAspect mostRestrictive;
 
 	public MassiveSignalController(String locTag, TileEntity tile) {
 		super(locTag, tile, 32);
@@ -38,8 +40,32 @@ public class MassiveSignalController extends SignalController {
 	public void setAspectFor(WorldCoordinate coord, SignalAspect aspect) {
 		if(this.aspects.get(coord) != aspect) {
 			this.aspects.put(coord, aspect);
+			this.mostRestrictive = null;
 			this.updateReceiver(coord);
 		}
+	}
+
+	public SignalAspect getVisualAspect() {
+		return this.visualAspect != null ? this.visualAspect : (this.visualAspect = this.getMostRestrictiveAspect());
+	}
+
+	public void setVisualAspect(SignalAspect aspect) {
+		this.visualAspect = aspect;
+	}
+
+	public SignalAspect getMostRestrictiveAspect() {
+		if(this.mostRestrictive != null) {
+			return this.mostRestrictive;
+		}
+		SignalAspect mostRestrictive = null;
+		for(SignalAspect aspect : this.aspects.values()) {
+			if(mostRestrictive == null) {
+				mostRestrictive = aspect;
+			} else {
+				mostRestrictive = SignalAspect.mostRestrictive(mostRestrictive, aspect);
+			}
+		}
+		return this.mostRestrictive = mostRestrictive != null ? mostRestrictive : SignalAspect.BLINK_RED;
 	}
 
 	@Override
@@ -75,7 +101,9 @@ public class MassiveSignalController extends SignalController {
 	public void cleanPairings() {
 		super.cleanPairings();
 		Collection<WorldCoordinate> pairs = getPairs();
-		this.aspects.keySet().retainAll(pairs);
+		if(this.aspects.keySet().retainAll(pairs)) {
+			this.mostRestrictive = null;
+		}
 		this.signalNames.retainAllValues(pairs);
 	}
 
@@ -83,6 +111,7 @@ public class MassiveSignalController extends SignalController {
 	public void clearPairings() {
 		super.clearPairings();
 		this.aspects.clear();
+		this.mostRestrictive = null;
 		this.signalNames.clear();
 	}
 
@@ -91,7 +120,9 @@ public class MassiveSignalController extends SignalController {
 	public void removePair(int x, int y, int z) {
 		super.removePair(x, y, z);
 		Collection<WorldCoordinate> pairs = getPairs();
-		this.aspects.keySet().retainAll(pairs);
+		if(this.aspects.keySet().retainAll(pairs)) {
+			this.mostRestrictive = null;
+		}
 		this.signalNames.retainAllValues(pairs);
 	}
 
@@ -126,5 +157,6 @@ public class MassiveSignalController extends SignalController {
 				signalNames.put(tag.getString("name"), coord);
 			}
 		}
+		this.mostRestrictive = null;
 	}
 }

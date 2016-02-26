@@ -10,7 +10,7 @@ import li.cil.oc.api.machine.Context;
 import mods.railcraft.api.signals.IReceiverTile;
 import mods.railcraft.api.signals.SignalAspect;
 import mods.railcraft.api.signals.SignalController;
-import mods.railcraft.api.signals.SimpleSignalReceiver;
+import mods.railcraft.api.signals.SignalReceiver;
 import mods.railcraft.common.blocks.signals.ISignalTileDefinition;
 import mods.railcraft.common.blocks.signals.TileBoxBase;
 import mods.railcraft.common.plugins.buildcraft.triggers.IAspectProvider;
@@ -18,6 +18,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.integration.railcraft.SignalTypes;
+import pl.asie.computronics.integration.railcraft.signalling.MassiveSignalReceiver;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.reference.Names;
 
@@ -37,7 +38,7 @@ import java.util.Locale;
 public class TileDigitalReceiverBox extends TileDigitalBoxBase implements IReceiverTile, IAspectProvider {
 
 	private boolean prevBlinkState;
-	private final SimpleSignalReceiver receiver = new SimpleSignalReceiver(getName(), this);
+	private final MassiveSignalReceiver receiver = new MassiveSignalReceiver(getName(), this);
 
 	@Override
 	public void updateEntity() {
@@ -45,20 +46,22 @@ public class TileDigitalReceiverBox extends TileDigitalBoxBase implements IRecei
 
 		if(worldObj.isRemote) {
 			this.receiver.tickClient();
-			if((this.receiver.getAspect().isBlinkAspect()) && (this.prevBlinkState != SignalAspect.isBlinkOn())) {
+			if((this.receiver.getVisualAspect().isBlinkAspect()) && (this.prevBlinkState != SignalAspect.isBlinkOn())) {
 				this.prevBlinkState = SignalAspect.isBlinkOn();
 				markBlockForUpdate();
 			}
 			return;
 		}
 		this.receiver.tickServer();
-		SignalAspect prevAspect = this.receiver.getAspect();
+		SignalAspect prevAspect = this.receiver.getVisualAspect();
 		if(this.receiver.isBeingPaired()) {
-			this.receiver.setAspect(SignalAspect.BLINK_YELLOW);
-		} else if(!this.receiver.isPaired()) {
-			this.receiver.setAspect(SignalAspect.BLINK_RED);
+			this.receiver.setVisualAspect(SignalAspect.BLINK_YELLOW);
+		} else if(this.receiver.isPaired()) {
+			this.receiver.setVisualAspect(this.receiver.getMostRestrictiveAspect());
+		} else {
+			this.receiver.setVisualAspect(SignalAspect.BLINK_RED);
 		}
-		if(prevAspect != this.receiver.getAspect()) {
+		if(prevAspect != this.receiver.getVisualAspect()) {
 			updateNeighbors();
 			sendUpdateToClient();
 		}
@@ -66,11 +69,12 @@ public class TileDigitalReceiverBox extends TileDigitalBoxBase implements IRecei
 
 	@Override
 	public void onControllerAspectChange(SignalController con, SignalAspect aspect) {
+		String name = this.receiver.getNameFor(con);
 		if(Mods.isLoaded(Mods.OpenComputers)) {
-			eventOC(aspect);
+			eventOC(name, aspect);
 		}
 		if(Mods.isLoaded(Mods.ComputerCraft)) {
-			eventCC(aspect);
+			eventCC(name, aspect);
 		}
 		updateNeighbors();
 		sendUpdateToClient();
@@ -93,22 +97,20 @@ public class TileDigitalReceiverBox extends TileDigitalBoxBase implements IRecei
 	}
 
 	@Override
-	public void writePacketData(DataOutputStream data)
-		throws IOException {
+	public void writePacketData(DataOutputStream data) throws IOException {
 		super.writePacketData(data);
 		this.receiver.writePacketData(data);
 	}
 
 	@Override
-	public void readPacketData(DataInputStream data)
-		throws IOException {
+	public void readPacketData(DataInputStream data) throws IOException {
 		super.readPacketData(data);
 		this.receiver.readPacketData(data);
 		markBlockForUpdate();
 	}
 
 	public SignalAspect getBoxSignalAspect(ForgeDirection side) {
-		return this.receiver.getAspect();
+		return this.receiver.getVisualAspect();
 	}
 
 	public boolean canTransferAspect() {
@@ -116,7 +118,7 @@ public class TileDigitalReceiverBox extends TileDigitalBoxBase implements IRecei
 	}
 
 	@Override
-	public SimpleSignalReceiver getReceiver() {
+	public SignalReceiver getReceiver() {
 		return this.receiver;
 	}
 
@@ -143,43 +145,55 @@ public class TileDigitalReceiverBox extends TileDigitalBoxBase implements IRecei
 	}
 
 	@Optional.Method(modid = Mods.OpenComputers)
-	public void eventOC(SignalAspect aspect) {
+	public void eventOC(String name, SignalAspect aspect) {
 		if(node() != null) {
-			node().sendToReachable("computer.signal", "aspect_changed", aspect.ordinal());
+			node().sendToReachable("computer.signal", "aspect_changed", name, aspect.ordinal());
 		}
 	}
 
 	@Optional.Method(modid = Mods.ComputerCraft)
-	public void eventCC(SignalAspect aspect) {
+	public void eventCC(String name, SignalAspect aspect) {
 		if(attachedComputersCC != null) {
 			for(IComputerAccess computer : attachedComputersCC) {
 				computer.queueEvent("aspect_changed", new Object[] {
 					computer.getAttachmentName(),
-					aspect.ordinal()
+					name, aspect.ordinal()
 				});
 			}
 		}
 	}
 
-	private Object[] getSignal() {
-		return new Object[] { this.getTriggerAspect().ordinal() };
+	private Object[] getSignal(String name) {
+		SignalAspect aspect = this.receiver.getMostRestrictiveAspectFor(name);
+		if(aspect != null) {
+			return new Object[] { aspect };
+		} else {
+			return new Object[] { null, "no valid signal found" };
+		}
 	}
 
+	private static LinkedHashMap<Object, Object> aspectMap;
+
 	private static Object[] aspects() {
-		LinkedHashMap<String, Integer> aspectMap = new LinkedHashMap<String, Integer>();
-		for(SignalAspect aspect : SignalAspect.VALUES) {
-			aspectMap.put(aspect.name().toLowerCase(Locale.ENGLISH), aspect.ordinal());
+		if(aspectMap == null) {
+			LinkedHashMap<Object, Object> newMap = new LinkedHashMap<Object, Object>();
+			for(SignalAspect aspect : SignalAspect.VALUES) {
+				String name = aspect.name().toLowerCase(Locale.ENGLISH);
+				newMap.put(name, aspect.ordinal() + 1);
+				newMap.put(aspect.ordinal() + 1, name);
+			}
+			aspectMap = newMap;
 		}
 		return new Object[] { aspectMap };
 	}
 
-	@Callback(doc = "function():number; Returns the currently received aspect that triggers the receiver box", direct = true, limit = 16)
+	@Callback(doc = "function(name:string):number; Returns the aspect currently received from a connected signal with the specified name. Returns nil and an error message on failure.", direct = true, limit = 16)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] getSignal(Context context, Arguments args) {
-		return getSignal();
+		return getSignal(args.checkString(0));
 	}
 
-	@Callback(doc = "This is a list of every available Signal Aspect in Railcraft", getter = true, direct = true, limit = 16)
+	@Callback(doc = "This is a list of every available Signal Aspect in Railcraft", getter = true, direct = true)
 	public Object[] aspects(Context c, Arguments a) {
 		return aspects();
 	}
@@ -196,7 +210,10 @@ public class TileDigitalReceiverBox extends TileDigitalBoxBase implements IRecei
 		if(method < getMethodNames().length) {
 			switch(method) {
 				case 0: {
-					return getSignal();
+					if(arguments.length < 1 || !(arguments[0] instanceof String)) {
+						throw new LuaException("first argument needs to be a string");
+					}
+					return getSignal(((String) arguments[0]));
 				}
 				case 1: {
 					return aspects();

@@ -23,6 +23,8 @@ public class MassiveSignalReceiver extends SignalReceiver {
 
 	private final Map<WorldCoordinate, SignalAspect> aspects = new HashMap<WorldCoordinate, SignalAspect>();
 	private final SimpleInvertibleDualMap<String, WorldCoordinate> signalNames = SimpleInvertibleDualMap.create();
+	private SignalAspect visualAspect;
+	private SignalAspect mostRestrictive;
 
 	public MassiveSignalReceiver(String locTag, TileEntity tile) {
 		super(locTag, tile, 32);
@@ -32,11 +34,64 @@ public class MassiveSignalReceiver extends SignalReceiver {
 		return this.aspects.get(coord);
 	}
 
+	public SignalAspect getVisualAspect() {
+		return this.visualAspect != null ? this.visualAspect : (this.visualAspect = this.getMostRestrictiveAspect());
+	}
+
+	public void setVisualAspect(SignalAspect aspect) {
+		this.visualAspect = aspect;
+	}
+
+	public String getNameFor(WorldCoordinate coord) {
+		return this.signalNames.inverse().get(coord);
+	}
+
+	public Collection<WorldCoordinate> getCoordsFor(String name) {
+		return this.signalNames.get(name);
+	}
+
+	public SignalAspect getMostRestrictiveAspectFor(String name) {
+		SignalAspect mostRestrictive = null;
+		for(WorldCoordinate coord : this.signalNames.get(name)) {
+			if(mostRestrictive == null) {
+				mostRestrictive = this.aspects.get(coord);
+			} else {
+				mostRestrictive = SignalAspect.mostRestrictive(mostRestrictive, this.aspects.get(coord));
+			}
+		}
+		return mostRestrictive;
+	}
+
+	public String getNameFor(SignalController con) {
+		String name = this.signalNames.inverse().get(con.getCoords());
+		if(name == null) {
+			name = con.getName();
+			this.signalNames.put(name, con.getCoords());
+		}
+		return name;
+	}
+
+	public SignalAspect getMostRestrictiveAspect() {
+		if(this.mostRestrictive != null) {
+			return this.mostRestrictive;
+		}
+		SignalAspect mostRestrictive = null;
+		for(SignalAspect aspect : this.aspects.values()) {
+			if(mostRestrictive == null) {
+				mostRestrictive = aspect;
+			} else {
+				mostRestrictive = SignalAspect.mostRestrictive(mostRestrictive, aspect);
+			}
+		}
+		return this.mostRestrictive = mostRestrictive != null ? mostRestrictive : SignalAspect.BLINK_RED;
+	}
+
 	public void onControllerAspectChange(SignalController con, SignalAspect aspect) {
 		WorldCoordinate coords = con.getCoords();
 		SignalAspect oldAspect = this.aspects.get(coords);
 		if(oldAspect != aspect) {
 			this.aspects.put(coords, aspect);
+			this.mostRestrictive = null;
 			super.onControllerAspectChange(con, aspect);
 		}
 		if(!signalNames.containsEntry(con.getName(), coords)) {
@@ -48,7 +103,9 @@ public class MassiveSignalReceiver extends SignalReceiver {
 	public void cleanPairings() {
 		super.cleanPairings();
 		Collection<WorldCoordinate> pairs = getPairs();
-		this.aspects.keySet().retainAll(pairs);
+		if(this.aspects.keySet().retainAll(pairs)) {
+			this.mostRestrictive = null;
+		}
 		this.signalNames.retainAllValues(pairs);
 	}
 
@@ -56,6 +113,7 @@ public class MassiveSignalReceiver extends SignalReceiver {
 	public void clearPairings() {
 		super.clearPairings();
 		this.aspects.clear();
+		this.mostRestrictive = null;
 		this.signalNames.clear();
 	}
 
@@ -64,7 +122,9 @@ public class MassiveSignalReceiver extends SignalReceiver {
 	public void removePair(int x, int y, int z) {
 		super.removePair(x, y, z);
 		Collection<WorldCoordinate> pairs = getPairs();
-		this.aspects.keySet().retainAll(pairs);
+		if(this.aspects.keySet().retainAll(pairs)) {
+			this.mostRestrictive = null;
+		}
 		this.signalNames.retainAllValues(pairs);
 	}
 
@@ -99,5 +159,6 @@ public class MassiveSignalReceiver extends SignalReceiver {
 				signalNames.put(tag.getString("name"), coord);
 			}
 		}
+		this.mostRestrictive = null;
 	}
 }
