@@ -8,6 +8,7 @@ import com.google.common.collect.Multisets;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -51,7 +52,7 @@ public class SimpleInvertibleDualMap<K, V> {
 
 	public boolean put(K key, V value) {
 		K oldKey = inverse.put(value, key);
-		if(oldKey != null){
+		if(oldKey != null) {
 			map.remove(oldKey, value);
 		}
 		return map.put(key, value);
@@ -63,6 +64,42 @@ public class SimpleInvertibleDualMap<K, V> {
 			inverse.remove(v);
 		}
 		return vs;
+	}
+
+	public K removeValue(V value) {
+		K removed = inverse.remove(value);
+		if(removed != null){
+			map.remove(removed, value);
+		}
+		return removed;
+	}
+
+	public boolean retainAll(Collection<K> keys) {
+		boolean any = false;
+		Iterator<K> iter = inverse.values().iterator();
+		while(iter.hasNext()) {
+			K key = iter.next();
+			if(!keys.contains(key)) {
+				iter.remove();
+				map.removeAll(key);
+				any = true;
+			}
+		}
+		return any;
+	}
+
+	public boolean retainAllValues(Collection<V> values) {
+		boolean any = false;
+		Iterator<V> iter = map.values().iterator();
+		while(iter.hasNext()) {
+			V value = iter.next();
+			if(!values.contains(value)) {
+				iter.remove();
+				inverse.remove(value);
+				any = true;
+			}
+		}
+		return any;
 	}
 
 	public void clear() {

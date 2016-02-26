@@ -1,5 +1,7 @@
 package pl.asie.computronics.integration.railcraft.signalling;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import mods.railcraft.api.core.WorldCoordinate;
 import mods.railcraft.api.signals.SignalAspect;
 import mods.railcraft.api.signals.SignalController;
@@ -10,6 +12,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.Constants;
 import pl.asie.computronics.util.collect.SimpleInvertibleDualMap;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,7 +28,6 @@ public class MassiveSignalController extends SignalController {
 	public MassiveSignalController(String locTag, TileEntity tile) {
 		super(locTag, tile, 32);
 		this.needsInit = true;
-
 	}
 
 	@Override
@@ -72,7 +74,25 @@ public class MassiveSignalController extends SignalController {
 	@Override
 	public void cleanPairings() {
 		super.cleanPairings();
-		this.aspects.keySet().retainAll(getPairs());
+		Collection<WorldCoordinate> pairs = getPairs();
+		this.aspects.keySet().retainAll(pairs);
+		this.signalNames.retainAllValues(pairs);
+	}
+
+	@Override
+	public void clearPairings() {
+		super.clearPairings();
+		this.aspects.clear();
+		this.signalNames.clear();
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void removePair(int x, int y, int z) {
+		super.removePair(x, y, z);
+		Collection<WorldCoordinate> pairs = getPairs();
+		this.aspects.keySet().retainAll(pairs);
+		this.signalNames.retainAllValues(pairs);
 	}
 
 	protected void saveNBT(NBTTagCompound data) {
