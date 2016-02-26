@@ -1,6 +1,5 @@
 package pl.asie.computronics.integration.charset.wires;
 
-import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.api.ComputerCraftAPI;
 import dan200.computercraft.api.redstone.IBundledRedstoneProvider;
 import dan200.computercraft.shared.computer.blocks.IComputerTile;
@@ -103,7 +102,7 @@ public class CCBundledRedstoneIntegration implements IBundledRedstoneProvider {
 
 		@Override
 		public byte[] getBundledSignal() {
-			int out = ComputerCraft.getDefaultBundledRedstoneOutput(tile.getWorld(), tile.getPos(), side);
+			int out = ComputerCraftAPI.getBundledRedstoneOutput(tile.getWorld(), tile.getPos(), side);
 			if(out < 0) {
 				return new byte[16];
 			}
@@ -142,7 +141,7 @@ public class CCBundledRedstoneIntegration implements IBundledRedstoneProvider {
 			return capability != null &&
 				(capability == CHARSET_EMITTER ||
 					capability == CHARSET_RECEIVER
-						&& ComputerCraft.getDefaultBundledRedstoneOutput(tile.getWorld(), tile.getPos(), facing) >= 0);
+						&& ComputerCraftAPI.getBundledRedstoneOutput(tile.getWorld(), tile.getPos(), facing) >= 0);
 		}
 
 		@Override
