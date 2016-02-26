@@ -9,7 +9,7 @@ tile.computronics.cipher_advanced.name=Продвинутый блок шифр�
 tile.computronics.radar.name=Радар
 tile.computronics.colorfulLamp.name=Цветной светильник
 tile.computronics.locomotiveRelay.name=Цифровое локомотивное реле
-tile.computronics.digitalBox.name=Цифровой приёмник сигнала
+tile.computronics.digitalReceiverBox.name=Цифровой приёмник сигнала
 tile.computronics.detector.name=Детектор - Цифровой
 tile.computronics.ticketMachine.name=Кассовый аппарат
 

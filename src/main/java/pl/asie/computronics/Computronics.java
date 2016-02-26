@@ -380,6 +380,9 @@ public class Computronics {
 		if(Mods.isLoaded(Mods.OpenComputers)) {
 			opencomputers.remap(event);
 		}
+		if(Mods.isLoaded(Mods.Railcraft)){
+			railcraft.remap(event);
+		}
 	}
 
 	/**

@@ -158,8 +158,8 @@ public class GregTechRecipes extends ModRecipes {
 			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.railcraft.relaySensor, 1, 0),
 				" r ", "rpn", " nc", 'p', ItemList.Emitter_LV.get(1), 'n', "ringRedAlloy", 'r', "cableGt01Tin", 'c', "circuitBasic");
 		}
-		if(Computronics.railcraft.digitalBox != null) {
-			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.railcraft.digitalBox, 1, 0),
+		if(Computronics.railcraft.digitalReceiverBox != null) {
+			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.railcraft.digitalReceiverBox, 1, 0),
 				"iri", "ibi", "isi", 'i', "plateIron", 'r', ItemList.Sensor_LV.get(1), 'b', GameRegistry.findItemStack(Mods.Railcraft, "signal.box.receiver", 1), 's', GameRegistry.findItemStack(Mods.Railcraft, "part.circuit.signal", 1));
 		}
 		if(Computronics.railcraft.detector != null) {
