@@ -92,7 +92,7 @@ public class MassiveSignalController extends SignalController {
 				mostRestrictive = SignalAspect.mostRestrictive(mostRestrictive, this.aspects.get(coord));
 			}
 		}
-		return mostRestrictive;
+		return mostRestrictive != null ? mostRestrictive : SignalAspect.GREEN;
 	}
 
 	public String getNameFor(SignalController con) {
@@ -118,7 +118,7 @@ public class MassiveSignalController extends SignalController {
 				mostRestrictive = SignalAspect.mostRestrictive(mostRestrictive, aspect);
 			}
 		}
-		return this.mostRestrictive = mostRestrictive != null ? mostRestrictive : SignalAspect.BLINK_RED;
+		return this.mostRestrictive = mostRestrictive != null ? mostRestrictive : SignalAspect.GREEN;
 	}
 
 	public Set<String> getSignalNames() {

@@ -188,7 +188,7 @@ public class TileDigitalControllerBox extends TileDigitalBoxBase implements ICon
 		return removeSignal(args.checkString(0));
 	}
 
-	@Callback(doc = "function():table; Returns a list containing the name of every paired controller.", direct = true, limit = 32)
+	@Callback(doc = "function():table; Returns a list containing the name of every paired receiver.", direct = true, limit = 32)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] getSignalNames(Context c, Arguments a) {
 		return getSignalNames();
