@@ -36,7 +36,8 @@ public class MassiveSignalController extends SignalController {
 
 	@Override
 	public SignalAspect getAspectFor(WorldCoordinate coord) {
-		return this.aspects.get(coord);
+		SignalAspect aspect = this.aspects.get(coord);
+		return aspect != null ? aspect : SignalAspect.GREEN;
 	}
 
 	public void setAspectFor(WorldCoordinate coord, SignalAspect aspect) {
