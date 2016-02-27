@@ -2,9 +2,12 @@
 
 This version comes with a 1.8.9 port in addition to many additions.
 
+  * ADDED: Noise Card!
+    - An upgraded Beep Card with slightly different syntax
+    - Can play square waves, sine waves, triangle waves and sawtooth waves!
   * ADDED: Support for TIS-3D!
     - Added a Colorful Module to display any colour you want, akin to a Colorful Lamp.
-    - [1.7.10] Added a Tape Reader Module which allows you to interface with an adjacent Tape Drive.
+    - Added a Tape Reader Module which allows you to interface with an adjacent Tape Drive.
     - Added a Self-Destructing Module which allows you to dispose of your casings with style.
     - Added a Serial Interface for Flamingos to make them wiggle.
     - Documented everything in the TIS-3D manual.
@@ -13,6 +16,10 @@ This version comes with a 1.8.9 port in addition to many additions.
     - Added a Light Board to put into Server Racks. Allows controlling coloured lights in various layouts.
     - Added a Server Self-Destructor in case you don't need your servers anymore.
     - Added a Rack Capacitor which is a Capacitor you can put into a Rack. Ingenious. It also provides a component that gives you the amount of energy stored in that capacitor.
+  * ADDED: getPosition() to tape drives. No, I'm not joking. It's real. I'm sorry.
+  * ADDED: Built-in tape utility program for ComputerCraft to write songs to tapes and to play, stop, pause etc.
+  * FIXED: Iron Note Blocks now properly error when used with instrument names.
+  * FIXED: Tape program not displaying information properly if file size is larger than tape size
   * [1.7.10] ADDED: EnderIO 2.3 integration  for OpenComputers and ComputerCraft! (It has actually existed since March 2015, just not in any official release)
     - Added support for the new Telepad
       - Allows full control over the coordinates set (if allowed in the EnderIO config file) as well as telepad activation
@@ -22,17 +29,26 @@ This version comes with a 1.8.9 port in addition to many additions.
       - This allows you to monitor input and output of your energy network separately
     - Now you can get and set the range of Vacuum Chests
     - Added `getProgress()` to most machines with progress
-  * [1.7.10] ADDED: Built-in tape utility program for ComputerCraft to write songs to tapes and to play, stop, pause etc.
-  * [1.7.10] ADDED: getPosition() to tape drives. No, I'm not joking. It's real. I'm sorry.
+  * [1.7.10] ADDED: Digital Signal Controller Box for Railcraft!
+    - Can be paired to up to 32 receivers (sounds overpowered, definitely is overpowered, but CovertJaguar told me to do it. It's probaby better this way...)
+    - Allows individually sending aspects to each paired receiver
+    - Receivers must be referenced by their name, meaning you have to name all your signals using Signal Labels
+  * [1.7.10] CHANGED: Digital Signal Receiver Box
+    - Can noe be paired to up to 32 receivers, just like the controller box
+    - Allows individually querying the aspect of each paired controller
+    - Sends an `aspect_changed` event containing the controller's name and new aspect.
+    - Controllers must be referenced by their name, meaning you have to name all your signals using Signal Labels
   * [1.7.10] FIXED: Crash when the `openComputersBees` config option was set to `false`.
-  * FIXED: Updated OpenComputers integration (requires OpenComputers 1.5.21 now)
+  * [1.7.10] FIXED: Digital Locomotive Relay trying to consume OpenComputers energy even if called from ComputerCraft
+  * [1.7.10] FIXED: Updated OpenComputers integration
+  * [1.7.10] FIXED: Removed explicit dependency on GregTech 5. Computronics will launch with GregTech 6 now (but there is no integration yet).
 
   * [1.8.9] Ported the mod to 1.8.9! Everything is resource-pack ready!
   	- Mods supported right now are ComputerCraft, OpenComputers, TIS-3D, Flamingo, Storage Drawers, Charset and WAILA. 
   	- asielib is no longer needed as a separate download, it is included in this mod.
-  * [1.8.9] Added Charset Wires Bundled Cable support for ComputerCraft.
-  * [1.8.9] Added Charset Wires Bundled Cable support for Computronics.
-  * [1.8.9] The Tape Drive and all related Audio stuff has been moved over to asie's new mod, Charset Audio. This means it no longer is in Computronics, but this mod will add support for it once the API is done.
+  * [1.8.9] ADDED: Charset Wires Bundled Cable support for ComputerCraft.
+  * [1.8.9] ADDED: Charset Wires Bundled Cable support for Computronics.
+  * [1.8.9] ADDED: Support for NoteBetter to the Iron Note Block and the Musical Turtle Upgrade.
 
 ==== 1.6.0 ====
 

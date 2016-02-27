@@ -34,7 +34,7 @@ public class ComputronicsPathProvider implements PathProvider {
 	private static TabIconRenderer findTabIconRenderer() {
 		ArrayList<Block> blocks = new ArrayList<Block>();
 		Collections.addAll(blocks,
-			//Computronics.tapeReader,
+			Computronics.tapeReader,
 			Computronics.colorfulLamp,
 			Computronics.camera,
 			Computronics.chatBox,

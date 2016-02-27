@@ -13,7 +13,7 @@ public enum ConfigValues {
 	Tape(Mods.Computronics + ".enableTape"),
 	TapeName(Mods.Computronics + ".enableTapeName"),
 	DriveState(Mods.Computronics + ".enableDriveState"),
-	RelayBound(Mods.Computronics + ".enableRelayBound"),
+	RelayBound(Mods.Computronics + ".enableRelayBound", Mods.Railcraft),
 	LampColor(Mods.Computronics + ".enableLampColor");
 
 	private String key;

@@ -1,6 +1,6 @@
 # Audio Cable
 
-![Popular proper pop propagation](block:computronics:computronics.audioCable)
+![Popular proper pop propagation](block:computronics:audio_cable)
 
 The Audio Cable allows you to connect devices which send audio signals to devices which receive and process those. An example would be connecting a [tape drive](tape_drive.md) with one or multiple [speakers](speaker.md).
 

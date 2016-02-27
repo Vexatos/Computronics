@@ -18,8 +18,6 @@ import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.RadarUtils;
 import pl.asie.lib.api.tile.IBatteryProvider;
-import pl.asie.lib.tile.BatteryBasic;
-import pl.asie.lib.util.EnergyConverter;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -29,7 +27,6 @@ public class TileRadar extends TileEntityPeripheralBase implements IBatteryProvi
 
 	public TileRadar() {
 		super("radar", Config.RADAR_ENERGY_COST_OC * Config.RADAR_RANGE * 3.5);
-		this.registerBattery(new BatteryBasic(EnergyConverter.convertEnergy(Config.RADAR_ENERGY_COST_OC * Config.RADAR_RANGE * 3.5, "OC", "RF")));
 	}
 
 	private int getDistance(Arguments args) {
@@ -51,23 +48,13 @@ public class TileRadar extends TileEntityPeripheralBase implements IBatteryProvi
 			expand(distance, distance, distance);
 	}
 
-	public boolean extractFromBattery(double amount) {
-		double amt = EnergyConverter.convertEnergy(amount, "OC", "RF");
-		if(this.getBatteryProvider().getEnergyStored() < amt) {
-			return false;
-		}
-		this.getBatteryProvider().extract(-1, amt, false);
-		return true;
-	}
-
 	@Callback(doc = "function([distance:number]):table; Returns a list of all entities detected within the specified or the maximum range")
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] getEntities(Context context, Arguments args) {
 		Set<Map> entities = new HashSet<Map>();
 		int distance = getDistance(args);
 		double energyNeeded = (Config.RADAR_ENERGY_COST_OC * distance * 1.75);
-		if(((Connector) node()).tryChangeBuffer(0 - energyNeeded)
-			|| extractFromBattery(energyNeeded)) {
+		if(((Connector) node()).tryChangeBuffer(0 - energyNeeded)) {
 			AxisAlignedBB bounds = getBounds(distance);
 			entities.addAll(RadarUtils.getEntities(worldObj, getPos(), bounds, EntityPlayer.class));
 			entities.addAll(RadarUtils.getEntities(worldObj, getPos(), bounds, EntityLiving.class));
@@ -88,8 +75,7 @@ public class TileRadar extends TileEntityPeripheralBase implements IBatteryProvi
 		Set<Map> entities = new HashSet<Map>();
 		int distance = getDistance(args);
 		double energyNeeded = (Config.RADAR_ENERGY_COST_OC * distance * 1.0);
-		if(((Connector) node()).tryChangeBuffer(0 - energyNeeded)
-			|| extractFromBattery(energyNeeded)) {
+		if(((Connector) node()).tryChangeBuffer(0 - energyNeeded)) {
 			AxisAlignedBB bounds = getBounds(distance);
 			entities.addAll(RadarUtils.getEntities(worldObj, getPos(), bounds, EntityPlayer.class));
 			context.pause(0.5);
@@ -103,8 +89,7 @@ public class TileRadar extends TileEntityPeripheralBase implements IBatteryProvi
 		Set<Map> entities = new HashSet<Map>();
 		int distance = getDistance(args);
 		double energyNeeded = (Config.RADAR_ENERGY_COST_OC * distance * 1.0);
-		if(((Connector) node()).tryChangeBuffer(0 - energyNeeded)
-			|| extractFromBattery(energyNeeded)) {
+		if(((Connector) node()).tryChangeBuffer(0 - energyNeeded)) {
 			AxisAlignedBB bounds = getBounds(distance);
 			entities.addAll(RadarUtils.getEntities(worldObj, getPos(), bounds, EntityLiving.class));
 			context.pause(0.5);
@@ -118,8 +103,7 @@ public class TileRadar extends TileEntityPeripheralBase implements IBatteryProvi
 		Set<Map> entities = new HashSet<Map>();
 		int distance = getDistance(args);
 		double energyNeeded = (Config.RADAR_ENERGY_COST_OC * distance * 2.0);
-		if(((Connector) node()).tryChangeBuffer(0 - energyNeeded)
-			|| extractFromBattery(energyNeeded)) {
+		if(((Connector) node()).tryChangeBuffer(0 - energyNeeded)) {
 			AxisAlignedBB bounds = getBounds(distance);
 			entities.addAll(RadarUtils.getItems(worldObj, getPos(), bounds, EntityItem.class));
 			context.pause(0.5);

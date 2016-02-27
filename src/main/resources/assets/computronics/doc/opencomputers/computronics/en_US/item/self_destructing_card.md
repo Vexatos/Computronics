@@ -1,6 +1,6 @@
 # Self-Destructing Card
 
-![Useful and convenient.](item:computronics:computronics.ocParts@6)
+![Useful and convenient.](item:computronics:oc_parts@6)
 
 The Self-destructing card allows for computers or robots to self-destruct after a specified duration (default 5 seconds). Devices are completely and irreversibly destroyed.
 

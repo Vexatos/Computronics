@@ -39,7 +39,7 @@ public class ItemMultiple extends Item {
 	@Override
 	@SideOnly(Side.CLIENT)
 	@SuppressWarnings("unchecked")
-	public void getSubItems(Item item, CreativeTabs tabs, List list) {
+	public void getSubItems(Item item, CreativeTabs tabs, List<ItemStack> list) {
 		for(int i = 0; i < parts.length; i++) {
 			list.add(new ItemStack(item, 1, i));
 		}

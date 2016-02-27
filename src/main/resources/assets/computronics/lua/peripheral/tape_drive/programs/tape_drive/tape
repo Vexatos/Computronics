@@ -101,6 +101,16 @@ local function writeTape(relPath)
   local block = 8192 --How much to read at a time
   local bytery = 0 --For the progress indicator
 
+  print("Are you sure you want to write to this tape?")
+  print("Type `y` to confirm, `n` to cancel.")
+  repeat
+    local response = read()
+    if response and response:lower():sub(1, 1) == "n" then
+      print("Canceled.")
+      return
+    end
+  until response and response:lower():sub(1, 1) == "y"
+
   local path = shell.resolve(relPath)
   local filesize = fs.getSize(path)
   print("Path: " .. path)
@@ -118,7 +128,7 @@ local function writeTape(relPath)
   if filesize > tape.getSize() then
     term.setCursorPos(1, y)
     printError("Error: File is too large for tape, shortening file")
-    y = y + 1
+    _, y = term.getCursorPos()
     filesize = tape.getSize()
   end
 
@@ -130,15 +140,20 @@ local function writeTape(relPath)
       bytes[#bytes + 1] = byte
     end
     if #bytes > 0 then
+      if not tape.isReady() then
+        io.stderr:write("\nError: Tape was removed during writing.\n")
+        file.close()
+        return
+      end
       term.setCursorPos(1, y)
       bytery = bytery + #bytes
-      term.write("Read " .. tostring(bytery) .. " of " .. tostring(filesize) .. " bytes...")
+      term.write("Read " .. tostring(math.min(bytery, filesize)) .. " of " .. tostring(filesize) .. " bytes...")
       for i = 1, #bytes do
         tape.write(bytes[i])
       end
       sleep(0)
     end
-  until not bytes or #bytes <= 0
+  until not bytes or #bytes <= 0 or bytery > filesize
   file.close()
   tape.stop()
   tape.seek(-tape.getSize())

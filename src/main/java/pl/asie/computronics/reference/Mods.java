@@ -55,7 +55,8 @@ public class Mods {
 			CoFHAPI_Energy = "CoFHAPI|energy",
 			DraconicEvolution = "DraconicEvolution|API",
 			Gendustry = "gendustryAPI",
-			Mekanism_Energy = "MekanismAPI|energy";
+			Mekanism_Energy = "MekanismAPI|energy",
+			NoteBetter = "notebetter|api";
 
 		public static boolean hasAPI(String name) {
 			return pl.asie.lib.reference.Mods.API.hasAPI(name);
@@ -68,7 +69,8 @@ public class Mods {
 		public static final String
 			BuildCraftTiles = "[1.1,)",
 			Forestry = "[4.2.0,)",
-			Gendustry = "[2.0.0,)";
+			Gendustry = "[2.0.0,)",
+			GregTech5 = "[MC1710]";
 	}
 
 	public static boolean isLoaded(String name) {

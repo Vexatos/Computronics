@@ -7,10 +7,14 @@ import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ITickable;
 import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.NoteUtils;
 import pl.asie.lib.api.tile.IBundledRedstoneProvider;
+
+import java.util.ArrayList;
+import java.util.List;
 
 //import mods.immibis.redlogic.api.wiring.IBundledEmitter;
 //import mods.immibis.redlogic.api.wiring.IBundledUpdatable;
@@ -24,29 +28,49 @@ import pl.asie.lib.api.tile.IBundledRedstoneProvider;
 	@Optional.Interface(iface = "mods.immibis.redlogic.api.wiring.IConnectable", modid = Mods.RedLogic),
 	@Optional.Interface(iface = "mrtjp.projectred.api.IBundledTile", modid = Mods.ProjectRed)
 })*/
-public class TileIronNote extends TileEntityPeripheralBase implements IBundledRedstoneProvider /*implements IBundledTile, IBundledUpdatable, IConnectable*/ {
+public class TileIronNote extends TileEntityPeripheralBase implements IBundledRedstoneProvider, ITickable /*implements IBundledTile, IBundledUpdatable, IConnectable*/ {
 
 	public TileIronNote() {
 		super("iron_noteblock");
 	}
 
+	protected final List<NoteUtils.NoteTask> noteBuffer = new ArrayList<NoteUtils.NoteTask>();
+
+	@Override
+	public void update() {
+		super.update();
+		synchronized(noteBuffer) {
+			if(!noteBuffer.isEmpty()) {
+				for(NoteUtils.NoteTask task : noteBuffer) {
+					task.play(worldObj, getPos());
+				}
+				noteBuffer.clear();
+			}
+		}
+	}
 	// OpenComputers
 
 	@Callback(direct = true, limit = 10, doc = "function([instrument:number or string,] note:number [, volume:number]); "
 		+ "Plays the specified note with the specified instrument or the default one; volume may be a number between 0 and 1")
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] playNote(Context context, Arguments args) {
+		NoteUtils.NoteTask task = null;
 		if(args.count() >= 1) {
 			if(args.count() >= 2 && args.isInteger(1)) {
 				if(args.isInteger(0)) {
-					NoteUtils.playNote(worldObj, getPos(), args.checkInteger(0), args.checkInteger(1), NoteUtils.toVolume(3, args.optDouble(2, 1.0D)));
+					task = NoteUtils.playNote(worldObj, getPos(), args.checkInteger(0), args.checkInteger(1), NoteUtils.toVolume(3, args.optDouble(2, 1.0D)));
 				} else if(args.isString(0)) {
-					NoteUtils.playNote(worldObj, getPos(), args.checkString(0), args.checkInteger(1), NoteUtils.toVolume(3, args.optDouble(2, 1.0D)));
+					task = NoteUtils.playNote(worldObj, getPos(), args.checkString(0), args.checkInteger(1), NoteUtils.toVolume(3, args.optDouble(2, 1.0D)));
 				} else if(args.checkAny(0) == null) {
-					NoteUtils.playNote(worldObj, getPos(), -1, args.checkInteger(1), NoteUtils.toVolume(3, args.optDouble(2, 1.0D)));
+					task = NoteUtils.playNote(worldObj, getPos(), -1, args.checkInteger(1), NoteUtils.toVolume(3, args.optDouble(2, 1.0D)));
 				}
 			} else if(args.isInteger(0)) {
-				NoteUtils.playNote(worldObj, getPos(), -1, args.checkInteger(0), NoteUtils.toVolume(2, args.optDouble(1, 1.0D)));
+				task = NoteUtils.playNote(worldObj, getPos(), -1, args.checkInteger(0), NoteUtils.toVolume(2, args.optDouble(1, 1.0D)));
+			}
+		}
+		if(task != null) {
+			synchronized(noteBuffer) {
+				noteBuffer.add(task);
 			}
 		}
 		return null;
@@ -64,19 +88,25 @@ public class TileIronNote extends TileEntityPeripheralBase implements IBundledRe
 		int method, Object[] arguments) throws LuaException,
 		InterruptedException {
 		try {
+			NoteUtils.NoteTask task = null;
 			if(arguments.length >= 1) {
 				if(arguments.length >= 2 && (arguments[1] instanceof Double)) {
 					if(arguments[0] != null) {
 						if(arguments[0] instanceof Double) {
-							NoteUtils.playNote(worldObj, getPos(), ((Double) arguments[0]).intValue(), ((Double) arguments[1]).intValue(), NoteUtils.toVolume(arguments, 2));
+							task = NoteUtils.playNote(worldObj, getPos(), ((Double) arguments[0]).intValue(), ((Double) arguments[1]).intValue(), NoteUtils.toVolume(arguments, 2));
 						} else if(arguments[0] instanceof String) {
-							NoteUtils.playNote(worldObj, getPos(), (String) arguments[0], ((Double) arguments[1]).intValue(), NoteUtils.toVolume(arguments, 2));
+							task = NoteUtils.playNote(worldObj, getPos(), (String) arguments[0], ((Double) arguments[1]).intValue(), NoteUtils.toVolume(arguments, 2));
 						}
 					} else {
-						NoteUtils.playNote(worldObj, getPos(), -1, ((Double) arguments[1]).intValue(), NoteUtils.toVolume(arguments, 2));
+						task = NoteUtils.playNote(worldObj, getPos(), -1, ((Double) arguments[1]).intValue(), NoteUtils.toVolume(arguments, 2));
 					}
 				} else if((arguments[0] instanceof Double)) {
-					NoteUtils.playNote(worldObj, getPos(), -1, ((Double) arguments[0]).intValue(), NoteUtils.toVolume(arguments, 1));
+					task = NoteUtils.playNote(worldObj, getPos(), -1, ((Double) arguments[0]).intValue(), NoteUtils.toVolume(arguments, 1));
+				}
+			}
+			if(task != null) {
+				synchronized(noteBuffer) {
+					noteBuffer.add(task);
 				}
 			}
 		} catch(IllegalArgumentException e) {
@@ -90,7 +120,10 @@ public class TileIronNote extends TileEntityPeripheralBase implements IBundledRe
 		if(data != null) {
 			for(int i = 0; i < 16; i++) {
 				if(data[i] != 0) {
-					NoteUtils.playNote(worldObj, getPos(), -1, baseNote + i);
+					NoteUtils.NoteTask task = NoteUtils.playNote(worldObj, getPos(), -1, baseNote + i);
+					if(task != null) {
+						task.play(worldObj, getPos());
+					}
 				}
 			}
 		}

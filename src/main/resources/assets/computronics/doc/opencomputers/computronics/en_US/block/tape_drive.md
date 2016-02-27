@@ -1,6 +1,6 @@
 # Tape Drive
 
-![Do not insert Duct Tape.](block:computronics:computronics.tapeReader)
+![Do not insert Duct Tape.](block:computronics:tape_reader)
 
 The tape drive is a block that allows for playback and recording of audio data. [Cassette tapes](../item/tape.md) can be placed into the tape drive and come in durations of 2 to 128 minutes. Note that the tape drive isn't restricted purely to audio data - other types of data can be written to the [cassette](../item/tape.md).
 

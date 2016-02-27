@@ -1,9 +1,9 @@
-package pl.asie.computronics.util;
+package pl.asie.lib.util;
 
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
-import pl.asie.computronics.util.internal.IColorable;
+import pl.asie.lib.util.internal.IColorable;
 
 import java.util.HashMap;
 

@@ -118,9 +118,10 @@ public class IntegrationOpenComputers {
 			|| Config.OC_UPGRADE_RADAR
 			|| Config.OC_CARD_FX
 			|| Config.OC_CARD_SPOOF
-			|| Config.OC_CARD_SOUND
+			|| Config.OC_CARD_BEEP
 			|| Config.OC_CARD_BOOM
 			|| Config.OC_UPGRADE_COLORFUL
+			|| Config.OC_CARD_NOISE
 			|| Config.OC_BOARD_LIGHT
 			|| Config.OC_BOARD_BOOM
 			|| Config.OC_BOARD_CAPACITOR) {
@@ -219,7 +220,7 @@ public class IntegrationOpenComputers {
 				Driver.add(new DriverPrimingTrack.OCDriver());
 			}
 		}*//*
-		if(Mods.isLoaded(Mods.GregTech)) {
+		if(Mods.hasVersion(Mods.GregTech, Mods.Versions.GregTech5)) {
 			if(compat.isCompatEnabled(Compat.GregTech_Machines)) {
 				Driver.add(new DriverBaseMetaTileEntity());
 				Driver.add(new DriverDeviceInformation());
@@ -351,7 +352,7 @@ public class IntegrationOpenComputers {
 				'p', li.cil.oc.api.Items.get("printedCircuitBoard").createItemStack(1),
 				'l', Items.brick);
 		}
-		if(Config.OC_CARD_SOUND) {
+		if(Config.OC_CARD_BEEP) {
 			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 5),
 				" l ", "mb ", " f ",
 				'm', li.cil.oc.api.Items.get("chip2").createItemStack(1),
@@ -383,9 +384,18 @@ public class IntegrationOpenComputers {
 				log.warn("Could not add Colorful Upgrade Recipe because Colorful Lamp is disabled in the config.");
 			}
 		}
+		if(Config.OC_CARD_NOISE) {
+			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 8),
+				" l ", "mbn", " f ",
+				'm', li.cil.oc.api.Items.get("chip2").createItemStack(1),
+				'f', li.cil.oc.api.Items.get("alu").createItemStack(1),
+				'b', new ItemStack(itemOCParts, 1, 5),
+				'l', li.cil.oc.api.Items.get("chip3").createItemStack(1),
+				'n', "nuggetGold");
+		}
 		if(Config.OC_BOARD_LIGHT) {
 			if(colorfulLamp != null) {
-				RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 8),
+				RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 9),
 					"oso", "gcg", "opo",
 					's', "paneGlassColorless",
 					'g', li.cil.oc.api.Items.get("chip1").createItemStack(1),
@@ -399,7 +409,7 @@ public class IntegrationOpenComputers {
 		}
 		if(Config.OC_BOARD_BOOM) {
 			if(Config.OC_CARD_BOOM) {
-				RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 9),
+				RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 10),
 					"lsl", "gcg", "opo",
 					's', li.cil.oc.api.Items.get("chip1").createItemStack(1),
 					'g', new ItemStack(itemOCParts, 1, 6),
@@ -413,7 +423,7 @@ public class IntegrationOpenComputers {
 			}
 		}
 		if(Config.OC_BOARD_CAPACITOR) {
-			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 10),
+			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 11),
 				"lsl", "gcg", "opo",
 				's', li.cil.oc.api.Items.get("chip1").createItemStack(1),
 				'g', "nuggetGold",

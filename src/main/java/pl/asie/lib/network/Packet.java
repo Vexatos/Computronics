@@ -56,7 +56,7 @@ public class Packet implements IMessage {
 		return gson.fromJson(ByteBufUtils.readUTF8String(read), t);
 	}
 	
-	public Object readJSON(Class t) throws IOException {
+	public Object readJSON(Class<?> t) throws IOException {
 		return gson.fromJson(ByteBufUtils.readUTF8String(read), t);
 	}
 	

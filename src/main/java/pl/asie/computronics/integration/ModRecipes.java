@@ -5,10 +5,12 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.RecipeUtils;
+import pl.asie.lib.util.color.RecipeColorizer;
 
 //import mods.railcraft.common.items.ItemElectricMeter;
 //import mods.railcraft.common.items.ItemRail;
@@ -34,6 +36,19 @@ public class ModRecipes {
 			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.ironNote, 1, 0),
 				"iii", "ini", "iii", 'i', Items.iron_ingot, 'n', Blocks.noteblock);
 		}
+		if(Computronics.audioCable != null) {
+			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.audioCable, 8, 0),
+				"ini", 'i', Items.iron_ingot, 'n', Blocks.noteblock);
+		}
+		if(Computronics.speaker != null) {
+			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.speaker, 1, 0),
+				"sIs", "ini", "sIs", 's', Blocks.stonebrick, 'I', Items.iron_ingot, 'i', Blocks.iron_bars, 'n', Blocks.noteblock);
+		}
+		if(Computronics.tapeReader != null) {
+			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.tapeReader, 1, 0),
+				"iii", "iri", "iai", 'i', Items.iron_ingot, 'r', Items.redstone,
+				'a', Computronics.ironNote != null ? Computronics.ironNote : Blocks.noteblock);
+		}
 		if(Computronics.cipher != null) {
 			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.cipher, 1, 0),
 				"sss", "srs", "eie", 'i', Items.iron_ingot, 'r', Items.redstone, 'e', Items.ender_pearl, 's', Blocks.stonebrick);
@@ -55,6 +70,34 @@ public class ModRecipes {
 		/*if(Mods.isLoaded(Mods.Railcraft) && Computronics.railcraft != null) {
 			registerRailcraftRecipes();
 		}*/
+		if(Computronics.itemTape != null) {
+			// Tape recipes
+			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.itemTape, 1, 0),
+				" i ", "iii", " T ", 'T', new ItemStack(Computronics.itemParts, 1, 0), 'i', Items.iron_ingot);
+			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.itemTape, 1, 1),
+				" i ", "ngn", " T ", 'T', new ItemStack(Computronics.itemParts, 1, 0), 'i', Items.iron_ingot, 'n', Items.gold_nugget, 'g', Items.gold_ingot);
+			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.itemTape, 1, 2),
+				" i ", "ggg", "nTn", 'T', new ItemStack(Computronics.itemParts, 1, 0), 'i', Items.iron_ingot, 'n', Items.gold_nugget, 'g', Items.gold_ingot);
+			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.itemTape, 1, 3),
+				" i ", "ddd", " T ", 'T', new ItemStack(Computronics.itemParts, 1, 0), 'i', Items.iron_ingot, 'd', Items.diamond);
+			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.itemTape, 1, 4),
+				" d ", "dnd", " T ", 'T', new ItemStack(Computronics.itemParts, 1, 0), 'n', Items.nether_star, 'd', Items.diamond);
+			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.itemTape, 1, 8),
+				" n ", "nnn", " T ", 'T', new ItemStack(Computronics.itemParts, 1, 0), 'n', Items.nether_star);
+
+			// Mod compat - copper/steel
+			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.itemTape, 1, 5),
+				" i ", " c ", " T ", 'T', new ItemStack(Computronics.itemParts, 1, 0), 'i', Items.iron_ingot, 'c', "ingotCopper");
+			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.itemTape, 1, 6),
+				" i ", "isi", " T ", 'T', new ItemStack(Computronics.itemParts, 1, 0), 'i', Items.iron_ingot, 's', "ingotSteel");
+
+			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.itemTape, 1, 7),
+				" i ", "isi", " T ", 'T', new ItemStack(Computronics.itemParts, 1, 0), 'i', "plateIridium", 's', "plateTungstenSteel");
+
+			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.itemParts, 1, 0),
+				" i ", "rrr", "iii", 'r', Items.redstone, 'i', Items.iron_ingot);
+			GameRegistry.addRecipe(new RecipeColorizer(Computronics.itemTape));
+		}
 	}
 
 	@Optional.Method(modid = Mods.OpenComputers)
@@ -91,8 +134,8 @@ public class ModRecipes {
 			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.railcraft.relaySensor, 1, 0),
 				" n ", "npr", " r ", 'p', Items.paper, 'n', "nuggetTin", 'r', Items.redstone);
 		}
-		if(Computronics.railcraft.digitalBox != null) {
-			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.railcraft.digitalBox, 1, 0),
+		if(Computronics.railcraft.digitalReceiverBox != null) {
+			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.railcraft.digitalReceiverBox, 1, 0),
 				"iri", "ibi", "isi", 'i', "ingotIron",
 				'r', GameRegistry.findItemStack(Mods.Railcraft, "part.circuit.receiver", 1),
 				'b', GameRegistry.findItemStack(Mods.Railcraft, "signal.box.receiver", 1),

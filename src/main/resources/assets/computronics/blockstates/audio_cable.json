@@ -1,0 +1,104 @@
+{
+
+    "forge_marker": 1,
+    "defaults": {
+        "textures": {
+            "cable": "computronics:blocks/audio_cable",
+            "particle": "computronics:blocks/audio_cable"
+        },
+        "uvlock": false
+    },
+    "variants": {
+        "normal": [
+            {}
+        ],
+        "inventory": [
+            {
+                "model": "computronics:audio_cable_item",
+                "transform": "forge:default-block"
+            }
+        ],
+        "down": {
+            "false": {
+                "submodel": {
+                    "down": {
+                        "model": "computronics:audio_cable_closed",
+                        "x": 180
+                    }
+                }
+            },
+            "true": {
+                "submodel": {
+                    "down": {
+                        "model": "computronics:audio_cable_open",
+                        "x": 180
+                    }
+                }
+            }
+        },
+        "up": {
+            "false": {
+                "submodel": {
+                    "up": {
+                        "model": "computronics:audio_cable_closed"
+                    }
+                }
+            },
+            "true": {
+                "submodel": {
+                    "up": {
+                        "model": "computronics:audio_cable_open"
+                    }
+                }
+            }
+        },
+        "north": {
+            "false": {
+                "submodel": {
+                    "north": { "model": "computronics:audio_cable_closed", "x": 90 }
+                }
+            },
+            "true": {
+                "submodel": {
+                    "north": { "model": "computronics:audio_cable_open", "x": 90 }
+                }
+            }
+        },
+        "south": {
+            "false": {
+                "submodel": {
+                    "south": { "model": "computronics:audio_cable_closed", "x": 90, "y": 180 }
+                }
+            },
+            "true": {
+                "submodel": {
+                    "south": { "model": "computronics:audio_cable_open", "x": 90, "y": 180 }
+                }
+            }
+        },
+        "west": {
+            "false": {
+                "submodel": {
+                    "west": { "model": "computronics:audio_cable_closed", "x": 90, "y": 270 }
+                }
+            },
+            "true": {
+                "submodel": {
+                    "west": { "model": "computronics:audio_cable_open", "x": 90, "y": 270 }
+                }
+            }
+        },
+        "east": {
+            "false": {
+                "submodel": {
+                    "east": { "model": "computronics:audio_cable_closed", "x": 90, "y": 90 }
+                }
+            },
+            "true": {
+                "submodel": {
+                    "east": { "model": "computronics:audio_cable_open", "x": 90, "y": 90 }
+                }
+            }
+        }
+    }
+}

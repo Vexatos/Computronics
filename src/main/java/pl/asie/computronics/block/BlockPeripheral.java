@@ -17,10 +17,10 @@ import pl.asie.computronics.oc.block.IComputronicsEnvironmentBlock;
 import pl.asie.computronics.oc.manual.IBlockWithDocumentation;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TileEntityPeripheralBase;
-import pl.asie.computronics.util.ColorUtils;
-import pl.asie.computronics.util.ColorUtils.Color;
-import pl.asie.computronics.util.internal.IColorable;
 import pl.asie.lib.block.BlockBase;
+import pl.asie.lib.util.ColorUtils;
+import pl.asie.lib.util.ColorUtils.Color;
+import pl.asie.lib.util.internal.IColorable;
 
 @Optional.InterfaceList({
 	@Optional.Interface(iface = "pl.asie.computronics.oc.block.IComputronicsEnvironmentBlock", modid = Mods.OpenComputers)
@@ -36,7 +36,7 @@ public abstract class BlockPeripheral extends BlockBase implements IComputronics
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
 		TileEntity tile = world.getTileEntity(pos);
-		if(tile instanceof TileEntityPeripheralBase && ((TileEntityPeripheralBase) tile).canBeColored()) {
+		if(tile instanceof TileEntityPeripheralBase && ((TileEntityPeripheralBase) tile).canBeColored() && player.getHeldItem() != null) {
 			Color color = ColorUtils.getColor(player.getHeldItem());
 			if(color != null) {
 				((TileEntityPeripheralBase) tile).setColor(color.color);

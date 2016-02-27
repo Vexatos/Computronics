@@ -22,6 +22,7 @@ Keep in mind that some of these may not be available, depending on the recipe se
 * [Particle Effects Card](particle_card.md)
 * [Spoofing Card](spoofing_card.md)
 * [Beep Card](beep_card.md)
+* [Noise Card](noise_card.md)
 * [Self-Destructing Card](self_destructing_card.md)
 
 ### Rack Mountables

@@ -7,8 +7,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.client.MinecraftForgeClient;
-import pl.asie.computronics.Computronics;
 import pl.asie.computronics.integration.flamingo.DriverFlamingo;
 import pl.asie.computronics.integration.tis3d.item.ItemModules;
 import pl.asie.computronics.integration.tis3d.manual.ComputronicsPathProvider;
@@ -29,7 +27,7 @@ public class IntegrationTIS3D {
 	@Optional.Method(modid = Mods.TIS3D)
 	public void preInit() {
 		if(Config.TIS3D_MODULE_COLORFUL
-			//|| Config.TIS3D_MODULE_TAPE_READER TODO Tape Drives
+			|| Config.TIS3D_MODULE_TAPE_READER
 			|| Config.TIS3D_MODULE_BOOM) {
 
 			itemModules = new ItemModules();
@@ -51,8 +49,9 @@ public class IntegrationTIS3D {
 		ModuleAPI.addProvider(itemModules);
 
 		if(Mods.isLoaded(Mods.Flamingo)) {
-			if(compat.isCompatEnabled(Compat.Flamingo))
-			SerialAPI.addProvider(new DriverFlamingo.TISInterfaceProvider());
+			if(compat.isCompatEnabled(Compat.Flamingo)) {
+				SerialAPI.addProvider(new DriverFlamingo.TISInterfaceProvider());
+			}
 		}
 	}
 
@@ -67,14 +66,14 @@ public class IntegrationTIS3D {
 					'R', "dustRedstone",
 					'G', "dustGlowstone");
 			}
-			/*if(Config.TIS3D_MODULE_TAPE_READER) { TODO Tape Drives
+			if(Config.TIS3D_MODULE_TAPE_READER) {
 				RecipeUtils.addShapedRecipe(new ItemStack(itemModules, 2, 1),
 					"PPP", "IGI", " R ",
 					'P', "paneGlassColorless",
 					'I', "ingotIron",
 					'R', "dustRedstone",
 					'G', "gemDiamond");
-			}*/
+			}
 			if(Config.TIS3D_MODULE_BOOM) {
 				RecipeUtils.addShapedRecipe(new ItemStack(itemModules, 2, 2),
 					"PPP", "IGI", " R ",

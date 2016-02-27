@@ -12,9 +12,12 @@ import pl.asie.computronics.Computronics;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.NoteUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MusicalTurtleUpgrade extends TurtleUpgradeBase {
 
-	private static class MusicalTurtlePeripheral extends TurtlePeripheralBase {
+	private class MusicalTurtlePeripheral extends TurtlePeripheralBase {
 
 		public MusicalTurtlePeripheral(ITurtleAccess access) {
 			super(access);
@@ -37,19 +40,25 @@ public class MusicalTurtleUpgrade extends TurtleUpgradeBase {
 			int method, Object[] arguments) throws LuaException,
 			InterruptedException {
 			try {
+				NoteUtils.NoteTask task = null;
 				if(arguments.length >= 1) {
 					if(arguments.length >= 2 && (arguments[1] instanceof Double)) {
 						if(arguments[0] != null) {
 							if(arguments[0] instanceof Double) {
-								NoteUtils.playNote(access.getWorld(), access.getPosition(), ((Double) arguments[0]).intValue(), ((Double) arguments[1]).intValue(), NoteUtils.toVolume(arguments, 2));
+								task = NoteUtils.playNote(access.getWorld(), access.getPosition(), ((Double) arguments[0]).intValue(), ((Double) arguments[1]).intValue(), NoteUtils.toVolume(arguments, 2));
 							} else if(arguments[0] instanceof String) {
-								NoteUtils.playNote(access.getWorld(), access.getPosition(), (String) arguments[0], ((Double) arguments[1]).intValue(), NoteUtils.toVolume(arguments, 2));
+								task = NoteUtils.playNote(access.getWorld(), access.getPosition(), (String) arguments[0], ((Double) arguments[1]).intValue(), NoteUtils.toVolume(arguments, 2));
 							}
 						} else {
-							NoteUtils.playNote(access.getWorld(), access.getPosition(), -1, ((Double) arguments[1]).intValue(), NoteUtils.toVolume(arguments, 2));
+							task = NoteUtils.playNote(access.getWorld(), access.getPosition(), -1, ((Double) arguments[1]).intValue(), NoteUtils.toVolume(arguments, 2));
 						}
 					} else if((arguments[0] instanceof Double)) {
-						NoteUtils.playNote(access.getWorld(), access.getPosition(), -1, ((Double) arguments[0]).intValue(), NoteUtils.toVolume(arguments, 1));
+						task = NoteUtils.playNote(access.getWorld(), access.getPosition(), -1, ((Double) arguments[0]).intValue(), NoteUtils.toVolume(arguments, 1));
+					}
+				}
+				if(task != null) {
+					synchronized(noteBuffer) {
+						noteBuffer.add(task);
 					}
 				}
 			} catch(IllegalArgumentException e) {
@@ -61,6 +70,21 @@ public class MusicalTurtleUpgrade extends TurtleUpgradeBase {
 
 	public MusicalTurtleUpgrade(String id) {
 		super(id);
+	}
+
+	protected final List<NoteUtils.NoteTask> noteBuffer = new ArrayList<NoteUtils.NoteTask>();
+
+	@Override
+	public void update(ITurtleAccess turtle, TurtleSide side) {
+		super.update(turtle, side);
+		synchronized(noteBuffer) {
+			if(!noteBuffer.isEmpty()) {
+				for(NoteUtils.NoteTask task : noteBuffer) {
+					task.play(turtle.getWorld(), turtle.getPosition());
+				}
+				noteBuffer.clear();
+			}
+		}
 	}
 
 	@Override
