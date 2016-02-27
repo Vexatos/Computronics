@@ -1,4 +1,4 @@
-package pl.asie.computronics.client;
+package pl.asie.computronics.oc.client;
 
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
