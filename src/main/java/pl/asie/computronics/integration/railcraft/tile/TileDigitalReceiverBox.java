@@ -7,6 +7,7 @@ import dan200.computercraft.api.peripheral.IComputerAccess;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
+import mods.railcraft.api.core.WorldCoordinate;
 import mods.railcraft.api.signals.IReceiverTile;
 import mods.railcraft.api.signals.SignalAspect;
 import mods.railcraft.api.signals.SignalController;
@@ -25,6 +26,7 @@ import pl.asie.computronics.reference.Names;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 
@@ -172,6 +174,17 @@ public class TileDigitalReceiverBox extends TileDigitalBoxBase implements IRecei
 		}
 	}
 
+	private Object[] removeSignal(String name) {
+		Collection<WorldCoordinate> coords = this.receiver.getCoordsFor(name);
+		if(!coords.isEmpty()) {
+			for(WorldCoordinate coord : coords) {
+				this.receiver.clearPairing(coord);
+			}
+			return new Object[] { true };
+		}
+		return new Object[] { false, "no valid signal found" };
+	}
+
 	private static LinkedHashMap<Object, Object> aspectMap;
 
 	private static Object[] aspects() {
@@ -187,13 +200,26 @@ public class TileDigitalReceiverBox extends TileDigitalBoxBase implements IRecei
 		return new Object[] { aspectMap };
 	}
 
-	@Callback(doc = "function(name:string):number; Returns the aspect currently received from a connected signal with the specified name. Returns nil and an error message on failure.", direct = true, limit = 16)
+	@Callback(doc = "function(name:string):number; Returns the aspect currently received from a connected signal with the specified name. Returns nil and an error message on failure.", direct = true, limit = 32)
 	@Optional.Method(modid = Mods.OpenComputers)
-	public Object[] getSignal(Context context, Arguments args) {
+	public Object[] getAspect(Context context, Arguments args) {
 		return getSignal(args.checkString(0));
 	}
 
+	@Callback(doc = "function():number; Returns the most restrictive aspect currently received from connected signals", direct = true, limit = 32)
+	@Optional.Method(modid = Mods.OpenComputers)
+	public Object[] getMostRestrictiveAspect(Context context, Arguments args) {
+		return new Object[] { this.receiver.getMostRestrictiveAspect() };
+	}
+
+	@Callback(doc = "function(name:string):number; Tries to remove any pairing to a signal with the specified name. Returns true on success.", direct = true, limit = 32)
+	@Optional.Method(modid = Mods.OpenComputers)
+	public Object[] unpair(Context context, Arguments args) {
+		return removeSignal(args.checkString(0));
+	}
+
 	@Callback(doc = "This is a list of every available Signal Aspect in Railcraft", getter = true, direct = true)
+	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] aspects(Context c, Arguments a) {
 		return aspects();
 	}
@@ -201,7 +227,7 @@ public class TileDigitalReceiverBox extends TileDigitalBoxBase implements IRecei
 	@Override
 	@Optional.Method(modid = Mods.ComputerCraft)
 	public String[] getMethodNames() {
-		return new String[] { "getSignal", "aspects" };
+		return new String[] { "getAspect", "getMostRestrictiveAspect", "unpair", "aspects" };
 	}
 
 	@Override
@@ -213,9 +239,18 @@ public class TileDigitalReceiverBox extends TileDigitalBoxBase implements IRecei
 					if(arguments.length < 1 || !(arguments[0] instanceof String)) {
 						throw new LuaException("first argument needs to be a string");
 					}
-					return getSignal(((String) arguments[0]));
+					return getSignal((String) arguments[0]);
 				}
 				case 1: {
+					return new Object[] { this.receiver.getMostRestrictiveAspect() };
+				}
+				case 2: {
+					if(arguments.length < 1 || !(arguments[0] instanceof String)) {
+						throw new LuaException("first argument needs to be a string");
+					}
+					return removeSignal((String) arguments[0]);
+				}
+				case 3: {
 					return aspects();
 				}
 			}

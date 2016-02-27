@@ -53,6 +53,35 @@ public class MassiveSignalController extends SignalController {
 		this.visualAspect = aspect;
 	}
 
+	public String getNameFor(WorldCoordinate coord) {
+		return this.signalNames.inverse().get(coord);
+	}
+
+	public Collection<WorldCoordinate> getCoordsFor(String name) {
+		return this.signalNames.get(name);
+	}
+
+	public SignalAspect getMostRestrictiveAspectFor(String name) {
+		SignalAspect mostRestrictive = null;
+		for(WorldCoordinate coord : this.signalNames.get(name)) {
+			if(mostRestrictive == null) {
+				mostRestrictive = this.aspects.get(coord);
+			} else {
+				mostRestrictive = SignalAspect.mostRestrictive(mostRestrictive, this.aspects.get(coord));
+			}
+		}
+		return mostRestrictive;
+	}
+
+	public String getNameFor(SignalController con) {
+		String name = this.signalNames.inverse().get(con.getCoords());
+		if(name == null) {
+			name = con.getName();
+			this.signalNames.put(name, con.getCoords());
+		}
+		return name;
+	}
+
 	public SignalAspect getMostRestrictiveAspect() {
 		if(this.mostRestrictive != null) {
 			return this.mostRestrictive;
@@ -94,6 +123,15 @@ public class MassiveSignalController extends SignalController {
 	private void updateReceivers() {
 		for(WorldCoordinate coord : this.getPairs()) {
 			updateReceiver(coord);
+		}
+	}
+
+	@Override
+	public void registerReceiver(SignalReceiver receiver) {
+		super.registerReceiver(receiver);
+		WorldCoordinate coords = receiver.getCoords();
+		if(!signalNames.containsEntry(receiver.getName(), coords)) {
+			signalNames.put(receiver.getName(), coords);
 		}
 	}
 

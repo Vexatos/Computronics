@@ -9,11 +9,16 @@ import mods.railcraft.api.signals.SignalAspect;
 import mods.railcraft.api.signals.SignalController;
 import mods.railcraft.common.blocks.signals.ISignalTileDefinition;
 import mods.railcraft.common.util.misc.Game;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.integration.railcraft.SignalTypes;
 import pl.asie.computronics.integration.railcraft.signalling.MassiveSignalController;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.reference.Names;
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 
 /**
  * @author CovertJaguar, Vexatos
@@ -75,6 +80,31 @@ public class TileDigitalControllerBox extends TileDigitalBoxBase implements ICon
 	@Override
 	public ISignalTileDefinition getSignalType() {
 		return SignalTypes.DigitalController;
+	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound data) {
+		super.writeToNBT(data);
+		this.controller.writeToNBT(data);
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound data) {
+		super.readFromNBT(data);
+		this.controller.readFromNBT(data);
+	}
+
+	@Override
+	public void writePacketData(DataOutputStream data) throws IOException {
+		super.writePacketData(data);
+		this.controller.writePacketData(data);
+	}
+
+	@Override
+	public void readPacketData(DataInputStream data) throws IOException {
+		super.readPacketData(data);
+		this.controller.readPacketData(data);
+		markBlockForUpdate();
 	}
 
 	// TODO Computer stuff
