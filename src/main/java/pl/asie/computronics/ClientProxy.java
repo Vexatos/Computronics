@@ -11,8 +11,6 @@ import pl.asie.computronics.api.audio.AudioPacketRegistry;
 import pl.asie.computronics.audio.AudioPacketClientHandlerDFPWM;
 import pl.asie.computronics.client.AudioCableRender;
 import pl.asie.computronics.client.LampRender;
-import pl.asie.computronics.client.SignalBoxRenderer;
-import pl.asie.computronics.client.UpgradeRenderer;
 import pl.asie.computronics.oc.IntegrationOpenComputers;
 import pl.asie.computronics.oc.client.RackMountableRenderer;
 import pl.asie.computronics.oc.client.UpgradeRenderer;
