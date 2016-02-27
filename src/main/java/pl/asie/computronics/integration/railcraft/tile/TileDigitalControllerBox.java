@@ -118,7 +118,7 @@ public class TileDigitalControllerBox extends TileDigitalBoxBase implements ICon
 	// Computer stuff //
 
 	private Object[] setAspect(String name, int aspectIndex) {
-		if(aspectIndex > 0 && aspectIndex <= SignalAspect.VALUES.length) {
+		if(aspectIndex > 0 && aspectIndex < SignalAspect.VALUES.length) {
 			SignalAspect aspect = SignalAspect.fromOrdinal(aspectIndex - 1);
 			boolean success = this.controller.setAspectFor(name, aspect);
 			if(success) {
@@ -131,7 +131,7 @@ public class TileDigitalControllerBox extends TileDigitalBoxBase implements ICon
 	}
 
 	private Object[] setEveryAspect(int aspectIndex) {
-		if(aspectIndex > 0 && aspectIndex <= SignalAspect.VALUES.length) {
+		if(aspectIndex > 0 && aspectIndex < SignalAspect.VALUES.length) {
 			SignalAspect aspect = SignalAspect.fromOrdinal(aspectIndex - 1);
 			this.controller.setAspectForAll(aspect);
 			return new Object[] { true };
@@ -159,7 +159,8 @@ public class TileDigitalControllerBox extends TileDigitalBoxBase implements ICon
 	private static Object[] aspects() {
 		if(aspectMap == null) {
 			LinkedHashMap<Object, Object> newMap = new LinkedHashMap<Object, Object>();
-			for(SignalAspect aspect : SignalAspect.VALUES) {
+			for(int i = 0; i < SignalAspect.VALUES.length - 1; i++) {
+				SignalAspect aspect = SignalAspect.VALUES[i];
 				String name = aspect.name().toLowerCase(Locale.ENGLISH);
 				newMap.put(name, aspect.ordinal() + 1);
 				newMap.put(aspect.ordinal() + 1, name);
@@ -171,7 +172,7 @@ public class TileDigitalControllerBox extends TileDigitalBoxBase implements ICon
 
 	@Callback(doc = "function(name:string, aspect:number):boolean; Tries to set the aspect for any paired signal with the specified name. Returns true on success.", direct = true, limit = 32)
 	@Optional.Method(modid = Mods.OpenComputers)
-	public Object[] getAspect(Context context, Arguments args) {
+	public Object[] setAspect(Context context, Arguments args) {
 		return setAspect(args.checkString(0), args.checkInteger(1));
 	}
 
