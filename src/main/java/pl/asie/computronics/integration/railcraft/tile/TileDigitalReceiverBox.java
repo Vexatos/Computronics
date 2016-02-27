@@ -165,7 +165,7 @@ public class TileDigitalReceiverBox extends TileDigitalBoxBase implements IRecei
 		}
 	}
 
-	private Object[] getSignal(String name) {
+	private Object[] getAspect(String name) {
 		SignalAspect aspect = this.receiver.getMostRestrictiveAspectFor(name);
 		if(aspect != null) {
 			return new Object[] { aspect };
@@ -203,7 +203,7 @@ public class TileDigitalReceiverBox extends TileDigitalBoxBase implements IRecei
 	@Callback(doc = "function(name:string):number; Returns the aspect currently received from a connected signal with the specified name. Returns nil and an error message on failure.", direct = true, limit = 32)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] getAspect(Context context, Arguments args) {
-		return getSignal(args.checkString(0));
+		return getAspect(args.checkString(0));
 	}
 
 	@Callback(doc = "function():number; Returns the most restrictive aspect currently received from connected signals", direct = true, limit = 32)
@@ -239,7 +239,7 @@ public class TileDigitalReceiverBox extends TileDigitalBoxBase implements IRecei
 					if(arguments.length < 1 || !(arguments[0] instanceof String)) {
 						throw new LuaException("first argument needs to be a string");
 					}
-					return getSignal((String) arguments[0]);
+					return getAspect((String) arguments[0]);
 				}
 				case 1: {
 					return new Object[] { this.receiver.getMostRestrictiveAspect() };

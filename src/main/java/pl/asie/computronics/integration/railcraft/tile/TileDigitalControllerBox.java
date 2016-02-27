@@ -4,6 +4,10 @@ import cpw.mods.fml.common.Optional;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
+import li.cil.oc.api.machine.Arguments;
+import li.cil.oc.api.machine.Callback;
+import li.cil.oc.api.machine.Context;
+import mods.railcraft.api.core.WorldCoordinate;
 import mods.railcraft.api.signals.IControllerTile;
 import mods.railcraft.api.signals.SignalAspect;
 import mods.railcraft.api.signals.SignalController;
@@ -19,6 +23,9 @@ import pl.asie.computronics.reference.Names;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.Locale;
 
 /**
  * @author CovertJaguar, Vexatos
@@ -107,17 +114,121 @@ public class TileDigitalControllerBox extends TileDigitalBoxBase implements ICon
 		markBlockForUpdate();
 	}
 
-	// TODO Computer stuff
+	// Computer stuff //
+
+	private Object[] setAspect(String name, int aspectIndex) {
+		if(aspectIndex > 0 && aspectIndex <= SignalAspect.VALUES.length) {
+			SignalAspect aspect = SignalAspect.fromOrdinal(aspectIndex - 1);
+			boolean success = this.controller.setAspectFor(name, aspect);
+			if(success) {
+				return new Object[] { true };
+			} else {
+				return new Object[] { false, "no valid signal found" };
+			}
+		}
+		throw new IllegalArgumentException("invalid aspect: " + aspectIndex);
+	}
+
+	private Object[] setEveryAspect(int aspectIndex) {
+		if(aspectIndex > 0 && aspectIndex <= SignalAspect.VALUES.length) {
+			SignalAspect aspect = SignalAspect.fromOrdinal(aspectIndex - 1);
+			this.controller.setAspectForAll(aspect);
+			return new Object[] { true };
+		}
+		throw new IllegalArgumentException("invalid aspect" + aspectIndex);
+	}
+
+	private Object[] removeSignal(String name) {
+		Collection<WorldCoordinate> coords = this.controller.getCoordsFor(name);
+		if(!coords.isEmpty()) {
+			for(WorldCoordinate coord : coords) {
+				this.controller.clearPairing(coord);
+			}
+			return new Object[] { true };
+		}
+		return new Object[] { false, "no valid signal found" };
+	}
+
+	private static LinkedHashMap<Object, Object> aspectMap;
+
+	private static Object[] aspects() {
+		if(aspectMap == null) {
+			LinkedHashMap<Object, Object> newMap = new LinkedHashMap<Object, Object>();
+			for(SignalAspect aspect : SignalAspect.VALUES) {
+				String name = aspect.name().toLowerCase(Locale.ENGLISH);
+				newMap.put(name, aspect.ordinal() + 1);
+				newMap.put(aspect.ordinal() + 1, name);
+			}
+			aspectMap = newMap;
+		}
+		return new Object[] { aspectMap };
+	}
+
+	@Callback(doc = "function(name:string, aspect:number):boolean; Tries to set the aspect for any paired signal with the specified name. Returns true on success.", direct = true, limit = 32)
+	@Optional.Method(modid = Mods.OpenComputers)
+	public Object[] getAspect(Context context, Arguments args) {
+		return setAspect(args.checkString(0), args.checkInteger(1));
+	}
+
+	@Callback(doc = "function(aspect:number):boolean; Sets the aspect for every paired signal to the specified value. Returns true on success.", direct = true, limit = 32)
+	@Optional.Method(modid = Mods.OpenComputers)
+	public Object[] setEveryAspect(Context context, Arguments args) {
+		return setEveryAspect(args.checkInteger(0));
+	}
+
+	@Callback(doc = "function(name:string):number; Tries to remove any pairing to a signal with the specified name. Returns true on success.", direct = true, limit = 32)
+	@Optional.Method(modid = Mods.OpenComputers)
+	public Object[] unpair(Context context, Arguments args) {
+		return removeSignal(args.checkString(0));
+	}
+
+	@Callback(doc = "This is a list of every available Signal Aspect in Railcraft", getter = true, direct = true)
+	@Optional.Method(modid = Mods.OpenComputers)
+	public Object[] aspects(Context c, Arguments a) {
+		return aspects();
+	}
 
 	@Override
 	@Optional.Method(modid = Mods.ComputerCraft)
 	public String[] getMethodNames() {
-		return new String[0];
+		return new String[] { "setAspect", "setEveryAspect", "unpair", "aspects" };
 	}
 
 	@Override
 	@Optional.Method(modid = Mods.ComputerCraft)
 	public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
-		return new Object[0];
+		try {
+			if(method < getMethodNames().length) {
+				switch(method) {
+					case 0: {
+						if(arguments.length < 1 || !(arguments[0] instanceof String)) {
+							throw new LuaException("first argument needs to be a string");
+						}
+						if(arguments.length < 2 || !(arguments[1] instanceof Number)) {
+							throw new LuaException("second argument needs to be a number");
+						}
+						return setAspect((String) arguments[0], ((Number) arguments[1]).intValue());
+					}
+					case 1: {
+						if(arguments.length < 1 || !(arguments[0] instanceof Number)) {
+							throw new LuaException("first argument needs to be a number");
+						}
+						return setEveryAspect(((Number) arguments[1]).intValue());
+					}
+					case 2: {
+						if(arguments.length < 1 || !(arguments[0] instanceof String)) {
+							throw new LuaException("first argument needs to be a string");
+						}
+						return removeSignal((String) arguments[0]);
+					}
+					case 3: {
+						return aspects();
+					}
+				}
+			}
+			return null;
+		} catch(Exception e) {
+			throw new LuaException(e.getMessage());
+		}
 	}
 }

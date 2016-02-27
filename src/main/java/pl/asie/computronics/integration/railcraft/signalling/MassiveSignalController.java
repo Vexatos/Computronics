@@ -1,5 +1,6 @@
 package pl.asie.computronics.integration.railcraft.signalling;
 
+import com.google.common.collect.Sets;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import mods.railcraft.api.core.WorldCoordinate;
@@ -42,6 +43,25 @@ public class MassiveSignalController extends SignalController {
 			this.aspects.put(coord, aspect);
 			this.mostRestrictive = null;
 			this.updateReceiver(coord);
+		}
+	}
+
+	public boolean setAspectFor(String name, SignalAspect aspect) {
+		boolean any = false;
+		// Shallow copy because signalNames may change during iteration
+		Collection<WorldCoordinate> coords = Sets.newHashSet(this.signalNames.get(name));
+		if(!coords.isEmpty()) {
+			for(WorldCoordinate coord : coords) {
+				setAspectFor(coord, aspect);
+				any = true;
+			}
+		}
+		return any;
+	}
+
+	public void setAspectForAll(SignalAspect aspect) {
+		for(WorldCoordinate coord : getPairs()) {
+			setAspectFor(coord, aspect);
 		}
 	}
 
@@ -112,6 +132,10 @@ public class MassiveSignalController extends SignalController {
 		SignalAspect aspect = this.aspects.get(coord);
 		if(receiver != null && aspect != null) {
 			receiver.onControllerAspectChange(this, aspect);
+			String name = receiver.getName();
+			if(name != null && !signalNames.containsEntry(name, coord)) {
+				signalNames.put(name, coord);
+			}
 		}
 	}
 
