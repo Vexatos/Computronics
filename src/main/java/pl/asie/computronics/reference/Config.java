@@ -139,7 +139,7 @@ public class Config {
 			COLORFUL_UPGRADE_COLOR_CHANGE_COST = convertRFtoOC(
 				config.getFloat("ocColorfulUpgradeColorChangeCost", "power", 2.0f, 0.0f, 10000.0f, "How much energy changing the color of the Colorful Upgrade will cost"));
 
-			// Colorful Upgrade
+			// Rack Mountables
 			LIGHT_BOARD_COLOR_CHANGE_COST = convertRFtoOC(
 				config.getFloat("ocLightBoardColorChangeCost", "power", 2.0f, 0.0f, 10000.0f, "How much energy changing the color or state of a Light Board's light will cost"));
 			LIGHT_BOARD_COLOR_MAINTENANCE_COST = convertRFtoOC(

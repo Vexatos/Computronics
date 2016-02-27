@@ -1,10 +1,10 @@
-package pl.asie.computronics.oc;
+package pl.asie.computronics.oc.driver;
 
 import li.cil.oc.api.Network;
-import li.cil.oc.api.driver.EnvironmentHost;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
+import li.cil.oc.api.network.EnvironmentHost;
 import li.cil.oc.api.network.Visibility;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;

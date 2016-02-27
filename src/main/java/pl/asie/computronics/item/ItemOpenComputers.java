@@ -33,18 +33,14 @@ import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.asie.computronics.Computronics;
-import pl.asie.computronics.oc.DriverCardBeep;
-import pl.asie.computronics.oc.DriverCardBoom;
-import pl.asie.computronics.oc.DriverCardFX;
-import pl.asie.computronics.oc.DriverCardNoise;
-import pl.asie.computronics.oc.DriverCardSpoof;
 import pl.asie.computronics.oc.IntegrationOpenComputers;
 import pl.asie.computronics.oc.driver.DriverBoardBoom;
 import pl.asie.computronics.oc.driver.DriverBoardCapacitor;
 import pl.asie.computronics.oc.driver.DriverBoardLight;
+import pl.asie.computronics.oc.driver.DriverCardBeep;
 import pl.asie.computronics.oc.driver.DriverCardBoom;
 import pl.asie.computronics.oc.driver.DriverCardFX;
-import pl.asie.computronics.oc.driver.DriverCardSound;
+import pl.asie.computronics.oc.driver.DriverCardNoise;
 import pl.asie.computronics.oc.driver.DriverCardSpoof;
 import pl.asie.computronics.oc.driver.RobotUpgradeCamera;
 import pl.asie.computronics.oc.driver.RobotUpgradeChatBox;
@@ -115,9 +111,9 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 					&& Robot.class.isAssignableFrom(host);
 				break;
 			}
-			case 8:
 			case 9:
-			case 10: {
+			case 10:
+			case 11: {
 				works = works && Rack.class.isAssignableFrom(host);
 				break;
 			}
