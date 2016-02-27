@@ -29,6 +29,7 @@ public class Names {
 		MFR_DSU = "deep_storage_unit",
 		Railcraft_BoilerFirebox = "boiler_firebox",
 		Railcraft_DigitalDetector = "digital_detector",
+		Railcraft_DigitalControllerBox = "digital_controller_box",
 		Railcraft_DigitalReceiverBox = "digital_receiver_box",
 		Railcraft_ElectricGrid = "electric_tile",
 		Railcraft_LauncherTrack = "launcher_track",

@@ -18,9 +18,8 @@ import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
 import pl.asie.computronics.integration.util.RoutingTableUtil;
 import pl.asie.computronics.reference.Names;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.LinkedList;
 import java.util.Map;
 
 /**
@@ -32,13 +31,13 @@ public class DriverRoutingSwitch {
 		if(tile.getInventory().getStackInSlot(0) != null
 			&& tile.getInventory().getStackInSlot(0).getItem() instanceof ItemRoutingTable) {
 			if(!tile.isSecure()) {
-				List<List<String>> pages = ItemRoutingTable.getPages(tile.getInventory().getStackInSlot(0));
+				LinkedList<LinkedList<String>> pages = ItemRoutingTable.getPages(tile.getInventory().getStackInSlot(0));
 				if(pages == null) {
 					return new Object[] { false, "no valid routing table found" };
 				}
 				LinkedHashMap<Integer, String> pageMap = new LinkedHashMap<Integer, String>();
 				int i = 1;
-				for(List<String> currentPage : pages) {
+				for(LinkedList<String> currentPage : pages) {
 					for(String currentLine : currentPage) {
 						pageMap.put(i++, currentLine);
 					}
@@ -60,14 +59,14 @@ public class DriverRoutingSwitch {
 		if(tile.getInventory().getStackInSlot(0) != null
 			&& tile.getInventory().getStackInSlot(0).getItem() instanceof ItemRoutingTable) {
 			if(!tile.isSecure()) {
-				List<List<String>> pages = new ArrayList<List<String>>();
-				pages.add(new ArrayList<String>());
+				LinkedList<LinkedList<String>> pages = new LinkedList<LinkedList<String>>();
+				pages.add(new LinkedList<String>());
 				int pageIndex = 0;
 				for(Object line : pageMap.values()) {
 					//Object line = pageMap.get(key);
 					if(line instanceof String) {
 						if(((String) line).toLowerCase().equals("{newline}")) {
-							pages.add(new ArrayList<String>());
+							pages.add(new LinkedList<String>());
 							pageIndex++;
 						} else {
 							pages.get(pageIndex).add((String) line);

@@ -1,47 +1,33 @@
 package pl.asie.computronics.integration.railcraft.tile;
 
 import cpw.mods.fml.common.Optional;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
-import dan200.computercraft.api.peripheral.IPeripheral;
-import li.cil.oc.api.Network;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
-import li.cil.oc.api.network.BlacklistedPeripheral;
-import li.cil.oc.api.network.Environment;
-import li.cil.oc.api.network.Message;
-import li.cil.oc.api.network.Node;
-import li.cil.oc.api.network.SidedEnvironment;
-import li.cil.oc.api.network.Visibility;
+import mods.railcraft.api.core.WorldCoordinate;
 import mods.railcraft.api.signals.IReceiverTile;
 import mods.railcraft.api.signals.SignalAspect;
 import mods.railcraft.api.signals.SignalController;
-import mods.railcraft.api.signals.SimpleSignalReceiver;
+import mods.railcraft.api.signals.SignalReceiver;
 import mods.railcraft.common.blocks.signals.ISignalTileDefinition;
 import mods.railcraft.common.blocks.signals.TileBoxBase;
 import mods.railcraft.common.plugins.buildcraft.triggers.IAspectProvider;
-import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
-import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
-import pl.asie.computronics.cc.ISidedPeripheral;
 import pl.asie.computronics.integration.railcraft.SignalTypes;
+import pl.asie.computronics.integration.railcraft.signalling.MassiveSignalReceiver;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.reference.Names;
-import pl.asie.computronics.util.internal.IComputronicsPeripheral;
+import pl.asie.computronics.util.sound.TableUtils;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 
@@ -49,45 +35,36 @@ import java.util.Locale;
  * @author CovertJaguar, Vexatos
  */
 @Optional.InterfaceList({
-	@Optional.Interface(iface = "li.cil.oc.api.network.Environment", modid = Mods.OpenComputers),
-	@Optional.Interface(iface = "li.cil.oc.api.network.SidedEnvironment", modid = Mods.OpenComputers),
-	@Optional.Interface(iface = "li.cil.oc.api.network.BlacklistedPeripheral", modid = Mods.OpenComputers),
-	@Optional.Interface(iface = "pl.asie.computronics.api.multiperipheral.IMultiPeripheral", modid = Mods.ComputerCraft),
 	@Optional.Interface(iface = "mods.railcraft.api.signals.IReceiverTile", modid = Mods.Railcraft),
 	@Optional.Interface(iface = "mods.railcraft.common.plugins.buildcraft.triggers.IAspectProvider", modid = Mods.Railcraft)
 })
-public class TileDigitalReceiverBox extends TileBoxBase
-	implements IReceiverTile, IAspectProvider, Environment, SidedEnvironment,
-	IMultiPeripheral, IComputronicsPeripheral, ISidedPeripheral, BlacklistedPeripheral {
+public class TileDigitalReceiverBox extends TileDigitalBoxBase implements IReceiverTile, IAspectProvider {
 
 	private boolean prevBlinkState;
-	private final SimpleSignalReceiver receiver = new SimpleSignalReceiver(getName(), this);
+	private final MassiveSignalReceiver receiver = new MassiveSignalReceiver(getName(), this);
 
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
 
-		if(!addedToNetwork && Mods.isLoaded(Mods.OpenComputers)) {
-			addedToNetwork = true;
-			Network.joinOrCreateNetwork(this);
-		}
-
 		if(worldObj.isRemote) {
 			this.receiver.tickClient();
-			if((this.receiver.getAspect().isBlinkAspect()) && (this.prevBlinkState != SignalAspect.isBlinkOn())) {
+			if((this.receiver.getVisualAspect().isBlinkAspect()) && (this.prevBlinkState != SignalAspect.isBlinkOn())) {
 				this.prevBlinkState = SignalAspect.isBlinkOn();
 				markBlockForUpdate();
 			}
 			return;
 		}
 		this.receiver.tickServer();
-		SignalAspect prevAspect = this.receiver.getAspect();
+		SignalAspect prevAspect = this.receiver.getVisualAspect();
 		if(this.receiver.isBeingPaired()) {
-			this.receiver.setAspect(SignalAspect.BLINK_YELLOW);
-		} else if(!this.receiver.isPaired()) {
-			this.receiver.setAspect(SignalAspect.BLINK_RED);
+			this.receiver.setVisualAspect(SignalAspect.BLINK_YELLOW);
+		} else if(this.receiver.isPaired()) {
+			this.receiver.setVisualAspect(this.receiver.getMostRestrictiveAspect());
+		} else {
+			this.receiver.setVisualAspect(SignalAspect.BLINK_RED);
 		}
-		if(prevAspect != this.receiver.getAspect()) {
+		if(prevAspect != this.receiver.getVisualAspect()) {
 			updateNeighbors();
 			sendUpdateToClient();
 		}
@@ -95,11 +72,12 @@ public class TileDigitalReceiverBox extends TileBoxBase
 
 	@Override
 	public void onControllerAspectChange(SignalController con, SignalAspect aspect) {
+		String name = this.receiver.getNameFor(con);
 		if(Mods.isLoaded(Mods.OpenComputers)) {
-			eventOC(aspect);
+			eventOC(name, aspect);
 		}
 		if(Mods.isLoaded(Mods.ComputerCraft)) {
-			eventCC(aspect);
+			eventCC(name, aspect);
 		}
 		updateNeighbors();
 		sendUpdateToClient();
@@ -109,40 +87,33 @@ public class TileDigitalReceiverBox extends TileBoxBase
 		notifyBlocksOfNeighborChange();
 	}
 
+	@Override
 	public void writeToNBT(NBTTagCompound data) {
 		super.writeToNBT(data);
-		if(Mods.isLoaded(Mods.OpenComputers)) {
-			writeToNBT_OC(data);
-		}
 		this.receiver.writeToNBT(data);
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound data) {
 		super.readFromNBT(data);
-		if(Mods.isLoaded(Mods.OpenComputers)) {
-			readFromNBT_OC(data);
-		}
 		this.receiver.readFromNBT(data);
 	}
 
 	@Override
-	public void writePacketData(DataOutputStream data)
-		throws IOException {
+	public void writePacketData(DataOutputStream data) throws IOException {
 		super.writePacketData(data);
 		this.receiver.writePacketData(data);
 	}
 
 	@Override
-	public void readPacketData(DataInputStream data)
-		throws IOException {
+	public void readPacketData(DataInputStream data) throws IOException {
 		super.readPacketData(data);
 		this.receiver.readPacketData(data);
 		markBlockForUpdate();
 	}
 
 	public SignalAspect getBoxSignalAspect(ForgeDirection side) {
-		return this.receiver.getAspect();
+		return this.receiver.getVisualAspect();
 	}
 
 	public boolean canTransferAspect() {
@@ -150,25 +121,13 @@ public class TileDigitalReceiverBox extends TileBoxBase
 	}
 
 	@Override
-	public SimpleSignalReceiver getReceiver() {
+	public SignalReceiver getReceiver() {
 		return this.receiver;
 	}
 
 	@Override
 	public SignalAspect getTriggerAspect() {
 		return getBoxSignalAspect(null);
-	}
-
-	@Override
-	public Block getBlockType() {
-		if(this.blockType == null) {
-			this.blockType = this.worldObj.getBlock(this.xCoord, this.yCoord, this.zCoord);
-		}
-		return this.blockType;
-	}
-
-	public boolean isSideSolid(IBlockAccess world, int i, int j, int k, ForgeDirection side) {
-		return side == ForgeDirection.UP;
 	}
 
 	@Override
@@ -179,183 +138,107 @@ public class TileDigitalReceiverBox extends TileBoxBase
 
 	@Override
 	public ISignalTileDefinition getSignalType() {
-		return SignalTypes.Digital;
-	}
-
-	@Override
-	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
-		NBTTagCompound tag = pkt.func_148857_g();
-		if(tag != null) {
-			readFromNBT(tag);
-		}
+		return SignalTypes.DigitalReceiver;
 	}
 
 	// Computer Stuff //
 
-	protected String peripheralName;
-	protected Node node;
-	protected ArrayList<IComputerAccess> attachedComputersCC;
-	protected boolean addedToNetwork = false;
-
 	public TileDigitalReceiverBox() {
-		this(Names.Railcraft_DigitalReceiverBox);
-	}
-
-	public TileDigitalReceiverBox(String name) {
-		super();
-		this.peripheralName = name;
-		if(Mods.isLoaded(Mods.OpenComputers)) {
-			initOC();
-		}
-	}
-
-	public TileDigitalReceiverBox(String name, double bufferSize) {
-		super();
-		this.peripheralName = name;
-		if(Mods.isLoaded(Mods.OpenComputers)) {
-			initOC(bufferSize);
-		}
+		super(Names.Railcraft_DigitalReceiverBox);
 	}
 
 	@Optional.Method(modid = Mods.OpenComputers)
-	public void eventOC(SignalAspect aspect) {
-		if(node != null) {
-			node.sendToReachable("computer.signal", "aspect_changed", aspect.ordinal());
+	public void eventOC(String name, SignalAspect aspect) {
+		if(node() != null) {
+			node().sendToReachable("computer.signal", "aspect_changed", name, aspect.ordinal() + 1);
 		}
 	}
 
 	@Optional.Method(modid = Mods.ComputerCraft)
-	public void eventCC(SignalAspect aspect) {
+	public void eventCC(String name, SignalAspect aspect) {
 		if(attachedComputersCC != null) {
 			for(IComputerAccess computer : attachedComputersCC) {
 				computer.queueEvent("aspect_changed", new Object[] {
 					computer.getAttachmentName(),
-					aspect.ordinal()
+					name, aspect.ordinal() + 1
 				});
 			}
 		}
 	}
 
-	@Override
-	@Optional.Method(modid = Mods.OpenComputers)
-	public Node node() {
-		return node;
+	private Object[] getAspect(String name) {
+		SignalAspect aspect = this.receiver.getMostRestrictiveAspectFor(name);
+		if(aspect != null) {
+			return new Object[] { aspect };
+		} else {
+			return new Object[] { null, "no valid signal found" };
+		}
 	}
 
-	@Override
-	@Optional.Method(modid = Mods.OpenComputers)
-	public void onConnect(Node node) {
-
+	private Object[] removeSignal(String name) {
+		Collection<WorldCoordinate> coords = this.receiver.getCoordsFor(name);
+		if(!coords.isEmpty()) {
+			for(WorldCoordinate coord : coords) {
+				this.receiver.clearPairing(coord);
+			}
+			return new Object[] { true };
+		}
+		return new Object[] { false, "no valid signal found" };
 	}
 
-	@Override
-	@Optional.Method(modid = Mods.OpenComputers)
-	public void onDisconnect(Node node) {
-
+	private Object[] getSignalNames() {
+		return new Object[] { TableUtils.convertSetToMap(this.receiver.getSignalNames()) };
 	}
 
-	@Override
-	@Optional.Method(modid = Mods.OpenComputers)
-	public void onMessage(Message message) {
-
-	}
-
-	@Override
-	@Optional.Method(modid = Mods.OpenComputers)
-	public boolean isPeripheralBlacklisted() {
-		return true;
-	}
-
-	private Object[] getSignal() {
-		return new Object[] { this.getTriggerAspect().ordinal() };
-	}
+	private static LinkedHashMap<Object, Object> aspectMap;
 
 	private static Object[] aspects() {
-		LinkedHashMap<String, Integer> aspectMap = new LinkedHashMap<String, Integer>();
-		for(SignalAspect aspect : SignalAspect.VALUES) {
-			aspectMap.put(aspect.name().toLowerCase(Locale.ENGLISH), aspect.ordinal());
+		if(aspectMap == null) {
+			LinkedHashMap<Object, Object> newMap = new LinkedHashMap<Object, Object>();
+			for(SignalAspect aspect : SignalAspect.VALUES) {
+				String name = aspect.name().toLowerCase(Locale.ENGLISH);
+				newMap.put(name, aspect.ordinal() + 1);
+				newMap.put(aspect.ordinal() + 1, name);
+			}
+			aspectMap = newMap;
 		}
 		return new Object[] { aspectMap };
 	}
 
-	@Callback(doc = "function():number; Returns the currently received aspect that triggers the receiver box", direct = true, limit = 16)
+	@Callback(doc = "function(name:string):number; Returns the aspect currently received from a connected signal with the specified name. Returns nil and an error message on failure.", direct = true, limit = 32)
 	@Optional.Method(modid = Mods.OpenComputers)
-	public Object[] getSignal(Context context, Arguments args) {
-		return getSignal();
+	public Object[] getAspect(Context context, Arguments args) {
+		return getAspect(args.checkString(0));
 	}
 
-	@Callback(doc = "This is a list of every available Signal Aspect in Railcraft", getter = true, direct = true, limit = 16)
+	@Callback(doc = "function():number; Returns the most restrictive aspect currently received from connected signals", direct = true, limit = 32)
+	@Optional.Method(modid = Mods.OpenComputers)
+	public Object[] getMostRestrictiveAspect(Context context, Arguments args) {
+		return new Object[] { this.receiver.getMostRestrictiveAspect() };
+	}
+
+	@Callback(doc = "function(name:string):number; Tries to remove any pairing to a signal with the specified name. Returns true on success.", direct = true, limit = 32)
+	@Optional.Method(modid = Mods.OpenComputers)
+	public Object[] unpair(Context context, Arguments args) {
+		return removeSignal(args.checkString(0));
+	}
+
+	@Callback(doc = "function():table; Returns a list containing the name of every paired controller.", direct = true, limit = 32)
+	@Optional.Method(modid = Mods.OpenComputers)
+	public Object[] getSignalNames(Context c, Arguments a) {
+		return getSignalNames();
+	}
+
+	@Callback(doc = "This is a list of every available Signal Aspect in Railcraft", getter = true, direct = true)
+	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] aspects(Context c, Arguments a) {
 		return aspects();
 	}
 
 	@Override
-	@Optional.Method(modid = Mods.OpenComputers)
-	public void onChunkUnload() {
-		super.onChunkUnload();
-		if(node != null) {
-			node.remove();
-		}
-	}
-
-	@Override
-	public void invalidate() {
-		this.tileCache.purge();
-		super.invalidate();
-		if(Mods.isLoaded(Mods.OpenComputers) && node != null) {
-			node.remove();
-		}
-	}
-
-	@Optional.Method(modid = Mods.OpenComputers)
-	private void initOC(double s) {
-		node = Network.newNode(this, Visibility.Network).withComponent(this.peripheralName, Visibility.Network).withConnector(s).create();
-	}
-
-	@Optional.Method(modid = Mods.OpenComputers)
-	private void initOC() {
-		node = Network.newNode(this, Visibility.Network).withComponent(this.peripheralName, Visibility.Network).create();
-	}
-
-	@Override
-	@Optional.Method(modid = Mods.OpenComputers)
-	public Node sidedNode(ForgeDirection forgeDirection) {
-		return forgeDirection == ForgeDirection.DOWN || forgeDirection == ForgeDirection.UP ? node : null;
-	}
-
-	@Override
-	@Optional.Method(modid = Mods.OpenComputers)
-	@SideOnly(Side.CLIENT)
-	public boolean canConnect(ForgeDirection forgeDirection) {
-		return forgeDirection == ForgeDirection.DOWN || forgeDirection == ForgeDirection.UP;
-	}
-
-	@Optional.Method(modid = Mods.OpenComputers)
-	public void readFromNBT_OC(final NBTTagCompound nbt) {
-		if(node != null && node.host() == this) {
-			node.load(nbt.getCompoundTag("oc:node"));
-		}
-	}
-
-	@Optional.Method(modid = Mods.OpenComputers)
-	public void writeToNBT_OC(final NBTTagCompound nbt) {
-		if(node != null && node.host() == this) {
-			final NBTTagCompound nodeNbt = new NBTTagCompound();
-			node.save(nodeNbt);
-			nbt.setTag("oc:node", nodeNbt);
-		}
-	}
-
-	@Override
-	@Optional.Method(modid = Mods.ComputerCraft)
-	public String getType() {
-		return peripheralName;
-	}
-
-	@Override
 	@Optional.Method(modid = Mods.ComputerCraft)
 	public String[] getMethodNames() {
-		return new String[] { "getSignal", "aspects" };
+		return new String[] { "getAspect", "getMostRestrictiveAspect", "unpair", "getSignalNames", "aspects" };
 	}
 
 	@Override
@@ -364,9 +247,24 @@ public class TileDigitalReceiverBox extends TileBoxBase
 		if(method < getMethodNames().length) {
 			switch(method) {
 				case 0: {
-					return getSignal();
+					if(arguments.length < 1 || !(arguments[0] instanceof String)) {
+						throw new LuaException("first argument needs to be a string");
+					}
+					return getAspect((String) arguments[0]);
 				}
 				case 1: {
+					return new Object[] { this.receiver.getMostRestrictiveAspect() };
+				}
+				case 2: {
+					if(arguments.length < 1 || !(arguments[0] instanceof String)) {
+						throw new LuaException("first argument needs to be a string");
+					}
+					return removeSignal((String) arguments[0]);
+				}
+				case 3: {
+					return getSignalNames();
+				}
+				case 4: {
 					return aspects();
 				}
 			}
@@ -374,54 +272,4 @@ public class TileDigitalReceiverBox extends TileBoxBase
 		return null;
 	}
 
-	@Override
-	@Optional.Method(modid = Mods.ComputerCraft)
-	public void attach(IComputerAccess computer) {
-		if(attachedComputersCC == null) {
-			attachedComputersCC = new ArrayList<IComputerAccess>(2);
-		}
-		attachedComputersCC.add(computer);
-	}
-
-	@Override
-	@Optional.Method(modid = Mods.ComputerCraft)
-	public void detach(IComputerAccess computer) {
-		if(attachedComputersCC != null) {
-			attachedComputersCC.remove(computer);
-		}
-	}
-
-	@Override
-	@Optional.Method(modid = Mods.ComputerCraft)
-	public boolean equals(IPeripheral other) {
-		if(other == null) {
-			return false;
-		}
-		if(this == other) {
-			return true;
-		}
-		if(other instanceof TileEntity) {
-			TileEntity tother = (TileEntity) other;
-			if(!tother.getWorldObj().equals(worldObj)) {
-				return false;
-			}
-			if(tother.xCoord != this.xCoord || tother.yCoord != this.yCoord || tother.zCoord != this.zCoord) {
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-	@Override
-	@Optional.Method(modid = Mods.ComputerCraft)
-	public int peripheralPriority() {
-		return 1;
-	}
-
-	@Override
-	public boolean canConnectPeripheralOnSide(int side) {
-		ForgeDirection forgeDirection = ForgeDirection.getOrientation(side);
-		return forgeDirection == ForgeDirection.DOWN || forgeDirection == ForgeDirection.UP;
-	}
 }
