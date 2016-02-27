@@ -19,6 +19,7 @@ import pl.asie.computronics.integration.railcraft.SignalTypes;
 import pl.asie.computronics.integration.railcraft.signalling.MassiveSignalController;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.reference.Names;
+import pl.asie.computronics.util.sound.TableUtils;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -149,6 +150,10 @@ public class TileDigitalControllerBox extends TileDigitalBoxBase implements ICon
 		return new Object[] { false, "no valid signal found" };
 	}
 
+	private Object[] getSignalNames() {
+		return new Object[] { TableUtils.convertSetToMap(this.controller.getSignalNames()) };
+	}
+
 	private static LinkedHashMap<Object, Object> aspectMap;
 
 	private static Object[] aspects() {
@@ -182,6 +187,12 @@ public class TileDigitalControllerBox extends TileDigitalBoxBase implements ICon
 		return removeSignal(args.checkString(0));
 	}
 
+	@Callback(doc = "function():table; Returns a list containing the name of every paired controller.", direct = true, limit = 32)
+	@Optional.Method(modid = Mods.OpenComputers)
+	public Object[] getSignalNames(Context c, Arguments a) {
+		return getSignalNames();
+	}
+
 	@Callback(doc = "This is a list of every available Signal Aspect in Railcraft", getter = true, direct = true)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] aspects(Context c, Arguments a) {
@@ -191,7 +202,7 @@ public class TileDigitalControllerBox extends TileDigitalBoxBase implements ICon
 	@Override
 	@Optional.Method(modid = Mods.ComputerCraft)
 	public String[] getMethodNames() {
-		return new String[] { "setAspect", "setEveryAspect", "unpair", "aspects" };
+		return new String[] { "setAspect", "setEveryAspect", "unpair", "getSignalNames", "aspects" };
 	}
 
 	@Override
@@ -222,6 +233,9 @@ public class TileDigitalControllerBox extends TileDigitalBoxBase implements ICon
 						return removeSignal((String) arguments[0]);
 					}
 					case 3: {
+						return getSignalNames();
+					}
+					case 4: {
 						return aspects();
 					}
 				}

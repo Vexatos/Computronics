@@ -22,6 +22,7 @@ import pl.asie.computronics.integration.railcraft.SignalTypes;
 import pl.asie.computronics.integration.railcraft.signalling.MassiveSignalReceiver;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.reference.Names;
+import pl.asie.computronics.util.sound.TableUtils;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -149,7 +150,7 @@ public class TileDigitalReceiverBox extends TileDigitalBoxBase implements IRecei
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void eventOC(String name, SignalAspect aspect) {
 		if(node() != null) {
-			node().sendToReachable("computer.signal", "aspect_changed", name, aspect.ordinal());
+			node().sendToReachable("computer.signal", "aspect_changed", name, aspect.ordinal() + 1);
 		}
 	}
 
@@ -159,7 +160,7 @@ public class TileDigitalReceiverBox extends TileDigitalBoxBase implements IRecei
 			for(IComputerAccess computer : attachedComputersCC) {
 				computer.queueEvent("aspect_changed", new Object[] {
 					computer.getAttachmentName(),
-					name, aspect.ordinal()
+					name, aspect.ordinal() + 1
 				});
 			}
 		}
@@ -183,6 +184,10 @@ public class TileDigitalReceiverBox extends TileDigitalBoxBase implements IRecei
 			return new Object[] { true };
 		}
 		return new Object[] { false, "no valid signal found" };
+	}
+
+	private Object[] getSignalNames() {
+		return new Object[] { TableUtils.convertSetToMap(this.receiver.getSignalNames()) };
 	}
 
 	private static LinkedHashMap<Object, Object> aspectMap;
@@ -218,6 +223,12 @@ public class TileDigitalReceiverBox extends TileDigitalBoxBase implements IRecei
 		return removeSignal(args.checkString(0));
 	}
 
+	@Callback(doc = "function():table; Returns a list containing the name of every paired controller.", direct = true, limit = 32)
+	@Optional.Method(modid = Mods.OpenComputers)
+	public Object[] getSignalNames(Context c, Arguments a) {
+		return getSignalNames();
+	}
+
 	@Callback(doc = "This is a list of every available Signal Aspect in Railcraft", getter = true, direct = true)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] aspects(Context c, Arguments a) {
@@ -227,7 +238,7 @@ public class TileDigitalReceiverBox extends TileDigitalBoxBase implements IRecei
 	@Override
 	@Optional.Method(modid = Mods.ComputerCraft)
 	public String[] getMethodNames() {
-		return new String[] { "getAspect", "getMostRestrictiveAspect", "unpair", "aspects" };
+		return new String[] { "getAspect", "getMostRestrictiveAspect", "unpair", "getSignalNames", "aspects" };
 	}
 
 	@Override
@@ -251,6 +262,9 @@ public class TileDigitalReceiverBox extends TileDigitalBoxBase implements IRecei
 					return removeSignal((String) arguments[0]);
 				}
 				case 3: {
+					return getSignalNames();
+				}
+				case 4: {
 					return aspects();
 				}
 			}

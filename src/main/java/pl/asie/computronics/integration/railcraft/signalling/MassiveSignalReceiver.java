@@ -15,6 +15,7 @@ import pl.asie.computronics.util.collect.SimpleInvertibleDualMap;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Vexatos
@@ -86,6 +87,10 @@ public class MassiveSignalReceiver extends SignalReceiver {
 			}
 		}
 		return this.mostRestrictive = mostRestrictive != null ? mostRestrictive : SignalAspect.BLINK_RED;
+	}
+
+	public Set<String> getSignalNames() {
+		return this.signalNames.keySet();
 	}
 
 	public void onControllerAspectChange(SignalController con, SignalAspect aspect) {
