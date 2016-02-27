@@ -77,7 +77,9 @@ public class MassiveSignalController extends SignalController {
 		String name = this.signalNames.inverse().get(con.getCoords());
 		if(name == null) {
 			name = con.getName();
-			this.signalNames.put(name, con.getCoords());
+			if(name != null) {
+				this.signalNames.put(name, con.getCoords());
+			}
 		}
 		return name;
 	}
@@ -130,8 +132,9 @@ public class MassiveSignalController extends SignalController {
 	public void registerReceiver(SignalReceiver receiver) {
 		super.registerReceiver(receiver);
 		WorldCoordinate coords = receiver.getCoords();
-		if(!signalNames.containsEntry(receiver.getName(), coords)) {
-			signalNames.put(receiver.getName(), coords);
+		String name = receiver.getName();
+		if(name != null && !signalNames.containsEntry(name, coords)) {
+			signalNames.put(name, coords);
 		}
 	}
 

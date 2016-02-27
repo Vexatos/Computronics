@@ -66,7 +66,9 @@ public class MassiveSignalReceiver extends SignalReceiver {
 		String name = this.signalNames.inverse().get(con.getCoords());
 		if(name == null) {
 			name = con.getName();
-			this.signalNames.put(name, con.getCoords());
+			if(name != null){
+				this.signalNames.put(name, con.getCoords());
+			}
 		}
 		return name;
 	}
@@ -94,8 +96,9 @@ public class MassiveSignalReceiver extends SignalReceiver {
 			this.mostRestrictive = null;
 			super.onControllerAspectChange(con, aspect);
 		}
-		if(!signalNames.containsEntry(con.getName(), coords)) {
-			signalNames.put(con.getName(), coords);
+		String name = con.getName();
+		if(name != null && !signalNames.containsEntry(name, coords)) {
+			signalNames.put(name, coords);
 		}
 	}
 
