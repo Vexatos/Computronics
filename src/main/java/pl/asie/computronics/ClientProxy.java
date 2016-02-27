@@ -56,13 +56,14 @@ public class ClientProxy extends CommonProxy {
 	}
 
 	public void registerRenderers() {
-		if(Computronics.colorfulLamp != null) {
-			//RenderingRegistry.registerBlockHandler(new LampRender()); TODO Proper Lamp Renderer
+		/*if(Computronics.colorfulLamp != null) {
+			//RenderingRegistry.registerBlockHandler(new LampRender());
+		}*/
+		/*if(Computronics.audioCable != null) {
+			RenderingRegistry.registerBlockHandler(new AudioCableRender());
 		}
-		/*if(Computronics.railcraft != null && Computronics.railcraft.digitalBox != null) {
-			SignalBoxRenderer renderer = new SignalBoxRenderer();
-			RenderingRegistry.registerBlockHandler(renderer);
-			MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(renderer.getBlock()), renderer.getItemRenderer());
+		if(Computronics.railcraft != null) {
+			Computronics.railcraft.registerRenderers();
 		}*/
 		if(Mods.isLoaded(Mods.OpenComputers)) {
 			registerOpenComputersRenderers();

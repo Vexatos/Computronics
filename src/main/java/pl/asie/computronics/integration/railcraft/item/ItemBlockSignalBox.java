@@ -49,6 +49,6 @@ public class ItemBlockSignalBox extends ItemBlock {
 			}
 		}
 
-		return world.canPlaceEntityOnSide(this.field_150939_a, x, y, z, false, side, null, stack) && (!SignalTypes.Digital.needsSupport() || world.isSideSolid(x, y - 1, z, ForgeDirection.UP));
+		return world.canPlaceEntityOnSide(this.field_150939_a, x, y, z, false, side, null, stack) && (!SignalTypes.DigitalReceiver.needsSupport() || world.isSideSolid(x, y - 1, z, ForgeDirection.UP));
 	}
 }

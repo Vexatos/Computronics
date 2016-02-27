@@ -25,6 +25,15 @@ This version comes with a 1.8.9 port in addition to many additions.
       - This allows you to monitor input and output of your energy network separately
     - Now you can get and set the range of Vacuum Chests
     - Added `getProgress()` to most machines with progress
+  * [1.7.10] ADDED: Digital Signal Controller Box for Railcraft!
+    - Can be paired to up to 32 receivers (sounds overpowered, definitely is overpowered, but CovertJaguar told me to do it. It's probaby better this way...)
+    - Allows individually sending aspects to each paired receiver
+    - Receivers must be referenced by their name, meaning you have to name all your signals using Signal Labels
+  * [1.7.10] CHANGED: Digital Signal Receiver Box
+    - Can noe be paired to up to 32 receivers, just like the controller box
+    - Allows individually querying the aspect of each paired controller
+    - Sends an `aspect_changed` event containing the controller's name and new aspect.
+    - Controllers must be referenced by their name, meaning you have to name all your signals using Signal Labels
   * [1.7.10] FIXED: Crash when the `openComputersBees` config option was set to `false`.
   * [1.7.10] FIXED: Digital Locomotive Relay trying to consume OpenComputers energy even if called from ComputerCraft
   * [1.7.10] FIXED: Updated OpenComputers integration

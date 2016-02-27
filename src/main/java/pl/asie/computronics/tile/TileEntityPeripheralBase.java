@@ -67,12 +67,12 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 	}
 
 	@Optional.Method(modid = Mods.OpenComputers)
-	private void initOC(double s) {
+	protected void initOC(double s) {
 		setNode(Network.newNode(this, Visibility.Network).withComponent(this.peripheralName, Visibility.Network).withConnector(s).create());
 	}
 
 	@Optional.Method(modid = Mods.OpenComputers)
-	private void initOC() {
+	protected void initOC() {
 		setNode(Network.newNode(this, Visibility.Network).withComponent(this.peripheralName, Visibility.Network).create());
 	}
 
