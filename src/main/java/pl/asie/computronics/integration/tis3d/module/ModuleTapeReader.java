@@ -6,6 +6,7 @@ import li.cil.tis3d.api.machine.Face;
 import li.cil.tis3d.api.machine.Pipe;
 import li.cil.tis3d.api.machine.Port;
 import li.cil.tis3d.api.util.RenderUtil;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -13,7 +14,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.StringUtils;
-import org.lwjgl.opengl.GL11;
 import pl.asie.computronics.tile.TapeDriveState.State;
 import pl.asie.computronics.tile.TileTapeDrive;
 
@@ -25,7 +25,9 @@ import java.util.HashMap;
 public class ModuleTapeReader extends ComputronicsModule {
 
 	private enum Mode {
-		IDLE, WAITING, WRITING;
+		IDLE,
+		WAITING,
+		WRITING;
 		private static final Mode[] VALUES = values();
 	}
 
@@ -525,8 +527,8 @@ public class ModuleTapeReader extends ComputronicsModule {
 
 			if(!hasTapeDrive) {
 				String s = StringUtils.center("NO TAPE DRIVE", 16);
-				GL11.glTranslatef((s.length() + 1) / 64f, 3 / 16f, 0);
-				GL11.glScalef(1 / 128f, 1 / 128f, 1);
+				GlStateManager.translate((s.length() + 1) / 64f, 3 / 16f, 0);
+				GlStateManager.scale(1 / 128f, 1 / 128f, 1);
 
 				FontRendererAPI.drawString(s);
 			}

@@ -1,9 +1,9 @@
 package pl.asie.computronics.oc;
 
 import li.cil.oc.api.Driver;
+import li.cil.oc.api.Network;
 import li.cil.oc.api.driver.EnvironmentProvider;
 import li.cil.oc.api.driver.Item;
-import li.cil.oc.api.Network;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -13,12 +13,13 @@ import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.apache.logging.log4j.Logger;
 import pl.asie.computronics.Computronics;
-import pl.asie.computronics.integration.appeng.DriverSpatialIOPort;
 import pl.asie.computronics.integration.flamingo.DriverFlamingo;
 import pl.asie.computronics.integration.storagedrawers.DriverDrawerGroup;
 import pl.asie.computronics.item.ItemOpenComputers;
-import pl.asie.computronics.oc.block.DriverBlockEnvironments;
+import pl.asie.computronics.oc.block.ComputronicsBlockEnvironmentProvider;
+import pl.asie.computronics.oc.client.RackMountableRenderer;
 import pl.asie.computronics.oc.client.UpgradeRenderer;
+import pl.asie.computronics.oc.driver.DriverBoardBoom;
 import pl.asie.computronics.oc.manual.ComputronicsPathProvider;
 import pl.asie.computronics.reference.Compat;
 import pl.asie.computronics.reference.Config;
@@ -71,23 +72,6 @@ import pl.asie.computronics.integration.railcraft.driver.track.DriverPoweredTrac
 import pl.asie.computronics.integration.railcraft.driver.track.DriverPrimingTrack;
 import pl.asie.computronics.integration.railcraft.driver.track.DriverRoutingTrack;
 import pl.asie.computronics.integration.redlogic.DriverLamp;*/
-import pl.asie.computronics.integration.storagedrawers.DriverDrawerGroup;
-import pl.asie.computronics.item.ItemOpenComputers;
-import pl.asie.computronics.oc.block.ComputronicsBlockEnvironmentProvider;
-import pl.asie.computronics.oc.client.RackMountableRenderer;
-import pl.asie.computronics.oc.client.UpgradeRenderer;
-import pl.asie.computronics.oc.driver.DriverBoardBoom;
-import pl.asie.computronics.oc.manual.ComputronicsPathProvider;
-import pl.asie.computronics.reference.Compat;
-import pl.asie.computronics.reference.Config;
-import pl.asie.computronics.reference.Mods;
-import pl.asie.computronics.util.RecipeUtils;
-
-import static pl.asie.computronics.Computronics.camera;
-import static pl.asie.computronics.Computronics.chatBox;
-import static pl.asie.computronics.Computronics.colorfulLamp;
-import static pl.asie.computronics.Computronics.radar;
-import pl.asie.computronics.integration.storagedrawers.DriverDrawerGroup;*/
 
 /**
  * @author Vexatos

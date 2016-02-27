@@ -6,6 +6,7 @@ import li.cil.tis3d.api.machine.Face;
 import li.cil.tis3d.api.machine.Pipe;
 import li.cil.tis3d.api.machine.Port;
 import li.cil.tis3d.api.util.RenderUtil;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Optional;
@@ -92,8 +93,8 @@ public class ModuleBoom extends ComputronicsModule {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void render(boolean enabled, float partialTicks) {
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GlStateManager.enableBlend();
+		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
 		int alpha = 0x44;
 		final int maxAlpha = enabled && steps < 0 ? 0x88 : 0xFF;
@@ -103,9 +104,9 @@ public class ModuleBoom extends ComputronicsModule {
 			: 0x44;
 
 		RenderUtil.bindTexture(ICON);
-		GL11.glColor4ub((byte) 0xFF, (byte) 0x0, (byte) 0x0, (byte) (alpha & 0xFF));
+		GlStateManager.color(1f, 0f, 0f, (alpha & 0xFF) / 255f);
 		RenderUtil.drawQuad();
-		GL11.glColor4f(1, 1, 1, 1);
+		GlStateManager.color(1, 1, 1, 1);
 
 		if(!enabled) {
 			return;
@@ -115,12 +116,12 @@ public class ModuleBoom extends ComputronicsModule {
 			//String s = StringUtils.center(timer, 8);
 			String s = String.format("%05d", steps);
 			int scale = FontRendererAPI.getCharHeight();
-			GL11.glTranslatef(FontRendererAPI.getCharWidth() / 15f, 7 / 16f, 0);
-			GL11.glScalef(scale / 128f, scale / 128f, 1);
+			GlStateManager.translate(FontRendererAPI.getCharWidth() / 15f, 7 / 16f, 0);
+			GlStateManager.scale(scale / 128f, scale / 128f, 1);
 
 			FontRendererAPI.drawString(s);
 		}
-		GL11.glDisable(GL11.GL_BLEND);
+		GlStateManager.disableBlend();
 	}
 
 	public static class BoomHandler {

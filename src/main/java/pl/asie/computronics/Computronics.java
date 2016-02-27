@@ -88,7 +88,7 @@ import java.util.concurrent.Executors;
 //import pl.asie.computronics.integration.railcraft.IntegrationRailcraft;
 
 @Mod(modid = Mods.Computronics, name = Mods.Computronics_NAME, version = "@VERSION@",
-	dependencies = "required-after:asielib@[0.4.6,);required-after:Forge@[11.15.1.1722,);"
+	dependencies = "required-after:asielib;required-after:Forge@[11.15.1.1722,);"
 		+ "after:ComputerCraft@[1.79,);after:OpenComputers@[1.6.0,);after:tis3d@[0.8.3.13,);"
 		+ "before:OpenPeripheralCore@[1.1,);before:OpenPeripheralApi@[3.2,);"
 		+ "after:MineFactoryReloaded;after:RedLogic@[59.1.9,);after:ProjRed|Core;"

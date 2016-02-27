@@ -12,11 +12,11 @@ public class ComputronicsBlockEnvironmentProvider implements EnvironmentProvider
 	@Override
 	public Class<?> getEnvironment(ItemStack stack) {
 		if(stack == null || stack.getItem() == null || !(stack.getItem() instanceof ItemBlock)
-			|| !(((ItemBlock) stack.getItem()).field_150939_a instanceof IComputronicsEnvironmentBlock)) {
+			|| !(((ItemBlock) stack.getItem()).block instanceof IComputronicsEnvironmentBlock)) {
 			return null;
 		}
 
-		return ((IComputronicsEnvironmentBlock) ((ItemBlock) stack.getItem()).field_150939_a)
+		return ((IComputronicsEnvironmentBlock) ((ItemBlock) stack.getItem()).block)
 			.getTileEntityClass(stack.getItemDamage());
 	}
 }

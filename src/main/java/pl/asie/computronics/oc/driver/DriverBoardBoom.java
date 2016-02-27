@@ -1,9 +1,5 @@
 package pl.asie.computronics.oc.driver;
 
-import cpw.mods.fml.common.Optional;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
 import li.cil.oc.api.Network;
 import li.cil.oc.api.component.RackBusConnectable;
 import li.cil.oc.api.component.RackMountable;
@@ -15,10 +11,14 @@ import li.cil.oc.api.network.Visibility;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ServerTickEvent;
 import org.apache.commons.lang3.tuple.Pair;
 import pl.asie.computronics.oc.IntegrationOpenComputers;
 import pl.asie.computronics.reference.Config;
@@ -90,21 +90,17 @@ public class DriverBoardBoom extends DriverCardBoom implements RackMountable {
 		final Queue<Rack> toSearch = new ArrayDeque<Rack>();
 		toSearch.add(container);
 		racks.add(container);
-		final Vec3 origin = Vec3.createVectorHelper(container.xPosition(), container.yPosition(), container.zPosition());
+		final Vec3 origin = new Vec3(container.xPosition(), container.yPosition(), container.zPosition());
 		Rack cur;
 		while((cur = toSearch.poll()) != null) {
 			final World world = cur.world();
-			final int x = MathHelper.floor_double(cur.xPosition());
-			final int y = MathHelper.floor_double(cur.yPosition());
-			final int z = MathHelper.floor_double(cur.zPosition());
-			for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
-				final int rx = x + dir.offsetX;
-				final int ry = y + dir.offsetY;
-				final int rz = z + dir.offsetZ;
+			final BlockPos currentPos = new BlockPos(cur.xPosition(), cur.yPosition(), cur.zPosition());
+			for(EnumFacing dir : EnumFacing.VALUES) {
+				final BlockPos pos = currentPos.offset(dir);
 
-				if(origin.squareDistanceTo(rx, ry, rz) <= 256 &&
-					world.blockExists(rx, ry, rz)) {
-					TileEntity tile = world.getTileEntity(rx, ry, rz);
+				if(origin.squareDistanceTo(new Vec3(pos)) <= 256 &&
+					world.isBlockLoaded(pos)) {
+					TileEntity tile = world.getTileEntity(pos);
 					if(tile instanceof Rack && racks.add((Rack) tile)) {
 						toSearch.add((Rack) tile);
 					}
@@ -178,7 +174,7 @@ public class DriverBoardBoom extends DriverCardBoom implements RackMountable {
 	}
 
 	@Override
-	public boolean onActivate(EntityPlayer player, ForgeDirection side, float hitX, float hitY, float hitZ) {
+	public boolean onActivate(EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
 		return false;
 	}
 

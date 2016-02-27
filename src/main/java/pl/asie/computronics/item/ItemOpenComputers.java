@@ -1,10 +1,5 @@
 package pl.asie.computronics.item;
 
-import li.cil.oc.api.driver.EnvironmentAware;
-import li.cil.oc.api.driver.EnvironmentHost;
-import cpw.mods.fml.common.Optional;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import li.cil.oc.api.driver.EnvironmentProvider;
 import li.cil.oc.api.driver.Item;
 import li.cil.oc.api.driver.item.HostAware;
@@ -465,7 +460,7 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 		if(Config.OC_CARD_SPOOF) {
 			registerItemModel(4);
 		}
-		if(Config.OC_CARD_SOUND) {
+		if(Config.OC_CARD_BEEP) {
 			registerItemModel(5);
 		}
 		if(Config.OC_CARD_BOOM) {
@@ -474,18 +469,21 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 		if(Config.OC_UPGRADE_COLORFUL) {
 			registerItemModel(7);
 		}
-		if(Config.OC_BOARD_LIGHT) {
+		if(Config.OC_CARD_NOISE) {
 			registerItemModel(8);
 		}
-		if(Config.OC_BOARD_BOOM) {
+		if(Config.OC_BOARD_LIGHT) {
 			registerItemModel(9);
 		}
-		if(Config.OC_BOARD_CAPACITOR) {
+		if(Config.OC_BOARD_BOOM) {
 			registerItemModel(10);
+		}
+		if(Config.OC_BOARD_CAPACITOR) {
+			registerItemModel(11);
 		}
 	}
 
-	private void registerItemModel(int meta){
+	protected void registerItemModel(int meta) {
 		Computronics.proxy.registerItemModel(this, meta, "computronics:" + parts[meta]);
 	}
 

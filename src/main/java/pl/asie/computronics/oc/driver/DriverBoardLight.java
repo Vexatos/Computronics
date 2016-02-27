@@ -1,21 +1,21 @@
 package pl.asie.computronics.oc.driver;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import li.cil.oc.api.Network;
 import li.cil.oc.api.internal.Rack;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.Visibility;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.asie.computronics.reference.Config;
 import pl.asie.lib.integration.Integration;
 
@@ -131,7 +131,8 @@ public class DriverBoardLight extends RackMountableWithComponentConnector {
 
 		public final int index;
 		public final int lightcount;
-		public IIcon background;
+		@SideOnly(Side.CLIENT)
+		public TextureAtlasSprite background;
 		public final ResourceLocation foreground;
 		public final String backgroundPath;
 		public static final Mode[] VALUES = values();
@@ -140,7 +141,7 @@ public class DriverBoardLight extends RackMountableWithComponentConnector {
 			this.index = ordinal() + 1;
 			this.lightcount = lightcount;
 			this.foreground = new ResourceLocation("computronics", "textures/blocks/light_board/mode_" + index + "_lights.png");
-			this.backgroundPath = "computronics:light_board/mode_" + index;
+			this.backgroundPath = "computronics:blocks/light_board/mode_" + index;
 		}
 
 		public abstract float getU0(int index);
@@ -164,8 +165,8 @@ public class DriverBoardLight extends RackMountableWithComponentConnector {
 		}
 
 		@SideOnly(Side.CLIENT)
-		public void registerIcons(IIconRegister ir) {
-			background = ir.registerIcon(backgroundPath);
+		public void registerIcons(TextureMap map) {
+			background = map.registerSprite(new ResourceLocation(backgroundPath));
 		}
 
 		public static Mode fromIndex(int index) {
@@ -316,13 +317,10 @@ public class DriverBoardLight extends RackMountableWithComponentConnector {
 	}
 
 	@Override
-	public boolean onActivate(EntityPlayer player, ForgeDirection side, float hitX, float hitY, float hitZ) {
-		final int
-			x = MathHelper.floor_double(host.xPosition()),
-			y = MathHelper.floor_double(host.yPosition()),
-			z = MathHelper.floor_double(host.zPosition());
+	public boolean onActivate(EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
+		final BlockPos pos = new BlockPos(host.xPosition(), host.yPosition(), host.zPosition());
 		ItemStack held = player.getHeldItem();
-		if(held != null && held.getItem() != null && Integration.isTool(held, player, x, y, z) && Integration.useTool(held, player, x, y, z)) {
+		if(held != null && held.getItem() != null && Integration.isTool(held, player, pos) && Integration.useTool(held, player, pos)) {
 			int index = mode.index;
 			if(index >= Mode.VALUES.length) {
 				index = 0;
@@ -330,7 +328,7 @@ public class DriverBoardLight extends RackMountableWithComponentConnector {
 			setMode(Mode.fromIndex(index + 1));
 			host.markChanged(host.indexOfMountable(this));
 			needsUpdate = false;
-			host.world().markBlockForUpdate(x, y, z);
+			host.world().markBlockForUpdate(pos);
 			return true;
 		}
 		return false;

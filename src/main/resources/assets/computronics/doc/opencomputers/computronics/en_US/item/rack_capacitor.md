@@ -1,6 +1,6 @@
 # Rack Capacitor
 
-![I've got the power!](item:computronics:computronics.ocParts@11)
+![I've got the power!](item:computronics:computronics.oc_parts@11)
 
 The Rack Capacitor is a [Capacitor](/%LANGUAGE%/block/capacitor.md) that you can put inside a [Server Rack](/%LANGUAGE%/block/rack.md). Its benefits are akin to those of a normal [capacitor](/%LANGUAGE%/block/capacitor.md), however, Rack Capacitors do not get any adjacency bonus.
 

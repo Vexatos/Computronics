@@ -1,15 +1,19 @@
 package pl.asie.computronics.oc.client;
 
-import cpw.mods.fml.common.Optional;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import li.cil.oc.api.event.RackMountableRenderEvent;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.opengl.GL11;
 import pl.asie.computronics.item.ItemOpenComputers;
 import pl.asie.computronics.oc.driver.DriverBoardLight.Mode;
@@ -24,9 +28,9 @@ import java.util.List;
 public class RackMountableRenderer {
 
 	private final ResourceLocation
-		boomBoardActive = new ResourceLocation("computronics", "textures/blocks/boom_board_on.png"),
-		boomBoardTicking = new ResourceLocation("computronics", "textures/blocks/boom_board_ticking.png");
-	private IIcon
+		boomBoardActive = new ResourceLocation("computronics", "blocks/boom_board_on"),
+		boomBoardTicking = new ResourceLocation("computronics", "blocks/boom_board_ticking");
+	private TextureAtlasSprite
 		boomBoard,
 		rackCapacitor;
 
@@ -53,8 +57,8 @@ public class RackMountableRenderer {
 					return;
 				}
 				enableLight();
-				GL11.glEnable(GL11.GL_BLEND);
-				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+				GlStateManager.enableBlend();
+				GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 				Mode mode = Mode.fromIndex(e.data.getInteger("m"));
 				if(mode == null) {
 					mode = Mode.Default;
@@ -66,7 +70,7 @@ public class RackMountableRenderer {
 							continue;
 						}
 						color = color & 0xFFFFFF;
-						GL11.glColor3ub((byte) ((color >> 16) & 0xFF), (byte) ((color >> 8) & 0xFF), (byte) (color & 0xFF));
+						GlStateManager.color(((color >> 16) & 0xFF) / 255f, ((color >> 8) & 0xFF) / 255f, (color & 0xFF) / 255f);
 						//float u0 = ((index - 1) * 3) / 16f;
 						//float u0 = ((index - 1) * 4) / 16f;
 						//float u1 = u0 + (3 / 16f);
@@ -77,8 +81,8 @@ public class RackMountableRenderer {
 					}
 				}
 
-				GL11.glColor3f(1, 1, 1);
-				GL11.glDisable(GL11.GL_BLEND);
+				GlStateManager.color(1, 1, 1);
+				GlStateManager.disableBlend();
 				disableLight();
 				break;
 			}
@@ -87,16 +91,16 @@ public class RackMountableRenderer {
 					return;
 				}
 				enableLight();
-				GL11.glEnable(GL11.GL_BLEND);
-				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+				GlStateManager.enableBlend();
+				GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 				if(e.data.getBoolean("r")) {
 					e.renderOverlay(boomBoardActive);
 				}
 				if(e.data.getBoolean("t") && (e.rack.world().getTotalWorldTime() + e.rack.hashCode() + (e.mountable * 10)) % 20 < 10) {
 					e.renderOverlay(boomBoardTicking);
 				}
-				GL11.glColor3f(1, 1, 1);
-				GL11.glDisable(GL11.GL_BLEND);
+				GlStateManager.color(1, 1, 1);
+				GlStateManager.disableBlend();
 				disableLight();
 				break;
 			}
@@ -104,23 +108,25 @@ public class RackMountableRenderer {
 	}
 
 	private void renderOverlay(ResourceLocation texture, final float u0, final float u1, final float v0, final float v1) {
-		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
-		final Tessellator t = Tessellator.instance;
-		t.startDrawingQuads();
-		t.addVertexWithUV(u0, v1, 0, u0, v1);
-		t.addVertexWithUV(u1, v1, 0, u1, v1);
-		t.addVertexWithUV(u1, v0, 0, u1, v0);
-		t.addVertexWithUV(u0, v0, 0, u0, v0);
+		Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
+		final TextureAtlasSprite icon = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(texture.toString());
+		final Tessellator t = Tessellator.getInstance();
+		final WorldRenderer r = t.getWorldRenderer();
+		r.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		r.pos(u0, v1, 0).tex(icon.getInterpolatedU(u0 * 16), icon.getInterpolatedV(v1 * 16)).endVertex();
+		r.pos(u1, v1, 0).tex(icon.getInterpolatedU(u1 * 16), icon.getInterpolatedV(v1 * 16)).endVertex();
+		r.pos(u1, v0, 0).tex(icon.getInterpolatedU(u1 * 16), icon.getInterpolatedV(v0 * 16)).endVertex();
+		r.pos(u0, v0, 0).tex(icon.getInterpolatedU(u0 * 16), icon.getInterpolatedV(v0 * 16)).endVertex();
 		t.draw();
 	}
 
 	private void enableLight() {
-		Minecraft.getMinecraft().entityRenderer.disableLightmap(0);
+		Minecraft.getMinecraft().entityRenderer.disableLightmap();
 		RenderHelper.disableStandardItemLighting();
 	}
 
 	private void disableLight() {
-		Minecraft.getMinecraft().entityRenderer.enableLightmap(0);
+		Minecraft.getMinecraft().entityRenderer.enableLightmap();
 		RenderHelper.enableStandardItemLighting();
 	}
 
@@ -158,12 +164,12 @@ public class RackMountableRenderer {
 	@SubscribeEvent
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void textureHook(TextureStitchEvent.Pre e) {
-		if(e.map.getTextureType() == 0) {
-			for(Mode mode : Mode.VALUES) {
-				mode.registerIcons(e.map);
-			}
-			boomBoard = e.map.registerIcon("computronics:boom_board");
-			rackCapacitor = e.map.registerIcon("computronics:rack_capacitor");
+		for(Mode mode : Mode.VALUES) {
+			mode.registerIcons(e.map);
 		}
+		boomBoard = e.map.registerSprite(new ResourceLocation("computronics:blocks/boom_board"));
+		e.map.registerSprite(boomBoardActive);
+		e.map.registerSprite(boomBoardTicking);
+		rackCapacitor = e.map.registerSprite(new ResourceLocation("computronics:blocks/rack_capacitor"));
 	}
 }

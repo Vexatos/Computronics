@@ -5,13 +5,13 @@ import li.cil.oc.api.event.RobotRenderEvent;
 import li.cil.oc.api.internal.Agent;
 import li.cil.oc.api.internal.Robot;
 import li.cil.oc.api.network.Node;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import org.lwjgl.opengl.GL11;
 import pl.asie.computronics.item.ItemOpenComputers;
 import pl.asie.computronics.oc.driver.RobotUpgradeColorful;
 import pl.asie.computronics.reference.Mods;
@@ -62,7 +62,7 @@ public class ColorfulUpgradeHandler {
 			return;
 		}
 		color = color & 0xFFFFFF;
-		GL11.glColor3ub((byte) ((color >> 16) & 0xFF), (byte) ((color >> 8) & 0xFF), (byte) (color & 0xFF));
+		GlStateManager.color(((color >> 16) & 0xFF) / 255f, ((color >> 8) & 0xFF) / 255f, (color & 0xFF) / 255f);
 	}
 
 	@Optional.Method(modid = Mods.OpenComputers)

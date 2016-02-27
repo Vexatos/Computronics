@@ -5,12 +5,12 @@ import li.cil.tis3d.api.machine.Face;
 import li.cil.tis3d.api.machine.Pipe;
 import li.cil.tis3d.api.machine.Port;
 import li.cil.tis3d.api.util.RenderUtil;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
 
 /**
  * @author Vexatos
@@ -73,11 +73,11 @@ public class ModuleColorful extends ComputronicsModule {
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 0.0F);
 
 		RenderUtil.bindTexture(LAMP_ICON);
-		GL11.glTranslated(0.0625F, 0.0625F, 0F);
-		GL11.glScalef(0.875f, 0.875f, 0.875f);
+		GlStateManager.translate(0.0625F, 0.0625F, 0F);
+		GlStateManager.scale(0.875f, 0.875f, 0.875f);
 		//int col = Color.HSBtoRGB((((System.currentTimeMillis() + (hashCode() % 30000)) % 30000) / 30000F), 1F, 1F) & 0xFFFFFF;
 		//GL11.glColor3ub((byte) ((col >> 16) & 0xFF), (byte) ((col >> 8) & 0xFF), (byte) (col & 0xFF));
-		GL11.glColor3ub((byte) (((color >> 10) & 0x1F) * 8), (byte) (((color >> 5) & 0x1F) * 8), (byte) ((color & 0x1F) * 8));
+		GlStateManager.color((((color >> 10) & 0x1F) * 8) / 255f, (((color >> 5) & 0x1F) * 8) / 255f, ((color & 0x1F) * 8) / 255f);
 		RenderUtil.drawQuad();
 
 		//bindTexture(front);

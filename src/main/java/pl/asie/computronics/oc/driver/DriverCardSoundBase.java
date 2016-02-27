@@ -1,6 +1,5 @@
 package pl.asie.computronics.oc.driver;
 
-import li.cil.oc.api.driver.EnvironmentHost;
 import li.cil.oc.api.network.Connector;
 import li.cil.oc.api.network.EnvironmentHost;
 import li.cil.oc.api.prefab.ManagedEnvironment;
