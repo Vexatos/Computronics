@@ -86,7 +86,7 @@ public class MassiveSignalReceiver extends SignalReceiver {
 				mostRestrictive = SignalAspect.mostRestrictive(mostRestrictive, aspect);
 			}
 		}
-		return this.mostRestrictive = mostRestrictive != null ? mostRestrictive : SignalAspect.BLINK_RED;
+		return this.mostRestrictive = mostRestrictive != null ? mostRestrictive : SignalAspect.GREEN;
 	}
 
 	public Set<String> getSignalNames() {
@@ -96,7 +96,7 @@ public class MassiveSignalReceiver extends SignalReceiver {
 	public void onControllerAspectChange(SignalController con, SignalAspect aspect) {
 		WorldCoordinate coords = con.getCoords();
 		SignalAspect oldAspect = this.aspects.get(coords);
-		if(oldAspect != aspect) {
+		if(aspect != null && oldAspect != aspect) {
 			this.aspects.put(coords, aspect);
 			this.mostRestrictive = null;
 			super.onControllerAspectChange(con, aspect);
