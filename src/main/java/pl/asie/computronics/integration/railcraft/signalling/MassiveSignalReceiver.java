@@ -13,6 +13,9 @@ import net.minecraftforge.common.util.Constants;
 import pl.asie.computronics.util.collect.SimpleInvertibleDualMap;
 
 import javax.annotation.Nonnull;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,7 +28,7 @@ public class MassiveSignalReceiver extends SignalReceiver {
 
 	private final Map<WorldCoordinate, SignalAspect> aspects = new HashMap<WorldCoordinate, SignalAspect>();
 	private final SimpleInvertibleDualMap<String, WorldCoordinate> signalNames = SimpleInvertibleDualMap.create();
-	private SignalAspect visualAspect;
+	private SignalAspect visualAspect = SignalAspect.BLINK_RED;
 	private SignalAspect mostRestrictive;
 
 	public MassiveSignalReceiver(String locTag, TileEntity tile) {
@@ -37,7 +40,7 @@ public class MassiveSignalReceiver extends SignalReceiver {
 	}
 
 	public SignalAspect getVisualAspect() {
-		return this.visualAspect != null ? this.visualAspect : (this.visualAspect = this.getMostRestrictiveAspect());
+		return this.visualAspect != null ? this.visualAspect : SignalAspect.BLINK_RED;
 	}
 
 	public void setVisualAspect(SignalAspect aspect) {
@@ -179,5 +182,17 @@ public class MassiveSignalReceiver extends SignalReceiver {
 			}
 		}
 		this.mostRestrictive = null;
+	}
+
+	@Override
+	public void writePacketData(DataOutputStream data) throws IOException {
+		super.writePacketData(data);
+		data.writeByte(this.visualAspect != null ? this.visualAspect.ordinal() : SignalAspect.BLINK_RED.ordinal());
+	}
+
+	@Override
+	public void readPacketData(DataInputStream data) throws IOException {
+		super.readPacketData(data);
+		this.visualAspect = SignalAspect.fromOrdinal(data.readByte());
 	}
 }
