@@ -76,12 +76,4 @@ public class RadarUtils {
 		return entities;
 	}
 
-	public static Map<Integer, Map> convertSetToMap(Set<Map> set) {
-		HashMap<Integer, Map> map = new HashMap<Integer, Map>();
-		int i = 1;
-		for(Map m : set) {
-			map.put(i++, m);
-		}
-		return map;
-	}
 }

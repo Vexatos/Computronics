@@ -19,6 +19,7 @@ import pl.asie.computronics.integration.railcraft.SignalTypes;
 import pl.asie.computronics.integration.railcraft.signalling.MassiveSignalController;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.reference.Names;
+import pl.asie.computronics.util.sound.TableUtils;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -117,7 +118,7 @@ public class TileDigitalControllerBox extends TileDigitalBoxBase implements ICon
 	// Computer stuff //
 
 	private Object[] setAspect(String name, int aspectIndex) {
-		if(aspectIndex > 0 && aspectIndex <= SignalAspect.VALUES.length) {
+		if(aspectIndex > 0 && aspectIndex < SignalAspect.VALUES.length) {
 			SignalAspect aspect = SignalAspect.fromOrdinal(aspectIndex - 1);
 			boolean success = this.controller.setAspectFor(name, aspect);
 			if(success) {
@@ -130,7 +131,7 @@ public class TileDigitalControllerBox extends TileDigitalBoxBase implements ICon
 	}
 
 	private Object[] setEveryAspect(int aspectIndex) {
-		if(aspectIndex > 0 && aspectIndex <= SignalAspect.VALUES.length) {
+		if(aspectIndex > 0 && aspectIndex < SignalAspect.VALUES.length) {
 			SignalAspect aspect = SignalAspect.fromOrdinal(aspectIndex - 1);
 			this.controller.setAspectForAll(aspect);
 			return new Object[] { true };
@@ -149,12 +150,17 @@ public class TileDigitalControllerBox extends TileDigitalBoxBase implements ICon
 		return new Object[] { false, "no valid signal found" };
 	}
 
+	private Object[] getSignalNames() {
+		return new Object[] { TableUtils.convertSetToMap(this.controller.getSignalNames()) };
+	}
+
 	private static LinkedHashMap<Object, Object> aspectMap;
 
 	private static Object[] aspects() {
 		if(aspectMap == null) {
 			LinkedHashMap<Object, Object> newMap = new LinkedHashMap<Object, Object>();
-			for(SignalAspect aspect : SignalAspect.VALUES) {
+			for(int i = 0; i < SignalAspect.VALUES.length - 1; i++) {
+				SignalAspect aspect = SignalAspect.VALUES[i];
 				String name = aspect.name().toLowerCase(Locale.ENGLISH);
 				newMap.put(name, aspect.ordinal() + 1);
 				newMap.put(aspect.ordinal() + 1, name);
@@ -166,7 +172,7 @@ public class TileDigitalControllerBox extends TileDigitalBoxBase implements ICon
 
 	@Callback(doc = "function(name:string, aspect:number):boolean; Tries to set the aspect for any paired signal with the specified name. Returns true on success.", direct = true, limit = 32)
 	@Optional.Method(modid = Mods.OpenComputers)
-	public Object[] getAspect(Context context, Arguments args) {
+	public Object[] setAspect(Context context, Arguments args) {
 		return setAspect(args.checkString(0), args.checkInteger(1));
 	}
 
@@ -176,10 +182,16 @@ public class TileDigitalControllerBox extends TileDigitalBoxBase implements ICon
 		return setEveryAspect(args.checkInteger(0));
 	}
 
-	@Callback(doc = "function(name:string):number; Tries to remove any pairing to a signal with the specified name. Returns true on success.", direct = true, limit = 32)
+	@Callback(doc = "function(name:string):boolean; Tries to remove any pairing to a signal with the specified name. Returns true on success.", direct = true, limit = 32)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] unpair(Context context, Arguments args) {
 		return removeSignal(args.checkString(0));
+	}
+
+	@Callback(doc = "function():table; Returns a list containing the name of every paired receiver.", direct = true, limit = 32)
+	@Optional.Method(modid = Mods.OpenComputers)
+	public Object[] getSignalNames(Context c, Arguments a) {
+		return getSignalNames();
 	}
 
 	@Callback(doc = "This is a list of every available Signal Aspect in Railcraft", getter = true, direct = true)
@@ -191,7 +203,7 @@ public class TileDigitalControllerBox extends TileDigitalBoxBase implements ICon
 	@Override
 	@Optional.Method(modid = Mods.ComputerCraft)
 	public String[] getMethodNames() {
-		return new String[] { "setAspect", "setEveryAspect", "unpair", "aspects" };
+		return new String[] { "setAspect", "setEveryAspect", "unpair", "getSignalNames", "aspects" };
 	}
 
 	@Override
@@ -222,6 +234,9 @@ public class TileDigitalControllerBox extends TileDigitalBoxBase implements ICon
 						return removeSignal((String) arguments[0]);
 					}
 					case 3: {
+						return getSignalNames();
+					}
+					case 4: {
 						return aspects();
 					}
 				}

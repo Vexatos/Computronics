@@ -13,9 +13,14 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.Constants;
 import pl.asie.computronics.util.collect.SimpleInvertibleDualMap;
 
+import javax.annotation.Nonnull;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Vexatos
@@ -25,7 +30,7 @@ public class MassiveSignalController extends SignalController {
 	private boolean needsInit;
 	private final Map<WorldCoordinate, SignalAspect> aspects = new HashMap<WorldCoordinate, SignalAspect>();
 	private final SimpleInvertibleDualMap<String, WorldCoordinate> signalNames = SimpleInvertibleDualMap.create();
-	private SignalAspect visualAspect;
+	private SignalAspect visualAspect = SignalAspect.BLINK_RED;
 	private SignalAspect mostRestrictive;
 
 	public MassiveSignalController(String locTag, TileEntity tile) {
@@ -34,8 +39,10 @@ public class MassiveSignalController extends SignalController {
 	}
 
 	@Override
+	@Nonnull
 	public SignalAspect getAspectFor(WorldCoordinate coord) {
-		return this.aspects.get(coord);
+		SignalAspect aspect = this.aspects.get(coord);
+		return aspect != null ? aspect : SignalAspect.GREEN;
 	}
 
 	public void setAspectFor(WorldCoordinate coord, SignalAspect aspect) {
@@ -66,7 +73,7 @@ public class MassiveSignalController extends SignalController {
 	}
 
 	public SignalAspect getVisualAspect() {
-		return this.visualAspect != null ? this.visualAspect : (this.visualAspect = this.getMostRestrictiveAspect());
+		return this.visualAspect != null ? this.visualAspect : SignalAspect.BLINK_RED;
 	}
 
 	public void setVisualAspect(SignalAspect aspect) {
@@ -90,7 +97,7 @@ public class MassiveSignalController extends SignalController {
 				mostRestrictive = SignalAspect.mostRestrictive(mostRestrictive, this.aspects.get(coord));
 			}
 		}
-		return mostRestrictive;
+		return mostRestrictive != null ? mostRestrictive : SignalAspect.GREEN;
 	}
 
 	public String getNameFor(SignalController con) {
@@ -116,7 +123,21 @@ public class MassiveSignalController extends SignalController {
 				mostRestrictive = SignalAspect.mostRestrictive(mostRestrictive, aspect);
 			}
 		}
-		return this.mostRestrictive = mostRestrictive != null ? mostRestrictive : SignalAspect.BLINK_RED;
+		return this.mostRestrictive = mostRestrictive != null ? mostRestrictive : SignalAspect.GREEN;
+	}
+
+	public Set<String> getSignalNames() {
+		return this.signalNames.keySet();
+	}
+
+	@Override
+	public void onPairNameChange(WorldCoordinate coords, String name) {
+		super.onPairNameChange(coords, name);
+		if(name != null) {
+			this.signalNames.put(name, coords);
+		} else {
+			this.signalNames.removeValue(coords);
+		}
 	}
 
 	@Override
@@ -217,11 +238,23 @@ public class MassiveSignalController extends SignalController {
 			NBTTagCompound tag = list.getCompoundTagAt(entry);
 			int[] c = tag.getIntArray("coords");
 			WorldCoordinate coord = new WorldCoordinate(c[0], c[1], c[2], c[3]);
-			this.aspects.put(coord, SignalAspect.fromOrdinal(data.getByte("aspect")));
+			this.aspects.put(coord, SignalAspect.fromOrdinal(tag.getByte("aspect")));
 			if(tag.hasKey("name")) {
 				signalNames.put(tag.getString("name"), coord);
 			}
 		}
 		this.mostRestrictive = null;
+	}
+
+	@Override
+	public void writePacketData(DataOutputStream data) throws IOException {
+		super.writePacketData(data);
+		data.writeByte(this.visualAspect != null ? this.visualAspect.ordinal() : SignalAspect.BLINK_RED.ordinal());
+	}
+
+	@Override
+	public void readPacketData(DataInputStream data) throws IOException {
+		super.readPacketData(data);
+		this.visualAspect = SignalAspect.fromOrdinal(data.readByte());
 	}
 }
