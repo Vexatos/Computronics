@@ -238,7 +238,7 @@ public class MassiveSignalController extends SignalController {
 			NBTTagCompound tag = list.getCompoundTagAt(entry);
 			int[] c = tag.getIntArray("coords");
 			WorldCoordinate coord = new WorldCoordinate(c[0], c[1], c[2], c[3]);
-			this.aspects.put(coord, SignalAspect.fromOrdinal(data.getByte("aspect")));
+			this.aspects.put(coord, SignalAspect.fromOrdinal(tag.getByte("aspect")));
 			if(tag.hasKey("name")) {
 				signalNames.put(tag.getString("name"), coord);
 			}

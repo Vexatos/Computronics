@@ -169,7 +169,7 @@ public class TileDigitalReceiverBox extends TileDigitalBoxBase implements IRecei
 	private Object[] getAspect(String name) {
 		SignalAspect aspect = this.receiver.getMostRestrictiveAspectFor(name);
 		if(aspect != null) {
-			return new Object[] { aspect };
+			return new Object[] { aspect.ordinal() + 1 };
 		} else {
 			return new Object[] { null, "no valid signal found" };
 		}
@@ -215,7 +215,7 @@ public class TileDigitalReceiverBox extends TileDigitalBoxBase implements IRecei
 	@Callback(doc = "function():number; Returns the most restrictive aspect currently received from connected signals", direct = true, limit = 32)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] getMostRestrictiveAspect(Context context, Arguments args) {
-		return new Object[] { this.receiver.getMostRestrictiveAspect() };
+		return new Object[] { this.receiver.getMostRestrictiveAspect().ordinal() + 1 };
 	}
 
 	@Callback(doc = "function(name:string):number; Tries to remove any pairing to a signal with the specified name. Returns true on success.", direct = true, limit = 32)
@@ -254,7 +254,7 @@ public class TileDigitalReceiverBox extends TileDigitalBoxBase implements IRecei
 					return getAspect((String) arguments[0]);
 				}
 				case 1: {
-					return new Object[] { this.receiver.getMostRestrictiveAspect() };
+					return new Object[] { this.receiver.getMostRestrictiveAspect().ordinal() + 1 };
 				}
 				case 2: {
 					if(arguments.length < 1 || !(arguments[0] instanceof String)) {
