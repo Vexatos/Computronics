@@ -182,7 +182,7 @@ public class TileDigitalControllerBox extends TileDigitalBoxBase implements ICon
 		return setEveryAspect(args.checkInteger(0));
 	}
 
-	@Callback(doc = "function(name:string):number; Tries to remove any pairing to a signal with the specified name. Returns true on success.", direct = true, limit = 32)
+	@Callback(doc = "function(name:string):boolean; Tries to remove any pairing to a signal with the specified name. Returns true on success.", direct = true, limit = 32)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] unpair(Context context, Arguments args) {
 		return removeSignal(args.checkString(0));
