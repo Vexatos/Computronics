@@ -13,6 +13,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.Constants;
 import pl.asie.computronics.util.collect.SimpleInvertibleDualMap;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,6 +36,7 @@ public class MassiveSignalController extends SignalController {
 	}
 
 	@Override
+	@Nonnull
 	public SignalAspect getAspectFor(WorldCoordinate coord) {
 		SignalAspect aspect = this.aspects.get(coord);
 		return aspect != null ? aspect : SignalAspect.GREEN;
@@ -123,6 +125,16 @@ public class MassiveSignalController extends SignalController {
 
 	public Set<String> getSignalNames() {
 		return this.signalNames.keySet();
+	}
+
+	@Override
+	public void onPairNameChange(WorldCoordinate coords, String name) {
+		super.onPairNameChange(coords, name);
+		if(name != null) {
+			this.signalNames.put(name, coords);
+		} else {
+			this.signalNames.removeValue(coords);
+		}
 	}
 
 	@Override
