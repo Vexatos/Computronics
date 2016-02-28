@@ -12,6 +12,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.Constants;
 import pl.asie.computronics.util.collect.SimpleInvertibleDualMap;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -67,7 +68,7 @@ public class MassiveSignalReceiver extends SignalReceiver {
 		String name = this.signalNames.inverse().get(con.getCoords());
 		if(name == null) {
 			name = con.getName();
-			if(name != null){
+			if(name != null) {
 				this.signalNames.put(name, con.getCoords());
 			}
 		}
@@ -93,10 +94,10 @@ public class MassiveSignalReceiver extends SignalReceiver {
 		return this.signalNames.keySet();
 	}
 
-	public void onControllerAspectChange(SignalController con, SignalAspect aspect) {
+	public void onControllerAspectChange(SignalController con, @Nonnull SignalAspect aspect) {
 		WorldCoordinate coords = con.getCoords();
 		SignalAspect oldAspect = this.aspects.get(coords);
-		if(aspect != null && oldAspect != aspect) {
+		if(oldAspect != aspect) {
 			this.aspects.put(coords, aspect);
 			this.mostRestrictive = null;
 			super.onControllerAspectChange(con, aspect);
@@ -104,6 +105,16 @@ public class MassiveSignalReceiver extends SignalReceiver {
 		String name = con.getName();
 		if(name != null && !signalNames.containsEntry(name, coords)) {
 			signalNames.put(name, coords);
+		}
+	}
+
+	@Override
+	public void onPairNameChange(WorldCoordinate coords, String name) {
+		super.onPairNameChange(coords, name);
+		if(name != null) {
+			this.signalNames.put(name, coords);
+		} else {
+			this.signalNames.removeValue(coords);
 		}
 	}
 
