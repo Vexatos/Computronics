@@ -141,6 +141,13 @@ public class ModRecipes {
 				'b', GameRegistry.findItemStack(Mods.Railcraft, "signal.box.receiver", 1),
 				's', GameRegistry.findItemStack(Mods.Railcraft, "part.circuit.signal", 1));
 		}
+		if(Computronics.railcraft.digitalControllerBox != null) {
+			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.railcraft.digitalControllerBox, 1, 0),
+				"iri", "ibi", "isi", 'i', "ingotIron",
+				'r', GameRegistry.findItemStack(Mods.Railcraft, "part.circuit.controller", 1),
+				'b', GameRegistry.findItemStack(Mods.Railcraft, "signal.box.controller", 1),
+				's', GameRegistry.findItemStack(Mods.Railcraft, "part.circuit.signal", 1));
+		}
 		if(Computronics.railcraft.detector != null) {
 			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.railcraft.detector, 1, 0),
 				"sss", "sdp", "sss",
