@@ -54,13 +54,13 @@ public class EntitySwarm extends EntityFlyingCreature implements IBeeHousing {
 	public EntitySwarm(World world) {
 		super(world);
 		this.setSize(1.0F, 1.0F);
-		this.inventory = new SwarmHousingInventory(null);
+		this.inventory = new SwarmHousingInventory();
 	}
 
 	public EntitySwarm(World world, double x, double y, double z, ItemStack queen) {
-		super(world);
+		this(world);
 		this.setSize(1.0F, 1.0F);
-		this.inventory = new SwarmHousingInventory(queen);
+		this.inventory.setQueen(queen);
 		this.setPosition(x, y, z);
 		this.prevPosX = x;
 		this.prevPosY = y;
@@ -554,10 +554,6 @@ public class EntitySwarm extends EntityFlyingCreature implements IBeeHousing {
 	public static class SwarmHousingInventory implements IBeeHousingInventory {
 
 		private ItemStack queenStack;
-
-		public SwarmHousingInventory(ItemStack queenStack) {
-			this.queenStack = queenStack;
-		}
 
 		@Override
 		public ItemStack getQueen() {
