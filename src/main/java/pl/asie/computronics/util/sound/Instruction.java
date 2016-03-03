@@ -3,9 +3,9 @@ package pl.asie.computronics.util.sound;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import pl.asie.computronics.util.sound.AudioUtil.AmplitudeModulation;
+import pl.asie.computronics.util.sound.AudioUtil.AudioState;
 
 import java.util.ArrayDeque;
-import java.util.List;
 import java.util.Queue;
 
 import static pl.asie.computronics.util.sound.AudioUtil.ADSR;
@@ -18,39 +18,49 @@ import static pl.asie.computronics.util.sound.AudioUtil.State;
  */
 public abstract class Instruction {
 
-	public static class Open extends Instruction {
+	public static class Open extends ChannelSpecific {
+
+		public Open(int channelIndex) {
+			super(channelIndex);
+		}
 
 		@Override
-		public void encounter(List<State> states, State state) {
+		public void encounter(AudioState process, State state) {
 			state.gate = Gate.Open;
 		}
 	}
 
-	public static class Close extends Instruction implements Ticking {
+	public static class Close extends ChannelSpecific {
+
+		public Close(int channelIndex) {
+			super(channelIndex);
+		}
 
 		@Override
-		public void encounter(List<State> states, State state) {
+		public void encounter(AudioState process, State state) {
 			state.gate = Gate.Closed;
 		}
 	}
 
-	public static class SetWave extends Instruction {
+	public static class SetWave extends ChannelSpecific {
 
 		public final AudioType type;
 		public final float frequency;
 
-		public SetWave(AudioType type, float frequency) {
+		public SetWave(int channelIndex, AudioType type, float frequency) {
+			super(channelIndex);
 			this.type = type;
 			this.frequency = frequency;
 		}
 
 		public SetWave(NBTTagCompound tag) {
+			super(tag.getInteger("c"));
 			this.type = AudioType.fromIndex(tag.getByte("t"));
 			this.frequency = tag.getFloat("f");
 		}
 
 		@Override
-		public void encounter(List<State> states, State state) {
+		public void encounter(AudioState process, State state) {
 			state.wave.type = type;
 			state.wave.frequencyInHz = frequency;
 		}
@@ -69,20 +79,22 @@ public abstract class Instruction {
 		}
 
 		@Override
-		public void encounter(List<State> states, State state) {
-			state.delay = this.delay;
+		public void encounter(AudioState process) {
+			process.delay = this.delay;
 		}
 	}
 
-	public static class SetFM extends Instruction {
+	public static class SetFM extends ChannelSpecific {
 
 		private final FrequencyModulation freqMod;
 
-		public SetFM(int modulatorIndex, float index) {
+		public SetFM(int channelIndex, int modulatorIndex, float index) {
+			super(channelIndex);
 			this.freqMod = new FrequencyModulation(modulatorIndex, index);
 		}
 
 		public SetFM(NBTTagCompound tag) {
+			super(tag.getInteger("c"));
 			this.freqMod = new FrequencyModulation(
 				tag.getInteger("m"),
 				tag.getFloat("i")
@@ -90,17 +102,17 @@ public abstract class Instruction {
 		}
 
 		@Override
-		public void encounter(List<State> states, State state) {
+		public void encounter(AudioState process, State state) {
 			if(state.isFreqMod) {
 				return;
 			}
 			if(state.freqMod != null) {
-				State mstate = states.get(state.freqMod.modulatorIndex);
+				State mstate = process.states.get(state.freqMod.modulatorIndex);
 				if(mstate != null) {
 					mstate.isFreqMod = false;
 				}
 			}
-			State mstate = states.get(this.freqMod.modulatorIndex);
+			State mstate = process.states.get(this.freqMod.modulatorIndex);
 			if(mstate != null) {
 				mstate.isFreqMod = true;
 				state.freqMod = this.freqMod;
@@ -108,14 +120,18 @@ public abstract class Instruction {
 		}
 	}
 
-	public static class ResetFM extends Instruction {
+	public static class ResetFM extends ChannelSpecific {
+
+		public ResetFM(int channelIndex) {
+			super(channelIndex);
+		}
 
 		@Override
-		public void encounter(List<State> states, State state) {
+		public void encounter(AudioState process, State state) {
 			if(state.freqMod == null) {
 				return;
 			}
-			State mstate = states.get(state.freqMod.modulatorIndex);
+			State mstate = process.states.get(state.freqMod.modulatorIndex);
 			if(mstate != null) {
 				mstate.isFreqMod = false;
 			}
@@ -123,30 +139,32 @@ public abstract class Instruction {
 		}
 	}
 
-	public static class SetAM extends Instruction {
+	public static class SetAM extends ChannelSpecific {
 
 		private final AmplitudeModulation ampMod;
 
-		public SetAM(int modulatorIndex, float index) {
+		public SetAM(int channelIndex, int modulatorIndex, float index) {
+			super(channelIndex);
 			this.ampMod = new AmplitudeModulation(modulatorIndex);
 		}
 
 		public SetAM(NBTTagCompound tag) {
+			super(tag.getInteger("c"));
 			this.ampMod = new AmplitudeModulation(tag.getInteger("m"));
 		}
 
 		@Override
-		public void encounter(List<State> states, State state) {
+		public void encounter(AudioState process, State state) {
 			if(state.isAmpMod) {
 				return;
 			}
 			if(state.ampMod != null) {
-				State mstate = states.get(state.ampMod.modulatorIndex);
+				State mstate = process.states.get(state.ampMod.modulatorIndex);
 				if(mstate != null) {
 					mstate.isAmpMod = false;
 				}
 			}
-			State mstate = states.get(this.ampMod.modulatorIndex);
+			State mstate = process.states.get(this.ampMod.modulatorIndex);
 			if(mstate != null) {
 				mstate.isAmpMod = true;
 				state.ampMod = this.ampMod;
@@ -154,14 +172,18 @@ public abstract class Instruction {
 		}
 	}
 
-	public static class ResetAM extends Instruction {
+	public static class ResetAM extends ChannelSpecific {
+
+		public ResetAM(int channelIndex) {
+			super(channelIndex);
+		}
 
 		@Override
-		public void encounter(List<State> states, State state) {
+		public void encounter(AudioState process, State state) {
 			if(state.ampMod == null) {
 				return;
 			}
-			State mstate = states.get(state.ampMod.modulatorIndex);
+			State mstate = process.states.get(state.ampMod.modulatorIndex);
 			if(mstate != null) {
 				mstate.isAmpMod = false;
 			}
@@ -169,15 +191,17 @@ public abstract class Instruction {
 		}
 	}
 
-	public static class SetADSR extends Instruction {
+	public static class SetADSR extends ChannelSpecific {
 
 		private final ADSR envelope;
 
-		public SetADSR(int attackDuration, int decayDuration, float attenuation, int releaseDuration) {
+		public SetADSR(int channelIndex, int attackDuration, int decayDuration, float attenuation, int releaseDuration) {
+			super(channelIndex);
 			this.envelope = new ADSR(attackDuration, decayDuration, attenuation, releaseDuration);
 		}
 
 		public SetADSR(NBTTagCompound tag) {
+			super(tag.getInteger("c"));
 			this.envelope = new ADSR(
 				tag.getInteger("a"),
 				tag.getInteger("d"),
@@ -187,20 +211,40 @@ public abstract class Instruction {
 		}
 
 		@Override
-		public void encounter(List<State> states, State state) {
+		public void encounter(AudioState process, State state) {
 			state.envelope = this.envelope;
 		}
 	}
 
-	public static class ResetEnvelope extends Instruction {
+	public static class ResetEnvelope extends ChannelSpecific {
+
+		public ResetEnvelope(int channelIndex) {
+			super(channelIndex);
+		}
 
 		@Override
-		public void encounter(List<State> states, State state) {
+		public void encounter(AudioState process, State state) {
 			state.envelope = null;
 		}
 	}
 
-	public abstract void encounter(List<State> states, State state);
+	public static abstract class ChannelSpecific extends Instruction {
+
+		public final int channelIndex;
+
+		public ChannelSpecific(int channelIndex) {
+			this.channelIndex = channelIndex;
+		}
+
+		@Override
+		public final void encounter(AudioState process) {
+			this.encounter(process, process.states.get(this.channelIndex));
+		}
+
+		public abstract void encounter(AudioState process, State state);
+	}
+
+	public abstract void encounter(AudioState process);
 
 	public interface Ticking {
 
@@ -210,10 +254,10 @@ public abstract class Instruction {
 		int type = tag.getInteger("t");
 		switch(type) {
 			case 0: {
-				return new Open();
+				return new Open(tag.getInteger("c"));
 			}
 			case 1: {
-				return new Close();
+				return new Close(tag.getInteger("c"));
 			}
 			case 2: {
 				return new SetWave(tag.getCompoundTag("d"));
@@ -225,19 +269,19 @@ public abstract class Instruction {
 				return new SetFM(tag.getCompoundTag("d"));
 			}
 			case 5: {
-				return new ResetFM();
+				return new ResetFM(tag.getInteger("c"));
 			}
 			case 6: {
 				return new SetAM(tag.getCompoundTag("d"));
 			}
 			case 7: {
-				return new ResetAM();
+				return new ResetAM(tag.getInteger("c"));
 			}
 			case 8: {
 				return new SetADSR(tag.getCompoundTag("d"));
 			}
 			case 9: {
-				return new ResetEnvelope();
+				return new ResetEnvelope(tag.getInteger("c"));
 			}
 		}
 		return null;

@@ -1,6 +1,8 @@
 package pl.asie.computronics.util.sound;
 
 import com.google.common.base.Throwables;
+import com.google.common.collect.Interner;
+import com.google.common.collect.Interners;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
@@ -325,5 +327,60 @@ public class Audio {
 			init();
 		}
 		return INSTANCE;
+	}
+
+	public void play(float x, float y, float z, Queue<Instruction> instructions) {
+		Minecraft mc = Minecraft.getMinecraft();
+		float distanceBasedGain = ((float) Math.max(0, 1 - mc.thePlayer.getDistance(x, y, z) / maxDistance));
+		float gain = distanceBasedGain * volume();
+		if(gain <= 0 || amplitude <= 0) {
+			return;
+		}
+
+		if(!disableAudio) {
+			if(AL.isCreated()) {
+				Interner<Byte> interner = Interners.newWeakInterner();
+				AudioUtil.AudioState process = new AudioUtil.AudioState(8);
+				while(!instructions.isEmpty()) {
+					if(process.delay > 0) {
+						int sampleCount = process.delay * sampleRate / 1000;
+						for(int sample = 0; sample < sampleCount; ++sample) {
+							for(AudioUtil.State state : process.states) {
+								int value = ((byte) (state.gate.getValue(process, state) * amplitude)) ^ 0x80;
+								state.data.add(interner.intern((byte) value));
+							}
+						}
+						process.delay = 0;
+					} else {
+						Instruction inst = instructions.peek();
+						inst.encounter(process);
+					}
+				}
+
+				// Watch out for sound cards running out of memory... this apparently
+				// really does happen. I'm assuming this is due to too many sounds being
+				// kept loaded, since from what I can see OC's releasing its audio
+				// memory as it should.
+				try {
+					synchronized(sources) {
+						for(AudioUtil.State state : process.states) {
+							ByteBuffer buf = BufferUtils.createByteBuffer(state.data.size());
+							for(Byte aByte : state.data) {
+								buf.put(aByte);
+							}
+							sources.add(new Source(x, y, z, buf, gain));
+						}
+					}
+				} catch(LessUselessOpenALException e) {
+					if(e.errorCode == AL10.AL_OUT_OF_MEMORY) {
+						// Well... let's just stop here.
+						Computronics.log.info("Couldn't play computer speaker sound because your sound card ran out of memory. Either your sound card is just really low-end, or there are just too many sounds in use already by other mods. Disabling computer speakers to avoid spamming your log file now.");
+						disableAudio = true;
+					} else {
+						Computronics.log.warn("Error playing computer speaker sound.", e);
+					}
+				}
+			}
+		}
 	}
 }

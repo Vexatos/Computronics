@@ -1,7 +1,9 @@
 package pl.asie.computronics.util.sound;
 
+import com.google.common.collect.ImmutableList;
 import pl.asie.computronics.reference.Config;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,7 +14,7 @@ public class AudioUtil {
 	public enum Gate {
 		Open {
 			@Override
-			public double getValue(List<State> states, State state) {
+			public double getValue(AudioState process, State state) {
 				if(state.isAmpMod || state.isFreqMod) {
 					return 0;
 				}
@@ -22,10 +24,10 @@ public class AudioUtil {
 					state.wave.offset -= 1;
 				}
 				if(state.freqMod != null && !state.isFreqMod) {
-					value = state.freqMod.getModifiedValue(states, state, value);
+					value = state.freqMod.getModifiedValue(process, state, value);
 				}
 				if(state.ampMod != null && !state.isAmpMod) {
-					value = state.ampMod.getModifiedValue(states, state, value);
+					value = state.ampMod.getModifiedValue(process, state, value);
 				}
 				if(state.envelope != null) {
 					value = state.envelope.getModifiedValue(state, value);
@@ -35,17 +37,17 @@ public class AudioUtil {
 		},
 		Closed {
 			@Override
-			public double getValue(List<State> states, State state) {
+			public double getValue(AudioState process, State state) {
 				return 0;
 			}
 		};
 
-		public abstract double getValue(List<State> states, State state);
+		public abstract double getValue(AudioState process, State state);
 	}
 
 	public static abstract class Modulation {
 
-		public abstract double getModifiedValue(List<State> states, State state, double value);
+		public abstract double getModifiedValue(AudioState process, State state, double value);
 	}
 
 	public static class FrequencyModulation extends Modulation {
@@ -59,13 +61,13 @@ public class AudioUtil {
 		}
 
 		@Override
-		public double getModifiedValue(List<State> states, State state, double value) {
-			State mstate = states.get(modulatorIndex);
+		public double getModifiedValue(AudioState process, State state, double value) {
+			State mstate = process.states.get(modulatorIndex);
 			if(mstate.gate == Gate.Closed) {
 				return value;
 			}
 			Wave carrier = state.wave;
-			double deviation = mstate.gate.getValue(states, mstate) * index * mstate.wave.frequencyInHz;
+			double deviation = mstate.gate.getValue(process, mstate) * index * mstate.wave.frequencyInHz;
 			carrier.offset += (carrier.frequencyInHz + deviation) / ((float) Config.SOUND_SAMPLE_RATE);
 			return value;
 		}
@@ -80,13 +82,13 @@ public class AudioUtil {
 		}
 
 		@Override
-		public double getModifiedValue(List<State> states, State state, double value) {
-			State mstate = states.get(modulatorIndex);
+		public double getModifiedValue(AudioState process, State state, double value) {
+			State mstate = process.states.get(modulatorIndex);
 			if(mstate.gate == Gate.Closed) {
 				return value;
 			}
 			Wave modulator = mstate.wave;
-			return value * (1 + mstate.gate.getValue(states, mstate));
+			return value * (1 + mstate.gate.getValue(process, mstate));
 		}
 	}
 
@@ -150,7 +152,10 @@ public class AudioUtil {
 		}
 
 		private enum Phase {
-			Attack, Decay, Sustain, Release;
+			Attack,
+			Decay,
+			Sustain,
+			Release;
 
 			public static final Phase[] VALUES = values();
 
@@ -165,7 +170,6 @@ public class AudioUtil {
 
 		public final Wave wave;
 		public final int channelIndex;
-		public int delay = 0;
 
 		public Gate gate = Gate.Closed;
 		public FrequencyModulation freqMod;
@@ -173,6 +177,7 @@ public class AudioUtil {
 		public ADSR envelope;
 
 		public boolean isFreqMod, isAmpMod;
+		public final List<Byte> data = new ArrayList<Byte>();
 
 		public State(int channelIndex) {
 			this.wave = new Wave();
@@ -194,6 +199,20 @@ public class AudioUtil {
 			this.frequencyInHz = frequencyInHz;
 			this.offset = offset;
 			this.type = type;
+		}
+	}
+
+	public static class AudioState {
+
+		public final ImmutableList<State> states;
+		public int delay = 0;
+
+		public AudioState(int channelCount) {
+			ArrayList<State> states = new ArrayList<State>(channelCount);
+			for(int i = 0; i < 8; i++) {
+				states.add(new AudioUtil.State(i));
+			}
+			this.states = ImmutableList.copyOf(states);
 		}
 	}
 }
