@@ -1,4 +1,4 @@
-package pl.asie.computronics.util.sound;
+package pl.asie.computronics.util;
 
 import java.util.HashMap;
 import java.util.Map;
