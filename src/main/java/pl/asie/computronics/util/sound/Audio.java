@@ -352,7 +352,7 @@ public class Audio {
 						}
 						process.delay = 0;
 					} else {
-						Instruction inst = instructions.peek();
+						Instruction inst = instructions.poll();
 						inst.encounter(process);
 					}
 				}
