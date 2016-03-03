@@ -329,6 +329,8 @@ public class Audio {
 		return INSTANCE;
 	}
 
+	private static final Interner<Byte> interner = Interners.newStrongInterner();
+
 	public void play(float x, float y, float z, Queue<Instruction> instructions) {
 		Minecraft mc = Minecraft.getMinecraft();
 		float distanceBasedGain = ((float) Math.max(0, 1 - mc.thePlayer.getDistance(x, y, z) / maxDistance));
@@ -339,7 +341,6 @@ public class Audio {
 
 		if(!disableAudio) {
 			if(AL.isCreated()) {
-				Interner<Byte> interner = Interners.newWeakInterner();
 				AudioUtil.AudioState process = new AudioUtil.AudioState(8);
 				while(!instructions.isEmpty()) {
 					if(process.delay > 0) {
