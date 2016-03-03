@@ -16,6 +16,7 @@ import pl.asie.computronics.cc.CCRadarProxy;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.RadarUtils;
+import pl.asie.computronics.util.sound.TableUtils;
 import pl.asie.lib.api.tile.IBatteryProvider;
 import pl.asie.lib.tile.BatteryBasic;
 import pl.asie.lib.util.EnergyConverter;
@@ -82,7 +83,7 @@ public class TileRadar extends TileEntityPeripheralBase implements IBatteryProvi
 		//   result = {radar.getEntities()}
 		// and we'd be limited in the number of entities, due to the limit of
 		// return values. So we wrap it in an array to return it as a list.
-		return new Object[] { RadarUtils.convertSetToMap(entities) };
+		return new Object[] { TableUtils.convertSetToMap(entities) };
 	}
 
 	@Callback(doc = "function([distance:number]):table; Returns a list of all players detected within the specified or the maximum range")
@@ -97,7 +98,7 @@ public class TileRadar extends TileEntityPeripheralBase implements IBatteryProvi
 			entities.addAll(RadarUtils.getEntities(worldObj, xCoord, yCoord, zCoord, bounds, EntityPlayer.class));
 			context.pause(0.5);
 		}
-		return new Object[] { RadarUtils.convertSetToMap(entities) };
+		return new Object[] { TableUtils.convertSetToMap(entities) };
 	}
 
 	@Callback(doc = "function([distance:number]):table; Returns a list of all mobs detected within the specified or the maximum range")
@@ -112,7 +113,7 @@ public class TileRadar extends TileEntityPeripheralBase implements IBatteryProvi
 			entities.addAll(RadarUtils.getEntities(worldObj, xCoord, yCoord, zCoord, bounds, EntityLiving.class));
 			context.pause(0.5);
 		}
-		return new Object[] { RadarUtils.convertSetToMap(entities) };
+		return new Object[] { TableUtils.convertSetToMap(entities) };
 	}
 
 	@Callback(doc = "function([distance:number]):table; Returns a list of all items detected within the specified or the maximum range")
@@ -127,7 +128,7 @@ public class TileRadar extends TileEntityPeripheralBase implements IBatteryProvi
 			entities.addAll(RadarUtils.getItems(worldObj, xCoord, yCoord, zCoord, bounds, EntityItem.class));
 			context.pause(0.5);
 		}
-		return new Object[] { RadarUtils.convertSetToMap(entities) };
+		return new Object[] { TableUtils.convertSetToMap(entities) };
 	}
 
 	@Override

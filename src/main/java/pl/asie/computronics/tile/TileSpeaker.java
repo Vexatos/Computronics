@@ -1,5 +1,6 @@
 package pl.asie.computronics.tile;
 
+import cpw.mods.fml.common.Optional;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
@@ -9,9 +10,11 @@ import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.api.audio.AudioPacket;
 import pl.asie.computronics.api.audio.IAudioReceiver;
 import pl.asie.computronics.api.audio.IAudioSource;
+import pl.asie.computronics.cc.ISidedPeripheral;
 import pl.asie.computronics.reference.Config;
+import pl.asie.computronics.reference.Mods;
 
-public class TileSpeaker extends TileEntityPeripheralBase implements IAudioReceiver {
+public class TileSpeaker extends TileEntityPeripheralBase implements IAudioReceiver, ISidedPeripheral {
 	private final TIntHashSet packetIds = new TIntHashSet();
 	private IAudioSource lastSource;
 
@@ -60,11 +63,13 @@ public class TileSpeaker extends TileEntityPeripheralBase implements IAudioRecei
 	}
 
 	@Override
+	@Optional.Method(modid = Mods.ComputerCraft)
 	public String[] getMethodNames() {
 		return new String[0];
 	}
 
 	@Override
+	@Optional.Method(modid = Mods.ComputerCraft)
 	public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
 		return new Object[0];
 	}
@@ -72,5 +77,22 @@ public class TileSpeaker extends TileEntityPeripheralBase implements IAudioRecei
 	@Override
 	public boolean connectsAudio(ForgeDirection side) {
 		return true;
+	}
+
+	@Override
+	public boolean canConnectPeripheralOnSide(int side) {
+		return false;
+	}
+
+	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
+	protected void initOC(double s) {
+		// NO-OP
+	}
+
+	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
+	protected void initOC() {
+		// NO-OP
 	}
 }

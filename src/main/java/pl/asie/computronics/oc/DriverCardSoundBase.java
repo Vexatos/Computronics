@@ -113,11 +113,9 @@ public abstract class DriverCardSoundBase extends ManagedEnvironment {
 
 	protected void sendSound(World world, double x, double y, double z, Channel.FreqPair[] freqPairs) throws Exception {
 		final int size = Math.min(freqPairs.length, 8);
-		short modes = 0;
 		byte hits = 0;
 		for(int i = 0; i < size; i++) {
 			if(freqPairs[i] != null) {
-				modes |= (getMode(i).ordinal() & 3) << (i * 2);
 				hits |= 1 << i;
 			}
 		}
@@ -126,11 +124,13 @@ public abstract class DriverCardSoundBase extends ManagedEnvironment {
 			.writeInt(MathHelper.floor_double(x))
 			.writeInt(MathHelper.floor_double(y))
 			.writeInt(MathHelper.floor_double(z))
-			.writeShort(modes)
 			.writeByte(hits);
-		for(Channel.FreqPair freqPair : freqPairs) {
+		for(int i = 0; i < freqPairs.length; i++) {
+			Channel.FreqPair freqPair = freqPairs[i];
 			if(freqPair != null) {
-				packet.writeFloat(freqPair.frequency)
+				packet
+					.writeByte((byte) getMode(i).ordinal())
+					.writeFloat(freqPair.frequency)
 					.writeShort((short) freqPair.duration);
 			}
 		}
@@ -150,13 +150,12 @@ public abstract class DriverCardSoundBase extends ManagedEnvironment {
 			int x = packet.readInt();
 			int y = packet.readInt();
 			int z = packet.readInt();
-			short modes = packet.readShort();
 			int hits = packet.readUnsignedByte();
 			for(int i = 0; i < 8; i++) {
 				if(((hits >> i) & 1) == 1) {
+					AudioType type = AudioType.fromIndex(packet.readUnsignedByte());
 					float frequency = packet.readFloat();
 					short duration = packet.readShort();
-					AudioType type = AudioType.fromIndex((modes >> (i * 2)) & 3);
 					Audio.instance().play(x + 0.5f, y + 0.5f, z + 0.5f, type, frequency, duration & 0xFFFF);
 				}
 			}

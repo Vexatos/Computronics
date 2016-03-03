@@ -1,8 +1,8 @@
-package pl.asie.computronics.client;
+package pl.asie.computronics.integration.railcraft.client;
 
 import mods.railcraft.client.render.BlockRenderer;
 import mods.railcraft.client.render.RenderSignalBox;
-import pl.asie.computronics.Computronics;
+import net.minecraft.block.Block;
 import pl.asie.computronics.integration.railcraft.SignalTypes;
 
 /**
@@ -10,8 +10,8 @@ import pl.asie.computronics.integration.railcraft.SignalTypes;
  */
 public class SignalBoxRenderer extends BlockRenderer {
 
-	public SignalBoxRenderer() {
-		super(Computronics.railcraft.digitalBox);
-		addCombinedRenderer(0, new RenderSignalBox(SignalTypes.Digital));
+	public SignalBoxRenderer(Block block, SignalTypes type) {
+		super(block);
+		addCombinedRenderer(0, new RenderSignalBox(type));
 	}
 }

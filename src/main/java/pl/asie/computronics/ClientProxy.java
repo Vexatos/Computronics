@@ -3,17 +3,14 @@ package pl.asie.computronics;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.Optional;
 import net.minecraft.client.Minecraft;
-import net.minecraft.item.Item;
 import net.minecraft.world.ChunkPosition;
 import net.minecraft.world.World;
-import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
 import pl.asie.computronics.api.audio.AudioPacketDFPWM;
 import pl.asie.computronics.api.audio.AudioPacketRegistry;
 import pl.asie.computronics.audio.AudioPacketClientHandlerDFPWM;
 import pl.asie.computronics.client.AudioCableRender;
 import pl.asie.computronics.client.LampRender;
-import pl.asie.computronics.client.SignalBoxRenderer;
 import pl.asie.computronics.client.UpgradeRenderer;
 import pl.asie.computronics.oc.IntegrationOpenComputers;
 import pl.asie.computronics.reference.Mods;
@@ -57,10 +54,8 @@ public class ClientProxy extends CommonProxy {
 		if(Computronics.audioCable != null) {
 			RenderingRegistry.registerBlockHandler(new AudioCableRender());
 		}
-		if(Computronics.railcraft != null && Computronics.railcraft.digitalBox != null) {
-			SignalBoxRenderer renderer = new SignalBoxRenderer();
-			RenderingRegistry.registerBlockHandler(renderer);
-			MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(renderer.getBlock()), renderer.getItemRenderer());
+		if(Computronics.railcraft != null) {
+			Computronics.railcraft.registerRenderers();
 		}
 		if(Mods.isLoaded(Mods.OpenComputers)) {
 			registerOpenComputersRenderers();
@@ -68,6 +63,11 @@ public class ClientProxy extends CommonProxy {
 				Computronics.forestry.registerOCRenderers();
 			}
 		}
+	}
+
+	@Override
+	public void onServerStop() {
+		Computronics.instance.audio.removeAll();
 	}
 
 	@Override

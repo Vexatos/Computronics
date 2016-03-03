@@ -11,20 +11,30 @@
     - Documented everything in the TIS-3D manual.
     - Each module can be individually disabled in the config file.
   * ADDED: EnderIO 2.3 integration  for OpenComputers and ComputerCraft! (Has actually existed since March 2015, just not in any official release)
-      - Added support for the new Telepad
-        - Allows full control over the coordinates set (if allowed in the EnderIO config file) as well as telepad activation
-      - Added support for the new Weather Obelisk
-        - Allows control over the weather, provided the Obelisk has the correct items.
-      - The Capacitor Bank now provides two additional functions, `getAverageInputPerTick()` and `getAverageOutputPerTick()`
-        - This allows you to monitor input and output of your energy network separately
-      - Now you can get and set the range of Vacuum Chests
-      - Added `getProgress()` to most machines with progress
+    - Added support for the new Telepad
+      - Allows full control over the coordinates set (if allowed in the EnderIO config file) as well as telepad activation
+    - Added support for the new Weather Obelisk
+      - Allows control over the weather, provided the Obelisk has the correct items.
+    - The Capacitor Bank now provides two additional functions, `getAverageInputPerTick()` and `getAverageOutputPerTick()`
+      - This allows you to monitor input and output of your energy network separately
+    - Now you can get and set the range of Vacuum Chests
+    - Added `getProgress()` to most machines with progress
   * ADDED: Built-in tape utility program for ComputerCraft to write songs to tapes and to play, stop, pause etc.
   * ADDED: getPosition() to tape drives. No, I'm not joking. It's real. I'm sorry.
+  * ADDED: Digital Signal Controller Box for Railcraft!
+    - Can be paired to up to 32 receivers (sounds overpowered, definitely is overpowered, but CovertJaguar told me to do it. It's probaby better this way...)
+    - Allows individually sending aspects to each paired receiver
+    - Receivers must be referenced by their name, meaning you have to name all your signals using Signal Labels
+  * CHANGED: Digital Signal Receiver Box
+    - Can noe be paired to up to 32 receivers, just like the controller box
+    - Allows individually querying the aspect of each paired controller
+    - Sends an `aspect_changed` event containing the controller's name and new aspect.
+    - Controllers must be referenced by their name, meaning you have to name all your signals using Signal Labels
   * FIXED: Crash when the `openComputersBees` config option was set to `false`.
   * FIXED: Digital Locomotive Relay trying to consume OpenComputers energy even if called from ComputerCraft
   * FIXED: Updated OpenComputers integration
   * FIXED: Removed explicit dependency on GregTech 5. Computronics will launch with GregTech 6 now (but there is no integration yet).
+  * FIXED: Tape program not displaying information properly if file size is larger than tape size
 
 ==== 1.6.0 ====
 

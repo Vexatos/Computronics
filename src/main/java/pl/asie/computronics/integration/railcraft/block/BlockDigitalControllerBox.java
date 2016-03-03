@@ -10,19 +10,17 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.integration.railcraft.SignalTypes;
-import pl.asie.computronics.integration.railcraft.tile.TileDigitalReceiverBox;
-import pl.asie.computronics.oc.block.IComputronicsEnvironmentBlock;
-import pl.asie.computronics.oc.manual.IBlockWithPrefix;
+import pl.asie.computronics.integration.railcraft.tile.TileDigitalControllerBox;
 import pl.asie.computronics.reference.Mods;
 
 /**
- * @author CovertJaguar, Vexatos
+ * @author Vexatos
  */
-public class BlockDigitalReceiverBox extends BlockDigitalBoxBase implements IComputronicsEnvironmentBlock, IBlockWithPrefix {
+public class BlockDigitalControllerBox extends BlockDigitalBoxBase {
 
-	public BlockDigitalReceiverBox() {
-		super("digital_receiver_box");
-		this.setBlockName("computronics.digitalReceiverBox");
+	public BlockDigitalControllerBox() {
+		super("digital_controller_box");
+		this.setBlockName("computronics.digitalControllerBox");
 		this.setCreativeTab(Computronics.tab);
 	}
 
@@ -30,21 +28,21 @@ public class BlockDigitalReceiverBox extends BlockDigitalBoxBase implements ICom
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister iconRegister) {
 		super.registerBlockIcons(iconRegister);
-		texturesBoxTop = iconRegister.registerIcon("computronics:digital_receiver_box");
+		texturesBoxTop = iconRegister.registerIcon("computronics:digital_controller_box");
 	}
 
 	@Override
 	public ISignalTileDefinition getSignalType(int meta) {
-		return SignalTypes.DigitalReceiver;
+		return SignalTypes.DigitalController;
 	}
 
 	public TileEntity createTileEntity(World world, int meta) {
-		return new TileDigitalReceiverBox();
+		return new TileDigitalControllerBox();
 	}
 
 	@Override
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Class<? extends Environment> getTileEntityClass(int meta) {
-		return TileDigitalReceiverBox.class;
+		return TileDigitalControllerBox.class;
 	}
 }

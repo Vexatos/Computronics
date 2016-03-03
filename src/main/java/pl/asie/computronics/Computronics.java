@@ -13,6 +13,7 @@ import cpw.mods.fml.common.event.FMLMissingMappingsEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
+import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 import cpw.mods.fml.common.network.FMLEventChannel;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -86,11 +87,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Mod(modid = Mods.Computronics, name = Mods.Computronics_NAME, version = "@VERSION@",
-	dependencies = "required-after:asielib@[0.4.5,);required-after:Forge@[10.13.2.1291,);"
-		+ "after:ComputerCraft;after:OpenComputers@[1.5.21,);after:tis3d@[0.8.2.61,);"
+	dependencies = "required-after:asielib@[0.4.6,);required-after:Forge@[10.13.2.1291,);"
+		+ "after:ComputerCraft@[1.75,);after:OpenComputers@[1.5.21,1.6);after:tis3d@[0.8.2.61,);"
 		+ "before:OpenPeripheralCore@[1.1,);before:OpenPeripheralApi@[3.2,);"
 		+ "after:MineFactoryReloaded;after:RedLogic@[59.1.9,);after:ProjRed|Core;"
-		+ "after:BuildCraft|Core@[7.0.6,);after:Railcraft@[9.8.0.0,);"
+		+ "after:BuildCraft|Core@[7.0.6,);after:Railcraft@[9.8.0.3,);"
 		+ "after:gregtech;after:EnderIO@[1.7.10-2.3,);"
 		+ "after:Forestry;after:Waila@[1.5.10,);"
 		+ "after:MekanismAPI|energy@[8.0.0,);after:Flamingo@[1.7.10-1.3,);"
@@ -369,9 +370,18 @@ public class Computronics {
 	}
 
 	@EventHandler
+	public void serverStop(FMLServerStoppedEvent event) {
+		storage = null;
+		proxy.onServerStop();
+	}
+
+	@EventHandler
 	public void remap(FMLMissingMappingsEvent event) {
 		if(Mods.isLoaded(Mods.OpenComputers)) {
 			opencomputers.remap(event);
+		}
+		if(Mods.isLoaded(Mods.Railcraft)){
+			railcraft.remap(event);
 		}
 	}
 

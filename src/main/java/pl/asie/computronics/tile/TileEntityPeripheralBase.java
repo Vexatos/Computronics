@@ -18,10 +18,10 @@ import net.minecraft.util.ResourceLocation;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
 import pl.asie.computronics.audio.MachineSound;
 import pl.asie.computronics.reference.Mods;
-import pl.asie.computronics.util.ColorUtils;
-import pl.asie.computronics.util.internal.IColorable;
 import pl.asie.computronics.util.internal.IComputronicsPeripheral;
 import pl.asie.lib.tile.TileMachine;
+import pl.asie.lib.util.ColorUtils;
+import pl.asie.lib.util.internal.IColorable;
 
 import java.util.ArrayList;
 
@@ -64,12 +64,12 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 	}
 
 	@Optional.Method(modid = Mods.OpenComputers)
-	private void initOC(double s) {
+	protected void initOC(double s) {
 		setNode(Network.newNode(this, Visibility.Network).withComponent(this.peripheralName, Visibility.Network).withConnector(s).create());
 	}
 
 	@Optional.Method(modid = Mods.OpenComputers)
-	private void initOC() {
+	protected void initOC() {
 		setNode(Network.newNode(this, Visibility.Network).withComponent(this.peripheralName, Visibility.Network).create());
 	}
 
