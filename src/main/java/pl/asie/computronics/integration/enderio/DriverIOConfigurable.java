@@ -48,6 +48,14 @@ public class DriverIOConfigurable {
 		return new Object[] { modes };
 	}
 
+	private static int checkSide(int side) {
+		--side;
+		if(side < 0 || side >= EnumFacing.VALUES.length) {
+			throw new IllegalArgumentException("side needs to be between 1 and " + EnumFacing.VALUES.length);
+		}
+		return side;
+	}
+
 	public static class OCDriver extends DriverTileEntity {
 
 		public static class InternalManagedEnvironment extends ManagedEnvironmentOCTile<IIoConfigurable> {
@@ -63,16 +71,12 @@ public class DriverIOConfigurable {
 
 			@Callback(doc = "function(side:number):string; Returns the current IO mode on the given side")
 			public Object[] getIOMode(Context c, Arguments a) {
-				int side = a.checkInteger(0) - 1;
-				if(side < 0 || side >= EnumFacing.VALUES.length) {
-					throw new IllegalArgumentException("side needs to be between 1 and " + EnumFacing.VALUES.length);
-				}
-				return DriverIOConfigurable.getIOMode(tile, side);
+				return DriverIOConfigurable.getIOMode(tile, checkSide(a.checkInteger(0)));
 			}
 
 			@Callback(doc = "function(side:number,mode:string); Sets the IO mode on the given side")
 			public Object[] setIOMode(Context c, Arguments a) {
-				return DriverIOConfigurable.setIOMode(tile, a.checkInteger(0), a.checkString(1));
+				return DriverIOConfigurable.setIOMode(tile, checkSide(a.checkInteger(0)), a.checkString(1));
 			}
 
 			@Callback(doc = "This is a bidirectional table of every IO mode available", getter = true)
