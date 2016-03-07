@@ -126,9 +126,6 @@ public class DriverWeatherObelisk {
 					return DriverWeatherObelisk.canActivate(tile, ((Double) arguments[0]).intValue());
 				}
 				case 1: {
-					if(arguments.length < 1 || !(arguments[0] instanceof Double)) {
-						throw new LuaException("first argument needs to be a number");
-					}
 					return DriverWeatherObelisk.activate(tile);
 				}
 				case 2: {
