@@ -135,9 +135,7 @@ sourceSets {
             exclude "pl/asie/computronics/integration/armourersworkshop/**"
             exclude "pl/asie/computronics/integration/betterstorage/**"
             exclude "pl/asie/computronics/integration/buildcraft/**"
-            exclude "pl/asie/computronics/integration/cofh/**"
             exclude "pl/asie/computronics/integration/draconicevolution/**"
-            exclude "pl/asie/computronics/integration/enderio/**"
             exclude "pl/asie/computronics/integration/factorization/**"
             exclude "pl/asie/computronics/integration/forestry/**"
             exclude "pl/asie/computronics/integration/fsp/**"
@@ -151,7 +149,6 @@ sourceSets {
             exclude "pl/asie/lib/integration/tool/appeng/**"
             exclude "pl/asie/lib/integration/tool/buildcraft/**"
             exclude "pl/asie/lib/integration/tool/cofh/**"
-            exclude "pl/asie/lib/integration/tool/enderio/**"
             exclude "pl/asie/lib/integration/tool/mekanism/**"
         }
     }

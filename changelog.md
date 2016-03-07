@@ -16,7 +16,7 @@ This version comes with a 1.8.9 port in addition to many additions.
   * ADDED: Built-in tape utility program for ComputerCraft to write songs to tapes and to play, stop, pause etc.
   * FIXED: Iron Note Blocks now properly error when used with instrument names.
   * FIXED: Tape program not displaying information properly if file size is larger than tape size
-  * [1.7.10] ADDED: EnderIO 2.3 integration  for OpenComputers and ComputerCraft! (It has actually existed since March 2015, just not in any official release)
+  * ADDED: EnderIO 2.3 integration  for OpenComputers and ComputerCraft! (It has actually existed since March 2015, just not in any official release)
     - Added support for the new Telepad
       - Allows full control over the coordinates set (if allowed in the EnderIO config file) as well as telepad activation
     - Added support for the new Weather Obelisk
@@ -40,7 +40,7 @@ This version comes with a 1.8.9 port in addition to many additions.
   * [1.7.10] FIXED: Removed explicit dependency on GregTech 5. Computronics will launch with GregTech 6 now (but there is no integration yet).
 
   * [1.8.9] Ported the mod to 1.8.9! Everything is resource-pack ready!
-  	- Mods supported right now are ComputerCraft, OpenComputers, TIS-3D, Flamingo, Storage Drawers, Charset and WAILA. 
+  	- Mods supported right now are ComputerCraft, OpenComputers, TIS-3D, EnderIO, Pink Flamingo, Storage Drawers, Charset and WAILA. 
   	- asielib is no longer needed as a separate download, it is included in this mod.
   * [1.8.9] ADDED: Charset Wires Bundled Cable support for ComputerCraft.
   * [1.8.9] ADDED: Charset Wires Bundled Cable support for Computronics.

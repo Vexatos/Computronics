@@ -11,8 +11,9 @@ import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.ManagedEnvironment;
 import li.cil.oc.api.prefab.DriverTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.integration.CCMultiPeripheral;
 import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
 import pl.asie.computronics.reference.Names;
@@ -26,12 +27,12 @@ import java.util.Locale;
 public class DriverIOConfigurable {
 
 	private static Object[] getIOMode(IIoConfigurable tile, int side) {
-		return new Object[] { tile.getIoMode(ForgeDirection.getOrientation(side)).name().toLowerCase(Locale.ENGLISH) };
+		return new Object[] { tile.getIoMode(EnumFacing.getFront(side - 1)).name().toLowerCase(Locale.ENGLISH) };
 	}
 
 	private static Object[] setIOMode(IIoConfigurable tile, int side, String mode) {
 		try {
-			tile.setIoMode(ForgeDirection.getOrientation(side), IoMode.valueOf(mode.toUpperCase(Locale.ENGLISH)));
+			tile.setIoMode(EnumFacing.getFront(side - 1), IoMode.valueOf(mode.toUpperCase(Locale.ENGLISH)));
 		} catch(IllegalArgumentException e) {
 			throw new IllegalArgumentException("No valid IO mode given");
 		}
@@ -62,7 +63,11 @@ public class DriverIOConfigurable {
 
 			@Callback(doc = "function(side:number):string; Returns the current IO mode on the given side")
 			public Object[] getIOMode(Context c, Arguments a) {
-				return DriverIOConfigurable.getIOMode(tile, a.checkInteger(0));
+				int side = a.checkInteger(0);
+				if(side <= 0 || side > IoMode.values().length) {
+					throw new IllegalArgumentException("side needs to be between 1 and 6");
+				}
+				return DriverIOConfigurable.getIOMode(tile, side);
 			}
 
 			@Callback(doc = "function(side:number,mode:string); Sets the IO mode on the given side")
@@ -70,7 +75,7 @@ public class DriverIOConfigurable {
 				return DriverIOConfigurable.setIOMode(tile, a.checkInteger(0), a.checkString(1));
 			}
 
-			@Callback(doc = "This is a table of every IO mode available", getter = true)
+			@Callback(doc = "This is a bidirectional table of every IO mode available", getter = true)
 			public Object[] io_modes(Context c, Arguments a) {
 				return DriverIOConfigurable.modes();
 			}
@@ -82,8 +87,8 @@ public class DriverIOConfigurable {
 		}
 
 		@Override
-		public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
-			return new InternalManagedEnvironment(((IIoConfigurable) world.getTileEntity(x, y, z)));
+		public ManagedEnvironment createEnvironment(World world, BlockPos pos) {
+			return new InternalManagedEnvironment(((IIoConfigurable) world.getTileEntity(pos)));
 		}
 	}
 
@@ -92,8 +97,8 @@ public class DriverIOConfigurable {
 		public CCDriver() {
 		}
 
-		public CCDriver(IIoConfigurable tile, World world, int x, int y, int z) {
-			super(tile, Names.EnderIO_IOConfigurable, world, x, y, z);
+		public CCDriver(IIoConfigurable tile, World world, BlockPos pos) {
+			super(tile, Names.EnderIO_IOConfigurable, world, pos);
 		}
 
 		@Override
@@ -102,10 +107,10 @@ public class DriverIOConfigurable {
 		}
 
 		@Override
-		public CCMultiPeripheral getPeripheral(World world, int x, int y, int z, int side) {
-			TileEntity te = world.getTileEntity(x, y, z);
+		public CCMultiPeripheral getPeripheral(World world, BlockPos pos, EnumFacing side) {
+			TileEntity te = world.getTileEntity(pos);
 			if(te != null && te instanceof IIoConfigurable) {
-				return new CCDriver((IIoConfigurable) te, world, x, y, z);
+				return new CCDriver((IIoConfigurable) te, world, pos);
 			}
 			return null;
 		}
@@ -120,7 +125,7 @@ public class DriverIOConfigurable {
 				throw new LuaException("first argument needs to be a number");
 			}
 			int side = ((Double) arguments[0]).intValue() - 1;
-			if(side < 0 || side >= IoMode.values().length) {
+			if(side <= 0 || side > IoMode.values().length) {
 				throw new LuaException("side needs to be between 1 and 6");
 			}
 			return side;

@@ -5,6 +5,20 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.cc.multiperipheral.MultiPeripheralProvider;
+import pl.asie.computronics.integration.cofh.DriverEnergyHandler;
+import pl.asie.computronics.integration.enderio.DriverAbstractMachine;
+import pl.asie.computronics.integration.enderio.DriverAbstractPoweredMachine;
+import pl.asie.computronics.integration.enderio.DriverCapacitorBank;
+import pl.asie.computronics.integration.enderio.DriverHasExperience;
+import pl.asie.computronics.integration.enderio.DriverIOConfigurable;
+import pl.asie.computronics.integration.enderio.DriverPowerMonitor;
+import pl.asie.computronics.integration.enderio.DriverPowerStorage;
+import pl.asie.computronics.integration.enderio.DriverProgressTile;
+import pl.asie.computronics.integration.enderio.DriverRedstoneControllable;
+import pl.asie.computronics.integration.enderio.DriverTelepad;
+import pl.asie.computronics.integration.enderio.DriverTransceiver;
+import pl.asie.computronics.integration.enderio.DriverVacuumChest;
+import pl.asie.computronics.integration.enderio.DriverWeatherObelisk;
 import pl.asie.computronics.integration.flamingo.DriverFlamingo;
 import pl.asie.computronics.integration.storagedrawers.DriverDrawerGroup;
 import pl.asie.computronics.reference.Compat;
@@ -21,16 +35,6 @@ import static pl.asie.computronics.Computronics.registerMultiPeripheralProvider;
 //import pl.asie.computronics.integration.cofh.DriverEnergyProvider;
 //import pl.asie.computronics.integration.cofh.DriverEnergyReceiver;
 //import pl.asie.computronics.integration.draconicevolution.DriverExtendedRFStorage;
-//import pl.asie.computronics.integration.enderio.DriverAbstractMachine;
-//import pl.asie.computronics.integration.enderio.DriverAbstractPoweredMachine;
-//import pl.asie.computronics.integration.enderio.DriverCapacitorBank;
-//import pl.asie.computronics.integration.enderio.DriverCapacitorBankOld;
-//import pl.asie.computronics.integration.enderio.DriverHasExperience;
-//import pl.asie.computronics.integration.enderio.DriverIOConfigurable;
-//import pl.asie.computronics.integration.enderio.DriverPowerMonitor;
-//import pl.asie.computronics.integration.enderio.DriverPowerStorage;
-//import pl.asie.computronics.integration.enderio.DriverRedstoneControllable;
-//import pl.asie.computronics.integration.enderio.DriverTransceiver;
 //import pl.asie.computronics.integration.factorization.DriverChargeConductor;
 //import pl.asie.computronics.integration.fsp.DriverSteamTransporter;
 //import pl.asie.computronics.integration.mekanism.DriverStrictEnergyStorage;
@@ -119,12 +123,11 @@ public class IntegrationComputerCraft {
 			if(compat.isCompatEnabled(Compat.AE2_SpatialIO)) {
 				registerMultiPeripheralProvider(new DriverSpatialIOPort.CCDriver());
 			}
-		}
+		}*/
 
 		if(Mods.API.hasAPI(Mods.API.CoFHAPI_Energy)
 			&& compat.isCompatEnabled(Compat.RedstoneFlux)) {
-			registerMultiPeripheralProvider(new DriverEnergyReceiver.CCDriver());
-			registerMultiPeripheralProvider(new DriverEnergyProvider.CCDriver());
+			registerMultiPeripheralProvider(new DriverEnergyHandler.CCDriver());
 		}
 
 		if(Mods.isLoaded(Mods.EnderIO)) {
@@ -138,7 +141,6 @@ public class IntegrationComputerCraft {
 				registerMultiPeripheralProvider(new DriverAbstractPoweredMachine.CCDriver());
 				registerMultiPeripheralProvider(new DriverPowerMonitor.CCDriver());
 				registerMultiPeripheralProvider(new DriverCapacitorBank.CCDriver());
-				registerMultiPeripheralProvider(new DriverCapacitorBankOld.CCDriver());
 				registerMultiPeripheralProvider(new DriverTransceiver.CCDriver());
 				registerMultiPeripheralProvider(new DriverVacuumChest.CCDriver());
 				registerMultiPeripheralProvider(new DriverWeatherObelisk.CCDriver());
@@ -146,7 +148,7 @@ public class IntegrationComputerCraft {
 			}
 		}
 
-		if(Mods.API.hasAPI(Mods.API.DraconicEvolution)
+		/*if(Mods.API.hasAPI(Mods.API.DraconicEvolution)
 			&& compat.isCompatEnabled(Compat.DraconicEvolution)) {
 			registerMultiPeripheralProvider(new DriverExtendedRFStorage.CCDriver());
 		}
@@ -189,7 +191,7 @@ public class IntegrationComputerCraft {
 				new ParticleTurtleUpgrade("computronics.turtle_fx"));
 		}
 
-		if(Computronics.tapeReader != null){
+		if(Computronics.tapeReader != null) {
 			TileTapeDrive.initCCFilesystem();
 		}
 	}

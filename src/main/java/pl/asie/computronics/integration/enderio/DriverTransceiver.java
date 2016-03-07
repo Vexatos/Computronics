@@ -15,6 +15,8 @@ import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.ManagedEnvironment;
 import li.cil.oc.api.prefab.DriverTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import pl.asie.computronics.integration.CCMultiPeripheral;
 import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
@@ -124,7 +126,7 @@ public class DriverTransceiver {
 					return new Object[] { false };
 				}
 			}
-			Channel channel = new Channel(((String) arguments[1]), null, ChannelType.valueOf(((String) arguments[0]).toUpperCase(Locale.ENGLISH)));
+			Channel channel = new Channel(((String) arguments[1]), ChannelType.valueOf(((String) arguments[0]).toUpperCase(Locale.ENGLISH)));
 			ServerChannelRegister.instance.addChannel(channel);
 			PacketHandler.INSTANCE.sendToAll(new PacketAddRemoveChannel(channel, true));
 			return new Object[] { true };
@@ -212,11 +214,17 @@ public class DriverTransceiver {
 		return new Object[] { false };
 	}
 
+	private static LinkedHashMap<Object, Object> types;
+
 	private static Object[] types() {
-		LinkedHashMap<Integer, String> types = new LinkedHashMap<Integer, String>();
-		int i = 1;
-		for(ChannelType type : ChannelType.values()) {
-			types.put(i++, type.name().toLowerCase(Locale.ENGLISH));
+		if(types == null) {
+			types = new LinkedHashMap<Object, Object>();
+			int i = 1;
+			for(ChannelType type : ChannelType.values()) {
+				final String name = type.name().toLowerCase(Locale.ENGLISH);
+				types.put(name, i);
+				types.put(i++, name);
+			}
 		}
 		return new Object[] { types };
 	}
@@ -303,7 +311,7 @@ public class DriverTransceiver {
 				return DriverTransceiver.isReceiveChannel(tile, a.toArray());
 			}
 
-			@Callback(doc = "This is a table containing every available channel type", getter = true)
+			@Callback(doc = "This is a bidirectional table containing every available channel type", getter = true)
 			public Object[] channel_types(Context c, Arguments a) {
 				return DriverTransceiver.types();
 			}
@@ -315,8 +323,8 @@ public class DriverTransceiver {
 		}
 
 		@Override
-		public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
-			return new InternalManagedEnvironment(((TileTransceiver) world.getTileEntity(x, y, z)));
+		public ManagedEnvironment createEnvironment(World world, BlockPos pos) {
+			return new InternalManagedEnvironment(((TileTransceiver) world.getTileEntity(pos)));
 		}
 	}
 
@@ -325,8 +333,8 @@ public class DriverTransceiver {
 		public CCDriver() {
 		}
 
-		public CCDriver(TileTransceiver tile, World world, int x, int y, int z) {
-			super(tile, Names.EnderIO_Transceiver, world, x, y, z);
+		public CCDriver(TileTransceiver tile, World world, BlockPos pos) {
+			super(tile, Names.EnderIO_Transceiver, world, pos);
 		}
 
 		@Override
@@ -335,10 +343,10 @@ public class DriverTransceiver {
 		}
 
 		@Override
-		public CCMultiPeripheral getPeripheral(World world, int x, int y, int z, int side) {
-			TileEntity te = world.getTileEntity(x, y, z);
+		public CCMultiPeripheral getPeripheral(World world, BlockPos pos, EnumFacing side) {
+			TileEntity te = world.getTileEntity(pos);
 			if(te != null && te instanceof TileTransceiver) {
-				return new CCDriver((TileTransceiver) te, world, x, y, z);
+				return new CCDriver((TileTransceiver) te, world, pos);
 			}
 			return null;
 		}
