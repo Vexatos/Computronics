@@ -27,12 +27,12 @@ import java.util.Locale;
 public class DriverIOConfigurable {
 
 	private static Object[] getIOMode(IIoConfigurable tile, int side) {
-		return new Object[] { tile.getIoMode(EnumFacing.getFront(side - 1)).name().toLowerCase(Locale.ENGLISH) };
+		return new Object[] { tile.getIoMode(EnumFacing.getFront(side)).name().toLowerCase(Locale.ENGLISH) };
 	}
 
 	private static Object[] setIOMode(IIoConfigurable tile, int side, String mode) {
 		try {
-			tile.setIoMode(EnumFacing.getFront(side - 1), IoMode.valueOf(mode.toUpperCase(Locale.ENGLISH)));
+			tile.setIoMode(EnumFacing.getFront(side), IoMode.valueOf(mode.toUpperCase(Locale.ENGLISH)));
 		} catch(IllegalArgumentException e) {
 			throw new IllegalArgumentException("No valid IO mode given");
 		}
@@ -63,9 +63,9 @@ public class DriverIOConfigurable {
 
 			@Callback(doc = "function(side:number):string; Returns the current IO mode on the given side")
 			public Object[] getIOMode(Context c, Arguments a) {
-				int side = a.checkInteger(0);
-				if(side <= 0 || side > IoMode.values().length) {
-					throw new IllegalArgumentException("side needs to be between 1 and 6");
+				int side = a.checkInteger(0) - 1;
+				if(side < 0 || side >= EnumFacing.VALUES.length) {
+					throw new IllegalArgumentException("side needs to be between 1 and " + EnumFacing.VALUES.length);
 				}
 				return DriverIOConfigurable.getIOMode(tile, side);
 			}
@@ -125,8 +125,8 @@ public class DriverIOConfigurable {
 				throw new LuaException("first argument needs to be a number");
 			}
 			int side = ((Double) arguments[0]).intValue() - 1;
-			if(side <= 0 || side > IoMode.values().length) {
-				throw new LuaException("side needs to be between 1 and 6");
+			if(side < 0 || side >= EnumFacing.VALUES.length) {
+				throw new LuaException("side needs to be between 1 and " + EnumFacing.VALUES.length);
 			}
 			return side;
 		}
