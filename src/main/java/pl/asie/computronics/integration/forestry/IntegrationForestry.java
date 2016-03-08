@@ -9,6 +9,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import forestry.api.apiculture.BeeManager;
 import forestry.api.apiculture.EnumBeeChromosome;
 import forestry.api.apiculture.FlowerManager;
+import forestry.api.apiculture.IAlleleBeeEffect;
 import forestry.api.apiculture.IAlleleBeeSpecies;
 import forestry.api.apiculture.IBeeMutationCustom;
 import forestry.api.core.EnumHumidity;
@@ -35,6 +36,8 @@ import net.minecraftforge.fluids.FluidRegistry;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.integration.forestry.client.SwarmTextureHandler;
 import pl.asie.computronics.integration.forestry.client.entity.EntitySwarmBeeFX;
+import pl.asie.computronics.integration.forestry.effect.AlleleEffectDevoid;
+import pl.asie.computronics.integration.forestry.effect.AlleleEffectEarthed;
 import pl.asie.computronics.integration.forestry.entity.EntitySwarm;
 import pl.asie.computronics.integration.forestry.entity.SwarmRenderer;
 import pl.asie.computronics.integration.forestry.nanomachines.SwarmProvider;
@@ -53,6 +56,8 @@ public class IntegrationForestry {
 	public static IBeeMutationCustom scummyA;
 	public static IBeeMutationCustom scummyB;
 	public static IAlleleFlowers sea;
+
+	public static IAlleleBeeEffect effectNone;
 
 	public static ItemMultiple itemPartsForestry;
 	public static Item itemStickImpregnated;
@@ -124,6 +129,14 @@ public class IntegrationForestry {
 			new ItemStack(itemPartsForestry, 1, 1),
 			new ItemStack(itemPartsForestry, 1, 1),
 			bottle);
+
+		effectNone = (IAlleleBeeEffect) AlleleManager.alleleRegistry.getAllele("forestry.effectNone");
+		if(Mods.isLoaded(Mods.API.CoFHAPI_Energy)) {
+			AlleleManager.alleleRegistry.registerAllele(new AlleleEffectDevoid(), EnumBeeChromosome.EFFECT);
+		}
+		if(Mods.isLoaded(Mods.API.IC2)) {
+			AlleleManager.alleleRegistry.registerAllele(new AlleleEffectEarthed(), EnumBeeChromosome.EFFECT);
+		}
 
 		if(Mods.hasVersion(Mods.API.Gendustry, Mods.Versions.Gendustry)) {
 			registerBees();

@@ -53,6 +53,7 @@ public class Mods {
 			CoFHAPI_Energy = "CoFHAPI|energy",
 			DraconicEvolution = "DraconicEvolution|API",
 			Gendustry = "gendustryAPI",
+			IC2 ="IC2API",
 			Mekanism_Energy = "MekanismAPI|energy";
 
 		public static boolean hasAPI(String name) {
