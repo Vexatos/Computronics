@@ -25,15 +25,28 @@ public class AlleleEffectEarthed extends AlleleEffectThrottled {
 	protected IEffectData doEffectThrottled(IBeeGenome genome, IEffectData storedData, IBeeHousing housing) {
 		List<EntityPlayer> entities = getEntitiesInRange(genome, housing, EntityPlayer.class);
 		for(EntityPlayer player : entities) {
-			if(BeeManager.armorApiaristHelper.wearsItems((EntityLivingBase) player, getUID(), true) == 4) {
-				continue;
-			}
 			InventoryPlayer inventory = player.inventory;
 			boolean charged = false;
 			for(ItemStack stack : inventory.armorInventory) {
-				double energy = ElectricItem.manager.getCharge(stack);
+				if(stack == null) {
+					continue;
+				}
+				if(BeeManager.armorApiaristHelper.isArmorApiarist(stack, ((EntityLivingBase) player), getUID(), true)) {
+					continue;
+				}
+				final double energy = ElectricItem.manager.getCharge(stack);
+				final double maxEnergy = energy + ElectricItem.manager.charge(stack, Double.POSITIVE_INFINITY, Integer.MAX_VALUE, true, true);
+				final double currentEnergy = maxEnergy / 10D;
+				double energyToDrain = currentEnergy;
 				if(energy > 0) {
-					charged = charged || ElectricItem.manager.discharge(stack, energy / 10D, Integer.MAX_VALUE, true, false, false) > 0;
+					for(int i = 0; energyToDrain > 0 && i < 10; i++) {
+						double discharged = ElectricItem.manager.discharge(stack, energy / 10D, Integer.MAX_VALUE, true, false, false);
+						if(discharged <= 0) {
+							break;
+						}
+						energyToDrain -= discharged;
+					}
+					charged = charged || currentEnergy > energyToDrain;
 				}
 			}
 			// TODO increase health.

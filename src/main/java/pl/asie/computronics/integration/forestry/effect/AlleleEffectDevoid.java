@@ -29,6 +29,9 @@ public class AlleleEffectDevoid extends AlleleEffectThrottled {
 			InventoryPlayer inventory = player.inventory;
 			boolean charged = false;
 			for(ItemStack stack : inventory.armorInventory) {
+				if(stack == null) {
+					continue;
+				}
 				if(BeeManager.armorApiaristHelper.isArmorApiarist(stack, ((EntityLivingBase) player), getUID(), true)) {
 					continue;
 				}
@@ -37,9 +40,13 @@ public class AlleleEffectDevoid extends AlleleEffectThrottled {
 					final int maxEnergy = item.getMaxEnergyStored(stack);
 					final int currentEnergy = MathHelper.ceiling_double_int(maxEnergy / 10D);
 					int energyToDrain = currentEnergy;
-					if(currentEnergy > 0) {
-						for(int i = 0; energyToDrain > 0 && i < 20; i++) {
-							energyToDrain -= item.extractEnergy(stack, energyToDrain, false);
+					if(item.getEnergyStored(stack) > 0) {
+						for(int i = 0; energyToDrain > 0 && i < 10; i++) {
+							int extracted = item.extractEnergy(stack, energyToDrain, false);
+							if(extracted <= 0) {
+								break;
+							}
+							energyToDrain -= extracted;
 						}
 					}
 					charged = charged || currentEnergy > energyToDrain;
