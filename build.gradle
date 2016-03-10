@@ -48,12 +48,12 @@ repositories {
     /*maven {
         name 'CB Repo'
         url "http://chickenbones.net/maven/"
-    }
+    }*/
     maven {
         name 'tterrag Repo'
         url "http://maven.tterrag.com/"
     }
-    maven {
+    /*maven {
         name = "Forestry and IC2 repo"
         url = "http://maven.ic2.player.to/"
     }
@@ -84,7 +84,8 @@ dependencies {
     //provided "net.industrial-craft:industrialcraft-2:${config.ic2.version}:dev"
     //provided "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech.version}:dev"
     compile "mcp.mobius.waila:Waila:${config.waila.version}:dev"
-    /*compile("com.enderio:EnderIO:${config.enderio.version}:dev") {
+    deobfCompile "com.enderio.core:EnderCore-1.8:${config.endercore.version}"
+    compile("com.enderio:EnderIO:${config.enderio.version}:dev") {
         exclude module: "appliedenergistics2"
         exclude module: "buildcraft"
         exclude module: "Waila"
@@ -93,7 +94,7 @@ dependencies {
         exclude module: "CodeChickenLib"
         exclude module: "CodeChickenCore"
         exclude module: "EquivalentExchange3"
-    }
+    }/*
     compile("net.sengir.forestry:forestry_1.7.10:${config.forestry.version}:dev") {
         exclude module: "buildcraft"
         exclude module: "industrialcraft-2"
