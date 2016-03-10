@@ -27,6 +27,7 @@ import net.bdew.gendustry.api.GendustryAPI;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.common.MinecraftForge;
@@ -120,7 +121,7 @@ public class IntegrationForestry {
 		Item bottleItem = GameRegistry.findItem(Mods.Forestry, "beverage");
 		ItemStack bottle = bottleItem != null ? new ItemStack(bottleItem, 1, 0)
 			: new ItemStack(net.minecraft.init.Items.potionitem, 1, 32);
-		RecipeUtils.addShapelessRecipe(Items.get("acid").createItemStack(1),
+		RecipeUtils.addShapelessRecipe(undisassemblable(Items.get("acid").createItemStack(1)),
 			new ItemStack(itemPartsForestry, 1, 1),
 			new ItemStack(itemPartsForestry, 1, 1),
 			bottle);
@@ -135,6 +136,15 @@ public class IntegrationForestry {
 		MinecraftForge.EVENT_BUS.register(provider);
 		//FMLCommonHandler.instance().bus().register(provider);
 		Nanomachines.addProvider(provider);
+	}
+
+	private ItemStack undisassemblable(ItemStack stack) {
+		NBTTagCompound tag = stack.getTagCompound();
+		if(tag == null)
+			tag = new NBTTagCompound();
+		tag.setBoolean("oc:undisassemblable", true);
+		stack.setTagCompound(tag);
+		return stack;
 	}
 
 	@Optional.Method(modid = Mods.OpenComputers)

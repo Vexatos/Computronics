@@ -1,16 +1,31 @@
 package pl.asie.computronics.integration.forestry.entity;
 
+import com.mojang.authlib.GameProfile;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import forestry.api.apiculture.BeeManager;
+import forestry.api.apiculture.DefaultBeeListener;
+import forestry.api.apiculture.DefaultBeeModifier;
+import forestry.api.apiculture.IBeeGenome;
+import forestry.api.apiculture.IBeeHousing;
+import forestry.api.apiculture.IBeeHousingInventory;
+import forestry.api.apiculture.IBeeListener;
+import forestry.api.apiculture.IBeeModifier;
+import forestry.api.apiculture.IBeekeepingLogic;
+import forestry.api.core.EnumHumidity;
+import forestry.api.core.EnumTemperature;
+import forestry.api.core.ForestryAPI;
+import forestry.api.core.IErrorLogic;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.MathHelper;
@@ -23,12 +38,13 @@ import pl.asie.computronics.Computronics;
 import pl.asie.computronics.integration.forestry.nanomachines.SwarmProvider;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
  * @author Vexatos
  */
-public class EntitySwarm extends EntityFlyingCreature {
+public class EntitySwarm extends EntityFlyingCreature implements IBeeHousing {
 
 	public static final DamageSource beeDamageSource = new BeeDamageSource("computronics.sting", 5);
 	public static final DamageSource beeDamageSourceSelf = new BeeDamageSource("computronics.sting.self", 1);
@@ -38,10 +54,13 @@ public class EntitySwarm extends EntityFlyingCreature {
 	public EntitySwarm(World world) {
 		super(world);
 		this.setSize(1.0F, 1.0F);
+		this.inventory = new SwarmHousingInventory();
 	}
 
-	public EntitySwarm(World world, double x, double y, double z) {
+	public EntitySwarm(World world, double x, double y, double z, ItemStack queen) {
 		this(world);
+		this.setSize(1.0F, 1.0F);
+		this.inventory.setQueen(queen);
 		this.setPosition(x, y, z);
 		this.prevPosX = x;
 		this.prevPosY = y;
@@ -69,6 +88,9 @@ public class EntitySwarm extends EntityFlyingCreature {
 				if(!(biome instanceof BiomeGenDesert) && (worldObj.isRaining() || worldObj.isThundering())) {
 					this.setDead();
 				}
+			}
+			if(beeLogic.canWork()) {
+				beeLogic.doWork();
 			}
 		} else {
 			/*ArrayList<Entity> toKeep = new ArrayList<Entity>();
@@ -440,5 +462,166 @@ public class EntitySwarm extends EntityFlyingCreature {
 		public Entity getEntity() {
 			return this.entity;
 		}*/
+	}
+
+	private final IBeekeepingLogic beeLogic = BeeManager.beeRoot.createBeekeepingLogic(this);
+	private final IErrorLogic errorLogic = ForestryAPI.errorStateRegistry.createErrorLogic();
+	private final IBeeHousingInventory inventory;
+	private final IBeeListener beeListener = new SwarmBeeListener();
+
+	@Override
+	public Iterable<IBeeModifier> getBeeModifiers() {
+		return Collections.singletonList(SwarmBeeModifier.instance);
+	}
+
+	@Override
+	public Iterable<IBeeListener> getBeeListeners() {
+		return Collections.singletonList(beeListener);
+	}
+
+	@Override
+	public IBeeHousingInventory getBeeInventory() {
+		return inventory;
+	}
+
+	@Override
+	public IBeekeepingLogic getBeekeepingLogic() {
+		return beeLogic;
+	}
+
+	@Override
+	public EnumTemperature getTemperature() {
+		return EnumTemperature.getFromBiome(getBiome(), getX(), getY(), getZ());
+	}
+
+	@Override
+	public EnumHumidity getHumidity() {
+		return EnumHumidity.getFromValue(getBiome().rainfall);
+	}
+
+	@Override
+	public int getBlockLightValue() {
+		return worldObj.getBlockLightValue(getX(), getY(), getZ());
+	}
+
+	@Override
+	public boolean canBlockSeeTheSky() {
+		return worldObj.canBlockSeeTheSky(getX(), getY() + 1, getZ());
+	}
+
+	@Override
+	public World getWorld() {
+		return worldObj;
+	}
+
+	@Override
+	public BiomeGenBase getBiome() {
+		return worldObj.getBiomeGenForCoords(getX(), getZ());
+	}
+
+	@Override
+	public GameProfile getOwner() {
+		return player != null ? player.getGameProfile() : null;
+	}
+
+	@Override
+	public Vec3 getBeeFXCoordinates() {
+		return Vec3.createVectorHelper(posX, posY + 0.25, posZ);
+	}
+
+	@Override
+	public IErrorLogic getErrorLogic() {
+		return errorLogic;
+	}
+
+	@Override
+	public ChunkCoordinates getCoordinates() {
+		return new ChunkCoordinates(getX(), getY(), getZ());
+	}
+
+	public int getX() {
+		return MathHelper.floor_double(posX);
+	}
+
+	public int getY() {
+		return MathHelper.floor_double(posY);
+	}
+
+	public int getZ() {
+		return MathHelper.floor_double(posZ);
+	}
+
+	public static class SwarmHousingInventory implements IBeeHousingInventory {
+
+		private ItemStack queenStack;
+
+		@Override
+		public ItemStack getQueen() {
+			return queenStack;
+		}
+
+		@Override
+		public ItemStack getDrone() {
+			return null;
+		}
+
+		@Override
+		public void setQueen(ItemStack stack) {
+			this.queenStack = stack;
+		}
+
+		@Override
+		public void setDrone(ItemStack stack) {
+			// NO-OP
+		}
+
+		@Override
+		public boolean addProduct(ItemStack product, boolean all) {
+			return true; // Consume all products without doing anything.
+		}
+	}
+
+	public class SwarmBeeListener extends DefaultBeeListener {
+
+		@Override
+		public void onQueenDeath() {
+			super.onQueenDeath();
+			setDead();
+		}
+	}
+
+	public static class SwarmBeeModifier extends DefaultBeeModifier {
+
+		public static final IBeeModifier instance = new SwarmBeeModifier();
+
+		@Override
+		public float getTerritoryModifier(IBeeGenome genome, float currentModifier) {
+			return 0.5f;
+		}
+
+		@Override
+		public float getMutationModifier(IBeeGenome genome, IBeeGenome mate, float currentModifier) {
+			return 0.0f;
+		}
+
+		@Override
+		public float getLifespanModifier(IBeeGenome genome, IBeeGenome mate, float currentModifier) {
+			return 1.1f;
+		}
+
+		@Override
+		public float getProductionModifier(IBeeGenome genome, float currentModifier) {
+			return 0.0f;
+		}
+
+		@Override
+		public float getFloweringModifier(IBeeGenome genome, float currentModifier) {
+			return 0.0f;
+		}
+
+		@Override
+		public float getGeneticDecay(IBeeGenome genome, float currentModifier) {
+			return 100f;
+		}
 	}
 }

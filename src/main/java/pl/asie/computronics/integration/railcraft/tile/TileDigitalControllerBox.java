@@ -19,7 +19,7 @@ import pl.asie.computronics.integration.railcraft.SignalTypes;
 import pl.asie.computronics.integration.railcraft.signalling.MassiveSignalController;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.reference.Names;
-import pl.asie.computronics.util.sound.TableUtils;
+import pl.asie.computronics.util.TableUtils;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

@@ -3,6 +3,7 @@ package pl.asie.computronics.integration.forestry.nanomachines;
 import cpw.mods.fml.common.eventhandler.Event;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import forestry.api.apiculture.BeeManager;
+import forestry.api.apiculture.EnumBeeType;
 import forestry.api.apiculture.IBee;
 import forestry.api.apiculture.IBeeHousing;
 import li.cil.oc.api.Nanomachines;
@@ -71,7 +72,8 @@ public class SwarmProvider extends AbstractProvider {
 					swingItem(player, e);
 				}
 			} else if(player.capabilities != null && player.capabilities.isCreativeMode) {
-				behavior.spawnNewEntity(player.posX, player.posY + 2f, player.posZ);
+				behavior.spawnNewEntity(player.posX, player.posY + 2f, player.posZ,
+					BeeManager.beeRoot.getMemberStack(BeeManager.beeRoot.templateAsIndividual(BeeManager.beeRoot.getDefaultTemplate()), EnumBeeType.QUEEN.ordinal()));
 				swingItem(player, e);
 			}
 		} /*else {
@@ -93,7 +95,8 @@ public class SwarmProvider extends AbstractProvider {
 
 	private void makeSwarm(double x, double y, double z, EntityPlayer player, IBeeHousing tile, Event e) {
 		if(tile.getBeekeepingLogic() != null && tile.getBeeInventory() != null && tile.getBeekeepingLogic().canDoBeeFX()) {
-			IBee member = BeeManager.beeRoot.getMember(tile.getBeeInventory().getQueen());
+			ItemStack queenStack = tile.getBeeInventory().getQueen();
+			IBee member = BeeManager.beeRoot.getMember(queenStack);
 			if(member != null) {
 				SwarmBehavior behavior = getSwarmBehavior(player);
 				if(behavior != null) {
@@ -106,7 +109,7 @@ public class SwarmProvider extends AbstractProvider {
 					}
 					behavior.spawnNewEntity(x, y, z,
 						member.getGenome().getPrimary().getIconColour(0),
-						member.getGenome().getTolerantFlyer());
+						member.getGenome().getTolerantFlyer(), queenStack.copy());
 					swingItem(player, e);
 				}
 			}
