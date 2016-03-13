@@ -10,6 +10,8 @@ import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.ManagedEnvironment;
 import li.cil.oc.api.prefab.DriverTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import pl.asie.computronics.integration.CCMultiPeripheral;
 import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
@@ -43,8 +45,8 @@ public class DriverProgressTile {
 		}
 
 		@Override
-		public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
-			return new InternalManagedEnvironment(((IProgressTile) world.getTileEntity(x, y, z)));
+		public ManagedEnvironment createEnvironment(World world, BlockPos pos) {
+			return new InternalManagedEnvironment(((IProgressTile) world.getTileEntity(pos)));
 		}
 	}
 
@@ -53,8 +55,8 @@ public class DriverProgressTile {
 		public CCDriver() {
 		}
 
-		public CCDriver(IProgressTile tile, World world, int x, int y, int z) {
-			super(tile, Names.EnderIO_MachineTile, world, x, y, z);
+		public CCDriver(IProgressTile tile, World world, BlockPos pos) {
+			super(tile, Names.EnderIO_MachineTile, world, pos);
 		}
 
 		@Override
@@ -63,10 +65,10 @@ public class DriverProgressTile {
 		}
 
 		@Override
-		public CCMultiPeripheral getPeripheral(World world, int x, int y, int z, int side) {
-			TileEntity te = world.getTileEntity(x, y, z);
+		public CCMultiPeripheral getPeripheral(World world, BlockPos pos, EnumFacing side) {
+			TileEntity te = world.getTileEntity(pos);
 			if(te != null && te instanceof IProgressTile) {
-				return new CCDriver((IProgressTile) te, world, x, y, z);
+				return new CCDriver((IProgressTile) te, world, pos);
 			}
 			return null;
 		}

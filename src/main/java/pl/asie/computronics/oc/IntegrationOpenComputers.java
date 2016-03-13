@@ -13,6 +13,20 @@ import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.apache.logging.log4j.Logger;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.integration.buildcraft.DriverHeatable;
+import pl.asie.computronics.integration.enderio.DriverAbstractMachine;
+import pl.asie.computronics.integration.enderio.DriverAbstractPoweredMachine;
+import pl.asie.computronics.integration.enderio.DriverCapacitorBank;
+import pl.asie.computronics.integration.enderio.DriverHasExperience;
+import pl.asie.computronics.integration.enderio.DriverIOConfigurable;
+import pl.asie.computronics.integration.enderio.DriverPowerMonitor;
+import pl.asie.computronics.integration.enderio.DriverPowerStorage;
+import pl.asie.computronics.integration.enderio.DriverProgressTile;
+import pl.asie.computronics.integration.enderio.DriverRedstoneControllable;
+import pl.asie.computronics.integration.enderio.DriverTelepad;
+import pl.asie.computronics.integration.enderio.DriverTransceiver;
+import pl.asie.computronics.integration.enderio.DriverVacuumChest;
+import pl.asie.computronics.integration.enderio.DriverWeatherObelisk;
 import pl.asie.computronics.integration.flamingo.DriverFlamingo;
 import pl.asie.computronics.integration.storagedrawers.DriverDrawerGroup;
 import pl.asie.computronics.item.ItemOpenComputers;
@@ -30,48 +44,6 @@ import static pl.asie.computronics.Computronics.camera;
 import static pl.asie.computronics.Computronics.chatBox;
 import static pl.asie.computronics.Computronics.colorfulLamp;
 import static pl.asie.computronics.Computronics.radar;
-
-/*import pl.asie.computronics.integration.appeng.DriverSpatialIOPort;
-import pl.asie.computronics.integration.armourersworkshop.DriverMannequin;
-import pl.asie.computronics.integration.betterstorage.DriverCrateStorageNew;
-import pl.asie.computronics.integration.betterstorage.DriverCrateStorageOld;
-import pl.asie.computronics.integration.buildcraft.DriverHeatable;
-import pl.asie.computronics.integration.buildcraft.IntegrationBuildCraft;
-import pl.asie.computronics.integration.draconicevolution.DriverExtendedRFStorage;
-import pl.asie.computronics.integration.enderio.DriverAbstractMachine;
-import pl.asie.computronics.integration.enderio.DriverAbstractPoweredMachine;
-import pl.asie.computronics.integration.enderio.DriverCapacitorBank;
-import pl.asie.computronics.integration.enderio.DriverCapacitorBankOld;
-import pl.asie.computronics.integration.enderio.DriverHasExperience;
-import pl.asie.computronics.integration.enderio.DriverIOConfigurable;
-import pl.asie.computronics.integration.enderio.DriverPowerMonitor;
-import pl.asie.computronics.integration.enderio.DriverPowerStorage;
-import pl.asie.computronics.integration.enderio.DriverProgressTile;
-import pl.asie.computronics.integration.enderio.DriverRedstoneControllable;
-import pl.asie.computronics.integration.enderio.DriverTelepad;
-import pl.asie.computronics.integration.enderio.DriverTransceiver;
-import pl.asie.computronics.integration.enderio.DriverVacuumChest;
-import pl.asie.computronics.integration.enderio.DriverWeatherObelisk;
-import pl.asie.computronics.integration.factorization.DriverChargeConductor;
-
-import pl.asie.computronics.integration.forestry.IntegrationForestry;
-import pl.asie.computronics.integration.fsp.DriverSteamTransporter;
-import pl.asie.computronics.integration.gregtech.DriverBaseMetaTileEntity;
-import pl.asie.computronics.integration.gregtech.DriverBatteryBuffer;
-import pl.asie.computronics.integration.gregtech.DriverDeviceInformation;
-import pl.asie.computronics.integration.gregtech.DriverDigitalChest;
-import pl.asie.computronics.integration.gregtech.DriverMachine;
-import pl.asie.computronics.integration.mekanism.DriverStrictEnergyStorage;
-import pl.asie.computronics.integration.railcraft.driver.DriverElectricGrid;
-import pl.asie.computronics.integration.railcraft.driver.DriverRoutingDetector;
-import pl.asie.computronics.integration.railcraft.driver.DriverRoutingSwitch;
-import pl.asie.computronics.integration.railcraft.driver.track.DriverLauncherTrack;
-import pl.asie.computronics.integration.railcraft.driver.track.DriverLimiterTrack;
-import pl.asie.computronics.integration.railcraft.driver.track.DriverLocomotiveTrack;
-import pl.asie.computronics.integration.railcraft.driver.track.DriverPoweredTrack;
-import pl.asie.computronics.integration.railcraft.driver.track.DriverPrimingTrack;
-import pl.asie.computronics.integration.railcraft.driver.track.DriverRoutingTrack;
-import pl.asie.computronics.integration.redlogic.DriverLamp;*/
 
 /**
  * @author Vexatos
@@ -130,7 +102,7 @@ public class IntegrationOpenComputers {
 			log.warn("Detected outdated version of Forestry, Forestry integration will not be enabled. Please update to Forestry " + Mods.Versions.Forestry + " or later.");
 		}*/
 
-		/*if(Mods.isLoaded(Mods.BuildCraftTransport) && Mods.isLoaded(Mods.BuildCraftCore) && Config.BUILDCRAFT_STATION) {
+		/*if(Mods.isLoaded(Mods.BuildCraftTransport) && Mods.isLoaded(Mods.BuildCraftCore) && Config.BUILDCRAFT_STATION) { // TODO BuildCraft Drone Docking
 			Computronics.buildcraft = new IntegrationBuildCraft();
 			Computronics.buildcraft.preInitOC();
 		}*/
@@ -224,7 +196,7 @@ public class IntegrationOpenComputers {
 			if(compat.isCompatEnabled(Compat.AE2_SpatialIO)) {
 				Driver.add(new DriverSpatialIOPort.OCDriver());
 			}
-		}*//*
+		}*/
 		if(Mods.isLoaded(Mods.EnderIO)) {
 			if(compat.isCompatEnabled(Compat.EnderIO)) {
 				Driver.add(new DriverRedstoneControllable.OCDriver());
@@ -236,13 +208,12 @@ public class IntegrationOpenComputers {
 				Driver.add(new DriverAbstractPoweredMachine.OCDriver());
 				Driver.add(new DriverPowerMonitor.OCDriver());
 				Driver.add(new DriverCapacitorBank.OCDriver());
-				Driver.add(new DriverCapacitorBankOld.OCDriver());
 				Driver.add(new DriverTransceiver.OCDriver());
 				Driver.add(new DriverVacuumChest.OCDriver());
 				Driver.add(new DriverWeatherObelisk.OCDriver());
 				Driver.add(new DriverTelepad.OCDriver());
 			}
-		}*//*
+		}/*
 
 		if(Mods.API.hasAPI(Mods.API.DraconicEvolution)
 			&& compat.isCompatEnabled(Compat.DraconicEvolution)) {
@@ -252,13 +223,13 @@ public class IntegrationOpenComputers {
 		if(Mods.API.hasAPI(Mods.API.Mekanism_Energy)
 			&& compat.isCompatEnabled(Compat.MekanismEnergy)) {
 			Driver.add(new DriverStrictEnergyStorage.OCDriver());
-		}*//*
+		}*/
 
 		if(Mods.hasVersion(Mods.API.BuildCraftTiles, Mods.Versions.BuildCraftTiles)) {
 			if(compat.isCompatEnabled(Compat.BuildCraft_Drivers)) {
 				Driver.add(new DriverHeatable.OCDriver());
 			}
-		}*/
+		}
 
 		if(Mods.isLoaded(Mods.Flamingo)) {
 			if(compat.isCompatEnabled(Compat.Flamingo)) {
@@ -268,9 +239,9 @@ public class IntegrationOpenComputers {
 
 		/*if(Computronics.forestry != null) {
 			Computronics.forestry.initOC();
-		}*//*
+		}*/
 
-		if(Computronics.buildcraft != null) {
+		/*if(Computronics.buildcraft != null) { TODO BuildCraft Drone Docking
 			Computronics.buildcraft.initOC();
 		}*/
 	}
@@ -417,7 +388,7 @@ public class IntegrationOpenComputers {
 				'p', li.cil.oc.api.Items.get("printedCircuitBoard").createItemStack(1)
 			);
 		}
-		/*if(Computronics.buildcraft != null) {
+		/*if(Computronics.buildcraft != null) { TODO BuildCraft Drone Docking
 			Computronics.buildcraft.postInitOC();
 		}*/
 	}

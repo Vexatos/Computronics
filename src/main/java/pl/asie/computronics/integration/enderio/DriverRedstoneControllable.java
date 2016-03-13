@@ -11,6 +11,8 @@ import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.ManagedEnvironment;
 import li.cil.oc.api.prefab.DriverTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import pl.asie.computronics.integration.CCMultiPeripheral;
 import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
@@ -37,11 +39,17 @@ public class DriverRedstoneControllable {
 		return new Object[] {};
 	}
 
+	private static LinkedHashMap<Object, Object> modes;
+
 	private static Object[] modes() {
-		LinkedHashMap<Integer, String> modes = new LinkedHashMap<Integer, String>();
-		int i = 1;
-		for(RedstoneControlMode mode : RedstoneControlMode.values()) {
-			modes.put(i++, mode.name().toLowerCase(Locale.ENGLISH));
+		if(modes == null) {
+			modes = new LinkedHashMap<Object, Object>();
+			int i = 1;
+			for(RedstoneControlMode mode : RedstoneControlMode.values()) {
+				final String name = mode.name().toLowerCase(Locale.ENGLISH);
+				modes.put(name, i);
+				modes.put(i++, name);
+			}
 		}
 		return new Object[] { modes };
 	}
@@ -69,7 +77,7 @@ public class DriverRedstoneControllable {
 				return DriverRedstoneControllable.setRedstoneMode(tile, a.checkString(0));
 			}
 
-			@Callback(doc = "This is a table of every Redstone control mode available", getter = true)
+			@Callback(doc = "This is a bidirectional table of every Redstone control mode available", getter = true)
 			public Object[] redstone_modes(Context c, Arguments a) {
 				return DriverRedstoneControllable.modes();
 			}
@@ -81,8 +89,8 @@ public class DriverRedstoneControllable {
 		}
 
 		@Override
-		public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
-			return new InternalManagedEnvironment(((IRedstoneModeControlable) world.getTileEntity(x, y, z)));
+		public ManagedEnvironment createEnvironment(World world, BlockPos pos) {
+			return new InternalManagedEnvironment(((IRedstoneModeControlable) world.getTileEntity(pos)));
 		}
 	}
 
@@ -91,8 +99,8 @@ public class DriverRedstoneControllable {
 		public CCDriver() {
 		}
 
-		public CCDriver(IRedstoneModeControlable tile, World world, int x, int y, int z) {
-			super(tile, Names.EnderIO_RedstoneTile, world, x, y, z);
+		public CCDriver(IRedstoneModeControlable tile, World world, BlockPos pos) {
+			super(tile, Names.EnderIO_RedstoneTile, world, pos);
 		}
 
 		@Override
@@ -101,10 +109,10 @@ public class DriverRedstoneControllable {
 		}
 
 		@Override
-		public CCMultiPeripheral getPeripheral(World world, int x, int y, int z, int side) {
-			TileEntity te = world.getTileEntity(x, y, z);
+		public CCMultiPeripheral getPeripheral(World world, BlockPos pos, EnumFacing side) {
+			TileEntity te = world.getTileEntity(pos);
 			if(te != null && te instanceof IRedstoneModeControlable) {
-				return new CCDriver((IRedstoneModeControlable) te, world, x, y, z);
+				return new CCDriver((IRedstoneModeControlable) te, world, pos);
 			}
 			return null;
 		}

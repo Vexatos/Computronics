@@ -4,7 +4,7 @@ import buildcraft.api.statements.IStatementContainer;
 import buildcraft.api.statements.IStatementParameter;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 import pl.asie.computronics.integration.buildcraft.statements.parameters.ActionParameterLampColor;
 import pl.asie.computronics.tile.TileColorfulLamp;
 
@@ -16,7 +16,7 @@ public class ActionLamp {
 	public static class Set implements IComputronicsParameterAction {
 
 		@Override
-		public void actionActivate(TileEntity tile, ForgeDirection side, IStatementContainer container, IStatementParameter[] parameters) {
+		public void actionActivate(TileEntity tile, EnumFacing side, IStatementContainer container, IStatementParameter[] parameters) {
 			if(tile != null && tile instanceof TileColorfulLamp) {
 
 				TileColorfulLamp lamp = (TileColorfulLamp) tile;
@@ -56,7 +56,7 @@ public class ActionLamp {
 	public static class Reset implements IComputronicsAction {
 
 		@Override
-		public void actionActivate(TileEntity tile, ForgeDirection side, IStatementContainer container, IStatementParameter[] parameters) {
+		public void actionActivate(TileEntity tile, EnumFacing side, IStatementContainer container, IStatementParameter[] parameters) {
 			if(tile != null && tile instanceof TileColorfulLamp) {
 
 				TileColorfulLamp lamp = (TileColorfulLamp) tile;

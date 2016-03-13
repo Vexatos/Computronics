@@ -10,6 +10,7 @@ import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.api.audio.AudioPacketDFPWM;
 import pl.asie.computronics.api.audio.AudioPacketRegistry;
 import pl.asie.computronics.audio.AudioPacketClientHandlerDFPWM;
+import pl.asie.computronics.integration.buildcraft.statements.StatementTextureManager;
 import pl.asie.computronics.oc.IntegrationOpenComputers;
 import pl.asie.computronics.oc.client.RackMountableRenderer;
 import pl.asie.computronics.oc.client.UpgradeRenderer;
@@ -71,6 +72,9 @@ public class ClientProxy extends CommonProxy {
 			/*if(Computronics.forestry != null) {
 				Computronics.forestry.registerOCRenderers();
 			}*/
+		}
+		if(Mods.API.hasAPI(Mods.API.BuildCraftStatements)) {
+			MinecraftForge.EVENT_BUS.register(new StatementTextureManager());
 		}
 	}
 

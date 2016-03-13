@@ -1,5 +1,7 @@
 package pl.asie.computronics.integration.buildcraft.pluggable;
 
+import li.cil.oc.api.driver.EnvironmentAware;
+import li.cil.oc.api.driver.EnvironmentHost;
 import cpw.mods.fml.common.Optional;
 import li.cil.oc.api.driver.EnvironmentProvider;
 import li.cil.oc.api.driver.Item;
@@ -10,6 +12,7 @@ import li.cil.oc.api.network.EnvironmentHost;
 import li.cil.oc.api.network.ManagedEnvironment;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.oc.manual.IItemWithPrefix;
 import pl.asie.computronics.reference.Mods;

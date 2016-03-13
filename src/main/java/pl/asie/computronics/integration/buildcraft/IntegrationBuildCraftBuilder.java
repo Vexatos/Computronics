@@ -1,7 +1,7 @@
 package pl.asie.computronics.integration.buildcraft;
 
 import buildcraft.api.blueprints.BuilderAPI;
-import cpw.mods.fml.common.Optional;
+import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.lib.block.BlockBase;
 import pl.asie.lib.integration.buildcraft.SchematicBlockBase;

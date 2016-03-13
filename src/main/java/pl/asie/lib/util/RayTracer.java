@@ -49,9 +49,9 @@ public class RayTracer {
 
 	protected MovingObjectPosition rayTrace(EntityLivingBase entity, double distance) {
 		Entity target;
-		final Vec3 position = new Vec3(entity.posX, entity.posY, entity.posZ);
+		Vec3 position = new Vec3(entity.posX, entity.posY, entity.posZ);
 		if(entity.getEyeHeight() != 0.12F) {
-			position.addVector(0, entity.getEyeHeight(), 0);
+			position = position.addVector(0, entity.getEyeHeight(), 0);
 		}
 
 		Vec3 look = entity.getLookVec();

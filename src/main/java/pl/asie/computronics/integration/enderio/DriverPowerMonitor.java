@@ -10,6 +10,8 @@ import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.ManagedEnvironment;
 import li.cil.oc.api.prefab.DriverTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
 import pl.asie.computronics.integration.CCMultiPeripheral;
@@ -114,8 +116,8 @@ public class DriverPowerMonitor {
 		}
 
 		@Override
-		public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
-			return new InternalManagedEnvironment(((TilePowerMonitor) world.getTileEntity(x, y, z)));
+		public ManagedEnvironment createEnvironment(World world, BlockPos pos) {
+			return new InternalManagedEnvironment(((TilePowerMonitor) world.getTileEntity(pos)));
 		}
 	}
 
@@ -124,8 +126,8 @@ public class DriverPowerMonitor {
 		public CCDriver() {
 		}
 
-		public CCDriver(TilePowerMonitor tile, World world, int x, int y, int z) {
-			super(tile, Names.EnderIO_PowerStorage, world, x, y, z);
+		public CCDriver(TilePowerMonitor tile, World world, BlockPos pos) {
+			super(tile, Names.EnderIO_PowerStorage, world, pos);
 		}
 
 		@Override
@@ -134,10 +136,10 @@ public class DriverPowerMonitor {
 		}
 
 		@Override
-		public IMultiPeripheral getPeripheral(World world, int x, int y, int z, int side) {
-			TileEntity te = world.getTileEntity(x, y, z);
+		public IMultiPeripheral getPeripheral(World world, BlockPos pos, EnumFacing side) {
+			TileEntity te = world.getTileEntity(pos);
 			if(te != null && te instanceof TilePowerMonitor) {
-				return new CCDriver((TilePowerMonitor) te, world, x, y, z);
+				return new CCDriver((TilePowerMonitor) te, world, pos);
 			}
 			return null;
 		}

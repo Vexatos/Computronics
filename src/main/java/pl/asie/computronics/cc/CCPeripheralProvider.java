@@ -9,6 +9,7 @@ import pl.asie.computronics.api.multiperipheral.IMultiPeripheralProvider;
 import pl.asie.computronics.util.internal.IComputronicsPeripheral;
 
 public class CCPeripheralProvider implements IMultiPeripheralProvider {
+
 	@Override
 	public IMultiPeripheral getPeripheral(World world, BlockPos pos, EnumFacing side) {
 		TileEntity t = world.getTileEntity(pos);

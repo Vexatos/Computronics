@@ -4,7 +4,7 @@ import buildcraft.api.statements.IStatementContainer;
 import buildcraft.api.statements.IStatementParameter;
 import li.cil.oc.api.internal.Case;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 /**
  * @author Vexatos
@@ -14,7 +14,7 @@ public class TriggerComputer {
 	public static class Running implements IComputronicsTrigger {
 
 		@Override
-		public boolean isTriggerActive(TileEntity tile, ForgeDirection side, IStatementContainer container, IStatementParameter[] statements) {
+		public boolean isTriggerActive(TileEntity tile, EnumFacing side, IStatementContainer container, IStatementParameter[] statements) {
 			return tile != null && tile instanceof Case && ((Case) tile).machine() != null
 				&& ((Case) tile).machine().isRunning();
 		}
@@ -23,7 +23,7 @@ public class TriggerComputer {
 	public static class Stopped implements IComputronicsTrigger {
 
 		@Override
-		public boolean isTriggerActive(TileEntity tile, ForgeDirection side, IStatementContainer container, IStatementParameter[] statements) {
+		public boolean isTriggerActive(TileEntity tile, EnumFacing side, IStatementContainer container, IStatementParameter[] statements) {
 			return tile != null && tile instanceof Case && ((Case) tile).machine() != null
 				&& !((Case) tile).machine().isRunning()
 				&& !((Case) tile).machine().isPaused();

@@ -4,7 +4,7 @@ import buildcraft.api.statements.IStatementContainer;
 import buildcraft.api.statements.IStatementParameter;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 import pl.asie.computronics.api.tape.IItemTapeStorage;
 import pl.asie.computronics.tile.TapeDriveState;
 import pl.asie.computronics.tile.TileTapeDrive;
@@ -21,7 +21,7 @@ public class ActionTapeDrive implements IComputronicsAction {
 	}
 
 	@Override
-	public void actionActivate(TileEntity tile, ForgeDirection side, IStatementContainer container, IStatementParameter[] parameters) {
+	public void actionActivate(TileEntity tile, EnumFacing side, IStatementContainer container, IStatementParameter[] parameters) {
 		if(tile != null && tile instanceof TileTapeDrive && ((TileTapeDrive) tile).getEnumState() != this.state) {
 			ItemStack is = ((TileTapeDrive) tile).getStackInSlot(0);
 			if(is != null && is.getItem() instanceof IItemTapeStorage) {

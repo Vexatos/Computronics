@@ -216,6 +216,10 @@ public abstract class BlockBase extends Block /*implements
 		return world.getBlockState(pos).getValue(rotation.FACING);
 	}
 
+	public EnumFacing getFacingDirection(IBlockState state) {
+		return state.getValue(rotation.FACING);
+	}
+
 	/*private void setDefaultRotation(World world, BlockPos pos, IBlockState state) {
 		if(!world.isRemote && this.rotation != Rotation.NONE) {
 			Block block = world.getBlockState(pos.offset(EnumFacing.NORTH)).getBlock();

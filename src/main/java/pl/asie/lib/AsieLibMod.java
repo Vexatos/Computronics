@@ -26,7 +26,7 @@ import java.lang.reflect.Method;
 import java.util.Random;
 
 @Mod(modid = Mods.AsieLib, name = Mods.AsieLib_NAME, version = "@AL_VERSION@",
-	dependencies = "required-after:Forge@[11.15.1.1722,);after:gregtech@[MC1710];"
+	dependencies = "required-after:Forge@[11.15.1.1764,);after:gregtech@[MC1710];"
 		+ "after:CoFHAPI|block@[1.7.10R1.0.0,);after:CoFHAPI|energy@[1.7.10R1.0.0,);"
 		+ "after:CoFHAPI|tileentity@[1.7.10R1.0.0,);after:CoFHAPI|item@[1.7.10R1.0.0,)")
 public class AsieLibMod extends AsieLibAPI {

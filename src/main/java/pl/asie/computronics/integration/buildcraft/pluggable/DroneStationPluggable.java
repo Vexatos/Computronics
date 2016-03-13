@@ -1,7 +1,7 @@
 package pl.asie.computronics.integration.buildcraft.pluggable;
 
 import buildcraft.api.transport.IPipeTile;
-import buildcraft.api.transport.pluggable.IPipePluggableRenderer;
+import buildcraft.api.transport.pluggable.IPipePluggableStaticRenderer;
 import buildcraft.api.transport.pluggable.PipePluggable;
 import buildcraft.core.lib.utils.MatrixTranformations;
 import cofh.api.energy.IEnergyReceiver;
@@ -13,8 +13,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.util.ParticleUtils;
 import pl.asie.lib.util.EnergyConverter;
@@ -51,7 +52,7 @@ public class DroneStationPluggable extends PipePluggable implements IEnergyRecei
 		return state;
 	}
 
-	public boolean isConnected(Drone drone, ForgeDirection side) {
+	public boolean isConnected(Drone drone, EnumFacing side) {
 		return this.drone == drone;
 	}
 
@@ -61,24 +62,25 @@ public class DroneStationPluggable extends PipePluggable implements IEnergyRecei
 	}
 
 	@Override
-	public boolean isBlocking(IPipeTile pipe, ForgeDirection direction) {
+	public boolean isBlocking(IPipeTile pipe, EnumFacing direction) {
 		return true;
 	}
 
 	@Override
-	public void update(IPipeTile pipe, ForgeDirection direction) {
+	public void update(IPipeTile pipe, EnumFacing direction) {
 		super.update(pipe, direction);
 		if(getState() == DroneStationState.Used && drone == null) {
 			state = DroneStationState.Available;
 		}
-		if(drone != null && (drone.world() != pipe.getWorld()
+		if(drone != null && (drone.world() != pipe.getWorldBC()
 			|| drone instanceof Entity && ((Entity) drone).getDistanceSq(pipe.x(), pipe.y(), pipe.z()) >= 4)) {
 			setDrone(null);
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
-	public AxisAlignedBB getBoundingBox(ForgeDirection side) {
+	public AxisAlignedBB getBoundingBox(EnumFacing side) {
 		float[][] bounds = new float[3][2];
 		// X START - END
 		bounds[0][0] = 0.25F;
@@ -91,11 +93,11 @@ public class DroneStationPluggable extends PipePluggable implements IEnergyRecei
 		bounds[2][1] = 0.75F;
 
 		MatrixTranformations.transform(bounds, side);
-		return AxisAlignedBB.getBoundingBox(bounds[0][0], bounds[1][0], bounds[2][0], bounds[0][1], bounds[1][1], bounds[2][1]);
+		return AxisAlignedBB.fromBounds(bounds[0][0], bounds[1][0], bounds[2][0], bounds[0][1], bounds[1][1], bounds[2][1]);
 	}
 
 	@Override
-	public IPipePluggableRenderer getRenderer() {
+	public IPipePluggableStaticRenderer getRenderer() {
 		return new DroneStationRenderer();
 	}
 
@@ -120,7 +122,7 @@ public class DroneStationPluggable extends PipePluggable implements IEnergyRecei
 	}
 
 	@Override
-	public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate) {
+	public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate) {
 		if(drone == null || state == DroneStationState.Available || drone.world() == null) {
 			return 0;
 		}
@@ -143,7 +145,7 @@ public class DroneStationPluggable extends PipePluggable implements IEnergyRecei
 						double dx = 0.45 * Math.sin(theta) * Math.cos(phi);
 						double dy = 0.45 * Math.sin(theta) * Math.sin(phi);
 						double dz = 0.45 * Math.cos(theta);
-						ParticleUtils.sendParticlePacket("happyVillager", drone.world(), drone.xPosition() + dx, drone.yPosition() + dz, drone.zPosition() + dy, 0, 0, 0);
+						ParticleUtils.sendParticlePacket(EnumParticleTypes.VILLAGER_HAPPY, drone.world(), drone.xPosition() + dx, drone.yPosition() + dz, drone.zPosition() + dy, 0, 0, 0);
 					}
 					return (int) Math.ceil(EnergyConverter.convertEnergy(newPower - remainingPower, "OC", "RF"));
 				}
@@ -153,17 +155,17 @@ public class DroneStationPluggable extends PipePluggable implements IEnergyRecei
 	}
 
 	@Override
-	public int getEnergyStored(ForgeDirection from) {
+	public int getEnergyStored(EnumFacing from) {
 		return 0;
 	}
 
 	@Override
-	public int getMaxEnergyStored(ForgeDirection from) {
+	public int getMaxEnergyStored(EnumFacing from) {
 		return 0;
 	}
 
 	@Override
-	public boolean canConnectEnergy(ForgeDirection from) {
+	public boolean canConnectEnergy(EnumFacing from) {
 		return true;
 	}
 }
