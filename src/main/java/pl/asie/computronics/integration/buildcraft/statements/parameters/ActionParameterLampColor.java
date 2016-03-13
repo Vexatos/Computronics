@@ -6,7 +6,7 @@ import buildcraft.api.statements.IStatementParameter;
 import buildcraft.api.statements.StatementMouseClick;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.init.Items;
-import net.minecraft.item.ItemDye;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
@@ -51,10 +51,10 @@ public class ActionParameterLampColor extends ComputronicsParameter {
 	public String getDescription() {
 		if(this.stack != null) {
 			return StringUtil.localizeAndFormat("tooltip.computronics.gate.action.lamp_color."
-				+ ItemDye.dyeColors[this.color], stack.stackSize);
+				+ EnumDyeColor.byDyeDamage(this.color), stack.stackSize);
 		}
 		return StringUtil.localizeAndFormat("tooltip.computronics.gate.action.lamp_color."
-			+ ItemDye.dyeColors[this.color], 0);
+			+ EnumDyeColor.byDyeDamage(this.color), 0);
 	}
 
 	@Override
