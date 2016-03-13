@@ -7,7 +7,6 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -28,8 +27,8 @@ import java.util.List;
 public class RackMountableRenderer {
 
 	private final ResourceLocation
-		boomBoardActive = new ResourceLocation("computronics", "blocks/boom_board_on"),
-		boomBoardTicking = new ResourceLocation("computronics", "blocks/boom_board_ticking");
+		boomBoardActive = new ResourceLocation("computronics", "textures/blocks/boom_board_on.png"),
+		boomBoardTicking = new ResourceLocation("computronics", "textures/blocks/boom_board_ticking.png");
 	private TextureAtlasSprite
 		boomBoard,
 		rackCapacitor;
@@ -108,15 +107,14 @@ public class RackMountableRenderer {
 	}
 
 	private void renderOverlay(ResourceLocation texture, final float u0, final float u1, final float v0, final float v1) {
-		Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
-		final TextureAtlasSprite icon = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(texture.toString());
+		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		final Tessellator t = Tessellator.getInstance();
 		final WorldRenderer r = t.getWorldRenderer();
 		r.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		r.pos(u0, v1, 0).tex(icon.getInterpolatedU(u0 * 16), icon.getInterpolatedV(v1 * 16)).endVertex();
-		r.pos(u1, v1, 0).tex(icon.getInterpolatedU(u1 * 16), icon.getInterpolatedV(v1 * 16)).endVertex();
-		r.pos(u1, v0, 0).tex(icon.getInterpolatedU(u1 * 16), icon.getInterpolatedV(v0 * 16)).endVertex();
-		r.pos(u0, v0, 0).tex(icon.getInterpolatedU(u0 * 16), icon.getInterpolatedV(v0 * 16)).endVertex();
+		r.pos(u0, v1, 0).tex(u0, v1).endVertex();
+		r.pos(u1, v1, 0).tex(u1, v1).endVertex();
+		r.pos(u1, v0, 0).tex(u1, v0).endVertex();
+		r.pos(u0, v0, 0).tex(u0, v0).endVertex();
 		t.draw();
 	}
 
@@ -168,8 +166,8 @@ public class RackMountableRenderer {
 			mode.registerIcons(e.map);
 		}
 		boomBoard = e.map.registerSprite(new ResourceLocation("computronics:blocks/boom_board"));
-		e.map.registerSprite(boomBoardActive);
-		e.map.registerSprite(boomBoardTicking);
+		//e.map.registerSprite(boomBoardActive);
+		//e.map.registerSprite(boomBoardTicking);
 		rackCapacitor = e.map.registerSprite(new ResourceLocation("computronics:blocks/rack_capacitor"));
 	}
 }
