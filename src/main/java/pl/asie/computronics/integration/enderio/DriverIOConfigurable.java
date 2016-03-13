@@ -47,6 +47,14 @@ public class DriverIOConfigurable {
 		return new Object[] { modes };
 	}
 
+	private static int checkSide(int side) {
+		--side;
+		if(side < 0 || side >= ForgeDirection.VALID_DIRECTIONS.length) {
+			throw new IllegalArgumentException("side needs to be between 1 and " + ForgeDirection.VALID_DIRECTIONS.length);
+		}
+		return side;
+	}
+
 	public static class OCDriver extends DriverTileEntity {
 
 		public static class InternalManagedEnvironment extends ManagedEnvironmentOCTile<IIoConfigurable> {
@@ -62,12 +70,12 @@ public class DriverIOConfigurable {
 
 			@Callback(doc = "function(side:number):string; Returns the current IO mode on the given side")
 			public Object[] getIOMode(Context c, Arguments a) {
-				return DriverIOConfigurable.getIOMode(tile, a.checkInteger(0));
+				return DriverIOConfigurable.getIOMode(tile, checkSide(a.checkInteger(0)));
 			}
 
 			@Callback(doc = "function(side:number,mode:string); Sets the IO mode on the given side")
 			public Object[] setIOMode(Context c, Arguments a) {
-				return DriverIOConfigurable.setIOMode(tile, a.checkInteger(0), a.checkString(1));
+				return DriverIOConfigurable.setIOMode(tile, checkSide(a.checkInteger(0)), a.checkString(1));
 			}
 
 			@Callback(doc = "This is a table of every IO mode available", getter = true)
@@ -120,8 +128,8 @@ public class DriverIOConfigurable {
 				throw new LuaException("first argument needs to be a number");
 			}
 			int side = ((Double) arguments[0]).intValue() - 1;
-			if(side < 0 || side >= IoMode.values().length) {
-				throw new LuaException("side needs to be between 1 and 6");
+			if(side < 0 || side >= ForgeDirection.VALID_DIRECTIONS.length) {
+				throw new LuaException("side needs to be between 1 and " + ForgeDirection.VALID_DIRECTIONS.length);
 			}
 			return side;
 		}
