@@ -18,6 +18,7 @@ import java.util.UUID;
  * @author CovertJaguar, Vexatos
  */
 public class LocomotiveManager {
+
 	private final Map<UUID, EntityLocomotiveElectric> carts = new MapMaker().weakValues().makeMap();
 
 	public static LocomotiveManager instance() {

@@ -37,6 +37,7 @@ public class DriverTelepad {
 	public static class OCDriver extends DriverTileEntity {
 
 		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<ITelePad> {
+
 			public InternalManagedEnvironment(ITelePad tile) {
 				super(tile, Names.EnderIO_Telepad);
 			}
@@ -145,7 +146,7 @@ public class DriverTelepad {
 		}
 
 		@Override
-		public ManagedEnvironment createEnvironment(World world, BlockPos pos) {
+		public ManagedEnvironment createEnvironment(World world, BlockPos pos, EnumFacing side) {
 			return new InternalManagedEnvironment(((ITelePad) world.getTileEntity(pos)));
 		}
 	}

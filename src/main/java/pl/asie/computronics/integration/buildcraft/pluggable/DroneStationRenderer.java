@@ -2,7 +2,6 @@ package pl.asie.computronics.integration.buildcraft.pluggable;
 
 import buildcraft.api.core.render.ITextureStates;
 import buildcraft.api.transport.IPipe;
-import buildcraft.api.transport.pluggable.IPipePluggableRenderer;
 import buildcraft.api.transport.pluggable.IPipePluggableStaticRenderer;
 import buildcraft.api.transport.pluggable.PipePluggable;
 import buildcraft.core.lib.render.TextureStateManager;
@@ -11,7 +10,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemStack;
@@ -250,9 +248,9 @@ public class DroneStationRenderer implements IPipePluggableStaticRenderer {
 
 		@SubscribeEvent
 		public void textureHook(TextureStitchEvent.Pre event) {
-				for(Textures t : Textures.VALUES) {
-					t.registerSprite(event.map);
-				}
+			for(Textures t : Textures.VALUES) {
+				t.registerSprite(event.map);
+			}
 		}
 
 		enum Textures {
@@ -273,7 +271,7 @@ public class DroneStationRenderer implements IPipePluggableStaticRenderer {
 			}
 
 			public void registerSprite(TextureMap iconRegister) {
-				this.icon = new WrappedIcon(iconRegister.registerSprite(new ResourceLocation("computronics","buildcraft/pluggable/" + location)));
+				this.icon = new WrappedIcon(iconRegister.registerSprite(new ResourceLocation("computronics", "buildcraft/pluggable/" + location)));
 			}
 		}
 

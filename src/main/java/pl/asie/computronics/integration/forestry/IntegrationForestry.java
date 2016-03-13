@@ -140,8 +140,9 @@ public class IntegrationForestry {
 
 	private ItemStack undisassemblable(ItemStack stack) {
 		NBTTagCompound tag = stack.getTagCompound();
-		if(tag == null)
+		if(tag == null) {
 			tag = new NBTTagCompound();
+		}
 		tag.setBoolean("oc:undisassemblable", true);
 		stack.setTagCompound(tag);
 		return stack;

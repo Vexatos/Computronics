@@ -10,6 +10,7 @@ import java.util.List;
  * @author Vexatos
  */
 public abstract class ComputronicsWailaProvider implements IComputronicsWailaProvider {
+
 	@Override
 	public ItemStack getWailaStack(IWailaDataAccessor accessor,
 		IWailaConfigHandler config) {

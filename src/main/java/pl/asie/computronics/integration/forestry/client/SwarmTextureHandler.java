@@ -9,6 +9,7 @@ import net.minecraftforge.client.event.TextureStitchEvent;
  * @author Vexatos
  */
 public class SwarmTextureHandler {
+
 	@SubscribeEvent
 	public void textureHook(TextureStitchEvent.Pre event) {
 		if(event.map.getTextureType() == 1) {

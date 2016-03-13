@@ -7,10 +7,11 @@ import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.ManagedEnvironment;
-import li.cil.oc.api.prefab.DriverTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.integration.CCMultiPeripheral;
+import pl.asie.computronics.integration.DriverTileEntity;
 import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
 import pl.asie.computronics.reference.Names;
 import riskyken.armourersWorkshop.common.data.BipedRotations.BipedPart;
@@ -25,7 +26,12 @@ public class DriverMannequin {
 	private static final HashMap<String, Part> parts = new HashMap<String, Part>();
 
 	private enum Part {
-		head, chest, left_arm, right_arm, left_leg, right_leg;
+		head,
+		chest,
+		left_arm,
+		right_arm,
+		left_leg,
+		right_leg;
 
 		private static final Part[] VALUES = values();
 
@@ -234,7 +240,7 @@ public class DriverMannequin {
 		}
 
 		@Override
-		public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
+		public ManagedEnvironment createEnvironment(World world, int x, int y, int z, ForgeDirection side) {
 			return new InternalManagedEnvironment((TileEntityMannequin) world.getTileEntity(x, y, z));
 		}
 	}

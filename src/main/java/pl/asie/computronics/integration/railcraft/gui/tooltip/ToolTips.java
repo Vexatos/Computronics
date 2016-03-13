@@ -13,6 +13,7 @@ import java.util.List;
  * @author CovertJaguar, Vexatos
  */
 public class ToolTips {
+
 	private static final Splitter keyValueSplitter = Splitter.on('=').trimResults();
 	private static final Splitter lineSplitter = Splitter.on("\n").trimResults();
 

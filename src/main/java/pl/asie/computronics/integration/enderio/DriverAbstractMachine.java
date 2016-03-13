@@ -47,7 +47,7 @@ public class DriverAbstractMachine {
 		}
 
 		@Override
-		public ManagedEnvironment createEnvironment(World world, BlockPos pos) {
+		public ManagedEnvironment createEnvironment(World world, BlockPos pos, EnumFacing side) {
 			return new InternalManagedEnvironment(((AbstractMachineEntity) world.getTileEntity(pos)));
 		}
 	}

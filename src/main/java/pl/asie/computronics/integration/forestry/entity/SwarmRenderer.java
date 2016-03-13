@@ -9,6 +9,7 @@ import net.minecraft.util.ResourceLocation;
 
 @SideOnly(Side.CLIENT)
 public class SwarmRenderer extends RenderLiving {
+
 	public SwarmRenderer() {
 		super(null, 0.0F);
 	}

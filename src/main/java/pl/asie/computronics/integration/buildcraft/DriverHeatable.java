@@ -58,7 +58,7 @@ public class DriverHeatable {
 		}
 
 		@Override
-		public ManagedEnvironment createEnvironment(World world, BlockPos pos) {
+		public ManagedEnvironment createEnvironment(World world, BlockPos pos, EnumFacing side) {
 			return new InternalManagedEnvironment((IHeatable) world.getTileEntity(pos));
 		}
 	}

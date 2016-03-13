@@ -57,7 +57,7 @@ public class DriverHasExperience {
 		}
 
 		@Override
-		public ManagedEnvironment createEnvironment(World world, BlockPos pos) {
+		public ManagedEnvironment createEnvironment(World world, BlockPos pos, EnumFacing side) {
 			return new InternalManagedEnvironment(((IHaveExperience) world.getTileEntity(pos)));
 		}
 	}

@@ -9,6 +9,7 @@ import pl.asie.computronics.integration.railcraft.tile.TileTicketMachine;
  * @author Vexatos
  */
 public class LockButtonWidget extends ButtonWidget {
+
 	private final TileTicketMachine tile;
 	public boolean accessible = true;
 

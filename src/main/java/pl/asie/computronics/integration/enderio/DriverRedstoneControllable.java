@@ -89,7 +89,7 @@ public class DriverRedstoneControllable {
 		}
 
 		@Override
-		public ManagedEnvironment createEnvironment(World world, BlockPos pos) {
+		public ManagedEnvironment createEnvironment(World world, BlockPos pos, EnumFacing side) {
 			return new InternalManagedEnvironment(((IRedstoneModeControlable) world.getTileEntity(pos)));
 		}
 	}

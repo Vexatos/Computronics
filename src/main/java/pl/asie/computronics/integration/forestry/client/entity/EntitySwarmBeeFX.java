@@ -9,6 +9,7 @@ import pl.asie.computronics.integration.forestry.client.SwarmTextureHandler;
  * Extension of EntityBeeFX
  */
 public class EntitySwarmBeeFX extends EntityFXBee {
+
 	public EntitySwarmBeeFX(World world, double x, double y, double z, int color) {
 		super(world, x, y, z, color);
 		setParticleIcon(SwarmTextureHandler.Textures.BEE_FX.getIcon());

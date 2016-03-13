@@ -21,9 +21,11 @@ import pl.asie.computronics.reference.Names;
  * @author Vexatos
  */
 public class DriverProgressTile {
+
 	public static class OCDriver extends DriverTileEntity {
 
 		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<IProgressTile> {
+
 			public InternalManagedEnvironment(IProgressTile tile) {
 				super(tile, Names.EnderIO_MachineTile);
 			}
@@ -45,7 +47,7 @@ public class DriverProgressTile {
 		}
 
 		@Override
-		public ManagedEnvironment createEnvironment(World world, BlockPos pos) {
+		public ManagedEnvironment createEnvironment(World world, BlockPos pos, EnumFacing side) {
 			return new InternalManagedEnvironment(((IProgressTile) world.getTileEntity(pos)));
 		}
 	}

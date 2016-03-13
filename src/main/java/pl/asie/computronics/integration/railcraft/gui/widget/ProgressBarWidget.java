@@ -8,6 +8,7 @@ import pl.asie.computronics.integration.railcraft.tile.TileTicketMachine;
  * @author Vexatos
  */
 public class ProgressBarWidget extends Widget {
+
 	private final TileTicketMachine tile;
 
 	public ProgressBarWidget(TileTicketMachine tile, int x, int y, int u, int v, int w, int h) {

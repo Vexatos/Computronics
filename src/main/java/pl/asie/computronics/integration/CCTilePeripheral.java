@@ -15,6 +15,7 @@ import pl.asie.computronics.reference.Mods;
  */
 @Optional.Interface(iface = "li.cil.oc.api.network.BlacklistedPeripheral", modid = Mods.OpenComputers)
 public abstract class CCTilePeripheral<T> implements IPeripheral, IPeripheralProvider, BlacklistedPeripheral {
+
 	protected T tile;
 	protected IBlockAccess w;
 	protected BlockPos pos;

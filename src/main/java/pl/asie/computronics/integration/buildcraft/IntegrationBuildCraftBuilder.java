@@ -12,6 +12,7 @@ import java.util.ArrayList;
  * @author Vexatos
  */
 public class IntegrationBuildCraftBuilder {
+
 	public static final IntegrationBuildCraftBuilder INSTANCE = new IntegrationBuildCraftBuilder();
 
 	private IntegrationBuildCraftBuilder() {

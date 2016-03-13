@@ -7,6 +7,7 @@ import mods.railcraft.common.gui.tooltips.ToolTip;
 import mods.railcraft.common.gui.widgets.Widget;
 
 public class ButtonWidget extends Widget {
+
 	protected boolean pressed;
 	protected int buttonPressed;
 

@@ -21,9 +21,11 @@ import pl.asie.computronics.reference.Names;
  * @author Vexatos
  */
 public class DriverVacuumChest {
+
 	public static class OCDriver extends DriverTileEntity {
 
 		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TileVacuumChest> {
+
 			public InternalManagedEnvironment(TileVacuumChest tile) {
 				super(tile, Names.EnderIO_VacuumChest);
 			}
@@ -51,7 +53,7 @@ public class DriverVacuumChest {
 		}
 
 		@Override
-		public ManagedEnvironment createEnvironment(World world, BlockPos pos) {
+		public ManagedEnvironment createEnvironment(World world, BlockPos pos, EnumFacing side) {
 			return new InternalManagedEnvironment(((TileVacuumChest) world.getTileEntity(pos)));
 		}
 	}

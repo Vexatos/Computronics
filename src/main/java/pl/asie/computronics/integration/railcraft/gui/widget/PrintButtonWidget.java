@@ -11,6 +11,7 @@ import java.io.IOException;
  * @author Vexatos
  */
 public class PrintButtonWidget extends ButtonWidget {
+
 	private final TileTicketMachine tile;
 
 	public PrintButtonWidget(TileTicketMachine tile, int x, int y, int u, int v, int w, int h) {

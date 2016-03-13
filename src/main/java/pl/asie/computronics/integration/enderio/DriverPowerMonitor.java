@@ -116,7 +116,7 @@ public class DriverPowerMonitor {
 		}
 
 		@Override
-		public ManagedEnvironment createEnvironment(World world, BlockPos pos) {
+		public ManagedEnvironment createEnvironment(World world, BlockPos pos, EnumFacing side) {
 			return new InternalManagedEnvironment(((TilePowerMonitor) world.getTileEntity(pos)));
 		}
 	}

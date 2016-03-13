@@ -20,6 +20,7 @@ import pl.asie.computronics.reference.Mods;
  * @author Vexatos
  */
 public class BlockLocomotiveRelay extends BlockPeripheral implements IBlockWithPrefix {
+
 	private IIcon mTop, mSide, mBottom;
 
 	public BlockLocomotiveRelay() {

@@ -9,6 +9,7 @@ import net.minecraft.world.World;
  * Combination of EntityAmbientCreature and EntityFlying
  */
 public class EntityFlyingCreature extends EntityAmbientCreature {
+
 	public EntityFlyingCreature(World par1World) {
 		super(par1World);
 	}

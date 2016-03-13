@@ -4,6 +4,7 @@ import mcp.mobius.waila.api.IWailaRegistrar;
 import pl.asie.computronics.block.BlockPeripheral;
 
 public class IntegrationWaila {
+
 	public static void register(IWailaRegistrar reg) {
 		WailaProviders.initialize();
 

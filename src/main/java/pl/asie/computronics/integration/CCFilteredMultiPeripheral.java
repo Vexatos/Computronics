@@ -14,6 +14,7 @@ import java.util.List;
  * @author Vexatos
  */
 public abstract class CCFilteredMultiPeripheral<T> extends CCMultiPeripheral<T> {
+
 	protected final List<String> methods;
 	protected List<String> availableMethods;
 
