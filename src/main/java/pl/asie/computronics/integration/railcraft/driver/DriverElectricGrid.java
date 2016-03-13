@@ -7,12 +7,13 @@ import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.ManagedEnvironment;
-import li.cil.oc.api.prefab.DriverTileEntity;
 import mods.railcraft.api.electricity.GridTools;
 import mods.railcraft.api.electricity.IElectricGrid;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
 import pl.asie.computronics.integration.CCMultiPeripheral;
+import pl.asie.computronics.integration.DriverTileEntity;
 import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
 import pl.asie.computronics.reference.Names;
 
@@ -61,12 +62,12 @@ public class DriverElectricGrid {
 		}
 
 		@Override
-		public boolean worksWith(World world, int x, int y, int z) {
+		public boolean worksWith(World world, int x, int y, int z, ForgeDirection side) {
 			return GridTools.getGridObjectAt(world, x, y, z) != null;
 		}
 
 		@Override
-		public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
+		public ManagedEnvironment createEnvironment(World world, int x, int y, int z, ForgeDirection side) {
 			return new InternalManagedEnvironment(GridTools.getGridObjectAt(world, x, y, z));
 		}
 	}
