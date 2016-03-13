@@ -4,12 +4,13 @@ import buildcraft.api.statements.IStatement;
 import buildcraft.api.statements.IStatementContainer;
 import buildcraft.api.statements.IStatementParameter;
 import buildcraft.api.statements.StatementMouseClick;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.IIcon;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.asie.computronics.integration.buildcraft.statements.StatementParameters;
 import pl.asie.computronics.util.StringUtil;
 
@@ -36,7 +37,8 @@ public class ActionParameterLampColor extends ComputronicsParameter {
 	}
 
 	@Override
-	public IIcon getIcon() {
+	@SideOnly(Side.CLIENT)
+	public TextureAtlasSprite getIcon() {
 		return null;
 	}
 
@@ -46,18 +48,13 @@ public class ActionParameterLampColor extends ComputronicsParameter {
 	}
 
 	@Override
-	public void registerIcons(IIconRegister iconRegister) {
-
-	}
-
-	@Override
 	public String getDescription() {
 		if(this.stack != null) {
 			return StringUtil.localizeAndFormat("tooltip.computronics.gate.action.lamp_color."
-				+ ItemDye.field_150923_a[this.color], stack.stackSize);
+				+ ItemDye.dyeColors[this.color], stack.stackSize);
 		}
 		return StringUtil.localizeAndFormat("tooltip.computronics.gate.action.lamp_color."
-			+ ItemDye.field_150923_a[this.color], 0);
+			+ ItemDye.dyeColors[this.color], 0);
 	}
 
 	@Override

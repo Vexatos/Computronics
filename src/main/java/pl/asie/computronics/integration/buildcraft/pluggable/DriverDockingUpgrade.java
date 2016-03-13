@@ -1,9 +1,8 @@
 package pl.asie.computronics.integration.buildcraft.pluggable;
 
-import buildcraft.api.core.EnumColor;
-import buildcraft.api.core.Position;
 import buildcraft.api.transport.IPipeTile;
 import buildcraft.api.transport.pluggable.PipePluggable;
+import buildcraft.core.lib.utils.Utils;
 import buildcraft.transport.BlockGenericPipe;
 import buildcraft.transport.PipeTransportItems;
 import buildcraft.transport.TileGenericPipe;
@@ -17,12 +16,14 @@ import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.Visibility;
 import li.cil.oc.api.prefab.ManagedEnvironment;
 import net.minecraft.entity.Entity;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.integration.buildcraft.pluggable.DroneStationPluggable.DroneStationState;
 
 /**
@@ -35,10 +36,10 @@ public class DriverDockingUpgrade extends ManagedEnvironment {
 	protected boolean isDocking = false;
 	protected boolean isDocked = false;
 	protected IPipeTile pipe;
-	protected final ForgeDirection side = ForgeDirection.UP;
-	private int[] pipevec;
+	protected final EnumFacing side = EnumFacing.UP;
+	private BlockPos pipepos;
 
-	private float targetX, targetY, targetZ;
+	private Vec3 targetVec = new Vec3(0, 0, 0);
 
 	public DriverDockingUpgrade(Drone drone) {
 		this.drone = drone;
@@ -54,8 +55,8 @@ public class DriverDockingUpgrade extends ManagedEnvironment {
 
 	@Override
 	public void update() {
-		if((isDocking || isDocked) && pipevec != null) {
-			TileEntity tile = drone.world().getTileEntity(pipevec[0], pipevec[1], pipevec[2]);
+		if((isDocking || isDocked) && pipepos != null) {
+			TileEntity tile = drone.world().getTileEntity(pipepos);
 			if(tile instanceof IPipeTile) {
 				pipe = (IPipeTile) tile;
 				if(pipe.getPipePluggable(side) != null && pipe.getPipePluggable(side) instanceof DroneStationPluggable) {
@@ -65,8 +66,7 @@ public class DriverDockingUpgrade extends ManagedEnvironment {
 					}
 				} else {
 					Vec3 target = drone.getTarget();
-					double targetY = pipe != null ? pipe.y() + 1.5 : pipevec != null ? pipevec[1] + 1.5 : target.yCoord + 0.5;
-					target.yCoord = (float) targetY;
+					target = target.addVector(0, pipe != null ? pipe.y() + 1.5 : pipepos != null ? pipepos.getY() + 1.5 : target.yCoord + 0.5, 0);
 					drone.setTarget(target);
 					isDocked = false;
 					isDocking = false;
@@ -75,8 +75,7 @@ public class DriverDockingUpgrade extends ManagedEnvironment {
 				}
 			} else {
 				Vec3 target = drone.getTarget();
-				double targetY = pipevec != null ? pipevec[1] + 1.5 : target.yCoord + 0.5;
-				target.yCoord = (float) targetY;
+				target = target.addVector(0, pipepos != null ? pipepos.getY() + 1.5 : target.yCoord + 0.5, 0);
 				drone.setTarget(target);
 				isDocked = false;
 				isDocking = false;
@@ -92,31 +91,29 @@ public class DriverDockingUpgrade extends ManagedEnvironment {
 		}
 		if(isDocked) {
 			Vec3 target = drone.getTarget();
-			Vec3 realTarget = Vec3.createVectorHelper(targetX, targetY, targetZ);
-			if(target.distanceTo(realTarget) > 0) {
+			if(target.distanceTo(targetVec) > 0) {
 				Entity droneEntity = (Entity) drone;
 				droneEntity.motionX = 0;
 				droneEntity.motionY = 0;
 				droneEntity.motionZ = 0;
-				drone.setTarget(Vec3.createVectorHelper(targetX, targetY, targetZ));
-				droneEntity.posX = targetX;
-				droneEntity.posY = targetY;
-				droneEntity.posZ = targetZ;
+				drone.setTarget(targetVec);
+				droneEntity.posX = targetVec.xCoord;
+				droneEntity.posY = targetVec.yCoord;
+				droneEntity.posZ = targetVec.zCoord;
 			}
 		}
 	}
 
 	//Re-implemented from BuildCraft to respect pluggables
-	private int injectItem(TileGenericPipe pipe, ItemStack stack, boolean doAdd, ForgeDirection from, EnumColor color) {
+	private int injectItem(TileGenericPipe pipe, ItemStack stack, boolean doAdd, EnumFacing from, EnumDyeColor color) {
 		if(!pipe.pipe.inputOpen(from)) {
 			return 0;
 		} else if(BlockGenericPipe.isValid(pipe.pipe) && pipe.pipe.transport instanceof PipeTransportItems && pipe.getPipePluggable(from) != null) {
 			if(doAdd) {
-				Position position = new Position((double) pipe.xCoord + 0.5D, (double) pipe.yCoord + 0.02D, (double) pipe.zCoord + 0.5D, from.getOpposite());
-				position.moveBackwards(0.4D);
-				TravelingItem itemInPipe = TravelingItem.make(position.x, position.y, position.z, stack);
-				itemInPipe.color = color;
-				((PipeTransportItems) pipe.pipe.transport).injectItem(itemInPipe, position.orientation);
+				Vec3 pos = Utils.convertMiddle(pipe.getPos()).add(Utils.convert(from, 0.4));
+				TravelingItem pipedItem = TravelingItem.make(pos, stack);
+				pipedItem.color = color;
+				((PipeTransportItems) pipe.pipe.transport).injectItem(pipedItem, from.getOpposite());
 			}
 			return stack.stackSize;
 		} else {
@@ -144,7 +141,7 @@ public class DriverDockingUpgrade extends ManagedEnvironment {
 		if(stack != null && stack.getItem() != null) {
 			stack = drone.mainInventory().decrStackSize(slot, count);
 			int rejected = stack.stackSize -
-				injectItem((TileGenericPipe) pipe, stack, true, side, args.count() > 2 && drone.tier() > 0 ? EnumColor.fromId(15 - args.checkInteger(2)) : null);
+				injectItem((TileGenericPipe) pipe, stack, true, side, args.count() > 2 && drone.tier() > 0 ? EnumDyeColor.byMetadata(args.checkInteger(2)) : null);
 			drone.mainInventory().getStackInSlot(slot).stackSize += rejected;
 			stack.stackSize -= rejected;
 			return new Object[] { stack.stackSize };
@@ -154,11 +151,8 @@ public class DriverDockingUpgrade extends ManagedEnvironment {
 
 	@Callback(doc = "function():boolean; Makes the drone start docking with a docking station; Always tries to dock with a station below it first")
 	public Object[] dock(Context context, Arguments args) {
-		int x = (int) Math.floor(drone.xPosition());
-		int y = (int) Math.floor(drone.yPosition());
-		int z = (int) Math.floor(drone.zPosition());
 		World world = drone.world();
-		DroneStationPluggable station = tryGetStation(world, x, y - 1, z, side);
+		DroneStationPluggable station = tryGetStation(world, new BlockPos(drone.xPosition(), drone.yPosition() - 1, drone.zPosition()), side);
 		if(station != null && station.getState() != DroneStationState.Used) {
 			double targetY = pipe.y() + 1;
 			Vec3 velocity = drone.getVelocity();
@@ -166,12 +160,10 @@ public class DriverDockingUpgrade extends ManagedEnvironment {
 				return new Object[] { false, "drone is still moving" };
 			}
 			Vec3 target = drone.getTarget();
-			target.yCoord = (float) targetY;
+			target = target.addVector(0, targetY, 0);
 			drone.setTarget(target);
 			target = drone.getTarget();
-			this.targetX = (float) target.xCoord;
-			this.targetY = (float) target.yCoord;
-			this.targetZ = (float) target.zCoord;
+			targetVec = target;
 			this.isDocking = true;
 			return new Object[] { true };
 		}
@@ -189,7 +181,7 @@ public class DriverDockingUpgrade extends ManagedEnvironment {
 
 		double targetY = pipe.y() + 1.5;
 		Vec3 target = drone.getTarget();
-		target.yCoord = (float) targetY;
+		target = target.addVector(0, targetY, 0);
 		drone.setTarget(target);
 		((DroneStationPluggable) pipe.getPipePluggable(side)).setDrone(null);
 		isDocking = false;
@@ -198,8 +190,8 @@ public class DriverDockingUpgrade extends ManagedEnvironment {
 		return new Object[] { true };
 	}
 
-	private DroneStationPluggable tryGetStation(World world, int x, int y, int z, ForgeDirection side) {
-		TileEntity tile = world.getTileEntity(x, y, z);
+	private DroneStationPluggable tryGetStation(World world, BlockPos pos, EnumFacing side) {
+		TileEntity tile = world.getTileEntity(pos);
 		if(tile != null && tile instanceof IPipeTile) {
 			PipePluggable pluggable = ((IPipeTile) tile).getPipePluggable(side);
 			if(pluggable != null && pluggable instanceof DroneStationPluggable) {
@@ -216,8 +208,8 @@ public class DriverDockingUpgrade extends ManagedEnvironment {
 		if(isDocked || isDocking) {
 			if(drone != null) {
 				Vec3 target = drone.getTarget();
-				double targetY = pipe != null ? pipe.y() + 1.5 : pipevec != null ? pipevec[1] + 1.5 : target.yCoord + 0.5;
-				target.yCoord = (float) targetY;
+				double targetY = pipe != null ? pipe.y() + 1.5 : pipepos != null ? pipepos.getY() + 1.5 : target.yCoord + 0.5;
+				target = target.addVector(0, targetY, 0);
 				drone.setTarget(target);
 			}
 			if(pipe != null) {
@@ -240,9 +232,9 @@ public class DriverDockingUpgrade extends ManagedEnvironment {
 			nbt.setInteger("drone:dockX", pipe.x());
 			nbt.setInteger("drone:dockY", pipe.y());
 			nbt.setInteger("drone:dockZ", pipe.z());
-			nbt.setFloat("drone:targetX", targetX);
-			nbt.setFloat("drone:targetY", targetY);
-			nbt.setFloat("drone:targetZ", targetZ);
+			nbt.setDouble("drone:targetX", targetVec.xCoord);
+			nbt.setDouble("drone:targetY", targetVec.yCoord);
+			nbt.setDouble("drone:targetZ", targetVec.zCoord);
 		}
 	}
 
@@ -252,13 +244,16 @@ public class DriverDockingUpgrade extends ManagedEnvironment {
 		isDocking = nbt.getBoolean("drone:docking");
 		isDocked = nbt.getBoolean("drone:docked");
 		if((isDocked || isDocking)) {
-			pipevec = new int[] {
+			pipepos = new BlockPos(
 				nbt.getInteger("drone:dockX"),
 				nbt.getInteger("drone:dockY"),
-				nbt.getInteger("drone:dockZ") };
-			targetX = nbt.getFloat("drone:targetX");
-			targetY = nbt.getFloat("drone:targetY");
-			targetZ = nbt.getFloat("drone:targetZ");
+				nbt.getInteger("drone:dockZ")
+			);
+			targetVec = new Vec3(
+				nbt.getDouble("drone:targetX"),
+				nbt.getDouble("drone:targetY"),
+				nbt.getDouble("drone:targetZ")
+			);
 		}
 	}
 }

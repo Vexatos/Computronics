@@ -5,10 +5,13 @@ import buildcraft.api.statements.IStatement;
 import buildcraft.api.statements.IStatementContainer;
 import buildcraft.api.statements.IStatementParameter;
 import buildcraft.api.statements.StatementManager;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.asie.computronics.tile.TapeDriveState.State;
 import pl.asie.computronics.util.StringUtil;
 
@@ -28,7 +31,8 @@ public enum Actions implements IActionExternal {
 	public static final Actions[] VALUES = values();
 	private String tag;
 	private IComputronicsAction action;
-	private IIcon icon;
+	@SideOnly(Side.CLIENT)
+	private TextureAtlasSprite icon;
 
 	private int minParams = 0, maxParams = 0;
 
@@ -50,7 +54,7 @@ public enum Actions implements IActionExternal {
 	}
 
 	@Override
-	public void actionActivate(TileEntity tile, ForgeDirection side, IStatementContainer container, IStatementParameter[] parameters) {
+	public void actionActivate(TileEntity tile, EnumFacing side, IStatementContainer container, IStatementParameter[] parameters) {
 		this.action.actionActivate(tile, side, container, parameters);
 	}
 
@@ -60,13 +64,14 @@ public enum Actions implements IActionExternal {
 	}
 
 	@Override
-	public IIcon getIcon() {
+	@SideOnly(Side.CLIENT)
+	public TextureAtlasSprite getGuiSprite() {
 		return this.icon;
 	}
 
-	@Override
-	public void registerIcons(IIconRegister iconRegister) {
-		this.icon = iconRegister.registerIcon("computronics:buildcraft/actions/action." + this.tag);
+	@SideOnly(Side.CLIENT)
+	public void stitchTextures(TextureStitchEvent.Pre event) {
+		this.icon = event.map.registerSprite(new ResourceLocation("computronics", "items/buildcraft/actions/action." + this.tag));
 	}
 
 	@Override

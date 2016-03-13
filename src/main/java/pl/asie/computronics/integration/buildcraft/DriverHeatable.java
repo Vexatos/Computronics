@@ -10,6 +10,8 @@ import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.ManagedEnvironment;
 import li.cil.oc.api.prefab.DriverTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
 import pl.asie.computronics.integration.CCMultiPeripheral;
@@ -56,8 +58,8 @@ public class DriverHeatable {
 		}
 
 		@Override
-		public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
-			return new InternalManagedEnvironment((IHeatable) world.getTileEntity(x, y, z));
+		public ManagedEnvironment createEnvironment(World world, BlockPos pos) {
+			return new InternalManagedEnvironment((IHeatable) world.getTileEntity(pos));
 		}
 	}
 
@@ -66,15 +68,15 @@ public class DriverHeatable {
 		public CCDriver() {
 		}
 
-		public CCDriver(IHeatable tile, World world, int x, int y, int z) {
-			super(tile, Names.BuildCraft_Heatable, world, x, y, z);
+		public CCDriver(IHeatable tile, World world, BlockPos pos) {
+			super(tile, Names.BuildCraft_Heatable, world, pos);
 		}
 
 		@Override
-		public IMultiPeripheral getPeripheral(World world, int x, int y, int z, int side) {
-			TileEntity te = world.getTileEntity(x, y, z);
+		public IMultiPeripheral getPeripheral(World world, BlockPos pos, EnumFacing side) {
+			TileEntity te = world.getTileEntity(pos);
 			if(te != null && te instanceof IHeatable) {
-				return new CCDriver((IHeatable) te, world, x, y, z);
+				return new CCDriver((IHeatable) te, world, pos);
 			}
 			return null;
 		}

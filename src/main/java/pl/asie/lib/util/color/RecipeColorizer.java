@@ -74,7 +74,7 @@ public class RecipeColorizer implements IRecipe {
 						return null;
 					}
 
-					float[] itemColor = EntitySheep.func_175513_a(EnumDyeColor.byDyeDamage(stackColor.ordinal()));
+					float[] itemColor = EntitySheep.getDyeRgb(EnumDyeColor.byDyeDamage(stackColor.ordinal()));
 					int red = (int) (itemColor[0] * 255.0F);
 					int green = (int) (itemColor[1] * 255.0F);
 					int blue = (int) (itemColor[2] * 255.0F);

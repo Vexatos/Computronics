@@ -4,10 +4,13 @@ import buildcraft.api.statements.IStatementContainer;
 import buildcraft.api.statements.IStatementParameter;
 import buildcraft.api.statements.ITriggerExternal;
 import buildcraft.api.statements.StatementManager;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.asie.computronics.tile.TapeDriveState.State;
 import pl.asie.computronics.util.StringUtil;
 
@@ -25,7 +28,8 @@ public enum Triggers implements ITriggerExternal {
 	public static final Triggers[] VALUES = values();
 	private String tag;
 	private IComputronicsTrigger trigger;
-	private IIcon icon;
+	@SideOnly(Side.CLIENT)
+	private TextureAtlasSprite icon;
 
 	Triggers(String tag, IComputronicsTrigger trigger) {
 		this.tag = tag;
@@ -39,7 +43,7 @@ public enum Triggers implements ITriggerExternal {
 	}
 
 	@Override
-	public boolean isTriggerActive(TileEntity tile, ForgeDirection side, IStatementContainer container, IStatementParameter[] statements) {
+	public boolean isTriggerActive(TileEntity tile, EnumFacing side, IStatementContainer container, IStatementParameter[] statements) {
 		return trigger.isTriggerActive(tile, side, container, statements);
 	}
 
@@ -49,13 +53,14 @@ public enum Triggers implements ITriggerExternal {
 	}
 
 	@Override
-	public IIcon getIcon() {
+	@SideOnly(Side.CLIENT)
+	public TextureAtlasSprite getGuiSprite() {
 		return this.icon;
 	}
 
-	@Override
-	public void registerIcons(IIconRegister iconRegister) {
-		this.icon = iconRegister.registerIcon("computronics:buildcraft/triggers/trigger." + this.tag);
+	@SideOnly(Side.CLIENT)
+	public void stitchTextures(TextureStitchEvent.Pre event) {
+		this.icon = event.map.registerSprite(new ResourceLocation("computronics", "items/buildcraft/triggers/trigger." + this.tag));
 	}
 
 	@Override

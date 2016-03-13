@@ -41,6 +41,10 @@ import pl.asie.computronics.cc.multiperipheral.MultiPeripheralRegistry;
 import pl.asie.computronics.gui.providers.GuiProviderCipher;
 import pl.asie.computronics.gui.providers.GuiProviderTapeDrive;
 import pl.asie.computronics.integration.ModRecipes;
+import pl.asie.computronics.integration.buildcraft.IntegrationBuildCraftBuilder;
+import pl.asie.computronics.integration.buildcraft.statements.ActionProvider;
+import pl.asie.computronics.integration.buildcraft.statements.StatementParameters;
+import pl.asie.computronics.integration.buildcraft.statements.TriggerProvider;
 import pl.asie.computronics.integration.charset.IntegrationCharset;
 import pl.asie.computronics.integration.tis3d.IntegrationTIS3D;
 import pl.asie.computronics.item.ItemMultiple;
@@ -78,21 +82,12 @@ import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-//import pl.asie.computronics.integration.buildcraft.IntegrationBuildCraft;
-//import pl.asie.computronics.integration.buildcraft.IntegrationBuildCraftBuilder;
-//import pl.asie.computronics.integration.buildcraft.statements.ActionProvider;
-//import pl.asie.computronics.integration.buildcraft.statements.StatementParameters;
-//import pl.asie.computronics.integration.buildcraft.statements.TriggerProvider;
-//import pl.asie.computronics.integration.forestry.IntegrationForestry;
-//import pl.asie.computronics.integration.gregtech.GregTechRecipes;
-//import pl.asie.computronics.integration.railcraft.IntegrationRailcraft;
-
 @Mod(modid = Mods.Computronics, name = Mods.Computronics_NAME, version = "@VERSION@",
-	dependencies = "required-after:asielib;required-after:Forge@[11.15.1.1722,);"
+	dependencies = "required-after:asielib;required-after:Forge@[11.15.1.1764,);"
 		+ "after:ComputerCraft@[1.79,);after:OpenComputers@[1.5.22.6,);after:tis3d@[0.8.3.13,);"
 		+ "before:OpenPeripheralCore@[1.1,);before:OpenPeripheralApi@[3.2,);"
 		+ "after:MineFactoryReloaded;after:RedLogic@[59.1.9,);after:ProjRed|Core;"
-		+ "after:BuildCraft|Core@[7.0.6,);after:Railcraft@[9.8.0.3,);"
+		+ "after:BuildCraft|Core@[7.2.0,);after:Railcraft@[9.8.0.3,);"
 		+ "after:gregtech;after:EnderIO@[1.8.9-3.0,);"
 		+ "after:Forestry;after:Waila@[1.5.10,);"
 		+ "after:MekanismAPI|energy@[8.0.0,);after:Flamingo@[1.7.10-1.3,);"
@@ -171,7 +166,7 @@ public class Computronics {
 		proxy.registerItemModel(block, 0, "computronics:" + name);
 		//System.out.println("Registering " + name + " as TE " + tile.getCanonicalName());
 		FMLInterModComms.sendMessage(Mods.AE2, "whitelist-spatial", tile.getCanonicalName());
-		//IntegrationBuildCraftBuilder.INSTANCE.registerBlockBaseSchematic(block); TODO BuildCraft
+		IntegrationBuildCraftBuilder.INSTANCE.registerBlockBaseSchematic(block);
 	}
 
 	@EventHandler
@@ -311,9 +306,9 @@ public class Computronics {
 			opencomputers.init();
 		}
 
-		/*if(Mods.API.hasAPI(Mods.API.BuildCraftBlueprints)) { TODO BuildCraft
+		if(Mods.API.hasAPI(Mods.API.BuildCraftBlueprints)) {
 			IntegrationBuildCraftBuilder.INSTANCE.init();
-		}*/
+		}
 
 		if(Mods.isLoaded(Mods.TIS3D) && tis3D != null) {
 			tis3D.init(compat);
@@ -361,11 +356,11 @@ public class Computronics {
 			opencomputers.postInit();
 		}
 
-		/*if(Mods.API.hasAPI(Mods.API.BuildCraftStatements)) { TODO BuildCraft
+		if(Mods.API.hasAPI(Mods.API.BuildCraftStatements)) {
 			TriggerProvider.initialize();
 			ActionProvider.initialize();
 			StatementParameters.initialize();
-		}*/
+		}
 
 		if(Mods.isLoaded(Mods.TIS3D) && tis3D != null) {
 			tis3D.postInit();

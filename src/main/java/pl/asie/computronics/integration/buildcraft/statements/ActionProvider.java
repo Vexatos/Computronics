@@ -7,7 +7,7 @@ import buildcraft.api.statements.IStatementContainer;
 import buildcraft.api.statements.StatementManager;
 import li.cil.oc.api.internal.Case;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 import pl.asie.computronics.integration.buildcraft.statements.actions.Actions;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TileColorfulLamp;
@@ -32,7 +32,7 @@ public class ActionProvider implements IActionProvider {
 	}
 
 	@Override
-	public Collection<IActionExternal> getExternalActions(ForgeDirection side, TileEntity tile) {
+	public Collection<IActionExternal> getExternalActions(EnumFacing side, TileEntity tile) {
 		LinkedList<IActionExternal> actions = new LinkedList<IActionExternal>();
 		if(tile != null) {
 			if(Mods.isLoaded(Mods.OpenComputers) && tile instanceof Case) {

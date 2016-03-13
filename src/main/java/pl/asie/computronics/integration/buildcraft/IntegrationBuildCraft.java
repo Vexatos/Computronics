@@ -1,28 +1,12 @@
-package pl.asie.computronics.integration.buildcraft;
-
-import buildcraft.api.transport.PipeManager;
-import cpw.mods.fml.common.Optional;
-import cpw.mods.fml.common.registry.GameRegistry;
-import li.cil.oc.api.Driver;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.client.MinecraftForgeClient;
-import net.minecraftforge.common.MinecraftForge;
-import pl.asie.computronics.Computronics;
-import pl.asie.computronics.integration.buildcraft.pluggable.DroneStationPluggable;
-import pl.asie.computronics.integration.buildcraft.pluggable.DroneStationRenderer;
-import pl.asie.computronics.integration.buildcraft.pluggable.ItemDockingUpgrade;
-import pl.asie.computronics.integration.buildcraft.pluggable.ItemDroneStation;
-import pl.asie.computronics.reference.Mods;
-import pl.asie.computronics.util.RecipeUtils;
+/*package pl.asie.computronics.integration.buildcraft;
 
 /**
  * @author Vexatos
- */
+ * /
 public class IntegrationBuildCraft {
 
-	public ItemDroneStation droneStationItem;
-	public ItemDockingUpgrade dockingUpgrade;
+	//public ItemDroneStation droneStationItem;
+	//public ItemDockingUpgrade dockingUpgrade;
 
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void preInitOC() {
@@ -40,7 +24,7 @@ public class IntegrationBuildCraft {
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void initOC() {
 		if(Computronics.proxy.isClient()) {
-			MinecraftForgeClient.registerItemRenderer(this.droneStationItem, new DroneStationRenderer.ItemRenderer());
+			//MinecraftForgeClient.registerItemRenderer(this.droneStationItem, new DroneStationRenderer.ItemRenderer());
 		}
 	}
 
@@ -48,16 +32,22 @@ public class IntegrationBuildCraft {
 	public void postInitOC() {
 		PipeManager.registerPipePluggable(DroneStationPluggable.class, "computronics.droneStation");
 
-		ItemStack robotStation = GameRegistry.findItemStack(Mods.BuildCraftTransport, "robotStation", 1);
-		if(robotStation == null || robotStation.getItem() == null) {
+		net.minecraft.item.Item item = Item.itemRegistry.getObject(new ResourceLocation(Mods.BuildCraftTransport, "robotStation"));
+		ItemStack robotStation;
+		if(item != null) {
+			robotStation = new ItemStack(item, 1);
+		} else {
 			robotStation = new ItemStack(Items.ender_pearl, 1, 0);
 		}
 		RecipeUtils.addShapedRecipe(new ItemStack(droneStationItem, 1, 0),
 			" a ", "tst", " c ", 's', robotStation, 'a', li.cil.oc.api.Items.get("chip1").createItemStack(1),
 			'c', li.cil.oc.api.Items.get("cable").createItemStack(1), 't', li.cil.oc.api.Items.get("transistor").createItemStack(1)
 		);
-		ItemStack pipe = GameRegistry.findItemStack(Mods.BuildCraftTransport, "item.buildcraftPipe.pipeitemsquartz", 1);
-		if(pipe == null || pipe.getItem() == null) {
+		item = Item.itemRegistry.getObject(new ResourceLocation(Mods.BuildCraftTransport, "item.buildcraftPipe.pipeitemsquartz"));
+		ItemStack pipe;
+		if(item != null) {
+			pipe = new ItemStack(item, 1);
+		} else {
 			pipe = li.cil.oc.api.Items.get("cable").createItemStack(1);
 		}
 		RecipeUtils.addShapedRecipe(new ItemStack(dockingUpgrade, 1, 0),
@@ -65,4 +55,4 @@ public class IntegrationBuildCraft {
 			'c', pipe, 't', li.cil.oc.api.Items.get("transistor").createItemStack(1)
 		);
 	}
-}
+}*/

@@ -3,33 +3,37 @@ package pl.asie.computronics.integration.buildcraft.pluggable;
 import buildcraft.api.core.render.ITextureStates;
 import buildcraft.api.transport.IPipe;
 import buildcraft.api.transport.pluggable.IPipePluggableRenderer;
+import buildcraft.api.transport.pluggable.IPipePluggableStaticRenderer;
 import buildcraft.api.transport.pluggable.PipePluggable;
 import buildcraft.core.lib.render.TextureStateManager;
 import buildcraft.core.lib.utils.MatrixTranformations;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.opengl.GL11;
 import pl.asie.computronics.integration.buildcraft.pluggable.DroneStationRenderer.TextureHandler.Textures;
 
 /**
  * @author Vexatos
  */
-public class DroneStationRenderer implements IPipePluggableRenderer {
+public class DroneStationRenderer implements IPipePluggableStaticRenderer {
 
 	private float zFightOffset = 1 / 4096.0F;
 
 	private void droneStationPartRender(RenderBlocks renderblocks,
-		ForgeDirection side, ITextureStates blockStateMachine, int x, int y, int z,
+		EnumFacing side, ITextureStates blockStateMachine, int x, int y, int z,
 		float xStart, float xEnd, float yStart, float yEnd, float zStart,
 		float zEnd) {
 
@@ -246,11 +250,9 @@ public class DroneStationRenderer implements IPipePluggableRenderer {
 
 		@SubscribeEvent
 		public void textureHook(TextureStitchEvent.Pre event) {
-			if(event.map.getTextureType() == 0) {
 				for(Textures t : Textures.VALUES) {
-					t.registerIcon(event.map);
+					t.registerSprite(event.map);
 				}
-			}
 		}
 
 		enum Textures {
@@ -258,7 +260,7 @@ public class DroneStationRenderer implements IPipePluggableRenderer {
 			DRONE_STATION_BOTTOM("drone_station_bottom"),
 			DRONE_STATION_SIDE("drone_station_side");
 
-			private IIcon icon;
+			private TextureAtlasSprite icon;
 			private final String location;
 			public static final Textures[] VALUES = values();
 
@@ -266,12 +268,12 @@ public class DroneStationRenderer implements IPipePluggableRenderer {
 				this.location = location;
 			}
 
-			public IIcon getIcon() {
+			public TextureAtlasSprite getIcon() {
 				return icon;
 			}
 
-			public void registerIcon(IIconRegister iconRegister) {
-				this.icon = new WrappedIcon(iconRegister.registerIcon("computronics:buildcraft/pluggable/" + location));
+			public void registerSprite(TextureMap iconRegister) {
+				this.icon = new WrappedIcon(iconRegister.registerSprite(new ResourceLocation("computronics","buildcraft/pluggable/" + location)));
 			}
 		}
 
