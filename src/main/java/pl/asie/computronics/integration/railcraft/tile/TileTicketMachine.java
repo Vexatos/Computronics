@@ -431,7 +431,7 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 		if(a.count() >= 2) {
 			return setDestination(a.checkInteger(0), a.checkString(1), true);
 		}
-		return setDestination(this.getSelectedSlot() + 1, a.checkString(1), true);
+		return setDestination(this.getSelectedSlot() + 1, a.checkString(0), true);
 	}
 
 	@Callback(doc = "function([slot:number]):string; Returns the destination of the currently selected or the specified ticket")
