@@ -35,6 +35,7 @@
   * FIXED: Updated OpenComputers integration
   * FIXED: Removed explicit dependency on GregTech 5. Computronics will launch with GregTech 6 now (but there is no integration yet).
   * FIXED: Tape program not displaying information properly if file size is larger than tape size
+  * FIXED: Ticket Machine's `setDestination` not working with OpenComputers when no slot is specified
 
 ==== 1.6.0 ====
 
