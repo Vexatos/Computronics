@@ -6,6 +6,7 @@ import dan200.computercraft.api.peripheral.IComputerAccess;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
+import li.cil.oc.api.prefab.DriverSidedTileEntity;
 import li.cil.oc.api.prefab.ManagedEnvironment;
 import mods.railcraft.common.blocks.signals.TileSwitchRouting;
 import mods.railcraft.common.items.ItemRoutingTable;
@@ -14,7 +15,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
 import pl.asie.computronics.integration.CCMultiPeripheral;
-import pl.asie.computronics.integration.DriverTileEntity;
 import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
 import pl.asie.computronics.integration.util.RoutingTableUtil;
 import pl.asie.computronics.reference.Names;
@@ -107,7 +107,7 @@ public class DriverRoutingSwitch {
 		return new Object[] { false, "no routing table found" };
 	}
 
-	public static class OCDriver extends DriverTileEntity {
+	public static class OCDriver extends DriverSidedTileEntity {
 
 		public static class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TileSwitchRouting> {
 

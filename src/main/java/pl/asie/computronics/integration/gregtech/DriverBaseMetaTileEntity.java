@@ -5,15 +5,15 @@ import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.ManagedEnvironment;
+import li.cil.oc.api.prefab.DriverSidedTileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import pl.asie.computronics.integration.DriverTileEntity;
 import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
 
 /*
  * GREEEEEEEEEEEEEEEEEEEEEEEEG
  */
-public class DriverBaseMetaTileEntity extends DriverTileEntity {
+public class DriverBaseMetaTileEntity extends DriverSidedTileEntity {
 
 	public static class ManagedEnvironmentMachine extends ManagedEnvironmentOCTile<BaseMetaTileEntity> {
 
