@@ -8,13 +8,13 @@ import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.ManagedEnvironment;
+import li.cil.oc.api.prefab.DriverSidedTileEntity;
 import li.cil.tis3d.api.serial.SerialInterface;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.integration.CCMultiPeripheral;
-import pl.asie.computronics.integration.DriverTileEntity;
 import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
 import pl.asie.computronics.integration.tis3d.serial.TileInterfaceProvider;
 import pl.asie.computronics.integration.tis3d.serial.TileSerialInterface;
@@ -29,7 +29,7 @@ public class DriverFlamingo {
 		tile.getWorldObj().addBlockEvent(tile.xCoord, tile.yCoord, tile.zCoord, tile.getBlockType(), 0, 0);
 	}
 
-	public static class OCDriver extends DriverTileEntity {
+	public static class OCDriver extends DriverSidedTileEntity {
 
 		public static class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TileEntityFlamingo> {
 
