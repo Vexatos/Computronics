@@ -183,10 +183,10 @@ local function writeTape(path)
       if status then
         print("Status: " .. status .. " " .. message)
         if string.match(tostring(status), "2%d%d") then
-          return true, setmetatable({}, {
-            close = file.close,
-            read = file.read,
-          }), header
+          return true, {
+            close = function(self, ...) return file.close(...) end,
+            read = function(self, ...) return file.read(...) end,
+          }, header
         end
         return false
       end
