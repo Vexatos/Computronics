@@ -178,6 +178,10 @@ local function writeTape(path)
         return false
       end
 
+      while not file.finishConnect() do
+        os.sleep(0)
+      end
+
       local status, message, header = file.response()
 
       if status then
