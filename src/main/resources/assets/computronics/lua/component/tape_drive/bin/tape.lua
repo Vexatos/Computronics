@@ -186,7 +186,7 @@ local function writeTape(path)
 
       if status then
         print("Status: " .. status .. " " .. message)
-        if string.match(tostring(status), "2%d%d") then
+        if string.format("%d", status):sub(1,1) == "2" then
           return true, {
             close = function(self, ...) return file.close(...) end,
             read = function(self, ...) return file.read(...) end,
