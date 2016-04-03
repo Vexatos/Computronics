@@ -1,5 +1,6 @@
 package pl.asie.computronics.integration.railcraft.client;
 
+import cpw.mods.fml.client.registry.ClientRegistry;
 import mods.railcraft.client.render.BlockRenderer;
 import mods.railcraft.client.render.RenderSignalBox;
 import net.minecraft.block.Block;
@@ -12,6 +13,9 @@ public class SignalBoxRenderer extends BlockRenderer {
 
 	public SignalBoxRenderer(Block block, SignalTypes type) {
 		super(block);
-		addCombinedRenderer(0, new RenderSignalBox(type));
+		RenderSignalBox renderer = new RenderSignalBox(type);
+		addCombinedRenderer(0, renderer);
+		ClientRegistry.bindTileEntitySpecialRenderer(type.getTileClass(), renderer);
 	}
 }
+

@@ -38,6 +38,7 @@ This version comes with a 1.8.9 port in addition to many additions.
   * [1.7.10] FIXED: Digital Locomotive Relay trying to consume OpenComputers energy even if called from ComputerCraft
   * [1.7.10] FIXED: Updated OpenComputers integration
   * [1.7.10] FIXED: Removed explicit dependency on GregTech 5. Computronics will launch with GregTech 6 now (but there is no integration yet).
+  * [1.7.10] FIXED: Ticket Machine's `setDestination` not working with OpenComputers when no slot is specified
 
   * [1.8.9] Ported the mod to 1.8.9! Everything is resource-pack ready!
   	- Mods supported right now are ComputerCraft, OpenComputers, TIS-3D, BuildCraft (apart from the Drone Docking Station), EnderIO, Pink Flamingo, Storage Drawers, Charset and WAILA. 
