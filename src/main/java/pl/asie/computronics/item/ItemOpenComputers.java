@@ -56,7 +56,7 @@ import java.util.Set;
 	@Optional.Interface(iface = "li.cil.oc.api.driver.item.HostAware", modid = Mods.OpenComputers),
 	@Optional.Interface(iface = "li.cil.oc.api.driver.item.UpgradeRenderer", modid = Mods.OpenComputers)
 })
-public class ItemOpenComputers extends ItemMultiple implements Item, EnvironmentProvider, HostAware, UpgradeRenderer, IItemWithDocumentation {
+public class ItemOpenComputers extends ItemMultipleComputronics implements Item, EnvironmentProvider, HostAware, UpgradeRenderer, IItemWithDocumentation {
 
 	public ItemOpenComputers() {
 		super(Mods.Computronics, new String[] {

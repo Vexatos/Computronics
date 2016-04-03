@@ -1,13 +1,14 @@
 package pl.asie.computronics.item;
 
 import pl.asie.computronics.Computronics;
+import pl.asie.lib.item.ItemMultiple;
 
 /**
  * @author Vexatos
  */
-public class ItemMultiple extends pl.asie.lib.item.ItemMultiple {
+public class ItemMultipleComputronics extends ItemMultiple {
 
-	public ItemMultiple(String mod, String[] parts) {
+	public ItemMultipleComputronics(String mod, String[] parts) {
 		super(mod, parts);
 	}
 

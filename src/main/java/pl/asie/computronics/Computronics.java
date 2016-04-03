@@ -47,7 +47,7 @@ import pl.asie.computronics.integration.buildcraft.statements.StatementParameter
 import pl.asie.computronics.integration.buildcraft.statements.TriggerProvider;
 import pl.asie.computronics.integration.charset.IntegrationCharset;
 import pl.asie.computronics.integration.tis3d.IntegrationTIS3D;
-import pl.asie.computronics.item.ItemMultiple;
+import pl.asie.computronics.item.ItemMultipleComputronics;
 import pl.asie.computronics.item.ItemTape;
 import pl.asie.computronics.item.block.ComputronicsItemBlock;
 import pl.asie.computronics.network.NetworkHandlerClient;
@@ -87,7 +87,7 @@ import java.util.concurrent.Executors;
 		+ "after:ComputerCraft@[1.79,);after:OpenComputers@[1.6.0,);after:tis3d@[0.8.3.13,);"
 		+ "before:OpenPeripheralCore@[1.1,);before:OpenPeripheralApi@[3.2,);"
 		+ "after:MineFactoryReloaded;after:RedLogic@[59.1.9,);after:ProjRed|Core;"
-		+ "after:BuildCraft|Core@[7.2.0,);after:Railcraft@[9.8.0.3,);"
+		+ "after:BuildCraft|Core@[7.2.0,);after:Railcraft@[9.10.0.0,);"
 		+ "after:gregtech;after:EnderIO@[1.8.9-3.0,);"
 		+ "after:Forestry;after:Waila@[1.5.10,);"
 		+ "after:MekanismAPI|energy@[8.0.0,);after:Flamingo@[1.7.10-1.3,);"
@@ -136,7 +136,7 @@ public class Computronics {
 	public static IntegrationCharset charset;
 
 	public static ItemTape itemTape;
-	public static ItemMultiple itemParts;
+	public static ItemMultipleComputronics itemParts;
 	//public static ItemMultiple itemPartsGreg;
 
 	public static IGuiProvider guiTapeDrive;
@@ -256,7 +256,7 @@ public class Computronics {
 				proxy.registerEntities();
 			}*/
 
-			itemParts = new ItemMultiple(Mods.Computronics, new String[] { "part_tape_track" });
+			itemParts = new ItemMultipleComputronics(Mods.Computronics, new String[] { "part_tape_track" });
 			itemParts.setCreativeTab(tab);
 			GameRegistry.registerItem(itemParts, "parts");
 			itemParts.registerItemModels();
