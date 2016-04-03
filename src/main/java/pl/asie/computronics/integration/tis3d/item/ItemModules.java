@@ -15,7 +15,7 @@ import pl.asie.computronics.integration.tis3d.manual.IModuleWithDocumentation;
 import pl.asie.computronics.integration.tis3d.module.ModuleBoom;
 import pl.asie.computronics.integration.tis3d.module.ModuleColorful;
 import pl.asie.computronics.integration.tis3d.module.ModuleTapeReader;
-import pl.asie.computronics.item.ItemMultiple;
+import pl.asie.computronics.item.ItemMultipleComputronics;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 
@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * @author Vexatos
  */
-public class ItemModules extends ItemMultiple implements ModuleProvider, IModuleWithDocumentation {
+public class ItemModules extends ItemMultipleComputronics implements ModuleProvider, IModuleWithDocumentation {
 
 	public ItemModules() {
 		super(Mods.Computronics, new String[] {

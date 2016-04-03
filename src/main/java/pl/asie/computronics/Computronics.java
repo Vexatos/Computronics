@@ -47,7 +47,7 @@ import pl.asie.computronics.integration.buildcraft.statements.StatementParameter
 import pl.asie.computronics.integration.buildcraft.statements.TriggerProvider;
 import pl.asie.computronics.integration.charset.IntegrationCharset;
 import pl.asie.computronics.integration.tis3d.IntegrationTIS3D;
-import pl.asie.computronics.item.ItemMultiple;
+import pl.asie.computronics.item.ItemMultipleComputronics;
 import pl.asie.computronics.item.ItemTape;
 import pl.asie.computronics.item.block.ComputronicsItemBlock;
 import pl.asie.computronics.network.NetworkHandlerClient;
@@ -136,7 +136,7 @@ public class Computronics {
 	public static IntegrationCharset charset;
 
 	public static ItemTape itemTape;
-	public static ItemMultiple itemParts;
+	public static ItemMultipleComputronics itemParts;
 	//public static ItemMultiple itemPartsGreg;
 
 	public static IGuiProvider guiTapeDrive;
@@ -256,7 +256,7 @@ public class Computronics {
 				proxy.registerEntities();
 			}*/
 
-			itemParts = new ItemMultiple(Mods.Computronics, new String[] { "part_tape_track" });
+			itemParts = new ItemMultipleComputronics(Mods.Computronics, new String[] { "part_tape_track" });
 			itemParts.setCreativeTab(tab);
 			GameRegistry.registerItem(itemParts, "parts");
 			itemParts.registerItemModels();
