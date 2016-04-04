@@ -27,6 +27,7 @@ local function printUsage()
   print("Other options:")
   print(" '--address=<address>' to use a specific tape drive")
   print(" '--b=<bytes>' to specify the size of the chunks the program will write to a tape")
+  print(" '--t=<timeout>' to specify a custom maximum timeout in seconds when writing from a URL")
   print(" '-y' to not ask for confirmation before starting to write")
   return
 end
@@ -179,7 +180,17 @@ local function writeTape(path)
       end
 
       local connected, reason = false, ""
-      for i = 1, 50 do
+      local timeout = 50
+      if options.t then
+        local nTimeout = tonumber(options.t)
+        if nTimeout then
+          print("Max timeout: " .. options.t)
+          timeout = nTimeout * 10
+        else
+          io.stderr:write("option --t is not a number. Defaulting to 5 seconds.\n")
+        end
+      end
+      for i = 1, timeout do
         connected, reason = file.finishConnect()
         os.sleep(.1)
         if connected or connected == nil then
