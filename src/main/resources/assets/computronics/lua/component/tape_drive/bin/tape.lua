@@ -179,7 +179,7 @@ local function writeTape(path)
       end
 
       local connected, reason = false, ""
-      for i = 1, 50, 1 do
+      for i = 1, 50 do
         connected, reason = file.finishConnect()
         os.sleep(.1)
         if connected or connected == nil then
@@ -195,9 +195,9 @@ local function writeTape(path)
       local status, message, header = file.response()
 
       if status then
-        status = math.tointeger and math.tointeger(status) or status
+        status = string.format("%d", status)
         print("Status: " .. status .. " " .. message)
-        if string.format("%d", status):sub(1,1) == "2" then
+        if status:sub(1,1) == "2" then
           return true, {
             close = function(self, ...) return file.close(...) end,
             read = function(self, ...) return file.read(...) end,
