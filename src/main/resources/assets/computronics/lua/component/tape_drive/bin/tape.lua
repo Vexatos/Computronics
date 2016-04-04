@@ -178,15 +178,26 @@ local function writeTape(path)
         return false
       end
 
-      while not file.finishConnect() do
-        os.sleep(0)
+      local connected, reason = false, ""
+      for i = 1, 50 do
+        connected, reason = file.finishConnect()
+        os.sleep(.1)
+        if connected or connected == nil then
+          break
+        end
+      end
+      
+      if connected == nil then
+        io.stderr:write("Could not connect to server: " .. reason)
+        return false
       end
 
       local status, message, header = file.response()
 
       if status then
+        status = string.format("%d", status)
         print("Status: " .. status .. " " .. message)
-        if string.format("%d", status):sub(1,1) == "2" then
+        if status:sub(1,1) == "2" then
           return true, {
             close = function(self, ...) return file.close(...) end,
             read = function(self, ...) return file.read(...) end,
