@@ -31,6 +31,10 @@ Keep in mind that some of these may not be available, depending on the recipe se
 * [Server Self-Destructor](server_self_destructor.md)
 * [Rack Capacitor](rack_capacitor.md)
 
+### Other
+
+* [Magical Memory](magical_memory.md)
+
 # Items for other mods
 
 These are items that Computronics adds for integration with other mods. They might not exist in your mod pack.

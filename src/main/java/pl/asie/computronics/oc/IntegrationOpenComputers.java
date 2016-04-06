@@ -55,11 +55,13 @@ import pl.asie.computronics.integration.railcraft.driver.track.DriverPrimingTrac
 import pl.asie.computronics.integration.railcraft.driver.track.DriverRoutingTrack;
 import pl.asie.computronics.integration.redlogic.DriverLamp;
 import pl.asie.computronics.integration.storagedrawers.DriverDrawerGroup;
+import pl.asie.computronics.item.ItemOCSpecialParts;
 import pl.asie.computronics.item.ItemOpenComputers;
 import pl.asie.computronics.oc.block.ComputronicsBlockEnvironmentProvider;
 import pl.asie.computronics.oc.client.RackMountableRenderer;
 import pl.asie.computronics.oc.client.UpgradeRenderer;
 import pl.asie.computronics.oc.driver.DriverBoardBoom;
+import pl.asie.computronics.oc.driver.DriverMagicalMemory;
 import pl.asie.computronics.oc.manual.ComputronicsPathProvider;
 import pl.asie.computronics.reference.Compat;
 import pl.asie.computronics.reference.Config;
@@ -81,6 +83,7 @@ public class IntegrationOpenComputers {
 	private final Logger log;
 
 	public static ItemOpenComputers itemOCParts;
+	public static ItemOCSpecialParts itemOCSpecialParts;
 	public static UpgradeRenderer upgradeRenderer;
 	public static RackMountableRenderer mountableRenderer;
 	public static ColorfulUpgradeHandler colorfulUpgradeHandler;
@@ -111,6 +114,14 @@ public class IntegrationOpenComputers {
 			GameRegistry.registerItem(itemOCParts, "computronics.ocParts");
 			Driver.add((Item) itemOCParts);
 			Driver.add((EnvironmentProvider) itemOCParts);
+		}
+
+		if(Config.OC_MAGICAL_MEMORY) {
+			itemOCSpecialParts = new ItemOCSpecialParts();
+			GameRegistry.registerItem(itemOCSpecialParts, "computronics.ocSpecialParts");
+			if(Config.OC_MAGICAL_MEMORY) {
+				Driver.add(new DriverMagicalMemory());
+			}
 		}
 
 		// OpenComputers needs a hook in updateEntity in order to proprly register peripherals.

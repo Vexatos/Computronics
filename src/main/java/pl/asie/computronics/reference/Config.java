@@ -60,6 +60,8 @@ public class Config {
 	public static boolean OC_BOARD_BOOM;
 	public static boolean OC_BOARD_CAPACITOR;
 
+	public static boolean OC_MAGICAL_MEMORY;
+
 	public static boolean CC_OPEN_MULTI_PERIPHERAL = true;
 	public static boolean CC_ALL_MULTI_PERIPHERALS = true;
 	public static boolean CC_ALWAYS_FIRST = true;
@@ -126,6 +128,8 @@ public class Config {
 			OC_BOARD_LIGHT = config.get("enable.opencomputers", "lightBoard", true).getBoolean(true);
 			OC_BOARD_BOOM = config.get("enable.opencomputers", "boomBoard", true).getBoolean(true);
 			OC_BOARD_CAPACITOR = config.get("enable.opencomputers", "rackCapacitor", true).getBoolean(true);
+
+			OC_MAGICAL_MEMORY = config.get("enable.opencomputers", "magicalMemory", true).getBoolean(true);
 
 			// Particle Card
 			FX_ENERGY_COST = convertRFtoOC(
