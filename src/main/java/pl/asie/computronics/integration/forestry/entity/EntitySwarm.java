@@ -444,6 +444,7 @@ public class EntitySwarm extends EntityFlyingCreature implements IBeeHousing {
 			this.numCauses = numCauses;
 		}
 
+		@Override
 		public IChatComponent func_151519_b(EntityLivingBase victim) {
 			EntityLivingBase damager = victim.func_94060_bK();
 			String format = "death.attack." + this.damageType + (numCauses > 1 ? "." + (victim.worldObj.rand.nextInt(this.numCauses) + 1) : "");

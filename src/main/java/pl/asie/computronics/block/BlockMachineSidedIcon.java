@@ -22,6 +22,7 @@ public abstract class BlockMachineSidedIcon extends BlockPeripheral {
 		this("", documentationName);
 	}
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public IIcon getAbsoluteIcon(int side, int metadata) {
 		switch(side) {

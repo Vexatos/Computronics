@@ -17,6 +17,7 @@ public abstract class CCMultiPeripheral<T> extends CCTilePeripheral<T>
 		super(tile, name, world, x, y, z);
 	}
 
+	@Override
 	public int peripheralPriority() {
 		return 0;
 	}

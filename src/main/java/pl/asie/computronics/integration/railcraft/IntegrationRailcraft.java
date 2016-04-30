@@ -122,7 +122,7 @@ public class IntegrationRailcraft {
 
 	public void remap(FMLMissingMappingsEvent e) {
 		for(FMLMissingMappingsEvent.MissingMapping mapping : e.get()) {
-			if(mapping.name.equals("computronics:computronics.digitalBox")) {
+			if(digitalReceiverBox != null && mapping.name.equals("computronics:computronics.digitalBox")) {
 				switch(mapping.type) {
 					case BLOCK: {
 						mapping.remap(digitalReceiverBox);
