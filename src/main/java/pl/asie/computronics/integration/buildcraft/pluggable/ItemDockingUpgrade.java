@@ -12,6 +12,7 @@ import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.oc.manual.IItemWithPrefix;
 import pl.asie.computronics.reference.Mods;
+import pl.asie.computronics.util.OCUtils;
 import pl.asie.lib.item.ItemMultiple;
 
 /**
@@ -66,16 +67,7 @@ public class ItemDockingUpgrade extends ItemMultiple implements Item, Environmen
 
 	@Override
 	public NBTTagCompound dataTag(ItemStack stack) {
-		if(!stack.hasTagCompound()) {
-			stack.setTagCompound(new NBTTagCompound());
-		}
-		final NBTTagCompound nbt = stack.getTagCompound();
-		// This is the suggested key under which to store item component data.
-		// You are free to change this as you please.
-		if(!nbt.hasKey("oc:data")) {
-			nbt.setTag("oc:data", new NBTTagCompound());
-		}
-		return nbt.getCompoundTag("oc:data");
+		return OCUtils.dataTag(stack);
 	}
 
 	@Override
