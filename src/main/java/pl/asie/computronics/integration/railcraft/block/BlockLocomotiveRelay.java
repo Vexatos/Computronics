@@ -44,6 +44,7 @@ public class BlockLocomotiveRelay extends BlockPeripheral implements IBlockWithP
 		mBottom = r.registerIcon("computronics:machine_bottom");
 	}
 
+	@Override
 	@SideOnly(Side.CLIENT)
 	public IIcon getAbsoluteIcon(int side, int metadata) {
 		switch(side) {

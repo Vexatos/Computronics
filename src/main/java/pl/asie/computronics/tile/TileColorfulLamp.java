@@ -237,6 +237,7 @@ public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundl
 		return true;
 	}
 
+	@Override
 	@Optional.Method(modid = Mods.ProjectRed)
 	public void onProjectRedBundledInputChanged() {
 		for(int i = 0; i < 6; i++) {

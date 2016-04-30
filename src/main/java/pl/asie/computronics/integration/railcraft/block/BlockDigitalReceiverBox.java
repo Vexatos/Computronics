@@ -38,6 +38,7 @@ public class BlockDigitalReceiverBox extends BlockDigitalBoxBase implements ICom
 		return SignalTypes.DigitalReceiver;
 	}
 
+	@Override
 	public TileEntity createTileEntity(World world, int meta) {
 		return new TileDigitalReceiverBox();
 	}

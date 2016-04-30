@@ -19,6 +19,7 @@ public class ItemBlockSignalBox extends ItemBlock {
 	}
 
 	// Taken from Railcraft code
+	@Override
 	public boolean func_150936_a(World world, int x, int y, int z, int side, EntityPlayer player, ItemStack stack) {
 		Block oldBlock = world.getBlock(x, y, z);
 		if(oldBlock == Blocks.snow_layer) {

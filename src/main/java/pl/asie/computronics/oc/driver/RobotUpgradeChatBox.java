@@ -28,6 +28,7 @@ public class RobotUpgradeChatBox extends ManagedEnvironment implements IChatList
 		this.setNode(Network.newNode(this, Visibility.Network).withConnector().withComponent("chat", Visibility.Neighbors).create());
 	}
 
+	@Override
 	public void receiveChatMessage(ServerChatEvent event) {
 		if(!Config.CHATBOX_MAGIC && (event.player.worldObj != this.container.world()
 			|| event.player.getDistanceSq(container.xPosition(), container.yPosition(), container.zPosition()) > distance * distance)) {

@@ -73,6 +73,7 @@ public abstract class TileDigitalBoxBase extends TileBoxBase
 		return this.blockType;
 	}
 
+	@Override
 	public boolean isSideSolid(IBlockAccess world, int i, int j, int k, ForgeDirection side) {
 		return side == ForgeDirection.UP;
 	}

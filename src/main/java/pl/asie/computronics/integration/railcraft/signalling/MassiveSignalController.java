@@ -212,6 +212,7 @@ public class MassiveSignalController extends SignalController {
 		this.signalNames.retainAllValues(pairs);
 	}
 
+	@Override
 	protected void saveNBT(NBTTagCompound data) {
 		super.saveNBT(data);
 		NBTTagList list = new NBTTagList();
@@ -230,6 +231,7 @@ public class MassiveSignalController extends SignalController {
 		data.setTag("aspects", list);
 	}
 
+	@Override
 	protected void loadNBT(NBTTagCompound data) {
 		super.loadNBT(data);
 		NBTTagList list = data.getTagList("aspects", Constants.NBT.TAG_COMPOUND);

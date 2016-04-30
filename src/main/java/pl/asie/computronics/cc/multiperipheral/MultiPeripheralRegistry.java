@@ -16,6 +16,7 @@ public class MultiPeripheralRegistry implements IMultiPeripheralRegistry {
 		this.peripheralProviders = new ArrayList<IMultiPeripheralProvider>();
 	}
 
+	@Override
 	public void registerPeripheralProvider(IMultiPeripheralProvider provider) {
 		peripheralProviders.add(provider);
 	}
