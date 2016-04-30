@@ -84,7 +84,7 @@ dependencies {
     //provided "net.industrial-craft:industrialcraft-2:${config.ic2.version}:dev"
     //provided "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech.version}:dev"
     compile "mcp.mobius.waila:Waila:${config.waila.version}:dev"
-    deobfCompile "com.enderio.core:EnderCore-1.8:${config.endercore.version}"
+    deobfCompile "com.enderio.core:EnderCore:${config.endercore.version}"
     compile("com.enderio:EnderIO:${config.enderio.version}:dev") {
         exclude module: "appliedenergistics2"
         exclude module: "buildcraft"
