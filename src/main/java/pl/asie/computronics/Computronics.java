@@ -147,6 +147,7 @@ public class Computronics {
 	public static MultiPeripheralRegistry peripheralRegistry;
 
 	public static CreativeTabs tab = new CreativeTabs("tabComputronics") {
+		@Override
 		public Item getTabIconItem() {
 			return itemTape;
 		}

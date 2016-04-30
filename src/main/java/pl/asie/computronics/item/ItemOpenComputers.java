@@ -261,7 +261,8 @@ public class ItemOpenComputers extends ItemMultipleComputronics implements Item,
 
 	//private IIcon colorfulUpgradeCanvasIcon, colorfulUpgradeTopIcon;
 
-	/*@SideOnly(Side.CLIENT)
+	/*@Override
+	@SideOnly(Side.CLIENT)
 	public void registerIcons(IIconRegister r) {
 		super.registerIcons(r);
 		colorfulUpgradeCanvasIcon = r.registerIcon("computronics:robot_upgrade_colorful_canvas");

@@ -587,6 +587,7 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 		return 0.5f;
 	}
 
+	@Override
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
 		String ownerName = "[Unknown]";
@@ -624,6 +625,7 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 		}
 	}
 
+	@Override
 	public void writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
 		if(this.owner.getName() != null) {

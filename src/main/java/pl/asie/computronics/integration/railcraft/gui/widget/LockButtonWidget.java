@@ -36,11 +36,13 @@ public class LockButtonWidget extends ButtonWidget {
 		this.tile.setLocked(!this.tile.isLocked());
 	}
 
+	@Override
 	@SideOnly(Side.CLIENT)
 	public boolean mouseClicked(int mouseX, int mouseY, int mouseButton) {
 		return this.accessible && super.mouseClicked(mouseX, mouseY, mouseButton);
 	}
 
+	@Override
 	@SideOnly(Side.CLIENT)
 	public void handleMouseRelease(int mouseX, int mouseY, int eventType) {
 		if(this.accessible) {
@@ -48,6 +50,7 @@ public class LockButtonWidget extends ButtonWidget {
 		}
 	}
 
+	@Override
 	@SideOnly(Side.CLIENT)
 	public void handleMouseMove(int mouseX, int mouseY, int mouseButton, long time) {
 		if(this.accessible) {

@@ -82,6 +82,7 @@ public class TileChatBox extends TileEntityPeripheralBase implements IChatListen
 		}
 	}
 
+	@Override
 	public void receiveChatMessage(ServerChatEvent event) {
 		if(!worldObj.isBlockLoaded(getPos())) {
 			return;

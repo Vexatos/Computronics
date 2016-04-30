@@ -29,6 +29,7 @@ public class SelectedSlotWidget extends Widget {
 		}
 	}
 
+	@Override
 	@SideOnly(Side.CLIENT)
 	public final boolean mouseClicked(int mouseX, int mouseY, int mouseButton) {
 		if(tile.isSelectionLocked()) {

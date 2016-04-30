@@ -79,6 +79,7 @@ public class GuiTicketMachine extends GuiContainerRailcraft {
 		}
 	}
 
+	@Override
 	public void updateScreen() {
 		super.updateScreen();
 		this.updateButtons();
