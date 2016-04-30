@@ -42,11 +42,16 @@ public class TapeStorage implements ITapeStorage {
 		}
 	}
 	
+	@Override
 	public String getUniqueId() { return uniqueId; }
+	@Override
 	public String getName() { return "Tape"; }
+	@Override
 	public int getPosition() { return position; }
+	@Override
 	public int getSize() { return size; }
 	
+	@Override
 	public int setPosition(int newPosition) {
 		if(newPosition < 0) newPosition = 0;
 		if(newPosition >= size) newPosition = size - 1;
@@ -61,6 +66,7 @@ public class TapeStorage implements ITapeStorage {
 		if(newPosition >= size) newPosition = size - 1;
 		return newPosition - oldPosition;
 	}
+	@Override
 	public int seek(int dir) {
 		int seek = trySeek(dir);
 		position += seek;
@@ -68,6 +74,7 @@ public class TapeStorage implements ITapeStorage {
 		return seek;
 	}
 	
+	@Override
 	public int read(boolean simulate) {
 		if(position >= size) return 0;
 		
@@ -90,16 +97,19 @@ public class TapeStorage implements ITapeStorage {
 		return len;
 	}
 	
+	@Override
 	public int read(byte[] v, boolean simulate) {
 		return read(v, 0, simulate);
 	}
 	
+	@Override
 	public void write(byte v) {
 		if(position >= size) return;
 		
 		modified = true;
 		data[position++] = v;
 	}
+	@Override
 	public int write(byte[] v) {
 		int len = Math.min(size - (position) - 1, v.length);
 		if(len == 0) return 0;

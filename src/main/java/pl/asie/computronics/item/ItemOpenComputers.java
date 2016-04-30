@@ -265,6 +265,7 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 
 	private IIcon colorfulUpgradeCanvasIcon, colorfulUpgradeTopIcon;
 
+	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IIconRegister r) {
 		super.registerIcons(r);

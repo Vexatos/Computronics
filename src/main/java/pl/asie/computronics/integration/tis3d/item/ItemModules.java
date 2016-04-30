@@ -54,6 +54,7 @@ public class ItemModules extends ItemMultiple implements ModuleProvider, IModule
 
 	//private IIcon tapeReaderBack, tapeReaderCenter, tapeReaderOff;
 
+	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IIconRegister r) {
 		super.registerIcons(r);
@@ -99,6 +100,7 @@ public class ItemModules extends ItemMultiple implements ModuleProvider, IModule
 		return super.getIconFromDamageForRenderPass(meta, pass);
 	}
 
+	@Override
 	@SideOnly(Side.CLIENT)
 	public IIcon getIconFromDamage(int meta) {
 		//return getIconFromDamageForRenderPass(meta, 0);

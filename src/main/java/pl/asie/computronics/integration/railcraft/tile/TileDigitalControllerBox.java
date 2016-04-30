@@ -43,6 +43,7 @@ public class TileDigitalControllerBox extends TileDigitalBoxBase implements ICon
 		super(Names.Railcraft_DigitalControllerBox);
 	}
 
+	@Override
 	public void updateEntity() {
 		super.updateEntity();
 		if(Game.isNotHost(this.worldObj)) {

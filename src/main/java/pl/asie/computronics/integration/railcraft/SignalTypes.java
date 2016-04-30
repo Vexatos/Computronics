@@ -68,6 +68,7 @@ public enum SignalTypes implements IIconProvider, ISignalTileDefinition {
 		return block;
 	}
 
+	@Override
 	public IIcon getIcon() {
 		return block.getIcon(direction.ordinal(), getMeta());
 	}

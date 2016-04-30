@@ -112,10 +112,12 @@ public class TileDigitalReceiverBox extends TileDigitalBoxBase implements IRecei
 		markBlockForUpdate();
 	}
 
+	@Override
 	public SignalAspect getBoxSignalAspect(ForgeDirection side) {
 		return this.receiver.getVisualAspect();
 	}
 
+	@Override
 	public boolean canTransferAspect() {
 		return true;
 	}

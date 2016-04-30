@@ -97,6 +97,7 @@ public class MassiveSignalReceiver extends SignalReceiver {
 		return this.signalNames.keySet();
 	}
 
+	@Override
 	public void onControllerAspectChange(SignalController con, @Nonnull SignalAspect aspect) {
 		WorldCoordinate coords = con.getCoords();
 		SignalAspect oldAspect = this.aspects.get(coords);
@@ -150,6 +151,7 @@ public class MassiveSignalReceiver extends SignalReceiver {
 		this.signalNames.retainAllValues(pairs);
 	}
 
+	@Override
 	protected void saveNBT(NBTTagCompound data) {
 		super.saveNBT(data);
 		NBTTagList list = new NBTTagList();
@@ -168,6 +170,7 @@ public class MassiveSignalReceiver extends SignalReceiver {
 		data.setTag("aspects", list);
 	}
 
+	@Override
 	protected void loadNBT(NBTTagCompound data) {
 		super.loadNBT(data);
 		NBTTagList list = data.getTagList("aspects", Constants.NBT.TAG_COMPOUND);
