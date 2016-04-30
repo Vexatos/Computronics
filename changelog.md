@@ -14,8 +14,7 @@ This version comes with a 1.8.9 port in addition to many additions.
     - Each module can be individually disabled in the config file.
   * ADDED: getPosition() to tape drives. No, I'm not joking. It's real. I'm sorry.
   * ADDED: Built-in tape utility program for ComputerCraft to write songs to tapes and to play, stop, pause etc.
-  * FIXED: Iron Note Blocks now properly error when used with instrument names.
-  * FIXED: Tape program not displaying information properly if file size is larger than tape size
+  * ADDED: Option to specify a custom timeout when writing files from a URL to a tape using the tape program on OpenComputers.
   * ADDED: EnderIO 2.3 integration  for OpenComputers and ComputerCraft! (It has actually existed since March 2015, just not in any official release)
     - Added support for the new Telepad
       - Allows full control over the coordinates set (if allowed in the EnderIO config file) as well as telepad activation
@@ -25,6 +24,9 @@ This version comes with a 1.8.9 port in addition to many additions.
       - This allows you to monitor input and output of your energy network separately
     - Now you can get and set the range of Vacuum Chests
     - Added `getProgress()` to most machines with progress
+  * FIXED: Iron Note Blocks now properly error when used with instrument names.
+  * FIXED: Tape program not displaying information properly if file size is larger than tape size
+  * FIXED: OpenComputers' tape program not working with HTTPS
   * [1.7.10] ADDED: Digital Signal Controller Box for Railcraft!
     - Can be paired to up to 32 receivers (sounds overpowered, definitely is overpowered, but CovertJaguar told me to do it. It's probaby better this way...)
     - Allows individually sending aspects to each paired receiver
