@@ -36,6 +36,7 @@ public class BlockDigitalControllerBox extends BlockDigitalBoxBase {
 		return SignalTypes.DigitalController;
 	}
 
+	@Override
 	public TileEntity createTileEntity(World world, int meta) {
 		return new TileDigitalControllerBox();
 	}

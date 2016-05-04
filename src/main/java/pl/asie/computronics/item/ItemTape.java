@@ -133,11 +133,13 @@ public class ItemTape extends Item implements IItemTapeStorage, IMedia, IMediaPr
 		}
 	}
 
+	@Override
 	public String getLabel(ItemStack stack) {
 		return stack.hasTagCompound() && stack.getTagCompound().hasKey("label")
 			? stack.getTagCompound().getString("label") : "";
 	}
 
+	@Override
 	public boolean setLabel(ItemStack stack, String label) {
 		if(stack == null) {
 			return false;
@@ -190,6 +192,7 @@ public class ItemTape extends Item implements IItemTapeStorage, IMedia, IMediaPr
 		}
 	}
 
+	@Override
 	public int getSize(ItemStack stack) {
 		return getSize(stack.getItemDamage());
 	}
@@ -198,6 +201,7 @@ public class ItemTape extends Item implements IItemTapeStorage, IMedia, IMediaPr
 		return sizes[meta % sizes.length];
 	}
 
+	@Override
 	public ITapeStorage getStorage(ItemStack stack) {
 		int size = getSize(stack);
 

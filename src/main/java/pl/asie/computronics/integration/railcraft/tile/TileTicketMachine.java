@@ -399,14 +399,14 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 		return printTicket(true);
 	}
 
-	@Callback(doc = "function(allowed:boolean):boolean; permits or prohibits manual printing; Returns true if manual printing is blocked")
+	@Callback(doc = "function(allowed:boolean):boolean; permits or prohibits manual printing; Returns true if manual printing is allowed")
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] setManualPrintingAllowed(Context c, Arguments a) {
 		this.setPrintLocked(!a.checkBoolean(0));
 		return new Object[] { !this.isPrintLocked() };
 	}
 
-	@Callback(doc = "function():boolean; Returns true if manual printing is blocked", direct = true)
+	@Callback(doc = "function():boolean; Returns true if manual printing is allowed", direct = true)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] isManualPrintingAllowed(Context c, Arguments a) {
 		return new Object[] { !this.isPrintLocked() };
@@ -431,7 +431,7 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 		if(a.count() >= 2) {
 			return setDestination(a.checkInteger(0), a.checkString(1), true);
 		}
-		return setDestination(this.getSelectedSlot() + 1, a.checkString(1), true);
+		return setDestination(this.getSelectedSlot() + 1, a.checkString(0), true);
 	}
 
 	@Callback(doc = "function([slot:number]):string; Returns the destination of the currently selected or the specified ticket")
@@ -587,6 +587,7 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 		return 0.5f;
 	}
 
+	@Override
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
 		String ownerName = "[Unknown]";
@@ -624,6 +625,7 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 		}
 	}
 
+	@Override
 	public void writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
 		if(this.owner.getName() != null) {

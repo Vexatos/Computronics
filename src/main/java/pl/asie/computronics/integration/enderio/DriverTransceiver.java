@@ -124,7 +124,7 @@ public class DriverTransceiver {
 					return new Object[] { false };
 				}
 			}
-			Channel channel = new Channel(((String) arguments[1]), null, ChannelType.valueOf(((String) arguments[0]).toUpperCase(Locale.ENGLISH)));
+			Channel channel = new Channel(((String) arguments[1]), ChannelType.valueOf(((String) arguments[0]).toUpperCase(Locale.ENGLISH)));
 			ServerChannelRegister.instance.addChannel(channel);
 			PacketHandler.INSTANCE.sendToAll(new PacketAddRemoveChannel(channel, true));
 			return new Object[] { true };

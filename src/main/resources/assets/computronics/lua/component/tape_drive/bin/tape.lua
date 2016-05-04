@@ -27,6 +27,7 @@ local function printUsage()
   print("Other options:")
   print(" '--address=<address>' to use a specific tape drive")
   print(" '--b=<bytes>' to specify the size of the chunks the program will write to a tape")
+  print(" '--t=<timeout>' to specify a custom maximum timeout in seconds when writing from a URL")
   print(" '-y' to not ask for confirmation before starting to write")
   return
 end
@@ -134,7 +135,7 @@ local function writeTape(path)
   tape.seek(-tape.getSize())
   tape.stop() --Just making sure
 
-  local file, msg, _, y, success
+  local file, msg, _, y
   local block = 2048 --How much to read at a time
   if options.b then
     local nBlock = tonumber(options.b)
@@ -163,60 +164,63 @@ local function writeTape(path)
   if string.match(path, "https?://.+") then
 
     if not component.isAvailable("internet") then
-      io.stderr:write("This program requires an internet card to run.")
+      io.stderr:write("This command requires an internet card to run.")
       return false
     end
 
-    local internet = require("internet")
-    local header = ""
+    local internet = component.internet
 
-    local function setupConnection(addr)
-      if string.match(addr, "https://") then
-        io.stderr:write("unsupported URL (HTTPS is not supported, use HTTP)")
+    local function setupConnection(url)
+
+      local file, reason = internet.request(url)
+
+      if not file then
+        io.stderr:write("error requesting data from URL: " .. reason .. "\n")
         return false
       end
-      local url = string.gsub(addr, "http://", "", 1)
-      local domain = string.gsub(url, "/.*", "", 1)
-      local path = string.gsub(url, ".-/", "/", 1)
-      local header = ""
 
-      file = internet.open(domain, 80)
-      file:setTimeout(10)
-
-      file:write("GET " .. path .. " HTTP/1.1\r\nHost: " .. domain .. "\r\nConnection: close\r\n\r\n")
-
-      repeat
-        local hBlock = file:read(block)
-        if not hBlock or #hBlock <= 0 then
-          io.stderr:write("no valid HTTP response - malformed header")
-          return false
+      local connected, reason = false, ""
+      local timeout = 50
+      if options.t then
+        local nTimeout = tonumber(options.t)
+        if nTimeout then
+          print("Max timeout: " .. options.t)
+          timeout = nTimeout * 10
+        else
+          io.stderr:write("option --t is not a number. Defaulting to 5 seconds.\n")
         end
-        header = header .. hBlock
-      until string.find(header, "\r\n\r\n")
+      end
+      for i = 1, timeout do
+        connected, reason = file.finishConnect()
+        os.sleep(.1)
+        if connected or connected == nil then
+          break
+        end
+      end
+      
+      if connected == nil then
+        io.stderr:write("Could not connect to server: " .. reason)
+        return false
+      end
 
-      if string.match(header, "HTTP/1.1 ([^\r\n]-)\r\n") then
-        local status = string.match(header, "HTTP/1.1 ([^\r\n]-)\r?\n")
-        local location = string.match(header, "[Ll]ocation: (.-)\r\n")
-        if string.match(status, "3%d%d") then
-          if location ~= addr then
-            file:close()
-            print("Redirecting to " .. location)
-            return setupConnection(location)
-          end
+      local status, message, header = file.response()
+
+      if status then
+        status = string.format("%d", status)
+        print("Status: " .. status .. " " .. message)
+        if status:sub(1,1) == "2" then
+          return true, {
+            close = function(self, ...) return file.close(...) end,
+            read = function(self, ...) return file.read(...) end,
+          }, header
         end
-        if string.match(status, "2%d%d") then
-          print("Status: " .. status)
-          print("Domain: " .. domain)
-          print("Path: " .. path)
-          return true, file, header
-        end
-        io.stderr:write(status)
         return false
       end
       io.stderr:write("no valid HTTP response - no response")
       return false
     end
 
+    local success, header
     success, file, header = setupConnection(path)
     if not success then
       if file then
@@ -229,15 +233,8 @@ local function writeTape(path)
 
     _, y = term.getCursor()
 
-    if string.match(header, "Content%-Length: (%d-)\r\n") then
-      filesize = tonumber(string.match(header, "Content%-Length: (%d-)\r\n"))
-    end
-    local bytes = string.gsub(header, ".-\r\n\r\n", "", 1)
-    if bytes and #bytes > 0 then
-      term.setCursor(1, y)
-      bytery = bytery + #bytes
-      term.write("Read " .. tostring(bytery) .. " bytes...")
-      tape.write(bytes)
+    if header and header["Content-Length"] and header["Content-Length"][1] then
+      filesize = tonumber(header["Content-Length"][1])
     end
   else
     local path = shell.resolve(path)

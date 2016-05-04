@@ -20,6 +20,7 @@ public class ButtonWidget extends Widget {
 		gui.drawTexturedModalRect(guiX + this.x, guiY + this.y, this.u, vv, this.w, this.h);
 	}
 
+	@Override
 	@SideOnly(Side.CLIENT)
 	public boolean mouseClicked(int mouseX, int mouseY, int mouseButton) {
 		this.pressed = true;

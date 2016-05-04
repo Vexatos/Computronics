@@ -24,13 +24,8 @@ import java.util.Locale;
  */
 public class DriverWeatherObelisk {
 
-	private static Object[] activate(TileWeatherObelisk tile, int taskID) {
-		final WeatherTask[] VALUES = WeatherTask.values();
-		taskID--;
-		if(taskID < 0 || taskID >= VALUES.length) {
-			return new Object[] { false, "invalid weather mode. needs to be between 1 and " + String.valueOf(VALUES.length) };
-		}
-		return new Object[] { tile.startTask(taskID) };
+	private static Object[] activate(TileWeatherObelisk tile) {
+		return new Object[] { tile.startTask() };
 	}
 
 	private static Object[] canActivate(TileWeatherObelisk tile, int taskID) {
@@ -68,9 +63,9 @@ public class DriverWeatherObelisk {
 				return DriverWeatherObelisk.canActivate(tile, a.checkInteger(0));
 			}
 
-			@Callback(doc = "function(task:number):boolean; Tries to change the weather to the specified mode; Returns true on success")
+			@Callback(doc = "function():boolean; Tries to change the weather; Returns true on success")
 			public Object[] activate(Context c, Arguments a) {
-				return DriverWeatherObelisk.activate(tile, a.checkInteger(0));
+				return DriverWeatherObelisk.activate(tile);
 			}
 
 			@Callback(doc = "This is a table of all the availabe weather modes", getter = true)
@@ -128,10 +123,7 @@ public class DriverWeatherObelisk {
 					return DriverWeatherObelisk.canActivate(tile, ((Double) arguments[0]).intValue());
 				}
 				case 1: {
-					if(arguments.length < 1 || !(arguments[0] instanceof Double)) {
-						throw new LuaException("first argument needs to be a number");
-					}
-					return DriverWeatherObelisk.activate(tile, ((Double) arguments[0]).intValue());
+					return DriverWeatherObelisk.activate(tile);
 				}
 				case 2: {
 					return DriverWeatherObelisk.weather_modes();

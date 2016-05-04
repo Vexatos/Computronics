@@ -91,8 +91,8 @@ import java.util.concurrent.Executors;
 		+ "after:ComputerCraft@[1.75,);after:OpenComputers@[1.5.21,1.6);after:tis3d@[0.8.2.61,);"
 		+ "before:OpenPeripheralCore@[1.1,);before:OpenPeripheralApi@[3.2,);"
 		+ "after:MineFactoryReloaded;after:RedLogic@[59.1.9,);after:ProjRed|Core;"
-		+ "after:BuildCraft|Core@[7.0.6,);after:Railcraft@[9.8.0.3,);"
-		+ "after:gregtech;after:EnderIO@[1.7.10-2.3,);"
+		+ "after:BuildCraft|Core@[7.0.6,);after:Railcraft@[9.10.0.0,);"
+		+ "after:gregtech;after:EnderIO@[1.7.10-2.3.0.424,);"
 		+ "after:Forestry;after:Waila@[1.5.10,);"
 		+ "after:MekanismAPI|energy@[8.0.0,);after:Flamingo@[1.7.10-1.3,);"
 		+ "after:armourersWorkshop@[1.7.10-0.33,)")
@@ -148,6 +148,7 @@ public class Computronics {
 	public static MultiPeripheralRegistry peripheralRegistry;
 
 	public static CreativeTabs tab = new CreativeTabs("tabComputronics") {
+		@Override
 		public Item getTabIconItem() {
 			return itemTape;
 		}

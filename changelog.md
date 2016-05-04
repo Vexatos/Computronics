@@ -25,6 +25,7 @@
     - Can be paired to up to 32 receivers (sounds overpowered, definitely is overpowered, but CovertJaguar told me to do it. It's probaby better this way...)
     - Allows individually sending aspects to each paired receiver
     - Receivers must be referenced by their name, meaning you have to name all your signals using Signal Labels
+  * ADDED: Option to specify a custom timeout when writing files from a URL to a tape using the tape program on OpenComputers.
   * CHANGED: Digital Signal Receiver Box
     - Can noe be paired to up to 32 receivers, just like the controller box
     - Allows individually querying the aspect of each paired controller
@@ -35,6 +36,8 @@
   * FIXED: Updated OpenComputers integration
   * FIXED: Removed explicit dependency on GregTech 5. Computronics will launch with GregTech 6 now (but there is no integration yet).
   * FIXED: Tape program not displaying information properly if file size is larger than tape size
+  * FIXED: OpenComputers' tape program not working with HTTPS
+  * FIXED: Ticket Machine's `setDestination` not working with OpenComputers when no slot is specified
 
 ==== 1.6.0 ====
 

@@ -40,7 +40,7 @@ public class DriverPowerMonitor {
 			}
 
 			@Callback(doc = "function():number; Returns the max energy that can be in the conduit network")
-			public Object[] getMaxPowerInCoduits(Context c, Arguments a) {
+			public Object[] getMaxPowerInConduits(Context c, Arguments a) {
 				return new Object[] { tile.getMaxPowerInConduits() };
 			}
 
@@ -144,7 +144,7 @@ public class DriverPowerMonitor {
 
 		@Override
 		public String[] getMethodNames() {
-			return new String[] { "getPowerInConduits", "getMaxPowerInCoduits", "getPowerInCapBanks", "getMaxPowerInCapBanks",
+			return new String[] { "getPowerInConduits", "getMaxPowerInConduits", "getPowerInCapBanks", "getMaxPowerInCapBanks",
 				"getPowerInMachines", "getMaxPowerInMachines", "getAverageEnergySent", "getAverageEnergyReceived",
 				"isEngineControlEnabled", "setEngineControlEnabled", "getStartLevel", "setStartLevel", "getStopLevel", "setStopLevel" };
 		}
