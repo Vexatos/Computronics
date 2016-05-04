@@ -1,8 +1,6 @@
 package pl.asie.computronics.util.sound;
 
 import com.google.common.base.Throwables;
-import com.google.common.collect.Interner;
-import com.google.common.collect.Interners;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
@@ -329,8 +327,6 @@ public class Audio {
 		return INSTANCE;
 	}
 
-	private static final Interner<Byte> interner = Interners.newStrongInterner();
-
 	public void play(float x, float y, float z, Queue<Instruction> instructions) {
 		Minecraft mc = Minecraft.getMinecraft();
 		float distanceBasedGain = ((float) Math.max(0, 1 - mc.thePlayer.getDistance(x, y, z) / maxDistance));
@@ -348,7 +344,7 @@ public class Audio {
 						for(int sample = 0; sample < sampleCount; ++sample) {
 							for(AudioUtil.State state : process.states) {
 								int value = ((byte) (state.gate.getValue(process, state) * amplitude)) ^ 0x80;
-								state.data.add(interner.intern((byte) value));
+								state.data.write((byte) value);
 							}
 						}
 						process.delay = 0;
@@ -366,7 +362,7 @@ public class Audio {
 					synchronized(sources) {
 						for(AudioUtil.State state : process.states) {
 							ByteBuffer buf = BufferUtils.createByteBuffer(state.data.size());
-							for(Byte aByte : state.data) {
+							for(byte aByte : state.data.toByteArray()) {
 								buf.put(aByte);
 							}
 							sources.add(new Source(x, y, z, buf, gain));

@@ -3,8 +3,8 @@ package pl.asie.computronics.util.sound;
 import com.google.common.collect.ImmutableList;
 import pl.asie.computronics.reference.Config;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Vexatos
@@ -177,7 +177,7 @@ public class AudioUtil {
 		public ADSR envelope;
 
 		public boolean isFreqMod, isAmpMod;
-		public final List<Byte> data = new ArrayList<Byte>();
+		public final ByteArrayOutputStream data = new ByteArrayOutputStream();
 
 		public State(int channelIndex) {
 			this.wave = new Wave();
