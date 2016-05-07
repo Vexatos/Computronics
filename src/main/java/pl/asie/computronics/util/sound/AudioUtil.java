@@ -38,6 +38,9 @@ public class AudioUtil {
 		Closed {
 			@Override
 			public double getValue(AudioState process, State state) {
+				if(state.envelope != null && state.envelope.phase != null) {
+					return Open.getValue(process, state);
+				}
 				return 0;
 			}
 		};
@@ -87,25 +90,27 @@ public class AudioUtil {
 			if(mstate.gate == Gate.Closed) {
 				return value;
 			}
-			Wave modulator = mstate.wave;
 			return value * (1 + mstate.gate.getValue(process, mstate));
 		}
 	}
 
 	public static class ADSR {
 
-		private int attackDuration;
-		private int decayDuration;
+		private double attackSpeed;
+		private double decaySpeed;
 		private float attenuation;
-		private int releaseDuration;
+		private double releaseSpeed;
 		private Phase phase = Phase.Attack;
-		private int progress;
+		private double progress = 0;
 
 		public ADSR(int attackDuration, int decayDuration, float attenuation, int releaseDuration) {
-			this.attackDuration = Math.min(attackDuration * Config.SOUND_SAMPLE_RATE / 1000, 1);
-			this.decayDuration = Math.min(decayDuration * Config.SOUND_SAMPLE_RATE / 1000, 1);
-			this.attenuation = attenuation;
-			this.releaseDuration = Math.min(releaseDuration * Config.SOUND_SAMPLE_RATE / 1000, 1);
+			this.attenuation = Math.min(Math.max(attenuation, 0), 1);
+			this.attackSpeed = 1000D / (double) (Math.max(attackDuration, 0) * Config.SOUND_SAMPLE_RATE);
+			if(attackDuration == 0) {
+				this.phase = Phase.Decay;
+			}
+			this.decaySpeed = ((this.attenuation - 1D) * 1000D) / (double) (Math.max(decayDuration, 0) * Config.SOUND_SAMPLE_RATE);
+			this.releaseSpeed = (-this.attenuation * 1000D) / (double) (Math.max(releaseDuration, 0) * Config.SOUND_SAMPLE_RATE);
 		}
 
 		public double getModifiedValue(State state, double value) {
@@ -114,41 +119,39 @@ public class AudioUtil {
 			}
 			if(state.gate == Gate.Closed && phase != Phase.Release) {
 				phase = Phase.Release;
-				progress = 0;
 			}
 			switch(phase) {
 				case Attack: {
-					value = value * (progress / attackDuration);
-					if(++progress >= attackDuration) {
-						nextPhase(state);
+					// value = value * (progress / (double) attackSpeed);
+					if((progress += attackSpeed) >= 1) {
+						progress = 1;
+						nextPhase();
 					}
-					return value;
+					break;
 				}
 				case Decay: {
-					value = value * (((attenuation - 1) * (progress / decayDuration)) + 1);
-					if(++progress >= decayDuration) {
-						nextPhase(state);
+					// value = value * (1 + ((attenuation - 1) * (progress / (double) decaySpeed)));
+					if((progress += decaySpeed) <= attenuation) {
+						progress = attenuation;
+						nextPhase();
 					}
-					return value;
-				}
-				case Sustain: {
-					return value * attenuation;
+					break;
 				}
 				case Release: {
-					value = value * (((-attenuation) * (progress / releaseDuration)) + attenuation);
-					if(++progress >= releaseDuration) {
+					// value = value * (attenuation * (1 - (progress / (double) releaseSpeed)));
+					if((progress += releaseSpeed) <= 0) {
 						phase = null;
 						progress = 0;
 					}
-					return value;
+					break;
 				}
 			}
+			value *= progress;
 			return value;
 		}
 
-		private void nextPhase(State state) {
+		private void nextPhase() {
 			phase = phase.next();
-			progress = 0;
 		}
 
 		private enum Phase {
