@@ -59,6 +59,7 @@ public class Config {
 	public static boolean OC_BOARD_LIGHT;
 	public static boolean OC_BOARD_BOOM;
 	public static boolean OC_BOARD_CAPACITOR;
+	public static boolean OC_BOARD_SWITCH;
 
 	public static boolean OC_MAGICAL_MEMORY;
 
@@ -128,6 +129,7 @@ public class Config {
 			OC_BOARD_LIGHT = config.get("enable.opencomputers", "lightBoard", true).getBoolean(true);
 			OC_BOARD_BOOM = config.get("enable.opencomputers", "boomBoard", true).getBoolean(true);
 			OC_BOARD_CAPACITOR = config.get("enable.opencomputers", "rackCapacitor", true).getBoolean(true);
+			OC_BOARD_SWITCH = config.get("enable.opencomputers", "switchBoard", true).getBoolean(true);
 
 			OC_MAGICAL_MEMORY = config.get("enable.opencomputers", "magicalMemory", true).getBoolean(true);
 
