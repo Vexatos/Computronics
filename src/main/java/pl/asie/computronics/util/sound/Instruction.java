@@ -27,6 +27,9 @@ public abstract class Instruction {
 		@Override
 		public void encounter(AudioState process, State state) {
 			state.gate = Gate.Open;
+			if(state.envelope != null) {
+				state.envelope.reset();
+			}
 		}
 	}
 

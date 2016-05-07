@@ -101,6 +101,7 @@ public class AudioUtil {
 		private float attenuation;
 		private double releaseSpeed;
 		private Phase phase = Phase.Attack;
+		private final Phase initialPhase;
 		private double progress = 0;
 
 		public ADSR(int attackDuration, int decayDuration, float attenuation, int releaseDuration) {
@@ -108,6 +109,9 @@ public class AudioUtil {
 			this.attackSpeed = 1000D / (double) (Math.max(attackDuration, 0) * Config.SOUND_SAMPLE_RATE);
 			if(attackDuration == 0) {
 				this.phase = Phase.Decay;
+				this.initialPhase = Phase.Decay;
+			} else {
+				this.initialPhase = Phase.Attack;
 			}
 			this.decaySpeed = ((this.attenuation - 1D) * 1000D) / (double) (Math.max(decayDuration, 0) * Config.SOUND_SAMPLE_RATE);
 			this.releaseSpeed = (-this.attenuation * 1000D) / (double) (Math.max(releaseDuration, 0) * Config.SOUND_SAMPLE_RATE);
@@ -152,6 +156,10 @@ public class AudioUtil {
 
 		private void nextPhase() {
 			phase = phase.next();
+		}
+
+		public void reset() {
+			phase = this.initialPhase;
 		}
 
 		private enum Phase {
