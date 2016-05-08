@@ -337,8 +337,8 @@ public class Audio {
 
 		if(!disableAudio) {
 			if(AL.isCreated()) {
-				AudioUtil.AudioState process = new AudioUtil.AudioState(8);
-				while(!instructions.isEmpty()) {
+				AudioUtil.AudioProcess process = new AudioUtil.AudioProcess(8);
+				while(!instructions.isEmpty() || process.delay > 0) {
 					if(process.delay > 0) {
 						int sampleCount = process.delay * sampleRate / 1000;
 						for(int sample = 0; sample < sampleCount; ++sample) {

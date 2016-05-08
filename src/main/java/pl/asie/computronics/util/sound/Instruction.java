@@ -3,7 +3,7 @@ package pl.asie.computronics.util.sound;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import pl.asie.computronics.util.sound.AudioUtil.AmplitudeModulation;
-import pl.asie.computronics.util.sound.AudioUtil.AudioState;
+import pl.asie.computronics.util.sound.AudioUtil.AudioProcess;
 
 import java.util.ArrayDeque;
 import java.util.Queue;
@@ -25,7 +25,7 @@ public abstract class Instruction {
 		}
 
 		@Override
-		public void encounter(AudioState process, State state) {
+		public void encounter(AudioProcess process, State state) {
 			state.gate = Gate.Open;
 			if(state.envelope != null) {
 				state.envelope.reset();
@@ -40,7 +40,7 @@ public abstract class Instruction {
 		}
 
 		@Override
-		public void encounter(AudioState process, State state) {
+		public void encounter(AudioProcess process, State state) {
 			state.gate = Gate.Closed;
 		}
 	}
@@ -63,7 +63,7 @@ public abstract class Instruction {
 		}
 
 		@Override
-		public void encounter(AudioState process, State state) {
+		public void encounter(AudioProcess process, State state) {
 			state.wave.type = type;
 			state.wave.frequencyInHz = frequency;
 		}
@@ -82,7 +82,7 @@ public abstract class Instruction {
 		}
 
 		@Override
-		public void encounter(AudioState process) {
+		public void encounter(AudioProcess process) {
 			process.delay = this.delay;
 		}
 	}
@@ -105,7 +105,7 @@ public abstract class Instruction {
 		}
 
 		@Override
-		public void encounter(AudioState process, State state) {
+		public void encounter(AudioProcess process, State state) {
 			if(state.isFreqMod) {
 				return;
 			}
@@ -130,7 +130,7 @@ public abstract class Instruction {
 		}
 
 		@Override
-		public void encounter(AudioState process, State state) {
+		public void encounter(AudioProcess process, State state) {
 			if(state.freqMod == null) {
 				return;
 			}
@@ -157,7 +157,7 @@ public abstract class Instruction {
 		}
 
 		@Override
-		public void encounter(AudioState process, State state) {
+		public void encounter(AudioProcess process, State state) {
 			if(state.isAmpMod) {
 				return;
 			}
@@ -182,7 +182,7 @@ public abstract class Instruction {
 		}
 
 		@Override
-		public void encounter(AudioState process, State state) {
+		public void encounter(AudioProcess process, State state) {
 			if(state.ampMod == null) {
 				return;
 			}
@@ -214,7 +214,7 @@ public abstract class Instruction {
 		}
 
 		@Override
-		public void encounter(AudioState process, State state) {
+		public void encounter(AudioProcess process, State state) {
 			state.envelope = this.envelope;
 		}
 	}
@@ -226,7 +226,7 @@ public abstract class Instruction {
 		}
 
 		@Override
-		public void encounter(AudioState process, State state) {
+		public void encounter(AudioProcess process, State state) {
 			state.envelope = null;
 		}
 	}
@@ -240,14 +240,14 @@ public abstract class Instruction {
 		}
 
 		@Override
-		public final void encounter(AudioState process) {
+		public final void encounter(AudioProcess process) {
 			this.encounter(process, process.states.get(this.channelIndex));
 		}
 
-		public abstract void encounter(AudioState process, State state);
+		public abstract void encounter(AudioProcess process, State state);
 	}
 
-	public abstract void encounter(AudioState process);
+	public abstract void encounter(AudioProcess process);
 
 	public interface Ticking {
 

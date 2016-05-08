@@ -5,7 +5,11 @@ import li.cil.oc.api.driver.EnvironmentHost;
 import li.cil.oc.api.network.Visibility;
 import li.cil.oc.api.prefab.ManagedEnvironment;
 import pl.asie.computronics.reference.Config;
-import pl.asie.computronics.util.sound.Channel;
+import pl.asie.computronics.util.sound.AudioUtil;
+import pl.asie.computronics.util.sound.Instruction;
+
+import java.util.LinkedList;
+import java.util.Queue;
 
 /**
  * @author Vexatos
@@ -13,23 +17,24 @@ import pl.asie.computronics.util.sound.Channel;
 public class DriverCardSound extends ManagedEnvironment {
 
 	protected final EnvironmentHost host;
-	protected final Long[] expirationList;
 
 	public DriverCardSound(EnvironmentHost host) {
 		this.host = host;
-		this.expirationList = new Long[8];
 		this.setNode(Network.newNode(this, Visibility.Neighbors).
 			withComponent("sound").
 			withConnector(Config.SOUND_ENERGY_COST * 42).
 			create());
-		channels = new Channel[8];
-		for(int i = 0; i < channels.length; i++) {
-			channels[i] = new Channel();
-		}
+		process = new AudioUtil.AudioProcess(8);
 	}
 
-	protected final Channel[] channels;
-	protected Channel[] channelSendBuffer;
+	protected Queue<Instruction> instructions = new LinkedList<Instruction>();
+	protected Queue<Instruction> sendBuffer = new LinkedList<Instruction>();
+
+	// the process simulated on the server side.
+	protected AudioUtil.AudioProcess process;
+
+	protected boolean isRunning = false;
+	private long time;
 
 	@Override
 	public boolean canUpdate() {
@@ -38,19 +43,29 @@ public class DriverCardSound extends ManagedEnvironment {
 
 	@Override
 	public void update() {
-		final long currentTime = host.world().getTotalWorldTime();
-		for(int i = 0; i < expirationList.length; i++) {
-			if(expirationList[i] != null && expirationList[i] <= currentTime) {
-				expirationList[i] = null;
+		if(isRunning) {
+			while(!instructions.isEmpty() || process.delay > 0) {
+				if(process.delay > 0) {
+					final long newTime = System.currentTimeMillis();
+					process.delay -= newTime - time;
+					time = newTime;
+					if(process.delay < 0) {
+						process.delay = 0;
+					}
+					break;
+				} else {
+					Instruction inst = instructions.poll();
+					inst.encounter(process);
+				}
 			}
 		}
-		if(channelSendBuffer != null) {
+		if(sendBuffer != null) {
 			try {
 				// TODO send sound
 			} catch(Exception e) {
 				e.printStackTrace();
 			}
-			channelSendBuffer = null;
+			sendBuffer = null;
 		}
 	}
 }

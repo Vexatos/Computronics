@@ -14,7 +14,7 @@ public class AudioUtil {
 	public enum Gate {
 		Open {
 			@Override
-			public double getValue(AudioState process, State state) {
+			public double getValue(AudioProcess process, State state) {
 				if(state.isAmpMod || state.isFreqMod) {
 					return 0;
 				}
@@ -37,7 +37,7 @@ public class AudioUtil {
 		},
 		Closed {
 			@Override
-			public double getValue(AudioState process, State state) {
+			public double getValue(AudioProcess process, State state) {
 				if(state.envelope != null && state.envelope.phase != null) {
 					return Open.getValue(process, state);
 				}
@@ -45,12 +45,12 @@ public class AudioUtil {
 			}
 		};
 
-		public abstract double getValue(AudioState process, State state);
+		public abstract double getValue(AudioProcess process, State state);
 	}
 
 	public static abstract class Modulation {
 
-		public abstract double getModifiedValue(AudioState process, State state, double value);
+		public abstract double getModifiedValue(AudioProcess process, State state, double value);
 	}
 
 	public static class FrequencyModulation extends Modulation {
@@ -64,7 +64,7 @@ public class AudioUtil {
 		}
 
 		@Override
-		public double getModifiedValue(AudioState process, State state, double value) {
+		public double getModifiedValue(AudioProcess process, State state, double value) {
 			State mstate = process.states.get(modulatorIndex);
 			if(mstate.gate == Gate.Closed) {
 				return value;
@@ -85,7 +85,7 @@ public class AudioUtil {
 		}
 
 		@Override
-		public double getModifiedValue(AudioState process, State state, double value) {
+		public double getModifiedValue(AudioProcess process, State state, double value) {
 			State mstate = process.states.get(modulatorIndex);
 			if(mstate.gate == Gate.Closed) {
 				return value;
@@ -213,12 +213,12 @@ public class AudioUtil {
 		}
 	}
 
-	public static class AudioState {
+	public static class AudioProcess {
 
 		public final ImmutableList<State> states;
 		public int delay = 0;
 
-		public AudioState(int channelCount) {
+		public AudioProcess(int channelCount) {
 			ArrayList<State> states = new ArrayList<State>(channelCount);
 			for(int i = 0; i < 8; i++) {
 				states.add(new AudioUtil.State(i));
