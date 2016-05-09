@@ -32,7 +32,7 @@ public class AudioUtil {
 				if(state.envelope != null) {
 					value = state.envelope.getModifiedValue(state, value);
 				}
-				return value;
+				return value * state.volume;
 			}
 		},
 		Closed {
@@ -186,6 +186,7 @@ public class AudioUtil {
 		public FrequencyModulation freqMod;
 		public AmplitudeModulation ampMod;
 		public ADSR envelope;
+		public float volume;
 
 		public boolean isFreqMod, isAmpMod;
 		public final ByteArrayOutputStream data = new ByteArrayOutputStream();

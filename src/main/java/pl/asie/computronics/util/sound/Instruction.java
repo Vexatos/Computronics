@@ -231,6 +231,33 @@ public abstract class Instruction {
 		}
 	}
 
+	public static class SetVolume extends ChannelSpecific {
+
+		private final float volume;
+
+		public SetVolume(int channelIndex, float volume) {
+			super(channelIndex);
+			this.volume = Math.min(Math.max(volume, 0), 1);
+		}
+
+		@Override
+		public void encounter(AudioProcess process, State state) {
+			state.volume = this.volume;
+		}
+	}
+
+	public static class ResetVolume extends ChannelSpecific {
+
+		public ResetVolume(int channelIndex) {
+			super(channelIndex);
+		}
+
+		@Override
+		public void encounter(AudioProcess process, State state) {
+			state.volume = 1;
+		}
+	}
+
 	public static abstract class ChannelSpecific extends Instruction {
 
 		public final int channelIndex;
