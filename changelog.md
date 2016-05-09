@@ -1,6 +1,6 @@
 ==== 1.6.1 ====
 
-This version comes with a 1.8.9 port in addition to many additions.
+This version comes with a 1.8.9 and 1.9 port in addition to many additions.
 
   * ADDED: Noise Card!
     - An upgraded Beep Card with slightly different syntax
@@ -52,6 +52,10 @@ This version comes with a 1.8.9 port in addition to many additions.
   * [1.8.9] ADDED: Charset Wires Bundled Cable support for ComputerCraft.
   * [1.8.9] ADDED: Charset Wires Bundled Cable support for Computronics.
   * [1.8.9] ADDED: Support for NoteBetter to the Iron Note Block and the Musical Turtle Upgrade.
+  
+  * [1.9] Ported the mod to 1.9!
+    - Mods supported right now are OpenComputers, TIS-3D, and Pink Flamingo. 
+    - asielib is no longer needed as a separate download, it is included in this mod.
 
 ==== 1.6.0 ====
 
