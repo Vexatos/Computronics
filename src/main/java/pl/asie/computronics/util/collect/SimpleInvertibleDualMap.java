@@ -68,7 +68,7 @@ public class SimpleInvertibleDualMap<K, V> {
 
 	public K removeValue(V value) {
 		K removed = inverse.remove(value);
-		if(removed != null){
+		if(removed != null) {
 			map.remove(removed, value);
 		}
 		return removed;

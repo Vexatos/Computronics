@@ -10,6 +10,7 @@ import java.util.Iterator;
  * @author Vexatos
  */
 public class ToolRegistry implements IToolRegistry, Iterable<IToolProvider> {
+
 	private final ArrayList<IToolProvider> toolProviders = new ArrayList<IToolProvider>();
 
 	@Override

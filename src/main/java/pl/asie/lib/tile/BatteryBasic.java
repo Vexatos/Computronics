@@ -5,30 +5,37 @@ import pl.asie.lib.AsieLibMod;
 import pl.asie.lib.api.tile.IBattery;
 
 public class BatteryBasic implements IBattery {
+
 	private double energy, maxEnergy, maxInsert, maxExtract;
-	
+
 	public BatteryBasic(double maxEng, double maxExt, double maxIns) {
 		this.maxEnergy = maxEng;
 		this.maxInsert = maxExt;
 		this.maxExtract = maxIns;
 	}
-	
+
 	public BatteryBasic(double maxEng, double maxIO) {
 		this(maxEng, maxIO, maxIO);
 	}
-	
+
 	public BatteryBasic(double maxEng) {
 		this(maxEng, maxEng, maxEng);
 	}
-	
+
 	@Override
 	public double insert(int side, double maximum, boolean simulate) {
-		if(maximum > maxInsert) maximum = maxInsert;
+		if(maximum > maxInsert) {
+			maximum = maxInsert;
+		}
 		if(energy + maximum > maxEnergy) {
-			if(!simulate) energy = maxEnergy;
+			if(!simulate) {
+				energy = maxEnergy;
+			}
 			return (maxEnergy - energy);
 		} else {
-			if(!simulate) energy += maximum;
+			if(!simulate) {
+				energy += maximum;
+			}
 			return maximum;
 		}
 	}
@@ -36,7 +43,9 @@ public class BatteryBasic implements IBattery {
 	@Override
 	public double extract(int side, double maximum, boolean simulate) {
 		double amount = Math.min(energy, Math.min(maximum, maxExtract));
-		if(!simulate) energy -= amount;
+		if(!simulate) {
+			energy -= amount;
+		}
 		return amount;
 	}
 
@@ -77,7 +86,9 @@ public class BatteryBasic implements IBattery {
 
 	@Override
 	public void readFromNBT(NBTTagCompound tag) {
-		if(tag.hasKey("bb_energy")) energy = tag.getDouble("bb_energy");
+		if(tag.hasKey("bb_energy")) {
+			energy = tag.getDouble("bb_energy");
+		}
 	}
 
 	@Override
@@ -95,7 +106,9 @@ public class BatteryBasic implements IBattery {
 		} else {
 			double p = this.energy - lastEnergy;
 			lastEnergy = energy;
-			if(p > peakEnergyUsage) peakEnergyUsage = p;
+			if(p > peakEnergyUsage) {
+				peakEnergyUsage = p;
+			}
 			averageUsage[avgUsPtr++] = p;
 			avgUsPtr &= 7;
 		}
@@ -104,7 +117,9 @@ public class BatteryBasic implements IBattery {
 	@Override
 	public double getEnergyUsage() {
 		double z = 0;
-		for(int i = 0; i < 8; i++) z += averageUsage[i];
+		for(int i = 0; i < 8; i++) {
+			z += averageUsage[i];
+		}
 		return z / 8.0;
 	}
 

@@ -6,6 +6,7 @@ import gnu.trove.map.hash.TIntObjectHashMap;
 import gnu.trove.map.hash.TObjectIntHashMap;
 
 public final class AudioPacketRegistry {
+
 	public static final AudioPacketRegistry INSTANCE = new AudioPacketRegistry();
 
 	private final TObjectIntMap<Class<? extends AudioPacket>> audioPacketIdMap = new TObjectIntHashMap<Class<? extends AudioPacket>>();

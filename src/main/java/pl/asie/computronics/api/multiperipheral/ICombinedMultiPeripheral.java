@@ -6,4 +6,5 @@ package pl.asie.computronics.api.multiperipheral;
  * @author Vexatos
  */
 public interface ICombinedMultiPeripheral extends IMultiPeripheral, IMultiPeripheralProvider {
+
 }

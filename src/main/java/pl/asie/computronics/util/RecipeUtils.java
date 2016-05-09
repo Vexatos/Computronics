@@ -14,6 +14,7 @@ import java.util.Arrays;
  * @author asie, Vexatos
  */
 public class RecipeUtils {
+
 	public static void addShapedRecipe(ItemStack result, Object... recipe) {
 		if(result == null || result.getItem() == null) {
 			warnCrafting(result, recipe);
@@ -67,7 +68,7 @@ public class RecipeUtils {
 		for(int i = 0; i < recipe.length; i++) {
 			if(recipe[i] == null) {
 				recipe[i] = "null";
-			} else if(recipe[i] instanceof ItemStack && ((ItemStack) recipe[i]).getItem() == null){
+			} else if(recipe[i] instanceof ItemStack && ((ItemStack) recipe[i]).getItem() == null) {
 				recipe[i] = "null";
 			}
 		}

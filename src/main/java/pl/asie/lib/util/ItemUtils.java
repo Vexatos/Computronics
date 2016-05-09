@@ -10,26 +10,27 @@ import net.minecraft.world.World;
 import pl.asie.lib.AsieLibMod;
 
 public class ItemUtils {
-    public static void dropItems(World world, BlockPos pos, IInventory inventory) {
-    	for (int i = 0; i < inventory.getSizeInventory(); i++) {
-    		ItemStack item = inventory.getStackInSlot(i);
 
-    		if (item != null && item.stackSize > 0) {
-    			inventory.setInventorySlotContents(i, null);
-    			dropItem(world, pos, item);
-    			item.stackSize = 0;
-    		}
-    	}
-    }
-    
-    public static void dropItems(World world, BlockPos pos) {
-    	TileEntity tileEntity = world.getTileEntity(pos);
-    	if (tileEntity == null || !(tileEntity instanceof IInventory)) {
-    		return;
-    	}
-    	IInventory inventory = (IInventory) tileEntity;
-    	dropItems(world,pos, inventory);
-    }
+	public static void dropItems(World world, BlockPos pos, IInventory inventory) {
+		for(int i = 0; i < inventory.getSizeInventory(); i++) {
+			ItemStack item = inventory.getStackInSlot(i);
+
+			if(item != null && item.stackSize > 0) {
+				inventory.setInventorySlotContents(i, null);
+				dropItem(world, pos, item);
+				item.stackSize = 0;
+			}
+		}
+	}
+
+	public static void dropItems(World world, BlockPos pos) {
+		TileEntity tileEntity = world.getTileEntity(pos);
+		if(tileEntity == null || !(tileEntity instanceof IInventory)) {
+			return;
+		}
+		IInventory inventory = (IInventory) tileEntity;
+		dropItems(world, pos, inventory);
+	}
 
 	public static void dropItem(World world, BlockPos pos, ItemStack item) {
 		float rx = AsieLibMod.rand.nextFloat() * 0.8F + 0.1F;
@@ -38,10 +39,10 @@ public class ItemUtils {
 
 		EntityItem entityItem = new EntityItem(world,
 			pos.getX() + rx, pos.getY() + ry, pos.getZ() + rz,
-				new ItemStack(item.getItem(), item.stackSize, item.getItemDamage()));
+			new ItemStack(item.getItem(), item.stackSize, item.getItemDamage()));
 
-		if (item.hasTagCompound()) {
-			entityItem.getEntityItem().setTagCompound((NBTTagCompound)item.getTagCompound().copy());
+		if(item.hasTagCompound()) {
+			entityItem.getEntityItem().setTagCompound((NBTTagCompound) item.getTagCompound().copy());
 		}
 
 		float factor = 0.05F;

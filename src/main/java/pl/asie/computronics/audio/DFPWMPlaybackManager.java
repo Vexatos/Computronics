@@ -5,6 +5,7 @@ import pl.asie.lib.audio.StreamingAudioPlayer;
 import pl.asie.lib.audio.StreamingPlaybackManager;
 
 public class DFPWMPlaybackManager extends StreamingPlaybackManager {
+
 	public DFPWMPlaybackManager(boolean isClient) {
 		super(isClient);
 	}

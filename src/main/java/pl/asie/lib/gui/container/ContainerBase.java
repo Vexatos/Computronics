@@ -10,6 +10,7 @@ import pl.asie.lib.AsieLibMod;
 import pl.asie.lib.tile.TileEntityBase;
 
 public abstract class ContainerBase extends Container {
+
 	private final int containerSize;
 	private final TileEntityBase entity;
 	private final IInventory inventory;

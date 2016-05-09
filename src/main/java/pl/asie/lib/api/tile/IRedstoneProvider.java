@@ -13,7 +13,10 @@ import pl.asie.lib.reference.Mods;*/
 	@Optional.Interface(iface = "mods.immibis.redlogic.api.wiring.IConnectable", modid = Mods.RedLogic)
 })*/
 public interface IRedstoneProvider /*extends IRedstoneEmitter, IRedstoneUpdatable, IConnectable, IBundledTile*/ {
+
 	public boolean canRedstoneConnectTo(int side, int face);
+
 	public int getRedstoneOutput(int side, int face);
+
 	public void onRedstoneInputChange(int side, int face, int input);
 }

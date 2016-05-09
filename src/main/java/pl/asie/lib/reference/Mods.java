@@ -24,8 +24,8 @@ public class Mods {
 		AE2 = "appliedenergistics2",
 		IC2 = "IC2",
 		IC2Classic = "IC2-Classic",
-		//GregTech = "gregtech",
-		Mekanism = "Mekanism",
+	//GregTech = "gregtech",
+	Mekanism = "Mekanism",
 		ProjectRed = "ProjRed|Core",
 		RedLogic = "RedLogic";
 

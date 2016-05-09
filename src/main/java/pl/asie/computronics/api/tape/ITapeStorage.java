@@ -1,6 +1,7 @@
 package pl.asie.computronics.api.tape;
 
 public interface ITapeStorage {
+
 	/**
 	 * @return The unique identifier of the ITapeStorage.
 	 */

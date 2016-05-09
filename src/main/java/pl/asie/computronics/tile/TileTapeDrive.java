@@ -18,12 +18,12 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.Computronics;
@@ -36,9 +36,9 @@ import pl.asie.computronics.network.PacketType;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TapeDriveState.State;
+import pl.asie.lib.network.Packet;
 import pl.asie.lib.util.ColorUtils;
 import pl.asie.lib.util.internal.IColorable;
-import pl.asie.lib.network.Packet;
 
 import java.util.HashMap;
 
@@ -262,9 +262,9 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 		return (state.getStorage() != null ? state.getStorage().getSize() : 0);
 	}
 
-    public int getPosition() {
-        return state.getStorage() != null ? state.getStorage().getPosition() : 0;
-    }
+	public int getPosition() {
+		return state.getStorage() != null ? state.getStorage().getPosition() : 0;
+	}
 
 	public int seek(int bytes) {
 		return state.getStorage() != null ? state.getStorage().seek(bytes) : 0;
@@ -543,11 +543,11 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 		return new Object[] { getSize() };
 	}
 
-    @Callback(doc = "function():number; Returns the position of the tape, in bytes", direct = true)
-    @Optional.Method(modid = Mods.OpenComputers)
-    public Object[] getPosition(Context context, Arguments args) {
-        return new Object[] { getPosition() };
-    }
+	@Callback(doc = "function():number; Returns the position of the tape, in bytes", direct = true)
+	@Optional.Method(modid = Mods.OpenComputers)
+	public Object[] getPosition(Context context, Arguments args) {
+		return new Object[] { getPosition() };
+	}
 
 	@Callback(doc = "function(label:string):string; Sets the label of the tape. "
 		+ "Returns the new label, or nil if there is no tape inserted")
@@ -684,9 +684,9 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 				switchState(State.STOPPED);
 				return new Object[] { state.getStorage() != null && this.getEnumState() == State.STOPPED };
 			}
-            case 13: { // getPosition
-                return new Object[]{ getPosition() };
-            }
+			case 13: { // getPosition
+				return new Object[] { getPosition() };
+			}
 		}
 
 		// Argument type check

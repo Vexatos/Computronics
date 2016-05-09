@@ -16,8 +16,12 @@ import net.minecraft.util.EnumFacing;
 	@Optional.Interface(iface = "mrtjp.projectred.api.IBundledTile", modid = Mods.ProjectRed)
 })*/
 public interface IBundledRedstoneProvider /*extends IBundledEmitter, IBundledUpdatable, IConnectable, IBundledTile*/ {
+
 	public boolean canBundledConnectToInput(EnumFacing side);
+
 	public boolean canBundledConnectToOutput(EnumFacing side);
+
 	public byte[] getBundledOutput(EnumFacing side);
+
 	public void onBundledInputChange(EnumFacing side, byte[] data);
 }

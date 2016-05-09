@@ -8,6 +8,7 @@ import pl.asie.lib.api.tool.IToolProvider;
 import pl.asie.lib.integration.tool.ToolRegistry;
 
 public class Integration {
+
 	public static final ToolRegistry toolRegistry = new ToolRegistry();
 
 	/**

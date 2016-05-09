@@ -3,9 +3,9 @@ package pl.asie.computronics.tile;
 import gnu.trove.set.hash.TIntHashSet;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import pl.asie.computronics.api.audio.AudioPacket;
 import pl.asie.computronics.api.audio.IAudioConnection;
@@ -85,16 +85,16 @@ public class TileAudioCable extends TileEntityBase implements IAudioReceiver, IC
 				continue;
 			}
 
-            if (connectsAudio(dir)) {
-                if (!worldObj.isBlockLoaded(getPos().offset(dir))) {
-                    continue;
-                }
+			if(connectsAudio(dir)) {
+				if(!worldObj.isBlockLoaded(getPos().offset(dir))) {
+					continue;
+				}
 
-                TileEntity tile = worldObj.getTileEntity(getPos().offset(dir));
-                if (tile instanceof IAudioReceiver) {
-                    ((IAudioReceiver) tile).receivePacket(packet, dir.getOpposite());
-                }
-            }
+				TileEntity tile = worldObj.getTileEntity(getPos().offset(dir));
+				if(tile instanceof IAudioReceiver) {
+					((IAudioReceiver) tile).receivePacket(packet, dir.getOpposite());
+				}
+			}
 		}
 	}
 

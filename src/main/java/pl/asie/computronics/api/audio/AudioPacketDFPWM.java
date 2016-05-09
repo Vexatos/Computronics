@@ -9,6 +9,7 @@ import java.io.IOException;
  * The client-side implementation of the packet is left to be internal.
  */
 public class AudioPacketDFPWM extends AudioPacket {
+
 	public final int frequency;
 	public final byte[] data;
 

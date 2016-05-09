@@ -16,6 +16,7 @@ import pl.asie.lib.tile.TileEntityBase;
  * @author Vexatos
  */
 public class GuiProviderCipher extends LegacyGuiProvider {
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	protected GuiBase makeGuiBase(int guiID, EntityPlayer entityPlayer, World world, BlockPos pos, TileEntityBase tile) {

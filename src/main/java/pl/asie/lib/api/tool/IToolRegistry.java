@@ -20,6 +20,7 @@ package pl.asie.lib.api.tool;
  * </pre>
  */
 public interface IToolRegistry extends Iterable<IToolProvider> {
+
 	/**
 	 * Registers a new {@link pl.asie.lib.api.tool.IToolProvider}.
 	 */

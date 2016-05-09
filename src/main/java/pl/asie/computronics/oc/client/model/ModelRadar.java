@@ -4,6 +4,7 @@ import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 
 public class ModelRadar extends ModelBase {
+
 	public ModelRenderer Pole;
 	public ModelRenderer Core;
 	public ModelRenderer LeftWing;

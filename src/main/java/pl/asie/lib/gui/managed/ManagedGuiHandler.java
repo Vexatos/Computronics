@@ -10,6 +10,7 @@ import java.util.ArrayList;
  * @author Vexatos
  */
 public class ManagedGuiHandler implements IGuiHandler {
+
 	private final ArrayList<IGuiProvider> guiProviders = new ArrayList<IGuiProvider>();
 
 	public int registerGuiProvider(IGuiProvider provider) {

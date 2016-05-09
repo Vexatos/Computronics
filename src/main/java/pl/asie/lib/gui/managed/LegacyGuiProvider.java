@@ -28,7 +28,7 @@ public abstract class LegacyGuiProvider extends GuiProviderBase {
 		final BlockPos pos = new BlockPos(x, y, z);
 		TileEntity tile = world.getTileEntity(pos);
 		if(tile instanceof TileEntityBase) {
-			return makeGuiBase(guiID, entityPlayer, world,pos, (TileEntityBase) tile);
+			return makeGuiBase(guiID, entityPlayer, world, pos, (TileEntityBase) tile);
 		}
 		return null;
 	}
