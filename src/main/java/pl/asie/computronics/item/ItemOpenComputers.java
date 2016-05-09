@@ -437,11 +437,6 @@ public class ItemOpenComputers extends ItemMultipleComputronics implements Item,
 	}
 
 	@Override
-	protected void registerItemModel(int meta) {
-		Computronics.proxy.registerItemModel(this, meta, "computronics:" + parts[meta]);
-	}
-
-	@Override
 	@Optional.Method(modid = Mods.OpenComputers)
 	public String computePreferredMountPoint(ItemStack stack, Robot robot, Set<String> availableMountPoints) {
 		return IntegrationOpenComputers.upgradeRenderer.computePreferredMountPoint(stack, robot, availableMountPoints);

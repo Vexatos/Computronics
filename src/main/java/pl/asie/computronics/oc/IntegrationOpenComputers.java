@@ -77,7 +77,9 @@ public class IntegrationOpenComputers {
 
 		if(Config.OC_MAGICAL_MEMORY) {
 			itemOCSpecialParts = new ItemOCSpecialParts();
-			Computronics.instance.registerItem(itemOCSpecialParts, "computronics.ocSpecialParts");
+			Computronics.instance.registerItem(itemOCSpecialParts, "oc_special_parts");
+			itemOCSpecialParts.registerItemModels();
+			Driver.add(itemOCSpecialParts);
 			if(Config.OC_MAGICAL_MEMORY) {
 				Driver.add(new DriverMagicalMemory());
 			}
