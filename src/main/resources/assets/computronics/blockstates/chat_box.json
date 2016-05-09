@@ -2,12 +2,9 @@
     "forge_marker": 1,
     "defaults": {
         "textures": {
-            "side": "computronics:blocks/chatbox_side",
-            "bottom": "computronics:blocks/machine_bottom",
-            "top": "computronics:blocks/machine_top",
-            "particle": "computronics:blocks/chatbox_side"
+            "side": "computronics:blocks/base"
         },
-        "model": "computronics:chat_box",
+        "model": "computronics:base_with_front",
         "transform": "forge:default-block"
     },
     "variants": {

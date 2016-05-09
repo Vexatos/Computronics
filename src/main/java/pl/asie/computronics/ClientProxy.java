@@ -23,6 +23,8 @@ import pl.asie.lib.network.Packet;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ClientProxy extends CommonProxy {
 
@@ -47,7 +49,7 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void registerItemModel(Item item, int meta, String name) {
 		if(item instanceof IItemColor) {
-			Minecraft.getMinecraft().getItemColors().registerItemColorHandler(((IItemColor) item), item);
+			coloredItems.put(((IItemColor) item), item);
 		}
 		if(name.contains("#")) {
 			ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(name.split("#")[0], name.split("#")[1]));
@@ -59,15 +61,28 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void registerItemModel(Block block, int meta, String name) {
 		if(block instanceof IBlockColor) {
-			Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(((IBlockColor) block), block);
+			coloredBlocks.put(((IBlockColor) block), block);
 		}
 		super.registerItemModel(block, meta, name);
 	}
+
+	private final Map<IItemColor, Item> coloredItems = new HashMap<IItemColor, Item>();
+	private final Map<IBlockColor, Block> coloredBlocks = new HashMap<IBlockColor, Block>();
 
 	@Override
 	public void init() {
 		Audio.init();
 		registerRenderers();
+		registerColors();
+	}
+
+	private void registerColors() {
+		for(Map.Entry<IItemColor, Item> entry : coloredItems.entrySet()) {
+			Minecraft.getMinecraft().getItemColors().registerItemColorHandler(entry.getKey(), entry.getValue());
+		}
+		for(Map.Entry<IBlockColor, Block> entry : coloredBlocks.entrySet()) {
+			Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(entry.getKey(), entry.getValue());
+		}
 	}
 
 	public void registerRenderers() {

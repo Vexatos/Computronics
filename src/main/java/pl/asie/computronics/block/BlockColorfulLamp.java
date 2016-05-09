@@ -96,7 +96,7 @@ public class BlockColorfulLamp extends BlockPeripheral /*implements IRedNetInput
 			}
 			return this.lightValue;
 		}*/
-		return this.lightValue = world.getBlockState(pos).getValue(BRIGHTNESS);
+		return this.lightValue = state.getValue(BRIGHTNESS);
 	}
 
 	@Override

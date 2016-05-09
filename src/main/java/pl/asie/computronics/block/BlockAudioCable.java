@@ -67,7 +67,7 @@ public class BlockAudioCable extends BlockBase implements IBlockWithDocumentatio
 		if(tile instanceof IColorable) {
 			return ((IColorable) tile).getColor();
 		}
-		return getRenderColor(world.getBlockState(pos));
+		return getRenderColor(state);
 	}
 
 	@Override

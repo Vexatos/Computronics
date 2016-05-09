@@ -1,7 +1,7 @@
 {
-	"tape_rewind": {"category": "block", "sounds": [{"name": "tape_rewind", "stream": false}]},
-	"tape_eject": {"category": "block", "sounds": [{"name": "tape_eject", "stream": false}]},
-	"tape_insert": {"category": "block", "sounds": [{"name": "tape_insert", "stream": false}]},
-	"tape_button": {"category": "block", "sounds": [{"name": "tape_button", "stream": false}]},
-	"ticket_print": {"category": "block", "sounds": [{"name": "ticket_print", "stream": false}]}
+	"tape_rewind": {"category": "block", "sounds": [{"name": "computronics:tape_rewind", "stream": false}]},
+	"tape_eject": {"category": "block", "sounds": [{"name": "computronics:tape_eject", "stream": false}]},
+	"tape_insert": {"category": "block", "sounds": [{"name": "computronics:tape_insert", "stream": false}]},
+	"tape_button": {"category": "block", "sounds": [{"name": "computronics:tape_button", "stream": false}]},
+	"ticket_print": {"category": "block", "sounds": [{"name": "computronics:ticket_print", "stream": false}]}
 }

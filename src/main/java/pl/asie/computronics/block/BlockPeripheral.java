@@ -64,7 +64,7 @@ public abstract class BlockPeripheral extends BlockBase implements IComputronics
 		if(tile instanceof IColorable && ((IColorable) tile).canBeColored()) {
 			return ((IColorable) tile).getColor();
 		}
-		return getRenderColor(world.getBlockState(pos));
+		return getRenderColor(state);
 	}
 
 	@Override
