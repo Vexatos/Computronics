@@ -119,6 +119,7 @@ public class IntegrationOpenComputers {
 		if(Config.OC_MAGICAL_MEMORY) {
 			itemOCSpecialParts = new ItemOCSpecialParts();
 			GameRegistry.registerItem(itemOCSpecialParts, "computronics.ocSpecialParts");
+			Driver.add(itemOCSpecialParts);
 			if(Config.OC_MAGICAL_MEMORY) {
 				Driver.add(new DriverMagicalMemory());
 			}
