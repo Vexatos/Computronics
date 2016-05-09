@@ -186,7 +186,7 @@ public class AudioUtil {
 		public FrequencyModulation freqMod;
 		public AmplitudeModulation ampMod;
 		public ADSR envelope;
-		public float volume;
+		public float volume = 1;
 
 		public boolean isFreqMod, isAmpMod;
 		public final ByteArrayOutputStream data = new ByteArrayOutputStream();
