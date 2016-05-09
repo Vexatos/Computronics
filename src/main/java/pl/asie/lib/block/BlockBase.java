@@ -270,7 +270,7 @@ public abstract class BlockBase extends Block /*implements
 
 		if(this.rotation == Rotation.SIX) {
 			if(MathHelper.abs((float) entity.posX - (float) pos.getX()) < 2.0F && MathHelper.abs((float) entity.posZ - (float) pos.getZ()) < 2.0F) {
-				double d0 = entity.posY + 1.82D - entity.getYOffset();
+				double d0 = entity.posY + entity.getEyeHeight();
 
 				if(d0 - (double) pos.getY() > 2.0D) {
 					return EnumFacing.UP;
@@ -280,7 +280,7 @@ public abstract class BlockBase extends Block /*implements
 				}
 			}
 		}
-		return EnumFacing.getHorizontal(MathHelper.floor_double((double) (entity.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3).getOpposite();
+		return entity.getHorizontalFacing().getOpposite();
 		/*int l = MathHelper.floor_double((double) (entity.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
 		return ROT_TRANSFORM4[l];*/
 	}
