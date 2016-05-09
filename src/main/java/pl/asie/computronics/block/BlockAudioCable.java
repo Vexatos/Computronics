@@ -4,7 +4,6 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
@@ -21,13 +20,14 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.oc.manual.IBlockWithDocumentation;
 import pl.asie.computronics.tile.TileAudioCable;
+import pl.asie.computronics.util.internal.IBlockWithColor;
 import pl.asie.lib.block.BlockBase;
 import pl.asie.lib.util.ColorUtils;
 import pl.asie.lib.util.internal.IColorable;
 
 import static pl.asie.lib.util.WorldUtils.notifyBlockUpdate;
 
-public class BlockAudioCable extends BlockBase implements IBlockWithDocumentation, IBlockColor {
+public class BlockAudioCable extends BlockBase implements IBlockWithDocumentation, IBlockWithColor {
 
 	private int connectionMask = 0x3f;
 	private int ImmibisMicroblocks_TransformableBlockMarker;

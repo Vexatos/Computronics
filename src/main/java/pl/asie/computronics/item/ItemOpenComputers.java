@@ -15,7 +15,6 @@ import li.cil.oc.api.internal.Tablet;
 import li.cil.oc.api.network.Environment;
 import li.cil.oc.api.network.EnvironmentHost;
 import li.cil.oc.api.network.ManagedEnvironment;
-import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -41,6 +40,7 @@ import pl.asie.computronics.oc.manual.IItemWithDocumentation;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.OCUtils;
+import pl.asie.computronics.util.internal.IItemWithColor;
 
 import java.awt.*;
 import java.util.List;
@@ -52,7 +52,7 @@ import java.util.Set;
 	@Optional.Interface(iface = "li.cil.oc.api.driver.item.HostAware", modid = Mods.OpenComputers),
 	@Optional.Interface(iface = "li.cil.oc.api.driver.item.UpgradeRenderer", modid = Mods.OpenComputers)
 })
-public class ItemOpenComputers extends ItemMultipleComputronics implements Item, EnvironmentProvider, HostAware, UpgradeRenderer, IItemWithDocumentation, IItemColor {
+public class ItemOpenComputers extends ItemMultipleComputronics implements Item, EnvironmentProvider, HostAware, UpgradeRenderer, IItemWithDocumentation, IItemWithColor {
 
 	public ItemOpenComputers() {
 		super(Mods.Computronics, new String[] {

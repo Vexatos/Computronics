@@ -3,7 +3,6 @@ package pl.asie.computronics.block;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
@@ -21,6 +20,7 @@ import pl.asie.computronics.oc.block.IComputronicsEnvironmentBlock;
 import pl.asie.computronics.oc.manual.IBlockWithDocumentation;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TileEntityPeripheralBase;
+import pl.asie.computronics.util.internal.IBlockWithColor;
 import pl.asie.lib.block.BlockBase;
 import pl.asie.lib.util.ColorUtils;
 import pl.asie.lib.util.ColorUtils.Color;
@@ -31,7 +31,7 @@ import static pl.asie.lib.util.WorldUtils.notifyBlockUpdate;
 @Optional.InterfaceList({
 	@Optional.Interface(iface = "pl.asie.computronics.oc.block.IComputronicsEnvironmentBlock", modid = Mods.OpenComputers)
 })
-public abstract class BlockPeripheral extends BlockBase implements IComputronicsEnvironmentBlock, IBlockWithDocumentation, IBlockColor {
+public abstract class BlockPeripheral extends BlockBase implements IComputronicsEnvironmentBlock, IBlockWithDocumentation, IBlockWithColor {
 
 	public BlockPeripheral(String documentationName, Rotation rotation) {
 		super(Material.IRON, Computronics.instance, rotation);

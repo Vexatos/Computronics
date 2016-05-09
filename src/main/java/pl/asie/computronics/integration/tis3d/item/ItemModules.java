@@ -4,7 +4,6 @@ import li.cil.tis3d.api.machine.Casing;
 import li.cil.tis3d.api.machine.Face;
 import li.cil.tis3d.api.module.Module;
 import li.cil.tis3d.api.module.ModuleProvider;
-import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -19,6 +18,7 @@ import pl.asie.computronics.integration.tis3d.module.ModuleTapeReader;
 import pl.asie.computronics.item.ItemMultipleComputronics;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
+import pl.asie.computronics.util.internal.IItemWithColor;
 
 import java.awt.*;
 import java.util.List;
@@ -26,7 +26,7 @@ import java.util.List;
 /**
  * @author Vexatos
  */
-public class ItemModules extends ItemMultipleComputronics implements ModuleProvider, IModuleWithDocumentation, IItemColor {
+public class ItemModules extends ItemMultipleComputronics implements ModuleProvider, IModuleWithDocumentation, IItemWithColor {
 
 	public ItemModules() {
 		super(Mods.Computronics, new String[] {

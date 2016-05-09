@@ -1,12 +1,15 @@
 package pl.asie.computronics;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Optional;
@@ -18,13 +21,14 @@ import pl.asie.computronics.oc.client.RackMountableRenderer;
 import pl.asie.computronics.oc.client.UpgradeRenderer;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.boom.SelfDestruct;
+import pl.asie.computronics.util.internal.IBlockWithColor;
+import pl.asie.computronics.util.internal.IItemWithColor;
 import pl.asie.computronics.util.sound.Audio;
 import pl.asie.lib.network.Packet;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 public class ClientProxy extends CommonProxy {
 
@@ -48,8 +52,8 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public void registerItemModel(Item item, int meta, String name) {
-		if(item instanceof IItemColor) {
-			coloredItems.put(((IItemColor) item), item);
+		if(item instanceof IItemWithColor) {
+			coloredItems.add(item);
 		}
 		if(name.contains("#")) {
 			ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(name.split("#")[0], name.split("#")[1]));
@@ -60,14 +64,14 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public void registerItemModel(Block block, int meta, String name) {
-		if(block instanceof IBlockColor) {
-			coloredBlocks.put(((IBlockColor) block), block);
+		if(block instanceof IBlockWithColor) {
+			coloredBlocks.add(block);
 		}
 		super.registerItemModel(block, meta, name);
 	}
 
-	private final Map<IItemColor, Item> coloredItems = new HashMap<IItemColor, Item>();
-	private final Map<IBlockColor, Block> coloredBlocks = new HashMap<IBlockColor, Block>();
+	private final List<Item> coloredItems = new ArrayList<Item>();
+	private final List<Block> coloredBlocks = new ArrayList<Block>();
 
 	@Override
 	public void init() {
@@ -77,12 +81,18 @@ public class ClientProxy extends CommonProxy {
 	}
 
 	private void registerColors() {
-		for(Map.Entry<IItemColor, Item> entry : coloredItems.entrySet()) {
-			Minecraft.getMinecraft().getItemColors().registerItemColorHandler(entry.getKey(), entry.getValue());
-		}
-		for(Map.Entry<IBlockColor, Block> entry : coloredBlocks.entrySet()) {
-			Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(entry.getKey(), entry.getValue());
-		}
+		Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new IItemColor() {
+			@Override
+			public int getColorFromItemstack(ItemStack stack, int tintIndex) {
+				return stack.getItem() instanceof IItemWithColor ? ((IItemWithColor) stack.getItem()).getColorFromItemstack(stack, tintIndex) : 0xFFFFFFFF;
+			}
+		}, coloredItems.toArray(new Item[coloredItems.size()]));
+		Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new IBlockColor() {
+			@Override
+			public int colorMultiplier(IBlockState state, IBlockAccess worldIn, BlockPos pos, int tintIndex) {
+				return state.getBlock() instanceof IBlockWithColor ? ((IBlockWithColor) state.getBlock()).colorMultiplier(state, worldIn, pos, tintIndex) : 0xFFFFFFFF;
+			}
+		}, coloredBlocks.toArray(new Block[coloredBlocks.size()]));
 	}
 
 	public void registerRenderers() {

@@ -3,7 +3,6 @@ package pl.asie.computronics.item;
 import dan200.computercraft.api.filesystem.IMount;
 import dan200.computercraft.api.media.IMedia;
 import dan200.computercraft.api.media.IMediaProvider;
-import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,6 +22,7 @@ import pl.asie.computronics.oc.manual.IItemWithDocumentation;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tape.TapeStorage;
 import pl.asie.computronics.util.StringUtil;
+import pl.asie.computronics.util.internal.IItemWithColor;
 import pl.asie.lib.util.color.ItemColorizer;
 
 import java.util.List;
@@ -31,7 +31,7 @@ import java.util.List;
 	@Optional.Interface(iface = "dan200.computercraft.api.media.IMediaProvider", modid = Mods.ComputerCraft),
 	@Optional.Interface(iface = "dan200.computercraft.api.media.IMedia", modid = Mods.ComputerCraft)
 })
-public class ItemTape extends Item implements IItemTapeStorage, IMedia, IMediaProvider, IItemWithDocumentation, IItemColor {
+public class ItemTape extends Item implements IItemTapeStorage, IMedia, IMediaProvider, IItemWithDocumentation, IItemWithColor {
 
 	public static final int L_SECOND = 4096;
 	public static final int L_MINUTE = 4096 * 60;

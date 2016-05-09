@@ -1,16 +1,16 @@
 package pl.asie.computronics.item.block;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.asie.computronics.util.internal.IItemWithColor;
 
 import java.util.List;
 
-public class ComputronicsItemBlock extends ItemBlock implements IItemColor {
+public class ComputronicsItemBlock extends ItemBlock implements IItemWithColor {
 
 	private IBlockWithSpecialText specialBlock;
 	private IBlockWithDifferentColors coloredBlock;
