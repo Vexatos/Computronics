@@ -394,6 +394,7 @@ public class ItemOpenComputers extends ItemMultipleComputronics implements Item,
 		OCUtils.addTooltip(stack, tooltip);
 	}
 
+	@Override
 	public void registerItemModels() {
 		if(!Computronics.proxy.isClient()) {
 			return;
@@ -434,10 +435,6 @@ public class ItemOpenComputers extends ItemMultipleComputronics implements Item,
 		if(Config.OC_BOARD_CAPACITOR) {
 			registerItemModel(11);
 		}
-	}
-
-	protected void registerItemModel(int meta) {
-		Computronics.proxy.registerItemModel(this, meta, "computronics:" + parts[meta]);
 	}
 
 	@Override

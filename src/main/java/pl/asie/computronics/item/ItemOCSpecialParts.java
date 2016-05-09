@@ -6,6 +6,7 @@ import net.minecraft.item.ItemStack;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.oc.driver.DriverMagicalMemory;
 import pl.asie.computronics.oc.manual.IItemWithDocumentation;
+import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.OCUtils;
 import pl.asie.lib.item.ItemMultiple;
@@ -15,7 +16,7 @@ import java.util.List;
 /**
  * @author Vexatos
  */
-public class ItemOCSpecialParts extends ItemMultiple implements IItemWithDocumentation, EnvironmentProvider {
+public class ItemOCSpecialParts extends ItemMultipleComputronics implements IItemWithDocumentation, EnvironmentProvider {
 
 	public ItemOCSpecialParts() {
 		super(Mods.Computronics, new String[] {
@@ -49,6 +50,16 @@ public class ItemOCSpecialParts extends ItemMultiple implements IItemWithDocumen
 				return DriverMagicalMemory.class;
 			default:
 				return null;
+		}
+	}
+
+	@Override
+	public void registerItemModels() {
+		if(!Computronics.proxy.isClient()) {
+			return;
+		}
+		if(Config.OC_MAGICAL_MEMORY) {
+			registerItemModel(0);
 		}
 	}
 }
