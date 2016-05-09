@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -111,7 +111,7 @@ public class Packet implements IMessage {
 	public Packet writeTileLocation(TileEntity te) throws IOException, RuntimeException {
 		if(te.getWorld() == null) throw new RuntimeException("World does not exist!");
 		if(te.isInvalid()) throw new RuntimeException("TileEntity is invalid!");
-		write.writeInt(te.getWorld().provider.getDimensionId());
+		write.writeInt(te.getWorld().provider.getDimension());
 		BlockPos pos = te.getPos();
 		write.writeInt(pos.getX());
 		write.writeInt(pos.getY());

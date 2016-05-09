@@ -3,8 +3,8 @@ package pl.asie.computronics.util.sound;
 import com.google.common.base.Throwables;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.client.audio.SoundCategory;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.util.SoundCategory;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
@@ -79,7 +79,7 @@ public class Audio {
 			float clampedFrequency = Math.min(Math.max(frequencyInHz - 20, 0), 1980) / 1980f + 0.5f;
 			int delay = 0;
 			for(char ch : pattern.toCharArray()) {
-				PositionedSoundRecord record = new PositionedSoundRecord(new ResourceLocation("note.harp"), gain, clampedFrequency, x, y, z);
+				PositionedSoundRecord record = new PositionedSoundRecord(SoundEvents.BLOCK_NOTE_HARP, SoundCategory.BLOCKS, gain, clampedFrequency, x, y, z);
 				if(delay == 0) {
 					mc.getSoundHandler().playSound(record);
 				} else {

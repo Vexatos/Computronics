@@ -9,7 +9,7 @@ import li.cil.oc.api.network.EnvironmentHost;
 import li.cil.oc.api.network.Visibility;
 import li.cil.oc.api.prefab.ManagedEnvironment;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import pl.asie.computronics.util.Camera;
 
 public class RobotUpgradeCamera extends ManagedEnvironment {
@@ -28,7 +28,7 @@ public class RobotUpgradeCamera extends ManagedEnvironment {
 		if(entity instanceof Rotatable) {
 			return ((Rotatable) entity).facing();
 		} else {
-			int l = MathHelper.floor_double((double) (entity.world().getClosestPlayer(entity.xPosition(), entity.yPosition(), entity.zPosition(), 1.0D).rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+			int l = MathHelper.floor_double((double) (entity.world().getClosestPlayer(entity.xPosition(), entity.yPosition(), entity.zPosition(), 1.0D, false).rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
 			return EnumFacing.getHorizontal(l);
 		}
 	}

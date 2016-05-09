@@ -30,13 +30,13 @@ public class RobotUpgradeChatBox extends ManagedEnvironment implements IChatList
 
 	@Override
 	public void receiveChatMessage(ServerChatEvent event) {
-		if(!Config.CHATBOX_MAGIC && (event.player.worldObj != this.container.world()
-			|| event.player.getDistanceSq(container.xPosition(), container.yPosition(), container.zPosition()) > distance * distance)) {
+		if(!Config.CHATBOX_MAGIC && (event.getPlayer().worldObj != this.container.world()
+			|| event.getPlayer().getDistanceSq(container.xPosition(), container.yPosition(), container.zPosition()) > distance * distance)) {
 			return;
 		}
 
 		if(this.node() != null) {
-			this.node().sendToReachable("computer.signal", "chat_message", event.username, event.message);
+			this.node().sendToReachable("computer.signal", "chat_message", event.getUsername(), event.getMessage());
 		}
 	}
 

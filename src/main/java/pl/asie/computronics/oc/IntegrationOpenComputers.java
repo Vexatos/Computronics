@@ -13,22 +13,7 @@ import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.apache.logging.log4j.Logger;
 import pl.asie.computronics.Computronics;
-import pl.asie.computronics.integration.buildcraft.DriverHeatable;
-import pl.asie.computronics.integration.enderio.DriverAbstractMachine;
-import pl.asie.computronics.integration.enderio.DriverAbstractPoweredMachine;
-import pl.asie.computronics.integration.enderio.DriverCapacitorBank;
-import pl.asie.computronics.integration.enderio.DriverHasExperience;
-import pl.asie.computronics.integration.enderio.DriverIOConfigurable;
-import pl.asie.computronics.integration.enderio.DriverPowerMonitor;
-import pl.asie.computronics.integration.enderio.DriverPowerStorage;
-import pl.asie.computronics.integration.enderio.DriverProgressTile;
-import pl.asie.computronics.integration.enderio.DriverRedstoneControllable;
-import pl.asie.computronics.integration.enderio.DriverTelepad;
-import pl.asie.computronics.integration.enderio.DriverTransceiver;
-import pl.asie.computronics.integration.enderio.DriverVacuumChest;
-import pl.asie.computronics.integration.enderio.DriverWeatherObelisk;
 import pl.asie.computronics.integration.flamingo.DriverFlamingo;
-import pl.asie.computronics.integration.storagedrawers.DriverDrawerGroup;
 import pl.asie.computronics.item.ItemOCSpecialParts;
 import pl.asie.computronics.item.ItemOpenComputers;
 import pl.asie.computronics.oc.block.ComputronicsBlockEnvironmentProvider;
@@ -85,7 +70,7 @@ public class IntegrationOpenComputers {
 			|| Config.OC_BOARD_BOOM
 			|| Config.OC_BOARD_CAPACITOR) {
 			itemOCParts = new ItemOpenComputers();
-			GameRegistry.registerItem(itemOCParts, "oc_parts");
+			Computronics.instance.registerItem(itemOCParts, "oc_parts");
 			itemOCParts.registerItemModels();
 			Driver.add((Item) itemOCParts);
 			Driver.add((EnvironmentProvider) itemOCParts);
@@ -93,7 +78,7 @@ public class IntegrationOpenComputers {
 
 		if(Config.OC_MAGICAL_MEMORY) {
 			itemOCSpecialParts = new ItemOCSpecialParts();
-			GameRegistry.registerItem(itemOCSpecialParts, "computronics.ocSpecialParts");
+			Computronics.instance.registerItem(itemOCSpecialParts, "computronics.ocSpecialParts");
 			if(Config.OC_MAGICAL_MEMORY) {
 				Driver.add(new DriverMagicalMemory());
 			}
@@ -159,11 +144,11 @@ public class IntegrationOpenComputers {
 				}
 			}
 		}*/
-		if(Mods.isLoaded(Mods.StorageDrawers)) {
+		/*if(Mods.isLoaded(Mods.StorageDrawers)) {
 			if(compat.isCompatEnabled(Compat.StorageDrawers)) {
 				Driver.add(new DriverDrawerGroup.OCDriver());
 			}
-		}/*
+		}*//*
 		if(Mods.isLoaded(Mods.FSP)) {
 			if(compat.isCompatEnabled(Compat.FSP_Steam_Transporter)) {
 				Driver.add(new DriverSteamTransporter.OCDriver());
@@ -208,7 +193,7 @@ public class IntegrationOpenComputers {
 				Driver.add(new DriverSpatialIOPort.OCDriver());
 			}
 		}*/
-		if(Mods.isLoaded(Mods.EnderIO)) {
+		/*if(Mods.isLoaded(Mods.EnderIO)) {
 			if(compat.isCompatEnabled(Compat.EnderIO)) {
 				Driver.add(new DriverRedstoneControllable.OCDriver());
 				Driver.add(new DriverIOConfigurable.OCDriver());
@@ -224,7 +209,7 @@ public class IntegrationOpenComputers {
 				Driver.add(new DriverWeatherObelisk.OCDriver());
 				Driver.add(new DriverTelepad.OCDriver());
 			}
-		}/*
+		}*//*
 
 		if(Mods.API.hasAPI(Mods.API.DraconicEvolution)
 			&& compat.isCompatEnabled(Compat.DraconicEvolution)) {
@@ -236,11 +221,11 @@ public class IntegrationOpenComputers {
 			Driver.add(new DriverStrictEnergyStorage.OCDriver());
 		}*/
 
-		if(Mods.hasVersion(Mods.API.BuildCraftTiles, Mods.Versions.BuildCraftTiles)) {
+		/*if(Mods.hasVersion(Mods.API.BuildCraftTiles, Mods.Versions.BuildCraftTiles)) {
 			if(compat.isCompatEnabled(Compat.BuildCraft_Drivers)) {
 				Driver.add(new DriverHeatable.OCDriver());
 			}
-		}
+		}*/
 
 		if(Mods.isLoaded(Mods.Flamingo)) {
 			if(compat.isCompatEnabled(Compat.Flamingo)) {
@@ -305,7 +290,7 @@ public class IntegrationOpenComputers {
 			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 3),
 				"mf", " b",
 				'm', li.cil.oc.api.Items.get("chip2").createItemStack(1),
-				'f', Items.firework_charge,
+				'f', Items.FIRE_CHARGE,
 				'b', li.cil.oc.api.Items.get("card").createItemStack(1));
 
 		}
@@ -316,7 +301,7 @@ public class IntegrationOpenComputers {
 				'f', li.cil.oc.api.Items.get("chip2").createItemStack(1),
 				'b', li.cil.oc.api.Items.get("lanCard").createItemStack(1),
 				'p', li.cil.oc.api.Items.get("printedCircuitBoard").createItemStack(1),
-				'l', Items.brick);
+				'l', Items.BRICK);
 		}
 		if(Config.OC_CARD_BEEP) {
 			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 5),
@@ -330,7 +315,7 @@ public class IntegrationOpenComputers {
 			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 6),
 				"mf", "fb",
 				'm', li.cil.oc.api.Items.get("cu").createItemStack(1),
-				'f', Blocks.tnt,
+				'f', Blocks.TNT,
 				'b', li.cil.oc.api.Items.get("redstoneCard1").createItemStack(1));
 
 		}
@@ -379,9 +364,9 @@ public class IntegrationOpenComputers {
 					"lsl", "gcg", "opo",
 					's', li.cil.oc.api.Items.get("chip1").createItemStack(1),
 					'g', new ItemStack(itemOCParts, 1, 6),
-					'c', Blocks.tnt,
+					'c', Blocks.TNT,
 					'o', "obsidian",
-					'l', Items.gunpowder,
+					'l', Items.GUNPOWDER,
 					'p', li.cil.oc.api.Items.get("printedCircuitBoard").createItemStack(1)
 				);
 			} else {

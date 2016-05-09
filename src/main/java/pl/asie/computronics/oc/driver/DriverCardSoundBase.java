@@ -4,7 +4,7 @@ import li.cil.oc.api.network.Connector;
 import li.cil.oc.api.network.EnvironmentHost;
 import li.cil.oc.api.prefab.ManagedEnvironment;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import pl.asie.computronics.Computronics;
@@ -130,7 +130,7 @@ public abstract class DriverCardSoundBase extends ManagedEnvironment {
 			}
 		}
 		Packet packet = Computronics.packet.create(PacketType.COMPUTER_BEEP.ordinal())
-			.writeInt(world.provider.getDimensionId())
+			.writeInt(world.provider.getDimension())
 			.writeInt(MathHelper.floor_double(x))
 			.writeInt(MathHelper.floor_double(y))
 			.writeInt(MathHelper.floor_double(z))
@@ -145,7 +145,7 @@ public abstract class DriverCardSoundBase extends ManagedEnvironment {
 			}
 		}
 		Computronics.packet.sendToAllAround(packet, new NetworkRegistry.TargetPoint(
-			world.provider.getDimensionId(),
+			world.provider.getDimension(),
 			MathHelper.floor_double(x),
 			MathHelper.floor_double(y),
 			MathHelper.floor_double(z), Config.SOUND_RADIUS));
@@ -193,7 +193,7 @@ public abstract class DriverCardSoundBase extends ManagedEnvironment {
 
 	protected static boolean isInDimension(EntityPlayer player, int dimension) {
 		return player != null && player.worldObj != null && player.worldObj.provider != null
-			&& player.worldObj.provider.getDimensionId() == dimension;
+			&& player.worldObj.provider.getDimension() == dimension;
 	}
 
 }

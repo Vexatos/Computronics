@@ -5,11 +5,13 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Enchantments;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -26,14 +28,15 @@ public class EnchantmentTweak {
 
 	public static void registerBaneEnchantment(int enchID) {
 		if(!(enchID < 0 || enchID >= 256)) {
-			if(Enchantment.getEnchantmentById(enchID) == null) {
-				bane = new EnchantmentBetterBane(244);
+			bane = new EnchantmentBetterBane();
+			if(Enchantment.getEnchantmentByID(enchID) == null) {
+				Enchantment.REGISTRY.register(244, new ResourceLocation("bane_of_arthropods_better"), bane);
 				return;
 			}
 			for(int i = enchID; i < 256; i++) {
-				if(Enchantment.getEnchantmentById(i) == null) {
+				if(Enchantment.getEnchantmentByID(i) == null) {
 					AsieLibMod.log.info("Enchantment ID " + enchID + " already occupied, using " + i + " instead");
-					bane = new EnchantmentBetterBane(i);
+					Enchantment.REGISTRY.register(i, new ResourceLocation("bane_of_arthropods_better"), bane);
 					return;
 				}
 			}
@@ -43,22 +46,22 @@ public class EnchantmentTweak {
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void anvilEvent(AnvilUpdateEvent e) {
-		if(e.left == null || e.right == null || e.left.getItem() == null || e.right.getItem() == null || e.isCanceled()) {
+		if(e.getLeft() == null || e.getRight() == null || e.getLeft().getItem() == null || e.getRight().getItem() == null || e.isCanceled()) {
 			return;
 		}
-		if(e.left.isItemStackDamageable() && e.left.isItemEnchanted()) {
-			if(e.right.getItem() == Items.fermented_spider_eye && !hasBaneEnchantment(e.left)) {
-				if(e.right.stackSize == e.right.getMaxStackSize()) {
-					e.output = e.left.copy();
-					e.cost = 37;
-					if(!addBaneEnchantment(e.output, 9)) {
-						e.output = null;
+		if(e.getLeft().isItemStackDamageable() && e.getLeft().isItemEnchanted()) {
+			if(e.getRight().getItem() == Items.FERMENTED_SPIDER_EYE && !hasBaneEnchantment(e.getLeft())) {
+				if(e.getRight().stackSize == e.getRight().getMaxStackSize()) {
+					e.setOutput(e.getLeft().copy());
+					e.setCost(37);
+					if(!addBaneEnchantment(e.getOutput(), 9)) {
+						e.setOutput(null);
 						if(e.isCancelable()) {
 							e.setCanceled(true);
 						}
 					}
 				} else {
-					e.output = null;
+					e.setOutput(null);
 					if(e.isCancelable()) {
 						e.setCanceled(true);
 					}
@@ -73,23 +76,23 @@ public class EnchantmentTweak {
 		if(player.worldObj.isRemote) {
 			return;
 		}
-		if(player.getCurrentEquippedItem() != null && hasBaneEnchantment(player.getCurrentEquippedItem())
-			&& player.getCurrentEquippedItem().isItemStackDamageable()) {
+		if(player.getHeldItemMainhand() != null && hasBaneEnchantment(player.getHeldItemMainhand())
+			&& player.getHeldItemMainhand().isItemStackDamageable()) {
 
 			RayTracer.instance().fire(player, 10.0);
-			MovingObjectPosition target = RayTracer.instance().getTarget();
-			if(target != null && target.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY) {
+			RayTraceResult target = RayTracer.instance().getTarget();
+			if(target != null && target.typeOfHit == RayTraceResult.Type.ENTITY) {
 				Entity entity = target.entityHit;
 				if(entity != null
 					&& entity instanceof EntityLivingBase
 					&& ((EntityLivingBase) entity).getCreatureAttribute() == EnumCreatureAttribute.ARTHROPOD
 					&& entity.hurtResistantTime <= 10
-					&& !player.isBlocking()) {
+					&& !player.isActiveItemStackBlocking()) {
 					player.attackTargetEntityWithCurrentItem(entity);
-					if(player.getCurrentEquippedItem().isItemStackDamageable()) {
+					if(player.getHeldItemMainhand().isItemStackDamageable()) {
 						float distance = player.getDistanceToEntity(entity);
 						int damage = Math.max(Math.min((int) distance + 1, 10), 1);
-						player.getCurrentEquippedItem().damageItem(damage, player);
+						player.getHeldItemMainhand().damageItem(damage, player);
 					}
 				}
 			}
@@ -108,7 +111,7 @@ public class EnchantmentTweak {
 		NBTTagList list = stack.getTagCompound().getTagList("ench", 10);
 		for(int i = 0; i < list.tagCount(); i++) {
 			NBTTagCompound tag = list.getCompoundTagAt(i);
-			if(tag != null && tag.getShort("id") == bane.effectId) {
+			if(tag != null && tag.getShort("id") == Enchantment.getEnchantmentID(bane)) {
 				return true;
 			}
 		}
@@ -127,11 +130,11 @@ public class EnchantmentTweak {
 		NBTTagList list = stack.getTagCompound().getTagList("ench", 10);
 		for(int i = 0; i < list.tagCount(); i++) {
 			NBTTagCompound tag = list.getCompoundTagAt(i);
-			if(tag != null && tag.getShort("id") == Enchantment.baneOfArthropods.effectId
+			if(tag != null && tag.getShort("id") == Enchantment.getEnchantmentID(Enchantments.BANE_OF_ARTHROPODS)
 				&& tag.getShort("lvl") == (short) 5) {
 				list.removeTag(i);
 				NBTTagCompound data = new NBTTagCompound();
-				data.setShort("id", (short) bane.effectId);
+				data.setShort("id", (short) Enchantment.getEnchantmentID(bane));
 				data.setShort("lvl", (short) ((byte) level));
 				list.appendTag(data);
 				return true;

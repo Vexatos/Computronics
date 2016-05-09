@@ -1,8 +1,8 @@
 package pl.asie.computronics.api.audio;
 
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.network.PacketType;
 import pl.asie.lib.network.Packet;
@@ -46,7 +46,7 @@ public abstract class AudioPacket {
 	protected abstract void writeData(Packet p) throws IOException;
 
 	protected boolean canHearReceiver(EntityPlayerMP playerMP, IAudioReceiver receiver) {
-		if(receiver.getSoundWorld().provider.getDimensionId() != playerMP.worldObj.provider.getDimensionId()) {
+		if(receiver.getSoundWorld().provider.getDimension() != playerMP.worldObj.provider.getDimension()) {
 			return false;
 		}
 
@@ -60,7 +60,7 @@ public abstract class AudioPacket {
 
 	public final void sendPacket() {
 		try {
-			for(EntityPlayerMP playerMP : MinecraftServer.getServer().getConfigurationManager().playerEntityList) {
+			for(EntityPlayerMP playerMP : FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerList()) {
 				if(playerMP == null || playerMP.worldObj == null) {
 					continue;
 				}
@@ -83,7 +83,7 @@ public abstract class AudioPacket {
 					pkt.writeShort((short) receivers.size());
 
 					for(IAudioReceiver receiver : receivers) {
-						pkt.writeInt(receiver.getSoundWorld() != null ? receiver.getSoundWorld().provider.getDimensionId() : 0);
+						pkt.writeInt(receiver.getSoundWorld() != null ? receiver.getSoundWorld().provider.getDimension() : 0);
 						final BlockPos pos = receiver.getSoundPos();
 						pkt.writeInt(pos.getX()).writeInt(pos.getY()).writeInt(pos.getZ())
 							.writeShort((short) receiver.getSoundDistance()).writeByte(volume);

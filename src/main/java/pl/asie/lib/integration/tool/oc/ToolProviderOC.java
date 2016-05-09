@@ -3,7 +3,7 @@ package pl.asie.lib.integration.tool.oc;
 import li.cil.oc.api.internal.Wrench;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import pl.asie.lib.api.tool.IToolProvider;
 
 /**

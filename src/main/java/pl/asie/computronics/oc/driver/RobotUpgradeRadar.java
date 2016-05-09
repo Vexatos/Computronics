@@ -11,7 +11,7 @@ import li.cil.oc.api.prefab.ManagedEnvironment;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.math.AxisAlignedBB;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.util.RadarUtils;
 
@@ -42,9 +42,9 @@ public class RobotUpgradeRadar extends ManagedEnvironment {
 		if(distance < 1) {
 			distance = 1;
 		}
-		return AxisAlignedBB.
-			fromBounds((float) container.xPosition(), (float) container.yPosition(), (float) container.zPosition(), (float) container.xPosition() + 1, (float) container.yPosition() + 1, (float) container.zPosition() + 1).
-			expand(distance, distance, distance);
+		return new AxisAlignedBB(
+			(float) container.xPosition(), (float) container.yPosition(), (float) container.zPosition(), (float) container.xPosition() + 1, (float) container.yPosition() + 1, (float) container.zPosition() + 1
+		).expand(distance, distance, distance);
 	}
 
 	@Callback(doc = "function([distance:number]):table; Returns a list of all entities detected within the specified or the maximum range", direct = true, limit = CALL_LIMIT)

@@ -18,7 +18,7 @@ public class ParticleUtils {
 				.writeFloat((float) x).writeFloat((float) y).writeFloat((float) z)
 				.writeFloat((float) vx).writeFloat((float) vy).writeFloat((float) vz)
 				.writeInt(particle.getParticleID());
-			Computronics.packet.sendToAllAround(pkt, new TargetPoint(worldObj.provider.getDimensionId(), x, y, z, 64.0D));
+			Computronics.packet.sendToAllAround(pkt, new TargetPoint(worldObj.provider.getDimension(), x, y, z, 64.0D));
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

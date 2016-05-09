@@ -11,7 +11,7 @@ import li.cil.oc.api.network.ManagedEnvironment;
 import li.cil.oc.api.prefab.DriverSidedTileEntity;
 import li.cil.tis3d.api.serial.SerialInterface;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import pl.asie.computronics.integration.CCMultiPeripheral;
@@ -50,7 +50,7 @@ public class DriverFlamingo {
 
 			@Callback(doc = "function():number; Returns the Flamingo's wiggle strength.")
 			public Object[] getWiggleStrength(Context c, Arguments a) {
-				return new Object[] { tile.wiggleStrength };
+				return new Object[] { tile.getWiggleStrength() };
 			}
 		}
 
@@ -100,7 +100,7 @@ public class DriverFlamingo {
 					DriverFlamingo.wiggle(tile);
 				}
 				case 1: {
-					return new Object[] { tile.wiggleStrength };
+					return new Object[] { tile.getWiggleStrength() };
 				}
 			}
 			return null;

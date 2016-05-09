@@ -8,12 +8,12 @@ import li.cil.oc.client.renderer.PetRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -45,7 +45,7 @@ public class UpgradeRenderer {
 		upgradeChatBox = new ResourceLocation("computronics", "textures/models/UpgradeChatBox.png"),
 		beepCard = new ResourceLocation("computronics", "textures/models/CardBeep.png");
 
-	AxisAlignedBB bounds = AxisAlignedBB.fromBounds(-0.1, -0.1, -0.1, 0.1, 0.1, 0.1);
+	AxisAlignedBB bounds = new AxisAlignedBB(-0.1, -0.1, -0.1, 0.1, 0.1, 0.1);
 
 	private static final List<Integer> upgrades = Arrays.asList(1, 2, 5, 8);
 
@@ -148,7 +148,7 @@ public class UpgradeRenderer {
 		GlStateManager.translate(mountPoint.offset.getX(), mountPoint.offset.getY(), mountPoint.offset.getZ());
 
 		Tessellator t = Tessellator.getInstance();
-		WorldRenderer r = t.getWorldRenderer();
+		VertexBuffer r = t.getBuffer();
 		r.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_NORMAL);
 
 		// Front.
@@ -205,12 +205,12 @@ public class UpgradeRenderer {
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void onPlayerTickPre(RenderPlayerEvent.Pre e) {
-		String uuid = e.entityPlayer.getUniqueID().toString();
+		String uuid = e.getEntityPlayer().getUniqueID().toString();
 		if(PetRenderer.hidden().contains(uuid) || !entitledPlayers.containsKey(uuid)) {
 			return;
 		}
 		rendering = true;
-		time = e.entityPlayer.getEntityWorld().getTotalWorldTime() + (e.entityPlayer.hashCode() ^ 0xFF);
+		time = e.getEntityPlayer().getEntityWorld().getTotalWorldTime() + (e.getEntityPlayer().hashCode() ^ 0xFF);
 		color = entitledPlayers.get(uuid);
 	}
 

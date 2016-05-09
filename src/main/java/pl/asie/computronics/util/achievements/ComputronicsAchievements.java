@@ -96,7 +96,7 @@ public class ComputronicsAchievements {
 
 	private void triggerAchievement(EntityPlayer player, EnumAchievements key) {
 		if(player != null && this.achievementMap.containsKey(key.getKey())) {
-			player.triggerAchievement(this.achievementMap.get(key.getKey()));
+			player.addStat(this.achievementMap.get(key.getKey()));
 		}
 	}
 
@@ -179,7 +179,7 @@ public class ComputronicsAchievements {
 				if(data.hasKey("computronics:dropplayer")) {
 					String playername = data.getString("computronics:dropplayer");
 					if(playername != null && !playername.isEmpty()) {
-						for(Object o : MinecraftServer.getServer().getConfigurationManager().playerEntityList) {
+						for(EntityPlayer o : FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerList()) {
 							if(o instanceof EntityPlayer && ((EntityPlayer) o).getCommandSenderName().equals(playername)) {
 								this.triggerAchievement((EntityPlayer) o, EnumAchievements.Tape_IG_Dropped);
 								((EntityPlayer) o).addChatMessage(new ChatComponentText("Test"));

@@ -2,7 +2,7 @@ package pl.asie.lib.integration;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import pl.asie.lib.AsieLibMod;
 import pl.asie.lib.api.tool.IToolProvider;
 import pl.asie.lib.integration.tool.ToolRegistry;

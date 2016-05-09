@@ -1,6 +1,7 @@
 package pl.asie.computronics.gui;
 
 import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import pl.asie.computronics.Computronics;
@@ -104,7 +105,7 @@ public class GuiTapePlayer extends GuiBase {
 	public void mouseReleased(int x, int y, int button) {
 		super.mouseReleased(x, y, button);
 		if(button == 0 && buttonMouse != null) {
-			this.mc.getSoundHandler().playSound(PositionedSoundRecord.create(new ResourceLocation("gui.button.press"), 1.0F));
+			this.mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 			handleButtonPress(buttonMouse);
 			buttonMouse = null;
 		}

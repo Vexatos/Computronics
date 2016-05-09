@@ -83,9 +83,9 @@ dependencies {
     deobfCompile "li.cil.tis3d:TIS-3D:${config.tis3d.version}"
     //provided "net.industrial-craft:industrialcraft-2:${config.ic2.version}:dev"
     //provided "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech.version}:dev"
-    compile "mcp.mobius.waila:Waila:${config.waila.version}:dev"
-    deobfCompile "com.enderio.core:EnderCore:${config.endercore.version}"
-    compile("com.enderio:EnderIO:${config.enderio.version}:dev") {
+    //compile "mcp.mobius.waila:Waila:${config.waila.version}:dev"
+    //deobfCompile "com.enderio.core:EnderCore:${config.endercore.version}"
+    /*compile("com.enderio:EnderIO:${config.enderio.version}:dev") {
         exclude module: "appliedenergistics2"
         exclude module: "buildcraft"
         exclude module: "Waila"
@@ -94,12 +94,12 @@ dependencies {
         exclude module: "CodeChickenLib"
         exclude module: "CodeChickenCore"
         exclude module: "EquivalentExchange3"
-    }/*
+    }*//*
     compile("net.sengir.forestry:forestry_1.7.10:${config.forestry.version}:dev") {
         exclude module: "buildcraft"
         exclude module: "industrialcraft-2"
     }*/
-    compile name: "buildcraft", version: "${config.buildcraft.version}", classifier: "dev"
+    //compile name: "buildcraft", version: "${config.buildcraft.version}", classifier: "dev"
     /*compile("appeng:appliedenergistics2:${config.ae2.version}:dev") {
         transitive = false
     }*/
@@ -135,8 +135,12 @@ sourceSets {
             exclude "pl/asie/computronics/integration/appeng/**"
             exclude "pl/asie/computronics/integration/armourersworkshop/**"
             exclude "pl/asie/computronics/integration/betterstorage/**"
+            exclude "pl/asie/computronics/integration/buildcraft/**"
             exclude "pl/asie/computronics/integration/buildcraft/pluggable/**"
+            exclude "pl/asie/computronics/integration/charset/**"
+            exclude "pl/asie/computronics/integration/cofh/**"
             exclude "pl/asie/computronics/integration/draconicevolution/**"
+            exclude "pl/asie/computronics/integration/enderio/**"
             exclude "pl/asie/computronics/integration/factorization/**"
             exclude "pl/asie/computronics/integration/forestry/**"
             exclude "pl/asie/computronics/integration/fsp/**"
@@ -145,10 +149,15 @@ sourceSets {
             exclude "pl/asie/computronics/integration/mfr/**"
             exclude "pl/asie/computronics/integration/railcraft/**"
             exclude "pl/asie/computronics/integration/redlogic/**"
+            exclude "pl/asie/computronics/integration/storagedrawers/**"
+            exclude "pl/asie/computronics/integration/waila/**"
 
+            exclude "pl/asie/lib/integration/buildcraft/*"
             exclude "pl/asie/lib/integration/tool/appeng/**"
             exclude "pl/asie/lib/integration/tool/cofh/**"
             exclude "pl/asie/lib/integration/tool/mekanism/**"
+            exclude "pl/asie/lib/integration/tool/buildcraft/**"
+            exclude "pl/asie/lib/integration/tool/enderio/**"
         }
     }
 }

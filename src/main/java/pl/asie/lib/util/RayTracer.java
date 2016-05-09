@@ -2,9 +2,9 @@ package pl.asie.lib.util;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +27,7 @@ public class RayTracer {
 		return instance;
 	}
 
-	protected MovingObjectPosition target = null;
+	protected RayTraceResult target = null;
 
 	/**
 	 * @param entity The {@link EntityLivingBase} to fire from
@@ -41,29 +41,29 @@ public class RayTracer {
 	}
 
 	/**
-	 * @return The {@link MovingObjectPosition} containing the Target Block or Entity
+	 * @return The {@link RayTraceResult} containing the Target Block or Entity
 	 */
-	public MovingObjectPosition getTarget() {
+	public RayTraceResult getTarget() {
 		return this.target;
 	}
 
-	protected MovingObjectPosition rayTrace(EntityLivingBase entity, double distance) {
+	protected RayTraceResult rayTrace(EntityLivingBase entity, double distance) {
 		Entity target;
-		Vec3 position = new Vec3(entity.posX, entity.posY, entity.posZ);
+		Vec3d position = new Vec3d(entity.posX, entity.posY, entity.posZ);
 		if(entity.getEyeHeight() != 0.12F) {
 			position = position.addVector(0, entity.getEyeHeight(), 0);
 		}
 
-		Vec3 look = entity.getLookVec();
+		Vec3d look = entity.getLookVec();
 
 		for(double i = 1.0; i < distance; i += 0.2) {
-			Vec3 search = position.addVector(look.xCoord * i, look.yCoord * i, look.zCoord * i);
-			AxisAlignedBB searchBox = AxisAlignedBB.fromBounds(
+			Vec3d search = position.addVector(look.xCoord * i, look.yCoord * i, look.zCoord * i);
+			AxisAlignedBB searchBox = new AxisAlignedBB(
 				search.xCoord - 0.1, search.yCoord - 0.1, search.zCoord - 0.1,
 				search.xCoord + 0.1, search.yCoord + 0.1, search.zCoord + 0.1);
-			MovingObjectPosition blockCheck = entity.worldObj.rayTraceBlocks(
-				new Vec3(position.xCoord, position.yCoord, position.zCoord), search, false);
-			if(blockCheck != null && blockCheck.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
+			RayTraceResult blockCheck = entity.worldObj.rayTraceBlocks(
+				new Vec3d(position.xCoord, position.yCoord, position.zCoord), search, false);
+			if(blockCheck != null && blockCheck.typeOfHit == RayTraceResult.Type.BLOCK) {
 				/*double d1 = position.squareDistanceTo(blockCheck.hitVec);
 				double d2 = position.squareDistanceTo(search);*/
 				if(position.squareDistanceTo(blockCheck.hitVec)
@@ -74,18 +74,18 @@ public class RayTracer {
 
 			target = getEntity(entity, position, search, look, searchBox, 0.1);
 			if(target != null) {
-				return new MovingObjectPosition(target);
+				return new RayTraceResult(target);
 			}
 		}
 		return null;
 	}
 
-	protected Entity getEntity(EntityLivingBase base, Vec3 position, Vec3 search, Vec3 look, AxisAlignedBB searchBox, double v) {
+	protected Entity getEntity(EntityLivingBase base, Vec3d position, Vec3d search, Vec3d look, AxisAlignedBB searchBox, double v) {
 		ArrayList<Entity> entityList = new ArrayList<Entity>();
-		List entityObjects = base.worldObj.getEntitiesWithinAABB(Entity.class, searchBox);
-		for(Object o : entityObjects) {
-			if(o instanceof Entity && o != base && ((Entity) o).canBeCollidedWith()) {
-				entityList.add(((Entity) o));
+		List<Entity> entityObjects = base.worldObj.getEntitiesWithinAABB(Entity.class, searchBox);
+		for(Entity entity : entityObjects) {
+			if(entity != null && entity != base && entity.canBeCollidedWith()) {
+				entityList.add(entity);
 			}
 		}
 		if(entityList.size() <= 0) {
@@ -94,8 +94,8 @@ public class RayTracer {
 		Entity entity = null;
 		if(entityList.size() > 1) {
 			for(Entity e : entityList) {
-				if(entity == null || position.squareDistanceTo(new Vec3(e.posX, e.posY, e.posZ))
-					< position.squareDistanceTo(new Vec3(entity.posX, entity.posY, entity.posZ))) {
+				if(entity == null || position.squareDistanceTo(new Vec3d(e.posX, e.posY, e.posZ))
+					< position.squareDistanceTo(new Vec3d(entity.posX, entity.posY, entity.posZ))) {
 					entity = e;
 				}
 			}

@@ -29,6 +29,7 @@ public class RecipeColorizer implements IRecipe {
 		this.sourceItems.add(item);
 	}
 
+	@Override
 	public boolean matches(InventoryCrafting crafting, World par2World) {
 		boolean hasTargetStack = false;
 		boolean hasDye = false;
@@ -54,6 +55,7 @@ public class RecipeColorizer implements IRecipe {
 	/**
 	 * Returns an Item that is the result of this recipe
 	 */
+	@Override
 	public ItemStack getCraftingResult(InventoryCrafting crafting) {
 		ItemStack targetStack = null;
 		int[] color = new int[3];
@@ -122,10 +124,12 @@ public class RecipeColorizer implements IRecipe {
 	/**
 	 * Returns the size of the recipe area
 	 */
+	@Override
 	public int getRecipeSize() {
 		return 10;
 	}
 
+	@Override
 	public ItemStack getRecipeOutput() {
 		return null;
 	}

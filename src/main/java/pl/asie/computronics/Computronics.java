@@ -6,6 +6,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -41,11 +42,6 @@ import pl.asie.computronics.cc.multiperipheral.MultiPeripheralRegistry;
 import pl.asie.computronics.gui.providers.GuiProviderCipher;
 import pl.asie.computronics.gui.providers.GuiProviderTapeDrive;
 import pl.asie.computronics.integration.ModRecipes;
-import pl.asie.computronics.integration.buildcraft.IntegrationBuildCraftBuilder;
-import pl.asie.computronics.integration.buildcraft.statements.ActionProvider;
-import pl.asie.computronics.integration.buildcraft.statements.StatementParameters;
-import pl.asie.computronics.integration.buildcraft.statements.TriggerProvider;
-import pl.asie.computronics.integration.charset.IntegrationCharset;
 import pl.asie.computronics.integration.tis3d.IntegrationTIS3D;
 import pl.asie.computronics.item.ItemMultipleComputronics;
 import pl.asie.computronics.item.ItemTape;
@@ -133,7 +129,7 @@ public class Computronics {
 	//public static IntegrationRailcraft railcraft;
 	//public static IntegrationForestry forestry;
 	public static IntegrationTIS3D tis3D;
-	public static IntegrationCharset charset;
+	//public static IntegrationCharset charset;
 
 	public static ItemTape itemTape;
 	public static ItemMultipleComputronics itemParts;
@@ -158,16 +154,21 @@ public class Computronics {
 	}
 
 	private void registerBlockWithTileEntity(BlockBase block, Class<? extends TileEntity> tile, String name) {
-		registerBlockWithTileEntity(block, ComputronicsItemBlock.class, tile, name);
+		registerBlockWithTileEntity(block, new ComputronicsItemBlock(block), tile, name);
 	}
 
-	private void registerBlockWithTileEntity(BlockBase block, Class<? extends ItemBlock> itemBlock, Class<? extends TileEntity> tile, String name) {
-		GameRegistry.registerBlock(block, itemBlock, name);
+	private void registerBlockWithTileEntity(BlockBase block, ItemBlock itemBlock, Class<? extends TileEntity> tile, String name) {
+		GameRegistry.register(block, new ResourceLocation(Mods.Computronics, name));
+		GameRegistry.register(itemBlock, block.getRegistryName());
 		GameRegistry.registerTileEntity(tile, name);
 		proxy.registerItemModel(block, 0, "computronics:" + name);
 		//System.out.println("Registering " + name + " as TE " + tile.getCanonicalName());
 		FMLInterModComms.sendMessage(Mods.AE2, "whitelist-spatial", tile.getCanonicalName());
-		IntegrationBuildCraftBuilder.INSTANCE.registerBlockBaseSchematic(block);
+		//IntegrationBuildCraftBuilder.INSTANCE.registerBlockBaseSchematic(block);
+	}
+
+	public void registerItem(Item item, String name) {
+		GameRegistry.register(item, new ResourceLocation(Mods.Computronics, name));
 	}
 
 	@EventHandler
@@ -247,19 +248,19 @@ public class Computronics {
 
 		if(isEnabled("tape", true)) {
 			itemTape = new ItemTape(Config.TAPE_LENGTHS);
-			GameRegistry.registerItem(itemTape, "tape");
+			registerItem(itemTape, "tape");
 			itemTape.registerItemModels();
 
 			/*if(Mods.hasVersion(Mods.GregTech, Mods.Versions.GregTech5)) { TODO GregTech
 				itemPartsGreg = new ItemMultiple(Mods.Computronics, new String[] { "reelChromoxide" });
 				itemPartsGreg.setCreativeTab(tab);
-				GameRegistry.registerItem(itemPartsGreg, "computronics.gt_parts");
+				GameRegistry.register(itemPartsGreg, new ResourceLocation(Mods.Computronics, "computronics.gt_parts"));
 				proxy.registerEntities();
 			}*/
 
 			itemParts = new ItemMultipleComputronics(Mods.Computronics, new String[] { "part_tape_track" });
 			itemParts.setCreativeTab(tab);
-			GameRegistry.registerItem(itemParts, "parts");
+			registerItem(itemParts, "parts");
 			itemParts.registerItemModels();
 		}
 
@@ -283,8 +284,8 @@ public class Computronics {
 			tis3D.preInit();
 		}
 
-		charset = new IntegrationCharset();
-		charset.preInit();
+		//charset = new IntegrationCharset();
+		//charset.preInit();
 
 		proxy.registerAudioHandlers();
 	}
@@ -307,9 +308,9 @@ public class Computronics {
 			opencomputers.init();
 		}
 
-		if(Mods.API.hasAPI(Mods.API.BuildCraftBlueprints)) {
+		/*if(Mods.API.hasAPI(Mods.API.BuildCraftBlueprints)) {
 			IntegrationBuildCraftBuilder.INSTANCE.init();
-		}
+		}*/
 
 		if(Mods.isLoaded(Mods.TIS3D) && tis3D != null) {
 			tis3D.init(compat);
@@ -357,11 +358,11 @@ public class Computronics {
 			opencomputers.postInit();
 		}
 
-		if(Mods.API.hasAPI(Mods.API.BuildCraftStatements)) {
+		/*if(Mods.API.hasAPI(Mods.API.BuildCraftStatements)) {
 			TriggerProvider.initialize();
 			ActionProvider.initialize();
 			StatementParameters.initialize();
-		}
+		}*/
 
 		if(Mods.isLoaded(Mods.TIS3D) && tis3D != null) {
 			tis3D.postInit();

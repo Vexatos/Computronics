@@ -10,8 +10,8 @@ import li.cil.oc.api.network.Connector;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.cc.CCRadarProxy;
 import pl.asie.computronics.reference.Config;
@@ -44,9 +44,9 @@ public class TileRadar extends TileEntityPeripheralBase implements IBatteryProvi
 			distance = 1;
 		}
 		final BlockPos pos = getPos();
-		return AxisAlignedBB.
-			fromBounds(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1).
-			expand(distance, distance, distance);
+		return new AxisAlignedBB(
+			pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1
+		).expand(distance, distance, distance);
 	}
 
 	@Callback(doc = "function([distance:number]):table; Returns a list of all entities detected within the specified or the maximum range")

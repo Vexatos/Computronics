@@ -11,13 +11,16 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.asie.computronics.reference.Config;
 import pl.asie.lib.integration.Integration;
+
+import static pl.asie.lib.util.WorldUtils.notifyBlockUpdate;
 
 /**
  * @author Vexatos
@@ -319,7 +322,7 @@ public class DriverBoardLight extends RackMountableWithComponentConnector {
 	@Override
 	public boolean onActivate(EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
 		final BlockPos pos = new BlockPos(host.xPosition(), host.yPosition(), host.zPosition());
-		ItemStack held = player.getHeldItem();
+		ItemStack held = player.getHeldItem(EnumHand.MAIN_HAND); //TODO change to held item
 		if(held != null && held.getItem() != null && Integration.isTool(held, player, pos) && Integration.useTool(held, player, pos)) {
 			int index = mode.index;
 			if(index >= Mode.VALUES.length) {
@@ -328,7 +331,7 @@ public class DriverBoardLight extends RackMountableWithComponentConnector {
 			setMode(Mode.fromIndex(index + 1));
 			host.markChanged(host.indexOfMountable(this));
 			needsUpdate = false;
-			host.world().markBlockForUpdate(pos);
+			notifyBlockUpdate(host.world(), pos);
 			return true;
 		}
 		return false;

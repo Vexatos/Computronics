@@ -48,7 +48,7 @@ public class EntityItemIndestructable extends EntityItem {
 
 	@Override
 	public boolean isInLava() {
-		return this.worldObj.isMaterialInBB(this.getEntityBoundingBox(), Material.lava);
+		return this.worldObj.isMaterialInBB(this.getEntityBoundingBox(), Material.LAVA);
 	}
 
 	@Override

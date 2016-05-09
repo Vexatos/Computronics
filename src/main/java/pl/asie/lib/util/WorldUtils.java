@@ -1,9 +1,9 @@
 package pl.asie.lib.util;
 
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import pl.asie.lib.AsieLibMod;
 
 public class WorldUtils {
@@ -17,7 +17,7 @@ public class WorldUtils {
 	}
 
 	public static TileEntity getTileEntityServer(int dimensionId, int x, int y, int z) {
-		World world = MinecraftServer.getServer().worldServerForDimension(dimensionId);
+		World world = FMLCommonHandler.instance().getMinecraftServerInstance().worldServerForDimension(dimensionId);
 		if(world == null) {
 			return null;
 		}
@@ -35,6 +35,10 @@ public class WorldUtils {
 
 	public static int getCurrentClientDimension() {
 		return AsieLibMod.proxy.getCurrentClientDimension();
+	}
+
+	public static void notifyBlockUpdate(World world, BlockPos pos) {
+		world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
 	}
 	
 	/*public static void sendParticlePacket(String name, World worldObj, double x, double y, double z, double vx, double vy, double vz) {

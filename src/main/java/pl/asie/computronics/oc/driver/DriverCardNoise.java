@@ -8,7 +8,7 @@ import li.cil.oc.api.network.EnvironmentHost;
 import li.cil.oc.api.network.Visibility;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import pl.asie.computronics.Computronics;
@@ -320,7 +320,7 @@ public class DriverCardNoise extends DriverCardSoundBase {
 			}
 		}
 		Packet packet = Computronics.packet.create(PacketType.COMPUTER_NOISE.ordinal())
-			.writeInt(world.provider.getDimensionId())
+			.writeInt(world.provider.getDimension())
 			.writeInt(MathHelper.floor_double(x))
 			.writeInt(MathHelper.floor_double(y))
 			.writeInt(MathHelper.floor_double(z))
@@ -341,7 +341,7 @@ public class DriverCardNoise extends DriverCardSoundBase {
 			}
 		}
 		Computronics.packet.sendToAllAround(packet, new NetworkRegistry.TargetPoint(
-			world.provider.getDimensionId(),
+			world.provider.getDimension(),
 			MathHelper.floor_double(x),
 			MathHelper.floor_double(y),
 			MathHelper.floor_double(z), Config.SOUND_RADIUS));

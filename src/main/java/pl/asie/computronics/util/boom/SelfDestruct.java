@@ -2,14 +2,18 @@ package pl.asie.computronics.util.boom;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import pl.asie.computronics.Computronics;
@@ -37,18 +41,19 @@ public class SelfDestruct extends Explosion {
 	//Unfortunately I had to copy a lot of code for this one.
 	@Override
 	public void doExplosionB(boolean spawnParticles) {
-		Vec3 position = getPosition();
+		Vec3d position = getPosition();
 		final double
 			explosionX = position.xCoord,
 			explosionY = position.yCoord,
 			explosionZ = position.zCoord;
 
-		this.worldObj.playSoundEffect(explosionX, explosionY, explosionZ, "random.explode", 4.0F, (1.0F + (this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) * 0.2F) * 0.7F);
+		this.worldObj.playSound(null, explosionX, explosionY, explosionZ, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) * 0.2F) * 0.7F);
 
 		this.worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_HUGE, explosionX, explosionY, explosionZ, 1.0D, 0.0D, 0.0D);
 
 		for(BlockPos blockpos : this.getAffectedBlockPositions()) {
-			Block block = this.worldObj.getBlockState(blockpos).getBlock();
+			IBlockState state = this.worldObj.getBlockState(blockpos);
+			Block block = state.getBlock();
 
 			if(spawnParticles) {
 				double d0 = (double) ((float) blockpos.getX() + this.worldObj.rand.nextFloat());
@@ -70,7 +75,7 @@ public class SelfDestruct extends Explosion {
 				this.worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0, d1, d2, d3, d4, d5);
 			}
 
-			if(block.getMaterial() != Material.air) {
+			if(block.getMaterial(state) != Material.AIR) {
 				if(!this.worldObj.isRemote
 					&& blockpos.getX() == Math.round(Math.floor(explosionX))
 					&& blockpos.getY() == Math.round(Math.floor(explosionY))
@@ -86,7 +91,7 @@ public class SelfDestruct extends Explosion {
 					block.dropBlockAsItemWithChance(this.worldObj, blockpos, this.worldObj.getBlockState(blockpos), 1.0F / this.explosionSize, 0);
 				}
 
-				if(destroyBlocks){
+				if(destroyBlocks) {
 					block.onBlockExploded(this.worldObj, blockpos, this);
 				}
 			}
@@ -106,7 +111,7 @@ public class SelfDestruct extends Explosion {
 		int y = (int) yPos;
 		int z = (int) zPos;
 
-		for(Object playerEntity : world.playerEntities) {
+		for(EntityPlayer playerEntity : world.playerEntities) {
 			if(playerEntity instanceof EntityPlayerMP) {
 				EntityPlayerMP entityplayer = (EntityPlayerMP) playerEntity;
 
@@ -132,7 +137,7 @@ public class SelfDestruct extends Explosion {
 							}
 						}
 
-						Vec3 motion = explosion.getPlayerKnockbackMap().get(entityplayer);
+						Vec3d motion = explosion.getPlayerKnockbackMap().get(entityplayer);
 						float motionX = 0;
 						float motionY = 0;
 						float motionZ = 0;

@@ -1,9 +1,9 @@
 package pl.asie.computronics.util;
 
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import pl.asie.computronics.reference.Config;
 
@@ -47,9 +47,9 @@ public class Camera {
 					
 			// shoot ray
 			float steps = Config.CAMERA_DISTANCE;
-			Vec3 origin = new Vec3(oxPos, oyPos, ozPos);
-			Vec3 target = new Vec3(xPos + (xDirection * steps), yPos + (yDirection * steps), zPos + (zDirection * steps));
-			MovingObjectPosition mop = world.rayTraceBlocks(origin, target);
+			Vec3d origin = new Vec3d(oxPos, oyPos, ozPos);
+			Vec3d target = new Vec3d(xPos + (xDirection * steps), yPos + (yDirection * steps), zPos + (zDirection * steps));
+			RayTraceResult mop = world.rayTraceBlocks(origin, target);
 			if(mop !=  null) {
 				xPos = (float)mop.hitVec.xCoord;
 				yPos = (float)mop.hitVec.yCoord;

@@ -5,7 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
@@ -109,7 +109,7 @@ public class RackMountableRenderer {
 	private void renderOverlay(ResourceLocation texture, final float u0, final float u1, final float v0, final float v1) {
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		final Tessellator t = Tessellator.getInstance();
-		final WorldRenderer r = t.getWorldRenderer();
+		final VertexBuffer r = t.getBuffer();
 		r.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		r.pos(u0, v1, 0).tex(u0, v1).endVertex();
 		r.pos(u1, v1, 0).tex(u1, v1).endVertex();
@@ -163,11 +163,11 @@ public class RackMountableRenderer {
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void textureHook(TextureStitchEvent.Pre e) {
 		for(Mode mode : Mode.VALUES) {
-			mode.registerIcons(e.map);
+			mode.registerIcons(e.getMap());
 		}
-		boomBoard = e.map.registerSprite(new ResourceLocation("computronics:blocks/boom_board"));
+		boomBoard = e.getMap().registerSprite(new ResourceLocation("computronics:blocks/boom_board"));
 		//e.map.registerSprite(boomBoardActive);
 		//e.map.registerSprite(boomBoardTicking);
-		rackCapacitor = e.map.registerSprite(new ResourceLocation("computronics:blocks/rack_capacitor"));
+		rackCapacitor = e.getMap().registerSprite(new ResourceLocation("computronics:blocks/rack_capacitor"));
 	}
 }

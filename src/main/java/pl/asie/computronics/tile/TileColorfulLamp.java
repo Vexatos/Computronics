@@ -86,7 +86,7 @@ public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundl
 			}
 		}
 		this.markDirty();
-		this.worldObj.markBlockForUpdate(getPos());
+		notifyBlockUpdate();
 	}
 
 	@Callback(doc = "function():number; Returns the current lamp color", direct = true)

@@ -1,24 +1,25 @@
 package pl.asie.lib.tweak.enchantment;
 
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentDamage;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.text.translation.I18n;
 
 /**
  * @author Vexatos
  */
 public class EnchantmentBetterBane extends EnchantmentDamage {
 
-	public EnchantmentBetterBane(int p_i1923_1_) {
-		super(p_i1923_1_, new ResourceLocation("bane_of_arthropods_better"), 2, 2);
+	public EnchantmentBetterBane() {
+		super(Enchantment.Rarity.VERY_RARE, 2, EntityEquipmentSlot.MAINHAND);
 	}
 
 	@Override
 	public String getTranslatedName(int p_77316_1_) {
-		String s = StatCollector.translateToLocal(this.getName());
+		String s = I18n.translateToLocal(this.getName());
 		return s + " \u2468" /*+ StatCollector.translateToLocal("enchantment.asielib.level.9")*/;
 	}
 

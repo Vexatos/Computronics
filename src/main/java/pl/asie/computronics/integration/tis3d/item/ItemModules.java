@@ -4,6 +4,7 @@ import li.cil.tis3d.api.machine.Casing;
 import li.cil.tis3d.api.machine.Face;
 import li.cil.tis3d.api.module.Module;
 import li.cil.tis3d.api.module.ModuleProvider;
+import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -25,7 +26,7 @@ import java.util.List;
 /**
  * @author Vexatos
  */
-public class ItemModules extends ItemMultipleComputronics implements ModuleProvider, IModuleWithDocumentation {
+public class ItemModules extends ItemMultipleComputronics implements ModuleProvider, IModuleWithDocumentation, IItemColor {
 
 	public ItemModules() {
 		super(Mods.Computronics, new String[] {
@@ -57,7 +58,7 @@ public class ItemModules extends ItemMultipleComputronics implements ModuleProvi
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public int getColorFromItemStack(ItemStack stack, int pass) {
+	public int getColorFromItemstack(ItemStack stack, int pass) {
 		switch(stack.getItemDamage()) {
 			case 0: {
 				if(pass == 1) {
@@ -72,7 +73,7 @@ public class ItemModules extends ItemMultipleComputronics implements ModuleProvi
 				}
 			}
 			default: {
-				return super.getColorFromItemStack(stack, pass);
+				return 0xFFFFFFFF;
 			}
 		}
 	}

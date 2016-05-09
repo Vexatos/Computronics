@@ -3,13 +3,14 @@ package pl.asie.computronics.item;
 import dan200.computercraft.api.filesystem.IMount;
 import dan200.computercraft.api.media.IMedia;
 import dan200.computercraft.api.media.IMediaProvider;
+import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
@@ -30,7 +31,7 @@ import java.util.List;
 	@Optional.Interface(iface = "dan200.computercraft.api.media.IMediaProvider", modid = Mods.ComputerCraft),
 	@Optional.Interface(iface = "dan200.computercraft.api.media.IMedia", modid = Mods.ComputerCraft)
 })
-public class ItemTape extends Item implements IItemTapeStorage, IMedia, IMediaProvider, IItemWithDocumentation {
+public class ItemTape extends Item implements IItemTapeStorage, IMedia, IMediaProvider, IItemWithDocumentation, IItemColor {
 
 	public static final int L_SECOND = 4096;
 	public static final int L_MINUTE = 4096 * 60;
@@ -83,6 +84,7 @@ public class ItemTape extends Item implements IItemTapeStorage, IMedia, IMediaPr
 		}
 	}
 
+	@Override
 	public String getLabel(ItemStack stack) {
 		return stack.hasTagCompound() && stack.getTagCompound().hasKey("label")
 			? stack.getTagCompound().getString("label") : "";
@@ -105,21 +107,21 @@ public class ItemTape extends Item implements IItemTapeStorage, IMedia, IMediaPr
 		if(stack.getTagCompound() != null) {
 			String label = getLabel(stack);
 			if(label.length() > 0) {
-				text.add(EnumChatFormatting.WHITE + "" + EnumChatFormatting.ITALIC + label);
+				text.add(TextFormatting.WHITE + "" + TextFormatting.ITALIC + label);
 			}
 		}
-		text.add(EnumChatFormatting.GRAY + StringUtil.localizeAndFormat("tooltip.computronics.tape.length", "" + len));
+		text.add(TextFormatting.GRAY + StringUtil.localizeAndFormat("tooltip.computronics.tape.length", "" + len));
 
 		switch(stack.getItemDamage()) {
 			case 7: {
-				text.add(EnumChatFormatting.AQUA + StringUtil.localize("tooltip.computronics.tape.balanced"));
+				text.add(TextFormatting.AQUA + StringUtil.localize("tooltip.computronics.tape.balanced"));
 				break;
 			}
 			case 9: {
 				String[] local = StringUtil.localize("tooltip.computronics.tape.ig")
 					.replace("\\n", "\n").split("\\n");
 				for(String s : local) {
-					text.add(EnumChatFormatting.AQUA + s);
+					text.add(TextFormatting.AQUA + s);
 				}
 				break;
 			}
@@ -222,8 +224,8 @@ public class ItemTape extends Item implements IItemTapeStorage, IMedia, IMediaPr
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public int getColorFromItemStack(ItemStack stack, int pass) {
-		return pass == 0 ? 16777215 : (ItemColorizer.hasColor(stack) ? ItemColorizer.getColor(stack) : 16777215);
+	public int getColorFromItemstack(ItemStack stack, int pass) {
+		return pass == 0 ? 0xFFFFFFFF : (ItemColorizer.hasColor(stack) ? ItemColorizer.getColor(stack) : 0xFFFFFFFF);
 	}
 
 	@Override

@@ -5,7 +5,7 @@ import buildcraft.api.blueprints.SchematicTile;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
 import pl.asie.lib.block.BlockBase;
 import pl.asie.lib.tile.TileMachine;

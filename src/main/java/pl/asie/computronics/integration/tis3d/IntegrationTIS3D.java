@@ -6,7 +6,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Optional;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import pl.asie.computronics.Computronics;
 import pl.asie.computronics.integration.flamingo.DriverFlamingo;
 import pl.asie.computronics.integration.tis3d.item.ItemModules;
 import pl.asie.computronics.integration.tis3d.manual.ComputronicsPathProvider;
@@ -31,7 +31,7 @@ public class IntegrationTIS3D {
 			|| Config.TIS3D_MODULE_BOOM) {
 
 			itemModules = new ItemModules();
-			GameRegistry.registerItem(itemModules, "modules.tis3d");
+			Computronics.instance.registerItem(itemModules, "modules.tis3d");
 			itemModules.registerItemModels();
 			/*if(Computronics.proxy.isClient()) {
 				//MinecraftForge.EVENT_BUS.register(new TextureLoader());
@@ -80,7 +80,7 @@ public class IntegrationTIS3D {
 					'P', "paneGlassColorless",
 					'I', "ingotIron",
 					'R', "dustRedstone",
-					'G', Blocks.tnt);
+					'G', Blocks.TNT);
 			}
 		}
 	}

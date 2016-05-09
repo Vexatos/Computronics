@@ -1,7 +1,7 @@
 package pl.asie.computronics.oc.manual;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 /**
@@ -9,7 +9,7 @@ import net.minecraft.world.World;
  */
 public interface IBlockWithDocumentation {
 
-	public String getDocumentationName(World world, BlockPos pos);
+	String getDocumentationName(World world, BlockPos pos);
 
-	public String getDocumentationName(ItemStack stack);
+	String getDocumentationName(ItemStack stack);
 }

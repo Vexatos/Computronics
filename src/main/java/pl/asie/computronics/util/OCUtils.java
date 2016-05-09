@@ -6,7 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -66,9 +66,9 @@ public class OCUtils {
 		if(stack.hasTagCompound() && stack.getTagCompound().hasKey("oc:data")) {
 			NBTTagCompound data = stack.getTagCompound().getCompoundTag("oc:data");
 			if(data.hasKey("node") && data.getCompoundTag("node").hasKey("address")) {
-				tooltip.add(EnumChatFormatting.DARK_GRAY
+				tooltip.add(TextFormatting.DARK_GRAY
 					+ data.getCompoundTag("node").getString("address").substring(0, 13) + "..."
-					+ EnumChatFormatting.GRAY);
+					+ TextFormatting.GRAY);
 			}
 		}
 	}

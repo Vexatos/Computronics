@@ -5,7 +5,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyDirection;
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
@@ -13,9 +13,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -54,11 +55,11 @@ public abstract class BlockBase extends Block /*implements
 	private final Object parent;
 	private int gui = -1;
 	protected IGuiProvider guiProvider;
-	protected final BlockState blockState;
+	protected final BlockStateContainer blockState;
 
 	public BlockBase(Material material, Object parent, Rotation rotation) {
 		super(material);
-		this.setCreativeTab(CreativeTabs.tabMisc);
+		this.setCreativeTab(CreativeTabs.MISC);
 		this.rotation = rotation;
 		this.setHardness(2.0F);
 		this.parent = parent;
@@ -79,16 +80,16 @@ public abstract class BlockBase extends Block /*implements
 	}
 
 	@Override
-	public BlockState getBlockState() {
+	public BlockStateContainer getBlockState() {
 		return this.blockState;
 	}
 
 	@Override
-	protected BlockState createBlockState() {
-		return new BlockState(this);
+	protected BlockStateContainer createBlockState() {
+		return new BlockStateContainer(this);
 	}
 
-	protected BlockState createActualBlockState() {
+	protected BlockStateContainer createActualBlockState() {
 		final ArrayList<IProperty> properties = new ArrayList<IProperty>();
 		if(rotation != Rotation.NONE) {
 			properties.add(rotation.FACING);
@@ -96,7 +97,7 @@ public abstract class BlockBase extends Block /*implements
 		if(this.supportsBundledRedstone()) {
 			properties.add(BUNDLED);
 		}
-		return new BlockState(this, properties.toArray(new IProperty[properties.size()]));
+		return new BlockStateContainer(this, properties.toArray(new IProperty[properties.size()]));
 	}
 
 	@Override
@@ -142,7 +143,7 @@ public abstract class BlockBase extends Block /*implements
 	}
 
 	@Override
-	public boolean canProvidePower() {
+	public boolean canProvidePower(IBlockState state) {
 		return true;
 	}
 
@@ -173,12 +174,12 @@ public abstract class BlockBase extends Block /*implements
 	}
 
 	@Override
-	public boolean canConnectRedstone(IBlockAccess world, BlockPos pos, EnumFacing side) {
+	public boolean canConnectRedstone(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
 		return (emitsRedstone(world, pos, side) || receivesRedstone(world, pos));
 	}
 
 	@Override
-	public int getWeakPower(IBlockAccess world, BlockPos pos, IBlockState state, EnumFacing side) {
+	public int getWeakPower(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
 		if(!emitsRedstone(world, pos, side)) {
 			return 0;
 		}
@@ -385,7 +386,7 @@ public abstract class BlockBase extends Block /*implements
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
 		if(!world.isRemote) {
 			if(!this.canUseTool(world, pos, player, side) || !this.useTool(world, pos, player, side)) {
 				IGuiProvider guiProvider = getGuiProvider(world, pos, player, side);

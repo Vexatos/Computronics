@@ -3,7 +3,7 @@ package pl.asie.lib.network;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.FMLEmbeddedChannel;
 import net.minecraftforge.fml.common.network.FMLOutboundHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
@@ -69,7 +69,7 @@ public class PacketHandler {
 	public void sendToAllAround(Packet packet, TileEntity entity,
 			double d) {
 		final BlockPos pos = entity.getPos();
-		this.sendToAllAround(packet, new TargetPoint(entity.getWorld().provider.getDimensionId(), pos.getX(), pos.getY(), pos.getZ(), d));
+		this.sendToAllAround(packet, new TargetPoint(entity.getWorld().provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), d));
 	}
 	
 	public void sendToAllAround(Packet packet, Entity entity,

@@ -2,19 +2,21 @@ package pl.asie.computronics.block;
 
 import li.cil.oc.api.network.Environment;
 import net.minecraft.block.properties.PropertyBool;
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.item.block.IBlockWithDifferentColors;
 import pl.asie.computronics.item.block.IBlockWithSpecialText;
@@ -45,13 +47,13 @@ public class BlockChatBox extends BlockPeripheral implements IBlockWithSpecialTe
 
 	// Cheaters never win! ~ jaquadro
 	@Override
-	public int colorMultiplier(IBlockAccess world, BlockPos pos, int renderPass) {
-		IBlockState state = world.getBlockState(pos);
-		return state.getValue(CREATIVE) ? getRenderColor(state) : super.colorMultiplier(world, pos, renderPass);
+	@SideOnly(Side.CLIENT)
+	public int colorMultiplier(IBlockState state, IBlockAccess world, BlockPos pos, int renderPass) {
+		return state.getValue(CREATIVE) ? getRenderColor(state) : super.colorMultiplier(state, world, pos, renderPass);
 	}
 
 	@Override
-	public int getColorFromItemStack(ItemStack stack, int pass) {
+	public int getColorFromItemstack(ItemStack stack, int pass) {
 		return (stack.getItemDamage() & 8) != 0 ? 0xFF60FF : 0xFFFFFF;
 	}
 
@@ -84,8 +86,8 @@ public class BlockChatBox extends BlockPeripheral implements IBlockWithSpecialTe
 	}
 
 	@Override
-	protected BlockState createActualBlockState() {
-		return new BlockState(this, CREATIVE);
+	protected BlockStateContainer createActualBlockState() {
+		return new BlockStateContainer(this, CREATIVE);
 	}
 
 	@Override
@@ -99,17 +101,17 @@ public class BlockChatBox extends BlockPeripheral implements IBlockWithSpecialTe
 	}
 
 	@Override
-	public boolean hasComparatorInputOverride() {
+	public boolean hasComparatorInputOverride(IBlockState state) {
 		return Config.REDSTONE_REFRESH;
 	}
 
 	@Override
-	public int getComparatorInputOverride(World world, BlockPos pos) {
+	public int getComparatorInputOverride(IBlockState state, World world, BlockPos pos) {
 		TileEntity tile = world.getTileEntity(pos);
 		if(tile instanceof TileEntityBase) {
 			return ((TileEntityBase) tile).requestCurrentRedstoneValue(null);
 		}
-		return super.getComparatorInputOverride(world, pos);
+		return super.getComparatorInputOverride(state, world, pos);
 	}
 
 	@Override
@@ -121,7 +123,7 @@ public class BlockChatBox extends BlockPeripheral implements IBlockWithSpecialTe
 	@SuppressWarnings("unchecked")
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean wat) {
 		if(stack.getItemDamage() >= 8) {
-			list.add(EnumChatFormatting.GRAY + StringUtil.localize("tooltip.computronics.chatBox.creative"));
+			list.add(TextFormatting.GRAY + StringUtil.localize("tooltip.computronics.chatBox.creative"));
 		}
 	}
 

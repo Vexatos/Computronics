@@ -3,13 +3,15 @@ package pl.asie.computronics.block;
 import li.cil.oc.api.network.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.PropertyInteger;
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumWorldBlockLayer;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
@@ -36,7 +38,7 @@ public class BlockColorfulLamp extends BlockPeripheral /*implements IRedNetInput
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
 		/*if(!world.isRemote && Mods.isLoaded(Mods.MFR) && player.isSneaking()) {
 			TileEntity tile = world.getTileEntity(pos);
 			if(tile instanceof TileColorfulLamp) {
@@ -49,12 +51,12 @@ public class BlockColorfulLamp extends BlockPeripheral /*implements IRedNetInput
 				}
 			}
 		}*/
-		return super.onBlockActivated(world, pos, state, player, side, hitX, hitY, hitZ);
+		return super.onBlockActivated(world, pos, state, player, hand, heldItem, side, hitX, hitY, hitZ);
 	}
 
 	@Override
-	protected BlockState createActualBlockState() {
-		return new BlockState(this, BUNDLED, BRIGHTNESS);
+	protected BlockStateContainer createActualBlockState() {
+		return new BlockStateContainer(this, BUNDLED, BRIGHTNESS);
 	}
 
 	@Override
@@ -82,7 +84,7 @@ public class BlockColorfulLamp extends BlockPeripheral /*implements IRedNetInput
 	}
 
 	@Override
-	public int getLightValue(IBlockAccess world, BlockPos pos) {
+	public int getLightValue(IBlockState state, IBlockAccess world, BlockPos pos) {
 		/*TileEntity tile = world.getTileEntity(pos);
 		if(tile instanceof TileColorfulLamp) {
 			int color = ((TileColorfulLamp) tile).getLampColor();
@@ -98,8 +100,8 @@ public class BlockColorfulLamp extends BlockPeripheral /*implements IRedNetInput
 	}
 
 	@Override
-	public int getLightOpacity() {
-		return super.getLightOpacity();
+	public int getLightOpacity(IBlockState state) {
+		return super.getLightOpacity(state);
 	}
 
 	@Override
@@ -113,21 +115,21 @@ public class BlockColorfulLamp extends BlockPeripheral /*implements IRedNetInput
 	}
 
 	@Override
-	public boolean canRenderInLayer(EnumWorldBlockLayer layer) {
-		return layer == EnumWorldBlockLayer.CUTOUT_MIPPED || super.canRenderInLayer(layer);
+	public boolean canRenderInLayer(IBlockState state, BlockRenderLayer layer) {
+		return layer == BlockRenderLayer.CUTOUT_MIPPED || super.canRenderInLayer(state, layer);
 	}
 
 	@Override
-	public int colorMultiplier(IBlockAccess world, BlockPos pos, int pass) {
+	public int colorMultiplier(IBlockState state, IBlockAccess world, BlockPos pos, int pass) {
 		if(pass != 0) {
-			return super.colorMultiplier(world, pos, pass);
+			return super.colorMultiplier(state, world, pos, pass);
 		}
 		TileEntity tile = world.getTileEntity(pos);
 		if(tile instanceof TileColorfulLamp) {
 			int color = ((TileColorfulLamp) tile).getLampColor();
 			return (color & (0x1F << 10)) << 9 | (color & (0x1F << 5)) << 6 | ((color & 0x1F) << 3);
 		}
-		return super.colorMultiplier(world, pos, pass);
+		return super.colorMultiplier(state, world, pos, pass);
 	}
 
 	@Override

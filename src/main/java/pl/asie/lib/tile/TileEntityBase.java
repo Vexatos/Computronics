@@ -4,11 +4,12 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
+import pl.asie.lib.util.WorldUtils;
 
 public class TileEntityBase extends TileEntity {
 
@@ -42,15 +43,19 @@ public class TileEntityBase extends TileEntity {
 	public net.minecraft.network.Packet getDescriptionPacket() {
 		NBTTagCompound tag = new NBTTagCompound();
 		this.writeToRemoteNBT(tag);
-		return new S35PacketUpdateTileEntity(getPos(), 0, tag);
+		return new SPacketUpdateTileEntity(getPos(), 0, tag);
 	}
 
 	@Override
-	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
 		NBTTagCompound tag = pkt.getNbtCompound();
 		if(tag != null) {
 			this.readFromRemoteNBT(tag);
 		}
+	}
+
+	protected void notifyBlockUpdate() {
+		WorldUtils.notifyBlockUpdate(getWorld(), getPos());
 	}
 
 	// Dummy functions

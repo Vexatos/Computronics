@@ -15,6 +15,7 @@ import li.cil.oc.api.internal.Tablet;
 import li.cil.oc.api.network.Environment;
 import li.cil.oc.api.network.EnvironmentHost;
 import li.cil.oc.api.network.ManagedEnvironment;
+import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -51,7 +52,7 @@ import java.util.Set;
 	@Optional.Interface(iface = "li.cil.oc.api.driver.item.HostAware", modid = Mods.OpenComputers),
 	@Optional.Interface(iface = "li.cil.oc.api.driver.item.UpgradeRenderer", modid = Mods.OpenComputers)
 })
-public class ItemOpenComputers extends ItemMultipleComputronics implements Item, EnvironmentProvider, HostAware, UpgradeRenderer, IItemWithDocumentation {
+public class ItemOpenComputers extends ItemMultipleComputronics implements Item, EnvironmentProvider, HostAware, UpgradeRenderer, IItemWithDocumentation, IItemColor {
 
 	public ItemOpenComputers() {
 		super(Mods.Computronics, new String[] {
@@ -364,7 +365,7 @@ public class ItemOpenComputers extends ItemMultipleComputronics implements Item,
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public int getColorFromItemStack(ItemStack stack, int pass) {
+	public int getColorFromItemstack(ItemStack stack, int pass) {
 		switch(stack.getItemDamage()) {
 			case 7: {
 				if(pass == 1) {
@@ -379,12 +380,10 @@ public class ItemOpenComputers extends ItemMultipleComputronics implements Item,
 				}
 			}
 			default: {
-				return super.getColorFromItemStack(stack, pass);
+				return 0xFFFFFFFF;
 			}
 		}
 	}
-
-	private static final int maxWidth = 220;
 
 	//Mostly stolen from Sangar
 	@Override
@@ -394,6 +393,7 @@ public class ItemOpenComputers extends ItemMultipleComputronics implements Item,
 		OCUtils.addTooltip(stack, tooltip);
 	}
 
+	@Override
 	public void registerItemModels() {
 		if(!Computronics.proxy.isClient()) {
 			return;
@@ -436,6 +436,7 @@ public class ItemOpenComputers extends ItemMultipleComputronics implements Item,
 		}
 	}
 
+	@Override
 	protected void registerItemModel(int meta) {
 		Computronics.proxy.registerItemModel(this, meta, "computronics:" + parts[meta]);
 	}

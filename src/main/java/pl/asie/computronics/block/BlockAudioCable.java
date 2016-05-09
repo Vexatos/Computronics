@@ -2,16 +2,18 @@ package pl.asie.computronics.block;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyBool;
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumWorldBlockLayer;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -19,17 +21,19 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.oc.manual.IBlockWithDocumentation;
 import pl.asie.computronics.tile.TileAudioCable;
+import pl.asie.lib.block.BlockBase;
 import pl.asie.lib.util.ColorUtils;
 import pl.asie.lib.util.internal.IColorable;
-import pl.asie.lib.block.BlockBase;
 
-public class BlockAudioCable extends BlockBase implements IBlockWithDocumentation {
+import static pl.asie.lib.util.WorldUtils.notifyBlockUpdate;
+
+public class BlockAudioCable extends BlockBase implements IBlockWithDocumentation, IBlockColor {
 
 	private int connectionMask = 0x3f;
 	private int ImmibisMicroblocks_TransformableBlockMarker;
 
 	public BlockAudioCable() {
-		super(Material.iron, Computronics.instance, Rotation.NONE);
+		super(Material.IRON, Computronics.instance, Rotation.NONE);
 		this.setCreativeTab(Computronics.tab);
 		this.setUnlocalizedName("computronics.audiocable");
 	}
@@ -39,26 +43,26 @@ public class BlockAudioCable extends BlockBase implements IBlockWithDocumentatio
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
 		TileEntity tile = world.getTileEntity(pos);
-		if(tile instanceof TileAudioCable && player.getHeldItem() != null) {
-			ColorUtils.Color color = ColorUtils.getColor(player.getHeldItem());
+		if(tile instanceof TileAudioCable && heldItem != null) {
+			ColorUtils.Color color = ColorUtils.getColor(heldItem);
 			if(color != null) {
 				((TileAudioCable) tile).setColor(color.color);
-				world.markBlockForUpdate(pos);
+				notifyBlockUpdate(world, pos);
 				return true;
 			}
 		}
-		return super.onBlockActivated(world, pos, state, player, side, hitX, hitY, hitZ);
+		return super.onBlockActivated(world, pos, state, player, hand, heldItem, side, hitX, hitY, hitZ);
 	}
 
-	@Override
 	public int getRenderColor(IBlockState state) {
 		return ColorUtils.Color.LightGray.color;
 	}
 
 	@Override
-	public int colorMultiplier(IBlockAccess world, BlockPos pos, int renderPass) {
+	@SideOnly(Side.CLIENT)
+	public int colorMultiplier(IBlockState state, IBlockAccess world, BlockPos pos, int renderPass) {
 		TileEntity tile = world.getTileEntity(pos);
 		if(tile instanceof IColorable) {
 			return ((IColorable) tile).getColor();
@@ -71,7 +75,7 @@ public class BlockAudioCable extends BlockBase implements IBlockWithDocumentatio
 		TileEntity tile = world.getTileEntity(pos);
 		if(tile instanceof IColorable && ((IColorable) tile).canBeColored()) {
 			((IColorable) tile).setColor(ColorUtils.fromColor(color).color);
-			world.markBlockForUpdate(pos);
+			notifyBlockUpdate(world, pos);
 			return true;
 		}
 		return super.recolorBlock(world, pos, side, color);
@@ -100,7 +104,7 @@ public class BlockAudioCable extends BlockBase implements IBlockWithDocumentatio
 
 		static {
 			for(int mask = 0; mask < 0x40; ++mask) {
-				bounds[mask] = AxisAlignedBB.fromBounds(
+				bounds[mask] = new AxisAlignedBB(
 					((mask & (1 << 4)) != 0 ? 0 : 0.375),
 					((mask & (1 << 0)) != 0 ? 0 : 0.375),
 					((mask & (1 << 2)) != 0 ? 0 : 0.375),
@@ -127,10 +131,6 @@ public class BlockAudioCable extends BlockBase implements IBlockWithDocumentatio
 			}
 		}
 		return result;
-	}
-
-	protected void setBlockBounds(AxisAlignedBB bounds) {
-		setBlockBounds((float) bounds.minX, (float) bounds.minY, (float) bounds.minZ, (float) bounds.maxX, (float) bounds.maxY, (float) bounds.maxZ);
 	}
 
 	/*@Override
@@ -169,8 +169,8 @@ public class BlockAudioCable extends BlockBase implements IBlockWithDocumentatio
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public EnumWorldBlockLayer getBlockLayer() {
-		return EnumWorldBlockLayer.CUTOUT;
+	public BlockRenderLayer getBlockLayer() {
+		return BlockRenderLayer.CUTOUT;
 	}
 
 	public static final PropertyBool UP = PropertyBool.create("up");
@@ -181,8 +181,8 @@ public class BlockAudioCable extends BlockBase implements IBlockWithDocumentatio
 	public static final PropertyBool WEST = PropertyBool.create("west");
 
 	@Override
-	protected BlockState createActualBlockState() {
-		return new BlockState(this,
+	protected BlockStateContainer createActualBlockState() {
+		return new BlockStateContainer(this,
 			DOWN,
 			UP,
 			NORTH,
@@ -211,33 +211,27 @@ public class BlockAudioCable extends BlockBase implements IBlockWithDocumentatio
 	}
 
 	@Override
-	public boolean isSideSolid(IBlockAccess world, BlockPos pos, EnumFacing side) {
+	public boolean isSideSolid(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
 		return false;
 	}
 
 	@Override
-	public AxisAlignedBB getCollisionBoundingBox(World world, BlockPos pos, IBlockState state) {
-		setBlockBoundsBasedOnState(world, pos);
-		return super.getCollisionBoundingBox(world, pos, state);
+	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos) {
+		return BoundingBox.getBox(neighbors(world, pos));
 	}
 
 	@Override
-	public void setBlockBoundsBasedOnState(IBlockAccess world, BlockPos pos) {
-		setBlockBounds(BoundingBox.getBox(neighbors(world, pos)));
-	}
-
-	@Override
-	public boolean isOpaqueCube() {
+	public boolean isOpaqueCube(IBlockState state) {
 		return false;
 	}
 
 	@Override
-	public boolean isFullCube() {
+	public boolean isFullCube(IBlockState state) {
 		return false;
 	}
 
 	@Override
-	public boolean shouldSideBeRendered(IBlockAccess worldIn, BlockPos pos, EnumFacing side) {
+	public boolean shouldSideBeRendered(IBlockState state, IBlockAccess worldIn, BlockPos pos, EnumFacing side) {
 		return (connectionMask & (1 << side.ordinal())) != 0;
 	}
 

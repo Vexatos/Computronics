@@ -1,17 +1,15 @@
 package pl.asie.computronics.util;
 
-import com.github.soniex2.notebetter.api.NoteBetterAPI;
-import com.github.soniex2.notebetter.api.NoteBetterInstrument;
 import net.minecraft.block.material.Material;
-import net.minecraft.util.BlockPos;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.NoteBlockEvent;
-import net.minecraftforge.fml.common.Optional;
-import pl.asie.computronics.reference.Config;
-import pl.asie.computronics.reference.Mods;
 
 public class NoteUtils {
 
@@ -24,7 +22,7 @@ public class NoteUtils {
 		int yCoord = pos.getY();
 		int zCoord = pos.getZ();
 
-		worldObj.playSoundEffect((double) xCoord + 0.5D, (double) yCoord + 0.5D, (double) zCoord + 0.5D, instrument, volume, f);
+		worldObj.playSound(null, (double) xCoord + 0.5D, (double) yCoord + 0.5D, (double) zCoord + 0.5D, SoundEvent.REGISTRY.getObject(new ResourceLocation(instrument)), SoundCategory.BLOCKS, volume, f);
 		ParticleUtils.sendParticlePacket(EnumParticleTypes.NOTE, worldObj, (double) xCoord + 0.5D, (double) yCoord + 1.2D, (double) zCoord + 0.5D, (double) note / 24.0D, 1.0D, 0.0D);
 	}
 
@@ -45,23 +43,24 @@ public class NoteUtils {
 			// Get default instrument
 			byte b0 = 0;
 			if(pos.getY() > 0) {
-				if(Mods.API.hasAPI(Mods.API.NoteBetter)) {
+				/*if(Mods.API.hasAPI(Mods.API.NoteBetter)) { TODO NoteBetter
 					NoteTask task = playNoteNoteBetter(worldObj, pos, note, volume);
 					if(task != null) {
 						return task;
 					}
-				}
-				Material m = worldObj.getBlockState(pos.down()).getBlock().getMaterial();
-				if(m == Material.rock) {
+				}*/
+				final IBlockState state = worldObj.getBlockState(pos.down());
+				Material m = state.getBlock().getMaterial(state);
+				if(m == Material.ROCK) {
 					b0 = 1;
 				}
-				if(m == Material.sand) {
+				if(m == Material.SAND) {
 					b0 = 2;
 				}
-				if(m == Material.glass) {
+				if(m == Material.GLASS) {
 					b0 = 3;
 				}
-				if(m == Material.wood) {
+				if(m == Material.WOOD) {
 					b0 = 4;
 				}
 			}
@@ -72,8 +71,8 @@ public class NoteUtils {
 		return new NoteTask(instrument, note, volume < 0 ? 3.0F : volume);
 	}
 
-	@Optional.Method(modid = Mods.API.NoteBetter)
-	private static NoteTask playNoteNoteBetter(World world, BlockPos pos, int note, float volume) {
+	/*@Optional.Method(modid = Mods.API.NoteBetter)
+	private static NoteTask playNoteNoteBetter(World world, BlockPos pos, int note, float volume) { TODO NoteBetter
 		NoteBetterInstrument instr = NoteBetterAPI.getInstrument(world, pos.down());
 		if(instr != null) {
 			ResourceLocation soundEvent = instr.getSoundEvent();
@@ -85,7 +84,7 @@ public class NoteUtils {
 			return new NoteTask(null, note, volume < 0 ? instr.getVolume() : volume);
 		}
 		return null;
-	}
+	}*/
 
 	public static float toVolume(int index, double value) {
 		if(value < 0.0D || value > 1.0D) {
@@ -108,14 +107,14 @@ public class NoteUtils {
 	public static String checkInstrument(String instrument) {
 		for(String s : instruments) {
 			if(s.equals(instrument)) {
-				return "note." + instrument;
+				return "block.note." + instrument;
 			}
 		}
-		if(Config.NOTEBETTER_ANY_INSTRUMENT && Mods.API.hasAPI(Mods.API.NoteBetter)) {
+		/*if(Config.NOTEBETTER_ANY_INSTRUMENT && Mods.API.hasAPI(Mods.API.NoteBetter)) { TODO NoteBetter
 			if(NoteBetterAPI.isNoteBetterInstrument(instrument)) {
 				return instrument;
 			}
-		}
+		}*/
 		throw new IllegalArgumentException("invalid instrument: " + instrument);
 	}
 
@@ -145,7 +144,7 @@ public class NoteUtils {
 					if(MinecraftForge.EVENT_BUS.post(e)) {
 						return;
 					}
-					instrumentID = e.instrument.ordinal();
+					instrumentID = e.getInstrument().ordinal();
 					note = e.getVanillaNoteId();
 				}
 

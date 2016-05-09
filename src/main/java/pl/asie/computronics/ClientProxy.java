@@ -1,16 +1,18 @@
 package pl.asie.computronics;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.color.IBlockColor;
+import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.item.Item;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.api.audio.AudioPacketDFPWM;
 import pl.asie.computronics.api.audio.AudioPacketRegistry;
 import pl.asie.computronics.audio.AudioPacketClientHandlerDFPWM;
-import pl.asie.computronics.integration.buildcraft.statements.StatementTextureManager;
 import pl.asie.computronics.oc.IntegrationOpenComputers;
 import pl.asie.computronics.oc.client.RackMountableRenderer;
 import pl.asie.computronics.oc.client.UpgradeRenderer;
@@ -44,11 +46,22 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public void registerItemModel(Item item, int meta, String name) {
+		if(item instanceof IItemColor) {
+			Minecraft.getMinecraft().getItemColors().registerItemColorHandler(((IItemColor) item), item);
+		}
 		if(name.contains("#")) {
 			ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(name.split("#")[0], name.split("#")[1]));
 		} else {
 			ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(name, "inventory"));
 		}
+	}
+
+	@Override
+	public void registerItemModel(Block block, int meta, String name) {
+		if(block instanceof IBlockColor) {
+			Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(((IBlockColor) block), block);
+		}
+		super.registerItemModel(block, meta, name);
 	}
 
 	@Override
@@ -73,9 +86,9 @@ public class ClientProxy extends CommonProxy {
 				Computronics.forestry.registerOCRenderers();
 			}*/
 		}
-		if(Mods.API.hasAPI(Mods.API.BuildCraftStatements)) {
+		/*if(Mods.API.hasAPI(Mods.API.BuildCraftStatements)) {
 			MinecraftForge.EVENT_BUS.register(new StatementTextureManager());
-		}
+		}*/
 	}
 
 	@Override

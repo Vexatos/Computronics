@@ -17,7 +17,7 @@ public class ItemMultiple extends Item {
 		super();
 		this.mod = mod;
 		this.parts = parts;
-		this.setCreativeTab(CreativeTabs.tabMisc);
+		this.setCreativeTab(CreativeTabs.MISC);
 		this.setHasSubtypes(true);
 		this.setMaxDamage(0);
 	}

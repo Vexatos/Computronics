@@ -5,9 +5,9 @@ import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.text.ITextComponent;
 import pl.asie.lib.api.tile.IBattery;
 
 /*@Optional.InterfaceList({
@@ -224,8 +224,8 @@ public class TileMachine extends TileEntityBase implements
 	}
 
 	@Override
-	public IChatComponent getDisplayName() {
-		return new ChatComponentTranslation(getName());
+	public ITextComponent getDisplayName() {
+		return new TextComponentTranslation(getName());
 	}
 
 	@Override
@@ -288,6 +288,7 @@ public class TileMachine extends TileEntityBase implements
 		}
 	}
 
+	@Override
 	public void setInventorySlotContents(int slot, ItemStack stack) {
 		if(this.items != null && slot >= 0 && slot < this.items.length) {
 			this.items[slot] = stack;

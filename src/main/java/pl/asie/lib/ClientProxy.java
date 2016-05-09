@@ -11,8 +11,10 @@ import pl.asie.lib.network.Packet;
 import java.io.File;
 
 public class ClientProxy extends CommonProxy {
+	@Override
 	public boolean isClient() { return true; }
 	
+	@Override
 	public File getMinecraftDirectory() {
 		return Minecraft.getMinecraft().mcDataDir;
 	}
@@ -26,7 +28,7 @@ public class ClientProxy extends CommonProxy {
 	
 	@Override
 	public int getCurrentClientDimension() {
-		return Minecraft.getMinecraft().theWorld.provider.getDimensionId();
+		return Minecraft.getMinecraft().theWorld.provider.getDimension();
 	}
 	
 	@Override
@@ -35,7 +37,7 @@ public class ClientProxy extends CommonProxy {
 	        switch (FMLCommonHandler.instance().getEffectiveSide()) {
 		        case CLIENT:
 		            if(client != null)
-		            	client.onMessage(packet, handler, (EntityPlayer)Minecraft.getMinecraft().thePlayer);
+		            	client.onMessage(packet, handler, Minecraft.getMinecraft().thePlayer);
 		            break;
 		        case SERVER:
 		        	super.handlePacket(client, server, packet, handler);

@@ -1,12 +1,12 @@
 package pl.asie.computronics.util;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.server.MinecraftServer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import pl.asie.computronics.reference.Config;
 
 public class ChatBoxUtils {
@@ -16,17 +16,16 @@ public class ChatBoxUtils {
 			return;
 		}
 		distance = Math.min(distance, 32767);
-		String text = EnumChatFormatting.GRAY + "" + EnumChatFormatting.ITALIC + "[" + prefix + "] ";
-		text += EnumChatFormatting.RESET + "" + EnumChatFormatting.GRAY + string;
-		ChatComponentText component = new ChatComponentText(text);
-		component.setChatStyle(component.getChatStyle().setColor(EnumChatFormatting.GRAY));
+		String text = TextFormatting.GRAY + "" + TextFormatting.ITALIC + "[" + prefix + "] ";
+		text += TextFormatting.RESET + "" + TextFormatting.GRAY + string;
+		TextComponentString component = new TextComponentString(text);
+		component.setStyle(component.getStyle().setColor(TextFormatting.GRAY));
 		try {
-			for(Object o : MinecraftServer.getServer().getConfigurationManager().playerEntityList) {
-				if(!(o instanceof EntityPlayer)) {
+			for(EntityPlayerMP player : FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerList()) {
+				if(player == null) {
 					continue;
 				}
-				EntityPlayer player = (EntityPlayer) o;
-				if(sendToAll || (player.worldObj.provider.getDimensionId() == worldObj.provider.getDimensionId()
+				if(sendToAll || (player.worldObj.provider.getDimension() == worldObj.provider.getDimension()
 					&& player.getDistanceSq(xCoord, yCoord, zCoord) < distance * distance)) {
 					player.addChatMessage(component.createCopy());
 				}

@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
  */
 public interface IBlockWithDifferentColors {
 
-	public boolean hasSubTypes();
+	boolean hasSubTypes();
 
-	public int getColorFromItemStack(ItemStack stack, int pass);
+	int getColorFromItemstack(ItemStack stack, int pass);
 }

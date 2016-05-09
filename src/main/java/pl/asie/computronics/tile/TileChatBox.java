@@ -8,7 +8,7 @@ import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.world.World;
@@ -87,7 +87,7 @@ public class TileChatBox extends TileEntityPeripheralBase implements IChatListen
 		if(!worldObj.isBlockLoaded(getPos())) {
 			return;
 		}
-		if(Config.CHATBOX_MAGIC && !isCreative() && (event.player.worldObj != this.worldObj || event.player.getDistanceSq(getPos()) > distance * distance)) {
+		if(Config.CHATBOX_MAGIC && !isCreative() && (event.getPlayer().worldObj != this.worldObj || event.getPlayer().getDistanceSq(getPos()) > distance * distance)) {
 			return;
 		}
 
@@ -124,7 +124,7 @@ public class TileChatBox extends TileEntityPeripheralBase implements IChatListen
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void eventOC(ServerChatEvent event) {
 		if(node() != null) {
-			node().sendToReachable("computer.signal", "chat_message", event.username, event.message);
+			node().sendToReachable("computer.signal", "chat_message", event.getUsername(), event.getMessage());
 		}
 	}
 
@@ -134,7 +134,7 @@ public class TileChatBox extends TileEntityPeripheralBase implements IChatListen
 			for(IComputerAccess computer : attachedComputersCC) {
 				computer.queueEvent("chat_message", new Object[] {
 					computer.getAttachmentName(),
-					event.username, event.message
+					event.getUsername(), event.getMessage()
 				});
 			}
 		}

@@ -1,13 +1,16 @@
 package pl.asie.computronics.item.block;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
-public class ComputronicsItemBlock extends ItemBlock {
+public class ComputronicsItemBlock extends ItemBlock implements IItemColor {
 
 	private IBlockWithSpecialText specialBlock;
 	private IBlockWithDifferentColors coloredBlock;
@@ -47,10 +50,11 @@ public class ComputronicsItemBlock extends ItemBlock {
 	}
 
 	@Override
-	public int getColorFromItemStack(ItemStack stack, int pass) {
+	@SideOnly(Side.CLIENT)
+	public int getColorFromItemstack(ItemStack stack, int pass) {
 		if(this.coloredBlock != null) {
-			return this.coloredBlock.getColorFromItemStack(stack, pass);
+			return this.coloredBlock.getColorFromItemstack(stack, pass);
 		}
-		return super.getColorFromItemStack(stack, pass);
+		return 0xFFFFFFFF;
 	}
 }

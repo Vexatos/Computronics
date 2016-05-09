@@ -7,7 +7,7 @@ import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.turtle.ITurtleAccess;
 import dan200.computercraft.api.turtle.TurtleSide;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.model.IBakedModel;
+import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -97,7 +97,7 @@ public class ParticleTurtleUpgrade extends TurtleUpgradeBase {
 
 	@Override
 	public ItemStack getCraftingItem() {
-		return new ItemStack(Items.blaze_powder, 1, 0);
+		return new ItemStack(Items.BLAZE_POWDER, 1, 0);
 	}
 
 	@Override
@@ -110,9 +110,9 @@ public class ParticleTurtleUpgrade extends TurtleUpgradeBase {
 		ItemStack stack;
 		if(turtle != null) {
 			int dyeColour = 15 - turtle.getDyeColour();
-			stack = dyeColour >= 0 && dyeColour < 16 ? new ItemStack(Blocks.stained_glass, 1, dyeColour) : new ItemStack(Blocks.glass, 1, 0);
+			stack = dyeColour >= 0 && dyeColour < 16 ? new ItemStack(Blocks.STAINED_GLASS, 1, dyeColour) : new ItemStack(Blocks.GLASS, 1, 0);
 		} else {
-			stack = new ItemStack(Blocks.glass, 1, 0);
+			stack = new ItemStack(Blocks.GLASS, 1, 0);
 		}
 		return Pair.of(Minecraft.getMinecraft().getRenderItem().getItemModelMesher().getItemModel(stack), getStandardBlockMatrixForSide(side));
 	}

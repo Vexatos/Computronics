@@ -9,7 +9,7 @@ public class ItemColorizer {
      */
     public static boolean hasColor(ItemStack stack)
     {
-        return (!stack.hasTagCompound() ? false : (!stack.getTagCompound().hasKey("display") ? false : stack.getTagCompound().getCompoundTag("display").hasKey("color")));
+        return (stack.hasTagCompound() && (stack.getTagCompound().hasKey("display") && stack.getTagCompound().getCompoundTag("display").hasKey("color")));
     }
 
     /**

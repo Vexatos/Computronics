@@ -11,9 +11,9 @@ import li.cil.oc.api.network.Visibility;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -90,7 +90,7 @@ public class DriverBoardBoom extends DriverCardBoom implements RackMountable {
 		final Queue<Rack> toSearch = new ArrayDeque<Rack>();
 		toSearch.add(container);
 		racks.add(container);
-		final Vec3 origin = new Vec3(container.xPosition(), container.yPosition(), container.zPosition());
+		final Vec3d origin = new Vec3d(container.xPosition(), container.yPosition(), container.zPosition());
 		Rack cur;
 		while((cur = toSearch.poll()) != null) {
 			final World world = cur.world();
@@ -98,7 +98,7 @@ public class DriverBoardBoom extends DriverCardBoom implements RackMountable {
 			for(EnumFacing dir : EnumFacing.VALUES) {
 				final BlockPos pos = currentPos.offset(dir);
 
-				if(origin.squareDistanceTo(new Vec3(pos)) <= 256 &&
+				if(origin.squareDistanceTo(new Vec3d(pos)) <= 256 &&
 					world.isBlockLoaded(pos)) {
 					TileEntity tile = world.getTileEntity(pos);
 					if(tile instanceof Rack && racks.add((Rack) tile)) {
