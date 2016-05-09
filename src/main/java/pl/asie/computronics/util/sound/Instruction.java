@@ -246,18 +246,6 @@ public abstract class Instruction {
 		}
 	}
 
-	public static class ResetVolume extends ChannelSpecific {
-
-		public ResetVolume(int channelIndex) {
-			super(channelIndex);
-		}
-
-		@Override
-		public void encounter(AudioProcess process, State state) {
-			state.volume = 1;
-		}
-	}
-
 	public static abstract class ChannelSpecific extends Instruction {
 
 		public final int channelIndex;
