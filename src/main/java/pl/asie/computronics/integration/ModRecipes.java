@@ -15,6 +15,7 @@ import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.RecipeUtils;
 import pl.asie.lib.util.color.RecipeColorizer;
+import pl.asie.lib.util.color.RecipeDecolorizer;
 
 /**
  * @author Vexatos
@@ -97,6 +98,7 @@ public class ModRecipes {
 			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.itemParts, 1, 0),
 				" i ", "rrr", "iii", 'r', Items.redstone, 'i', Items.iron_ingot);
 			GameRegistry.addRecipe(new RecipeColorizer(Computronics.itemTape));
+			GameRegistry.addRecipe(new RecipeDecolorizer(Computronics.itemTape));
 		}
 	}
 
