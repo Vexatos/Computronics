@@ -2,6 +2,7 @@ package pl.asie.computronics.util.sound;
 
 import com.google.common.collect.ImmutableList;
 import pl.asie.computronics.reference.Config;
+import pl.asie.computronics.util.sound.AudioUtil.ADSR;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -174,6 +175,11 @@ public class AudioUtil {
 				int ordinal = ordinal();
 				return ordinal < VALUES.length ? VALUES[ordinal + 1] : null;
 			}
+		}
+
+		public void copy(ADSR envelope) {
+			this.progress = envelope.progress;
+			this.phase = envelope.phase;
 		}
 	}
 

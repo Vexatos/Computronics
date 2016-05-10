@@ -89,7 +89,7 @@ public abstract class Instruction {
 
 	public static class SetFM extends ChannelSpecific {
 
-		private final FrequencyModulation freqMod;
+		public final FrequencyModulation freqMod;
 
 		public SetFM(int channelIndex, int modulatorIndex, float index) {
 			super(channelIndex);
@@ -144,9 +144,9 @@ public abstract class Instruction {
 
 	public static class SetAM extends ChannelSpecific {
 
-		private final AmplitudeModulation ampMod;
+		public final AmplitudeModulation ampMod;
 
-		public SetAM(int channelIndex, int modulatorIndex, float index) {
+		public SetAM(int channelIndex, int modulatorIndex) {
 			super(channelIndex);
 			this.ampMod = new AmplitudeModulation(modulatorIndex);
 		}
@@ -197,10 +197,18 @@ public abstract class Instruction {
 	public static class SetADSR extends ChannelSpecific {
 
 		private final ADSR envelope;
+		public int attackDuration;
+		public int decayDuration;
+		public float attenuation;
+		public int releaseDuration;
 
 		public SetADSR(int channelIndex, int attackDuration, int decayDuration, float attenuation, int releaseDuration) {
 			super(channelIndex);
 			this.envelope = new ADSR(attackDuration, decayDuration, attenuation, releaseDuration);
+			this.attackDuration = attackDuration;
+			this.decayDuration = decayDuration;
+			this.attenuation = attenuation;
+			this.releaseDuration = releaseDuration;
 		}
 
 		public SetADSR(NBTTagCompound tag) {
@@ -215,6 +223,8 @@ public abstract class Instruction {
 
 		@Override
 		public void encounter(AudioProcess process, State state) {
+			if (state.envelope != null)
+				this.envelope.copy(state.envelope);
 			state.envelope = this.envelope;
 		}
 	}
@@ -233,11 +243,16 @@ public abstract class Instruction {
 
 	public static class SetVolume extends ChannelSpecific {
 
-		private final float volume;
+		public final float volume;
 
 		public SetVolume(int channelIndex, float volume) {
 			super(channelIndex);
 			this.volume = Math.min(Math.max(volume, 0), 1);
+		}
+
+		public SetVolume(NBTTagCompound tag) {
+			super(tag.getInteger("c"));
+			this.volume = tag.getFloat("v");
 		}
 
 		@Override
@@ -300,6 +315,9 @@ public abstract class Instruction {
 			}
 			case 9: {
 				return new ResetEnvelope(tag.getInteger("c"));
+			}
+			case 10: {
+				return new SetVolume(tag.getCompoundTag("d"));
 			}
 		}
 		return null;
