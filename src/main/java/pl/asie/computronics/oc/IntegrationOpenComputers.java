@@ -2,6 +2,7 @@ package pl.asie.computronics.oc;
 
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.event.FMLMissingMappingsEvent;
+import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import li.cil.oc.api.Driver;
 import net.minecraft.init.Blocks;
@@ -13,6 +14,7 @@ import pl.asie.computronics.Computronics;
 import pl.asie.computronics.api.audio.AudioPacketRegistry;
 import pl.asie.computronics.audio.SoundCardPacket;
 import pl.asie.computronics.audio.SoundCardPacketClientHandler;
+import pl.asie.computronics.audio.SoundCardPlaybackManager;
 import pl.asie.computronics.client.UpgradeRenderer;
 import pl.asie.computronics.integration.appeng.DriverSpatialIOPort;
 import pl.asie.computronics.integration.armourersworkshop.DriverMannequin;
@@ -81,6 +83,7 @@ public class IntegrationOpenComputers {
 	public static ItemOpenComputers itemOCParts;
 	public static UpgradeRenderer upgradeRenderer;
 	public static ColorfulUpgradeHandler colorfulUpgradeHandler;
+	public SoundCardPlaybackManager audio;
 
 	public IntegrationOpenComputers(Computronics computronics) {
 		this.computronics = computronics;
@@ -112,6 +115,8 @@ public class IntegrationOpenComputers {
 		Config.MUST_UPDATE_TILE_ENTITIES = true;
 
 		if(Config.OC_CARD_SOUND) {
+			audio = new SoundCardPlaybackManager(Computronics.proxy.isClient());
+
 			AudioPacketRegistry.INSTANCE.registerType(SoundCardPacket.class);
 
 			AudioPacketRegistry.INSTANCE.registerClientHandler(
@@ -373,6 +378,12 @@ public class IntegrationOpenComputers {
 		}
 		if(Computronics.buildcraft != null) {
 			Computronics.buildcraft.postInitOC();
+		}
+	}
+
+	public void onServerStop(FMLServerStoppedEvent event) {
+		if(Config.OC_CARD_SOUND) {
+			this.audio.removeAll();
 		}
 	}
 

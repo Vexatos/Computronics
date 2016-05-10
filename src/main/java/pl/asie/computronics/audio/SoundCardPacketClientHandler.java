@@ -96,14 +96,16 @@ public class SoundCardPacketClientHandler extends AudioPacketClientHandler {
 			}
 		}
 
-		StreamingAudioPlayer codec = Computronics.instance.audio.getPlayer(codecId);
-		codec.setSampleRate(sampleRate);
-		codec.push(data.toByteArray());
+		if (data.size() > 0) {
+			StreamingAudioPlayer codec = Computronics.opencomputers.audio.getPlayer(codecId);
+			codec.setSampleRate(sampleRate);
+			codec.push(data.toByteArray());
+		}
 	}
 
 	@Override
 	protected void playData(int packetId, int codecId, int x, int y, int z, int distance, byte volume) {
-		StreamingAudioPlayer codec = Computronics.instance.audio.getPlayer(codecId);
+		StreamingAudioPlayer codec = Computronics.opencomputers.audio.getPlayer(codecId);
 
 		codec.setHearing((float) distance, volume / 127.0F);
 		codec.play(x, y, z);

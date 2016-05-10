@@ -18,7 +18,6 @@ import pl.asie.computronics.audio.SoundCardPacket;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.sound.AudioType;
-import pl.asie.computronics.util.sound.AudioUtil;
 import pl.asie.computronics.util.sound.Instruction;
 import pl.asie.computronics.util.sound.Instruction.*;
 
@@ -41,8 +40,8 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 			create());
 		buildBuffer = new LinkedList<Instruction>();
 
-		codecId = Computronics.instance.audio.newPlayer();
-		Computronics.instance.audio.getPlayer(codecId);
+		codecId = Computronics.opencomputers.audio.newPlayer();
+		Computronics.opencomputers.audio.getPlayer(codecId);
 	}
 
 	private final IAudioReceiver internalSpeaker = new IAudioReceiver() {
@@ -98,7 +97,7 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 
 	@Override
 	public void update() {
-		if (nextBuffer != null && System.currentTimeMillis() >= timeout) {
+		if (nextBuffer != null && System.currentTimeMillis() >= timeout - 100) {
 			try {
 				sendSound(nextDelay, nextBuffer);
 			} catch (IOException e) {
