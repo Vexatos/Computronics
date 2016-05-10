@@ -19,10 +19,12 @@ public class AudioUtil {
 				if(state.isAmpMod || state.isFreqMod) {
 					return 0;
 				}
-				double value = state.wave.type.generate(state.wave.offset);
+				double value = state.wave.type == AudioType.Noise ? state.noiseOutput : state.wave.type.generate(state.wave.offset);
 				state.wave.offset += state.wave.frequencyInHz / ((float) Config.SOUND_SAMPLE_RATE);
 				if(state.wave.offset > 1) {
 					state.wave.offset -= 1;
+					if (state.wave.type == AudioType.Noise)
+						state.noiseOutput = Math.random();
 				}
 				if(state.freqMod != null && !state.isFreqMod) {
 					value = state.freqMod.getModifiedValue(process, state, value);
@@ -193,9 +195,9 @@ public class AudioUtil {
 		public AmplitudeModulation ampMod;
 		public ADSR envelope;
 		public float volume = 1;
+		public double noiseOutput = Math.random();
 
 		public boolean isFreqMod, isAmpMod;
-		public final ByteArrayOutputStream data = new ByteArrayOutputStream();
 
 		public State(int channelIndex) {
 			this.wave = new Wave();
