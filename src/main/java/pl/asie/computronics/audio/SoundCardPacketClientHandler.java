@@ -26,7 +26,9 @@ import pl.asie.lib.network.Packet;
 @SideOnly(Side.CLIENT)
 public class SoundCardPacketClientHandler extends AudioPacketClientHandler {
 	private Map<String, AudioProcess> processMap = new HashMap<String, AudioProcess>();
+	private Map<String, Long> timeoutMap = new HashMap<String, Long>();
 	private int sampleRate = Config.SOUND_SAMPLE_RATE;
+	private int soundTimeoutMS = 250;
 
 	@Override
 	protected void readData(Packet packet, int packetId, int codecId) throws IOException {
@@ -73,9 +75,12 @@ public class SoundCardPacketClientHandler extends AudioPacketClientHandler {
 			}
 		}
 
-		if (!processMap.containsKey(address))
+		if(!processMap.containsKey(address)) {
 			processMap.put(address, new AudioUtil.AudioProcess(8));
+			timeoutMap.put(address, System.currentTimeMillis());
+		}
 		AudioProcess process = processMap.get(address);
+		long timeout = timeoutMap.get(address);
 
 		ByteArrayOutputStream data = new ByteArrayOutputStream();
 		while(!buffer.isEmpty() || process.delay > 0) {
@@ -98,9 +103,15 @@ public class SoundCardPacketClientHandler extends AudioPacketClientHandler {
 
 		if (data.size() > 0) {
 			StreamingAudioPlayer codec = Computronics.opencomputers.audio.getPlayer(codecId);
+			if(System.currentTimeMillis() > timeout + soundTimeoutMS) {
+				codec.stop();
+				timeout = System.currentTimeMillis();
+			}
 			codec.setSampleRate(sampleRate);
 			codec.push(data.toByteArray());
 		}
+
+		timeoutMap.put(address, timeout+delay);
 	}
 
 	@Override
@@ -108,6 +119,10 @@ public class SoundCardPacketClientHandler extends AudioPacketClientHandler {
 		StreamingAudioPlayer codec = Computronics.opencomputers.audio.getPlayer(codecId);
 
 		codec.setHearing((float) distance, volume / 127.0F);
-		codec.play(x, y, z);
+		try {
+			codec.play(x, y, z);
+		} catch(NullPointerException e) {
+			// This exception occurs when there is no data to play, and is harmless.
+		}
 	}
 }

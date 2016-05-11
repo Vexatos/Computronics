@@ -18,6 +18,7 @@ import pl.asie.computronics.audio.SoundCardPacket;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.sound.AudioType;
+import pl.asie.computronics.util.sound.AudioUtil;
 import pl.asie.computronics.util.sound.Instruction;
 import pl.asie.computronics.util.sound.Instruction.*;
 
@@ -39,6 +40,7 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 			withConnector(Config.SOUND_ENERGY_COST * 42).
 			create());
 		buildBuffer = new LinkedList<Instruction>();
+		process = new AudioUtil.AudioProcess(8);
 
 		codecId = Computronics.opencomputers.audio.newPlayer();
 		Computronics.opencomputers.audio.getPlayer(codecId);
@@ -81,14 +83,19 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 		}
 	};
 
-	protected Queue<Instruction> buildBuffer;
-	protected Queue<Instruction> nextBuffer;
+	private AudioUtil.AudioProcess process;
+	private Queue<Instruction> buildBuffer;
+	private Queue<Instruction> nextBuffer;
 
 	private long buildDelay = 0;
 	private long nextDelay = 0;
 	private long timeout = System.currentTimeMillis();
 	private int soundVolume = 127;
 	private int codecId;
+
+	private int packetSizeMS = 500;
+	private int maxInstructions = Integer.MAX_VALUE;
+	private int maxDelay = Integer.MAX_VALUE;
 
 	@Override
 	public boolean canUpdate() {
@@ -98,11 +105,7 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 	@Override
 	public void update() {
 		if (nextBuffer != null && System.currentTimeMillis() >= timeout - 100) {
-			try {
-				sendSound(nextDelay, nextBuffer);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			sendSound(nextDelay, nextBuffer);
 			timeout = timeout + nextDelay;
 			nextBuffer = null;
 		}
@@ -222,10 +225,46 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 			return new Object[] {false,System.currentTimeMillis(),timeout};
 	}
 
-	protected void sendSound(long delay, Queue<Instruction> instructions) throws IOException {
+	private void sendMusicPacket(long delay, Queue<Instruction> instructions) {
 		SoundCardPacket pkt = new SoundCardPacket(this, (byte) soundVolume, node().address(), delay, instructions);
 		internalSpeaker.receivePacket(pkt, ForgeDirection.UNKNOWN);
 		pkt.sendPacket();
+	}
+
+	protected void sendSound(long delay, Queue<Instruction> buffer) {
+		int counter = 0;
+		Queue<Instruction> sendBuffer = new LinkedList<Instruction>();
+		while(!buffer.isEmpty() || process.delay > 0) {
+			if(process.delay > 0) {
+				if(counter + process.delay < packetSizeMS) {
+					sendBuffer.add(new Delay(process.delay));
+					counter += process.delay;
+				} else {
+					while(process.delay > 0) {
+						int remove = Math.min(process.delay, packetSizeMS-counter);
+						sendBuffer.add(new Delay(remove));
+						if(remove+counter >= packetSizeMS) {
+							sendMusicPacket(remove+counter, sendBuffer);
+							sendBuffer.clear();
+							counter = 0;
+						} else {
+							counter += remove;
+						}
+						process.delay -= remove;
+					}
+				}
+				process.delay = 0;
+			} else {
+				Instruction inst = buffer.poll();
+				inst.encounter(process);
+				if (!(inst instanceof Delay)) {
+					sendBuffer.add(inst);
+				}
+			}
+		}
+		if(sendBuffer.size() > 0) {
+			sendMusicPacket(counter, sendBuffer);
+		}
 	}
 
 	@Override

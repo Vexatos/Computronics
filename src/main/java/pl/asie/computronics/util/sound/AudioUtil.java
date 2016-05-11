@@ -22,7 +22,7 @@ public class AudioUtil {
 				double value = state.wave.type == AudioType.Noise ? state.noiseOutput : state.wave.type.generate(state.wave.offset);
 				state.wave.offset += state.wave.frequencyInHz / ((float) Config.SOUND_SAMPLE_RATE);
 				if(state.wave.offset > 1) {
-					state.wave.offset -= 1;
+					state.wave.offset %= 1.0F;
 					if (state.wave.type == AudioType.Noise)
 						state.noiseOutput = Math.random();
 				}
