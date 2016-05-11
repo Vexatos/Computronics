@@ -14,10 +14,10 @@ import pl.asie.lib.network.Packet;
  */
 public class SoundCardPacket extends AudioPacket {
 	public final String address;
-	public final long delay;
+	public final int delay;
 	public final Queue<Instruction> instructions;
 
-	public SoundCardPacket(IAudioSource source, byte volume, String address, long delay, Queue<Instruction> instructions) {
+	public SoundCardPacket(IAudioSource source, byte volume, String address, int delay, Queue<Instruction> instructions) {
 		super(source, volume);
 		this.address = address;
 		this.delay = delay;
@@ -28,7 +28,7 @@ public class SoundCardPacket extends AudioPacket {
 	protected void writeData(Packet packet) throws IOException {
 		packet
 			.writeString(address)
-			.writeLong(delay)
+			.writeInt(delay)
 			.writeInt(instructions.size());
 		for (Instruction instruction : instructions) {
 			if (instruction instanceof Open) {

@@ -33,7 +33,7 @@ public class SoundCardPacketClientHandler extends AudioPacketClientHandler {
 	@Override
 	protected void readData(Packet packet, int packetId, int codecId) throws IOException {
 		String address = packet.readString();
-		long delay = packet.readLong();
+		int delay = packet.readInt();
 		int size = packet.readInt();
 		Queue<Instruction> buffer = new LinkedList<Instruction>();
 		for (int i=0; i<size; i++) {

@@ -87,15 +87,15 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 	private Queue<Instruction> buildBuffer;
 	private Queue<Instruction> nextBuffer;
 
-	private long buildDelay = 0;
-	private long nextDelay = 0;
+	private int buildDelay = 0;
+	private int nextDelay = 0;
 	private long timeout = System.currentTimeMillis();
 	private int soundVolume = 127;
 	private int codecId;
 
 	private int packetSizeMS = 500;
 	private int maxInstructions = Integer.MAX_VALUE;
-	private int maxDelay = Integer.MAX_VALUE;
+	private int maxDelayMS = Integer.MAX_VALUE;
 
 	@Override
 	public boolean canUpdate() {
@@ -109,6 +109,14 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 			timeout = timeout + nextDelay;
 			nextBuffer = null;
 		}
+	}
+
+	private Object[] tryAdd(Instruction inst) {
+		if(buildBuffer.size() >= maxInstructions) {
+			return new Object[] {false, "too many instructions"};
+		}
+		buildBuffer.add(inst);
+		return new Object[] {true};
 	}
 
 	@Callback(doc = "function(channel:number); ", direct = true)
@@ -132,80 +140,71 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 	@Callback(doc = "function(channel:number); ", direct = true)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] open(Context context, Arguments args) {
-		buildBuffer.add(new Open(args.checkInteger(0)));
-		return new Object[] {};
+		return tryAdd(new Open(args.checkInteger(0)));
 	}
 
 	@Callback(doc = "function(channel:number); ", direct = true)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] close(Context context, Arguments args) {
-		buildBuffer.add(new Close(args.checkInteger(0)));
-		return new Object[] {};
+		return tryAdd(new Close(args.checkInteger(0)));
 	}
 
 	@Callback(doc = "function(channel:number, audiotype:string, frequency:number); ", direct = true)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] setWave(Context context, Arguments args) {
-		buildBuffer.add(new SetWave(args.checkInteger(0), AudioType.valueOf(args.checkString(1)), (float) args.checkDouble(2)));
-		return new Object[] {};
+		return tryAdd(new SetWave(args.checkInteger(0), AudioType.valueOf(args.checkString(1)), (float) args.checkDouble(2)));
 	}
 
 	@Callback(doc = "function(duration:number); ", direct = true)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] delay(Context context, Arguments args) {
 		int duration = args.checkInteger(0);
+		if (buildDelay + duration > maxDelayMS)
+			return new Object[] {false, "too many delays"};
 		buildDelay += duration;
-		buildBuffer.add(new Delay(duration));
-		return new Object[] {};
+		return tryAdd(new Delay(duration));
 	}
 
 	@Callback(doc = "function(channel:number, modIndex:number, index:number); ", direct = true)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] setFM(Context context, Arguments args) {
-		buildBuffer.add(new SetFM(args.checkInteger(0), args.checkInteger(1), (float) args.checkDouble(2)));
-		return new Object[] {};
+		return tryAdd(new SetFM(args.checkInteger(0), args.checkInteger(1), (float) args.checkDouble(2)));
 	}
 
 	@Callback(doc = "function(channel:number); ", direct = true)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] resetFM(Context context, Arguments args) {
-		buildBuffer.add(new ResetFM(args.checkInteger(0)));
-		return new Object[] {};
+		return tryAdd(new ResetFM(args.checkInteger(0)));
 	}
 
 	@Callback(doc = "function(channel:number, modIndex:number); ", direct = true)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] setAM(Context context, Arguments args) {
-		buildBuffer.add(new SetAM(args.checkInteger(0), args.checkInteger(1)));
-		return new Object[] {};
+		return tryAdd(new SetAM(args.checkInteger(0), args.checkInteger(1)));
 	}
 
 	@Callback(doc = "function(channel:number); ", direct = true)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] resetAM(Context context, Arguments args) {
-		buildBuffer.add(new ResetAM(args.checkInteger(0)));
-		return new Object[] {};
+		return tryAdd(new ResetAM(args.checkInteger(0)));
 	}
 
 	@Callback(doc = "function(channel:number, attack:number, decay:number, sustain:number, release:number); ", direct = true)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] setADSR(Context context, Arguments args) {
-		buildBuffer.add(new SetADSR(args.checkInteger(0), args.checkInteger(1), args.checkInteger(2), (float) args.checkDouble(3), args.checkInteger(4)));
-		return new Object[] {};
+		return tryAdd(new SetADSR(args.checkInteger(0), args.checkInteger(1), args.checkInteger(2), (float) args.checkDouble(3), args.checkInteger(4)));
 	}
 
 	@Callback(doc = "function(channel:number); ", direct = true)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] resetEnvelope(Context context, Arguments args) {
-		buildBuffer.add(new ResetEnvelope(args.checkInteger(0)));
-		return new Object[] {};
+		return tryAdd(new ResetEnvelope(args.checkInteger(0)));
 	}
 
 	@Callback(doc = "function(channel:number, volume:number); ", direct = true)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] setVolume(Context context, Arguments args) {
-		buildBuffer.add(new SetVolume(args.checkInteger(0), (float) args.checkDouble(1)));
-		return new Object[] {};
+		return tryAdd(new SetVolume(args.checkInteger(0), (float) args.checkDouble(1)));
 	}
 
 	@Callback(doc = "function(); ", direct = true)
@@ -225,13 +224,13 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 			return new Object[] {false,System.currentTimeMillis(),timeout};
 	}
 
-	private void sendMusicPacket(long delay, Queue<Instruction> instructions) {
+	private void sendMusicPacket(int delay, Queue<Instruction> instructions) {
 		SoundCardPacket pkt = new SoundCardPacket(this, (byte) soundVolume, node().address(), delay, instructions);
 		internalSpeaker.receivePacket(pkt, ForgeDirection.UNKNOWN);
 		pkt.sendPacket();
 	}
 
-	protected void sendSound(long delay, Queue<Instruction> buffer) {
+	protected void sendSound(int delay, Queue<Instruction> buffer) {
 		int counter = 0;
 		Queue<Instruction> sendBuffer = new LinkedList<Instruction>();
 		while(!buffer.isEmpty() || process.delay > 0) {
