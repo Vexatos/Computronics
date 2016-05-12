@@ -2,9 +2,7 @@ package pl.asie.computronics.util.sound;
 
 import com.google.common.collect.ImmutableList;
 import pl.asie.computronics.reference.Config;
-import pl.asie.computronics.util.sound.AudioUtil.ADSR;
 
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
 /**
@@ -229,7 +227,7 @@ public class AudioUtil {
 
 		public AudioProcess(int channelCount) {
 			ArrayList<State> states = new ArrayList<State>(channelCount);
-			for(int i = 0; i < 8; i++) {
+			for(int i = 0; i < channelCount; i++) {
 				states.add(new AudioUtil.State(i));
 			}
 			this.states = ImmutableList.copyOf(states);

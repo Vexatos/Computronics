@@ -8,7 +8,10 @@ import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.Visibility;
 import li.cil.oc.api.prefab.ManagedEnvironment;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.api.audio.AudioPacket;
@@ -22,7 +25,6 @@ import pl.asie.computronics.util.sound.AudioUtil;
 import pl.asie.computronics.util.sound.Instruction;
 import pl.asie.computronics.util.sound.Instruction.*;
 
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -109,6 +111,48 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 			timeout = timeout + nextDelay;
 			nextBuffer = null;
 		}
+	}
+
+	@Override
+	public void load(NBTTagCompound nbt) {
+		super.load(nbt);
+		if(nbt.hasKey("bbuffer")) {
+			buildBuffer = Instruction.fromNBT(nbt.getTagList("bbuffer", Constants.NBT.TAG_COMPOUND));
+			buildDelay = 0;
+			for (Instruction inst : buildBuffer) {
+				if(inst instanceof Delay) {
+					buildDelay += ((Delay)inst).delay;
+				}
+			}
+		}
+		if(nbt.hasKey("nbuffer")) {
+			nextBuffer = Instruction.fromNBT(nbt.getTagList("bbuffer", Constants.NBT.TAG_COMPOUND));
+			nextDelay = 0;
+			for (Instruction inst : nextBuffer) {
+				if(inst instanceof Delay) {
+					nextDelay += ((Delay)inst).delay;
+				}
+			}
+		}
+		if(nbt.hasKey("volume")) {
+			soundVolume = nbt.getByte("volume");
+		}
+	}
+
+	@Override
+	public void save(NBTTagCompound nbt) {
+		super.save(nbt);
+		if(buildBuffer != null) {
+			NBTTagList buildNBT = new NBTTagList();
+			Instruction.toNBT(buildNBT, buildBuffer);
+			nbt.setTag("bbuffer", buildNBT);
+		}
+		if(nextBuffer != null) {
+			NBTTagList nextNBT = new NBTTagList();
+			Instruction.toNBT(nextNBT, nextBuffer);
+			nbt.setTag("nbuffer", nextNBT);
+		}
+		nbt.setByte("volume", (byte) soundVolume);
 	}
 
 	private Object[] tryAdd(Instruction inst) {
