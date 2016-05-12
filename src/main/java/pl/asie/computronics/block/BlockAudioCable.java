@@ -18,6 +18,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.item.block.IBlockWithDifferentColors;
 import pl.asie.computronics.oc.manual.IBlockWithDocumentation;
 import pl.asie.computronics.tile.TileAudioCable;
 import pl.asie.computronics.util.internal.IBlockWithColor;
@@ -27,7 +28,7 @@ import pl.asie.lib.util.internal.IColorable;
 
 import static pl.asie.lib.util.WorldUtils.notifyBlockUpdate;
 
-public class BlockAudioCable extends BlockBase implements IBlockWithDocumentation, IBlockWithColor {
+public class BlockAudioCable extends BlockBase implements IBlockWithDocumentation, IBlockWithDifferentColors, IBlockWithColor {
 
 	private int connectionMask = 0x3f;
 	private int ImmibisMicroblocks_TransformableBlockMarker;
@@ -56,8 +57,12 @@ public class BlockAudioCable extends BlockBase implements IBlockWithDocumentatio
 		return super.onBlockActivated(world, pos, state, player, hand, heldItem, side, hitX, hitY, hitZ);
 	}
 
-	public int getRenderColor(IBlockState state) {
+	public int getRenderColor() {
 		return ColorUtils.Color.LightGray.color;
+	}
+
+	public int getRenderColor(IBlockState state) {
+		return getRenderColor();
 	}
 
 	@Override
@@ -79,6 +84,16 @@ public class BlockAudioCable extends BlockBase implements IBlockWithDocumentatio
 			return true;
 		}
 		return super.recolorBlock(world, pos, side, color);
+	}
+
+	@Override
+	public boolean hasSubTypes() {
+		return false;
+	}
+
+	@Override
+	public int getColorFromItemstack(ItemStack stack, int pass) {
+		return getRenderColor();
 	}
 
 	// Collision box magic

@@ -4,6 +4,7 @@ import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import gnu.trove.set.hash.TIntHashSet;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
@@ -70,7 +71,8 @@ public class TileSpeaker extends TileEntityPeripheralBase implements IAudioRecei
 
 	@Override
 	public boolean connectsAudio(EnumFacing side) {
-		return worldObj.getBlockState(getPos()).getValue(Computronics.speaker.rotation.FACING) != side;
+		IBlockState state = worldObj.getBlockState(getPos());
+		return state != null && state.getValue(Computronics.speaker.rotation.FACING) != side;
 	}
 
 	@Override
