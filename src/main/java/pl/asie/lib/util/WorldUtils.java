@@ -43,7 +43,7 @@ public class WorldUtils {
 	}
 
 	public static void notifyBlockUpdate(World world, BlockPos pos, IBlockState state) {
-		world.notifyBlockUpdate(pos, state, state, 3);
+		world.notifyBlockUpdate(pos, state, state, 11);
 	}
 	
 	/*public static void sendParticlePacket(String name, World worldObj, double x, double y, double z, double vx, double vy, double vz) {
