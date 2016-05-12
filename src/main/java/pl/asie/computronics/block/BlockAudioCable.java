@@ -50,7 +50,7 @@ public class BlockAudioCable extends BlockBase implements IBlockWithDocumentatio
 			ColorUtils.Color color = ColorUtils.getColor(heldItem);
 			if(color != null) {
 				((TileAudioCable) tile).setColor(color.color);
-				notifyBlockUpdate(world, pos);
+				notifyBlockUpdate(world, pos, state);
 				return true;
 			}
 		}

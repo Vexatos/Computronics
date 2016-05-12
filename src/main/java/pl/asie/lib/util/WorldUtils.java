@@ -1,5 +1,6 @@
 package pl.asie.lib.util;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -38,7 +39,11 @@ public class WorldUtils {
 	}
 
 	public static void notifyBlockUpdate(World world, BlockPos pos) {
-		world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
+		notifyBlockUpdate(world, pos, world.getBlockState(pos));
+	}
+
+	public static void notifyBlockUpdate(World world, BlockPos pos, IBlockState state) {
+		world.notifyBlockUpdate(pos, state, state, 3);
 	}
 	
 	/*public static void sendParticlePacket(String name, World worldObj, double x, double y, double z, double vx, double vy, double vz) {

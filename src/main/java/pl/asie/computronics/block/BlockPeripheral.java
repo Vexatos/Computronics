@@ -46,7 +46,7 @@ public abstract class BlockPeripheral extends BlockBase implements IComputronics
 			Color color = ColorUtils.getColor(heldItem);
 			if(color != null) {
 				((TileEntityPeripheralBase) tile).setColor(color.color);
-				notifyBlockUpdate(world, pos);
+				notifyBlockUpdate(world, pos, state);
 				return true;
 			}
 		}
