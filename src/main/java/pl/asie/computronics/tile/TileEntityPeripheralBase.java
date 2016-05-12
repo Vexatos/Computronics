@@ -127,6 +127,9 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 
 	public void update() {
 		//super.update();
+		if(worldObj == null) {
+			return;
+		}
 		if(worldObj.isRemote && hasSound()) {
 			updateSound();
 		}

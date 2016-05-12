@@ -70,7 +70,9 @@ public class TileAudioCable extends TileEntityBase implements IAudioReceiver, IC
 	@Override
 	public void update() {
 		packetIds.clear();
-		updateConnections();
+		if(worldObj != null) {
+			updateConnections();
+		}
 	}
 
 	@Override

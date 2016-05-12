@@ -16,16 +16,20 @@ public class ServerTickHandler {
 
 	@SubscribeEvent
 	public void onServerTick(ServerTickEvent e) {
-		if(e.phase != TickEvent.Phase.START || taskQueue.isEmpty()) {
-			return;
+		synchronized(taskQueue) {
+			if(e.phase != TickEvent.Phase.START || taskQueue.isEmpty()) {
+				return;
+			}
+			for(Runnable task : taskQueue) {
+				task.run();
+			}
+			taskQueue.clear();
 		}
-		for(Runnable task : taskQueue) {
-			task.run();
-		}
-		taskQueue.clear();
 	}
 
 	public void schedule(Runnable task) {
-		taskQueue.add(task);
+		synchronized(taskQueue) {
+			taskQueue.add(task);
+		}
 	}
 }
