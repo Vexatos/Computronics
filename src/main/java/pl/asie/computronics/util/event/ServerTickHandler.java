@@ -1,10 +1,12 @@
 package pl.asie.computronics.util.event;
 
+import com.google.common.collect.Queues;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ServerTickEvent;
 
 import java.util.HashSet;
+import java.util.Queue;
 import java.util.Set;
 
 /**
@@ -12,18 +14,18 @@ import java.util.Set;
  */
 public class ServerTickHandler {
 
-	private final Set<Runnable> taskQueue = new HashSet<Runnable>();
+	private final Queue<Runnable> taskQueue = Queues.newArrayDeque();
 
 	@SubscribeEvent
 	public void onServerTick(ServerTickEvent e) {
+		if(e.phase != TickEvent.Phase.START || taskQueue.isEmpty()) {
+			return;
+		}
+		
 		synchronized(taskQueue) {
-			if(e.phase != TickEvent.Phase.START || taskQueue.isEmpty()) {
-				return;
+			while (!taskQueue.isEmpty()) {
+				taskQueue.poll().run();
 			}
-			for(Runnable task : taskQueue) {
-				task.run();
-			}
-			taskQueue.clear();
 		}
 	}
 
