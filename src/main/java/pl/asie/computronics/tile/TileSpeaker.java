@@ -72,8 +72,12 @@ public class TileSpeaker extends TileEntityPeripheralBase implements IAudioRecei
 
 	@Override
 	public boolean connectsAudio(EnumFacing side) {
-		IBlockState state = worldObj.getBlockState(getPos());
-		return state != null && state.getValue(Computronics.speaker.rotation.FACING) != side;
+		if (hasWorldObj()) {
+			IBlockState state = worldObj.getBlockState(getPos());
+			return state != null && state.getValue(Computronics.speaker.rotation.FACING) != side;
+		} else {
+			return false;
+		}
 	}
 
 	@Override
