@@ -196,24 +196,16 @@ public abstract class Instruction {
 
 	public static class SetADSR extends ChannelSpecific {
 
-		private final ADSR envelope;
-		public int attackDuration;
-		public int decayDuration;
-		public float attenuation;
-		public int releaseDuration;
+		public final ADSR envelope;
 
 		public SetADSR(int channelIndex, int attackDuration, int decayDuration, float attenuation, int releaseDuration) {
 			super(channelIndex);
 			this.envelope = new ADSR(attackDuration, decayDuration, attenuation, releaseDuration);
-			this.attackDuration = attackDuration;
-			this.decayDuration = decayDuration;
-			this.attenuation = attenuation;
-			this.releaseDuration = releaseDuration;
 		}
 
 		public SetADSR(NBTTagCompound tag) {
-			this(
-				tag.getByte("c"),
+			super(tag.getByte("c"));
+			this.envelope = new ADSR(
 				tag.getInteger("a"),
 				tag.getInteger("d"),
 				tag.getFloat("s"),
@@ -223,8 +215,10 @@ public abstract class Instruction {
 
 		@Override
 		public void encounter(AudioProcess process, State state) {
-			if (state.envelope != null)
-				this.envelope.copy(state.envelope);
+			if (state.envelope != null) {
+				this.envelope.progress = state.envelope.progress;
+				this.envelope.phase = state.envelope.phase;
+			}
 			state.envelope = this.envelope;
 		}
 	}
@@ -356,10 +350,11 @@ public abstract class Instruction {
 		} else if(inst instanceof SetADSR) {
 			tag.setByte("t", (byte) 8);
 			tag.setByte("c", (byte) ((SetADSR) inst).channelIndex);
-			tag.setInteger("a", ((SetADSR) inst).attackDuration);
-			tag.setInteger("d", ((SetADSR) inst).decayDuration);
-			tag.setFloat("s", ((SetADSR) inst).attenuation);
-			tag.setInteger("r", ((SetADSR) inst).releaseDuration);
+			ADSR envelope = ((SetADSR) inst).envelope;
+			tag.setInteger("a", envelope.attackDuration);
+			tag.setInteger("d", envelope.decayDuration);
+			tag.setFloat("s", envelope.attenuation);
+			tag.setInteger("r", envelope.releaseDuration);
 		} else if(inst instanceof ResetEnvelope) {
 			tag.setByte("t", (byte) 9);
 			tag.setByte("c", (byte) ((ResetEnvelope) inst).channelIndex);

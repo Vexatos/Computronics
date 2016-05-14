@@ -5,6 +5,7 @@ import java.util.Queue;
 
 import pl.asie.computronics.api.audio.AudioPacket;
 import pl.asie.computronics.api.audio.IAudioSource;
+import pl.asie.computronics.util.sound.AudioUtil.ADSR;
 import pl.asie.computronics.util.sound.Instruction;
 import pl.asie.computronics.util.sound.Instruction.*;
 import pl.asie.lib.network.Packet;
@@ -69,13 +70,14 @@ public class SoundCardPacket extends AudioPacket {
 					.writeByte((byte) 7)
 					.writeByte((byte) ((ResetAM) instruction).channelIndex);
 			} else if (instruction instanceof SetADSR) {
+				ADSR envelope = ((SetADSR) instruction).envelope;
 				packet
 					.writeByte((byte) 8)
 					.writeByte((byte) ((SetADSR) instruction).channelIndex)
-					.writeInt(((SetADSR) instruction).attackDuration)
-					.writeInt(((SetADSR) instruction).decayDuration)
-					.writeFloat(((SetADSR) instruction).attenuation)
-					.writeInt(((SetADSR) instruction).releaseDuration);
+					.writeInt(envelope.attackDuration)
+					.writeInt(envelope.decayDuration)
+					.writeFloat(envelope.attenuation)
+					.writeInt(envelope.releaseDuration);
 			} else if (instruction instanceof ResetEnvelope) {
 				packet
 					.writeByte((byte) 9)

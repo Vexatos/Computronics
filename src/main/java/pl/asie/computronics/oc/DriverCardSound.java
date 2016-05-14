@@ -1,6 +1,9 @@
 package pl.asie.computronics.oc;
 
 import cpw.mods.fml.common.Optional;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import li.cil.oc.api.Network;
 import li.cil.oc.api.driver.EnvironmentHost;
 import li.cil.oc.api.machine.Arguments;
@@ -13,11 +16,15 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.event.world.ChunkEvent;
+import net.minecraftforge.event.world.WorldEvent;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.api.audio.AudioPacket;
+import pl.asie.computronics.api.audio.AudioPacketRegistry;
 import pl.asie.computronics.api.audio.IAudioReceiver;
 import pl.asie.computronics.api.audio.IAudioSource;
 import pl.asie.computronics.audio.SoundCardPacket;
+import pl.asie.computronics.audio.SoundCardPacketClientHandler;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.sound.AudioType;
@@ -25,8 +32,11 @@ import pl.asie.computronics.util.sound.AudioUtil;
 import pl.asie.computronics.util.sound.Instruction;
 import pl.asie.computronics.util.sound.Instruction.*;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Set;
+import java.util.WeakHashMap;
 
 /**
  * @author Vexatos, gamax92
@@ -41,11 +51,15 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 			withComponent("sound").
 			withConnector(Config.SOUND_ENERGY_COST * 42).
 			create());
-		buildBuffer = new LinkedList<Instruction>();
 		process = new AudioUtil.AudioProcess(8);
 
 		codecId = Computronics.opencomputers.audio.newPlayer();
 		Computronics.opencomputers.audio.getPlayer(codecId);
+		if (host.world().isRemote) {
+			SyncHandler.envs.add(this);
+		} else {
+			buildBuffer = new LinkedList<Instruction>();
+		}
 	}
 
 	private final IAudioReceiver internalSpeaker = new IAudioReceiver() {
@@ -94,10 +108,41 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 	private long timeout = System.currentTimeMillis();
 	private int soundVolume = 127;
 	private int codecId;
+	private String clientAddress;
 
 	private int packetSizeMS = 500;
 	private int maxInstructions = Integer.MAX_VALUE;
 	private int maxDelayMS = Integer.MAX_VALUE;
+
+	protected static class SyncHandler {
+		static Set<DriverCardSound> envs;
+		static {
+			envs = Collections.newSetFromMap(new WeakHashMap<DriverCardSound, Boolean>());
+		}
+
+		@SideOnly(Side.CLIENT)
+		private static SoundCardPacketClientHandler getHandler() {
+			return (SoundCardPacketClientHandler) AudioPacketRegistry.INSTANCE.getClientHandler(AudioPacketRegistry.INSTANCE.getId(SoundCardPacket.class));
+		}
+
+		@SubscribeEvent
+		public void onChunkUnload(ChunkEvent.Unload evt) {
+			for(DriverCardSound env : envs) {
+				if(env.host.world() == evt.world && evt.getChunk().isAtLocation((int)Math.floor(env.host.xPosition()) >> 4, (int)Math.floor(env.host.zPosition()) >> 4)) {
+					getHandler().setProcess(env.clientAddress, null, 0);
+				}
+			}
+		}
+
+		@SubscribeEvent
+		public void onWorldUnload(WorldEvent.Unload evt) {
+			for(DriverCardSound env : envs) {
+				if(env.host.world() == evt.world) {
+					getHandler().setProcess(env.clientAddress, null, 0);
+				}
+			}
+		}
+	}
 
 	@Override
 	public boolean canUpdate() {
@@ -116,43 +161,61 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 	@Override
 	public void load(NBTTagCompound nbt) {
 		super.load(nbt);
-		if(nbt.hasKey("bbuffer")) {
-			buildBuffer = Instruction.fromNBT(nbt.getTagList("bbuffer", Constants.NBT.TAG_COMPOUND));
-			buildDelay = 0;
-			for (Instruction inst : buildBuffer) {
-				if(inst instanceof Delay) {
-					buildDelay += ((Delay)inst).delay;
+		if(nbt.hasKey("process")) {
+			process.load(nbt.getCompoundTag("process"));
+		}
+		if(host.world().isRemote) {
+			if(nbt.hasKey("node")) {
+				NBTTagCompound nodeNBT = nbt.getCompoundTag("node");
+				if(nodeNBT.hasKey("address")) {
+					clientAddress = nodeNBT.getString("address");
+					SyncHandler.getHandler().setProcess(clientAddress, process, System.currentTimeMillis());
 				}
 			}
-		}
-		if(nbt.hasKey("nbuffer")) {
-			nextBuffer = Instruction.fromNBT(nbt.getTagList("bbuffer", Constants.NBT.TAG_COMPOUND));
-			nextDelay = 0;
-			for (Instruction inst : nextBuffer) {
-				if(inst instanceof Delay) {
-					nextDelay += ((Delay)inst).delay;
+		} else {
+			if(nbt.hasKey("bbuffer")) {
+				buildBuffer = Instruction.fromNBT(nbt.getTagList("bbuffer", Constants.NBT.TAG_COMPOUND));
+				buildDelay = 0;
+				for (Instruction inst : buildBuffer) {
+					if(inst instanceof Delay) {
+						buildDelay += ((Delay)inst).delay;
+					}
 				}
 			}
-		}
-		if(nbt.hasKey("volume")) {
-			soundVolume = nbt.getByte("volume");
+			if(nbt.hasKey("nbuffer")) {
+				nextBuffer = Instruction.fromNBT(nbt.getTagList("nbuffer", Constants.NBT.TAG_COMPOUND));
+				nextDelay = 0;
+				for (Instruction inst : nextBuffer) {
+					if(inst instanceof Delay) {
+						nextDelay += ((Delay)inst).delay;
+					}
+				}
+			}
+			if(nbt.hasKey("volume")) {
+				soundVolume = nbt.getByte("volume");
+			}
 		}
 	}
 
 	@Override
 	public void save(NBTTagCompound nbt) {
 		super.save(nbt);
-		if(buildBuffer != null) {
-			NBTTagList buildNBT = new NBTTagList();
-			Instruction.toNBT(buildNBT, buildBuffer);
-			nbt.setTag("bbuffer", buildNBT);
+		if(!host.world().isRemote) {
+			NBTTagCompound processNBT = new NBTTagCompound();
+			nbt.setTag("process", processNBT);
+			process.save(processNBT);
+			if(buildBuffer != null) {
+				NBTTagList buildNBT = new NBTTagList();
+				Instruction.toNBT(buildNBT, buildBuffer);
+				nbt.setTag("bbuffer", buildNBT);
+			}
+			if(nextBuffer != null) {
+				NBTTagList nextNBT = new NBTTagList();
+				Instruction.toNBT(nextNBT, nextBuffer);
+				nbt.setTag("nbuffer", nextNBT);
+			}
+			nbt.setByte("volume", (byte) soundVolume);
 		}
-		if(nextBuffer != null) {
-			NBTTagList nextNBT = new NBTTagList();
-			Instruction.toNBT(nextNBT, nextBuffer);
-			nbt.setTag("nbuffer", nextNBT);
-		}
-		nbt.setByte("volume", (byte) soundVolume);
 	}
 
 	private Object[] tryAdd(Instruction inst) {

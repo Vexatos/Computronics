@@ -272,6 +272,10 @@ public class IntegrationOpenComputers {
 		if(Computronics.buildcraft != null) {
 			Computronics.buildcraft.initOC();
 		}
+
+		if(Config.OC_CARD_SOUND) {
+			MinecraftForge.EVENT_BUS.register(new DriverCardSound.SyncHandler());
+		}
 	}
 
 	@Optional.Method(modid = Mods.OpenComputers)

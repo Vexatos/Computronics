@@ -30,6 +30,16 @@ public class SoundCardPacketClientHandler extends AudioPacketClientHandler {
 	private int sampleRate = Config.SOUND_SAMPLE_RATE;
 	private int soundTimeoutMS = 250;
 
+	public void setProcess(String address, AudioProcess process, long timeout) {
+		if(process != null) {
+			processMap.put(address, process);
+			timeoutMap.put(address, timeout);
+		} else {
+			processMap.remove(address);
+			timeoutMap.remove(address);
+		}
+	}
+
 	@Override
 	protected void readData(Packet packet, int packetId, int codecId) throws IOException {
 		String address = packet.readString();
@@ -76,8 +86,7 @@ public class SoundCardPacketClientHandler extends AudioPacketClientHandler {
 		}
 
 		if(!processMap.containsKey(address)) {
-			processMap.put(address, new AudioUtil.AudioProcess(8));
-			timeoutMap.put(address, System.currentTimeMillis());
+			setProcess(address, new AudioUtil.AudioProcess(8), System.currentTimeMillis());
 		}
 		AudioProcess process = processMap.get(address);
 		long timeout = timeoutMap.get(address);
@@ -118,7 +127,7 @@ public class SoundCardPacketClientHandler extends AudioPacketClientHandler {
 	protected void playData(int packetId, int codecId, int x, int y, int z, int distance, byte volume) {
 		StreamingAudioPlayer codec = Computronics.opencomputers.audio.getPlayer(codecId);
 
-		codec.setHearing((float) distance, volume / 127.0F);
+		codec.setHearing(distance, volume / 127.0F);
 		try {
 			codec.play(x, y, z);
 		} catch(NullPointerException e) {
