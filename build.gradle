@@ -137,7 +137,6 @@ sourceSets {
             exclude "pl/asie/computronics/integration/betterstorage/**"
             exclude "pl/asie/computronics/integration/buildcraft/**"
             exclude "pl/asie/computronics/integration/buildcraft/pluggable/**"
-            exclude "pl/asie/computronics/integration/charset/**"
             exclude "pl/asie/computronics/integration/cofh/**"
             exclude "pl/asie/computronics/integration/draconicevolution/**"
             exclude "pl/asie/computronics/integration/enderio/**"

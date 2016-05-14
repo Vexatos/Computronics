@@ -5,9 +5,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ServerTickEvent;
 
-import java.util.HashSet;
 import java.util.Queue;
-import java.util.Set;
 
 /**
  * @author Vexatos

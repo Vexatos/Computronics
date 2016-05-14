@@ -1,4 +1,4 @@
-package pl.asie.computronics.integration.charset.wires;
+/*package pl.asie.computronics.integration.charset.wires;
 
 import dan200.computercraft.api.ComputerCraftAPI;
 import dan200.computercraft.api.redstone.IBundledRedstoneProvider;
@@ -20,9 +20,9 @@ import pl.asie.charset.api.wires.IBundledReceiver;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.reference.Mods;
 
-/**
+/*
  * @author Vexatos
- */
+ * / TODO Re-add with ComputerCraft
 @Optional.Interface(iface = "import dan200.computercraft.api.redstone.IBundledRedstoneProvider", modid = Mods.ComputerCraft)
 public class CCBundledRedstoneIntegration implements IBundledRedstoneProvider {
 
@@ -172,4 +172,4 @@ public class CCBundledRedstoneIntegration implements IBundledRedstoneProvider {
 			return RECEIVERS[facing.ordinal()];
 		}
 	}
-}
+}*/
