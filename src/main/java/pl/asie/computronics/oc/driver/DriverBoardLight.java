@@ -15,7 +15,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.reference.Config;
 import pl.asie.lib.integration.Integration;
 
@@ -316,7 +315,7 @@ public class DriverBoardLight extends RackMountableWithComponentConnector {
 	}
 
 	@Override
-	public boolean onActivate(EntityPlayer player, ForgeDirection side, float hitX, float hitY, float hitZ) {
+	public boolean onActivate(EntityPlayer player, float hitX, float hitY) {
 		final int
 			x = MathHelper.floor_double(host.xPosition()),
 			y = MathHelper.floor_double(host.yPosition()),

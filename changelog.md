@@ -3,7 +3,7 @@
   * ADDED: Noise Card!
     - An upgraded Beep Card with slightly different syntax
     - Can play square waves, sine waves, triangle waves and sawtooth waves!
-  * ADDED: Sound Card! Lots of thanks to gamax92 for having done a big part of this! Also thanks to Temia!
+  * ADDED: Sound Card! Lots of thanks to gamax92 for having done a big part of this! Also thanks to Temia for helping us design this!
     - Plays generated sounds of various types akin to a noise card
     - Supports frequency modulation, amplitude modulation, general volume changes, wave type changes, frequency changes and ADSR on 8 channels, allowing for highly customizable sound synthesis!
     - Works on an instruction-based system; instructions are added to a queue and processed when wanted.
