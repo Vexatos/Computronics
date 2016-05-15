@@ -31,6 +31,7 @@ public enum AudioType {
 	Noise {
 		@Override
 		public double generate(float pos) {
+			// Handled separately
 			return 0.0D;
 		}
 	};

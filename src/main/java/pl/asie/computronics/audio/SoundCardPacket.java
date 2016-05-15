@@ -1,19 +1,30 @@
 package pl.asie.computronics.audio;
 
-import java.io.IOException;
-import java.util.Queue;
-
 import pl.asie.computronics.api.audio.AudioPacket;
 import pl.asie.computronics.api.audio.IAudioSource;
 import pl.asie.computronics.util.sound.AudioUtil.ADSR;
 import pl.asie.computronics.util.sound.Instruction;
-import pl.asie.computronics.util.sound.Instruction.*;
+import pl.asie.computronics.util.sound.Instruction.Close;
+import pl.asie.computronics.util.sound.Instruction.Delay;
+import pl.asie.computronics.util.sound.Instruction.Open;
+import pl.asie.computronics.util.sound.Instruction.ResetAM;
+import pl.asie.computronics.util.sound.Instruction.ResetEnvelope;
+import pl.asie.computronics.util.sound.Instruction.ResetFM;
+import pl.asie.computronics.util.sound.Instruction.SetADSR;
+import pl.asie.computronics.util.sound.Instruction.SetAM;
+import pl.asie.computronics.util.sound.Instruction.SetFM;
+import pl.asie.computronics.util.sound.Instruction.SetVolume;
+import pl.asie.computronics.util.sound.Instruction.SetWave;
 import pl.asie.lib.network.Packet;
+
+import java.io.IOException;
+import java.util.Queue;
 
 /**
  * @author gamax92
  */
 public class SoundCardPacket extends AudioPacket {
+
 	public final String address;
 	public final int delay;
 	public final Queue<Instruction> instructions;
@@ -31,45 +42,45 @@ public class SoundCardPacket extends AudioPacket {
 			.writeString(address)
 			.writeInt(delay)
 			.writeInt(instructions.size());
-		for (Instruction instruction : instructions) {
-			if (instruction instanceof Open) {
+		for(Instruction instruction : instructions) {
+			if(instruction instanceof Open) {
 				packet
 					.writeByte((byte) 0)
 					.writeByte((byte) ((Open) instruction).channelIndex);
-			} else if (instruction instanceof Close) {
+			} else if(instruction instanceof Close) {
 				packet
 					.writeByte((byte) 1)
 					.writeByte((byte) ((Close) instruction).channelIndex);
-			} else if (instruction instanceof SetWave) {
+			} else if(instruction instanceof SetWave) {
 				packet
 					.writeByte((byte) 2)
 					.writeByte((byte) ((SetWave) instruction).channelIndex)
 					.writeInt(((SetWave) instruction).type.ordinal())
 					.writeFloat(((SetWave) instruction).frequency);
-			} else if (instruction instanceof Delay) {
+			} else if(instruction instanceof Delay) {
 				packet
 					.writeByte((byte) 3)
 					.writeInt(((Delay) instruction).delay);
-			} else if (instruction instanceof SetFM) {
+			} else if(instruction instanceof SetFM) {
 				packet
 					.writeByte((byte) 4)
 					.writeByte((byte) ((SetFM) instruction).channelIndex)
 					.writeInt(((SetFM) instruction).freqMod.modulatorIndex)
 					.writeFloat(((SetFM) instruction).freqMod.index);
-			} else if (instruction instanceof ResetFM) {
+			} else if(instruction instanceof ResetFM) {
 				packet
 					.writeByte((byte) 5)
 					.writeByte((byte) ((ResetFM) instruction).channelIndex);
-			} else if (instruction instanceof SetAM) {
+			} else if(instruction instanceof SetAM) {
 				packet
 					.writeByte((byte) 6)
 					.writeByte((byte) ((SetAM) instruction).channelIndex)
 					.writeInt(((SetAM) instruction).ampMod.modulatorIndex);
-			} else if (instruction instanceof ResetAM) {
+			} else if(instruction instanceof ResetAM) {
 				packet
 					.writeByte((byte) 7)
 					.writeByte((byte) ((ResetAM) instruction).channelIndex);
-			} else if (instruction instanceof SetADSR) {
+			} else if(instruction instanceof SetADSR) {
 				ADSR envelope = ((SetADSR) instruction).envelope;
 				packet
 					.writeByte((byte) 8)
@@ -78,11 +89,11 @@ public class SoundCardPacket extends AudioPacket {
 					.writeInt(envelope.decayDuration)
 					.writeFloat(envelope.attenuation)
 					.writeInt(envelope.releaseDuration);
-			} else if (instruction instanceof ResetEnvelope) {
+			} else if(instruction instanceof ResetEnvelope) {
 				packet
 					.writeByte((byte) 9)
 					.writeByte((byte) ((ResetEnvelope) instruction).channelIndex);
-			} else if (instruction instanceof SetVolume) {
+			} else if(instruction instanceof SetVolume) {
 				packet
 					.writeByte((byte) 10)
 					.writeByte((byte) ((SetVolume) instruction).channelIndex)

@@ -19,14 +19,16 @@ public class AudioUtil {
 					return 0;
 				}
 				double value = state.wave.type == AudioType.Noise ? state.noiseOutput : state.wave.type.generate(state.wave.offset);
-				state.wave.offset += state.wave.frequencyInHz / Config.SOUND_SAMPLE_RATE;
-				if(state.wave.offset > 1) {
-					state.wave.offset %= 1.0F;
-					if (state.wave.type == AudioType.Noise)
-						state.noiseOutput = Math.random();
-				}
 				if(state.freqMod != null && !state.isFreqMod) {
 					value = state.freqMod.getModifiedValue(process, state, value);
+				} else {
+					state.wave.offset += state.wave.frequencyInHz / Config.SOUND_SAMPLE_RATE;
+				}
+				if(state.wave.offset > 1) {
+					state.wave.offset %= 1.0F;
+					if(state.wave.type == AudioType.Noise) {
+						state.noiseOutput = Math.random();
+					}
 				}
 				if(state.ampMod != null && !state.isAmpMod) {
 					value = state.ampMod.getModifiedValue(process, state, value);
@@ -74,9 +76,6 @@ public class AudioUtil {
 		@Override
 		public double getModifiedValue(AudioProcess process, State state, double value) {
 			State mstate = process.states.get(modulatorIndex);
-			if(mstate.gate == Gate.Closed) {
-				return value;
-			}
 			Wave carrier = state.wave;
 			double deviation = mstate.gate.getValue(process, mstate) * index * mstate.wave.frequencyInHz;
 			carrier.offset += (carrier.frequencyInHz + deviation) / Config.SOUND_SAMPLE_RATE;
@@ -95,9 +94,6 @@ public class AudioUtil {
 		@Override
 		public double getModifiedValue(AudioProcess process, State state, double value) {
 			State mstate = process.states.get(modulatorIndex);
-			if(mstate.gate == Gate.Closed) {
-				return value;
-			}
 			return value * (1 + mstate.gate.getValue(process, mstate));
 		}
 	}
@@ -241,7 +237,7 @@ public class AudioUtil {
 				envelope.phase = ADSR.Phase.fromIndex(nbt.getInteger("p"));
 				envelope.progress = nbt.getDouble("o");
 			}
-			if(nbt.hasKey("vol")){
+			if(nbt.hasKey("vol")) {
 				volume = nbt.getFloat("vol");
 			}
 			if(nbt.hasKey("noise")) {

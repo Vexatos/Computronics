@@ -5,6 +5,7 @@ import pl.asie.computronics.network.PacketType;
 import pl.asie.lib.network.Packet;
 
 public final class AudioUtils {
+
 	private AudioUtils() {
 
 	}
@@ -13,8 +14,10 @@ public final class AudioUtils {
 		Computronics.instance.audio.removePlayer(id);
 		try {
 			Packet pkt = Computronics.packet.create(PacketType.AUDIO_STOP.ordinal())
-					.writeInt(id);
+				.writeInt(id);
 			Computronics.packet.sendToAll(pkt);
-		} catch(Exception e) { e.printStackTrace(); }
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

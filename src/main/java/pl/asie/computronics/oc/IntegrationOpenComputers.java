@@ -18,7 +18,6 @@ import pl.asie.computronics.api.audio.AudioPacketRegistry;
 import pl.asie.computronics.audio.SoundCardPacket;
 import pl.asie.computronics.audio.SoundCardPacketClientHandler;
 import pl.asie.computronics.audio.SoundCardPlaybackManager;
-import pl.asie.computronics.client.UpgradeRenderer;
 import pl.asie.computronics.integration.appeng.DriverSpatialIOPort;
 import pl.asie.computronics.integration.armourersworkshop.DriverMannequin;
 import pl.asie.computronics.integration.betterstorage.DriverCrateStorageNew;
@@ -67,6 +66,7 @@ import pl.asie.computronics.oc.block.ComputronicsBlockEnvironmentProvider;
 import pl.asie.computronics.oc.client.RackMountableRenderer;
 import pl.asie.computronics.oc.client.UpgradeRenderer;
 import pl.asie.computronics.oc.driver.DriverBoardBoom;
+import pl.asie.computronics.oc.driver.DriverCardSound;
 import pl.asie.computronics.oc.driver.DriverMagicalMemory;
 import pl.asie.computronics.oc.manual.ComputronicsPathProvider;
 import pl.asie.computronics.reference.Compat;
@@ -454,7 +454,7 @@ public class IntegrationOpenComputers {
 	}
 
 	public void onServerStop(FMLServerStoppedEvent event) {
-		if(Config.OC_CARD_SOUND) {
+		if(Config.OC_CARD_SOUND && this.audio != null) {
 			this.audio.removeAll();
 		}
 	}

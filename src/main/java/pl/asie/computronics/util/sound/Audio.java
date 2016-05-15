@@ -111,14 +111,18 @@ public class Audio {
 				}
 				float step = frequencyInHz / ((float) sampleRate);
 				float offset = 0f;
+				double noiseOutput = Math.random();
 				for(int sampleCount : sampleCounts) {
 					for(int sample = 0; sample < sampleCount; sample++) {
 						//double angle = 2 * Math.PI * offset;
 						//int value = ((byte) (Math.signum(Math.sin(angle)) * amplitude())) ^ 0x80;
-						int value = ((byte) (type.generate(offset) * amplitude)) ^ 0x80;
+						int value = ((byte) ((type == AudioType.Noise ? noiseOutput : type.generate(offset)) * amplitude)) ^ 0x80;
 						offset += step;
 						if(offset > 1) {
-							offset -= 1;
+							offset %= 1.0F;
+							if(type == AudioType.Noise) {
+								noiseOutput = Math.random();
+							}
 						}
 						data.put((byte) value);
 					}

@@ -1,12 +1,5 @@
 package pl.asie.computronics.audio;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Queue;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import pl.asie.computronics.Computronics;
@@ -16,15 +9,33 @@ import pl.asie.computronics.util.sound.AudioType;
 import pl.asie.computronics.util.sound.AudioUtil;
 import pl.asie.computronics.util.sound.AudioUtil.AudioProcess;
 import pl.asie.computronics.util.sound.Instruction;
-import pl.asie.computronics.util.sound.Instruction.*;
+import pl.asie.computronics.util.sound.Instruction.Close;
+import pl.asie.computronics.util.sound.Instruction.Delay;
+import pl.asie.computronics.util.sound.Instruction.Open;
+import pl.asie.computronics.util.sound.Instruction.ResetAM;
+import pl.asie.computronics.util.sound.Instruction.ResetEnvelope;
+import pl.asie.computronics.util.sound.Instruction.ResetFM;
+import pl.asie.computronics.util.sound.Instruction.SetADSR;
+import pl.asie.computronics.util.sound.Instruction.SetAM;
+import pl.asie.computronics.util.sound.Instruction.SetFM;
+import pl.asie.computronics.util.sound.Instruction.SetVolume;
+import pl.asie.computronics.util.sound.Instruction.SetWave;
 import pl.asie.lib.audio.StreamingAudioPlayer;
 import pl.asie.lib.network.Packet;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Queue;
 
 /**
  * @author gamax92
  */
 @SideOnly(Side.CLIENT)
 public class SoundCardPacketClientHandler extends AudioPacketClientHandler {
+
 	private Map<String, AudioProcess> processMap = new HashMap<String, AudioProcess>();
 	private Map<String, Long> timeoutMap = new HashMap<String, Long>();
 	private int sampleRate = Config.SOUND_SAMPLE_RATE;
@@ -46,7 +57,7 @@ public class SoundCardPacketClientHandler extends AudioPacketClientHandler {
 		int delay = packet.readInt();
 		int size = packet.readInt();
 		Queue<Instruction> buffer = new LinkedList<Instruction>();
-		for (int i=0; i<size; i++) {
+		for(int i = 0; i < size; i++) {
 			int type = packet.readByte();
 			switch(type) {
 				case 0:
@@ -98,7 +109,7 @@ public class SoundCardPacketClientHandler extends AudioPacketClientHandler {
 				for(int i = 0; i < sampleCount; ++i) {
 					double sample = 0;
 					for(AudioUtil.State state : process.states) {
-						sample += state.gate.getValue(process, state)/8;
+						sample += state.gate.getValue(process, state) / 8;
 					}
 					int value = ((byte) (sample * 127)) ^ 0x80;
 					data.write((byte) value);
@@ -110,7 +121,7 @@ public class SoundCardPacketClientHandler extends AudioPacketClientHandler {
 			}
 		}
 
-		if (data.size() > 0) {
+		if(data.size() > 0) {
 			StreamingAudioPlayer codec = Computronics.opencomputers.audio.getPlayer(codecId);
 			if(System.currentTimeMillis() > timeout + soundTimeoutMS) {
 				codec.stop();
@@ -120,7 +131,7 @@ public class SoundCardPacketClientHandler extends AudioPacketClientHandler {
 			codec.push(data.toByteArray());
 		}
 
-		timeoutMap.put(address, timeout+delay);
+		timeoutMap.put(address, timeout + delay);
 	}
 
 	@Override
