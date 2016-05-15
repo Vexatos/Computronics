@@ -19,6 +19,10 @@
       - This allows you to monitor input and output of your energy network separately
     - Now you can get and set the range of Vacuum Chests
     - Added `getProgress()` to most machines with progress
+  * ADDED: OpenComputers 1.6 integration (requires OpenComputers 1.6.0 now)
+    - Added a Light Board to put into Server Racks. Allows controlling coloured lights in various layouts.
+    - Added a Server Self-Destructor in case you don't need your servers anymore.
+    - Added a Rack Capacitor which is a Capacitor you can put into a Rack. Ingenious. It also provides a component that gives you the amount of energy stored in that capacitor.
   * ADDED: Built-in tape utility program for ComputerCraft to write songs to tapes and to play, stop, pause etc.
   * ADDED: getPosition() to tape drives. No, I'm not joking. It's real. I'm sorry.
   * ADDED: Digital Signal Controller Box for Railcraft!

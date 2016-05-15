@@ -7,12 +7,13 @@ import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.ManagedEnvironment;
-import li.cil.oc.api.prefab.DriverTileEntity;
+import li.cil.oc.api.prefab.DriverSidedTileEntity;
 import mods.railcraft.common.blocks.tracks.TileTrack;
 import mods.railcraft.common.blocks.tracks.TrackLauncher;
 import mods.railcraft.common.core.RailcraftConfig;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
 import pl.asie.computronics.integration.CCMultiPeripheral;
 import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
@@ -37,7 +38,7 @@ public class DriverLauncherTrack {
 		return new Object[] { false, "not a valid force value, needs to be between 5 and " + RailcraftConfig.getLaunchRailMaxForce() };
 	}
 
-	public static class OCDriver extends DriverTileEntity {
+	public static class OCDriver extends DriverSidedTileEntity {
 
 		public static class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TrackLauncher> {
 
@@ -63,14 +64,14 @@ public class DriverLauncherTrack {
 		}
 
 		@Override
-		public boolean worksWith(World world, int x, int y, int z) {
+		public boolean worksWith(World world, int x, int y, int z, ForgeDirection side) {
 			TileEntity tileEntity = world.getTileEntity(x, y, z);
 			return (tileEntity != null) && tileEntity instanceof TileTrack
 				&& ((TileTrack) tileEntity).getTrackInstance() instanceof TrackLauncher;
 		}
 
 		@Override
-		public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
+		public ManagedEnvironment createEnvironment(World world, int x, int y, int z, ForgeDirection side) {
 			return new InternalManagedEnvironment((TrackLauncher) ((TileTrack) world.getTileEntity(x, y, z)).getTrackInstance());
 		}
 	}

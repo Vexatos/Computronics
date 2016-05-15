@@ -1,4 +1,4 @@
-package pl.asie.computronics.oc;
+package pl.asie.computronics.oc.driver;
 
 import li.cil.oc.api.network.ComponentConnector;
 import li.cil.oc.api.network.Node;

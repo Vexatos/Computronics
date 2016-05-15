@@ -8,9 +8,10 @@ import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.ManagedEnvironment;
-import li.cil.oc.api.prefab.DriverTileEntity;
+import li.cil.oc.api.prefab.DriverSidedTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.integration.CCMultiPeripheral;
 import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
 import pl.asie.computronics.reference.Names;
@@ -19,7 +20,7 @@ import pl.asie.computronics.reference.Names;
  * @author Vexatos
  */
 public class DriverProgressTile {
-	public static class OCDriver extends DriverTileEntity {
+	public static class OCDriver extends DriverSidedTileEntity {
 
 		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<IProgressTile> {
 			public InternalManagedEnvironment(IProgressTile tile) {
@@ -43,7 +44,7 @@ public class DriverProgressTile {
 		}
 
 		@Override
-		public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
+		public ManagedEnvironment createEnvironment(World world, int x, int y, int z, ForgeDirection side) {
 			return new InternalManagedEnvironment(((IProgressTile) world.getTileEntity(x, y, z)));
 		}
 	}

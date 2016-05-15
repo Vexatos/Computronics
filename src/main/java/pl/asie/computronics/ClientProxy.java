@@ -11,8 +11,9 @@ import pl.asie.computronics.api.audio.AudioPacketRegistry;
 import pl.asie.computronics.audio.AudioPacketClientHandlerDFPWM;
 import pl.asie.computronics.client.AudioCableRender;
 import pl.asie.computronics.client.LampRender;
-import pl.asie.computronics.client.UpgradeRenderer;
 import pl.asie.computronics.oc.IntegrationOpenComputers;
+import pl.asie.computronics.oc.client.RackMountableRenderer;
+import pl.asie.computronics.oc.client.UpgradeRenderer;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.boom.SelfDestruct;
 import pl.asie.computronics.util.sound.Audio;
@@ -77,12 +78,10 @@ public class ClientProxy extends CommonProxy {
 			y = p.readDouble(),
 			z = p.readDouble();
 		float force = p.readFloat();
+		boolean destroyBlocks = p.readByte() != 0;
 		Minecraft minecraft = Minecraft.getMinecraft();
 		SelfDestruct explosion = new SelfDestruct(minecraft.theWorld,
-			null, x,
-			y,
-			z,
-			force);
+			null, x, y, z, force, destroyBlocks);
 		int size = p.readInt();
 		ArrayList<ChunkPosition> list = new ArrayList<ChunkPosition>(size);
 		int i = (int) x;
@@ -116,5 +115,10 @@ public class ClientProxy extends CommonProxy {
 			IntegrationOpenComputers.upgradeRenderer = new UpgradeRenderer();
 		}
 		MinecraftForge.EVENT_BUS.register(IntegrationOpenComputers.upgradeRenderer);
+
+		if(IntegrationOpenComputers.mountableRenderer == null) {
+			IntegrationOpenComputers.mountableRenderer = new RackMountableRenderer();
+		}
+		MinecraftForge.EVENT_BUS.register(IntegrationOpenComputers.mountableRenderer);
 	}
 }

@@ -1,7 +1,6 @@
 package pl.asie.computronics.cc;
 
 import dan200.computercraft.api.filesystem.IMount;
-import dan200.computercraft.core.filesystem.JarMount;
 import pl.asie.computronics.Computronics;
 
 import java.io.File;
@@ -9,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Constructor;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -113,7 +113,9 @@ public class ComputronicsFileMount implements IMount {
 			}
 
 			if(isArchive) {
-				return new JarMount(file, innerPath);
+				if(jarMount != null) {
+					return (IMount) jarMount.newInstance(file, innerPath);
+				}
 			} else {
 				if(!file.exists() || file.isDirectory()) {
 					return null;
@@ -132,9 +134,21 @@ public class ComputronicsFileMount implements IMount {
 				}
 			}
 			return null;
-		} catch(IOException e) {
+		} catch(Exception e) {
 			Computronics.log.error("Unable to create ComputerCraft file mount", e);
-			return null;
 		}
+		return null;
+	}
+
+	private static final Constructor<?> jarMount;
+
+	static {
+		Constructor<?> constr = null;
+		try {
+			constr = Class.forName("dan200.computercraft.core.filesystem.JarMount").getConstructor(File.class, String.class);
+		} catch(Exception e) {
+			Computronics.log.error("Unable to access ComputerCraft jar file mount", e);
+		}
+		jarMount = constr;
 	}
 }

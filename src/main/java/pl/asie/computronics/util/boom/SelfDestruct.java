@@ -24,10 +24,12 @@ import java.io.IOException;
 public class SelfDestruct extends Explosion {
 
 	private World worldObj;
+	private boolean destroyBlocks;
 
-	public SelfDestruct(World world, Entity exploder, double x, double y, double z, float size) {
+	public SelfDestruct(World world, Entity exploder, double x, double y, double z, float size, boolean destroyBlocks) {
 		super(world, exploder, x, y, z, size);
 		this.worldObj = world;
+		this.destroyBlocks = destroyBlocks;
 	}
 
 	//Unfortunately I had to copy a lot of code for this one.
@@ -72,9 +74,9 @@ public class SelfDestruct extends Explosion {
 
 				if(block.getMaterial() != Material.air) {
 					if(!this.worldObj.isRemote
-						&& i == Math.round(Math.floor(explosionX))
-						&& j == Math.round(Math.floor(explosionY))
-						&& k == Math.round(Math.floor(explosionZ))) {
+						&& i == MathHelper.floor_double(explosionX)
+						&& j == MathHelper.floor_double(explosionY)
+						&& k == MathHelper.floor_double(explosionZ)) {
 						//This is the case.
 						TileEntity tile = this.worldObj.getTileEntity(i, j, k);
 						if(tile != null && !tile.isInvalid() && tile instanceof IInventory) {
@@ -87,14 +89,16 @@ public class SelfDestruct extends Explosion {
 							}
 						}
 					}
-					block.onBlockExploded(this.worldObj, i, j, k, this);
+					if(destroyBlocks){
+						block.onBlockExploded(this.worldObj, i, j, k, this);
+					}
 				}
 			}
 		}
 	}
 
-	public static void goBoom(World world, double xPos, double yPos, double zPos) {
-		SelfDestruct explosion = new SelfDestruct(world, null, xPos, yPos, zPos, 4.0F);
+	public static void goBoom(World world, double xPos, double yPos, double zPos, boolean destroyBlocks) {
+		SelfDestruct explosion = new SelfDestruct(world, null, xPos, yPos, zPos, 4.0F, destroyBlocks);
 		explosion.isSmoking = true;
 		explosion.isFlaming = false;
 		explosion.doExplosionA();
@@ -114,7 +118,8 @@ public class SelfDestruct extends Explosion {
 							.writeDouble(xPos)
 							.writeDouble(yPos)
 							.writeDouble(zPos)
-							.writeFloat(4.0F);
+							.writeFloat(4.0F)
+							.writeByte((byte) (destroyBlocks ? 1 : 0));
 						p.writeInt(explosion.affectedBlockPositions.size());
 
 						{

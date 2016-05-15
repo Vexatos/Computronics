@@ -4,25 +4,27 @@ import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import li.cil.oc.api.Network;
+import li.cil.oc.api.driver.SidedBlock;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.ManagedEnvironment;
 import li.cil.oc.api.network.Visibility;
-import li.cil.oc.api.prefab.DriverBlock;
 import mods.immibis.redlogic.api.misc.ILampBlock;
 import net.minecraft.block.Block;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
 import pl.asie.computronics.integration.CCMultiPeripheral;
 import pl.asie.computronics.reference.Names;
 
 public class DriverLamp {
 
-	public static class OCDriver extends DriverBlock {
+	public static class OCDriver implements SidedBlock {
 
 		public static class InternalManagedEnvironment extends li.cil.oc.api.prefab.ManagedEnvironment {
+
 			private ILampBlock block;
 			private IBlockAccess w;
 			private int x, y, z;
@@ -53,12 +55,12 @@ public class DriverLamp {
 		}
 
 		@Override
-		public boolean worksWith(final World world, final int x, final int y, final int z) {
+		public boolean worksWith(final World world, final int x, final int y, final int z, ForgeDirection side) {
 			return world.getBlock(x, y, z) instanceof ILampBlock;
 		}
 
 		@Override
-		public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
+		public ManagedEnvironment createEnvironment(World world, int x, int y, int z, ForgeDirection side) {
 			Block block = world.getBlock(x, y, z);
 			if(block instanceof ILampBlock) {
 				return new InternalManagedEnvironment((ILampBlock) block, world, x, y, z);
