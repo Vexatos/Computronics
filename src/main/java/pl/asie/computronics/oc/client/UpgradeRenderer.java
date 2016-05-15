@@ -227,19 +227,19 @@ public class UpgradeRenderer {
 		}
 		entitledPlayers = new HashMap<String, Triple>();
 		WHITE = new Triple(1, 1, 1);
-		entitledPlayers.put("Vexatos", WHITE);
+		entitledPlayers.put("f3ba6ec8-c280-4950-bb08-1fcb2eab3a9c", WHITE); // Vexatos
 	}
 
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void onPlayerTickPre(RenderPlayerEvent.Pre e) {
-		String name = e.entityPlayer.getCommandSenderName();
-		if(PetRenderer.hidden().contains(name) || !entitledPlayers.containsKey(name)) {
+		String uuid = e.entityPlayer.getUniqueID().toString();
+		if(PetRenderer.hidden().contains(uuid) || !entitledPlayers.containsKey(uuid)) {
 			return;
 		}
 		rendering = true;
 		time = e.entityPlayer.getEntityWorld().getTotalWorldTime() + (e.entityPlayer.hashCode() ^ 0xFF);
-		color = entitledPlayers.get(name);
+		color = entitledPlayers.get(uuid);
 	}
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
