@@ -2,6 +2,7 @@ package pl.asie.computronics.oc;
 
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.event.FMLMissingMappingsEvent;
+import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import li.cil.oc.api.Driver;
 import net.minecraft.init.Blocks;
@@ -10,6 +11,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import org.apache.logging.log4j.Logger;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.api.audio.AudioPacketRegistry;
+import pl.asie.computronics.audio.SoundCardPacket;
+import pl.asie.computronics.audio.SoundCardPacketClientHandler;
+import pl.asie.computronics.audio.SoundCardPlaybackManager;
 import pl.asie.computronics.client.UpgradeRenderer;
 import pl.asie.computronics.integration.appeng.DriverSpatialIOPort;
 import pl.asie.computronics.integration.armourersworkshop.DriverMannequin;
@@ -78,6 +83,7 @@ public class IntegrationOpenComputers {
 	public static ItemOpenComputers itemOCParts;
 	public static UpgradeRenderer upgradeRenderer;
 	public static ColorfulUpgradeHandler colorfulUpgradeHandler;
+	public SoundCardPlaybackManager audio;
 
 	public IntegrationOpenComputers(Computronics computronics) {
 		this.computronics = computronics;
@@ -96,7 +102,8 @@ public class IntegrationOpenComputers {
 			|| Config.OC_CARD_BEEP
 			|| Config.OC_CARD_BOOM
 			|| Config.OC_UPGRADE_COLORFUL
-			|| Config.OC_CARD_NOISE) {
+			|| Config.OC_CARD_NOISE
+			|| Config.OC_CARD_SOUND) {
 			itemOCParts = new ItemOpenComputers();
 			GameRegistry.registerItem(itemOCParts, "computronics.ocParts");
 			Driver.add(itemOCParts);
@@ -106,6 +113,16 @@ public class IntegrationOpenComputers {
 		// Fixes Iron Note Block, among others.
 		// To ensure less TE ticks for those who don't use OC, we keep this tidbit around.
 		Config.MUST_UPDATE_TILE_ENTITIES = true;
+
+		if(Config.OC_CARD_SOUND) {
+			audio = new SoundCardPlaybackManager(Computronics.proxy.isClient());
+
+			AudioPacketRegistry.INSTANCE.registerType(SoundCardPacket.class);
+
+			AudioPacketRegistry.INSTANCE.registerClientHandler(
+				SoundCardPacket.class, new SoundCardPacketClientHandler()
+			);
+		}
 
 		if(Mods.hasVersion(Mods.Forestry, Mods.Versions.Forestry)) {
 			if(Config.FORESTRY_BEES) {
@@ -255,6 +272,10 @@ public class IntegrationOpenComputers {
 		if(Computronics.buildcraft != null) {
 			Computronics.buildcraft.initOC();
 		}
+
+		if(Config.OC_CARD_SOUND) {
+			MinecraftForge.EVENT_BUS.register(new DriverCardSound.SyncHandler());
+		}
 	}
 
 	@Optional.Method(modid = Mods.OpenComputers)
@@ -361,6 +382,12 @@ public class IntegrationOpenComputers {
 		}
 		if(Computronics.buildcraft != null) {
 			Computronics.buildcraft.postInitOC();
+		}
+	}
+
+	public void onServerStop(FMLServerStoppedEvent event) {
+		if(Config.OC_CARD_SOUND) {
+			this.audio.removeAll();
 		}
 	}
 

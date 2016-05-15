@@ -374,6 +374,9 @@ public class Computronics {
 	public void serverStop(FMLServerStoppedEvent event) {
 		storage = null;
 		proxy.onServerStop();
+		if(Mods.isLoaded(Mods.OpenComputers)) {
+			opencomputers.onServerStop(event);
+		}
 	}
 
 	@EventHandler

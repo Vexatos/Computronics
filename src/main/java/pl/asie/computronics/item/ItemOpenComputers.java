@@ -33,6 +33,7 @@ import pl.asie.computronics.oc.DriverCardBeep;
 import pl.asie.computronics.oc.DriverCardBoom;
 import pl.asie.computronics.oc.DriverCardFX;
 import pl.asie.computronics.oc.DriverCardNoise;
+import pl.asie.computronics.oc.DriverCardSound;
 import pl.asie.computronics.oc.DriverCardSpoof;
 import pl.asie.computronics.oc.IntegrationOpenComputers;
 import pl.asie.computronics.oc.RobotUpgradeCamera;
@@ -67,7 +68,8 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 			"card_beep",
 			"card_boom",
 			"robot_upgrade_colorful",
-			"card_noise"
+			"card_noise",
+			"card_sound"
 		});
 		this.setCreativeTab(Computronics.tab);
 	}
@@ -128,6 +130,8 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 				return RobotUpgradeColorful.class;
 			case 8:
 				return DriverCardNoise.class;
+			case 9:
+				return DriverCardSound.class;
 			default:
 				return null;
 		}
@@ -156,6 +160,8 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 				return new RobotUpgradeColorful(container);
 			case 8:
 				return new DriverCardNoise(container);
+			case 9:
+				return new DriverCardSound(container);
 			default:
 				return null;
 		}
@@ -183,6 +189,8 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 				return Slot.Upgrade;
 			case 8:
 				return Slot.Card;
+			case 9:
+				return Slot.Card;
 			default:
 				return Slot.None;
 		}
@@ -209,6 +217,8 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 			case 7:
 				return 1; // Tier 2
 			case 8:
+				return 2; // Tier 3
+			case 9:
 				return 2; // Tier 3
 			default:
 				return 0; // Tier 1 default
@@ -260,6 +270,9 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 		}
 		if(Config.OC_CARD_NOISE) {
 			list.add(new ItemStack(item, 1, 8));
+		}
+		if(Config.OC_CARD_SOUND) {
+			list.add(new ItemStack(item, 1, 9));
 		}
 	}
 
@@ -390,6 +403,8 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 				return "colorful_upgrade";
 			case 8:
 				return "noise_card";
+			case 9:
+				return "sound_card";
 			default:
 				return "index";
 		}

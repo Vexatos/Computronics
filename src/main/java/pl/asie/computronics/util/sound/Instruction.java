@@ -57,8 +57,8 @@ public abstract class Instruction {
 		}
 
 		public SetWave(NBTTagCompound tag) {
-			super(tag.getInteger("c"));
-			this.type = AudioType.fromIndex(tag.getByte("t"));
+			super(tag.getByte("c"));
+			this.type = AudioType.fromIndex(tag.getByte("w"));
 			this.frequency = tag.getFloat("f");
 		}
 
@@ -89,7 +89,7 @@ public abstract class Instruction {
 
 	public static class SetFM extends ChannelSpecific {
 
-		private final FrequencyModulation freqMod;
+		public final FrequencyModulation freqMod;
 
 		public SetFM(int channelIndex, int modulatorIndex, float index) {
 			super(channelIndex);
@@ -97,7 +97,7 @@ public abstract class Instruction {
 		}
 
 		public SetFM(NBTTagCompound tag) {
-			super(tag.getInteger("c"));
+			super(tag.getByte("c"));
 			this.freqMod = new FrequencyModulation(
 				tag.getInteger("m"),
 				tag.getFloat("i")
@@ -144,15 +144,15 @@ public abstract class Instruction {
 
 	public static class SetAM extends ChannelSpecific {
 
-		private final AmplitudeModulation ampMod;
+		public final AmplitudeModulation ampMod;
 
-		public SetAM(int channelIndex, int modulatorIndex, float index) {
+		public SetAM(int channelIndex, int modulatorIndex) {
 			super(channelIndex);
 			this.ampMod = new AmplitudeModulation(modulatorIndex);
 		}
 
 		public SetAM(NBTTagCompound tag) {
-			super(tag.getInteger("c"));
+			super(tag.getByte("c"));
 			this.ampMod = new AmplitudeModulation(tag.getInteger("m"));
 		}
 
@@ -196,7 +196,7 @@ public abstract class Instruction {
 
 	public static class SetADSR extends ChannelSpecific {
 
-		private final ADSR envelope;
+		public final ADSR envelope;
 
 		public SetADSR(int channelIndex, int attackDuration, int decayDuration, float attenuation, int releaseDuration) {
 			super(channelIndex);
@@ -204,7 +204,7 @@ public abstract class Instruction {
 		}
 
 		public SetADSR(NBTTagCompound tag) {
-			super(tag.getInteger("c"));
+			super(tag.getByte("c"));
 			this.envelope = new ADSR(
 				tag.getInteger("a"),
 				tag.getInteger("d"),
@@ -215,6 +215,10 @@ public abstract class Instruction {
 
 		@Override
 		public void encounter(AudioProcess process, State state) {
+			if (state.envelope != null) {
+				this.envelope.progress = state.envelope.progress;
+				this.envelope.phase = state.envelope.phase;
+			}
 			state.envelope = this.envelope;
 		}
 	}
@@ -233,11 +237,16 @@ public abstract class Instruction {
 
 	public static class SetVolume extends ChannelSpecific {
 
-		private final float volume;
+		public final float volume;
 
 		public SetVolume(int channelIndex, float volume) {
 			super(channelIndex);
 			this.volume = Math.min(Math.max(volume, 0), 1);
+		}
+
+		public SetVolume(NBTTagCompound tag) {
+			super(tag.getByte("c"));
+			this.volume = tag.getFloat("v");
 		}
 
 		@Override
@@ -269,40 +278,91 @@ public abstract class Instruction {
 	}
 
 	public static Instruction load(NBTTagCompound tag) {
-		int type = tag.getInteger("t");
+		int type = tag.getByte("t");
 		switch(type) {
 			case 0: {
-				return new Open(tag.getInteger("c"));
+				return new Open(tag.getByte("c"));
 			}
 			case 1: {
-				return new Close(tag.getInteger("c"));
+				return new Close(tag.getByte("c"));
 			}
 			case 2: {
-				return new SetWave(tag.getCompoundTag("d"));
+				return new SetWave(tag);
 			}
 			case 3: {
-				return new Delay(tag.getCompoundTag("d"));
+				return new Delay(tag);
 			}
 			case 4: {
-				return new SetFM(tag.getCompoundTag("d"));
+				return new SetFM(tag);
 			}
 			case 5: {
-				return new ResetFM(tag.getInteger("c"));
+				return new ResetFM(tag.getByte("c"));
 			}
 			case 6: {
-				return new SetAM(tag.getCompoundTag("d"));
+				return new SetAM(tag);
 			}
 			case 7: {
-				return new ResetAM(tag.getInteger("c"));
+				return new ResetAM(tag.getByte("c"));
 			}
 			case 8: {
-				return new SetADSR(tag.getCompoundTag("d"));
+				return new SetADSR(tag);
 			}
 			case 9: {
-				return new ResetEnvelope(tag.getInteger("c"));
+				return new ResetEnvelope(tag.getByte("c"));
+			}
+			case 10: {
+				return new SetVolume(tag);
 			}
 		}
 		return null;
+	}
+
+	public static void save(NBTTagCompound tag, Instruction inst) {
+		if(inst instanceof Open) {
+			tag.setByte("t", (byte) 0);
+			tag.setByte("c", (byte) ((Open) inst).channelIndex);
+		} else if(inst instanceof Close) {
+			tag.setByte("t", (byte) 1);
+			tag.setByte("c", (byte) ((Close) inst).channelIndex);
+		} else if(inst instanceof SetWave) {
+			tag.setByte("t", (byte) 2);
+			tag.setByte("c", (byte) ((SetWave) inst).channelIndex);
+			tag.setInteger("w", ((SetWave) inst).type.ordinal());
+			tag.setFloat("f", ((SetWave) inst).frequency);
+		} else if(inst instanceof Delay) {
+			tag.setByte("t", (byte) 3);
+			tag.setInteger("d", ((Delay) inst).delay);
+		} else if(inst instanceof SetFM) {
+			tag.setByte("t", (byte) 4);
+			tag.setByte("c", (byte) ((SetFM) inst).channelIndex);
+			tag.setInteger("m", ((SetFM) inst).freqMod.modulatorIndex);
+			tag.setFloat("i", ((SetFM) inst).freqMod.index);
+		} else if(inst instanceof ResetFM) {
+			tag.setByte("t", (byte) 5);
+			tag.setByte("c", (byte) ((ResetFM) inst).channelIndex);
+		} else if(inst instanceof SetAM) {
+			tag.setByte("t", (byte) 6);
+			tag.setByte("c", (byte) ((SetAM) inst).channelIndex);
+			tag.setInteger("m", ((SetAM) inst).ampMod.modulatorIndex);
+		} else if(inst instanceof ResetAM) {
+			tag.setByte("t", (byte) 7);
+			tag.setByte("c", (byte) ((ResetAM) inst).channelIndex);
+		} else if(inst instanceof SetADSR) {
+			tag.setByte("t", (byte) 8);
+			tag.setByte("c", (byte) ((SetADSR) inst).channelIndex);
+			ADSR envelope = ((SetADSR) inst).envelope;
+			tag.setInteger("a", envelope.attackDuration);
+			tag.setInteger("d", envelope.decayDuration);
+			tag.setFloat("s", envelope.attenuation);
+			tag.setInteger("r", envelope.releaseDuration);
+		} else if(inst instanceof ResetEnvelope) {
+			tag.setByte("t", (byte) 9);
+			tag.setByte("c", (byte) ((ResetEnvelope) inst).channelIndex);
+		} else if(inst instanceof SetVolume) {
+			tag.setByte("t", (byte) 10);
+			tag.setByte("c", (byte) ((SetVolume) inst).channelIndex);
+			tag.setFloat("v", ((SetVolume) inst).volume);
+		}
 	}
 
 	public static Queue<Instruction> fromNBT(NBTTagList l) {
@@ -319,4 +379,11 @@ public abstract class Instruction {
 		return instructions;
 	}
 
+	public static void toNBT(NBTTagList l, Queue<Instruction> instructions) {
+		for (Instruction instruction : instructions) {
+			NBTTagCompound tag = new NBTTagCompound();
+			save(tag, instruction);
+			l.appendTag(tag);
+		}
+	}
 }

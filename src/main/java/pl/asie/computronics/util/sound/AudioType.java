@@ -27,6 +27,12 @@ public enum AudioType {
 		public double generate(float pos) {
 			return (2 * pos) - 1;
 		}
+	},
+	Noise {
+		@Override
+		public double generate(float pos) {
+			return 0.0D;
+		}
 	};
 
 	public abstract double generate(float pos);
