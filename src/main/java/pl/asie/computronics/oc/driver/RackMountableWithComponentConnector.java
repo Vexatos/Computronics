@@ -3,7 +3,6 @@ package pl.asie.computronics.oc.driver;
 import li.cil.oc.api.component.RackBusConnectable;
 import li.cil.oc.api.component.RackMountable;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.EnumSet;
 
@@ -23,7 +22,7 @@ public abstract class RackMountableWithComponentConnector extends ManagedEnviron
 	}
 
 	@Override
-	public boolean onActivate(EntityPlayer player, ForgeDirection side, float hitX, float hitY, float hitZ) {
+	public boolean onActivate(EntityPlayer player, float hitX, float hitY) {
 		return false;
 	}
 
