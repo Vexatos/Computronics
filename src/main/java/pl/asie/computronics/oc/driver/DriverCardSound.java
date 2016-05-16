@@ -257,7 +257,7 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 		if(channel >= 0 && channel < process.states.size()) {
 			return channel;
 		}
-		throw new IllegalArgumentException("invalid channel");
+		throw new IllegalArgumentException("invalid channel: " + index);
 	}
 
 	protected int checkChannel(Arguments args) {
@@ -311,7 +311,7 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 		if(mode >= 0 && mode < AudioType.VALUES.length) {
 			return tryAdd(new SetWave(channel, AudioType.fromIndex(mode), (float) args.checkDouble(2)));
 		}
-		throw new IllegalArgumentException("invalid mode");
+		throw new IllegalArgumentException("invalid mode: " + (mode + 1));
 	}
 
 	@Callback(doc = "function(duration:number); Instruction; Adds a delay of the specified duration in milliseconds, allowing sound to generate.", direct = true)

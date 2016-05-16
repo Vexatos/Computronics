@@ -77,7 +77,9 @@ import pl.asie.computronics.util.RecipeUtils;
 import static pl.asie.computronics.Computronics.camera;
 import static pl.asie.computronics.Computronics.chatBox;
 import static pl.asie.computronics.Computronics.colorfulLamp;
+import static pl.asie.computronics.Computronics.ironNote;
 import static pl.asie.computronics.Computronics.radar;
+import static pl.asie.computronics.Computronics.speaker;
 
 /**
  * @author Vexatos
@@ -371,7 +373,7 @@ public class IntegrationOpenComputers {
 			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 5),
 				" l ", "mb ", " f ",
 				'm', li.cil.oc.api.Items.get("chip2").createItemStack(1),
-				'f', Computronics.ironNote,
+				'f', speaker != null ? speaker : ironNote != null ? ironNote : Blocks.noteblock,
 				'b', li.cil.oc.api.Items.get("card").createItemStack(1),
 				'l', li.cil.oc.api.Items.get("cu").createItemStack(1));
 		}
@@ -384,61 +386,58 @@ public class IntegrationOpenComputers {
 
 		}
 		if(Config.OC_UPGRADE_COLORFUL) {
-			if(colorfulLamp != null) {
-				RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 7),
-					" f ", "mcm", " f ", 'c',
-					new ItemStack(colorfulLamp, 1, 0),
-					'm', li.cil.oc.api.Items.get("chip2").createItemStack(1),
-					'f', li.cil.oc.api.Items.get("chamelium").createItemStack(1));
-				RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 7),
-					" m ", "fcf", " m ",
-					'c', new ItemStack(colorfulLamp, 1, 0),
-					'm', li.cil.oc.api.Items.get("chip2").createItemStack(1),
-					'f', li.cil.oc.api.Items.get("chamelium").createItemStack(1));
-			} else {
-				log.warn("Could not add Colorful Upgrade Recipe because Colorful Lamp is disabled in the config.");
-			}
+			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 7),
+				" f ", "mcm", " f ",
+				'c', colorfulLamp != null ? colorfulLamp : "glowstone",
+				'm', li.cil.oc.api.Items.get("chip2").createItemStack(1),
+				'f', li.cil.oc.api.Items.get("chamelium").createItemStack(1));
+			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 7),
+				" m ", "fcf", " m ",
+				'c', colorfulLamp != null ? colorfulLamp : "glowstone",
+				'm', li.cil.oc.api.Items.get("chip2").createItemStack(1),
+				'f', li.cil.oc.api.Items.get("chamelium").createItemStack(1));
 		}
 		if(Config.OC_CARD_NOISE) {
 			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 8),
 				" l ", "mbn", " f ",
 				'm', li.cil.oc.api.Items.get("chip2").createItemStack(1),
 				'f', li.cil.oc.api.Items.get("alu").createItemStack(1),
-				'b', new ItemStack(itemOCParts, 1, 5),
+				'b', Config.OC_CARD_BEEP ? new ItemStack(itemOCParts, 1, 5) : speaker != null ? speaker : ironNote != null ? ironNote : Blocks.noteblock,
 				'l', li.cil.oc.api.Items.get("chip3").createItemStack(1),
 				'n', "gemQuartz");
 		}
+		if(Config.OC_CARD_SOUND) {
+			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 9),
+				" l ", "mb ", " f ",
+				'm', li.cil.oc.api.Items.get("ram5").createItemStack(1),
+				'f', li.cil.oc.api.Items.get("cpu1").createItemStack(1),
+				'b', Config.OC_CARD_NOISE ? new ItemStack(itemOCParts, 1, 8) :
+					Config.OC_CARD_BEEP ? new ItemStack(itemOCParts, 1, 5) : speaker != null ? speaker : ironNote != null ? ironNote : Blocks.noteblock,
+				'l', li.cil.oc.api.Items.get("chip3").createItemStack(1));
+		}
 		if(Config.OC_BOARD_LIGHT) {
-			if(colorfulLamp != null) {
-				RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 9),
-					"oso", "gcg", "opo",
-					's', "paneGlassColorless",
-					'g', li.cil.oc.api.Items.get("chip1").createItemStack(1),
-					'c', new ItemStack(colorfulLamp, 1, 0),
-					'o', "obsidian",
-					'p', li.cil.oc.api.Items.get("printedCircuitBoard").createItemStack(1)
-				);
-			} else {
-				log.warn("Could not add Light Board Recipe because Colorful Lamp is disabled in the config.");
-			}
+			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 10),
+				"oso", "gcg", "opo",
+				's', "paneGlassColorless",
+				'g', li.cil.oc.api.Items.get("chip1").createItemStack(1),
+				'c', colorfulLamp != null ? colorfulLamp : "glowstone",
+				'o', "obsidian",
+				'p', li.cil.oc.api.Items.get("printedCircuitBoard").createItemStack(1)
+			);
 		}
 		if(Config.OC_BOARD_BOOM) {
-			if(Config.OC_CARD_BOOM) {
-				RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 10),
-					"lsl", "gcg", "opo",
-					's', li.cil.oc.api.Items.get("chip1").createItemStack(1),
-					'g', new ItemStack(itemOCParts, 1, 6),
-					'c', Blocks.tnt,
-					'o', "obsidian",
-					'l', Items.gunpowder,
-					'p', li.cil.oc.api.Items.get("printedCircuitBoard").createItemStack(1)
-				);
-			} else {
-				log.warn("Could not add Server Self-Destructor Recipe because Self-Destructing Card is disabled in the config.");
-			}
+			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 11),
+				"lsl", "gcg", "opo",
+				's', li.cil.oc.api.Items.get("chip1").createItemStack(1),
+				'g', Config.OC_CARD_BOOM ? new ItemStack(itemOCParts, 1, 6) : Items.blaze_powder,
+				'c', Blocks.tnt,
+				'o', "obsidian",
+				'l', Items.gunpowder,
+				'p', li.cil.oc.api.Items.get("printedCircuitBoard").createItemStack(1)
+			);
 		}
 		if(Config.OC_BOARD_CAPACITOR) {
-			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 11),
+			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 12),
 				"lsl", "gcg", "opo",
 				's', li.cil.oc.api.Items.get("chip1").createItemStack(1),
 				'g', "nuggetGold",

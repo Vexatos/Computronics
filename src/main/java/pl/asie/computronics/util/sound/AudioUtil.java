@@ -284,7 +284,7 @@ public class AudioUtil {
 
 		public float frequencyInHz;
 		public float offset;
-		public AudioType type;
+		public AudioType type = AudioType.Square;
 
 		public Wave() {
 
