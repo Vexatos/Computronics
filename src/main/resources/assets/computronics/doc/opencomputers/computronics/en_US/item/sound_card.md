@@ -2,7 +2,7 @@
 
 ![♩♫♩♫♩♫♫♫♩♫♩♫♩♫♫♩♩♪♩♩♪♩♪♩♩♪♩♪♩♩♪♩♪♩♩♪♩♫♩♫♩♫♫♫♩♫♩♫♩♫♫♫♩](item:computronics:computronics.ocParts@9)
 
-The sound card is a complex device allowing for high-resolution sound synthesis. Similarly to the [noise card](noise_card.md), it allows generating sound waves of various forms, but it also allows modulating that wave.
+The sound card is a complex device allowing for high-resolution sound synthesis. Similarly to the [noise card](noise_card.md), it allows generating sound waves of various forms.
 
 The sound card provides eight channels, each of which may generate a wave on its own. However, one can assign any channel to modulate frequency and amplitude of another. In this case, the channel will not generate sound itself but instead change the wave of the carrier channel.
 
