@@ -25,8 +25,8 @@ import pl.asie.lib.network.Packet;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayDeque;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 
@@ -52,7 +52,7 @@ public class SoundCardPacketClientHandler extends AudioPacketClientHandler {
 		String address = packet.readString();
 		int delay = packet.readInt();
 		int size = packet.readInt();
-		Queue<Instruction> buffer = new LinkedList<Instruction>();
+		Queue<Instruction> buffer = new ArrayDeque<Instruction>();
 		for(int i = 0; i < size; i++) {
 			int type = packet.readByte();
 			switch(type) {

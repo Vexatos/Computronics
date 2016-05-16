@@ -215,7 +215,7 @@ public abstract class Instruction {
 
 		@Override
 		public void encounter(AudioProcess process, State state) {
-			if (state.envelope != null) {
+			if(state.envelope != null) {
 				this.envelope.progress = state.envelope.progress;
 				this.envelope.phase = state.envelope.phase;
 			}
@@ -380,7 +380,7 @@ public abstract class Instruction {
 	}
 
 	public static void toNBT(NBTTagList l, Queue<Instruction> instructions) {
-		for (Instruction instruction : instructions) {
+		for(Instruction instruction : instructions) {
 			NBTTagCompound tag = new NBTTagCompound();
 			save(tag, instruction);
 			l.appendTag(tag);

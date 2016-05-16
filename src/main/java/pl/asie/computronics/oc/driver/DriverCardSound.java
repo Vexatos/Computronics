@@ -44,9 +44,9 @@ import pl.asie.computronics.util.sound.Instruction.SetFM;
 import pl.asie.computronics.util.sound.Instruction.SetVolume;
 import pl.asie.computronics.util.sound.Instruction.SetWave;
 
+import java.util.ArrayDeque;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Queue;
 import java.util.Set;
@@ -69,9 +69,8 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 
 		if(host.world().isRemote) {
 			SyncHandler.envs.add(this);
-		} else {
-			buildBuffer = new LinkedList<Instruction>();
 		}
+		buildBuffer = new ArrayDeque<Instruction>();
 	}
 
 	private final IAudioReceiver internalSpeaker = new IAudioReceiver() {
@@ -112,7 +111,7 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 	};
 
 	private AudioUtil.AudioProcess process;
-	private Queue<Instruction> buildBuffer;
+	private final ArrayDeque<Instruction> buildBuffer;
 	private Queue<Instruction> nextBuffer;
 
 	private int buildDelay = 0;
@@ -163,7 +162,7 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 	@Override
 	public void update() {
 		if(nextBuffer != null && System.currentTimeMillis() >= timeout - 100) {
-			sendSound(nextDelay, nextBuffer);
+			sendSound(nextBuffer);
 			timeout = timeout + nextDelay;
 			nextBuffer = null;
 		} else if(codecId != null && System.currentTimeMillis() >= timeout + soundTimeoutMS) {
@@ -188,11 +187,14 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 			}
 		} else {
 			if(nbt.hasKey("bbuffer")) {
-				buildBuffer = Instruction.fromNBT(nbt.getTagList("bbuffer", Constants.NBT.TAG_COMPOUND));
-				buildDelay = 0;
-				for(Instruction inst : buildBuffer) {
-					if(inst instanceof Delay) {
-						buildDelay += ((Delay) inst).delay;
+				synchronized(buildBuffer) {
+					buildBuffer.clear();
+					buildBuffer.addAll(Instruction.fromNBT(nbt.getTagList("bbuffer", Constants.NBT.TAG_COMPOUND)));
+					buildDelay = 0;
+					for(Instruction inst : buildBuffer) {
+						if(inst instanceof Delay) {
+							buildDelay += ((Delay) inst).delay;
+						}
 					}
 				}
 			}
@@ -220,7 +222,9 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 			process.save(processNBT);
 			if(buildBuffer != null) {
 				NBTTagList buildNBT = new NBTTagList();
-				Instruction.toNBT(buildNBT, buildBuffer);
+				synchronized(buildBuffer) {
+					Instruction.toNBT(buildNBT, buildBuffer);
+				}
 				nbt.setTag("bbuffer", buildNBT);
 			}
 			if(nextBuffer != null) {
@@ -233,10 +237,12 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 	}
 
 	private Object[] tryAdd(Instruction inst) {
-		if(buildBuffer.size() >= maxInstructions) {
-			return new Object[] { false, "too many instructions" };
+		synchronized(buildBuffer) {
+			if(buildBuffer.size() >= maxInstructions) {
+				return new Object[] { false, "too many instructions" };
+			}
+			buildBuffer.add(inst);
 		}
-		buildBuffer.add(inst);
 		return new Object[] { true };
 	}
 
@@ -289,7 +295,9 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 	@Callback(doc = "function(); Clears the instruction queue.", direct = true)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] clear(Context context, Arguments args) {
-		buildBuffer.clear();
+		synchronized(buildBuffer) {
+			buildBuffer.clear();
+		}
 		buildDelay = 0;
 		return new Object[] {};
 	}
@@ -376,20 +384,22 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 	@Callback(doc = "function(); Starts processing the queue; Returns true is processing began, false if there is still a queue being processed.", direct = true)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] process(Context context, Arguments args) {
-		if(buildBuffer.size() == 0) {
-			return new Object[] { true };
-		}
-		if(nextBuffer == null) {
-			nextBuffer = buildBuffer;
-			nextDelay = buildDelay;
-			buildBuffer = new LinkedList<Instruction>();
-			buildDelay = 0;
-			if(System.currentTimeMillis() > timeout) {
-				timeout = System.currentTimeMillis();
+		synchronized(buildBuffer) {
+			if(buildBuffer.size() == 0) {
+				return new Object[] { true };
 			}
-			return new Object[] { true };
-		} else {
-			return new Object[] { false, System.currentTimeMillis(), timeout };
+			if(nextBuffer == null) {
+				nextBuffer = new ArrayDeque<Instruction>(buildBuffer);
+				nextDelay = buildDelay;
+				buildBuffer.clear();
+				buildDelay = 0;
+				if(System.currentTimeMillis() > timeout) {
+					timeout = System.currentTimeMillis();
+				}
+				return new Object[] { true };
+			} else {
+				return new Object[] { false, System.currentTimeMillis(), timeout };
+			}
 		}
 	}
 
@@ -403,9 +413,9 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 		pkt.sendPacket();
 	}
 
-	protected void sendSound(int delay, Queue<Instruction> buffer) {
+	protected void sendSound(Queue<Instruction> buffer) {
 		int counter = 0;
-		Queue<Instruction> sendBuffer = new LinkedList<Instruction>();
+		Queue<Instruction> sendBuffer = new ArrayDeque<Instruction>();
 		while(!buffer.isEmpty() || process.delay > 0) {
 			if(process.delay > 0) {
 				if(counter + process.delay < packetSizeMS) {
