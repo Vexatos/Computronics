@@ -1,6 +1,6 @@
 # Light Board
 
-![And Notch said, Let there be light.](item:computronics:computronics.ocParts@9)
+![And Notch said, Let there be light.](item:computronics:computronics.ocParts@10)
 
 This Board can be put into Server Racks. It provides four visual indicator lights which connected computers are able to control using the provided `light_board` component.
 
