@@ -19,18 +19,18 @@ public class TapeDriveState {
 
 		public static final State[] VALUES = values();
 	}
-	
+
 	private State state = State.STOPPED;
 	private int codecId;//, packetId;
     private long lastCodecTime;
 	protected int packetSize = 1024;
 	protected int soundVolume = 127;
 	private ITapeStorage storage;
-	
+
 	public ITapeStorage getStorage() { return storage; }
 	protected void setStorage(ITapeStorage storage) { this.storage = storage; }
 	protected void setState(State state) { this.state = state; }
-	
+
 	public boolean setSpeed(float speed) {
 		if(speed < 0.25F || speed > 2.0F) return false;
 		this.packetSize = Math.round(1024*speed);
@@ -44,13 +44,13 @@ public class TapeDriveState {
 	public byte getVolume() {
 		return (byte) soundVolume;
 	}
-	
+
 	public void setVolume(float volume) {
 		if(volume < 0.0F) volume = 0.0F;
 		if(volume > 1.0F) volume = 1.0F;
 		this.soundVolume = (int) Math.floor(volume * 127.0F);
 	}
-	
+
 	public void switchState(World worldObj, int x, int y, int z, State newState) {
 		if(worldObj.isRemote) { // Client-side happening
 			if(newState == state) return;
@@ -58,7 +58,7 @@ public class TapeDriveState {
 		if(!worldObj.isRemote) { // Server-side happening
 			if(this.storage == null) newState = State.STOPPED;
 			if(state == State.PLAYING) { // State is playing - stop playback
-				AudioUtils.removePlayer(codecId);
+				AudioUtils.removePlayer(Computronics.instance.managerId, codecId);
 			}
 			if(newState == State.PLAYING) { // Time to play again!
 				codecId = Computronics.instance.audio.newPlayer();
@@ -69,7 +69,7 @@ public class TapeDriveState {
 		state = newState;
 		//sendState();
 	}
-	
+
 	public State getState() {
 		return state;
 	}
@@ -86,7 +86,7 @@ public class TapeDriveState {
 			return null;
 		}
 	}
-	
+
 	public AudioPacket update(IAudioSource source, World worldObj, int x, int y, int z) {
 		if(!worldObj.isRemote) {
 			switch(state) {
@@ -107,7 +107,7 @@ public class TapeDriveState {
 				case FORWARDING: {
 					int seeked = storage.seek(2048);
 					if(seeked < 2048) switchState(worldObj, x, y, z, State.STOPPED);
-				} break;	
+				} break;
 				case STOPPED: {
 				} break;
 			}

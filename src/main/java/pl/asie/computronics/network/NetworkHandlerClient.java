@@ -61,8 +61,9 @@ public class NetworkHandlerClient extends MessageHandlerBase {
 			}
 			break;
 			case AUDIO_STOP: {
+				int managerId = packet.readInt();
 				int codecId = packet.readInt();
-				Computronics.instance.audio.removePlayer(codecId);
+				AudioPacketRegistry.INSTANCE.getManager(managerId).removePlayer(codecId);
 			}
 			break;
 			case PARTICLE_SPAWN: {

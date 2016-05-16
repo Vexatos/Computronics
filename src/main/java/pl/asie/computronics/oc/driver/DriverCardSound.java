@@ -24,6 +24,7 @@ import pl.asie.computronics.api.audio.AudioPacket;
 import pl.asie.computronics.api.audio.AudioPacketRegistry;
 import pl.asie.computronics.api.audio.IAudioReceiver;
 import pl.asie.computronics.api.audio.IAudioSource;
+import pl.asie.computronics.audio.AudioUtils;
 import pl.asie.computronics.audio.SoundCardPacket;
 import pl.asie.computronics.audio.SoundCardPacketClientHandler;
 import pl.asie.computronics.reference.Config;
@@ -66,8 +67,6 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 			create());
 		process = new AudioUtil.AudioProcess(8);
 
-		codecId = Computronics.opencomputers.audio.newPlayer();
-		Computronics.opencomputers.audio.getPlayer(codecId);
 		if(host.world().isRemote) {
 			SyncHandler.envs.add(this);
 		} else {
@@ -120,12 +119,13 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 	private int nextDelay = 0;
 	private long timeout = System.currentTimeMillis();
 	private int soundVolume = 127;
-	private int codecId;
+	private Integer codecId;
 	private String clientAddress;
 
-	private int packetSizeMS = 500;
+	private final int packetSizeMS = 500;
 	private final int maxInstructions = Config.SOUND_CARD_QUEUE_SIZE;
 	private final int maxDelayMS = Config.SOUND_CARD_MAX_DELAY;
+	private final int soundTimeoutMS = 250;
 
 	public static class SyncHandler {
 
@@ -140,7 +140,7 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 		public void onChunkUnload(ChunkEvent.Unload evt) {
 			for(DriverCardSound env : envs) {
 				if(env.host.world() == evt.world && evt.getChunk().isAtLocation(MathHelper.floor_double(env.host.xPosition()) >> 4, MathHelper.floor_double(env.host.zPosition()) >> 4)) {
-					getHandler().setProcess(env.clientAddress, null, 0);
+					getHandler().setProcess(env.clientAddress, null);
 				}
 			}
 		}
@@ -149,7 +149,7 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 		public void onWorldUnload(WorldEvent.Unload evt) {
 			for(DriverCardSound env : envs) {
 				if(env.host.world() == evt.world) {
-					getHandler().setProcess(env.clientAddress, null, 0);
+					getHandler().setProcess(env.clientAddress, null);
 				}
 			}
 		}
@@ -166,6 +166,9 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 			sendSound(nextDelay, nextBuffer);
 			timeout = timeout + nextDelay;
 			nextBuffer = null;
+		} else if(codecId != null && System.currentTimeMillis() >= timeout + soundTimeoutMS) {
+			AudioUtils.removePlayer(Computronics.opencomputers.managerId, codecId);
+			codecId = null;
 		}
 	}
 
@@ -180,7 +183,7 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 				NBTTagCompound nodeNBT = nbt.getCompoundTag("node");
 				if(nodeNBT.hasKey("address")) {
 					clientAddress = nodeNBT.getString("address");
-					SyncHandler.getHandler().setProcess(clientAddress, process, System.currentTimeMillis());
+					SyncHandler.getHandler().setProcess(clientAddress, process);
 				}
 			}
 		} else {
@@ -391,6 +394,10 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 	}
 
 	private void sendMusicPacket(int delay, Queue<Instruction> instructions) {
+		if(codecId == null) {
+			codecId = Computronics.opencomputers.audio.newPlayer();
+			Computronics.opencomputers.audio.getPlayer(codecId);
+		}
 		SoundCardPacket pkt = new SoundCardPacket(this, (byte) soundVolume, node().address(), delay, instructions);
 		internalSpeaker.receivePacket(pkt, ForgeDirection.UNKNOWN);
 		pkt.sendPacket();
