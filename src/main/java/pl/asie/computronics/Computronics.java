@@ -24,6 +24,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import pl.asie.computronics.api.audio.AudioPacketRegistry;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheralProvider;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheralRegistry;
 import pl.asie.computronics.audio.DFPWMPlaybackManager;
@@ -111,8 +112,9 @@ public class Computronics {
 	public static TapeStorageEventHandler storageEventHandler;
 	public static ManagedGuiHandler gui;
 	public static PacketHandler packet;
-	public DFPWMPlaybackManager audio;
 	public static ExecutorService rsaThreads;
+	public DFPWMPlaybackManager audio;
+	public int managerId;
 
 	@SidedProxy(clientSide = "pl.asie.computronics.ClientProxy", serverSide = "pl.asie.computronics.CommonProxy")
 	public static CommonProxy proxy;
@@ -181,6 +183,9 @@ public class Computronics {
 		config = new Config(event);
 
 		audio = new DFPWMPlaybackManager(proxy.isClient());
+
+		managerId = AudioPacketRegistry.INSTANCE.registerManager(audio);
+
 		packet = new PacketHandler(Mods.Computronics, new NetworkHandlerClient(), new NetworkHandlerServer());
 
 		compat = new Compat(this.config.config);

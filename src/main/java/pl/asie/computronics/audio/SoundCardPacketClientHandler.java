@@ -37,17 +37,13 @@ import java.util.Queue;
 public class SoundCardPacketClientHandler extends AudioPacketClientHandler {
 
 	private Map<String, AudioProcess> processMap = new HashMap<String, AudioProcess>();
-	private Map<String, Long> timeoutMap = new HashMap<String, Long>();
 	private int sampleRate = Config.SOUND_SAMPLE_RATE;
-	private int soundTimeoutMS = 250;
 
-	public void setProcess(String address, AudioProcess process, long timeout) {
+	public void setProcess(String address, AudioProcess process) {
 		if(process != null) {
 			processMap.put(address, process);
-			timeoutMap.put(address, timeout);
 		} else {
 			processMap.remove(address);
-			timeoutMap.remove(address);
 		}
 	}
 
@@ -97,10 +93,9 @@ public class SoundCardPacketClientHandler extends AudioPacketClientHandler {
 		}
 
 		if(!processMap.containsKey(address)) {
-			setProcess(address, new AudioUtil.AudioProcess(8), System.currentTimeMillis());
+			setProcess(address, new AudioUtil.AudioProcess(8));
 		}
 		AudioProcess process = processMap.get(address);
-		long timeout = timeoutMap.get(address);
 
 		ByteArrayOutputStream data = new ByteArrayOutputStream();
 		while(!buffer.isEmpty() || process.delay > 0) {
@@ -123,15 +118,9 @@ public class SoundCardPacketClientHandler extends AudioPacketClientHandler {
 
 		if(data.size() > 0) {
 			StreamingAudioPlayer codec = Computronics.opencomputers.audio.getPlayer(codecId);
-			if(System.currentTimeMillis() > timeout + soundTimeoutMS) {
-				codec.stop();
-				timeout = System.currentTimeMillis();
-			}
 			codec.setSampleRate(sampleRate);
 			codec.push(data.toByteArray());
 		}
-
-		timeoutMap.put(address, timeout + delay);
 	}
 
 	@Override

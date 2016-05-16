@@ -97,6 +97,7 @@ public class IntegrationOpenComputers {
 	public static ColorfulUpgradeHandler colorfulUpgradeHandler;
 	public static DriverBoardBoom.BoomHandler boomBoardHandler;
 	public SoundCardPlaybackManager audio;
+	public int managerId;
 
 	public IntegrationOpenComputers(Computronics computronics) {
 		this.computronics = computronics;
@@ -142,6 +143,8 @@ public class IntegrationOpenComputers {
 
 		if(Config.OC_CARD_SOUND) {
 			audio = new SoundCardPlaybackManager(Computronics.proxy.isClient());
+
+			managerId = AudioPacketRegistry.INSTANCE.registerManager(audio);
 
 			AudioPacketRegistry.INSTANCE.registerType(SoundCardPacket.class);
 
