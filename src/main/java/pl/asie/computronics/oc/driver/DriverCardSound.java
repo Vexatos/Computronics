@@ -121,7 +121,6 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 	private Integer codecId;
 	private String clientAddress;
 
-	private final int packetSizeMS = 500;
 	private final int maxInstructions = Config.SOUND_CARD_QUEUE_SIZE;
 	private final int maxDelayMS = Config.SOUND_CARD_MAX_DELAY;
 	private final int soundTimeoutMS = 250;
