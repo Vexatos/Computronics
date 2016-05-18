@@ -418,30 +418,12 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 		Queue<Instruction> sendBuffer = new ArrayDeque<Instruction>();
 		while(!buffer.isEmpty() || process.delay > 0) {
 			if(process.delay > 0) {
-				if(counter + process.delay < packetSizeMS) {
-					sendBuffer.add(new Delay(process.delay));
-					counter += process.delay;
-				} else {
-					while(process.delay > 0) {
-						int remove = Math.min(process.delay, packetSizeMS - counter);
-						sendBuffer.add(new Delay(remove));
-						if(remove + counter >= packetSizeMS) {
-							sendMusicPacket(remove + counter, sendBuffer);
-							sendBuffer.clear();
-							counter = 0;
-						} else {
-							counter += remove;
-						}
-						process.delay -= remove;
-					}
-				}
+				counter += process.delay;
 				process.delay = 0;
 			} else {
 				Instruction inst = buffer.poll();
 				inst.encounter(process);
-				if(!(inst instanceof Delay)) {
-					sendBuffer.add(inst);
-				}
+				sendBuffer.add(inst);
 			}
 		}
 		if(sendBuffer.size() > 0) {
