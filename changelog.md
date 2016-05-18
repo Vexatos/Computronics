@@ -35,6 +35,7 @@
     - Receivers must be referenced by their name, meaning you have to name all your signals using Signal Labels
   * ADDED: Option to specify a custom timeout when writing files from a URL to a tape using the tape program on OpenComputers.
   * ADDED: Colored tapes can now be crafted with a bucket of water to wash off the color.
+  * CHANGED: Sangar made beep card and noise card textures a lot less boring. He also made the sound card texture to match them. Thanks a lot!
   * CHANGED: Digital Signal Receiver Box
     - Can noe be paired to up to 32 receivers, just like the controller box
     - Allows individually querying the aspect of each paired controller
