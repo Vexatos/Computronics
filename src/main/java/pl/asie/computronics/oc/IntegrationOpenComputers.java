@@ -15,8 +15,6 @@ import net.minecraftforge.common.MinecraftForge;
 import org.apache.logging.log4j.Logger;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.api.audio.AudioPacketRegistry;
-import pl.asie.computronics.audio.SoundCardPacket;
-import pl.asie.computronics.audio.SoundCardPacketClientHandler;
 import pl.asie.computronics.audio.SoundCardPlaybackManager;
 import pl.asie.computronics.integration.appeng.DriverSpatialIOPort;
 import pl.asie.computronics.integration.armourersworkshop.DriverMannequin;
@@ -78,6 +76,7 @@ import static pl.asie.computronics.Computronics.camera;
 import static pl.asie.computronics.Computronics.chatBox;
 import static pl.asie.computronics.Computronics.colorfulLamp;
 import static pl.asie.computronics.Computronics.ironNote;
+import static pl.asie.computronics.Computronics.proxy;
 import static pl.asie.computronics.Computronics.radar;
 import static pl.asie.computronics.Computronics.speaker;
 
@@ -142,15 +141,9 @@ public class IntegrationOpenComputers {
 		Config.MUST_UPDATE_TILE_ENTITIES = true;
 
 		if(Config.OC_CARD_SOUND) {
-			audio = new SoundCardPlaybackManager(Computronics.proxy.isClient());
+			audio = new SoundCardPlaybackManager(proxy.isClient());
 
 			managerId = AudioPacketRegistry.INSTANCE.registerManager(audio);
-
-			AudioPacketRegistry.INSTANCE.registerType(SoundCardPacket.class);
-
-			AudioPacketRegistry.INSTANCE.registerClientHandler(
-				SoundCardPacket.class, new SoundCardPacketClientHandler()
-			);
 		}
 
 		if(Mods.hasVersion(Mods.Forestry, Mods.Versions.Forestry)) {
@@ -306,7 +299,7 @@ public class IntegrationOpenComputers {
 			Computronics.buildcraft.initOC();
 		}
 
-		if(Config.OC_CARD_SOUND) {
+		if(Config.OC_CARD_SOUND && proxy.isClient()) {
 			MinecraftForge.EVENT_BUS.register(new DriverCardSound.SyncHandler());
 		}
 	}
