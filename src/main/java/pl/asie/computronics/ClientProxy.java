@@ -9,6 +9,8 @@ import net.minecraftforge.common.MinecraftForge;
 import pl.asie.computronics.api.audio.AudioPacketDFPWM;
 import pl.asie.computronics.api.audio.AudioPacketRegistry;
 import pl.asie.computronics.audio.AudioPacketClientHandlerDFPWM;
+import pl.asie.computronics.audio.SoundCardPacket;
+import pl.asie.computronics.audio.SoundCardPacketClientHandler;
 import pl.asie.computronics.client.AudioCableRender;
 import pl.asie.computronics.client.LampRender;
 import pl.asie.computronics.oc.IntegrationOpenComputers;
@@ -120,5 +122,14 @@ public class ClientProxy extends CommonProxy {
 			IntegrationOpenComputers.mountableRenderer = new RackMountableRenderer();
 		}
 		MinecraftForge.EVENT_BUS.register(IntegrationOpenComputers.mountableRenderer);
+	}
+
+	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
+	protected void registerOpenComputersAudioHandlers() {
+		super.registerOpenComputersAudioHandlers();
+		AudioPacketRegistry.INSTANCE.registerClientHandler(
+			SoundCardPacket.class, new SoundCardPacketClientHandler()
+		);
 	}
 }

@@ -34,6 +34,7 @@ import pl.asie.computronics.oc.driver.DriverCardBeep;
 import pl.asie.computronics.oc.driver.DriverCardBoom;
 import pl.asie.computronics.oc.driver.DriverCardFX;
 import pl.asie.computronics.oc.driver.DriverCardNoise;
+import pl.asie.computronics.oc.driver.DriverCardSound;
 import pl.asie.computronics.oc.driver.DriverCardSpoof;
 import pl.asie.computronics.oc.driver.RobotUpgradeCamera;
 import pl.asie.computronics.oc.driver.RobotUpgradeChatBox;
@@ -68,6 +69,7 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 			"card_boom",
 			"robot_upgrade_colorful",
 			"card_noise",
+			"card_sound",
 			"rack_board_light",
 			"rack_board_boom",
 			"rack_board_capacitor",
@@ -106,10 +108,10 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 					&& Robot.class.isAssignableFrom(host);
 				break;
 			}
-			case 9:
 			case 10:
 			case 11:
-			case 12: {
+			case 12:
+			case 13: {
 				works = works && Rack.class.isAssignableFrom(host);
 				break;
 			}
@@ -143,12 +145,14 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 			case 8:
 				return DriverCardNoise.class;
 			case 9:
-				return DriverBoardLight.class;
+				return DriverCardSound.class;
 			case 10:
-				return DriverBoardBoom.class;
+				return DriverBoardLight.class;
 			case 11:
-				return DriverBoardCapacitor.class;
+				return DriverBoardBoom.class;
 			case 12:
+				return DriverBoardCapacitor.class;
+			case 13:
 				return DriverBoardSwitch.class;
 			default:
 				return null;
@@ -179,12 +183,14 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 			case 8:
 				return new DriverCardNoise(container);
 			case 9:
-				return container instanceof Rack ? new DriverBoardLight((Rack) container) : null;
+				return new DriverCardSound(container);
 			case 10:
-				return container instanceof Rack ? new DriverBoardBoom((Rack) container) : null;
+				return container instanceof Rack ? new DriverBoardLight((Rack) container) : null;
 			case 11:
-				return container instanceof Rack ? new DriverBoardCapacitor((Rack) container) : null;
+				return container instanceof Rack ? new DriverBoardBoom((Rack) container) : null;
 			case 12:
+				return container instanceof Rack ? new DriverBoardCapacitor((Rack) container) : null;
+			case 13:
 				return container instanceof Rack ? new DriverBoardSwitch((Rack) container) : null;
 			default:
 				return null;
@@ -214,9 +220,10 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 			case 8:
 				return Slot.Card;
 			case 9:
+				return Slot.Card;
 			case 10:
 			case 11:
-			case 12:
+			case 13:
 				return Slot.RackMountable;
 			default:
 				return Slot.None;
@@ -244,11 +251,12 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 			case 7:
 				return 1; // Tier 2
 			case 8:
-				return 2; // Tier 3
+				return 1; // Tier 2
 			case 9:
+				return 2; // Tier 3
 			case 10:
 			case 11:
-			case 12:
+			case 13:
 				return 0; // Tier 1
 			default:
 				return 0; // Tier 1 default
@@ -277,12 +285,14 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 			case 8:
 				return "noise_card";
 			case 9:
-				return "light_board";
+				return "sound_card";
 			case 10:
-				return "server_self_destructor";
+				return "light_board";
 			case 11:
-				return "rack_capacitor";
+				return "server_self_destructor";
 			case 12:
+				return "rack_capacitor";
+			case 13:
 				return "switch_board";
 			default:
 				return "index";
@@ -326,17 +336,20 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 		if(Config.OC_CARD_NOISE) {
 			list.add(new ItemStack(item, 1, 8));
 		}
-		if(Config.OC_BOARD_LIGHT) {
+		if(Config.OC_CARD_SOUND) {
 			list.add(new ItemStack(item, 1, 9));
 		}
-		if(Config.OC_BOARD_BOOM) {
+		if(Config.OC_BOARD_LIGHT) {
 			list.add(new ItemStack(item, 1, 10));
 		}
-		if(Config.OC_BOARD_CAPACITOR) {
+		if(Config.OC_BOARD_BOOM) {
 			list.add(new ItemStack(item, 1, 11));
 		}
-		if(Config.OC_BOARD_SWITCH) {
+		if(Config.OC_BOARD_CAPACITOR) {
 			list.add(new ItemStack(item, 1, 12));
+		}
+		if(Config.OC_BOARD_SWITCH) {
+			list.add(new ItemStack(item, 1, 13));
 		}
 	}
 

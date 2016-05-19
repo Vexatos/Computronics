@@ -3,6 +3,10 @@
   * ADDED: Noise Card!
     - An upgraded Beep Card with slightly different syntax
     - Can play square waves, sine waves, triangle waves and sawtooth waves!
+  * ADDED: Sound Card! Lots of thanks to gamax92 for having done a big part of this! Also thanks to Temia for helping us design this!
+    - Plays generated sounds of various types akin to a noise card
+    - Supports frequency modulation, amplitude modulation, general volume changes, wave type changes, frequency changes and ADSR on 8 channels, allowing for highly customizable sound synthesis!
+    - Works on an instruction-based system; instructions are added to a queue and processed when wanted.
   * ADDED: Support for TIS-3D!
     - Added a Colorful Module to display any colour you want, akin to a Colorful Lamp.
     - Added a Tape Reader Module which allows you to interface with an adjacent Tape Drive.
@@ -31,6 +35,8 @@
     - Receivers must be referenced by their name, meaning you have to name all your signals using Signal Labels
   * ADDED: Option to specify a custom timeout when writing files from a URL to a tape using the tape program on OpenComputers.
   * ADDED: Colored tapes can now be crafted with a bucket of water to wash off the color.
+  * CHANGED: Sangar made beep card and noise card textures a lot less boring. He also made the sound card texture to match them. Thanks a lot!
+  * CHANGED: Some tweaks to beep card and noise card recipes.
   * CHANGED: Digital Signal Receiver Box
     - Can noe be paired to up to 32 receivers, just like the controller box
     - Allows individually querying the aspect of each paired controller
