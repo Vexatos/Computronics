@@ -1,6 +1,6 @@
 # Sound Card
 
-![♩♫♩♫♩♫♫♫♩♫♩♫♩♫♫♩♩♪♩♩♪♩♪♩♩♪♩♪♩♩♪♩♪♩♩♪♩♫♩♫♩♫♫♫♩♫♩♫♩♫♫♫♩](item:computronics:computronics.ocParts@9)
+![♩♫♩♫♩♫♫♫♩♫♩♫♩♫♫♩♩♪♩♩♪♩♪♩♩♪♩♪♩♩♪♩♪♩♩♪♩♫♩♫♩♫♫♫♩♫♩♫♩♫♫♫♩](item:computronics:computronics.oc_parts@9)
 
 The sound card is a complex device allowing for high-resolution sound synthesis. Similarly to the [noise card](noise_card.md), it allows generating sound waves of various forms.
 

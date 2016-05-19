@@ -24,7 +24,7 @@ public class TapeDriveState {
 
 	private State state = State.STOPPED;
 	private int codecId;//, packetId;
-    private long lastCodecTime;
+	private long lastCodecTime;
 	protected int packetSize = 1024;
 	protected int soundVolume = 127;
 	private ITapeStorage storage;
@@ -116,12 +116,13 @@ public class TapeDriveState {
 					if(storage.getPosition() >= storage.getSize() || storage.getPosition() < 0) {
 						storage.setPosition(storage.getPosition());
 					}
-                    long time = System.nanoTime();
-					if ((time - (250 * 1000000)) > lastCodecTime) {
-                        lastCodecTime += (250 * 1000000);
+					long time = System.nanoTime();
+					if((time - (250 * 1000000)) > lastCodecTime) {
+						lastCodecTime += (250 * 1000000);
 						return createMusicPacket(source, worldObj, pos);
 					}
-				} break;
+				}
+				break;
 				case REWINDING: {
 					int seeked = storage.seek(-2048);
 					if(seeked > -2048) {

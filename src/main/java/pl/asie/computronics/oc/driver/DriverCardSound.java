@@ -1,9 +1,5 @@
 package pl.asie.computronics.oc.driver;
 
-import cpw.mods.fml.common.Optional;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import li.cil.oc.api.Network;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
@@ -13,12 +9,17 @@ import li.cil.oc.api.network.Visibility;
 import li.cil.oc.api.prefab.ManagedEnvironment;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.api.audio.AudioPacket;
 import pl.asie.computronics.api.audio.AudioPacketRegistry;
@@ -75,7 +76,7 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 
 	private final IAudioReceiver internalSpeaker = new IAudioReceiver() {
 		@Override
-		public boolean connectsAudio(ForgeDirection side) {
+		public boolean connectsAudio(EnumFacing side) {
 			return true;
 		}
 
@@ -85,18 +86,8 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 		}
 
 		@Override
-		public int getSoundX() {
-			return MathHelper.floor_double(host.xPosition());
-		}
-
-		@Override
-		public int getSoundY() {
-			return MathHelper.floor_double(host.yPosition());
-		}
-
-		@Override
-		public int getSoundZ() {
-			return MathHelper.floor_double(host.zPosition());
+		public BlockPos getSoundPos() {
+			return new BlockPos(host.xPosition(), host.yPosition(), host.zPosition());
 		}
 
 		@Override
@@ -105,7 +96,7 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 		}
 
 		@Override
-		public void receivePacket(AudioPacket packet, ForgeDirection direction) {
+		public void receivePacket(AudioPacket packet, EnumFacing direction) {
 			packet.addReceiver(this);
 		}
 	};
@@ -408,7 +399,7 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 			Computronics.opencomputers.audio.getPlayer(codecId);
 		}
 		SoundCardPacket pkt = new SoundCardPacket(this, (byte) soundVolume, node().address(), delay, instructions);
-		internalSpeaker.receivePacket(pkt, ForgeDirection.UNKNOWN);
+		internalSpeaker.receivePacket(pkt, null);
 		pkt.sendPacket();
 	}
 
@@ -431,7 +422,7 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 	}
 
 	@Override
-	public boolean connectsAudio(ForgeDirection side) {
+	public boolean connectsAudio(EnumFacing side) {
 		return false;
 	}
 

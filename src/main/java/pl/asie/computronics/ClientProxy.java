@@ -12,8 +12,6 @@ import pl.asie.computronics.api.audio.AudioPacketRegistry;
 import pl.asie.computronics.audio.AudioPacketClientHandlerDFPWM;
 import pl.asie.computronics.audio.SoundCardPacket;
 import pl.asie.computronics.audio.SoundCardPacketClientHandler;
-import pl.asie.computronics.client.AudioCableRender;
-import pl.asie.computronics.client.LampRender;
 import pl.asie.computronics.integration.buildcraft.statements.StatementTextureManager;
 import pl.asie.computronics.oc.IntegrationOpenComputers;
 import pl.asie.computronics.oc.client.RackMountableRenderer;

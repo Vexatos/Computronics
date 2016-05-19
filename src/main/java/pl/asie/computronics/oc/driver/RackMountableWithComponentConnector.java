@@ -3,7 +3,6 @@ package pl.asie.computronics.oc.driver;
 import li.cil.oc.api.component.RackBusConnectable;
 import li.cil.oc.api.component.RackMountable;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.EnumFacing;
 
 import java.util.EnumSet;
 

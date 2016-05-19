@@ -12,8 +12,8 @@ import net.minecraft.nbt.NBTTagFloat;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.network.PacketType;
 import pl.asie.computronics.reference.Config;
@@ -248,7 +248,7 @@ public class DriverCardNoise extends DriverCardSoundBase {
 		int size = min(iTypes.length, channels.length, frequencies.tagCount(), durations.length, delays.length);
 		for(int i = 0; i < size; i++) {
 			channels[i].type = AudioType.fromIndex(iTypes[i]);
-			channels[i].entries.add(new Channel.WaveEntry(new Channel.FreqPair(frequencies.func_150308_e(i), durations[i]), delays[i]));
+			channels[i].entries.add(new Channel.WaveEntry(new Channel.FreqPair(frequencies.getFloatAt(i), durations[i]), delays[i]));
 		}
 	}
 
