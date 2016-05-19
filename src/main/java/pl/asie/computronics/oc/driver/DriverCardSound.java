@@ -5,6 +5,7 @@ import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.EnvironmentHost;
+import li.cil.oc.api.network.Message;
 import li.cil.oc.api.network.Visibility;
 import li.cil.oc.api.prefab.ManagedEnvironment;
 import net.minecraft.nbt.NBTTagCompound;
@@ -223,6 +224,25 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 				nbt.setTag("nbuffer", nextNBT);
 			}
 			nbt.setByte("volume", (byte) soundVolume);
+		}
+	}
+
+	protected void clearAndStop(){
+		synchronized(buildBuffer) {
+			buildBuffer.clear();
+		}
+		buildDelay = 0;
+		if(codecId != null) {
+			AudioUtils.removePlayer(Computronics.opencomputers.managerId, codecId);
+		}
+	}
+
+	@Override
+	public void onMessage(Message message) {
+		if((message.name().equals("computer.stopped")
+			|| message.name().equals("computer.started"))
+			&& node().isNeighborOf(message.source())) {
+			clearAndStop();
 		}
 	}
 
