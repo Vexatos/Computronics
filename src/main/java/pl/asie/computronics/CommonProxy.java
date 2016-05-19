@@ -2,11 +2,15 @@ package pl.asie.computronics;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+import cpw.mods.fml.common.Optional;
+import cpw.mods.fml.common.registry.EntityRegistry;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import pl.asie.computronics.api.audio.AudioPacketDFPWM;
 import pl.asie.computronics.api.audio.AudioPacketRegistry;
+import pl.asie.computronics.audio.SoundCardPacket;
 import pl.asie.computronics.item.entity.EntityItemIndestructable;
+import pl.asie.computronics.reference.Mods;
 import pl.asie.lib.network.Packet;
 
 import java.io.IOException;
@@ -19,6 +23,9 @@ public class CommonProxy {
 
 	public void registerAudioHandlers() {
 		AudioPacketRegistry.INSTANCE.registerType(AudioPacketDFPWM.class);
+		if(Mods.isLoaded(Mods.OpenComputers)) {
+			registerOpenComputersAudioHandlers();
+		}
 	}
 
 	public void registerEntities() {
@@ -47,5 +54,10 @@ public class CommonProxy {
 
 	public void onServerStop() {
 
+	}
+
+	@Optional.Method(modid = Mods.OpenComputers)
+	protected void registerOpenComputersAudioHandlers() {
+		AudioPacketRegistry.INSTANCE.registerType(SoundCardPacket.class);
 	}
 }

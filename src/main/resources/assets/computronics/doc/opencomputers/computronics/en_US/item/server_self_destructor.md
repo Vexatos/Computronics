@@ -1,6 +1,6 @@
 # Server Self-Destructor
 
-![Solid state of the art](item:computronics:computronics.oc_parts@10)
+![Solid state of the art](item:computronics:computronics.oc_parts@11)
 
 Don't you also sometimes think about how messy and dirty your server racks become after a while? Well, the latest invention of Hugging Creepers Industries resolves that problem: The SSD! On command, this marvellous device will, after a specified duration, wipe the containing and any connected [server rack](/%LANGUAGE%/block/rack.md) clean! In fact, they will be so clean you won't even be able to detect the presence of your other mountables anymore while the racks themselves will appear undamaged! Truly ingenious.
 

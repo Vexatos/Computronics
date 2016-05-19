@@ -5,6 +5,10 @@ This version comes with a 1.8.9 port in addition to many additions.
   * ADDED: Noise Card!
     - An upgraded Beep Card with slightly different syntax
     - Can play square waves, sine waves, triangle waves and sawtooth waves!
+  * ADDED: Sound Card! Lots of thanks to gamax92 for having done a big part of this! Also thanks to Temia for helping us design this!
+    - Plays generated sounds of various types akin to a noise card
+    - Supports frequency modulation, amplitude modulation, general volume changes, wave type changes, frequency changes and ADSR on 8 channels, allowing for highly customizable sound synthesis!
+    - Works on an instruction-based system; instructions are added to a queue and processed when wanted.
   * ADDED: Support for TIS-3D!
     - Added a Colorful Module to display any colour you want, akin to a Colorful Lamp.
     - Added a Tape Reader Module which allows you to interface with an adjacent Tape Drive.
@@ -29,9 +33,12 @@ This version comes with a 1.8.9 port in addition to many additions.
       - This allows you to monitor input and output of your energy network separately
     - Now you can get and set the range of Vacuum Chests
     - Added `getProgress()` to most machines with progress
+  * CHANGED: Sangar made beep card and noise card textures a lot less boring. He also made the sound card texture to match them. Thanks a lot!
+  * CHANGED: Some tweaks to beep card and noise card recipes.
   * FIXED: Iron Note Blocks now properly error when used with instrument names.
   * FIXED: Tape program not displaying information properly if file size is larger than tape size
   * FIXED: OpenComputers' tape program not working with HTTPS
+
   * [1.7.10] ADDED: Digital Signal Controller Box for Railcraft!
     - Can be paired to up to 32 receivers (sounds overpowered, definitely is overpowered, but CovertJaguar told me to do it. It's probaby better this way...)
     - Allows individually sending aspects to each paired receiver

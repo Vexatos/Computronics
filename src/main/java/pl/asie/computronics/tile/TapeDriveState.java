@@ -78,7 +78,7 @@ public class TapeDriveState {
 				newState = State.STOPPED;
 			}
 			if(state == State.PLAYING) { // State is playing - stop playback
-				AudioUtils.removePlayer(codecId);
+				AudioUtils.removePlayer(Computronics.instance.managerId, codecId);
 			}
 			if(newState == State.PLAYING) { // Time to play again!
 				codecId = Computronics.instance.audio.newPlayer();

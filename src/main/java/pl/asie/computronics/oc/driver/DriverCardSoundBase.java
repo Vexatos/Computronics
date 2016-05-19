@@ -12,6 +12,7 @@ import pl.asie.computronics.network.PacketType;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.util.sound.Audio;
 import pl.asie.computronics.util.sound.AudioType;
+import pl.asie.computronics.util.sound.Channel;
 import pl.asie.lib.network.Packet;
 
 import java.io.IOException;
@@ -36,7 +37,7 @@ public abstract class DriverCardSoundBase extends ManagedEnvironment {
 		return true;
 	}
 
-	protected FreqPair[] sendBuffer;
+	protected Channel.FreqPair[] sendBuffer;
 
 	@Override
 	public void update() {
@@ -59,17 +60,6 @@ public abstract class DriverCardSoundBase extends ManagedEnvironment {
 
 	protected int getActiveChannelCount() {
 		return getNonNullCount(expirationList);
-	}
-
-	protected static class FreqPair {
-
-		protected final int frequency;
-		protected final int duration;
-
-		protected FreqPair(int frequency, int duration) {
-			this.frequency = frequency;
-			this.duration = duration;
-		}
 	}
 
 	protected static <E, T extends Iterable<E>> int getNonNullCount(T array) {
@@ -103,7 +93,7 @@ public abstract class DriverCardSoundBase extends ManagedEnvironment {
 		return null;
 	}
 
-	protected Object[] tryQueueSound(FreqPair[] freqPairs, Object[] result, double v, String methodName) throws Exception {
+	protected Object[] tryQueueSound(Channel.FreqPair[] freqPairs, Object[] result, double v, String methodName) throws Exception {
 		Object[] error = tryConsumeEnergy(v, methodName);
 		if(error != null) {
 			return error;
@@ -121,7 +111,7 @@ public abstract class DriverCardSoundBase extends ManagedEnvironment {
 		return result;
 	}
 
-	protected void sendSound(World world, double x, double y, double z, FreqPair[] freqPairs) throws Exception {
+	protected void sendSound(World world, double x, double y, double z, Channel.FreqPair[] freqPairs) throws Exception {
 		final int size = Math.min(freqPairs.length, 8);
 		byte hits = 0;
 		for(int i = 0; i < size; i++) {
@@ -136,11 +126,11 @@ public abstract class DriverCardSoundBase extends ManagedEnvironment {
 			.writeInt(MathHelper.floor_double(z))
 			.writeByte(hits);
 		for(int i = 0; i < freqPairs.length; i++) {
-			FreqPair freqPair = freqPairs[i];
+			Channel.FreqPair freqPair = freqPairs[i];
 			if(freqPair != null) {
 				packet
 					.writeByte((byte) getMode(i).ordinal())
-					.writeShort((short) freqPair.frequency)
+					.writeFloat(freqPair.frequency)
 					.writeShort((short) freqPair.duration);
 			}
 		}
@@ -164,9 +154,9 @@ public abstract class DriverCardSoundBase extends ManagedEnvironment {
 			for(int i = 0; i < 8; i++) {
 				if(((hits >> i) & 1) == 1) {
 					AudioType type = AudioType.fromIndex(packet.readUnsignedByte());
-					short frequency = packet.readShort();
+					float frequency = packet.readFloat();
 					short duration = packet.readShort();
-					Audio.instance().play(x + 0.5f, y + 0.5f, z + 0.5f, type, frequency & 0xFFFF, duration & 0xFFFF);
+					Audio.instance().play(x + 0.5f, y + 0.5f, z + 0.5f, type, frequency, duration & 0xFFFF);
 				}
 			}
 		}

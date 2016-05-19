@@ -1,5 +1,10 @@
 package pl.asie.computronics.oc;
 
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Optional;
+import cpw.mods.fml.common.event.FMLMissingMappingsEvent;
+import cpw.mods.fml.common.event.FMLServerStoppedEvent;
+import cpw.mods.fml.common.registry.GameRegistry;
 import li.cil.oc.api.Driver;
 import li.cil.oc.api.Network;
 import li.cil.oc.api.driver.EnvironmentProvider;
@@ -13,6 +18,12 @@ import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.apache.logging.log4j.Logger;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.api.audio.AudioPacketRegistry;
+import pl.asie.computronics.audio.SoundCardPlaybackManager;
+import pl.asie.computronics.integration.appeng.DriverSpatialIOPort;
+import pl.asie.computronics.integration.armourersworkshop.DriverMannequin;
+import pl.asie.computronics.integration.betterstorage.DriverCrateStorageNew;
+import pl.asie.computronics.integration.betterstorage.DriverCrateStorageOld;
 import pl.asie.computronics.integration.buildcraft.DriverHeatable;
 import pl.asie.computronics.integration.enderio.DriverAbstractMachine;
 import pl.asie.computronics.integration.enderio.DriverAbstractPoweredMachine;
@@ -35,6 +46,7 @@ import pl.asie.computronics.oc.block.ComputronicsBlockEnvironmentProvider;
 import pl.asie.computronics.oc.client.RackMountableRenderer;
 import pl.asie.computronics.oc.client.UpgradeRenderer;
 import pl.asie.computronics.oc.driver.DriverBoardBoom;
+import pl.asie.computronics.oc.driver.DriverCardSound;
 import pl.asie.computronics.oc.driver.DriverMagicalMemory;
 import pl.asie.computronics.oc.manual.ComputronicsPathProvider;
 import pl.asie.computronics.reference.Compat;
@@ -45,7 +57,10 @@ import pl.asie.computronics.util.RecipeUtils;
 import static pl.asie.computronics.Computronics.camera;
 import static pl.asie.computronics.Computronics.chatBox;
 import static pl.asie.computronics.Computronics.colorfulLamp;
+import static pl.asie.computronics.Computronics.ironNote;
+import static pl.asie.computronics.Computronics.proxy;
 import static pl.asie.computronics.Computronics.radar;
+import static pl.asie.computronics.Computronics.speaker;
 
 /**
  * @author Vexatos
@@ -62,6 +77,8 @@ public class IntegrationOpenComputers {
 	public static RackMountableRenderer mountableRenderer;
 	public static ColorfulUpgradeHandler colorfulUpgradeHandler;
 	public static DriverBoardBoom.BoomHandler boomBoardHandler;
+	public SoundCardPlaybackManager audio;
+	public int managerId;
 
 	public IntegrationOpenComputers(Computronics computronics) {
 		this.computronics = computronics;
@@ -81,6 +98,7 @@ public class IntegrationOpenComputers {
 			|| Config.OC_CARD_BOOM
 			|| Config.OC_UPGRADE_COLORFUL
 			|| Config.OC_CARD_NOISE
+			|| Config.OC_CARD_SOUND
 			|| Config.OC_BOARD_LIGHT
 			|| Config.OC_BOARD_BOOM
 			|| Config.OC_BOARD_CAPACITOR) {
@@ -105,6 +123,12 @@ public class IntegrationOpenComputers {
 		// Fixes Iron Note Block, among others.
 		// To ensure less TE ticks for those who don't use OC, we keep this tidbit around.
 		//Config.MUST_UPDATE_TILE_ENTITIES = true;
+
+		if(Config.OC_CARD_SOUND) {
+			audio = new SoundCardPlaybackManager(proxy.isClient());
+
+			managerId = AudioPacketRegistry.INSTANCE.registerManager(audio);
+		}
 
 		/*if(Mods.hasVersion(Mods.Forestry, Mods.Versions.Forestry)) {
 			if(Config.FORESTRY_BEES) {
@@ -257,6 +281,10 @@ public class IntegrationOpenComputers {
 		/*if(Computronics.buildcraft != null) { TODO BuildCraft Drone Docking
 			Computronics.buildcraft.initOC();
 		}*/
+
+		if(Config.OC_CARD_SOUND && proxy.isClient()) {
+			MinecraftForge.EVENT_BUS.register(new DriverCardSound.SyncHandler());
+		}
 	}
 
 	@Optional.Method(modid = Mods.OpenComputers)
@@ -324,7 +352,7 @@ public class IntegrationOpenComputers {
 			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 5),
 				" l ", "mb ", " f ",
 				'm', li.cil.oc.api.Items.get("chip2").createItemStack(1),
-				'f', Computronics.ironNote,
+				'f', speaker != null ? speaker : ironNote != null ? ironNote : Blocks.noteblock,
 				'b', li.cil.oc.api.Items.get("card").createItemStack(1),
 				'l', li.cil.oc.api.Items.get("cu").createItemStack(1));
 		}
@@ -337,61 +365,58 @@ public class IntegrationOpenComputers {
 
 		}
 		if(Config.OC_UPGRADE_COLORFUL) {
-			if(colorfulLamp != null) {
-				RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 7),
-					" f ", "mcm", " f ", 'c',
-					new ItemStack(colorfulLamp, 1, 0),
-					'm', li.cil.oc.api.Items.get("chip2").createItemStack(1),
-					'f', li.cil.oc.api.Items.get("chamelium").createItemStack(1));
-				RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 7),
-					" m ", "fcf", " m ",
-					'c', new ItemStack(colorfulLamp, 1, 0),
-					'm', li.cil.oc.api.Items.get("chip2").createItemStack(1),
-					'f', li.cil.oc.api.Items.get("chamelium").createItemStack(1));
-			} else {
-				log.warn("Could not add Colorful Upgrade Recipe because Colorful Lamp is disabled in the config.");
-			}
+			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 7),
+				" f ", "mcm", " f ",
+				'c', colorfulLamp != null ? colorfulLamp : "glowstone",
+				'm', li.cil.oc.api.Items.get("chip2").createItemStack(1),
+				'f', li.cil.oc.api.Items.get("chamelium").createItemStack(1));
+			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 7),
+				" m ", "fcf", " m ",
+				'c', colorfulLamp != null ? colorfulLamp : "glowstone",
+				'm', li.cil.oc.api.Items.get("chip2").createItemStack(1),
+				'f', li.cil.oc.api.Items.get("chamelium").createItemStack(1));
 		}
 		if(Config.OC_CARD_NOISE) {
 			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 8),
 				" l ", "mbn", " f ",
 				'm', li.cil.oc.api.Items.get("chip2").createItemStack(1),
 				'f', li.cil.oc.api.Items.get("alu").createItemStack(1),
-				'b', new ItemStack(itemOCParts, 1, 5),
+				'b', Config.OC_CARD_BEEP ? new ItemStack(itemOCParts, 1, 5) : speaker != null ? speaker : ironNote != null ? ironNote : Blocks.noteblock,
 				'l', li.cil.oc.api.Items.get("chip3").createItemStack(1),
-				'n', "nuggetGold");
+				'n', "gemQuartz");
+		}
+		if(Config.OC_CARD_SOUND) {
+			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 9),
+				" l ", "mb ", " f ",
+				'm', li.cil.oc.api.Items.get("ram5").createItemStack(1),
+				'f', li.cil.oc.api.Items.get("cpu1").createItemStack(1),
+				'b', Config.OC_CARD_NOISE ? new ItemStack(itemOCParts, 1, 8) :
+					Config.OC_CARD_BEEP ? new ItemStack(itemOCParts, 1, 5) : speaker != null ? speaker : ironNote != null ? ironNote : Blocks.noteblock,
+				'l', li.cil.oc.api.Items.get("chip3").createItemStack(1));
 		}
 		if(Config.OC_BOARD_LIGHT) {
-			if(colorfulLamp != null) {
-				RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 9),
-					"oso", "gcg", "opo",
-					's', "paneGlassColorless",
-					'g', li.cil.oc.api.Items.get("chip1").createItemStack(1),
-					'c', new ItemStack(colorfulLamp, 1, 0),
-					'o', "obsidian",
-					'p', li.cil.oc.api.Items.get("printedCircuitBoard").createItemStack(1)
-				);
-			} else {
-				log.warn("Could not add Light Board Recipe because Colorful Lamp is disabled in the config.");
-			}
+			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 10),
+				"oso", "gcg", "opo",
+				's', "paneGlassColorless",
+				'g', li.cil.oc.api.Items.get("chip1").createItemStack(1),
+				'c', colorfulLamp != null ? colorfulLamp : "glowstone",
+				'o', "obsidian",
+				'p', li.cil.oc.api.Items.get("printedCircuitBoard").createItemStack(1)
+			);
 		}
 		if(Config.OC_BOARD_BOOM) {
-			if(Config.OC_CARD_BOOM) {
-				RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 10),
-					"lsl", "gcg", "opo",
-					's', li.cil.oc.api.Items.get("chip1").createItemStack(1),
-					'g', new ItemStack(itemOCParts, 1, 6),
-					'c', Blocks.tnt,
-					'o', "obsidian",
-					'l', Items.gunpowder,
-					'p', li.cil.oc.api.Items.get("printedCircuitBoard").createItemStack(1)
-				);
-			} else {
-				log.warn("Could not add Server Self-Destructor Recipe because Self-Destructing Card is disabled in the config.");
-			}
+			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 11),
+				"lsl", "gcg", "opo",
+				's', li.cil.oc.api.Items.get("chip1").createItemStack(1),
+				'g', Config.OC_CARD_BOOM ? new ItemStack(itemOCParts, 1, 6) : Items.blaze_powder,
+				'c', Blocks.tnt,
+				'o', "obsidian",
+				'l', Items.gunpowder,
+				'p', li.cil.oc.api.Items.get("printedCircuitBoard").createItemStack(1)
+			);
 		}
 		if(Config.OC_BOARD_CAPACITOR) {
-			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 11),
+			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 12),
 				"lsl", "gcg", "opo",
 				's', li.cil.oc.api.Items.get("chip1").createItemStack(1),
 				'g', "nuggetGold",
@@ -415,6 +440,12 @@ public class IntegrationOpenComputers {
 					Network.joinOrCreateNetwork(tile);
 				}
 			});
+		}
+	}
+
+	public void onServerStop(FMLServerStoppedEvent event) {
+		if(Config.OC_CARD_SOUND && this.audio != null) {
+			this.audio.removeAll();
 		}
 	}
 

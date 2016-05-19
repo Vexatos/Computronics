@@ -51,7 +51,7 @@ public class RackMountableRenderer {
 		}
 
 		switch(stack.getItemDamage()) {
-			case 9: {
+			case 10: {
 				if(e.data == null) {
 					return;
 				}
@@ -85,7 +85,7 @@ public class RackMountableRenderer {
 				disableLight();
 				break;
 			}
-			case 10: {
+			case 11: {
 				if(e.data == null) {
 					return;
 				}
@@ -137,7 +137,7 @@ public class RackMountableRenderer {
 		}
 
 		switch(stack.getItemDamage()) {
-			case 9: {
+			case 10: {
 				if(e.data == null) {
 					return;
 				}
@@ -148,11 +148,11 @@ public class RackMountableRenderer {
 				e.setFrontTextureOverride(mode.background);
 				break;
 			}
-			case 10: {
+			case 11: {
 				e.setFrontTextureOverride(boomBoard);
 				break;
 			}
-			case 11: {
+			case 12: {
 				e.setFrontTextureOverride(rackCapacitor);
 				break;
 			}
