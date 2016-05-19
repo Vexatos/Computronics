@@ -11,7 +11,7 @@ public final class AudioUtils {
 
 	}
 
-	public static void removePlayer(int managerId, int codecId) {
+	public static synchronized void removePlayer(int managerId, int codecId) {
 		AudioPacketRegistry.INSTANCE.getManager(managerId).removePlayer(codecId);
 		try {
 			Packet pkt = Computronics.packet.create(PacketType.AUDIO_STOP.ordinal())
