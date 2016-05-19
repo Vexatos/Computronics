@@ -3,6 +3,8 @@ package pl.asie.computronics.oc.driver;
 import li.cil.oc.api.component.RackBusConnectable;
 import li.cil.oc.api.component.RackMountable;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
 
 import java.util.EnumSet;
 
@@ -22,7 +24,7 @@ public abstract class RackMountableWithComponentConnector extends ManagedEnviron
 	}
 
 	@Override
-	public boolean onActivate(EntityPlayer player, float hitX, float hitY) {
+	public boolean onActivate(EntityPlayer player, EnumHand hand, ItemStack heldItem, float hitX, float hitY) {
 		return false;
 	}
 

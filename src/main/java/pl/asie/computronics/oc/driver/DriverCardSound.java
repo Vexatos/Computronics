@@ -9,9 +9,9 @@ import li.cil.oc.api.network.Visibility;
 import li.cil.oc.api.prefab.ManagedEnvironment;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.event.world.ChunkEvent;
@@ -128,7 +128,7 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 		@SubscribeEvent
 		public void onChunkUnload(ChunkEvent.Unload evt) {
 			for(DriverCardSound env : envs) {
-				if(env.host.world() == evt.world && evt.getChunk().isAtLocation(MathHelper.floor_double(env.host.xPosition()) >> 4, MathHelper.floor_double(env.host.zPosition()) >> 4)) {
+				if(env.host.world() == evt.getWorld() && evt.getChunk().isAtLocation(MathHelper.floor_double(env.host.xPosition()) >> 4, MathHelper.floor_double(env.host.zPosition()) >> 4)) {
 					getHandler().setProcess(env.clientAddress, null);
 				}
 			}
@@ -137,7 +137,7 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 		@SubscribeEvent
 		public void onWorldUnload(WorldEvent.Unload evt) {
 			for(DriverCardSound env : envs) {
-				if(env.host.world() == evt.world) {
+				if(env.host.world() == evt.getWorld()) {
 					getHandler().setProcess(env.clientAddress, null);
 				}
 			}

@@ -11,7 +11,6 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -320,10 +319,9 @@ public class DriverBoardLight extends RackMountableWithComponentConnector {
 	}
 
 	@Override
-	public boolean onActivate(EntityPlayer player, float hitX, float hitY) {
+	public boolean onActivate(EntityPlayer player, EnumHand hand, ItemStack heldItem, float hitX, float hitY) {
 		final BlockPos pos = new BlockPos(host.xPosition(), host.yPosition(), host.zPosition());
-		ItemStack held = player.getHeldItem(EnumHand.MAIN_HAND); //TODO change to held item
-		if(held != null && held.getItem() != null && Integration.isTool(held, player, pos) && Integration.useTool(held, player, pos)) {
+		if(heldItem != null && heldItem.getItem() != null && Integration.isTool(heldItem, player, pos) && Integration.useTool(heldItem, player, pos)) {
 			int index = mode.index;
 			if(index >= Mode.VALUES.length) {
 				index = 0;

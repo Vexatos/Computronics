@@ -10,8 +10,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
 import org.apache.logging.log4j.Logger;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.api.audio.AudioPacketRegistry;
+import pl.asie.computronics.audio.SoundCardPlaybackManager;
 import pl.asie.computronics.integration.flamingo.DriverFlamingo;
 import pl.asie.computronics.item.ItemOCSpecialParts;
 import pl.asie.computronics.item.ItemOpenComputers;
@@ -325,7 +328,7 @@ public class IntegrationOpenComputers {
 			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 5),
 				" l ", "mb ", " f ",
 				'm', li.cil.oc.api.Items.get("chip2").createItemStack(1),
-				'f', speaker != null ? speaker : ironNote != null ? ironNote : Blocks.noteblock,
+				'f', speaker != null ? speaker : ironNote != null ? ironNote : Blocks.NOTEBLOCK,
 				'b', li.cil.oc.api.Items.get("card").createItemStack(1),
 				'l', li.cil.oc.api.Items.get("cu").createItemStack(1));
 		}
@@ -354,7 +357,7 @@ public class IntegrationOpenComputers {
 				" l ", "mbn", " f ",
 				'm', li.cil.oc.api.Items.get("chip2").createItemStack(1),
 				'f', li.cil.oc.api.Items.get("alu").createItemStack(1),
-				'b', Config.OC_CARD_BEEP ? new ItemStack(itemOCParts, 1, 5) : speaker != null ? speaker : ironNote != null ? ironNote : Blocks.noteblock,
+				'b', Config.OC_CARD_BEEP ? new ItemStack(itemOCParts, 1, 5) : speaker != null ? speaker : ironNote != null ? ironNote : Blocks.NOTEBLOCK,
 				'l', li.cil.oc.api.Items.get("chip3").createItemStack(1),
 				'n', "gemQuartz");
 		}
@@ -364,7 +367,7 @@ public class IntegrationOpenComputers {
 				'm', li.cil.oc.api.Items.get("ram5").createItemStack(1),
 				'f', li.cil.oc.api.Items.get("cpu1").createItemStack(1),
 				'b', Config.OC_CARD_NOISE ? new ItemStack(itemOCParts, 1, 8) :
-					Config.OC_CARD_BEEP ? new ItemStack(itemOCParts, 1, 5) : speaker != null ? speaker : ironNote != null ? ironNote : Blocks.noteblock,
+					Config.OC_CARD_BEEP ? new ItemStack(itemOCParts, 1, 5) : speaker != null ? speaker : ironNote != null ? ironNote : Blocks.NOTEBLOCK,
 				'l', li.cil.oc.api.Items.get("chip3").createItemStack(1));
 		}
 		if(Config.OC_BOARD_LIGHT) {
@@ -381,10 +384,10 @@ public class IntegrationOpenComputers {
 			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 11),
 				"lsl", "gcg", "opo",
 				's', li.cil.oc.api.Items.get("chip1").createItemStack(1),
-				'g', Config.OC_CARD_BOOM ? new ItemStack(itemOCParts, 1, 6) : Items.blaze_powder,
-				'c', Blocks.tnt,
+				'g', Config.OC_CARD_BOOM ? new ItemStack(itemOCParts, 1, 6) : Items.BLAZE_POWDER,
+				'c', Blocks.TNT,
 				'o', "obsidian",
-				'l', Items.gunpowder,
+				'l', "gunpowder",
 				'p', li.cil.oc.api.Items.get("printedCircuitBoard").createItemStack(1)
 			);
 		}
