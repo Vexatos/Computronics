@@ -33,7 +33,7 @@ public class RackMountableRenderer {
 		boomBoard,
 		rackCapacitor;
 
-	private static final List<Integer> mountables = Arrays.asList(9, 10, 11);
+	private static final List<Integer> mountables = Arrays.asList(10, 11, 12);
 
 	@Optional.Method(modid = Mods.OpenComputers)
 	private boolean isRackMountable(ItemStack stack) {
