@@ -41,7 +41,7 @@ public class Audio {
 
 	private boolean disableAudio = false;
 
-	public void play(float x, float y, float z, AudioType type, int frequencyInHz, int durationInMilliseconds) {
+	public void play(float x, float y, float z, AudioType type, float frequencyInHz, int durationInMilliseconds) {
 		play(x, y, z, ".", type, frequencyInHz, durationInMilliseconds);
 	}
 
@@ -49,19 +49,19 @@ public class Audio {
 		play(x, y, z, pattern, type, 1000, 200);
 	}
 
-	public void play(float x, float y, float z, String pattern, AudioType type, int frequencyInHz) {
+	public void play(float x, float y, float z, String pattern, AudioType type, float frequencyInHz) {
 		play(x, y, z, pattern, type, frequencyInHz, 200);
 	}
 
-	public void play(float x, float y, float z, String pattern, AudioType type, int frequencyInHz, int durationInMilliseconds) {
+	public void play(float x, float y, float z, String pattern, AudioType type, float frequencyInHz, int durationInMilliseconds) {
 		play(x, y, z, pattern, type, frequencyInHz, durationInMilliseconds, 0);
 	}
 
-	public void play(float x, float y, float z, AudioType type, int frequencyInHz, int durationInMilliseconds, int initialDelayInMilliseconds) {
+	public void play(float x, float y, float z, AudioType type, float frequencyInHz, int durationInMilliseconds, int initialDelayInMilliseconds) {
 		play(x, y, z, ".", type, frequencyInHz, durationInMilliseconds, initialDelayInMilliseconds);
 	}
 
-	public void play(float x, float y, float z, String pattern, AudioType type, int frequencyInHz, int durationInMilliseconds, int initialDelayInMilliseconds) {
+	public void play(float x, float y, float z, String pattern, AudioType type, float frequencyInHz, int durationInMilliseconds, int initialDelayInMilliseconds) {
 		Minecraft mc = Minecraft.getMinecraft();
 		float distanceBasedGain = ((float) Math.max(0, 1 - mc.thePlayer.getDistance(x, y, z) / maxDistance));
 		float gain = distanceBasedGain * volume();
@@ -111,14 +111,18 @@ public class Audio {
 				}
 				float step = frequencyInHz / ((float) sampleRate);
 				float offset = 0f;
+				double noiseOutput = Math.random();
 				for(int sampleCount : sampleCounts) {
 					for(int sample = 0; sample < sampleCount; sample++) {
 						//double angle = 2 * Math.PI * offset;
 						//int value = ((byte) (Math.signum(Math.sin(angle)) * amplitude())) ^ 0x80;
-						int value = ((byte) (type.generate(offset) * amplitude)) ^ 0x80;
+						int value = ((byte) ((type == AudioType.Noise ? noiseOutput : type.generate(offset)) * amplitude)) ^ 0x80;
 						offset += step;
 						if(offset > 1) {
-							offset -= 1;
+							offset %= 1.0F;
+							if(type == AudioType.Noise) {
+								noiseOutput = Math.random();
+							}
 						}
 						data.put((byte) value);
 					}

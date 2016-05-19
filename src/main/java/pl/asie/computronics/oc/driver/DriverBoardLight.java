@@ -320,7 +320,7 @@ public class DriverBoardLight extends RackMountableWithComponentConnector {
 	}
 
 	@Override
-	public boolean onActivate(EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
+	public boolean onActivate(EntityPlayer player, float hitX, float hitY) {
 		final BlockPos pos = new BlockPos(host.xPosition(), host.yPosition(), host.zPosition());
 		ItemStack held = player.getHeldItem(EnumHand.MAIN_HAND); //TODO change to held item
 		if(held != null && held.getItem() != null && Integration.isTool(held, player, pos) && Integration.useTool(held, player, pos)) {

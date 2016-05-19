@@ -174,7 +174,7 @@ public class DriverBoardBoom extends DriverCardBoom implements RackMountable {
 	}
 
 	@Override
-	public boolean onActivate(EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
+	public boolean onActivate(EntityPlayer player, float hitX, float hitY) {
 		return false;
 	}
 
