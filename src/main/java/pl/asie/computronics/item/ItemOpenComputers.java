@@ -441,14 +441,17 @@ public class ItemOpenComputers extends ItemMultipleComputronics implements Item,
 		if(Config.OC_CARD_NOISE) {
 			registerItemModel(8);
 		}
-		if(Config.OC_BOARD_LIGHT) {
+		if(Config.OC_CARD_SOUND) {
 			registerItemModel(9);
 		}
-		if(Config.OC_BOARD_BOOM) {
+		if(Config.OC_BOARD_LIGHT) {
 			registerItemModel(10);
 		}
-		if(Config.OC_BOARD_CAPACITOR) {
+		if(Config.OC_BOARD_BOOM) {
 			registerItemModel(11);
+		}
+		if(Config.OC_BOARD_CAPACITOR) {
+			registerItemModel(12);
 		}
 	}
 
