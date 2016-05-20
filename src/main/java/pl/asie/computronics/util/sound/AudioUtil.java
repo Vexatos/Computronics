@@ -228,7 +228,7 @@ public class AudioUtil {
 					noise = new WhiteNoise();
 					break;
 				case 1:
-					noise = new LFSR(nbt.getInteger("initial"), nbt.getInteger("mask"), nbt.getInteger("period"));
+					noise = new LFSR(nbt.getInteger("initial"), nbt.getInteger("period"), nbt.getInteger("mask"));
 					break;
 			}
 			noise.noiseOutput = nbt.getDouble("o");
@@ -287,8 +287,8 @@ public class AudioUtil {
 			nbt.setByte("t", (byte) 1);
 			nbt.setDouble("o", noiseOutput);
 			nbt.setInteger("initial", initial);
-			nbt.setInteger("mask", mask);
 			nbt.setInteger("period", period);
+			nbt.setInteger("mask", mask);
 		}
 	}
 
