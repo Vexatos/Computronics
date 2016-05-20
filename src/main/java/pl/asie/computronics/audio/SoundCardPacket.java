@@ -111,7 +111,6 @@ public class SoundCardPacket extends AudioPacket {
 					.writeByte((byte) 13)
 					.writeByte((byte) ((SetLFSR) instruction).channelIndex)
 					.writeInt(((SetLFSR) instruction).initial)
-					.writeInt(((SetLFSR) instruction).period)
 					.writeInt(((SetLFSR) instruction).mask);
 			}
 		}

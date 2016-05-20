@@ -228,7 +228,7 @@ public class AudioUtil {
 					noise = new WhiteNoise();
 					break;
 				case 1:
-					noise = new LFSR(nbt.getInteger("initial"), nbt.getInteger("period"), nbt.getInteger("mask"));
+					noise = new LFSR(nbt.getInteger("v"), nbt.getInteger("m"));
 					break;
 			}
 			noise.noiseOutput = nbt.getDouble("o");
@@ -255,40 +255,31 @@ public class AudioUtil {
 
 	public static class LFSR extends Noise {
 
-		private final byte[] noise;
-		private final int initial, period, mask;
-		private int position = 0;
+		private int value;
+		private final int mask;
 
-		public LFSR(int v, int period, int mask) {
-			this.initial = v;
-			this.period = period;
+		public LFSR(int value, int mask) {
+			this.value = value;
 			this.mask = mask;
-			this.noise = new byte[period];
-			for(int i = 0; i < this.noise.length; ++i) {
-				if((v & 1) != 0) {
-					v = (v >>> 1) ^ mask;
-					this.noise[i] = 1;
-				} else {
-					v >>>= 1;
-					this.noise[i] = -1;
-				}
-			}
 		}
 
 		@Override
 		protected double generate(State state) {
-			int val = position++;
-			position %= noise.length;
-			return noise[val];
+			if((value & 1) != 0) {
+				value = (value >>> 1) ^ mask;
+				return 1;
+			} else {
+				value >>>= 1;
+				return -1;
+			}
 		}
 
 		@Override
 		protected void save(NBTTagCompound nbt) {
 			nbt.setByte("t", (byte) 1);
 			nbt.setDouble("o", noiseOutput);
-			nbt.setInteger("initial", initial);
-			nbt.setInteger("period", period);
-			nbt.setInteger("mask", mask);
+			nbt.setInteger("v", value);
+			nbt.setInteger("m", mask);
 		}
 	}
 

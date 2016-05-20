@@ -289,22 +289,21 @@ public abstract class Instruction {
 
 	public static class SetLFSR extends ChannelSpecific {
 
-		public final int initial, period, mask;
+		public final int initial, mask;
 
-		public SetLFSR(int channelIndex, int initial, int period, int mask) {
+		public SetLFSR(int channelIndex, int initial, int mask) {
 			super(channelIndex);
 			this.initial = initial;
-			this.period = period;
 			this.mask = mask;
 		}
 
 		public SetLFSR(NBTTagCompound tag) {
-			this(tag.getByte("c"), tag.getInteger("i"), tag.getInteger("p"), tag.getInteger("m"));
+			this(tag.getByte("c"), tag.getInteger("i"), tag.getInteger("m"));
 		}
 
 		@Override
 		public void encounter(AudioProcess process, State state) {
-			state.generator = new AudioUtil.LFSR(initial, period, mask);
+			state.generator = new AudioUtil.LFSR(initial, mask);
 		}
 	}
 
@@ -424,7 +423,6 @@ public abstract class Instruction {
 		} else if(inst instanceof SetLFSR) {
 			tag.setByte("t", (byte) 13);
 			tag.setInteger("i", ((SetLFSR) inst).initial);
-			tag.setInteger("p", ((SetLFSR) inst).period);
 			tag.setInteger("m", ((SetLFSR) inst).mask);
 		}
 	}

@@ -97,7 +97,7 @@ public class SoundCardPacketClientHandler extends AudioPacketClientHandler {
 					buffer.add(new SetWhiteNoise(packet.readByte()));
 					break;
 				case 13:
-					buffer.add(new Instruction.SetLFSR(packet.readByte(), packet.readInt(), packet.readInt(), packet.readInt()));
+					buffer.add(new Instruction.SetLFSR(packet.readByte(), packet.readInt(), packet.readInt()));
 					break;
 			}
 		}

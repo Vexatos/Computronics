@@ -358,10 +358,10 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 		return tryAdd(new Instruction.SetFrequency(checkChannel(args), (float) args.checkDouble(1)));
 	}
 
-	@Callback(doc = "function(channel:number, initial:number, period:number, mask:number); Instruction; Makes the specified channel generate LFSR noise. Functions like a wave type.", direct = true)
+	@Callback(doc = "function(channel:number, initial:number, mask:number); Instruction; Makes the specified channel generate LFSR noise. Functions like a wave type.", direct = true)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] setLFSR(Context context, Arguments args) {
-		return tryAdd(new Instruction.SetLFSR(checkChannel(args), args.checkInteger(1), args.checkInteger(2), args.checkInteger(3)));
+		return tryAdd(new Instruction.SetLFSR(checkChannel(args), args.checkInteger(1), args.checkInteger(2)));
 	}
 
 	@Callback(doc = "function(duration:number); Instruction; Adds a delay of the specified duration in milliseconds, allowing sound to generate.", direct = true)
