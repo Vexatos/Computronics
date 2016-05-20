@@ -500,7 +500,7 @@ public class TileMachine extends TileEntityBase implements
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound tagCompound) {
+	public NBTTagCompound writeToNBT(NBTTagCompound tagCompound) {
 		super.writeToNBT(tagCompound);
 		if(this.battery != null) {
 			this.battery.writeToNBT(tagCompound);
@@ -518,6 +518,7 @@ public class TileMachine extends TileEntityBase implements
 			}
 			tagCompound.setTag("Inventory", itemList);
 		}
+		return tagCompound;
 	}
 
 	// Remove NBT data for transfer with the BuildCraft Builder

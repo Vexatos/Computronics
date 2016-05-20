@@ -6,7 +6,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.translation.I18n;
+import pl.asie.computronics.util.StringUtil;
 
 /**
  * @author Vexatos
@@ -19,7 +19,7 @@ public class EnchantmentBetterBane extends EnchantmentDamage {
 
 	@Override
 	public String getTranslatedName(int p_77316_1_) {
-		String s = I18n.translateToLocal(this.getName());
+		String s = StringUtil.localize(this.getName());
 		return s + " \u2468" /*+ StatCollector.translateToLocal("enchantment.asielib.level.9")*/;
 	}
 

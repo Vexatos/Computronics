@@ -60,6 +60,7 @@ public class BlockColorfulLamp extends BlockPeripheral /*implements IRedNetInput
 	}
 
 	@Override
+	@Deprecated
 	public IBlockState getStateFromMeta(int meta) {
 		return super.getStateFromMeta(meta).withProperty(BRIGHTNESS, meta);
 	}
@@ -75,12 +76,13 @@ public class BlockColorfulLamp extends BlockPeripheral /*implements IRedNetInput
 	}
 
 	@Override
-	public void onNeighborBlockChange(World world, BlockPos pos, IBlockState state, Block block) {
+	@Deprecated
+	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block) {
 		/*TileEntity tile = world.getTileEntity(x, y, z);
 		if(Mods.isLoaded(Mods.ProjectRed) && tile instanceof TileColorfulLamp) {
 			((TileColorfulLamp) tile).onProjectRedBundledInputChanged();
 		}*/
-		super.onNeighborBlockChange(world, pos, state, block);
+		super.neighborChanged(state, world, pos, block);
 	}
 
 	@Override
@@ -100,6 +102,7 @@ public class BlockColorfulLamp extends BlockPeripheral /*implements IRedNetInput
 	}
 
 	@Override
+	@Deprecated
 	public int getLightOpacity(IBlockState state) {
 		return super.getLightOpacity(state);
 	}

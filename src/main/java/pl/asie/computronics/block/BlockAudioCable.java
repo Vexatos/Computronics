@@ -208,6 +208,7 @@ public class BlockAudioCable extends BlockBase implements IBlockWithDocumentatio
 	}
 
 	@Override
+	@Deprecated
 	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
 		TileEntity t = world.getTileEntity(pos);
 
@@ -231,21 +232,26 @@ public class BlockAudioCable extends BlockBase implements IBlockWithDocumentatio
 	}
 
 	@Override
+	@Deprecated
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos) {
 		return BoundingBox.getBox(neighbors(world, pos));
 	}
 
 	@Override
+	@Deprecated
 	public boolean isOpaqueCube(IBlockState state) {
 		return false;
 	}
 
 	@Override
+	@Deprecated
 	public boolean isFullCube(IBlockState state) {
 		return false;
 	}
 
 	@Override
+	@Deprecated
+	@SideOnly(Side.CLIENT)
 	public boolean shouldSideBeRendered(IBlockState state, IBlockAccess worldIn, BlockPos pos, EnumFacing side) {
 		return (connectionMask & (1 << side.ordinal())) != 0;
 	}

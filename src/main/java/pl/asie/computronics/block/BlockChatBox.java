@@ -71,6 +71,7 @@ public class BlockChatBox extends BlockPeripheral implements IBlockWithSpecialTe
 	}
 
 	@Override
+	@Deprecated
 	public IBlockState getStateFromMeta(int meta) {
 		return super.getStateFromMeta(meta).withProperty(CREATIVE, (meta & 8) != 0);
 	}
@@ -101,11 +102,13 @@ public class BlockChatBox extends BlockPeripheral implements IBlockWithSpecialTe
 	}
 
 	@Override
+	@Deprecated
 	public boolean hasComparatorInputOverride(IBlockState state) {
 		return Config.REDSTONE_REFRESH;
 	}
 
 	@Override
+	@Deprecated
 	public int getComparatorInputOverride(IBlockState state, World world, BlockPos pos) {
 		TileEntity tile = world.getTileEntity(pos);
 		if(tile instanceof TileEntityBase) {

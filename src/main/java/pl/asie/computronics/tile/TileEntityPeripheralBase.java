@@ -303,7 +303,7 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 	}
 
 	@Override
-	public void writeToNBT(final NBTTagCompound nbt) {
+	public NBTTagCompound writeToNBT(final NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 		if(overlayColor != getDefaultColor()) {
 			nbt.setInteger("computronics:color", overlayColor);
@@ -311,6 +311,7 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 		if(Mods.isLoaded(Mods.OpenComputers)) {
 			writeToNBT_OC(nbt);
 		}
+		return nbt;
 	}
 
 	@Override

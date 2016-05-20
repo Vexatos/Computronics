@@ -79,8 +79,9 @@ public abstract class BlockPeripheral extends BlockBase implements IComputronics
 	}
 
 	@Override
-	public void onNeighborBlockChange(World world, BlockPos pos, IBlockState state, Block block) {
-		super.onNeighborBlockChange(world, pos, state, block);
+	@Deprecated
+	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block) {
+		super.neighborChanged(state, world, pos, block);
 	}
 
 	@Override
@@ -89,11 +90,13 @@ public abstract class BlockPeripheral extends BlockBase implements IComputronics
 	}
 
 	@Override
+	@Deprecated
 	public boolean isOpaqueCube(IBlockState state) {
 		return true;
 	}
 
 	@Override
+	@Deprecated
 	public boolean isNormalCube(IBlockState state) {
 		return true;
 	}
@@ -104,11 +107,13 @@ public abstract class BlockPeripheral extends BlockBase implements IComputronics
 	}
 
 	@Override
+	@Deprecated
 	public boolean isBlockNormalCube(IBlockState state) {
 		return true;
 	}
 
 	@Override
+	@Deprecated
 	public boolean isFullCube(IBlockState state) {
 		return true;
 	}

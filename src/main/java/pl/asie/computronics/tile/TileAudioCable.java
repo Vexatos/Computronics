@@ -173,11 +173,12 @@ public class TileAudioCable extends TileEntityBase implements IAudioReceiver, IC
 	}
 
 	@Override
-	public void writeToNBT(final NBTTagCompound nbt) {
+	public NBTTagCompound writeToNBT(final NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 		if(overlayColor != getDefaultColor()) {
 			nbt.setInteger("computronics:color", overlayColor);
 		}
+		return nbt;
 	}
 
 	public boolean ImmibisMicroblocks_isSideOpen(int side) {

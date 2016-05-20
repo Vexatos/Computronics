@@ -50,7 +50,7 @@ public class NoteUtils {
 					}
 				}*/
 				final IBlockState state = worldObj.getBlockState(pos.down());
-				Material m = state.getBlock().getMaterial(state);
+				Material m = state.getMaterial();
 				if(m == Material.ROCK) {
 					b0 = 1;
 				}

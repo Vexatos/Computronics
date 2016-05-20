@@ -11,6 +11,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import pl.asie.lib.util.WorldUtils;
 
+import javax.annotation.Nullable;
+
 public class TileEntityBase extends TileEntity {
 
 	// Base functions for containers
@@ -40,7 +42,8 @@ public class TileEntityBase extends TileEntity {
 	}
 
 	@Override
-	public net.minecraft.network.Packet getDescriptionPacket() {
+	@Nullable
+	public SPacketUpdateTileEntity getUpdatePacket() {
 		NBTTagCompound tag = new NBTTagCompound();
 		this.writeToRemoteNBT(tag);
 		return new SPacketUpdateTileEntity(getPos(), 0, tag);
@@ -80,12 +83,13 @@ public class TileEntityBase extends TileEntity {
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound tag) {
+	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
 		tag.setInteger("old_redstone", this.oldRedstoneSignal);
+		return tag;
 	}
 
-	public int requestCurrentRedstoneValue(EnumFacing side) {
+	public int requestCurrentRedstoneValue(@Nullable EnumFacing side) {
 		return 0;
 	}
 }

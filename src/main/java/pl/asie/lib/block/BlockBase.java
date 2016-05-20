@@ -101,6 +101,7 @@ public abstract class BlockBase extends Block /*implements
 	}
 
 	@Override
+	@Deprecated
 	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
 		IBlockState actualState = super.getActualState(state, world, pos);
 		if(this.supportsBundledRedstone()) {
@@ -110,6 +111,7 @@ public abstract class BlockBase extends Block /*implements
 	}
 
 	@Override
+	@Deprecated
 	public IBlockState getStateFromMeta(int meta) {
 		IBlockState state = this.getDefaultState();
 		switch(rotation) {
@@ -143,6 +145,7 @@ public abstract class BlockBase extends Block /*implements
 	}
 
 	@Override
+	@Deprecated
 	public boolean canProvidePower(IBlockState state) {
 		return true;
 	}
@@ -153,7 +156,8 @@ public abstract class BlockBase extends Block /*implements
 	}
 
 	@Override
-	public void onNeighborBlockChange(World world, BlockPos pos, IBlockState state, Block block) {
+	@Deprecated
+	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block) {
 		if(receivesRedstone(world, pos)) {
 			TileEntity tile = world.getTileEntity(pos);
 			if(tile != null && tile instanceof TileEntityBase) {
@@ -179,6 +183,7 @@ public abstract class BlockBase extends Block /*implements
 	}
 
 	@Override
+	@Deprecated
 	public int getWeakPower(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
 		if(!emitsRedstone(world, pos, side)) {
 			return 0;

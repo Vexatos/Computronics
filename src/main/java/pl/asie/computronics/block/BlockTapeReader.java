@@ -31,11 +31,13 @@ public class BlockTapeReader extends BlockPeripheral {
 	}
 
 	@Override
+	@Deprecated
 	public boolean hasComparatorInputOverride(IBlockState state) {
 		return true;
 	}
 
 	@Override
+	@Deprecated
 	public int getComparatorInputOverride(IBlockState state, World world, BlockPos pos) {
 		TileEntity tile = world.getTileEntity(pos);
 		if(tile == null || !(tile instanceof TileTapeDrive)) {

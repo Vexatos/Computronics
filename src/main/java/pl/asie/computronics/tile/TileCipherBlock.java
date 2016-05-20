@@ -268,7 +268,7 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements IBundle
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound tag) {
+	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
 		if(this.code != null) {
 			this.code.toNBT(tag);
@@ -276,6 +276,7 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements IBundle
 		if(this.forceLocked) {
 			tag.setBoolean("cb_l", true);
 		}
+		return tag;
 	}
 
 	@Override

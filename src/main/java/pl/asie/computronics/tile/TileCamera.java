@@ -15,6 +15,8 @@ import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.Camera;
 
+import javax.annotation.Nullable;
+
 public class TileCamera extends TileEntityPeripheralBase implements ITickable {
 
 	private static final int CALL_LIMIT = 20;
@@ -31,7 +33,7 @@ public class TileCamera extends TileEntityPeripheralBase implements ITickable {
 	}
 
 	@Override
-	public int requestCurrentRedstoneValue(EnumFacing side) {
+	public int requestCurrentRedstoneValue(@Nullable EnumFacing side) {
 		double distance = cameraRedstone.getDistance();
 		if(distance > 0.0) {
 			return 15 - (int) Math.min(15, Math.round(distance / 2D));
@@ -80,7 +82,7 @@ public class TileCamera extends TileEntityPeripheralBase implements ITickable {
 		int method, Object[] arguments) throws LuaException,
 		InterruptedException {
 		if(camera == null) {
-			return null;
+			return new Object[] {};
 		}
 		//Object[] rayDir = null;
 		switch(method) {
@@ -98,6 +100,6 @@ public class TileCamera extends TileEntityPeripheralBase implements ITickable {
 				return new Object[] { camera.getDistance() };
 			}
 		}
-		return null;
+		return new Object[] {};
 	}
 }

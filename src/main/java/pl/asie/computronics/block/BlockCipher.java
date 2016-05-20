@@ -56,8 +56,9 @@ public class BlockCipher extends BlockPeripheral /*implements IRedNetOmniNode*/ 
 	}
 
 	@Override
-	public void onNeighborBlockChange(World world, BlockPos pos, IBlockState state, Block block) {
-		super.onNeighborBlockChange(world, pos, state, block);
+	@Deprecated
+	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block) {
+		super.neighborChanged(state, world, pos, block);
 		/*TileEntity tile = world.getTileEntity(pos);
 		if(Mods.isLoaded(Mods.ProjectRed))
 			((TileCipherBlock)tile).onProjectRedBundledInputChanged();*/

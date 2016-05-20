@@ -232,13 +232,14 @@ public class TileChatBox extends TileEntityPeripheralBase implements IChatListen
 	}
 
 	@Override
-	public void writeToNBT(final NBTTagCompound nbt) {
+	public NBTTagCompound writeToNBT(final NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 		nbt.setShort("d", (short) this.distance);
 		nbt.setBoolean("hd", this.hasDistance);
 		if(name.length() > 0) {
 			nbt.setString("n", this.name);
 		}
+		return nbt;
 	}
 
 	@Override

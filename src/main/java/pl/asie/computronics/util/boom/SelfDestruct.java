@@ -16,6 +16,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.FakePlayer;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.network.PacketType;
 import pl.asie.lib.network.Packet;
@@ -75,7 +76,7 @@ public class SelfDestruct extends Explosion {
 				this.worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0, d1, d2, d3, d4, d5);
 			}
 
-			if(block.getMaterial(state) != Material.AIR) {
+			if(state.getMaterial() != Material.AIR) {
 				if(!this.worldObj.isRemote
 					&& blockpos.getX() == Math.round(Math.floor(explosionX))
 					&& blockpos.getY() == Math.round(Math.floor(explosionY))

@@ -473,13 +473,14 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound tag) {
+	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
 		tag.setShort("sp", (short) this.state.packetSize);
 		tag.setByte("state", (byte) this.state.getState().ordinal());
 		if(this.state.soundVolume != 127) {
 			tag.setByte("vo", (byte) this.state.soundVolume);
 		}
+		return tag;
 	}
 
 	@Override

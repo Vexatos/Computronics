@@ -31,11 +31,13 @@ public class BlockCamera extends BlockPeripheral {
 	}
 
 	@Override
+	@Deprecated
 	public boolean hasComparatorInputOverride(IBlockState state) {
 		return Config.REDSTONE_REFRESH;
 	}
 
 	@Override
+	@Deprecated
 	public int getComparatorInputOverride(IBlockState state, World world, BlockPos pos) {
 		TileEntity tile = world.getTileEntity(pos);
 		if(tile instanceof TileEntityBase) {
