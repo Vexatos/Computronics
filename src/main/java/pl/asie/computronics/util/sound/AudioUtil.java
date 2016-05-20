@@ -260,6 +260,9 @@ public class AudioUtil {
 		private int position = 0;
 
 		public LFSR(int v, int period, int mask) {
+			this.initial = v;
+			this.period = period;
+			this.mask = mask;
 			this.noise = new byte[period];
 			for(int i = 0; i < this.noise.length; ++i) {
 				if((v & 1) != 0) {
@@ -270,9 +273,6 @@ public class AudioUtil {
 					this.noise[i] = -1;
 				}
 			}
-			this.initial = v;
-			this.period = period;
-			this.mask = mask;
 		}
 
 		@Override
