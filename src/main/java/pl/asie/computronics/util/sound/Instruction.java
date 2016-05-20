@@ -48,24 +48,20 @@ public abstract class Instruction {
 	public static class SetWave extends ChannelSpecific {
 
 		public final AudioType type;
-		public final float frequency;
 
-		public SetWave(int channelIndex, AudioType type, float frequency) {
+		public SetWave(int channelIndex, AudioType type) {
 			super(channelIndex);
 			this.type = type;
-			this.frequency = frequency;
 		}
 
 		public SetWave(NBTTagCompound tag) {
 			super(tag.getByte("c"));
 			this.type = AudioType.fromIndex(tag.getByte("w"));
-			this.frequency = tag.getFloat("f");
 		}
 
 		@Override
 		public void encounter(AudioProcess process, State state) {
-			state.wave.type = type;
-			state.wave.frequencyInHz = frequency;
+			state.generator = new AudioUtil.Wave(type);
 		}
 	}
 
@@ -255,6 +251,63 @@ public abstract class Instruction {
 		}
 	}
 
+	public static class SetFrequency extends ChannelSpecific {
+
+		public final float frequency;
+
+		public SetFrequency(int channelIndex, float frequency) {
+			super(channelIndex);
+			this.frequency = frequency;
+		}
+
+		public SetFrequency(NBTTagCompound tag) {
+			super(tag.getByte("c"));
+			this.frequency = tag.getFloat("f");
+		}
+
+		@Override
+		public void encounter(AudioProcess process, State state) {
+			state.frequencyInHz = frequency;
+		}
+	}
+
+	public static class SetWhiteNoise extends ChannelSpecific {
+
+		public SetWhiteNoise(int channelIndex) {
+			super(channelIndex);
+		}
+
+		public SetWhiteNoise(NBTTagCompound tag) {
+			super(tag.getByte("c"));
+		}
+
+		@Override
+		public void encounter(AudioProcess process, State state) {
+			state.generator = new AudioUtil.WhiteNoise();
+		}
+	}
+
+	public static class SetLFSR extends ChannelSpecific {
+
+		public final int initial, period, mask;
+
+		public SetLFSR(int channelIndex, int initial, int period, int mask) {
+			super(channelIndex);
+			this.initial = initial;
+			this.period = period;
+			this.mask = mask;
+		}
+
+		public SetLFSR(NBTTagCompound tag) {
+			this(tag.getByte("c"), tag.getInteger("i"), tag.getInteger("p"), tag.getInteger("m"));
+		}
+
+		@Override
+		public void encounter(AudioProcess process, State state) {
+			state.generator = new AudioUtil.LFSR(initial, period, mask);
+		}
+	}
+
 	public static abstract class ChannelSpecific extends Instruction {
 
 		public final int channelIndex;
@@ -313,43 +366,46 @@ public abstract class Instruction {
 			case 10: {
 				return new SetVolume(tag);
 			}
+			case 11: {
+				return new SetFrequency(tag);
+			}
+			case 12: {
+				return new SetWhiteNoise(tag);
+			}
+			case 13: {
+				return new SetLFSR(tag);
+			}
 		}
 		return null;
 	}
 
 	public static void save(NBTTagCompound tag, Instruction inst) {
+		if(inst instanceof ChannelSpecific) {
+			tag.setByte("c", (byte) ((ChannelSpecific) inst).channelIndex);
+		}
 		if(inst instanceof Open) {
 			tag.setByte("t", (byte) 0);
-			tag.setByte("c", (byte) ((Open) inst).channelIndex);
 		} else if(inst instanceof Close) {
 			tag.setByte("t", (byte) 1);
-			tag.setByte("c", (byte) ((Close) inst).channelIndex);
 		} else if(inst instanceof SetWave) {
 			tag.setByte("t", (byte) 2);
-			tag.setByte("c", (byte) ((SetWave) inst).channelIndex);
 			tag.setInteger("w", ((SetWave) inst).type.ordinal());
-			tag.setFloat("f", ((SetWave) inst).frequency);
 		} else if(inst instanceof Delay) {
 			tag.setByte("t", (byte) 3);
 			tag.setInteger("d", ((Delay) inst).delay);
 		} else if(inst instanceof SetFM) {
 			tag.setByte("t", (byte) 4);
-			tag.setByte("c", (byte) ((SetFM) inst).channelIndex);
 			tag.setInteger("m", ((SetFM) inst).freqMod.modulatorIndex);
 			tag.setFloat("i", ((SetFM) inst).freqMod.index);
 		} else if(inst instanceof ResetFM) {
 			tag.setByte("t", (byte) 5);
-			tag.setByte("c", (byte) ((ResetFM) inst).channelIndex);
 		} else if(inst instanceof SetAM) {
 			tag.setByte("t", (byte) 6);
-			tag.setByte("c", (byte) ((SetAM) inst).channelIndex);
 			tag.setInteger("m", ((SetAM) inst).ampMod.modulatorIndex);
 		} else if(inst instanceof ResetAM) {
 			tag.setByte("t", (byte) 7);
-			tag.setByte("c", (byte) ((ResetAM) inst).channelIndex);
 		} else if(inst instanceof SetADSR) {
 			tag.setByte("t", (byte) 8);
-			tag.setByte("c", (byte) ((SetADSR) inst).channelIndex);
 			ADSR envelope = ((SetADSR) inst).envelope;
 			tag.setInteger("a", envelope.attackDuration);
 			tag.setInteger("d", envelope.decayDuration);
@@ -357,11 +413,19 @@ public abstract class Instruction {
 			tag.setInteger("r", envelope.releaseDuration);
 		} else if(inst instanceof ResetEnvelope) {
 			tag.setByte("t", (byte) 9);
-			tag.setByte("c", (byte) ((ResetEnvelope) inst).channelIndex);
 		} else if(inst instanceof SetVolume) {
 			tag.setByte("t", (byte) 10);
-			tag.setByte("c", (byte) ((SetVolume) inst).channelIndex);
 			tag.setFloat("v", ((SetVolume) inst).volume);
+		} else if(inst instanceof SetFrequency) {
+			tag.setByte("t", (byte) 11);
+			tag.setFloat("f", ((SetFrequency) inst).frequency);
+		} else if(inst instanceof SetWhiteNoise) {
+			tag.setByte("t", (byte) 12);
+		} else if(inst instanceof SetLFSR) {
+			tag.setByte("t", (byte) 13);
+			tag.setInteger("i", ((SetLFSR) inst).initial);
+			tag.setInteger("p", ((SetLFSR) inst).period);
+			tag.setInteger("m", ((SetLFSR) inst).mask);
 		}
 	}
 
