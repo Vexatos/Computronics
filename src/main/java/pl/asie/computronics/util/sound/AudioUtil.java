@@ -18,16 +18,17 @@ public class AudioUtil {
 				if(state.isAmpMod || state.isFreqMod) {
 					return 0;
 				}
-				double value = state.wave.type == AudioType.Noise ? state.noiseOutput : state.wave.type.generate(state.wave.offset);
+				double value = state.generator instanceof Noise ? ((Noise) state.generator).noiseOutput :
+					state.generator instanceof Wave ? ((Wave) state.generator).type.generate(state.offset) : 0;
 				if(state.freqMod != null && !state.isFreqMod) {
 					value = state.freqMod.getModifiedValue(process, state, value);
 				} else {
-					state.wave.offset += state.wave.frequencyInHz / Config.SOUND_SAMPLE_RATE;
+					state.offset += state.frequencyInHz / Config.SOUND_SAMPLE_RATE;
 				}
-				if(state.wave.offset > 1) {
-					state.wave.offset %= 1.0F;
-					if(state.wave.type == AudioType.Noise) {
-						state.noiseOutput = Math.random();
+				if(state.offset > 1) {
+					state.offset %= 1.0F;
+					if(state.generator instanceof Noise) {
+						((Noise) state.generator).updateModifier(state);
 					}
 				}
 				if(state.ampMod != null && !state.isAmpMod) {
@@ -76,9 +77,8 @@ public class AudioUtil {
 		@Override
 		public double getModifiedValue(AudioProcess process, State state, double value) {
 			State mstate = process.states.get(modulatorIndex);
-			Wave carrier = state.wave;
-			double deviation = mstate.gate.getValue(process, mstate) * index * mstate.wave.frequencyInHz;
-			carrier.offset += (carrier.frequencyInHz + deviation) / Config.SOUND_SAMPLE_RATE;
+			double deviation = mstate.gate.getValue(process, mstate) * index * mstate.frequencyInHz;
+			state.offset += (state.frequencyInHz + deviation) / Config.SOUND_SAMPLE_RATE;
 			return value;
 		}
 	}
@@ -194,34 +194,127 @@ public class AudioUtil {
 		}
 	}
 
+	public static abstract class Generator {
+
+	}
+
+	public static class Wave extends Generator {
+
+		public AudioType type = AudioType.Square;
+
+		public Wave() {
+
+		}
+
+		public Wave(AudioType type) {
+			this.type = type;
+		}
+	}
+
+	public static abstract class Noise extends Generator {
+
+		public double noiseOutput;
+
+		public void updateModifier(State state) {
+			this.noiseOutput = generate(state);
+		}
+
+		protected abstract double generate(State state);
+
+		public static Noise load(NBTTagCompound nbt) {
+			final Noise noise;
+			switch(nbt.getByte("t")) {
+				default:
+					noise = new WhiteNoise();
+					break;
+				case 1:
+					noise = new LFSR(nbt.getInteger("v"), nbt.getInteger("m"));
+					break;
+			}
+			noise.noiseOutput = nbt.getDouble("o");
+			return noise;
+		}
+
+		protected abstract void save(NBTTagCompound nbt);
+
+	}
+
+	public static class WhiteNoise extends Noise {
+
+		@Override
+		protected double generate(State state) {
+			return Math.random()*2-1;
+		}
+
+		@Override
+		protected void save(NBTTagCompound nbt) {
+			nbt.setByte("t", (byte) 0);
+			nbt.setDouble("o", noiseOutput);
+		}
+	}
+
+	public static class LFSR extends Noise {
+
+		private int value;
+		private final int mask;
+
+		public LFSR(int value, int mask) {
+			this.value = value;
+			this.mask = mask;
+		}
+
+		@Override
+		protected double generate(State state) {
+			if((value & 1) != 0) {
+				value = (value >>> 1) ^ mask;
+				return 1;
+			} else {
+				value >>>= 1;
+				return -1;
+			}
+		}
+
+		@Override
+		protected void save(NBTTagCompound nbt) {
+			nbt.setByte("t", (byte) 1);
+			nbt.setDouble("o", noiseOutput);
+			nbt.setInteger("v", value);
+			nbt.setInteger("m", mask);
+		}
+	}
+
 	public static class State {
 
-		public final Wave wave;
+		public Generator generator;
 		public final int channelIndex;
 
+		public float frequencyInHz;
+		public float offset;
 		public Gate gate = Gate.Closed;
 		public FrequencyModulation freqMod;
 		public AmplitudeModulation ampMod;
 		public ADSR envelope;
 		public float volume = 1;
-		public double noiseOutput = Math.random();
 
 		public boolean isFreqMod, isAmpMod;
 
 		public State(int channelIndex) {
-			this.wave = new Wave();
+			this.generator = new Wave();
 			this.channelIndex = channelIndex;
 		}
 
 		public void load(NBTTagCompound nbt) {
 			if(nbt.hasKey("wavehz")) {
-				wave.frequencyInHz = nbt.getFloat("wavehz");
+				frequencyInHz = nbt.getFloat("wavehz");
 			}
 			if(nbt.hasKey("offset")) {
-				wave.offset = nbt.getFloat("offset");
+				offset = nbt.getFloat("offset");
 			}
 			if(nbt.hasKey("type")) {
-				wave.type = AudioType.fromIndex(nbt.getInteger("type"));
+				this.generator = new Wave(AudioType.fromIndex(nbt.getInteger("type")));
+			}
+			if(nbt.hasKey("noise")) {
+				this.generator = Noise.load(nbt.getCompoundTag("noise"));
 			}
 			if(nbt.hasKey("gate")) {
 				gate = Gate.fromIndex(nbt.getInteger("gate"));
@@ -232,7 +325,7 @@ public class AudioUtil {
 			if(nbt.hasKey("amodi")) {
 				ampMod = new AmplitudeModulation(nbt.getInteger("amodi"));
 			}
-			if(nbt.hasKey("envelope")) {
+			if(nbt.hasKey("a")) {
 				envelope = new ADSR(nbt.getInteger("a"), nbt.getInteger("d"), nbt.getFloat("s"), nbt.getInteger("r"));
 				envelope.phase = ADSR.Phase.fromIndex(nbt.getInteger("p"));
 				envelope.progress = nbt.getDouble("o");
@@ -240,9 +333,7 @@ public class AudioUtil {
 			if(nbt.hasKey("vol")) {
 				volume = nbt.getFloat("vol");
 			}
-			if(nbt.hasKey("noise")) {
-				noiseOutput = nbt.getDouble("noise");
-			}
+
 			if(nbt.hasKey("isfmod")) {
 				isFreqMod = nbt.getBoolean("isfmod");
 			}
@@ -252,10 +343,15 @@ public class AudioUtil {
 		}
 
 		public void save(NBTTagCompound nbt) {
-			nbt.setFloat("wavehz", wave.frequencyInHz);
-			nbt.setFloat("offset", wave.offset);
-			if(wave.type != null) {
-				nbt.setInteger("type", wave.type.ordinal());
+			nbt.setFloat("wavehz", frequencyInHz);
+			nbt.setFloat("offset", offset);
+			if(generator instanceof Wave && ((Wave) generator).type != null) {
+				nbt.setInteger("type", ((Wave) generator).type.ordinal());
+			}
+			if(generator instanceof Noise) {
+				NBTTagCompound data = new NBTTagCompound();
+				((Noise) generator).save(data);
+				nbt.setTag("noise", data);
 			}
 			nbt.setInteger("gate", gate.ordinal());
 			if(freqMod != null) {
@@ -274,26 +370,8 @@ public class AudioUtil {
 				nbt.setDouble("o", envelope.progress);
 			}
 			nbt.setFloat("vol", volume);
-			nbt.setDouble("noise", noiseOutput);
 			nbt.setBoolean("isfmod", isFreqMod);
 			nbt.setBoolean("isamod", isAmpMod);
-		}
-	}
-
-	public static class Wave {
-
-		public float frequencyInHz;
-		public float offset;
-		public AudioType type = AudioType.Square;
-
-		public Wave() {
-
-		}
-
-		public Wave(float frequencyInHz, float offset, AudioType type) {
-			this.frequencyInHz = frequencyInHz;
-			this.offset = offset;
-			this.type = type;
 		}
 	}
 

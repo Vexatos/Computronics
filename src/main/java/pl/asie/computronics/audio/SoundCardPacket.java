@@ -13,8 +13,11 @@ import pl.asie.computronics.util.sound.Instruction.ResetFM;
 import pl.asie.computronics.util.sound.Instruction.SetADSR;
 import pl.asie.computronics.util.sound.Instruction.SetAM;
 import pl.asie.computronics.util.sound.Instruction.SetFM;
+import pl.asie.computronics.util.sound.Instruction.SetFrequency;
+import pl.asie.computronics.util.sound.Instruction.SetLFSR;
 import pl.asie.computronics.util.sound.Instruction.SetVolume;
 import pl.asie.computronics.util.sound.Instruction.SetWave;
+import pl.asie.computronics.util.sound.Instruction.SetWhiteNoise;
 import pl.asie.lib.network.Packet;
 
 import java.io.IOException;
@@ -26,13 +29,11 @@ import java.util.Queue;
 public class SoundCardPacket extends AudioPacket {
 
 	public final String address;
-	public final int delay;
 	public final Queue<Instruction> instructions;
 
-	public SoundCardPacket(IAudioSource source, byte volume, String address, int delay, Queue<Instruction> instructions) {
+	public SoundCardPacket(IAudioSource source, byte volume, String address, Queue<Instruction> instructions) {
 		super(source, volume);
 		this.address = address;
-		this.delay = delay;
 		this.instructions = instructions;
 	}
 
@@ -40,7 +41,6 @@ public class SoundCardPacket extends AudioPacket {
 	protected void writeData(Packet packet) throws IOException {
 		packet
 			.writeString(address)
-			.writeInt(delay)
 			.writeInt(instructions.size());
 		for(Instruction instruction : instructions) {
 			if(instruction instanceof Open) {
@@ -55,8 +55,7 @@ public class SoundCardPacket extends AudioPacket {
 				packet
 					.writeByte((byte) 2)
 					.writeByte((byte) ((SetWave) instruction).channelIndex)
-					.writeInt(((SetWave) instruction).type.ordinal())
-					.writeFloat(((SetWave) instruction).frequency);
+					.writeInt(((SetWave) instruction).type.ordinal());
 			} else if(instruction instanceof Delay) {
 				packet
 					.writeByte((byte) 3)
@@ -98,6 +97,21 @@ public class SoundCardPacket extends AudioPacket {
 					.writeByte((byte) 10)
 					.writeByte((byte) ((SetVolume) instruction).channelIndex)
 					.writeFloat(((SetVolume) instruction).volume);
+			} else if(instruction instanceof SetFrequency) {
+				packet
+					.writeByte((byte) 11)
+					.writeByte((byte) ((SetFrequency) instruction).channelIndex)
+					.writeFloat(((SetFrequency) instruction).frequency);
+			} else if(instruction instanceof SetWhiteNoise) {
+				packet
+					.writeByte((byte) 12)
+					.writeByte((byte) ((SetWhiteNoise) instruction).channelIndex);
+			} else if(instruction instanceof SetLFSR) {
+				packet
+					.writeByte((byte) 13)
+					.writeByte((byte) ((SetLFSR) instruction).channelIndex)
+					.writeInt(((SetLFSR) instruction).initial)
+					.writeInt(((SetLFSR) instruction).mask);
 			}
 		}
 	}

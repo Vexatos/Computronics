@@ -18,8 +18,10 @@ import pl.asie.computronics.util.sound.Instruction.ResetFM;
 import pl.asie.computronics.util.sound.Instruction.SetADSR;
 import pl.asie.computronics.util.sound.Instruction.SetAM;
 import pl.asie.computronics.util.sound.Instruction.SetFM;
+import pl.asie.computronics.util.sound.Instruction.SetFrequency;
 import pl.asie.computronics.util.sound.Instruction.SetVolume;
 import pl.asie.computronics.util.sound.Instruction.SetWave;
+import pl.asie.computronics.util.sound.Instruction.SetWhiteNoise;
 import pl.asie.lib.audio.StreamingAudioPlayer;
 import pl.asie.lib.network.Packet;
 
@@ -50,7 +52,6 @@ public class SoundCardPacketClientHandler extends AudioPacketClientHandler {
 	@Override
 	protected void readData(Packet packet, int packetId, int codecId) throws IOException {
 		String address = packet.readString();
-		int delay = packet.readInt();
 		int size = packet.readInt();
 		Queue<Instruction> buffer = new ArrayDeque<Instruction>();
 		for(int i = 0; i < size; i++) {
@@ -63,7 +64,7 @@ public class SoundCardPacketClientHandler extends AudioPacketClientHandler {
 					buffer.add(new Close(packet.readByte()));
 					break;
 				case 2:
-					buffer.add(new SetWave(packet.readByte(), AudioType.fromIndex(packet.readInt()), packet.readFloat()));
+					buffer.add(new SetWave(packet.readByte(), AudioType.fromIndex(packet.readInt())));
 					break;
 				case 3:
 					buffer.add(new Delay(packet.readInt()));
@@ -88,6 +89,15 @@ public class SoundCardPacketClientHandler extends AudioPacketClientHandler {
 					break;
 				case 10:
 					buffer.add(new SetVolume(packet.readByte(), packet.readFloat()));
+					break;
+				case 11:
+					buffer.add(new SetFrequency(packet.readByte(), packet.readFloat()));
+					break;
+				case 12:
+					buffer.add(new SetWhiteNoise(packet.readByte()));
+					break;
+				case 13:
+					buffer.add(new Instruction.SetLFSR(packet.readByte(), packet.readInt(), packet.readInt()));
 					break;
 			}
 		}
