@@ -35,18 +35,25 @@ public class TileEntityBase extends TileEntity {
 	}
 
 	// Remote NBT data management
-	public void readFromRemoteNBT(NBTTagCompound tag) {
+	public NBTTagCompound readFromRemoteNBT(NBTTagCompound tag) {
+		return tag;
 	}
 
-	public void writeToRemoteNBT(NBTTagCompound tag) {
+	public NBTTagCompound writeToRemoteNBT(NBTTagCompound tag) {
+		return tag;
 	}
 
 	@Override
 	@Nullable
 	public SPacketUpdateTileEntity getUpdatePacket() {
 		NBTTagCompound tag = new NBTTagCompound();
-		this.writeToRemoteNBT(tag);
-		return new SPacketUpdateTileEntity(getPos(), 0, tag);
+
+		return new SPacketUpdateTileEntity(getPos(), getBlockMetadata(), tag);
+	}
+
+	@Override
+	public NBTTagCompound getUpdateTag() {
+		return this.writeToRemoteNBT(super.getUpdateTag());
 	}
 
 	@Override

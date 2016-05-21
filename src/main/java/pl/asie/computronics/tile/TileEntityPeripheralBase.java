@@ -266,7 +266,7 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 	}
 
 	@Override
-	public void readFromRemoteNBT(NBTTagCompound nbt) {
+	public NBTTagCompound readFromRemoteNBT(NBTTagCompound nbt) {
 		super.readFromRemoteNBT(nbt);
 		int oldColor = this.overlayColor;
 		if(nbt.hasKey("computronics:color")) {
@@ -278,14 +278,16 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 		if(oldColor != this.overlayColor) {
 			this.worldObj.markBlockRangeForRenderUpdate(getPos(), getPos());
 		}
+		return nbt;
 	}
 
 	@Override
-	public void writeToRemoteNBT(NBTTagCompound nbt) {
+	public NBTTagCompound writeToRemoteNBT(NBTTagCompound nbt) {
 		super.writeToRemoteNBT(nbt);
 		if(overlayColor != getDefaultColor()) {
 			nbt.setInteger("computronics:color", overlayColor);
 		}
+		return nbt;
 	}
 
 	@Override

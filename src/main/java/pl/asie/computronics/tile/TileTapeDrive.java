@@ -504,9 +504,10 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 	}
 
 	@Override
-	public void writeToRemoteNBT(NBTTagCompound tag) {
+	public NBTTagCompound writeToRemoteNBT(NBTTagCompound tag) {
 		super.writeToRemoteNBT(tag);
 		tag.setByte("state", (byte) this.state.getState().ordinal());
+		return tag;
 	}
 
 	@Override
@@ -517,11 +518,12 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 	}
 
 	@Override
-	public void readFromRemoteNBT(NBTTagCompound tag) {
+	public NBTTagCompound readFromRemoteNBT(NBTTagCompound tag) {
 		super.readFromRemoteNBT(tag);
 		if(tag.hasKey("state")) {
 			this.state.setState(State.VALUES[tag.getByte("state")]);
 		}
+		return tag;
 	}
 
 	// OpenComputers
