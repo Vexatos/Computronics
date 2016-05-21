@@ -5,7 +5,7 @@
     - Can play square waves, sine waves, triangle waves and sawtooth waves!
   * ADDED: Sound Card! Lots of thanks to gamax92 for having done a big part of this! Also thanks to Temia for helping us design this!
     - Plays generated sounds of various types akin to a noise card
-    - Supports frequency modulation, amplitude modulation, general volume changes, wave type changes, frequency changes and ADSR on 8 channels, allowing for highly customizable sound synthesis!
+    - Supports frequency modulation, amplitude modulation, general volume changes, wave type changes, certain types of noise generation, frequency changes and ADSR on 8 channels, allowing for highly customizable sound synthesis!
     - Works on an instruction-based system; instructions are added to a queue and processed when wanted.
   * ADDED: Support for TIS-3D!
     - Added a Colorful Module to display any colour you want, akin to a Colorful Lamp.

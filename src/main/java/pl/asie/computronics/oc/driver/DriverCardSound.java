@@ -9,6 +9,7 @@ import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.EnvironmentHost;
+import li.cil.oc.api.network.Message;
 import li.cil.oc.api.network.Visibility;
 import li.cil.oc.api.prefab.ManagedEnvironment;
 import net.minecraft.nbt.NBTTagCompound;
@@ -235,6 +236,25 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 		}
 	}
 
+	protected void clearAndStop() {
+		synchronized(buildBuffer) {
+			buildBuffer.clear();
+		}
+		buildDelay = 0;
+		if(codecId != null) {
+			AudioUtils.removePlayer(Computronics.opencomputers.managerId, codecId);
+		}
+	}
+
+	@Override
+	public void onMessage(Message message) {
+		if((message.name().equals("computer.stopped")
+			|| message.name().equals("computer.started"))
+			&& node().isNeighborOf(message.source())) {
+			clearAndStop();
+		}
+	}
+
 	private Object[] tryAdd(Instruction inst) {
 		synchronized(buildBuffer) {
 			if(buildBuffer.size() >= maxInstructions) {
@@ -255,6 +275,9 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 				modes.put(value.ordinal() + 1, name);
 				modes.put(name, value.ordinal() + 1);
 			}
+			// Adding white noise
+			modes.put("noise", -1);
+			modes.put(-1, "noise");
 			DriverCardSound.modes = modes;
 		}
 		return modes;
@@ -313,15 +336,32 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 		return tryAdd(new Close(checkChannel(args)));
 	}
 
-	@Callback(doc = "function(channel:number, mode:number, frequency:number); Instruction; Sets the wave type and frequency on the specified channel.", direct = true)
+	@Callback(doc = "function(channel:number, type:number); Instruction; Sets the wave type on the specified channel.", direct = true)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] setWave(Context context, Arguments args) {
 		int channel = checkChannel(args);
 		int mode = args.checkInteger(1) - 1;
-		if(mode >= 0 && mode < AudioType.VALUES.length) {
-			return tryAdd(new SetWave(channel, AudioType.fromIndex(mode), (float) args.checkDouble(2)));
+		switch(mode) {
+			case -2:
+				return tryAdd(new Instruction.SetWhiteNoise(channel));
+			default:
+				if(mode >= 0 && mode < AudioType.VALUES.length) {
+					return tryAdd(new SetWave(channel, AudioType.fromIndex(mode)));
+				}
 		}
 		throw new IllegalArgumentException("invalid mode: " + (mode + 1));
+	}
+
+	@Callback(doc = "function(channel:number, frequency:number); Instruction; Sets the frequency on the specified channel.", direct = true)
+	@Optional.Method(modid = Mods.OpenComputers)
+	public Object[] setFrequency(Context context, Arguments args) {
+		return tryAdd(new Instruction.SetFrequency(checkChannel(args), (float) args.checkDouble(1)));
+	}
+
+	@Callback(doc = "function(channel:number, initial:number, mask:number); Instruction; Makes the specified channel generate LFSR noise. Functions like a wave type.", direct = true)
+	@Optional.Method(modid = Mods.OpenComputers)
+	public Object[] setLFSR(Context context, Arguments args) {
+		return tryAdd(new Instruction.SetLFSR(checkChannel(args), args.checkInteger(1), args.checkInteger(2)));
 	}
 
 	@Callback(doc = "function(duration:number); Instruction; Adds a delay of the specified duration in milliseconds, allowing sound to generate.", direct = true)
@@ -402,22 +442,20 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 		}
 	}
 
-	private void sendMusicPacket(int delay, Queue<Instruction> instructions) {
+	private void sendMusicPacket(Queue<Instruction> instructions) {
 		if(codecId == null) {
 			codecId = Computronics.opencomputers.audio.newPlayer();
 			Computronics.opencomputers.audio.getPlayer(codecId);
 		}
-		SoundCardPacket pkt = new SoundCardPacket(this, (byte) soundVolume, node().address(), delay, instructions);
+		SoundCardPacket pkt = new SoundCardPacket(this, (byte) soundVolume, node().address(), instructions);
 		internalSpeaker.receivePacket(pkt, ForgeDirection.UNKNOWN);
 		pkt.sendPacket();
 	}
 
 	protected void sendSound(Queue<Instruction> buffer) {
-		int counter = 0;
 		Queue<Instruction> sendBuffer = new ArrayDeque<Instruction>();
 		while(!buffer.isEmpty() || process.delay > 0) {
 			if(process.delay > 0) {
-				counter += process.delay;
 				process.delay = 0;
 			} else {
 				Instruction inst = buffer.poll();
@@ -426,7 +464,7 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 			}
 		}
 		if(sendBuffer.size() > 0) {
-			sendMusicPacket(counter, sendBuffer);
+			sendMusicPacket(sendBuffer);
 		}
 	}
 

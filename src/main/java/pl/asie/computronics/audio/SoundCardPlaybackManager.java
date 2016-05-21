@@ -14,6 +14,6 @@ public class SoundCardPlaybackManager extends StreamingPlaybackManager {
 
 	@Override
 	public StreamingAudioPlayer create() {
-		return new StreamingAudioPlayer(false, false, 1);
+		return new StreamingAudioPlayer(false, false, -1);
 	}
 }
