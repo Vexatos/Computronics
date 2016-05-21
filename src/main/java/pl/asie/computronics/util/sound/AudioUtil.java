@@ -213,7 +213,7 @@ public class AudioUtil {
 
 	public static abstract class Noise extends Generator {
 
-		public double noiseOutput = Math.random();
+		public double noiseOutput;
 
 		public void updateModifier(State state) {
 			this.noiseOutput = generate(state);
@@ -243,7 +243,7 @@ public class AudioUtil {
 
 		@Override
 		protected double generate(State state) {
-			return Math.random();
+			return Math.random()*2-1;
 		}
 
 		@Override

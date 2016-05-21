@@ -342,7 +342,7 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 		int channel = checkChannel(args);
 		int mode = args.checkInteger(1) - 1;
 		switch(mode) {
-			case -1:
+			case -2:
 				return tryAdd(new Instruction.SetWhiteNoise(channel));
 			default:
 				if(mode >= 0 && mode < AudioType.VALUES.length) {
