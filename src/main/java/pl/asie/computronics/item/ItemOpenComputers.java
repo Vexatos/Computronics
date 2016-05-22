@@ -223,6 +223,7 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 				return Slot.Card;
 			case 10:
 			case 11:
+			case 12:
 			case 13:
 				return Slot.RackMountable;
 			default:
@@ -256,6 +257,7 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 				return 2; // Tier 3
 			case 10:
 			case 11:
+			case 12:
 			case 13:
 				return 0; // Tier 1
 			default:

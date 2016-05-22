@@ -50,19 +50,24 @@ public class DriverBoardSwitch extends ManagedEnvironment implements RackMountab
 
 	@Override
 	public boolean onActivate(EntityPlayer player, float hitX, float hitY) {
-		int xPix = (int) hitX * 14;
+		int xPix = (int) (hitX * 14);
 		int yPix = (int) (hitY * 3);
-		if(yPix == 3) {
-			if(xPix > 0 && xPix < pixToSwitch.length) {
+		if(yPix == 1) {
+			if(xPix > 0 && xPix < pixToSwitch.length && pixToSwitch[xPix] >= 0) {
 				flipSwitch(pixToSwitch[xPix]);
 			}
-			return true;
 		}
-		return false;
+		return true;
 	}
 
 	protected void flipSwitch(int i) {
 		switches[i] = !switches[i];
+		needsUpdate = true;
+	}
+
+	@Override
+	public boolean canUpdate() {
+		return true;
 	}
 
 	@Override
@@ -112,7 +117,7 @@ public class DriverBoardSwitch extends ManagedEnvironment implements RackMountab
 		if(tag.hasKey("s")) {
 			byte switchData = tag.getByte("s");
 			for(int i = 0; i < switches.length; i++) {
-				switches[i] = (switchData & (1 << i)) == 1;
+				switches[i] = ((switchData >> i) & 1) == 1;
 			}
 		}
 	}
