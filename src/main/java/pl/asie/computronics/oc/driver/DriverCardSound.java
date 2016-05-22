@@ -70,8 +70,10 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 
 		if(host.world().isRemote) {
 			SyncHandler.envs.add(this);
+			buildBuffer = null;
+		} else {
+			buildBuffer = new ArrayDeque<Instruction>();
 		}
-		buildBuffer = new ArrayDeque<Instruction>();
 	}
 
 	private final IAudioReceiver internalSpeaker = new IAudioReceiver() {
@@ -187,13 +189,15 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 			}
 		} else {
 			if(nbt.hasKey("bbuffer")) {
-				synchronized(buildBuffer) {
-					buildBuffer.clear();
-					buildBuffer.addAll(Instruction.fromNBT(nbt.getTagList("bbuffer", Constants.NBT.TAG_COMPOUND)));
-					buildDelay = 0;
-					for(Instruction inst : buildBuffer) {
-						if(inst instanceof Delay) {
-							buildDelay += ((Delay) inst).delay;
+				if(buildBuffer != null) {
+					synchronized(buildBuffer) {
+						buildBuffer.clear();
+						buildBuffer.addAll(Instruction.fromNBT(nbt.getTagList("bbuffer", Constants.NBT.TAG_COMPOUND)));
+						buildDelay = 0;
+						for(Instruction inst : buildBuffer) {
+							if(inst instanceof Delay) {
+								buildDelay += ((Delay) inst).delay;
+							}
 						}
 					}
 				}
@@ -237,8 +241,10 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 	}
 
 	protected void clearAndStop() {
-		synchronized(buildBuffer) {
-			buildBuffer.clear();
+		if(buildBuffer != null) {
+			synchronized(buildBuffer) {
+				buildBuffer.clear();
+			}
 		}
 		buildDelay = 0;
 		if(codecId != null) {
