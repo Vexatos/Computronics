@@ -277,10 +277,6 @@ public abstract class Instruction {
 			super(channelIndex);
 		}
 
-		public SetWhiteNoise(NBTTagCompound tag) {
-			super(tag.getByte("c"));
-		}
-
 		@Override
 		public void encounter(AudioProcess process, State state) {
 			state.generator = new AudioUtil.WhiteNoise();
@@ -369,7 +365,7 @@ public abstract class Instruction {
 				return new SetFrequency(tag);
 			}
 			case 12: {
-				return new SetWhiteNoise(tag);
+				return new SetWhiteNoise(tag.getByte("c"));
 			}
 			case 13: {
 				return new SetLFSR(tag);

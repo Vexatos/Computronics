@@ -34,6 +34,6 @@ public enum AudioType {
 	public static final AudioType[] VALUES = values();
 
 	public static AudioType fromIndex(int index) {
-		return index > 0 && index < VALUES.length ? VALUES[index] : Square;
+		return index >= 0 && index < VALUES.length ? VALUES[index] : Square;
 	}
 }
