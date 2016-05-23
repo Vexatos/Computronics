@@ -72,8 +72,10 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 		if(host.world().isRemote) {
 			SyncHandler.envs.add(this);
 			buildBuffer = null;
+			nextBuffer = null;
 		} else {
 			buildBuffer = new ArrayDeque<Instruction>();
+			nextBuffer = new ArrayDeque<Instruction>();
 		}
 	}
 
@@ -106,7 +108,7 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 
 	private AudioUtil.AudioProcess process;
 	private final ArrayDeque<Instruction> buildBuffer;
-	private Queue<Instruction> nextBuffer;
+	private final ArrayDeque<Instruction> nextBuffer;
 
 	private int buildDelay = 0;
 	private int nextDelay = 0;
@@ -154,10 +156,14 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 
 	@Override
 	public void update() {
-		if(nextBuffer != null && System.currentTimeMillis() >= timeout - 100) {
-			sendSound(nextBuffer);
-			timeout = timeout + nextDelay;
-			nextBuffer = null;
+		if(nextBuffer != null && !nextBuffer.isEmpty() && System.currentTimeMillis() >= timeout - 100) {
+			final ArrayDeque<Instruction> clone;
+			synchronized(nextBuffer) {
+				clone = nextBuffer.clone();
+				timeout = timeout + nextDelay;
+				nextBuffer.clear();
+			}
+			sendSound(clone);
 		} else if(codecId != null && System.currentTimeMillis() >= timeout + soundTimeoutMS) {
 			AudioUtils.removePlayer(Computronics.opencomputers.managerId, codecId);
 			codecId = null;
@@ -194,11 +200,16 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 				}
 			}
 			if(nbt.hasKey("nbuffer")) {
-				nextBuffer = Instruction.fromNBT(nbt.getTagList("nbuffer", Constants.NBT.TAG_COMPOUND));
-				nextDelay = 0;
-				for(Instruction inst : nextBuffer) {
-					if(inst instanceof Delay) {
-						nextDelay += ((Delay) inst).delay;
+				if(nextBuffer != null) {
+					synchronized(nextBuffer) {
+						nextBuffer.clear();
+						nextBuffer.addAll(Instruction.fromNBT(nbt.getTagList("nbuffer", Constants.NBT.TAG_COMPOUND)));
+						nextDelay = 0;
+						for(Instruction inst : nextBuffer) {
+							if(inst instanceof Delay) {
+								nextDelay += ((Delay) inst).delay;
+							}
+						}
 					}
 				}
 			}
@@ -215,16 +226,18 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 			NBTTagCompound processNBT = new NBTTagCompound();
 			nbt.setTag("process", processNBT);
 			process.save(processNBT);
-			if(buildBuffer != null) {
+			if(buildBuffer != null && !buildBuffer.isEmpty()) {
 				NBTTagList buildNBT = new NBTTagList();
 				synchronized(buildBuffer) {
 					Instruction.toNBT(buildNBT, buildBuffer);
 				}
 				nbt.setTag("bbuffer", buildNBT);
 			}
-			if(nextBuffer != null) {
+			if(nextBuffer != null && !nextBuffer.isEmpty()) {
 				NBTTagList nextNBT = new NBTTagList();
-				Instruction.toNBT(nextNBT, nextBuffer);
+				synchronized(nextBuffer) {
+					Instruction.toNBT(nextNBT, nextBuffer);
+				}
 				nbt.setTag("nbuffer", nextNBT);
 			}
 			nbt.setByte("volume", (byte) soundVolume);
@@ -232,9 +245,14 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 	}
 
 	protected void clearAndStop() {
-		if(buildBuffer != null) {
+		if(buildBuffer != null && !buildBuffer.isEmpty()) {
 			synchronized(buildBuffer) {
 				buildBuffer.clear();
+			}
+		}
+		if(nextBuffer != null && !nextBuffer.isEmpty()) {
+			synchronized(nextBuffer) {
+				nextBuffer.clear();
 			}
 		}
 		buildDelay = 0;
@@ -424,8 +442,10 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 			if(buildBuffer.size() == 0) {
 				return new Object[] { true };
 			}
-			if(nextBuffer == null) {
-				nextBuffer = new ArrayDeque<Instruction>(buildBuffer);
+			if(nextBuffer != null && nextBuffer.isEmpty()) {
+				synchronized(nextBuffer) {
+					nextBuffer.addAll(new ArrayDeque<Instruction>(buildBuffer));
+				}
 				nextDelay = buildDelay;
 				buildBuffer.clear();
 				buildDelay = 0;
@@ -434,7 +454,7 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 				}
 				return new Object[] { true };
 			} else {
-				return new Object[] { false, System.currentTimeMillis(), timeout };
+				return new Object[] { false, timeout };
 			}
 		}
 	}
