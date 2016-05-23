@@ -43,7 +43,6 @@ import pl.asie.computronics.cc.multiperipheral.MultiPeripheralRegistry;
 import pl.asie.computronics.gui.providers.GuiProviderCipher;
 import pl.asie.computronics.gui.providers.GuiProviderTapeDrive;
 import pl.asie.computronics.integration.ModRecipes;
-import pl.asie.computronics.integration.charset.IntegrationCharset;
 import pl.asie.computronics.integration.tis3d.IntegrationTIS3D;
 import pl.asie.computronics.item.ItemMultipleComputronics;
 import pl.asie.computronics.item.ItemTape;
@@ -132,7 +131,7 @@ public class Computronics {
 	//public static IntegrationRailcraft railcraft;
 	//public static IntegrationForestry forestry;
 	public static IntegrationTIS3D tis3D;
-	public static IntegrationCharset charset;
+	//public static IntegrationCharset charset;
 
 	public static ItemTape itemTape;
 	public static ItemMultipleComputronics itemParts;
@@ -289,8 +288,8 @@ public class Computronics {
 			tis3D.preInit();
 		}
 
-		charset = new IntegrationCharset();
-		charset.preInit();
+		//charset = new IntegrationCharset();
+		//charset.preInit();
 
 		proxy.registerAudioHandlers();
 	}
