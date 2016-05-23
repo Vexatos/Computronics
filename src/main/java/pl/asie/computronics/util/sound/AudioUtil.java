@@ -55,7 +55,7 @@ public class AudioUtil {
 		public static final Gate[] VALUES = values();
 
 		public static Gate fromIndex(int index) {
-			return index > 0 && index < VALUES.length ? VALUES[index] : Closed;
+			return index >= 0 && index < VALUES.length ? VALUES[index] : Closed;
 		}
 	}
 
@@ -189,7 +189,7 @@ public class AudioUtil {
 			}
 
 			public static Phase fromIndex(int index) {
-				return index > 0 && index < VALUES.length ? VALUES[index] : Attack;
+				return index >= 0 && index < VALUES.length ? VALUES[index] : Attack;
 			}
 		}
 	}
