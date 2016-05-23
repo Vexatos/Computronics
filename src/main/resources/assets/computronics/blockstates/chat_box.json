@@ -4,8 +4,7 @@
         "textures": {
             "side": "computronics:blocks/chatbox_side"
         },
-        "model": "computronics:base",
-        "transform": "forge:default-block"
+        "model": "computronics:base"
     },
     "variants": {
         "normal": [{ }],

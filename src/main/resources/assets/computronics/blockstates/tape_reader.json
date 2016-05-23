@@ -4,8 +4,7 @@
         "textures": {
             "front": "computronics:blocks/tape_drive_front"
         },
-        "model": "computronics:base_with_front",
-        "transform": "forge:default-block"
+        "model": "computronics:base_with_front"
     },
     "variants": {
         "normal": [{ }],

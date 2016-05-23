@@ -4,8 +4,7 @@
         "textures": {
             "side": "computronics:blocks/advanced/cipher_front"
         },
-        "model": "computronics:advanced/base",
-        "transform": "forge:default-block"
+        "model": "computronics:advanced/base"
     },
     "variants": {
         "normal": [{ }],
