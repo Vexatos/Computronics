@@ -220,7 +220,13 @@ public class ModuleTapeReader extends ComputronicsModule {
 		new ImmediateReturnCommand("read") { // read a single byte
 			@Override
 			protected short getValue(TileTapeDrive tile) {
-				return (short) tile.read();
+				return (short) tile.read(true);
+			}
+
+			@Override
+			protected void finishWriting(TileTapeDrive tile, Port writtenPort) {
+				tile.seek(1);
+				super.finishWriting(tile, writtenPort);
 			}
 		},
 		new Command("readMultiple") { // read a set number of bytes
@@ -252,7 +258,7 @@ public class ModuleTapeReader extends ComputronicsModule {
 								for(Port p : Port.VALUES) {
 									Pipe sendingPipe = getCasing().getSendingPipe(getFace(), p);
 									if(!sendingPipe.isWriting()) {
-										sendingPipe.beginWrite((short) tile.read());
+										sendingPipe.beginWrite((short) tile.read(true));
 									}
 								}
 								return;
@@ -267,13 +273,15 @@ public class ModuleTapeReader extends ComputronicsModule {
 			protected void finishWriting(TileTapeDrive tile, Port writtenPort) {
 				cancelWrite();
 				if(--byteQueue > 0) {
+					tile.seek(1);
 					for(Port port : Port.VALUES) {
 						Pipe sendingPipe = getCasing().getSendingPipe(getFace(), port);
 						if(!sendingPipe.isWriting()) {
-							sendingPipe.beginWrite((short) tile.read());
+							sendingPipe.beginWrite((short) tile.read(true));
 						}
 					}
 				} else {
+					tile.seek(1);
 					mode = Mode.IDLE;
 					command = null;
 					for(Port port : Port.VALUES) {
