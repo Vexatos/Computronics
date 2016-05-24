@@ -252,6 +252,7 @@ public class ModuleTapeReader extends ComputronicsModule {
 									mode = Mode.IDLE;
 									command = null;
 									sendDataToClient();
+									return;
 								}
 								cancelRead();
 								mode = Mode.WRITING;
@@ -337,6 +338,7 @@ public class ModuleTapeReader extends ComputronicsModule {
 									mode = Mode.IDLE;
 									command = null;
 									sendDataToClient();
+									return;
 								}
 								mode = Mode.WRITING;
 							}
@@ -451,7 +453,6 @@ public class ModuleTapeReader extends ComputronicsModule {
 		super.onWriteComplete(port);
 		if(command != null) {
 			command.finishWriting(getTapeDrive(), port);
-			command = null;
 		}
 	}
 
