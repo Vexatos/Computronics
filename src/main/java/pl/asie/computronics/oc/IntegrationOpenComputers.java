@@ -444,6 +444,16 @@ public class IntegrationOpenComputers {
 				'p', li.cil.oc.api.Items.get("printedCircuitBoard").createItemStack(1)
 			);
 		}
+		if(Config.OC_BOARD_SWITCH) {
+			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 13),
+				"oso", "gcg", "opo",
+				's', "paneGlassColorless",
+				'g', li.cil.oc.api.Items.get("chip1").createItemStack(1),
+				'c', li.cil.oc.api.Items.get("buttonGroup").createItemStack(1),
+				'o', "obsidian",
+				'p', li.cil.oc.api.Items.get("printedCircuitBoard").createItemStack(1)
+			);
+		}
 		if(Computronics.buildcraft != null) {
 			Computronics.buildcraft.postInitOC();
 		}
