@@ -1,6 +1,6 @@
 # Digital Signal Controller Box
 
-![I have everything under control, I swear!](block:computronics:computronics.digital_controller_b_ox)
+![I have everything under control, I swear!](block:computronics:digital_controller_box)
 
 The Digital Signal Controller Box allows sending aspects to connected receivers and is connected using a cable on the top or bottom face of the box. Signal aspects are defined as per Railcraft's [signaling](http://railcraft.info/wiki/guide:signalling) documentation (aspects include green, yellow blinking, yellow, red blinking, and red).
 

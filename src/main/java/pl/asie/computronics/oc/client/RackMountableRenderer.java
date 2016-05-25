@@ -197,6 +197,6 @@ public class RackMountableRenderer {
 		//e.map.registerSprite(boomBoardActive);
 		//e.map.registerSprite(boomBoardTicking);
 		rackCapacitor = e.map.registerSprite(new ResourceLocation("computronics:blocks/rack_capacitor"));
-		switchBoard = e.map.registerSprite("computronics:blocks/switch_board");
+		switchBoard = e.map.registerSprite(new ResourceLocation("computronics:blocks/switch_board"));
 	}
 }

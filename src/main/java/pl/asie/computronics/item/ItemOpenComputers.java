@@ -465,6 +465,9 @@ public class ItemOpenComputers extends ItemMultipleComputronics implements Item,
 		if(Config.OC_BOARD_CAPACITOR) {
 			registerItemModel(12);
 		}
+		if(Config.OC_BOARD_SWITCH) {
+			registerItemModel(13);
+		}
 	}
 
 	@Override
