@@ -27,6 +27,7 @@ import pl.asie.computronics.oc.IntegrationOpenComputers;
 import pl.asie.computronics.oc.driver.DriverBoardBoom;
 import pl.asie.computronics.oc.driver.DriverBoardCapacitor;
 import pl.asie.computronics.oc.driver.DriverBoardLight;
+import pl.asie.computronics.oc.driver.DriverBoardSwitch;
 import pl.asie.computronics.oc.driver.DriverCardBeep;
 import pl.asie.computronics.oc.driver.DriverCardBoom;
 import pl.asie.computronics.oc.driver.DriverCardFX;
@@ -68,7 +69,8 @@ public class ItemOpenComputers extends ItemMultipleComputronics implements Item,
 			"card_sound",
 			"rack_board_light",
 			"rack_board_boom",
-			"rack_board_capacitor"
+			"rack_board_capacitor",
+			"rack_board_switch"
 		});
 		this.setCreativeTab(Computronics.tab);
 	}
@@ -105,7 +107,8 @@ public class ItemOpenComputers extends ItemMultipleComputronics implements Item,
 			}
 			case 10:
 			case 11:
-			case 12: {
+			case 12:
+			case 13: {
 				works = works && Rack.class.isAssignableFrom(host);
 				break;
 			}
@@ -146,6 +149,8 @@ public class ItemOpenComputers extends ItemMultipleComputronics implements Item,
 				return DriverBoardBoom.class;
 			case 12:
 				return DriverBoardCapacitor.class;
+			case 13:
+				return DriverBoardSwitch.class;
 			default:
 				return null;
 		}
@@ -182,6 +187,8 @@ public class ItemOpenComputers extends ItemMultipleComputronics implements Item,
 				return container instanceof Rack ? new DriverBoardBoom((Rack) container) : null;
 			case 12:
 				return container instanceof Rack ? new DriverBoardCapacitor((Rack) container) : null;
+			case 13:
+				return container instanceof Rack ? new DriverBoardSwitch((Rack) container) : null;
 			default:
 				return null;
 		}
@@ -214,6 +221,7 @@ public class ItemOpenComputers extends ItemMultipleComputronics implements Item,
 			case 10:
 			case 11:
 			case 12:
+			case 13:
 				return Slot.RackMountable;
 			default:
 				return Slot.None;
@@ -247,6 +255,7 @@ public class ItemOpenComputers extends ItemMultipleComputronics implements Item,
 			case 10:
 			case 11:
 			case 12:
+			case 13:
 				return 0; // Tier 1
 			default:
 				return 0; // Tier 1 default
@@ -282,6 +291,8 @@ public class ItemOpenComputers extends ItemMultipleComputronics implements Item,
 				return "server_self_destructor";
 			case 12:
 				return "rack_capacitor";
+			case 13:
+				return "switch_board";
 			default:
 				return "index";
 		}
@@ -334,6 +345,9 @@ public class ItemOpenComputers extends ItemMultipleComputronics implements Item,
 		}
 		if(Config.OC_BOARD_CAPACITOR) {
 			list.add(new ItemStack(item, 1, 12));
+		}
+		if(Config.OC_BOARD_SWITCH) {
+			list.add(new ItemStack(item, 1, 13));
 		}
 	}
 
@@ -398,8 +412,6 @@ public class ItemOpenComputers extends ItemMultipleComputronics implements Item,
 			}
 		}
 	}
-
-	private static final int maxWidth = 220;
 
 	//Mostly stolen from Sangar
 	@Override
