@@ -271,8 +271,12 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 	}
 
 	public int read() {
+		return read(false);
+	}
+
+	public int read(boolean simulate) {
 		if(state.getStorage() != null) {
-			return state.getStorage().read(false) & 0xFF;
+			return state.getStorage().read(simulate) & 0xFF;
 		} else {
 			return 0;
 		}

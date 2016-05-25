@@ -77,7 +77,8 @@ public class IntegrationOpenComputers {
 			|| Config.OC_CARD_SOUND
 			|| Config.OC_BOARD_LIGHT
 			|| Config.OC_BOARD_BOOM
-			|| Config.OC_BOARD_CAPACITOR) {
+			|| Config.OC_BOARD_CAPACITOR
+			|| Config.OC_BOARD_SWITCH) {
 			itemOCParts = new ItemOpenComputers();
 			Computronics.instance.registerItem(itemOCParts, "oc_parts");
 			itemOCParts.registerItemModels();
@@ -399,6 +400,16 @@ public class IntegrationOpenComputers {
 				'c', li.cil.oc.api.Items.get("capacitor").createItemStack(1),
 				'o', "obsidian",
 				'l', "ingotIron",
+				'p', li.cil.oc.api.Items.get("printedCircuitBoard").createItemStack(1)
+			);
+		}
+		if(Config.OC_BOARD_SWITCH) {
+			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 13),
+				"oso", "gcg", "opo",
+				's', "paneGlassColorless",
+				'g', li.cil.oc.api.Items.get("chip1").createItemStack(1),
+				'c', li.cil.oc.api.Items.get("buttonGroup").createItemStack(1),
+				'o', "obsidian",
 				'p', li.cil.oc.api.Items.get("printedCircuitBoard").createItemStack(1)
 			);
 		}
