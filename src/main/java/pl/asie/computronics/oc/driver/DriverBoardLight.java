@@ -24,7 +24,7 @@ import pl.asie.lib.integration.Integration;
 public class DriverBoardLight extends RackMountableWithComponentConnector {
 
 	protected final Rack host;
-	protected boolean needsUpdate;
+	protected boolean needsUpdate = false;
 
 	public DriverBoardLight(Rack host) {
 		this.host = host;
@@ -49,6 +49,9 @@ public class DriverBoardLight extends RackMountableWithComponentConnector {
 
 	public enum Mode {
 		Default(4) {
+			// ----------------
+			// - 00 00  00 00 -
+			// ----------------
 			@Override
 			public float getU0(int index) {
 				return ((index - 1) * 4) / 16f;
@@ -60,6 +63,9 @@ public class DriverBoardLight extends RackMountableWithComponentConnector {
 			}
 		},
 		Regular(5) {
+			// ----------------
+			// -00 00 00 00 00-
+			// ----------------
 			@Override
 			public float getU0(int index) {
 				return ((index - 1) * 3) / 16f;
@@ -71,6 +77,9 @@ public class DriverBoardLight extends RackMountableWithComponentConnector {
 			}
 		},
 		Five(10) {
+			// ----------------
+			// - 00000  00000 -
+			// ----------------
 			@Override
 			public float getU0(int index) {
 				return (index <= 5 ? (1 + index) : (3 + index)) / 16f;
@@ -82,6 +91,9 @@ public class DriverBoardLight extends RackMountableWithComponentConnector {
 			}
 		},
 		Twelve(12) {
+			// ----------------
+			// - 000000000000 -
+			// ----------------
 			@Override
 			public float getU0(int index) {
 				return (index + 1) / 16f;
@@ -93,6 +105,9 @@ public class DriverBoardLight extends RackMountableWithComponentConnector {
 			}
 		},
 		Total(42) {
+			// -00000000000000-
+			// -00000000000000-
+			// -00000000000000-
 			@Override
 			public float getU0(int index) {
 				return (((index - 1) % 14) + 1) / 16f;

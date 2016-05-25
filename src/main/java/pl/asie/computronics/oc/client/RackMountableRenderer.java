@@ -25,12 +25,14 @@ public class RackMountableRenderer {
 
 	private final ResourceLocation
 		boomBoardActive = new ResourceLocation("computronics", "textures/blocks/boom_board_on.png"),
-		boomBoardTicking = new ResourceLocation("computronics", "textures/blocks/boom_board_ticking.png");
+		boomBoardTicking = new ResourceLocation("computronics", "textures/blocks/boom_board_ticking.png"),
+		switchBoardActive = new ResourceLocation("computronics", "textures/blocks/switch_board_on.png");
 	private IIcon
 		boomBoard,
-		rackCapacitor;
+		rackCapacitor,
+		switchBoard;
 
-	private static final List<Integer> mountables = Arrays.asList(10, 11, 12);
+	private static final List<Integer> mountables = Arrays.asList(10, 11, 12, 13);
 
 	@Optional.Method(modid = Mods.OpenComputers)
 	private boolean isRackMountable(ItemStack stack) {
@@ -100,6 +102,28 @@ public class RackMountableRenderer {
 				disableLight();
 				break;
 			}
+			case 13: {
+				if(e.data == null) {
+					return;
+				}
+				enableLight();
+				GL11.glEnable(GL11.GL_BLEND);
+				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+
+				final byte switchData = e.data.getByte("s");
+				for(int i = 0; i < 4; i++){
+					if(((switchData >> i) & 1) == 1){
+						float u0 = (i * 4) / 16f;
+						float u1 = u0 + (4 / 16f);
+						e.renderOverlay(switchBoardActive, u0, u1);
+					}
+				}
+
+				GL11.glColor3f(1, 1, 1);
+				GL11.glDisable(GL11.GL_BLEND);
+				disableLight();
+				break;
+			}
 		}
 	}
 
@@ -152,6 +176,10 @@ public class RackMountableRenderer {
 				e.setFrontTextureOverride(rackCapacitor);
 				break;
 			}
+			case 13: {
+				e.setFrontTextureOverride(switchBoard);
+				break;
+			}
 		}
 	}
 
@@ -164,6 +192,7 @@ public class RackMountableRenderer {
 			}
 			boomBoard = e.map.registerIcon("computronics:boom_board");
 			rackCapacitor = e.map.registerIcon("computronics:rack_capacitor");
+			switchBoard = e.map.registerIcon("computronics:switch_board");
 		}
 	}
 }
