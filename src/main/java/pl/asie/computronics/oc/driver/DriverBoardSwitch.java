@@ -1,23 +1,19 @@
 package pl.asie.computronics.oc.driver;
 
 import li.cil.oc.api.Network;
-import li.cil.oc.api.component.RackBusConnectable;
-import li.cil.oc.api.component.RackMountable;
 import li.cil.oc.api.internal.Rack;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.Visibility;
-import li.cil.oc.api.prefab.ManagedEnvironment;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-
-import java.util.EnumSet;
+import pl.asie.computronics.reference.Config;
 
 /**
  * @author Vexatos
  */
-public class DriverBoardSwitch extends ManagedEnvironment implements RackMountable {
+public class DriverBoardSwitch extends RackMountableWithComponentConnector {
 
 	protected final boolean[] switches = new boolean[4];
 	protected final Rack host;
@@ -27,6 +23,7 @@ public class DriverBoardSwitch extends ManagedEnvironment implements RackMountab
 		this.host = host;
 		this.setNode(Network.newNode(this, Visibility.Network).
 			withComponent("switch_board", Visibility.Network).
+			withConnector().
 			create());
 	}
 
@@ -73,6 +70,11 @@ public class DriverBoardSwitch extends ManagedEnvironment implements RackMountab
 	@Override
 	public void update() {
 		super.update();
+		for(int i = 0; i < switches.length; i++) {
+			if(switches[i] && !node.tryChangeBuffer(-Config.SWITCH_BOARD_MAINTENANCE_COST)) {
+				setActive(i, false);
+			}
+		}
 		if(needsUpdate) {
 			host.markChanged(host.indexOfMountable(this));
 			needsUpdate = false;
@@ -130,22 +132,5 @@ public class DriverBoardSwitch extends ManagedEnvironment implements RackMountab
 			switchData |= (switches[i] ? 1 : 0) << i;
 		}
 		tag.setByte("s", switchData);
-	}
-
-	// Unused things
-
-	@Override
-	public int getConnectableCount() {
-		return 0;
-	}
-
-	@Override
-	public RackBusConnectable getConnectableAt(int index) {
-		return null;
-	}
-
-	@Override
-	public EnumSet<State> getCurrentState() {
-		return EnumSet.noneOf(State.class);
 	}
 }

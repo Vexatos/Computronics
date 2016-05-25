@@ -111,8 +111,8 @@ public class RackMountableRenderer {
 				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
 				final byte switchData = e.data.getByte("s");
-				for(int i = 0; i < 4; i++){
-					if(((switchData >> i) & 1) == 1){
+				for(int i = 0; i < 4; i++) {
+					if(((switchData >> i) & 1) == 1) {
 						float u0 = (i * 4) / 16f;
 						float u1 = u0 + (4 / 16f);
 						e.renderOverlay(switchBoardActive, u0, u1);
