@@ -47,6 +47,9 @@ public class DriverBoardSwitch extends RackMountableWithComponentConnector {
 
 	@Override
 	public boolean onActivate(EntityPlayer player, float hitX, float hitY) {
+		if(player.worldObj.isRemote) {
+			return true;
+		}
 		int xPix = (int) (hitX * 14);
 		int yPix = (int) (hitY * 3);
 		if(yPix == 1) {

@@ -331,6 +331,9 @@ public class DriverBoardLight extends RackMountableWithComponentConnector {
 
 	@Override
 	public boolean onActivate(EntityPlayer player, float hitX, float hitY) {
+		if(player.worldObj.isRemote) {
+			return false;
+		}
 		final int
 			x = MathHelper.floor_double(host.xPosition()),
 			y = MathHelper.floor_double(host.yPosition()),
