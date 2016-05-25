@@ -334,7 +334,7 @@ public class DriverBoardLight extends RackMountableWithComponentConnector {
 	@Override
 	public boolean onActivate(EntityPlayer player, float hitX, float hitY) {
 		if(player.worldObj.isRemote) {
-			return false;
+			return true;
 		}
 		final BlockPos pos = new BlockPos(host.xPosition(), host.yPosition(), host.zPosition());
 		ItemStack held = player.getHeldItem();
