@@ -88,6 +88,11 @@ public class DriverBoardSwitch extends RackMountableWithComponentConnector {
 		return index >= 0 && index < switches.length ? switches[index] : null;
 	}
 
+	public boolean isActiveB(int index) {
+		Boolean active = isActive(index);
+		return active != null ? active : false;
+	}
+
 	private void setActive(int index, boolean active) {
 		if(switches[index] != active) {
 			switches[index] = active;
@@ -98,22 +103,25 @@ public class DriverBoardSwitch extends RackMountableWithComponentConnector {
 	private int checkSwitch(int index) {
 		Boolean active = isActive(index - 1);
 		if(active == null) {
-			throw new IllegalArgumentException("index out of range");
+			throw new IllegalArgumentException("index out of range: " + index);
 		}
-		return index;
+		return index - 1;
 	}
 
-	@Callback(doc = "function(index:number, active:boolean):boolean; Activates or deactivates the specified switch. Returns true on success, false and an error message otherwise", direct = true)
+	@Callback(doc = "function(index:number, active:boolean):boolean; Activates or deactivates the specified switch. Returns true if the state changed.", direct = true)
 	public Object[] setActive(Context context, Arguments args) {
 		int index = checkSwitch(args.checkInteger(0));
 		boolean active = args.checkBoolean(1);
-		setActive(index, active);
-		return new Object[] { true };
+		if(switches[index] != active) {
+			setActive(index, active);
+			return new Object[] { true };
+		}
+		return new Object[] { false };
 	}
 
 	@Callback(doc = "function(index:number):boolean; Returns true if the switch at the specified position is currently active", direct = true)
 	public Object[] isActive(Context context, Arguments args) {
-		return new Object[] { isActive(checkSwitch(args.checkInteger(0))) };
+		return new Object[] { isActiveB(checkSwitch(args.checkInteger(0))) };
 	}
 
 	@Override
