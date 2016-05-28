@@ -154,7 +154,7 @@ sourceSets {
             exclude "pl/asie/computronics/integration/draconicevolution/**"
             //exclude "pl/asie/computronics/integration/enderio/**"
             exclude "pl/asie/computronics/integration/factorization/**"
-            exclude "pl/asie/computronics/integration/forestry/**"
+            //exclude "pl/asie/computronics/integration/forestry/**"
             exclude "pl/asie/computronics/integration/fsp/**"
             exclude "pl/asie/computronics/integration/gregtech/**"
             exclude "pl/asie/computronics/integration/mekanism/**"
