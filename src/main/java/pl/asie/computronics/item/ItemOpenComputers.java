@@ -358,8 +358,8 @@ public class ItemOpenComputers extends ItemMultipleComputronics implements Item,
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IIconRegister r) {
 		super.registerIcons(r);
-		colorfulUpgradeCanvasIcon = r.registerIcon("computronics:robot_upgrade_colorful_canvas");
-		colorfulUpgradeTopIcon = r.registerIcon("computronics:robot_upgrade_colorful_top");
+		colorfulUpgradeCanvasIcon = r.registerSprite("computronics:robot_upgrade_colorful_canvas");
+		colorfulUpgradeTopIcon = r.registerSprite("computronics:robot_upgrade_colorful_top");
 	}
 
 	@Override

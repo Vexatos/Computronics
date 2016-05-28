@@ -1,18 +1,18 @@
 package pl.asie.computronics.integration.forestry.client.entity;
 
-import forestry.apiculture.entities.EntityFXBee;
-import net.minecraft.client.renderer.Tessellator;
+import forestry.apiculture.entities.ParticleBee;
+import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.entity.Entity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import pl.asie.computronics.integration.forestry.client.SwarmTextureHandler;
 
 /**
  * Extension of EntityBeeFX
  */
-public class EntitySwarmBeeFX extends EntityFXBee {
+public class ParticleSwarm extends ParticleBee {
 
-	public EntitySwarmBeeFX(World world, double x, double y, double z, int color) {
-		super(world, x, y, z, color);
-		setParticleIcon(SwarmTextureHandler.Textures.BEE_FX.getIcon());
+	public ParticleSwarm(World world, double x, double y, double z, int color) {
+		super(world, x, y, z, color, new BlockPos(x, y, z));
 
 		//From EntityFX.java
 		this.motionX = (Math.random() * 2.0D - 1.0D) * 0.4D;
@@ -47,13 +47,13 @@ public class EntitySwarmBeeFX extends EntityFXBee {
 		this.motionY *= 1.08D;
 		this.motionZ *= 1.08D;
 		if(this.particleAge++ >= this.particleMaxAge) {
-			setDead();
+			this.setExpired();
 		}
 		//super.onUpdate();
 	}
 
 	@Override
-	public void renderParticle(Tessellator tessellator, float f, float f1, float f2, float f3, float f4, float f5) {
-		super.renderParticle(tessellator, f, f1, f2, f3, f4, f5);
+	public void renderParticle(VertexBuffer worldRendererIn, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ) {
+		super.renderParticle(worldRendererIn, entityIn, partialTicks, rotationX, rotationZ, rotationYZ, rotationXY, rotationXZ);
 	}
 }

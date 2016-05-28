@@ -15,7 +15,21 @@ import org.apache.logging.log4j.Logger;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.api.audio.AudioPacketRegistry;
 import pl.asie.computronics.audio.SoundCardPlaybackManager;
+import pl.asie.computronics.integration.enderio.DriverAbstractMachine;
+import pl.asie.computronics.integration.enderio.DriverAbstractPoweredMachine;
+import pl.asie.computronics.integration.enderio.DriverCapacitorBank;
+import pl.asie.computronics.integration.enderio.DriverHasExperience;
+import pl.asie.computronics.integration.enderio.DriverIOConfigurable;
+import pl.asie.computronics.integration.enderio.DriverPowerMonitor;
+import pl.asie.computronics.integration.enderio.DriverPowerStorage;
+import pl.asie.computronics.integration.enderio.DriverProgressTile;
+import pl.asie.computronics.integration.enderio.DriverRedstoneControllable;
+import pl.asie.computronics.integration.enderio.DriverTelepad;
+import pl.asie.computronics.integration.enderio.DriverTransceiver;
+import pl.asie.computronics.integration.enderio.DriverVacuumChest;
+import pl.asie.computronics.integration.enderio.DriverWeatherObelisk;
 import pl.asie.computronics.integration.flamingo.DriverFlamingo;
+import pl.asie.computronics.integration.forestry.IntegrationForestry;
 import pl.asie.computronics.item.ItemOCSpecialParts;
 import pl.asie.computronics.item.ItemOpenComputers;
 import pl.asie.computronics.oc.block.ComputronicsBlockEnvironmentProvider;
@@ -107,14 +121,12 @@ public class IntegrationOpenComputers {
 			managerId = AudioPacketRegistry.INSTANCE.registerManager(audio);
 		}
 
-		/*if(Mods.hasVersion(Mods.Forestry, Mods.Versions.Forestry)) {
+		if(Mods.isLoaded(Mods.Forestry)) {
 			if(Config.FORESTRY_BEES) {
 				Computronics.forestry = new IntegrationForestry();
 				Computronics.forestry.preInitOC();
 			}
-		} else {
-			log.warn("Detected outdated version of Forestry, Forestry integration will not be enabled. Please update to Forestry " + Mods.Versions.Forestry + " or later.");
-		}*/
+		}
 
 		/*if(Mods.isLoaded(Mods.BuildCraftTransport) && Mods.isLoaded(Mods.BuildCraftCore) && Config.BUILDCRAFT_STATION) { // TODO BuildCraft Drone Docking
 			Computronics.buildcraft = new IntegrationBuildCraft();
@@ -211,7 +223,7 @@ public class IntegrationOpenComputers {
 				Driver.add(new DriverSpatialIOPort.OCDriver());
 			}
 		}*/
-		/*if(Mods.isLoaded(Mods.EnderIO)) {
+		if(Mods.isLoaded(Mods.EnderIO)) {
 			if(compat.isCompatEnabled(Compat.EnderIO)) {
 				Driver.add(new DriverRedstoneControllable.OCDriver());
 				Driver.add(new DriverIOConfigurable.OCDriver());
@@ -227,7 +239,7 @@ public class IntegrationOpenComputers {
 				Driver.add(new DriverWeatherObelisk.OCDriver());
 				Driver.add(new DriverTelepad.OCDriver());
 			}
-		}*//*
+		}/*
 
 		if(Mods.API.hasAPI(Mods.API.DraconicEvolution)
 			&& compat.isCompatEnabled(Compat.DraconicEvolution)) {
@@ -251,9 +263,9 @@ public class IntegrationOpenComputers {
 			}
 		}
 
-		/*if(Computronics.forestry != null) {
+		if(Computronics.forestry != null) {
 			Computronics.forestry.initOC();
-		}*/
+		}
 
 		/*if(Computronics.buildcraft != null) { TODO BuildCraft Drone Docking
 			Computronics.buildcraft.initOC();

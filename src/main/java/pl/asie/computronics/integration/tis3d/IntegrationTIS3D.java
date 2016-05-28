@@ -93,7 +93,7 @@ public class IntegrationTIS3D {
 		public void textureHook(TextureStitchEvent.Pre event) {
 			if(event.map.getTextureType() == 0) {
 				for(Textures t : Textures.VALUES) {
-					t.registerIcon(event.map);
+					t.registerSprite(event.map);
 				}
 			}
 		}
@@ -111,13 +111,13 @@ public class IntegrationTIS3D {
 				this.location = location;
 			}
 
-			public IIcon getIcon() {
+			public IIcon getSprite() {
 				return icon;
 			}
 
 			@SideOnly(Side.CLIENT)
-			public void registerIcon(IIconRegister iconRegister) {
-				this.icon = iconRegister.registerIcon("computronics:" + location);
+			public void registerSprite(IIconRegister iconRegister) {
+				this.icon = iconRegister.registerSprite("computronics:" + location);
 			}
 		}
 	}*/

@@ -6,6 +6,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,10 +44,12 @@ public class RayTracer {
 	/**
 	 * @return The {@link RayTraceResult} containing the Target Block or Entity
 	 */
+	@Nullable
 	public RayTraceResult getTarget() {
 		return this.target;
 	}
 
+	@Nullable
 	protected RayTraceResult rayTrace(EntityLivingBase entity, double distance) {
 		Entity target;
 		Vec3d position = new Vec3d(entity.posX, entity.posY, entity.posZ);
@@ -80,6 +83,7 @@ public class RayTracer {
 		return null;
 	}
 
+	@Nullable
 	protected Entity getEntity(EntityLivingBase base, Vec3d position, Vec3d search, Vec3d look, AxisAlignedBB searchBox, double v) {
 		ArrayList<Entity> entityList = new ArrayList<Entity>();
 		List<Entity> entityObjects = base.worldObj.getEntitiesWithinAABB(Entity.class, searchBox);

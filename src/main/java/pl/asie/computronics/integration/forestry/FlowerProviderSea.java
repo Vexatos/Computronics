@@ -1,12 +1,13 @@
 package pl.asie.computronics.integration.forestry;
 
-import forestry.api.apiculture.FlowerManager;
+import forestry.api.genetics.ICheckPollinatable;
 import forestry.api.genetics.IFlowerAcceptableRule;
 import forestry.api.genetics.IFlowerProvider;
 import forestry.api.genetics.IIndividual;
-import forestry.api.genetics.IPollinatable;
-import net.minecraft.block.Block;
+import net.minecraft.block.BlockLiquid;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -15,7 +16,6 @@ import pl.asie.computronics.util.StringUtil;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author Vexatos
@@ -40,20 +40,18 @@ public class FlowerProviderSea implements IFlowerProvider, IFlowerAcceptableRule
 	}
 
 	@Override
-	public boolean isAcceptableFlower(String flowerType, World world, int x, int y, int z) {
-		Block block = world.getBlock(x, y, z);
-		if(block != null) {
-			Fluid fluid = FluidRegistry.lookupFluidForBlock(block);
-			if(fluid != null && FluidRegistry.isFluidRegistered(fluid)) {
-				if(!hasCheckedSaltwater) {
-					checkSaltwater();
-				}
-				if(waterTypes.contains(fluid.getName())) {
-					if(block instanceof IFluidBlock) {
-						return ((IFluidBlock) block).canDrain(world, x, y, z);
-					} else {
-						return world.getBlockMetadata(x, y, z) == 0;
-					}
+	public boolean isAcceptableFlower(String flowerType, World world, BlockPos pos) {
+		IBlockState state = world.getBlockState(pos);
+		Fluid fluid = FluidRegistry.lookupFluidForBlock(state.getBlock());
+		if(fluid != null && FluidRegistry.isFluidRegistered(fluid)) {
+			if(!hasCheckedSaltwater) {
+				checkSaltwater();
+			}
+			if(waterTypes.contains(fluid.getName())) {
+				if(state.getBlock() instanceof IFluidBlock) {
+					return ((IFluidBlock) state).canDrain(world, pos);
+				} else if(state.getBlock() instanceof BlockLiquid) {
+					return state.getValue(BlockLiquid.LEVEL) == 0;
 				}
 			}
 		}
@@ -61,7 +59,7 @@ public class FlowerProviderSea implements IFlowerProvider, IFlowerAcceptableRule
 	}
 
 	@Override
-	public boolean isAcceptedPollinatable(World world, IPollinatable iPollinatable) {
+	public boolean isAcceptedPollinatable(World world, ICheckPollinatable iPollinatable) {
 		return false;
 	}
 
@@ -76,20 +74,7 @@ public class FlowerProviderSea implements IFlowerProvider, IFlowerAcceptableRule
 	}
 
 	@Override
-	public ItemStack[] affectProducts(World world, IIndividual individual, int x, int y, int z, ItemStack[] products) {
+	public ItemStack[] affectProducts(World world, IIndividual individual, BlockPos pos, ItemStack[] products) {
 		return products;
-	}
-
-	@Override
-	@Deprecated
-	@SuppressWarnings("deprecation")
-	public Set<forestry.api.genetics.IFlower> getFlowers() {
-		return FlowerManager.flowerRegistry.getAcceptableFlowers(getFlowerType());
-	}
-
-	@Override
-	@Deprecated
-	public boolean growFlower(World world, IIndividual iIndividual, int i, int i1, int i2) {
-		return false;
 	}
 }

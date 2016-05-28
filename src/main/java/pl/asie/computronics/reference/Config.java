@@ -174,7 +174,7 @@ public class Config {
 
 			NON_OC_RECIPES = config.getBoolean("easyRecipeMode", "recipes", false, "Set this to true to make some recipes not require OpenComputers blocks and items");
 
-			if(Mods.hasVersion(Mods.Forestry, Mods.Versions.Forestry)) {
+			if(Mods.isLoaded(Mods.Forestry)) {
 				FORESTRY_BEES = config.getBoolean("opencomputersBees", "enable.forestry", true, "Set this to false to disable Forestry bee species for OpenComputers");
 			}
 			if(Mods.isLoaded(Mods.BuildCraftTransport) && Mods.isLoaded(Mods.BuildCraftCore)) {

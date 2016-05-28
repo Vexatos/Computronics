@@ -1,7 +1,5 @@
 package pl.asie.computronics.integration.forestry.nanomachines;
 
-import cpw.mods.fml.common.eventhandler.Event;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import forestry.api.apiculture.BeeManager;
 import forestry.api.apiculture.EnumBeeType;
 import forestry.api.apiculture.IBee;
@@ -16,15 +14,19 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.play.server.S0BPacketAnimation;
+import net.minecraft.network.play.server.SPacketAnimation;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.event.entity.minecart.MinecartInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
+import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import pl.asie.computronics.integration.forestry.IntegrationForestry;
 import pl.asie.lib.util.RayTracer;
 
+import javax.annotation.Nullable;
 import java.util.Collections;
 
 /**
@@ -55,26 +57,29 @@ public class SwarmProvider extends AbstractProvider {
 		return Collections.<Behavior>singletonList(new SwarmBehavior(player));
 	}
 
-	private void findTarget(EntityPlayer player, Event e) {
+	private void findTarget(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack, Event e) {
+		if(stack != null && player.getCooldownTracker().hasCooldown(stack.getItem())) {
+			return;
+		}
 		SwarmBehavior behavior = getSwarmBehavior(player);
 		if(behavior != null) {
 			if(behavior.entity != null) {
 				RayTracer.instance().fire(player, 30);
-				MovingObjectPosition target = RayTracer.instance().getTarget();
-				if((target != null) && (target.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY)) {
+				RayTraceResult target = RayTracer.instance().getTarget();
+				if((target != null) && (target.typeOfHit == RayTraceResult.Type.ENTITY)) {
 					Entity entity = target.entityHit;
 					if(entity != null && entity instanceof EntityLivingBase && entity != behavior.entity) {
 						behavior.entity.setAttackTarget((EntityLivingBase) entity);
-						swingItem(player, e);
+						swingItem(player, hand, stack, e);
 					}
 				} else if(behavior.entity.getAttackTarget() != null) {
 					behavior.entity.setAttackTarget(null);
-					swingItem(player, e);
+					swingItem(player, hand, stack, e);
 				}
 			} else if(player.capabilities != null && player.capabilities.isCreativeMode) {
 				behavior.spawnNewEntity(player.posX, player.posY + 2f, player.posZ,
-					BeeManager.beeRoot.getMemberStack(BeeManager.beeRoot.templateAsIndividual(BeeManager.beeRoot.getDefaultTemplate()), EnumBeeType.QUEEN.ordinal()));
-				swingItem(player, e);
+					BeeManager.beeRoot.getMemberStack(BeeManager.beeRoot.templateAsIndividual(BeeManager.beeRoot.getDefaultTemplate()), EnumBeeType.QUEEN));
+				swingItem(player, hand, stack, e);
 			}
 		} /*else {
 			Controller controller = Nanomachines.installController(player);
@@ -93,7 +98,10 @@ public class SwarmProvider extends AbstractProvider {
 		}*/
 	}
 
-	private void makeSwarm(double x, double y, double z, EntityPlayer player, IBeeHousing tile, Event e) {
+	private void makeSwarm(double x, double y, double z, EntityPlayer player, EnumHand hand, @Nullable ItemStack stack, IBeeHousing tile, Event e) {
+		if(stack != null && player.getCooldownTracker().hasCooldown(stack.getItem())) {
+			return;
+		}
 		if(tile.getBeekeepingLogic() != null && tile.getBeeInventory() != null && tile.getBeekeepingLogic().canDoBeeFX()) {
 			ItemStack queenStack = tile.getBeeInventory().getQueen();
 			IBee member = BeeManager.beeRoot.getMember(queenStack);
@@ -108,9 +116,9 @@ public class SwarmProvider extends AbstractProvider {
 						controller.changeBuffer(-10);
 					}
 					behavior.spawnNewEntity(x, y, z,
-						member.getGenome().getPrimary().getIconColour(0),
-						member.getGenome().getTolerantFlyer(), queenStack.copy());
-					swingItem(player, e);
+						member.getGenome().getPrimary().getSpriteColour(0),
+						member.getGenome().getToleratesRain(), queenStack.copy());
+					swingItem(player, hand, e);
 				}
 			}
 		}
@@ -118,29 +126,31 @@ public class SwarmProvider extends AbstractProvider {
 
 	@SubscribeEvent
 	public void onPlayerInteract(PlayerInteractEvent e) {
-		EntityPlayer player = e.entityPlayer;
+		EntityPlayer player = e.getEntityPlayer();
 		if(player != null && !player.worldObj.isRemote) {
-			ItemStack heldItem = player.getHeldItem();
+			ItemStack heldItem = e.getItemStack();
 			if(heldItem != null && heldItem.getItem() == IntegrationForestry.itemStickImpregnated) {
-				if(e.action == Action.RIGHT_CLICK_AIR) {
-					findTarget(player, e);
-				} else if(e.action == Action.RIGHT_CLICK_BLOCK) {
-					if(player.isSneaking() && e.world.blockExists(e.x, e.y, e.z)) {
-						TileEntity te = e.world.getTileEntity(e.x, e.y, e.z);
+				if(e instanceof PlayerInteractEvent.RightClickItem) {
+					findTarget(player, e.getHand(), heldItem, e);
+				} else if(e instanceof PlayerInteractEvent.RightClickBlock) {
+					if(player.isSneaking() && e.getWorld().isBlockLoaded(e.getPos())) {
+						TileEntity te = e.getWorld().getTileEntity(e.getPos());
 						if(te instanceof IBeeHousing) {
-							makeSwarm(e.x + 0.5, e.y + 0.5, e.z + 0.5, player, (IBeeHousing) te, e);
+							BlockPos pos = e.getPos();
+							makeSwarm(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, player, e.getHand(), heldItem, (IBeeHousing) te, e);
 						} else {
-							findTarget(player, e);
+							findTarget(player, e.getHand(), heldItem, e);
 						}
 					} else {
-						findTarget(player, e);
+						findTarget(player, e.getHand(), heldItem, e);
 					}
 				}
-			} else if(heldItem == null && e.action == Action.RIGHT_CLICK_BLOCK) {
-				if(player.isSneaking() && e.world.blockExists(e.x, e.y, e.z)) {
-					TileEntity te = e.world.getTileEntity(e.x, e.y, e.z);
+			} else if(heldItem == null && e.getHand() == EnumHand.MAIN_HAND && e instanceof PlayerInteractEvent.RightClickBlock) {
+				if(player.isSneaking() && e.getWorld().isBlockLoaded(e.getPos())) {
+					TileEntity te = e.getWorld().getTileEntity(e.getPos());
 					if(te instanceof IBeeHousing) {
-						makeSwarm(e.x + 0.5, e.y + 0.5, e.z + 0.5, player, (IBeeHousing) te, e);
+						BlockPos pos = e.getPos();
+						makeSwarm(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, player, e.getHand(), null, (IBeeHousing) te, e);
 					}
 				}
 			}
@@ -149,27 +159,45 @@ public class SwarmProvider extends AbstractProvider {
 
 	@SubscribeEvent
 	public void onMinecartInteract(MinecartInteractEvent e) {
-		EntityPlayer player = e.player;
+		EntityPlayer player = e.getPlayer();
 		if(player != null && !player.worldObj.isRemote) {
-			ItemStack heldItem = player.getHeldItem();
+			ItemStack heldItem = e.getItem();
 			if(heldItem != null && heldItem.getItem() == IntegrationForestry.itemStickImpregnated) {
-				if(player.isSneaking() && e.minecart instanceof IBeeHousing) {
-					makeSwarm(e.minecart.posX, e.minecart.posY + 0.25, e.minecart.posZ, player, (IBeeHousing) e.minecart, e);
+				if(player.isSneaking() && e.getMinecart() instanceof IBeeHousing) {
+					makeSwarm(e.getMinecart().posX, e.getMinecart().posY + 0.25, e.getMinecart().posZ, player, e.getHand(), heldItem, (IBeeHousing) e.getMinecart(), e);
 				} else {
-					findTarget(player, e);
+					findTarget(player, e.getHand(), heldItem, e);
 				}
-			} else if(heldItem == null) {
-				if(player.isSneaking() && e.minecart instanceof IBeeHousing) {
-					makeSwarm(e.minecart.posX, e.minecart.posY + 0.25, e.minecart.posZ, player, (IBeeHousing) e.minecart, e);
+			} else if(heldItem == null && e.getHand() == EnumHand.MAIN_HAND) {
+				if(player.isSneaking() && e.getMinecart() instanceof IBeeHousing) {
+					makeSwarm(e.getMinecart().posX, e.getMinecart().posY + 0.25, e.getMinecart().posZ, player, e.getHand(), null, (IBeeHousing) e.getMinecart(), e);
 				}
 			}
 		}
 	}
 
-	public static void swingItem(EntityPlayer player, Event e) {
-		player.swingItem();
-		if(player instanceof EntityPlayerMP && ((EntityPlayerMP) player).playerNetServerHandler != null) {
-			((EntityPlayerMP) player).playerNetServerHandler.sendPacket(new S0BPacketAnimation(player, 0));
+	/*@SubscribeEvent(priority = EventPriority.HIGH)
+	public void tooltip(ItemTooltipEvent e) {
+		ItemStack stack = e.getItemStack();
+		if(stack != null && stack.getItem() == IntegrationForestry.itemStickImpregnated) {
+			SwarmBehavior behavior = getSwarmBehavior(e.getEntityPlayer());
+			if(behavior != null) {
+				e.getToolTip().add("" + TextFormatting.ITALIC + TextFormatting.DARK_GRAY + "Something inside you makes this somwhat look like a baton.");
+			}
+		}
+	}*/
+
+	public static void swingItem(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack, @Nullable Event e) {
+		if(stack != null) {
+			player.getCooldownTracker().setCooldown(stack.getItem(), 20);
+		}
+		swingItem(player, hand, e);
+	}
+
+	public static void swingItem(EntityPlayer player, EnumHand hand, @Nullable Event e) {
+		player.swingArm(hand);
+		if(player instanceof EntityPlayerMP && ((EntityPlayerMP) player).connection != null) {
+			((EntityPlayerMP) player).connection.sendPacket(new SPacketAnimation(player, hand == EnumHand.MAIN_HAND ? 0 : 3));
 		}
 		if(e != null && e.isCancelable()) {
 			e.setCanceled(true);

@@ -1,5 +1,6 @@
 package pl.asie.computronics.integration.enderio;
 
+import crazypants.enderio.conduit.power.NetworkPowerManager;
 import crazypants.enderio.machine.monitor.TilePowerMonitor;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
@@ -23,6 +24,14 @@ import pl.asie.computronics.reference.Names;
  */
 public class DriverPowerMonitor {
 
+	private static NetworkPowerManager checkPowerManager(TilePowerMonitor tile) {
+		NetworkPowerManager man = tile.getPowerManager();
+		if(man == null) {
+			throw new IllegalStateException("no conduit network detected");
+		}
+		return man;
+	}
+
 	public static class OCDriver extends DriverSidedTileEntity {
 
 		public static class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TilePowerMonitor> {
@@ -38,42 +47,42 @@ public class DriverPowerMonitor {
 
 			@Callback(doc = "function():number; Returns the energy currently in the conduit network")
 			public Object[] getPowerInConduits(Context c, Arguments a) {
-				return new Object[] { tile.getPowerInConduits() };
+				return new Object[] { checkPowerManager(tile).getPowerInConduits() };
 			}
 
 			@Callback(doc = "function():number; Returns the max energy that can be in the conduit network")
 			public Object[] getMaxPowerInConduits(Context c, Arguments a) {
-				return new Object[] { tile.getMaxPowerInConduits() };
+				return new Object[] { checkPowerManager(tile).getMaxPowerInConduits() };
 			}
 
 			@Callback(doc = "function():number; Returns the energy currently in connected Capacitor Banks")
-			public Object[] getPowerInCapBanks(Context c, Arguments a) {
-				return new Object[] { tile.getPowerInCapBanks() };
+			public Object[] getPowerInCapacitorBanks(Context c, Arguments a) {
+				return new Object[] { checkPowerManager(tile).getPowerInCapacitorBanks() };
 			}
 
 			@Callback(doc = "function():number; Returns the max energy that can be in connected Capacitor Banks")
-			public Object[] getMaxPowerInCapBanks(Context c, Arguments a) {
-				return new Object[] { tile.getMaxPowerInCapBanks() };
+			public Object[] getMaxPowerInCapacitorBanks(Context c, Arguments a) {
+				return new Object[] { checkPowerManager(tile).getMaxPowerInCapacitorBanks() };
 			}
 
 			@Callback(doc = "function():number; Returns the energy currently in connected Machines")
-			public Object[] getPowerInMachines(Context c, Arguments a) {
-				return new Object[] { tile.getPowerInMachines() };
+			public Object[] getPowerInReceptors(Context c, Arguments a) {
+				return new Object[] { checkPowerManager(tile).getPowerInReceptors() };
 			}
 
 			@Callback(doc = "function():number; Returns the max energy that can be in connected Machines")
-			public Object[] getMaxPowerInMachines(Context c, Arguments a) {
-				return new Object[] { tile.getMaxPowerInMachines() };
+			public Object[] getMaxPowerInReceptors(Context c, Arguments a) {
+				return new Object[] { checkPowerManager(tile).getMaxPowerInReceptors() };
 			}
 
 			@Callback(doc = "function():number; Returns the average energy sent")
 			public Object[] getAverageEnergySent(Context c, Arguments a) {
-				return new Object[] { tile.getAveRfSent() };
+				return new Object[] { checkPowerManager(tile).getNetworkPowerTracker().getAverageRfTickSent() };
 			}
 
 			@Callback(doc = "function():number; Returns the average energy received")
 			public Object[] getAverageEnergyReceived(Context c, Arguments a) {
-				return new Object[] { tile.getAveRfReceived() };
+				return new Object[] { checkPowerManager(tile).getNetworkPowerTracker().getAverageRfTickRecieved() };
 			}
 
 			@Callback(doc = "function():boolean; Returns whether Engine Control is enabled")
@@ -146,8 +155,8 @@ public class DriverPowerMonitor {
 
 		@Override
 		public String[] getMethodNames() {
-			return new String[] { "getPowerInConduits", "getMaxPowerInConduits", "getPowerInCapBanks", "getMaxPowerInCapBanks",
-				"getPowerInMachines", "getMaxPowerInMachines", "getAverageEnergySent", "getAverageEnergyReceived",
+			return new String[] { "getPowerInConduits", "getMaxPowerInConduits", "getPowerInCapacitorBanks", "getMaxPowerInCapacitorBanks",
+				"getPowerInReceptors", "getMaxPowerInReceptors", "getAverageEnergySent", "getAverageEnergyReceived",
 				"isEngineControlEnabled", "setEngineControlEnabled", "getStartLevel", "setStartLevel", "getStopLevel", "setStopLevel" };
 		}
 
@@ -155,28 +164,28 @@ public class DriverPowerMonitor {
 		public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
 			switch(method) {
 				case 0: {
-					return new Object[] { tile.getPowerInConduits() };
+					return new Object[] { checkPowerManager(tile).getPowerInConduits() };
 				}
 				case 1: {
-					return new Object[] { tile.getMaxPowerInConduits() };
+					return new Object[] { checkPowerManager(tile).getMaxPowerInConduits() };
 				}
 				case 2: {
-					return new Object[] { tile.getPowerInCapBanks() };
+					return new Object[] { checkPowerManager(tile).getPowerInCapacitorBanks() };
 				}
 				case 3: {
-					return new Object[] { tile.getMaxPowerInCapBanks() };
+					return new Object[] { checkPowerManager(tile).getMaxPowerInCapacitorBanks() };
 				}
 				case 4: {
-					return new Object[] { tile.getPowerInMachines() };
+					return new Object[] { checkPowerManager(tile).getPowerInReceptors() };
 				}
 				case 5: {
-					return new Object[] { tile.getMaxPowerInMachines() };
+					return new Object[] { checkPowerManager(tile).getMaxPowerInReceptors() };
 				}
 				case 6: {
-					return new Object[] { tile.getAveRfSent() };
+					return new Object[] { checkPowerManager(tile).getNetworkPowerTracker().getAverageRfTickSent() };
 				}
 				case 7: {
-					return new Object[] { tile.getAveRfReceived() };
+					return new Object[] { checkPowerManager(tile).getNetworkPowerTracker().getAverageRfTickRecieved() };
 				}
 				case 8: {
 					return new Object[] { tile.isEngineControlEnabled() };

@@ -1,11 +1,5 @@
 package pl.asie.computronics.integration.forestry;
 
-import cpw.mods.fml.client.registry.RenderingRegistry;
-import cpw.mods.fml.common.Optional;
-import cpw.mods.fml.common.registry.EntityRegistry;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import forestry.api.apiculture.BeeManager;
 import forestry.api.apiculture.EnumBeeChromosome;
 import forestry.api.apiculture.FlowerManager;
@@ -19,26 +13,30 @@ import forestry.api.genetics.IAlleleFlowers;
 import forestry.api.genetics.IAlleleSpecies;
 import forestry.api.genetics.IClassification;
 import forestry.api.recipes.RecipeManagers;
-import forestry.apiculture.render.ParticleRenderer;
 import li.cil.oc.api.Items;
 import li.cil.oc.api.Nanomachines;
-import net.bdew.gendustry.api.EnumMutationSetting;
-import net.bdew.gendustry.api.GendustryAPI;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.common.registry.EntityRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.asie.computronics.Computronics;
-import pl.asie.computronics.integration.forestry.client.SwarmTextureHandler;
-import pl.asie.computronics.integration.forestry.client.entity.EntitySwarmBeeFX;
+import pl.asie.computronics.integration.forestry.client.entity.ParticleSwarm;
 import pl.asie.computronics.integration.forestry.entity.EntitySwarm;
-import pl.asie.computronics.integration.forestry.entity.SwarmRenderer;
+import pl.asie.computronics.integration.forestry.entity.RenderSwarm;
 import pl.asie.computronics.integration.forestry.nanomachines.SwarmProvider;
+import pl.asie.computronics.item.ItemMultipleComputronics;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.RecipeUtils;
 import pl.asie.lib.item.ItemMultiple;
@@ -55,22 +53,20 @@ public class IntegrationForestry {
 	public static IBeeMutationCustom scummyB;
 	public static IAlleleFlowers sea;
 
-	public static ItemMultiple itemPartsForestry;
+	public static ItemMultipleComputronics itemPartsForestry;
 	public static Item itemStickImpregnated;
 
 	private static final String
-		speciesAgrarian = "forestry.speciesAgrarian",
-		speciesExotic = "forestry.speciesExotic",
-		speciesTipsy = "forestry.speciesTipsy";
+		speciesAgrarian = "Forestry.speciesAgrarian",
+		speciesExotic = "Forestry.speciesExotic",
+		speciesTipsy = "Forestry.speciesTipsy";
 
 	public void preInitOC() {
 		if(Mods.isLoaded(Mods.OpenComputers)) {
-			itemPartsForestry = new ItemMultiple(Mods.Computronics, new String[] { "for.combAcid", "for.dropAcid" });
+			itemPartsForestry = new ItemMultipleComputronics(Mods.Computronics, new String[] { "acid_comb", "acid_drop" });
 			itemPartsForestry.setCreativeTab(Computronics.tab);
-			GameRegistry.registerItem(itemPartsForestry, "computronics.partsForestry");
-			if(Computronics.proxy.isClient()) {
-				MinecraftForge.EVENT_BUS.register(new SwarmTextureHandler());
-			}
+			Computronics.instance.registerItem(itemPartsForestry, "forestry_parts");
+			itemPartsForestry.registerItemModels();
 		}
 	}
 
@@ -94,7 +90,7 @@ public class IntegrationForestry {
 			"computronics.bees.species.scummy", "computronics.bees.species.scummy.description", pirates, "ebriosus", 0x00DF1F, 0xffdc16)
 			.setNocturnal().setJubilanceProvider(new JubilanceSea(shortMead, 0))
 			.addSpecialty(new ItemStack(itemPartsForestry, 1, 0), 0.2f).setIsSecret()
-			.setTemperature(EnumTemperature.WARM).setHumidity(EnumHumidity.DAMP).setHasEffect().setIsNotCounted();
+			.setTemperature(EnumTemperature.WARM).setHumidity(EnumHumidity.DAMP).setHasEffect().setIsNotCounted().build();
 
 		scummyA = BeeManager.beeMutationFactory.createMutation(
 			(IAlleleBeeSpecies) AlleleManager.alleleRegistry.getAllele(speciesAgrarian),
@@ -118,19 +114,19 @@ public class IntegrationForestry {
 		RecipeManagers.centrifugeManager.addRecipe(40,
 			new ItemStack(itemPartsForestry, 1, 0),
 			acidRecipe);
-		Item bottleItem = GameRegistry.findItem(Mods.Forestry, "beverage");
+		Item bottleItem = Item.REGISTRY.getObject(new ResourceLocation(Mods.Forestry, "beverage"));
 		ItemStack bottle = bottleItem != null ? new ItemStack(bottleItem, 1, 0)
-			: new ItemStack(net.minecraft.init.Items.potionitem, 1, 32);
+			: new ItemStack(net.minecraft.init.Items.POTIONITEM, 1, 32);
 		RecipeUtils.addShapelessRecipe(undisassemblable(Items.get("acid").createItemStack(1)),
 			new ItemStack(itemPartsForestry, 1, 1),
 			new ItemStack(itemPartsForestry, 1, 1),
 			bottle);
 
-		if(Mods.hasVersion(Mods.API.Gendustry, Mods.Versions.Gendustry)) {
+		/*if(Mods.hasVersion(Mods.API.Gendustry, Mods.Versions.Gendustry)) { TODO Gendustry
 			registerBees();
-		}
+		}*/
 
-		itemStickImpregnated = GameRegistry.findItem(Mods.Forestry, "oakStick");
+		itemStickImpregnated = Item.REGISTRY.getObject(new ResourceLocation(Mods.Forestry, "oakStick"));
 		EntityRegistry.registerModEntity(EntitySwarm.class, "swarm", 9, Computronics.instance, 64, 1, true);
 		SwarmProvider provider = new SwarmProvider();
 		MinecraftForge.EVENT_BUS.register(provider);
@@ -148,45 +144,45 @@ public class IntegrationForestry {
 		return stack;
 	}
 
-	@Optional.Method(modid = Mods.OpenComputers)
 	@SideOnly(Side.CLIENT)
-	public void registerOCRenderers() {
-		RenderingRegistry.registerEntityRenderingHandler(EntitySwarm.class, new SwarmRenderer());
+	@Optional.Method(modid = Mods.OpenComputers)
+	public void registerOCEntityRenderers() {
+		RenderingRegistry.registerEntityRenderingHandler(EntitySwarm.class, new RenderSwarm.Factory());
 	}
 
-	@Optional.Method(modid = Mods.API.Gendustry)
+	/*@Optional.Method(modid = Mods.API.Gendustry) TODO Gendustry
 	private void registerBees() {
 		if(GendustryAPI.Registries != null && GendustryAPI.Registries.getMutatronOverrides() != null) {
 			GendustryAPI.Registries.getMutatronOverrides().set(speciesScummy, EnumMutationSetting.REQUIREMENTS);
 		}
-	}
+	}*/
 
 	public static IAllele[] getScummyTemplate() {
 		IAllele[] alleles = BeeManager.beeRoot.getTemplate(speciesExotic).clone();
 
 		//Just making sure
-		alleles[EnumBeeChromosome.CAVE_DWELLING.ordinal()] = AlleleManager.alleleRegistry.getAllele("forestry.boolFalse");
-		alleles[EnumBeeChromosome.HUMIDITY_TOLERANCE.ordinal()] = AlleleManager.alleleRegistry.getAllele("forestry.toleranceUp1");
-		alleles[EnumBeeChromosome.FLOWERING.ordinal()] = AlleleManager.alleleRegistry.getAllele("forestry.floweringSlowest");
-		alleles[EnumBeeChromosome.TERRITORY.ordinal()] = AlleleManager.alleleRegistry.getAllele("forestry.territoryDefault");
+		alleles[EnumBeeChromosome.CAVE_DWELLING.ordinal()] = AlleleManager.alleleRegistry.getAllele("Forestry.boolFalse");
+		alleles[EnumBeeChromosome.HUMIDITY_TOLERANCE.ordinal()] = AlleleManager.alleleRegistry.getAllele("Forestry.toleranceUp1");
+		alleles[EnumBeeChromosome.FLOWERING.ordinal()] = AlleleManager.alleleRegistry.getAllele("Forestry.floweringSlowest");
+		alleles[EnumBeeChromosome.TERRITORY.ordinal()] = AlleleManager.alleleRegistry.getAllele("Forestry.territoryAverage");
 
 		//Actual template
 		alleles[EnumBeeChromosome.SPECIES.ordinal()] = speciesScummy;
-		alleles[EnumBeeChromosome.FERTILITY.ordinal()] = AlleleManager.alleleRegistry.getAllele("forestry.fertilityLow");
-		alleles[EnumBeeChromosome.TOLERANT_FLYER.ordinal()] = AlleleManager.alleleRegistry.getAllele("forestry.boolTrue");
-		alleles[EnumBeeChromosome.NOCTURNAL.ordinal()] = AlleleManager.alleleRegistry.getAllele("forestry.boolFalse");
-		alleles[EnumBeeChromosome.SPEED.ordinal()] = AlleleManager.alleleRegistry.getAllele("forestry.speedSlowest");
-		alleles[EnumBeeChromosome.LIFESPAN.ordinal()] = AlleleManager.alleleRegistry.getAllele("forestry.lifespanLonger");
-		alleles[EnumBeeChromosome.TEMPERATURE_TOLERANCE.ordinal()] = AlleleManager.alleleRegistry.getAllele("forestry.toleranceUp1");
+		alleles[EnumBeeChromosome.FERTILITY.ordinal()] = AlleleManager.alleleRegistry.getAllele("Forestry.fertilityLow");
+		alleles[EnumBeeChromosome.TOLERATES_RAIN.ordinal()] = AlleleManager.alleleRegistry.getAllele("Forestry.boolTrue");
+		alleles[EnumBeeChromosome.NEVER_SLEEPS.ordinal()] = AlleleManager.alleleRegistry.getAllele("Forestry.boolFalse");
+		alleles[EnumBeeChromosome.SPEED.ordinal()] = AlleleManager.alleleRegistry.getAllele("Forestry.speedSlowest");
+		alleles[EnumBeeChromosome.LIFESPAN.ordinal()] = AlleleManager.alleleRegistry.getAllele("Forestry.lifespanLonger");
+		alleles[EnumBeeChromosome.TEMPERATURE_TOLERANCE.ordinal()] = AlleleManager.alleleRegistry.getAllele("Forestry.toleranceUp1");
 		alleles[EnumBeeChromosome.FLOWER_PROVIDER.ordinal()] = sea;
-		alleles[EnumBeeChromosome.EFFECT.ordinal()] = AlleleManager.alleleRegistry.getAllele("forestry.effectDrunkard");
+		alleles[EnumBeeChromosome.EFFECT.ordinal()] = AlleleManager.alleleRegistry.getAllele("Forestry.effectDrunkard");
 		return alleles;
 	}
 
 	@SideOnly(Side.CLIENT)
 	public void spawnSwarmParticle(World worldObj, double xPos, double yPos, double zPos, int color) {
-		EntitySwarmBeeFX entity = new EntitySwarmBeeFX(worldObj, xPos, yPos, zPos, color);
-		ParticleRenderer.getInstance().addEffect(entity);
+		ParticleSwarm entity = new ParticleSwarm(worldObj, xPos, yPos, zPos, color);
+		Minecraft.getMinecraft().effectRenderer.addEffect(entity);
 		//Minecraft.getMinecraft().effectRenderer.addEffect(entity);
 	}
 }

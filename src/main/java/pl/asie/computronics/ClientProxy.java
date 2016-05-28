@@ -10,6 +10,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Optional;
@@ -28,6 +29,7 @@ import pl.asie.computronics.util.internal.IItemWithColor;
 import pl.asie.computronics.util.sound.Audio;
 import pl.asie.lib.network.Packet;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -76,7 +78,18 @@ public class ClientProxy extends CommonProxy {
 	private final List<Block> coloredBlocks = new ArrayList<Block>();
 
 	@Override
+	public void preInit() {
+		super.preInit();
+		if(Mods.isLoaded(Mods.OpenComputers)) {
+			if(Computronics.forestry != null) {
+				Computronics.forestry.registerOCEntityRenderers();
+			}
+		}
+	}
+
+	@Override
 	public void init() {
+		super.init();
 		Audio.init();
 		registerRenderers();
 		registerColors();
@@ -91,9 +104,8 @@ public class ClientProxy extends CommonProxy {
 		}, coloredItems.toArray(new Item[coloredItems.size()]));
 		Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new IBlockColor() {
 			@Override
-			public int colorMultiplier(IBlockState state, IBlockAccess worldIn, BlockPos pos, int tintIndex) {
-				// TODO Check if pos can still be null on 1.9.4
-				return pos != null && state != null && state.getBlock() instanceof IBlockWithColor ? ((IBlockWithColor) state.getBlock()).colorMultiplier(state, worldIn, pos, tintIndex) : 0xFFFFFFFF;
+			public int colorMultiplier(IBlockState state, @Nullable IBlockAccess worldIn, @Nullable BlockPos pos, int tintIndex) {
+				return pos != null && state.getBlock() instanceof IBlockWithColor ? ((IBlockWithColor) state.getBlock()).colorMultiplier(state, worldIn, pos, tintIndex) : 0xFFFFFFFF;
 			}
 		}, coloredBlocks.toArray(new Block[coloredBlocks.size()]));
 	}
@@ -110,9 +122,6 @@ public class ClientProxy extends CommonProxy {
 		}*/
 		if(Mods.isLoaded(Mods.OpenComputers)) {
 			registerOpenComputersRenderers();
-			/*if(Computronics.forestry != null) {
-				Computronics.forestry.registerOCRenderers();
-			}*/
 		}
 		/*if(Mods.API.hasAPI(Mods.API.BuildCraftStatements)) {
 			MinecraftForge.EVENT_BUS.register(new StatementTextureManager());
@@ -158,11 +167,11 @@ public class ClientProxy extends CommonProxy {
 		minecraft.thePlayer.motionZ += (double) p.readFloat();
 	}
 
-	/*@Override
+	@Override
 	@Optional.Method(modid = Mods.Forestry)
-	public void spawnSwarmParticle(World worldObj, double xPos, double yPos, double zPos, int color) { TODO Forestry
+	public void spawnSwarmParticle(World worldObj, double xPos, double yPos, double zPos, int color) {
 		Computronics.forestry.spawnSwarmParticle(worldObj, xPos, yPos, zPos, color);
-	}*/
+	}
 
 	@Optional.Method(modid = Mods.OpenComputers)
 	private void registerOpenComputersRenderers() {
