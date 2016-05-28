@@ -120,12 +120,12 @@ public class BlockAudioCable extends BlockBase implements IBlockWithDocumentatio
 		static {
 			for(int mask = 0; mask < 0x40; ++mask) {
 				bounds[mask] = new AxisAlignedBB(
-					((mask & (1 << 4)) != 0 ? 0 : 0.375),
-					((mask & (1 << 0)) != 0 ? 0 : 0.375),
-					((mask & (1 << 2)) != 0 ? 0 : 0.375),
-					((mask & (1 << 5)) != 0 ? 1 : 0.625),
-					((mask & (1 << 1)) != 0 ? 1 : 0.625),
-					((mask & (1 << 3)) != 0 ? 1 : 0.625)
+					((mask & (1 << 4)) != 0 ? 0 : 0.3125),
+					((mask & (1 << 0)) != 0 ? 0 : 0.3125),
+					((mask & (1 << 2)) != 0 ? 0 : 0.3125),
+					((mask & (1 << 5)) != 0 ? 1 : 0.6875),
+					((mask & (1 << 1)) != 0 ? 1 : 0.6875),
+					((mask & (1 << 3)) != 0 ? 1 : 0.6875)
 				);
 			}
 		}

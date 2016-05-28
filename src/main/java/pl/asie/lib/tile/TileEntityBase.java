@@ -46,14 +46,17 @@ public class TileEntityBase extends TileEntity {
 	@Override
 	@Nullable
 	public SPacketUpdateTileEntity getUpdatePacket() {
-		NBTTagCompound tag = new NBTTagCompound();
-
-		return new SPacketUpdateTileEntity(getPos(), getBlockMetadata(), tag);
+		return new SPacketUpdateTileEntity(getPos(), getBlockMetadata(), getUpdateTag());
 	}
 
 	@Override
 	public NBTTagCompound getUpdateTag() {
 		return this.writeToRemoteNBT(super.getUpdateTag());
+	}
+
+	@Override
+	public void handleUpdateTag(NBTTagCompound tag) {
+		super.handleUpdateTag(tag);
 	}
 
 	@Override

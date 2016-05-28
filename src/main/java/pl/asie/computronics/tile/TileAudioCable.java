@@ -20,10 +20,11 @@ public class TileAudioCable extends TileEntityBase implements IAudioReceiver, IC
 
 	private int ImmibisMicroblocks_TransformableTileEntityMarker;
 
-	private int connectionMap = 0;
+	private byte connectionMap = 0;
 	private boolean initialConnect = false;
 
 	private void updateConnections() {
+		final byte oldConnections = connectionMap;
 		connectionMap = 0;
 		for(EnumFacing dir : EnumFacing.VALUES) {
 			if(!connectsInternal(dir)) {
@@ -51,6 +52,9 @@ public class TileAudioCable extends TileEntityBase implements IAudioReceiver, IC
 
 				connectionMap |= 1 << dir.ordinal();
 			}
+		}
+		if(connectionMap != oldConnections) {
+			notifyBlockUpdate();
 		}
 	}
 
@@ -142,14 +146,17 @@ public class TileAudioCable extends TileEntityBase implements IAudioReceiver, IC
 	public NBTTagCompound readFromRemoteNBT(NBTTagCompound nbt) {
 		super.readFromRemoteNBT(nbt);
 		int oldColor = this.overlayColor;
-		if(nbt.hasKey("computronics:color")) {
-			overlayColor = nbt.getInteger("computronics:color");
+		if(nbt.hasKey("col")) {
+			overlayColor = nbt.getInteger("col");
 		}
 		if(this.overlayColor < 0) {
 			this.overlayColor = getDefaultColor();
 		}
 		if(oldColor != this.overlayColor) {
 			this.worldObj.markBlockRangeForRenderUpdate(getPos(), getPos());
+		}
+		if(nbt.hasKey("con")) {
+			this.connectionMap = nbt.getByte("con");
 		}
 		return nbt;
 	}
@@ -158,19 +165,23 @@ public class TileAudioCable extends TileEntityBase implements IAudioReceiver, IC
 	public NBTTagCompound writeToRemoteNBT(NBTTagCompound nbt) {
 		super.writeToRemoteNBT(nbt);
 		if(overlayColor != getDefaultColor()) {
-			nbt.setInteger("computronics:color", overlayColor);
+			nbt.setInteger("col", overlayColor);
 		}
+		nbt.setByte("con", connectionMap);
 		return nbt;
 	}
 
 	@Override
 	public void readFromNBT(final NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-		if(nbt.hasKey("computronics:color")) {
-			overlayColor = nbt.getInteger("computronics:color");
+		if(nbt.hasKey("col")) {
+			overlayColor = nbt.getInteger("col");
 		}
 		if(this.overlayColor < 0) {
 			this.overlayColor = getDefaultColor();
+		}
+		if(nbt.hasKey("con")) {
+			this.connectionMap = nbt.getByte("con");
 		}
 	}
 
@@ -178,8 +189,9 @@ public class TileAudioCable extends TileEntityBase implements IAudioReceiver, IC
 	public NBTTagCompound writeToNBT(final NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 		if(overlayColor != getDefaultColor()) {
-			nbt.setInteger("computronics:color", overlayColor);
+			nbt.setInteger("col", overlayColor);
 		}
+		nbt.setByte("con", connectionMap);
 		return nbt;
 	}
 
