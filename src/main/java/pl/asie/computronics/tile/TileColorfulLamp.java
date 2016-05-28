@@ -178,7 +178,7 @@ public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundl
 	}
 
 	@Override
-	public NBTTagCompound readFromRemoteNBT(NBTTagCompound tag) {
+	public void readFromRemoteNBT(NBTTagCompound tag) {
 		super.readFromRemoteNBT(tag);
 		int oldColor = this.color;
 		if(tag.hasKey("clc")) {
@@ -190,7 +190,6 @@ public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundl
 		if(oldColor != this.color) {
 			this.worldObj.markBlockRangeForRenderUpdate(getPos(), getPos());
 		}
-		return tag;
 	}
 
 	private boolean parseBundledInput(byte[] data) {

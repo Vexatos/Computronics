@@ -522,12 +522,11 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 	}
 
 	@Override
-	public NBTTagCompound readFromRemoteNBT(NBTTagCompound tag) {
+	public void readFromRemoteNBT(NBTTagCompound tag) {
 		super.readFromRemoteNBT(tag);
 		if(tag.hasKey("state")) {
 			this.state.setState(State.VALUES[tag.getByte("state")]);
 		}
-		return tag;
 	}
 
 	// OpenComputers

@@ -54,7 +54,7 @@ public class TileAudioCable extends TileEntityBase implements IAudioReceiver, IC
 			}
 		}
 		if(connectionMap != oldConnections) {
-			notifyBlockUpdate();
+			worldObj.markBlockRangeForRenderUpdate(getPos(), getPos());
 		}
 	}
 
@@ -143,22 +143,22 @@ public class TileAudioCable extends TileEntityBase implements IAudioReceiver, IC
 	}
 
 	@Override
-	public NBTTagCompound readFromRemoteNBT(NBTTagCompound nbt) {
+	public void readFromRemoteNBT(NBTTagCompound nbt) {
 		super.readFromRemoteNBT(nbt);
 		int oldColor = this.overlayColor;
+		byte oldConnections = this.connectionMap;
 		if(nbt.hasKey("col")) {
 			overlayColor = nbt.getInteger("col");
 		}
 		if(this.overlayColor < 0) {
 			this.overlayColor = getDefaultColor();
 		}
-		if(oldColor != this.overlayColor) {
-			this.worldObj.markBlockRangeForRenderUpdate(getPos(), getPos());
-		}
 		if(nbt.hasKey("con")) {
 			this.connectionMap = nbt.getByte("con");
 		}
-		return nbt;
+		if(oldColor != this.overlayColor || oldConnections != this.connectionMap) {
+			this.worldObj.markBlockRangeForRenderUpdate(getPos(), getPos());
+		}
 	}
 
 	@Override
