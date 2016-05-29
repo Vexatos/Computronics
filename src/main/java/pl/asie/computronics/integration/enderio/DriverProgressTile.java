@@ -40,7 +40,7 @@ public class DriverProgressTile {
 			}
 		}
 
-		public OCDriver(){
+		public OCDriver() {
 			super(IProgressTile.class);
 		}
 

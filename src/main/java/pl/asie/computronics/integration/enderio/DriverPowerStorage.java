@@ -55,7 +55,7 @@ public class DriverPowerStorage {
 			}
 		}
 
-		public OCDriver(){
+		public OCDriver() {
 			super(IPowerStorage.class);
 		}
 

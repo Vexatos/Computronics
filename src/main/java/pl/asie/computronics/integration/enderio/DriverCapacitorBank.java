@@ -175,7 +175,7 @@ public class DriverCapacitorBank {
 			}
 		}
 
-		public OCDriver(){
+		public OCDriver() {
 			super(TileCapBank.class);
 		}
 

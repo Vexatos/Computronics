@@ -82,7 +82,7 @@ public class DriverRedstoneControllable {
 			}
 		}
 
-		public OCDriver(){
+		public OCDriver() {
 			super(IRedstoneModeControlable.class);
 		}
 

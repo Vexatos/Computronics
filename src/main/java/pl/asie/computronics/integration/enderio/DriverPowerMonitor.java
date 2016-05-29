@@ -118,7 +118,7 @@ public class DriverPowerMonitor {
 			}
 		}
 
-		public OCDriver(){
+		public OCDriver() {
 			super(TilePowerMonitor.class);
 		}
 

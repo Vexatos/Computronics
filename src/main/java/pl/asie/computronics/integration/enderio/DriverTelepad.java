@@ -139,7 +139,7 @@ public class DriverTelepad {
 			}
 		}
 
-		public OCDriver(){
+		public OCDriver() {
 			super(ITelePad.class);
 		}
 

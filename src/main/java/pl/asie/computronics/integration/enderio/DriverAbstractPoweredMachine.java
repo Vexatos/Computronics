@@ -40,7 +40,7 @@ public class DriverAbstractPoweredMachine {
 			}
 		}
 
-		public OCDriver(){
+		public OCDriver() {
 			super(AbstractPoweredMachineEntity.class);
 		}
 

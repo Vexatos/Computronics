@@ -39,7 +39,6 @@ import pl.asie.computronics.integration.forestry.nanomachines.SwarmProvider;
 import pl.asie.computronics.item.ItemMultipleComputronics;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.RecipeUtils;
-import pl.asie.lib.item.ItemMultiple;
 
 import java.util.HashMap;
 

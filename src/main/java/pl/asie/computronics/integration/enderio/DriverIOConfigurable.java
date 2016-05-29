@@ -84,7 +84,7 @@ public class DriverIOConfigurable {
 			}
 		}
 
-		public OCDriver(){
+		public OCDriver() {
 			super(IIoConfigurable.class);
 		}
 
