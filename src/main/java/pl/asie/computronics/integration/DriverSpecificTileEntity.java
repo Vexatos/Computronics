@@ -23,7 +23,7 @@ public abstract class DriverSpecificTileEntity<T> implements SidedBlock {
 	@Override
 	public boolean worksWith(World world, BlockPos pos, EnumFacing side) {
 		final TileEntity tile = world.getTileEntity(pos);
-		return tile != null && tileClass.isInstance(tile);
+		return tileClass.isInstance(tile);
 	}
 
 	@Nullable
