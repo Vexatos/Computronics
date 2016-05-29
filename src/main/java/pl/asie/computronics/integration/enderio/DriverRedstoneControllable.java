@@ -8,13 +8,12 @@ import dan200.computercraft.api.peripheral.IComputerAccess;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
-import li.cil.oc.api.network.ManagedEnvironment;
-import li.cil.oc.api.prefab.DriverSidedTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import pl.asie.computronics.integration.CCMultiPeripheral;
+import pl.asie.computronics.integration.DriverSpecificTileEntity;
 import pl.asie.computronics.integration.NamedManagedEnvironment;
 import pl.asie.computronics.reference.Names;
 
@@ -54,7 +53,7 @@ public class DriverRedstoneControllable {
 		return new Object[] { modes };
 	}
 
-	public static class OCDriver extends DriverSidedTileEntity {
+	public static class OCDriver extends DriverSpecificTileEntity<IRedstoneModeControlable> {
 
 		public static class InternalManagedEnvironment extends NamedManagedEnvironment<IRedstoneModeControlable> {
 
@@ -83,14 +82,13 @@ public class DriverRedstoneControllable {
 			}
 		}
 
-		@Override
-		public Class<?> getTileEntityClass() {
-			return IRedstoneModeControlable.class;
+		public OCDriver(){
+			super(IRedstoneModeControlable.class);
 		}
 
 		@Override
-		public ManagedEnvironment createEnvironment(World world, BlockPos pos, EnumFacing side) {
-			return new InternalManagedEnvironment(((IRedstoneModeControlable) world.getTileEntity(pos)));
+		public InternalManagedEnvironment createEnvironment(World world, BlockPos pos, EnumFacing side, IRedstoneModeControlable tile) {
+			return new InternalManagedEnvironment(tile);
 		}
 	}
 
@@ -142,7 +140,7 @@ public class DriverRedstoneControllable {
 					return DriverRedstoneControllable.modes();
 				}
 			}
-			return null;
+			return new Object[] {};
 		}
 	}
 }

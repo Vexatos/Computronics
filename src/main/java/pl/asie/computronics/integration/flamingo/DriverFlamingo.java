@@ -7,13 +7,13 @@ import dan200.computercraft.api.peripheral.IComputerAccess;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
-import li.cil.oc.api.prefab.DriverSidedTileEntity;
 import li.cil.tis3d.api.serial.SerialInterface;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import pl.asie.computronics.integration.CCMultiPeripheral;
+import pl.asie.computronics.integration.DriverSpecificTileEntity;
 import pl.asie.computronics.integration.NamedManagedEnvironment;
 import pl.asie.computronics.integration.tis3d.serial.TileInterfaceProvider;
 import pl.asie.computronics.integration.tis3d.serial.TileSerialInterface;
@@ -28,7 +28,7 @@ public class DriverFlamingo {
 		tile.getWorld().addBlockEvent(tile.getPos(), tile.getBlockType(), 0, 0);
 	}
 
-	public static class OCDriver extends DriverSidedTileEntity {
+	public static class OCDriver extends DriverSpecificTileEntity<TileEntityFlamingo> {
 
 		public static class InternalManagedEnvironment extends NamedManagedEnvironment<TileEntityFlamingo> {
 
@@ -53,14 +53,13 @@ public class DriverFlamingo {
 			}
 		}
 
-		@Override
-		public Class<TileEntityFlamingo> getTileEntityClass() {
-			return TileEntityFlamingo.class;
+		public OCDriver() {
+			super(TileEntityFlamingo.class);
 		}
 
 		@Override
-		public InternalManagedEnvironment createEnvironment(World world, BlockPos pos, EnumFacing side) {
-			return new InternalManagedEnvironment((TileEntityFlamingo) world.getTileEntity(pos));
+		public InternalManagedEnvironment createEnvironment(World world, BlockPos pos, EnumFacing side, TileEntityFlamingo tile) {
+			return new InternalManagedEnvironment(tile);
 		}
 	}
 
@@ -106,7 +105,7 @@ public class DriverFlamingo {
 		}
 	}
 
-	public static class TISInterfaceProvider extends TileInterfaceProvider {
+	public static class TISInterfaceProvider extends TileInterfaceProvider<TileEntityFlamingo> {
 
 		public TISInterfaceProvider() {
 			super(TileEntityFlamingo.class, "flamingo", "flamingo.md");
@@ -140,8 +139,8 @@ public class DriverFlamingo {
 		}
 
 		@Override
-		public SerialInterface interfaceFor(World world, BlockPos pos, EnumFacing side) {
-			return new InternalSerialInterface((TileEntityFlamingo) world.getTileEntity(pos));
+		public SerialInterface interfaceFor(World world, BlockPos pos, EnumFacing side, TileEntityFlamingo tile) {
+			return new InternalSerialInterface(tile);
 		}
 
 		@Override

@@ -7,13 +7,12 @@ import dan200.computercraft.api.peripheral.IComputerAccess;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
-import li.cil.oc.api.network.ManagedEnvironment;
-import li.cil.oc.api.prefab.DriverSidedTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import pl.asie.computronics.integration.CCMultiPeripheral;
+import pl.asie.computronics.integration.DriverSpecificTileEntity;
 import pl.asie.computronics.integration.NamedManagedEnvironment;
 import pl.asie.computronics.reference.Names;
 
@@ -22,7 +21,7 @@ import pl.asie.computronics.reference.Names;
  */
 public class DriverVacuumChest {
 
-	public static class OCDriver extends DriverSidedTileEntity {
+	public static class OCDriver extends DriverSpecificTileEntity<TileVacuumChest> {
 
 		public class InternalManagedEnvironment extends NamedManagedEnvironment<TileVacuumChest> {
 
@@ -47,14 +46,13 @@ public class DriverVacuumChest {
 			}
 		}
 
-		@Override
-		public Class<?> getTileEntityClass() {
-			return TileVacuumChest.class;
+		public OCDriver() {
+			super(TileVacuumChest.class);
 		}
 
 		@Override
-		public ManagedEnvironment createEnvironment(World world, BlockPos pos, EnumFacing side) {
-			return new InternalManagedEnvironment(((TileVacuumChest) world.getTileEntity(pos)));
+		public InternalManagedEnvironment createEnvironment(World world, BlockPos pos, EnumFacing side, TileVacuumChest tile) {
+			return new InternalManagedEnvironment(tile);
 		}
 	}
 
@@ -100,7 +98,7 @@ public class DriverVacuumChest {
 					return new Object[] {};
 				}
 			}
-			return null;
+			return new Object[] {};
 		}
 	}
 }

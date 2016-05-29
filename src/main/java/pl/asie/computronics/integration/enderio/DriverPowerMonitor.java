@@ -8,14 +8,13 @@ import dan200.computercraft.api.peripheral.IComputerAccess;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
-import li.cil.oc.api.network.ManagedEnvironment;
-import li.cil.oc.api.prefab.DriverSidedTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
 import pl.asie.computronics.integration.CCMultiPeripheral;
+import pl.asie.computronics.integration.DriverSpecificTileEntity;
 import pl.asie.computronics.integration.NamedManagedEnvironment;
 import pl.asie.computronics.reference.Names;
 
@@ -32,7 +31,7 @@ public class DriverPowerMonitor {
 		return man;
 	}
 
-	public static class OCDriver extends DriverSidedTileEntity {
+	public static class OCDriver extends DriverSpecificTileEntity<TilePowerMonitor> {
 
 		public static class InternalManagedEnvironment extends NamedManagedEnvironment<TilePowerMonitor> {
 
@@ -119,14 +118,13 @@ public class DriverPowerMonitor {
 			}
 		}
 
-		@Override
-		public Class<?> getTileEntityClass() {
-			return TilePowerMonitor.class;
+		public OCDriver(){
+			super(TilePowerMonitor.class);
 		}
 
 		@Override
-		public ManagedEnvironment createEnvironment(World world, BlockPos pos, EnumFacing side) {
-			return new InternalManagedEnvironment(((TilePowerMonitor) world.getTileEntity(pos)));
+		public InternalManagedEnvironment createEnvironment(World world, BlockPos pos, EnumFacing side, TilePowerMonitor tile) {
+			return new InternalManagedEnvironment(tile);
 		}
 	}
 
@@ -218,7 +216,7 @@ public class DriverPowerMonitor {
 					return new Object[] {};
 				}
 			}
-			return null;
+			return new Object[] {};
 		}
 	}
 }

@@ -8,13 +8,12 @@ import dan200.computercraft.api.peripheral.IComputerAccess;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
-import li.cil.oc.api.network.ManagedEnvironment;
-import li.cil.oc.api.prefab.DriverSidedTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import pl.asie.computronics.integration.CCMultiPeripheral;
+import pl.asie.computronics.integration.DriverSpecificTileEntity;
 import pl.asie.computronics.integration.NamedManagedEnvironment;
 import pl.asie.computronics.reference.Names;
 
@@ -112,7 +111,7 @@ public class DriverCapacitorBank {
 		return new Object[] { modes };
 	}
 
-	public static class OCDriver extends DriverSidedTileEntity {
+	public static class OCDriver extends DriverSpecificTileEntity<TileCapBank> {
 
 		public static class InternalManagedEnvironment extends NamedManagedEnvironment<TileCapBank> {
 
@@ -176,14 +175,13 @@ public class DriverCapacitorBank {
 			}
 		}
 
-		@Override
-		public Class<?> getTileEntityClass() {
-			return TileCapBank.class;
+		public OCDriver(){
+			super(TileCapBank.class);
 		}
 
 		@Override
-		public ManagedEnvironment createEnvironment(World world, BlockPos pos, EnumFacing side) {
-			return new InternalManagedEnvironment(((TileCapBank) world.getTileEntity(pos)));
+		public InternalManagedEnvironment createEnvironment(World world, BlockPos pos, EnumFacing side, TileCapBank tile) {
+			return new InternalManagedEnvironment(tile);
 		}
 	}
 
@@ -270,7 +268,7 @@ public class DriverCapacitorBank {
 					return DriverCapacitorBank.modes();
 				}
 			}
-			return null;
+			return new Object[] {};
 		}
 	}
 }

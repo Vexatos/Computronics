@@ -8,13 +8,12 @@ import dan200.computercraft.api.peripheral.IComputerAccess;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
-import li.cil.oc.api.network.ManagedEnvironment;
-import li.cil.oc.api.prefab.DriverSidedTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import pl.asie.computronics.integration.CCMultiPeripheral;
+import pl.asie.computronics.integration.DriverSpecificTileEntity;
 import pl.asie.computronics.integration.NamedManagedEnvironment;
 import pl.asie.computronics.reference.Names;
 
@@ -56,7 +55,7 @@ public class DriverIOConfigurable {
 		return side;
 	}
 
-	public static class OCDriver extends DriverSidedTileEntity {
+	public static class OCDriver extends DriverSpecificTileEntity<IIoConfigurable> {
 
 		public static class InternalManagedEnvironment extends NamedManagedEnvironment<IIoConfigurable> {
 
@@ -85,14 +84,13 @@ public class DriverIOConfigurable {
 			}
 		}
 
-		@Override
-		public Class<?> getTileEntityClass() {
-			return IIoConfigurable.class;
+		public OCDriver(){
+			super(IIoConfigurable.class);
 		}
 
 		@Override
-		public ManagedEnvironment createEnvironment(World world, BlockPos pos, EnumFacing side) {
-			return new InternalManagedEnvironment(((IIoConfigurable) world.getTileEntity(pos)));
+		public InternalManagedEnvironment createEnvironment(World world, BlockPos pos, EnumFacing side, IIoConfigurable tile) {
+			return new InternalManagedEnvironment(tile);
 		}
 	}
 
@@ -157,7 +155,7 @@ public class DriverIOConfigurable {
 					return DriverIOConfigurable.modes();
 				}
 			}
-			return null;
+			return new Object[] {};
 		}
 	}
 }

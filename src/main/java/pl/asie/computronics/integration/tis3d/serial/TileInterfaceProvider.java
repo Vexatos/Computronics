@@ -11,12 +11,12 @@ import net.minecraft.world.World;
 /**
  * @author Sangar, Vexatos
  */
-public abstract class TileInterfaceProvider implements SerialInterfaceProvider {
+public abstract class TileInterfaceProvider<T> implements SerialInterfaceProvider {
 
-	protected final Class<?> tileClass;
+	protected final Class<T> tileClass;
 	protected final String name, link;
 
-	public TileInterfaceProvider(Class<?> tileClass, String name, String link) {
+	public TileInterfaceProvider(Class<T> tileClass, String name, String link) {
 		this.tileClass = tileClass;
 		this.name = name;
 		this.link = link;
@@ -24,11 +24,6 @@ public abstract class TileInterfaceProvider implements SerialInterfaceProvider {
 
 	@Override
 	public boolean worksWith(World world, BlockPos pos, EnumFacing side) {
-		if(tileClass == null) {
-			// This can happen if filter classes are deduced by reflection and
-			// the class in question is not present.
-			return false;
-		}
 		final TileEntity tile = world.getTileEntity(pos);
 		return tile != null && tileClass.isInstance(tile);
 	}
@@ -42,12 +37,15 @@ public abstract class TileInterfaceProvider implements SerialInterfaceProvider {
 
 	@Override
 	public boolean isValid(World world, BlockPos pos, EnumFacing side, SerialInterface serialInterface) {
-		if(tileClass == null) {
-			// This can happen if filter classes are deduced by reflection and
-			// the class in question is not present.
-			return false;
-		}
 		final TileEntity tile = world.getTileEntity(pos);
 		return tile != null && isStillValid(world, pos, side, serialInterface, tile);
 	}
+
+	@Override
+	public final SerialInterface interfaceFor(World world, BlockPos pos, EnumFacing side) {
+		final TileEntity tile = world.getTileEntity(pos);
+		return tile != null && tileClass.isInstance(tile) ? interfaceFor(world, pos, side, tileClass.cast(tile)) : null;
+	}
+
+	protected abstract SerialInterface interfaceFor(World world, BlockPos pos, EnumFacing side, T tile);
 }
