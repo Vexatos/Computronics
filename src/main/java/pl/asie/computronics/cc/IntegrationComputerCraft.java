@@ -20,6 +20,7 @@ import pl.asie.computronics.integration.enderio.DriverTransceiver;
 import pl.asie.computronics.integration.enderio.DriverVacuumChest;
 import pl.asie.computronics.integration.enderio.DriverWeatherObelisk;
 import pl.asie.computronics.integration.flamingo.DriverFlamingo;
+import pl.asie.computronics.integration.storagedrawers.DriverDrawerGroup;
 import pl.asie.computronics.reference.Compat;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
@@ -56,11 +57,11 @@ public class IntegrationComputerCraft {
 				registerMultiPeripheralProvider(new DriverDeepStorageUnit.CCDriver());
 			}
 		}*/
-		/*if(Mods.isLoaded(Mods.StorageDrawers)) {
+		if(Mods.isLoaded(Mods.StorageDrawers)) {
 			if(compat.isCompatEnabled(Compat.StorageDrawers)) {
 				registerMultiPeripheralProvider(new DriverDrawerGroup.CCDriver());
 			}
-		}*//*
+		}/*
 		if(Mods.isLoaded(Mods.FSP)) {
 			if(compat.isCompatEnabled(Compat.FSP_Steam_Transporter)) {
 				registerMultiPeripheralProvider(new DriverSteamTransporter.CCDriver());

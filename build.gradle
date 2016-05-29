@@ -161,7 +161,7 @@ sourceSets {
             exclude "pl/asie/computronics/integration/mfr/**"
             exclude "pl/asie/computronics/integration/railcraft/**"
             exclude "pl/asie/computronics/integration/redlogic/**"
-            exclude "pl/asie/computronics/integration/storagedrawers/**"
+            //exclude "pl/asie/computronics/integration/storagedrawers/**"
             exclude "pl/asie/computronics/integration/waila/**"
 
             exclude "pl/asie/lib/integration/buildcraft/*"

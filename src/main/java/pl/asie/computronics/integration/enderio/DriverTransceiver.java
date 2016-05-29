@@ -19,7 +19,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import pl.asie.computronics.integration.CCMultiPeripheral;
-import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
+import pl.asie.computronics.integration.NamedManagedEnvironment;
 import pl.asie.computronics.reference.Names;
 
 import java.util.Collection;
@@ -231,7 +231,7 @@ public class DriverTransceiver {
 
 	public static class OCDriver extends DriverSidedTileEntity {
 
-		public static class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TileTransceiver> {
+		public static class InternalManagedEnvironment extends NamedManagedEnvironment<TileTransceiver> {
 
 			public InternalManagedEnvironment(TileTransceiver tile) {
 				super(tile, Names.EnderIO_Transceiver);

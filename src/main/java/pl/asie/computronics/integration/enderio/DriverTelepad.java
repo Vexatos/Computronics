@@ -16,7 +16,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import pl.asie.computronics.integration.CCMultiPeripheral;
-import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
+import pl.asie.computronics.integration.NamedManagedEnvironment;
 import pl.asie.computronics.reference.Names;
 
 /**
@@ -36,7 +36,7 @@ public class DriverTelepad {
 
 	public static class OCDriver extends DriverSidedTileEntity {
 
-		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<ITelePad> {
+		public class InternalManagedEnvironment extends NamedManagedEnvironment<ITelePad> {
 
 			public InternalManagedEnvironment(ITelePad tile) {
 				super(tile, Names.EnderIO_Telepad);

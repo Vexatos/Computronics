@@ -15,7 +15,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import pl.asie.computronics.integration.CCMultiPeripheral;
-import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
+import pl.asie.computronics.integration.NamedManagedEnvironment;
 import pl.asie.computronics.reference.Names;
 
 import java.util.LinkedHashMap;
@@ -114,7 +114,7 @@ public class DriverCapacitorBank {
 
 	public static class OCDriver extends DriverSidedTileEntity {
 
-		public static class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TileCapBank> {
+		public static class InternalManagedEnvironment extends NamedManagedEnvironment<TileCapBank> {
 
 			public InternalManagedEnvironment(TileCapBank tile) {
 				super(tile, Names.EnderIO_CapacitorBank);

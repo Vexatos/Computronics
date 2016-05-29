@@ -16,7 +16,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
 import pl.asie.computronics.integration.CCMultiPeripheral;
-import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
+import pl.asie.computronics.integration.NamedManagedEnvironment;
 import pl.asie.computronics.reference.Names;
 
 /**
@@ -34,7 +34,7 @@ public class DriverPowerMonitor {
 
 	public static class OCDriver extends DriverSidedTileEntity {
 
-		public static class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TilePowerMonitor> {
+		public static class InternalManagedEnvironment extends NamedManagedEnvironment<TilePowerMonitor> {
 
 			public InternalManagedEnvironment(TilePowerMonitor tile) {
 				super(tile, Names.EnderIO_PowerMonitor);

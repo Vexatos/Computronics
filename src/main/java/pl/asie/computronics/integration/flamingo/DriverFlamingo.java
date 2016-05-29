@@ -7,7 +7,6 @@ import dan200.computercraft.api.peripheral.IComputerAccess;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
-import li.cil.oc.api.network.ManagedEnvironment;
 import li.cil.oc.api.prefab.DriverSidedTileEntity;
 import li.cil.tis3d.api.serial.SerialInterface;
 import net.minecraft.tileentity.TileEntity;
@@ -15,7 +14,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import pl.asie.computronics.integration.CCMultiPeripheral;
-import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
+import pl.asie.computronics.integration.NamedManagedEnvironment;
 import pl.asie.computronics.integration.tis3d.serial.TileInterfaceProvider;
 import pl.asie.computronics.integration.tis3d.serial.TileSerialInterface;
 import pl.asie.computronics.reference.Names;
@@ -31,7 +30,7 @@ public class DriverFlamingo {
 
 	public static class OCDriver extends DriverSidedTileEntity {
 
-		public static class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TileEntityFlamingo> {
+		public static class InternalManagedEnvironment extends NamedManagedEnvironment<TileEntityFlamingo> {
 
 			public InternalManagedEnvironment(TileEntityFlamingo tile) {
 				super(tile, Names.Flamingo_Flamingo);
@@ -55,13 +54,13 @@ public class DriverFlamingo {
 		}
 
 		@Override
-		public Class<?> getTileEntityClass() {
+		public Class<TileEntityFlamingo> getTileEntityClass() {
 			return TileEntityFlamingo.class;
 		}
 
 		@Override
-		public ManagedEnvironment createEnvironment(World world, BlockPos pos, EnumFacing side) {
-			return new InternalManagedEnvironment(((TileEntityFlamingo) world.getTileEntity(pos)));
+		public InternalManagedEnvironment createEnvironment(World world, BlockPos pos, EnumFacing side) {
+			return new InternalManagedEnvironment((TileEntityFlamingo) world.getTileEntity(pos));
 		}
 	}
 
@@ -103,7 +102,7 @@ public class DriverFlamingo {
 					return new Object[] { tile.getWiggleStrength() };
 				}
 			}
-			return null;
+			return new Object[] {};
 		}
 	}
 

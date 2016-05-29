@@ -7,7 +7,6 @@ import dan200.computercraft.api.peripheral.IComputerAccess;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
-import li.cil.oc.api.network.ManagedEnvironment;
 import li.cil.oc.api.prefab.DriverSidedTileEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -15,7 +14,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import pl.asie.computronics.integration.CCMultiPeripheral;
-import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
+import pl.asie.computronics.integration.NamedManagedEnvironment;
 import pl.asie.computronics.reference.Names;
 
 /**
@@ -32,7 +31,7 @@ public class DriverDrawerGroup {
 
 	public static class OCDriver extends DriverSidedTileEntity {
 
-		public static class InternalManagedEnvironment extends ManagedEnvironmentOCTile<IDrawerGroup> {
+		public static class InternalManagedEnvironment extends NamedManagedEnvironment<IDrawerGroup> {
 
 			public InternalManagedEnvironment(IDrawerGroup tile) {
 				super(tile, Names.StorageDrawers_DrawerGroup);
@@ -67,7 +66,7 @@ public class DriverDrawerGroup {
 				int slot = a.checkInteger(0) - 1;
 				checkValidDrawer(tile, slot);
 				ItemStack stack = tile.getDrawer(slot).getStoredItemPrototype();
-				if(stack == null || stack.getItem() == null) {
+				if(stack == null) {
 					return new Object[] { null, "there no item in this drawer slot" };
 				}
 				return new Object[] { stack.getUnlocalizedName() };
@@ -78,7 +77,7 @@ public class DriverDrawerGroup {
 				int slot = a.checkInteger(0) - 1;
 				checkValidDrawer(tile, slot);
 				ItemStack stack = tile.getDrawer(slot).getStoredItemPrototype();
-				if(stack == null || stack.getItem() == null) {
+				if(stack == null) {
 					return new Object[] { null, "there no item in this drawer slot" };
 				}
 				return new Object[] { tile.getDrawer(slot).getStoredItemPrototype().getItemDamage() };
@@ -86,13 +85,13 @@ public class DriverDrawerGroup {
 		}
 
 		@Override
-		public Class<?> getTileEntityClass() {
+		public Class<IDrawerGroup> getTileEntityClass() {
 			return IDrawerGroup.class;
 		}
 
 		@Override
-		public ManagedEnvironment createEnvironment(World world, BlockPos pos, EnumFacing side) {
-			return new InternalManagedEnvironment(((IDrawerGroup) world.getTileEntity(pos)));
+		public InternalManagedEnvironment createEnvironment(World world, BlockPos pos, EnumFacing side) {
+			return new InternalManagedEnvironment((IDrawerGroup) world.getTileEntity(pos));
 		}
 	}
 
@@ -154,7 +153,7 @@ public class DriverDrawerGroup {
 						int slot = ((Number) arguments[0]).intValue() - 1;
 						checkValidDrawer(tile, slot);
 						ItemStack stack = tile.getDrawer(slot).getStoredItemPrototype();
-						if(stack == null || stack.getItem() == null) {
+						if(stack == null) {
 							return new Object[] { null, "there no item in this drawer slot" };
 						}
 						return new Object[] { stack.getUnlocalizedName() };
@@ -166,7 +165,7 @@ public class DriverDrawerGroup {
 						int slot = ((Number) arguments[0]).intValue() - 1;
 						checkValidDrawer(tile, slot);
 						ItemStack stack = tile.getDrawer(slot).getStoredItemPrototype();
-						if(stack == null || stack.getItem() == null) {
+						if(stack == null) {
 							return new Object[] { null, "there no item in this drawer slot" };
 						}
 						return new Object[] { tile.getDrawer(slot).getStoredItemPrototype().getItemDamage() };

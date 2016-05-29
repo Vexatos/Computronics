@@ -44,7 +44,7 @@ This version comes with a 1.8.9 and 1.9 port in addition to many additions.
     - Allows individually sending aspects to each paired receiver
     - Receivers must be referenced by their name, meaning you have to name all your signals using Signal Labels
   * [1.7.10] CHANGED: Digital Signal Receiver Box
-    - Can noe be paired to up to 32 receivers, just like the controller box
+    - Can now be paired to up to 32 receivers, just like the controller box
     - Allows individually querying the aspect of each paired controller
     - Sends an `aspect_changed` event containing the controller's name and new aspect.
     - Controllers must be referenced by their name, meaning you have to name all your signals using Signal Labels
@@ -62,7 +62,7 @@ This version comes with a 1.8.9 and 1.9 port in addition to many additions.
   * [1.8.9] ADDED: Support for NoteBetter to the Iron Note Block and the Musical Turtle Upgrade.
   
   * [1.9] Ported the mod to 1.9!
-    - Mods supported right now are OpenComputers, TIS-3D, and Pink Flamingo. 
+    - Mods supported right now are OpenComputers, TIS-3D, EnderIO, Charset, Forestry, Storage Drawers and Pink Flamingo. 
     - asielib is no longer needed as a separate download, it is included in this mod.
 
 ==== 1.6.0 ====
