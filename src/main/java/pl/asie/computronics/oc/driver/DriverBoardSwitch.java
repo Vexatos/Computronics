@@ -62,6 +62,7 @@ public class DriverBoardSwitch extends RackMountableWithComponentConnector {
 
 	protected void flipSwitch(int i) {
 		switches[i] = !switches[i];
+		node.sendToReachable("computer.signal", "switch_flipped", i + 1, switches[i]);
 		needsUpdate = true;
 	}
 
@@ -75,7 +76,7 @@ public class DriverBoardSwitch extends RackMountableWithComponentConnector {
 		super.update();
 		for(int i = 0; i < switches.length; i++) {
 			if(switches[i] && !node.tryChangeBuffer(-Config.SWITCH_BOARD_MAINTENANCE_COST)) {
-				setActive(i, false);
+				setActive(i, false, false);
 			}
 		}
 		if(needsUpdate) {
@@ -93,9 +94,12 @@ public class DriverBoardSwitch extends RackMountableWithComponentConnector {
 		return active != null ? active : false;
 	}
 
-	private void setActive(int index, boolean active) {
+	private void setActive(int index, boolean active, boolean signal) {
 		if(switches[index] != active) {
 			switches[index] = active;
+			if(signal) {
+				node.sendToReachable("computer.signal", "switch_flipped", index + 1, switches[index]);
+			}
 			needsUpdate = true;
 		}
 	}
@@ -113,7 +117,7 @@ public class DriverBoardSwitch extends RackMountableWithComponentConnector {
 		int index = checkSwitch(args.checkInteger(0));
 		boolean active = args.checkBoolean(1);
 		if(switches[index] != active) {
-			setActive(index, active);
+			setActive(index, active, true);
 			return new Object[] { true };
 		}
 		return new Object[] { false };
