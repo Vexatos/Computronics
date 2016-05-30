@@ -20,6 +20,7 @@ This version comes with a 1.8.9 and 1.9 port in addition to many additions.
     - Added a Light Board to put into Server Racks. Allows controlling coloured lights in various layouts.
     - Added a Server Self-Destructor in case you don't need your servers anymore.
     - Added a Rack Capacitor which is a Capacitor you can put into a Rack. Ingenious. It also provides a component that gives you the amount of energy stored in that capacitor.
+    - Added a Switch Board providing four switches to manually and automatically activate and deactivate. Fires an event whenever a switch is flipped, too.
   * ADDED: getPosition() to tape drives. No, I'm not joking. It's real. I'm sorry.
   * ADDED: Built-in tape utility program for ComputerCraft to write songs to tapes and to play, stop, pause etc.
   * ADDED: Option to specify a custom timeout when writing files from a URL to a tape using the tape program on OpenComputers.
