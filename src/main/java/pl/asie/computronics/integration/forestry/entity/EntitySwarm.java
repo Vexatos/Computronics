@@ -172,17 +172,20 @@ public class EntitySwarm extends EntityFlyingCreature implements IBeeHousing {
 	}
 
 	private double circle(EntityLivingBase target, float yOffset, float modifier, float xFuzzy, float radius) {
-		Vec3d pos = getPositionVector();
-		double y = pos.yCoord;
-		pos = pos.subtract(0, pos.yCoord, 0);
-		Vec3d targetPos = target.getPositionVector();
-		y = targetPos.yCoord + yOffset - y;
-		y /= Math.abs(y);
-		targetPos = targetPos.subtract(0, targetPos.yCoord, 0);
-		Vec3d between = pos.subtract(targetPos);
-		Vec3d betweenX = between.scale(1D / Math.abs(between.xCoord));
-		Vec3d targetRadius = betweenX.scale(radius / betweenX.lengthVector()).add(new Vec3d(0, 1, 0).crossProduct(between).normalize());
-		Vec3d direction = targetRadius.subtract(between).addVector(0, y, 0).normalize();
+		final Vec3d direction;
+		{
+			Vec3d pos = getPositionVector();
+			double y = pos.yCoord;
+			pos = pos.subtract(0, pos.yCoord, 0);
+			Vec3d targetPos = target.getPositionVector();
+			y = targetPos.yCoord + yOffset - y;
+			y /= Math.abs(y);
+			targetPos = targetPos.subtract(0, targetPos.yCoord, 0);
+			Vec3d between = pos.subtract(targetPos);
+			Vec3d betweenX = between.scale(1D / Math.abs(between.xCoord));
+			Vec3d targetRadius = betweenX.scale(radius / betweenX.lengthVector()).add(new Vec3d(0, 1, 0).crossProduct(between).normalize());
+			direction = targetRadius.subtract(between).addVector(0, y, 0).normalize();
+		}
 
 		modifier /= 10f;
 
