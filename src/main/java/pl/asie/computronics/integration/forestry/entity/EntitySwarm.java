@@ -159,9 +159,44 @@ public class EntitySwarm extends EntityFlyingCreature implements IBeeHousing {
 				moveTo(player.posX + look.xCoord, player.posY + look.yCoord, player.posZ + look.zCoord,
 					player.width / 2f, ((player.height / 2f) + player.getEyeHeight()) / 2f, 0.3f, 1f, 0.5f);
 			} else {
-				moveTo(player, 3f, 0.3f, 1f);
+				circle(player, 3f, 0.3f, 1f, 1f);
 			}
 		}
+	}
+
+	private double circle(EntityLivingBase target, float yOffset, float modifier, float xFuzzy, float radius) {
+		final Vec3 direction;
+		{
+			Vec3 pos = Vec3.createVectorHelper(posX, posY, posZ);
+			double y = pos.yCoord;
+			pos = pos.addVector(0, -pos.yCoord, 0);
+			Vec3 targetPos = Vec3.createVectorHelper(target.posX, target.posY, target.posZ);
+			y = targetPos.yCoord + yOffset - y;
+			y /= Math.abs(y);
+			targetPos = targetPos.addVector(0, -targetPos.yCoord, 0);
+			final Vec3 between = pos.subtract(targetPos);
+			final Vec3 betweenX = Vec3.createVectorHelper(between.xCoord / Math.abs(between.xCoord), between.yCoord / Math.abs(between.xCoord), between.zCoord / Math.abs(between.xCoord));
+			final double normdist = betweenX.lengthVector();
+			Vec3 targetRadius = Vec3.createVectorHelper(betweenX.xCoord * radius / normdist, betweenX.yCoord * radius / normdist, betweenX.zCoord * radius / normdist);
+			{
+				final Vec3 dir = Vec3.createVectorHelper(0, 1, 0).crossProduct(between).normalize();
+				targetRadius = targetRadius.addVector(dir.xCoord, dir.yCoord, dir.zCoord);
+			}
+			direction = targetRadius.subtract(between).addVector(0, y, 0).normalize();
+		}
+
+		modifier /= 10f;
+
+		double res = direction.xCoord * direction.xCoord + direction.yCoord * direction.yCoord + direction.zCoord * direction.zCoord;
+
+		double ndeltaX = maxAbs(direction.xCoord, Math.signum(direction.xCoord), xFuzzy) * modifier;
+		double ndeltaY = maxAbs(direction.yCoord, Math.signum(direction.yCoord), xFuzzy) /*vec3.yCoord*/ * modifier;
+		double ndeltaZ = maxAbs(direction.zCoord, Math.signum(direction.zCoord), xFuzzy) * modifier;
+		motionX += minAbs(ndeltaX, Math.signum(ndeltaX), 0.5);
+		motionY += minAbs(ndeltaY, Math.signum(ndeltaY), 0.5);
+		motionZ += minAbs(ndeltaZ, Math.signum(ndeltaZ), 0.5);
+
+		return res;
 	}
 
 	private double moveTo(EntityLivingBase target, double yOffset, float modifier, float xFuzzy) {
