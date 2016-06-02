@@ -56,9 +56,9 @@ public class IntegrationForestry {
 	public static Item itemStickImpregnated;
 
 	private static final String
-		speciesAgrarian = "Forestry.speciesAgrarian",
-		speciesExotic = "Forestry.speciesExotic",
-		speciesTipsy = "Forestry.speciesTipsy";
+		speciesAgrarian = "forestry.speciesAgrarian",
+		speciesExotic = "forestry.speciesExotic",
+		speciesTipsy = "forestry.speciesTipsy";
 
 	public void preInitOC() {
 		if(Mods.isLoaded(Mods.OpenComputers)) {
@@ -160,21 +160,21 @@ public class IntegrationForestry {
 		IAllele[] alleles = BeeManager.beeRoot.getTemplate(speciesExotic).clone();
 
 		//Just making sure
-		alleles[EnumBeeChromosome.CAVE_DWELLING.ordinal()] = AlleleManager.alleleRegistry.getAllele("Forestry.boolFalse");
-		alleles[EnumBeeChromosome.HUMIDITY_TOLERANCE.ordinal()] = AlleleManager.alleleRegistry.getAllele("Forestry.toleranceUp1");
-		alleles[EnumBeeChromosome.FLOWERING.ordinal()] = AlleleManager.alleleRegistry.getAllele("Forestry.floweringSlowest");
-		alleles[EnumBeeChromosome.TERRITORY.ordinal()] = AlleleManager.alleleRegistry.getAllele("Forestry.territoryAverage");
+		alleles[EnumBeeChromosome.CAVE_DWELLING.ordinal()] = AlleleManager.alleleRegistry.getAllele("forestry.boolFalse");
+		alleles[EnumBeeChromosome.HUMIDITY_TOLERANCE.ordinal()] = AlleleManager.alleleRegistry.getAllele("forestry.toleranceUp1");
+		alleles[EnumBeeChromosome.FLOWERING.ordinal()] = AlleleManager.alleleRegistry.getAllele("forestry.floweringSlowest");
+		alleles[EnumBeeChromosome.TERRITORY.ordinal()] = AlleleManager.alleleRegistry.getAllele("forestry.territoryAverage");
 
 		//Actual template
 		alleles[EnumBeeChromosome.SPECIES.ordinal()] = speciesScummy;
-		alleles[EnumBeeChromosome.FERTILITY.ordinal()] = AlleleManager.alleleRegistry.getAllele("Forestry.fertilityLow");
-		alleles[EnumBeeChromosome.TOLERATES_RAIN.ordinal()] = AlleleManager.alleleRegistry.getAllele("Forestry.boolTrue");
-		alleles[EnumBeeChromosome.NEVER_SLEEPS.ordinal()] = AlleleManager.alleleRegistry.getAllele("Forestry.boolFalse");
-		alleles[EnumBeeChromosome.SPEED.ordinal()] = AlleleManager.alleleRegistry.getAllele("Forestry.speedSlowest");
-		alleles[EnumBeeChromosome.LIFESPAN.ordinal()] = AlleleManager.alleleRegistry.getAllele("Forestry.lifespanLonger");
-		alleles[EnumBeeChromosome.TEMPERATURE_TOLERANCE.ordinal()] = AlleleManager.alleleRegistry.getAllele("Forestry.toleranceUp1");
+		alleles[EnumBeeChromosome.FERTILITY.ordinal()] = AlleleManager.alleleRegistry.getAllele("forestry.fertilityLow");
+		alleles[EnumBeeChromosome.TOLERATES_RAIN.ordinal()] = AlleleManager.alleleRegistry.getAllele("forestry.boolTrue");
+		alleles[EnumBeeChromosome.NEVER_SLEEPS.ordinal()] = AlleleManager.alleleRegistry.getAllele("forestry.boolFalse");
+		alleles[EnumBeeChromosome.SPEED.ordinal()] = AlleleManager.alleleRegistry.getAllele("forestry.speedSlowest");
+		alleles[EnumBeeChromosome.LIFESPAN.ordinal()] = AlleleManager.alleleRegistry.getAllele("forestry.lifespanLonger");
+		alleles[EnumBeeChromosome.TEMPERATURE_TOLERANCE.ordinal()] = AlleleManager.alleleRegistry.getAllele("forestry.toleranceUp1");
 		alleles[EnumBeeChromosome.FLOWER_PROVIDER.ordinal()] = sea;
-		alleles[EnumBeeChromosome.EFFECT.ordinal()] = AlleleManager.alleleRegistry.getAllele("Forestry.effectDrunkard");
+		alleles[EnumBeeChromosome.EFFECT.ordinal()] = AlleleManager.alleleRegistry.getAllele("forestry.effectDrunkard");
 		return alleles;
 	}
 

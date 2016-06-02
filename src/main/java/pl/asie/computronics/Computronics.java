@@ -82,13 +82,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Mod(modid = Mods.Computronics, name = Mods.Computronics_NAME, version = "@VERSION@",
-	dependencies = "required-after:asielib;required-after:Forge@[12.17.0.1922,);"
+	dependencies = "required-after:asielib;required-after:Forge@[12.17.0.1932,);"
 		+ "after:ComputerCraft@[1.79,);after:OpenComputers@[1.6.0,);after:tis3d@[0.8.3,);"
 		+ "before:OpenPeripheralCore@[1.1,);before:OpenPeripheralApi@[3.2,);"
 		+ "after:MineFactoryReloaded;after:RedLogic@[59.1.9,);after:ProjRed|Core;"
 		+ "after:BuildCraft|Core@[7.2.0,);after:Railcraft@[9.10.0.0,);"
 		+ "after:gregtech;after:EnderIO@[1.9.4-3.0,);"
-		+ "after:Forestry@[5.0.0,);after:Waila@[1.5.10,);"
+		+ "after:forestry@[5.0.0,);after:Waila@[1.5.10,);"
 		+ "after:MekanismAPI|energy@[8.0.0,);after:Flamingo@[1.7.10-1.3,);"
 		+ "after:armourersWorkshop@[1.7.10-0.33,);"
 		+ "before:CharsetAPI|Wires@[0.3,);before:CharsetWires")

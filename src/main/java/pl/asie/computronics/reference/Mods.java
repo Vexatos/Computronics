@@ -32,7 +32,7 @@ public class Mods {
 		EnderIO = "EnderIO",
 		Factorization = "factorization",
 		Flamingo = "Flamingo",
-		Forestry = "Forestry",
+		Forestry = "forestry",
 		FSP = "Steamcraft",
 		GregTech = "gregtech",
 		MFR = "MineFactoryReloaded",
