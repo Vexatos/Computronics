@@ -516,7 +516,7 @@ public class DriverCardSound extends ManagedEnvironment implements DeviceInfo, I
 				DeviceClass.Multimedia,
 				"Audio interface",
 				OCUtils.Vendors.Yanaki,
-				"Temia AQ-244"
+				"MinoSound 244-X"
 			).deviceInfo();
 		}
 		return deviceInfo;

@@ -124,7 +124,7 @@ public class TileDigitalControllerBox extends TileDigitalBoxBase implements ICon
 	protected OCUtils.Device deviceInfo() {
 		return new OCUtils.Device(
 			DeviceClass.Communication,
-			"Signal Controller",
+			"Signal controller",
 			OCUtils.Vendors.Railcraft,
 			"Digitized Signal Sender X3"
 		);
