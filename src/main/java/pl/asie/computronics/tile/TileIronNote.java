@@ -17,6 +17,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.NoteUtils;
+import pl.asie.computronics.util.OCUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,6 +78,17 @@ public class TileIronNote extends TileEntityPeripheralBase implements IBundledTi
 			}
 		}
 		return null;
+	}
+
+	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
+	protected OCUtils.Device deviceInfo() {
+		return new OCUtils.Device(
+			DeviceClass.Multimedia,
+			"Music note emission device",
+			OCUtils.Vendors.Yanaki,
+			"Vanilla 1"
+		);
 	}
 
 	@Override

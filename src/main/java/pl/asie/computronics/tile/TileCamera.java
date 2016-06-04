@@ -12,8 +12,10 @@ import pl.asie.computronics.Computronics;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.Camera;
+import pl.asie.computronics.util.OCUtils;
 
 public class TileCamera extends TileEntityPeripheralBase {
+
 	private static final int CALL_LIMIT = 20;
 	private final Camera camera = new Camera();
 	private final Camera cameraRedstone = new Camera();
@@ -50,6 +52,17 @@ public class TileCamera extends TileEntityPeripheralBase {
 			this.worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, this.getBlockType());
 		}
 		tick++;
+	}
+
+	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
+	protected OCUtils.Device deviceInfo() {
+		return new OCUtils.Device(
+			DeviceClass.Multimedia,
+			"Rangefinder",
+			OCUtils.Vendors.Siekierka,
+			"Simple Spatiometer 1"
+		);
 	}
 
 	// OpenComputers

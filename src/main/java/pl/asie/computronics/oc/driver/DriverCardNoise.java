@@ -17,6 +17,7 @@ import net.minecraftforge.common.util.Constants;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.network.PacketType;
 import pl.asie.computronics.reference.Config;
+import pl.asie.computronics.util.OCUtils;
 import pl.asie.computronics.util.sound.Audio;
 import pl.asie.computronics.util.sound.AudioType;
 import pl.asie.computronics.util.sound.Channel;
@@ -284,6 +285,16 @@ public class DriverCardNoise extends DriverCardSoundBase {
 		nbt.setTag("freqs", freqList);
 		nbt.setIntArray("dur", durations);
 		nbt.setIntArray("delays", delays);
+	}
+
+	@Override
+	protected OCUtils.Device deviceInfo() {
+		return new OCUtils.Device(
+			DeviceClass.Multimedia,
+			"Audio interface",
+			OCUtils.Vendors.Yanaki,
+			"SQ1289-4"
+		);
 	}
 
 	protected void sendSound(World world, double x, double y, double z, Channel[] channels) throws Exception {

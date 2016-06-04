@@ -22,6 +22,7 @@ import pl.asie.computronics.integration.railcraft.SignalTypes;
 import pl.asie.computronics.integration.railcraft.signalling.MassiveSignalReceiver;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.reference.Names;
+import pl.asie.computronics.util.OCUtils;
 import pl.asie.computronics.util.TableUtils;
 
 import java.io.DataInputStream;
@@ -167,6 +168,18 @@ public class TileDigitalReceiverBox extends TileDigitalBoxBase implements IRecei
 			}
 		}
 	}
+
+	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
+	protected OCUtils.Device deviceInfo() {
+		return new OCUtils.Device(
+			DeviceClass.Communication,
+			"Signal receiver",
+			OCUtils.Vendors.Railcraft,
+			"Digitized Signal Receiver X3"
+		);
+	}
+
 
 	private Object[] getAspect(String name) {
 		SignalAspect aspect = this.receiver.getMostRestrictiveAspectFor(name);

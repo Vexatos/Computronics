@@ -2,6 +2,7 @@ package pl.asie.computronics.oc.driver;
 
 import cpw.mods.fml.common.Optional;
 import li.cil.oc.api.Network;
+import li.cil.oc.api.driver.DeviceInfo;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
@@ -15,8 +16,11 @@ import pl.asie.computronics.api.chat.IChatListener;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.ChatBoxUtils;
+import pl.asie.computronics.util.OCUtils;
 
-public class RobotUpgradeChatBox extends ManagedEnvironment implements IChatListener {
+import java.util.Map;
+
+public class RobotUpgradeChatBox extends ManagedEnvironment implements DeviceInfo, IChatListener {
 
 	private final EnvironmentHost container;
 	private int distance;
@@ -132,5 +136,20 @@ public class RobotUpgradeChatBox extends ManagedEnvironment implements IChatList
 			return;
 		}
 		ChatBoxUtils.sendChatMessage(c.world(), c.xPosition(), c.yPosition(), c.zPosition(), d, prefix, string);
+	}
+
+	protected Map<String, String> deviceInfo;
+
+	@Override
+	public Map<String, String> getDeviceInfo() {
+		if(deviceInfo == null) {
+			return deviceInfo = new OCUtils.Device(
+				DeviceClass.Multimedia,
+				"Chat interface",
+				OCUtils.Vendors.NSA,
+				"[CLASSIFIED]"
+			).deviceInfo();
+		}
+		return deviceInfo;
 	}
 }

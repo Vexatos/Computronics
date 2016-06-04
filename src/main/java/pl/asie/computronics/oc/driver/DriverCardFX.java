@@ -1,6 +1,7 @@
 package pl.asie.computronics.oc.driver;
 
 import li.cil.oc.api.Network;
+import li.cil.oc.api.driver.DeviceInfo;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
@@ -9,11 +10,13 @@ import li.cil.oc.api.network.EnvironmentHost;
 import li.cil.oc.api.network.Visibility;
 import li.cil.oc.api.prefab.ManagedEnvironment;
 import pl.asie.computronics.reference.Config;
+import pl.asie.computronics.util.OCUtils;
 import pl.asie.computronics.util.ParticleUtils;
 
+import java.util.Map;
 import java.util.Random;
 
-public class DriverCardFX extends ManagedEnvironment {
+public class DriverCardFX extends ManagedEnvironment implements DeviceInfo {
 
 	protected final EnvironmentHost container;
 
@@ -63,5 +66,20 @@ public class DriverCardFX extends ManagedEnvironment {
 			return new Object[] { true };
 		}
 		return new Object[] { false };
+	}
+
+	protected Map<String, String> deviceInfo;
+
+	@Override
+	public Map<String, String> getDeviceInfo() {
+		if(deviceInfo == null) {
+			return deviceInfo = new OCUtils.Device(
+				DeviceClass.Generic,
+				"Particle emitter",
+				OCUtils.Vendors.Siekierka,
+				"Holotron FX-84"
+			).deviceInfo();
+		}
+		return deviceInfo;
 	}
 }

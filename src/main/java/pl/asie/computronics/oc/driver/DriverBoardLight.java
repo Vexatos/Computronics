@@ -16,6 +16,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import pl.asie.computronics.reference.Config;
+import pl.asie.computronics.util.OCUtils;
 import pl.asie.lib.integration.Integration;
 
 /**
@@ -352,4 +353,15 @@ public class DriverBoardLight extends RackMountableWithComponentConnector {
 		}
 		return false;
 	}
+
+	@Override
+	protected OCUtils.Device deviceInfo() {
+		return new OCUtils.Device(
+			DeviceClass.Display,
+			"Light board",
+			OCUtils.Vendors.Lumiose,
+			"LED-15 X"
+		);
+	}
+
 }

@@ -9,6 +9,7 @@ import li.cil.oc.api.network.Visibility;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import pl.asie.computronics.reference.Config;
+import pl.asie.computronics.util.OCUtils;
 
 /**
  * @author Vexatos
@@ -147,5 +148,15 @@ public class DriverBoardSwitch extends RackMountableWithComponentConnector {
 			switchData |= (switches[i] ? 1 : 0) << i;
 		}
 		tag.setByte("s", switchData);
+	}
+
+	@Override
+	protected OCUtils.Device deviceInfo() {
+		return new OCUtils.Device(
+			DeviceClass.Input,
+			"Switch board",
+			OCUtils.Vendors.Soluna,
+			"Clickety-Clack Q3"
+		);
 	}
 }
