@@ -5,7 +5,6 @@ import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.api.ProbeMode;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
-import mcp.mobius.waila.api.SpecialChars;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -13,6 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.Computronics;
@@ -43,7 +43,7 @@ public class InfoTapeDrive extends ComputronicsInfoProvider {
 			String label = Computronics.itemTape.getLabel(is);
 			if(label.length() > 0 && ConfigValues.TapeName.getValue(config)) {
 				currenttip.add(StringUtil.localizeAndFormat("tooltip.computronics.waila.tape.labeltapeinserted",
-					label + SpecialChars.RESET));
+					label + TextFormatting.RESET));
 			} else {
 				currenttip.add(StringUtil.localize("tooltip.computronics.waila.tape.tapeinserted"));
 			}
@@ -91,7 +91,7 @@ public class InfoTapeDrive extends ComputronicsInfoProvider {
 			String label = Computronics.itemTape.getLabel(is);
 			if(label.length() > 0) {
 				probeInfo.text(StringUtil.localizeAndFormat("tooltip.computronics.waila.tape.labeltapeinserted",
-					label + SpecialChars.RESET));
+					label + TextFormatting.RESET));
 			} else {
 				probeInfo.text(StringUtil.localize("tooltip.computronics.waila.tape.tapeinserted"));
 			}
