@@ -8,6 +8,8 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
+import li.cil.oc.api.network.Node;
+import li.cil.oc.api.network.SidedEnvironment;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.Computronics;
@@ -17,8 +19,14 @@ import pl.asie.computronics.api.audio.IAudioSource;
 import pl.asie.computronics.cc.ISidedPeripheral;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
+import pl.asie.computronics.util.OCUtils;
 
-public class TileSpeaker extends TileEntityPeripheralBase implements IAudioReceiver, ITickable, ISidedPeripheral {
+import javax.annotation.Nullable;
+
+@Optional.InterfaceList({
+	@Optional.Interface(iface = "li.cil.oc.api.network.SidedEnvironment", modid = Mods.OpenComputers)
+})
+public class TileSpeaker extends TileEntityPeripheralBase implements IAudioReceiver, ITickable, ISidedPeripheral, SidedEnvironment {
 
 	private final TIntHashSet packetIds = new TIntHashSet();
 	private IAudioSource lastSource;
@@ -74,7 +82,7 @@ public class TileSpeaker extends TileEntityPeripheralBase implements IAudioRecei
 	public boolean connectsAudio(EnumFacing side) {
 		if (hasWorldObj()) {
 			IBlockState state = worldObj.getBlockState(getPos());
-			return state != null && state.getValue(Computronics.speaker.rotation.FACING) != side;
+			return state.getValue(Computronics.speaker.rotation.FACING) != side;
 		} else {
 			return false;
 		}
@@ -95,5 +103,24 @@ public class TileSpeaker extends TileEntityPeripheralBase implements IAudioRecei
 	@Optional.Method(modid = Mods.OpenComputers)
 	protected void initOC() {
 		// NO-OP
+	}
+
+	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
+	protected OCUtils.Device deviceInfo() {
+		return null;
+	}
+
+	@Nullable
+	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
+	public Node sidedNode(EnumFacing side) {
+		return null;
+	}
+
+	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
+	public boolean canConnect(EnumFacing side) {
+		return false;
 	}
 }

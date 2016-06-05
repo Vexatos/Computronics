@@ -18,6 +18,7 @@ import pl.asie.computronics.integration.railcraft.LocomotiveManager;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TileEntityPeripheralBase;
+import pl.asie.computronics.util.OCUtils;
 
 import java.lang.ref.WeakReference;
 import java.util.Locale;
@@ -174,6 +175,17 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 			return "not enough energy";
 		}
 		return null;
+	}
+
+	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
+	protected OCUtils.Device deviceInfo() {
+		return new OCUtils.Device(
+			DeviceClass.Communication,
+			"Locomotive interface",
+			OCUtils.Vendors.Railcraft,
+			"Locoremotive (TM)"
+		);
 	}
 
 	//Computer stuff

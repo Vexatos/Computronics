@@ -16,6 +16,7 @@ import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.cc.CCRadarProxy;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
+import pl.asie.computronics.util.OCUtils;
 import pl.asie.computronics.util.RadarUtils;
 import pl.asie.computronics.util.TableUtils;
 import pl.asie.lib.api.tile.IBatteryProvider;
@@ -47,6 +48,17 @@ public class TileRadar extends TileEntityPeripheralBase implements IBatteryProvi
 		return new AxisAlignedBB(
 			pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1
 		).expand(distance, distance, distance);
+	}
+
+	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
+	protected OCUtils.Device deviceInfo() {
+		return new OCUtils.Device(
+			DeviceClass.Multimedia,
+			"Radar",
+			OCUtils.Vendors.Trumbour,
+			"Detectotron M1"
+		);
 	}
 
 	@Callback(doc = "function([distance:number]):table; Returns a list of all entities detected within the specified or the maximum range")

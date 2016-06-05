@@ -1,6 +1,7 @@
 package pl.asie.computronics.oc.driver;
 
 import li.cil.oc.api.Network;
+import li.cil.oc.api.driver.DeviceInfo;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
@@ -13,13 +14,14 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.AxisAlignedBB;
 import pl.asie.computronics.reference.Config;
+import pl.asie.computronics.util.OCUtils;
 import pl.asie.computronics.util.RadarUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class RobotUpgradeRadar extends ManagedEnvironment {
+public class RobotUpgradeRadar extends ManagedEnvironment implements DeviceInfo {
 
 	private final EnvironmentHost container;
 	private static final int CALL_LIMIT = 15;
@@ -100,5 +102,20 @@ public class RobotUpgradeRadar extends ManagedEnvironment {
 			context.pause(0.5);
 		}
 		return new Object[] { entities.toArray() };
+	}
+
+	protected Map<String, String> deviceInfo;
+
+	@Override
+	public Map<String, String> getDeviceInfo() {
+		if(deviceInfo == null) {
+			return deviceInfo = new OCUtils.Device(
+				DeviceClass.Multimedia,
+				"Radar",
+				OCUtils.Vendors.Trumbour,
+				"Detectotron M1 Mini"
+			).deviceInfo();
+		}
+		return deviceInfo;
 	}
 }

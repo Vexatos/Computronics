@@ -12,8 +12,10 @@ import li.cil.oc.api.network.Packet;
 import li.cil.oc.api.network.Visibility;
 import li.cil.oc.server.component.NetworkCard;
 import pl.asie.computronics.reference.Config;
+import pl.asie.computronics.util.OCUtils;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * @author Sangar, Vexatos
@@ -30,6 +32,21 @@ public class DriverCardSpoof extends NetworkCard {
 			.withComponent("modem", Visibility.Neighbors)
 			.withConnector(Config.SPOOFING_ENERGY_COST * 10)
 			.create());
+	}
+
+	protected Map<String, String> deviceInfo;
+
+	@Override
+	public Map<String, String> getDeviceInfo() {
+		if(deviceInfo == null) {
+			return deviceInfo = new OCUtils.Device(
+				DeviceClass.Network,
+				"Ethernet contorter",
+				OCUtils.Vendors.Hosencorp,
+				"42i520 (MPN-01) - Br1ck"
+			).deviceInfo();
+		}
+		return deviceInfo;
 	}
 
 	@Override

@@ -12,6 +12,7 @@ import li.cil.oc.api.network.Visibility;
 import net.minecraft.nbt.NBTTagCompound;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.reference.Mods;
+import pl.asie.computronics.util.OCUtils;
 import pl.asie.computronics.util.boom.SelfDestruct;
 
 /**
@@ -132,6 +133,16 @@ public class DriverCardBoom extends ManagedEnvironmentWithComponentConnector {
 		} else {
 			nbt.setBoolean("ticking", false);
 		}
+	}
+
+	@Override
+	protected OCUtils.Device deviceInfo() {
+		return new OCUtils.Device(
+			DeviceClass.Generic,
+			"Machine destruction service",
+			OCUtils.Vendors.HuggingCreeper,
+			"SD-Struct 1"
+		);
 	}
 
 	@Override

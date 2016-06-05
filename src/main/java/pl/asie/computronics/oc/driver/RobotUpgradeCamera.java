@@ -1,6 +1,7 @@
 package pl.asie.computronics.oc.driver;
 
 import li.cil.oc.api.Network;
+import li.cil.oc.api.driver.DeviceInfo;
 import li.cil.oc.api.internal.Rotatable;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
@@ -11,8 +12,11 @@ import li.cil.oc.api.prefab.ManagedEnvironment;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.MathHelper;
 import pl.asie.computronics.util.Camera;
+import pl.asie.computronics.util.OCUtils;
 
-public class RobotUpgradeCamera extends ManagedEnvironment {
+import java.util.Map;
+
+public class RobotUpgradeCamera extends ManagedEnvironment implements DeviceInfo {
 
 	private final EnvironmentHost entity;
 
@@ -76,5 +80,20 @@ public class RobotUpgradeCamera extends ManagedEnvironment {
 		camera.ray(entity.world(), (int) Math.floor(entity.xPosition()), (int) Math.floor(entity.yPosition()), (int) Math.floor(entity.zPosition()),
 			EnumFacing.DOWN, x, y);
 		return new Object[] { camera.getDistance() };
+	}
+
+	protected Map<String, String> deviceInfo;
+
+	@Override
+	public Map<String, String> getDeviceInfo() {
+		if(deviceInfo == null) {
+			return deviceInfo = new OCUtils.Device(
+				DeviceClass.Multimedia,
+				"Rangefinder",
+				OCUtils.Vendors.Siekierka,
+				"Compact Spatiometer 1-C"
+			).deviceInfo();
+		}
+		return deviceInfo;
 	}
 }

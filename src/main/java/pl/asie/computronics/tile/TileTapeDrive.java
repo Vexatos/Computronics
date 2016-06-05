@@ -36,6 +36,7 @@ import pl.asie.computronics.network.PacketType;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TapeDriveState.State;
+import pl.asie.computronics.util.OCUtils;
 import pl.asie.lib.network.Packet;
 import pl.asie.lib.util.ColorUtils;
 import pl.asie.lib.util.internal.IColorable;
@@ -210,6 +211,17 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 		}
 
 		super.invalidate_OC();
+	}
+
+	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
+	protected OCUtils.Device deviceInfo() {
+		return new OCUtils.Device(
+			DeviceClass.Tape,
+			"Tape drive",
+			OCUtils.Vendors.Yanaki,
+			"DFPWM 1"
+		);
 	}
 
 	// GUI/State

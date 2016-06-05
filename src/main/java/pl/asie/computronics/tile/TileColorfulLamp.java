@@ -14,6 +14,7 @@ import pl.asie.computronics.Computronics;
 import pl.asie.computronics.block.BlockColorfulLamp;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.LampUtil;
+import pl.asie.computronics.util.OCUtils;
 import pl.asie.lib.api.tile.IBundledRedstoneProvider;
 
 import static pl.asie.computronics.block.BlockColorfulLamp.BRIGHTNESS;
@@ -103,6 +104,17 @@ public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundl
 			return new Object[] { true };
 		}
 		return new Object[] { false, "number must be between 0 and 32767" };
+	}
+
+	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
+	protected OCUtils.Device deviceInfo() {
+		return new OCUtils.Device(
+			DeviceClass.Display,
+			"Colored Lamp",
+			OCUtils.Vendors.Lumiose,
+			"LED-4"
+		);
 	}
 
 	@Override

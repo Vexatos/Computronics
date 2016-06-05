@@ -20,6 +20,7 @@ import pl.asie.computronics.block.BlockChatBox;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.ChatBoxUtils;
+import pl.asie.computronics.util.OCUtils;
 
 public class TileChatBox extends TileEntityPeripheralBase implements IChatListener, ITickable {
 
@@ -143,6 +144,16 @@ public class TileChatBox extends TileEntityPeripheralBase implements IChatListen
 		}
 	}
 
+	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
+	protected OCUtils.Device deviceInfo() {
+		return new OCUtils.Device(
+			DeviceClass.Multimedia,
+			"Chat interface",
+			OCUtils.Vendors.NSA,
+			"[CLASSIFIED]"
+		);
+	}
 	// OpenComputers API
 
 	@Callback(doc = "function(text:string [, distance:number]):boolean; "

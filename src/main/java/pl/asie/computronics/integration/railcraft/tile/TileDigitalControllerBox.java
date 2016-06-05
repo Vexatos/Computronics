@@ -19,6 +19,7 @@ import pl.asie.computronics.integration.railcraft.SignalTypes;
 import pl.asie.computronics.integration.railcraft.signalling.MassiveSignalController;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.reference.Names;
+import pl.asie.computronics.util.OCUtils;
 import pl.asie.computronics.util.TableUtils;
 
 import java.io.DataInputStream;
@@ -117,6 +118,18 @@ public class TileDigitalControllerBox extends TileDigitalBoxBase implements ICon
 	}
 
 	// Computer stuff //
+
+	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
+	protected OCUtils.Device deviceInfo() {
+		return new OCUtils.Device(
+			DeviceClass.Communication,
+			"Signal controller",
+			OCUtils.Vendors.Railcraft,
+			"Digitized Signal Sender X3"
+		);
+	}
+
 
 	private Object[] setAspect(String name, int aspectIndex) {
 		if(aspectIndex > 0 && aspectIndex < SignalAspect.VALUES.length) {

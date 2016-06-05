@@ -17,6 +17,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.asie.computronics.reference.Config;
+import pl.asie.computronics.util.OCUtils;
 import pl.asie.lib.integration.Integration;
 
 import static pl.asie.lib.util.WorldUtils.notifyBlockUpdate;
@@ -352,4 +353,15 @@ public class DriverBoardLight extends RackMountableWithComponentConnector {
 		}
 		return false;
 	}
+
+	@Override
+	protected OCUtils.Device deviceInfo() {
+		return new OCUtils.Device(
+			DeviceClass.Display,
+			"Light board",
+			OCUtils.Vendors.Lumiose,
+			"LED-15 X"
+		);
+	}
+
 }

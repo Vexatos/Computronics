@@ -1,6 +1,7 @@
 package pl.asie.computronics.oc.driver;
 
 import li.cil.oc.api.Network;
+import li.cil.oc.api.driver.DeviceInfo;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
@@ -31,6 +32,7 @@ import pl.asie.computronics.audio.SoundCardPacket;
 import pl.asie.computronics.audio.SoundCardPacketClientHandler;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
+import pl.asie.computronics.util.OCUtils;
 import pl.asie.computronics.util.sound.AudioType;
 import pl.asie.computronics.util.sound.AudioUtil;
 import pl.asie.computronics.util.sound.Instruction;
@@ -50,6 +52,7 @@ import java.util.ArrayDeque;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 import java.util.WeakHashMap;
@@ -57,7 +60,7 @@ import java.util.WeakHashMap;
 /**
  * @author Vexatos, gamax92
  */
-public class DriverCardSound extends ManagedEnvironment implements IAudioSource {
+public class DriverCardSound extends ManagedEnvironment implements DeviceInfo, IAudioSource {
 
 	protected final EnvironmentHost host;
 
@@ -493,5 +496,20 @@ public class DriverCardSound extends ManagedEnvironment implements IAudioSource 
 	@Override
 	public int getSourceId() {
 		return codecId;
+	}
+
+	protected Map<String, String> deviceInfo;
+
+	@Override
+	public Map<String, String> getDeviceInfo() {
+		if(deviceInfo == null) {
+			return deviceInfo = new OCUtils.Device(
+				DeviceClass.Multimedia,
+				"Audio interface",
+				OCUtils.Vendors.Yanaki,
+				"MinoSound 244-X"
+			).deviceInfo();
+		}
+		return deviceInfo;
 	}
 }

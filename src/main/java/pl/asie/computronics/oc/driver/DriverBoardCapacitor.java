@@ -8,6 +8,7 @@ import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.Visibility;
 import net.minecraft.nbt.NBTTagCompound;
 import pl.asie.computronics.reference.Config;
+import pl.asie.computronics.util.OCUtils;
 
 /**
  * @author Vexatos
@@ -32,6 +33,16 @@ public class DriverBoardCapacitor extends RackMountableWithComponentConnector {
 	@Callback(doc = "function():number; Returns the total amount of energy this capacitor can store.", direct = true)
 	public Object[] maxEnergy(Context context, Arguments args) {
 		return new Object[] { node.localBufferSize() };
+	}
+
+	@Override
+	protected OCUtils.Device deviceInfo() {
+		return new OCUtils.Device(
+			DeviceClass.Power,
+			"Battery",
+			OCUtils.Vendors.Soluna,
+			"CapCube 64 (Rev. 2)"
+		);
 	}
 
 	@Override

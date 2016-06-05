@@ -1,5 +1,6 @@
 package pl.asie.computronics.oc.driver;
 
+import li.cil.oc.api.driver.DeviceInfo;
 import li.cil.oc.api.network.Connector;
 import li.cil.oc.api.network.EnvironmentHost;
 import li.cil.oc.api.prefab.ManagedEnvironment;
@@ -10,17 +11,19 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.network.PacketType;
 import pl.asie.computronics.reference.Config;
+import pl.asie.computronics.util.OCUtils;
 import pl.asie.computronics.util.sound.Audio;
 import pl.asie.computronics.util.sound.AudioType;
 import pl.asie.computronics.util.sound.Channel;
 import pl.asie.lib.network.Packet;
 
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * @author Vexatos
  */
-public abstract class DriverCardSoundBase extends ManagedEnvironment {
+public abstract class DriverCardSoundBase extends ManagedEnvironment implements DeviceInfo {
 
 	protected final EnvironmentHost host;
 	protected final Long[] expirationList;
@@ -186,4 +189,18 @@ public abstract class DriverCardSoundBase extends ManagedEnvironment {
 			&& player.worldObj.provider.getDimension() == dimension;
 	}
 
+	protected Map<String, String> deviceInfo;
+
+	@Override
+	public Map<String, String> getDeviceInfo() {
+		if(deviceInfo == null) {
+			OCUtils.Device device = deviceInfo();
+			if(device != null) {
+				return deviceInfo = device.deviceInfo();
+			}
+		}
+		return deviceInfo;
+	}
+
+	protected abstract OCUtils.Device deviceInfo();
 }

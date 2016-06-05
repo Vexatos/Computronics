@@ -3,6 +3,7 @@ package pl.asie.computronics.tile;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import li.cil.oc.api.Network;
+import li.cil.oc.api.driver.DeviceInfo;
 import li.cil.oc.api.network.BlacklistedPeripheral;
 import li.cil.oc.api.network.Environment;
 import li.cil.oc.api.network.Message;
@@ -19,12 +20,15 @@ import pl.asie.computronics.Computronics;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
 import pl.asie.computronics.audio.MachineSound;
 import pl.asie.computronics.reference.Mods;
+import pl.asie.computronics.util.OCUtils;
 import pl.asie.computronics.util.internal.IComputronicsPeripheral;
 import pl.asie.lib.tile.TileMachine;
 import pl.asie.lib.util.ColorUtils;
 import pl.asie.lib.util.internal.IColorable;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Map;
 
 //import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
 
@@ -36,10 +40,11 @@ import java.util.ArrayList;
 
 @Optional.InterfaceList({
 	@Optional.Interface(iface = "li.cil.oc.api.network.Environment", modid = Mods.OpenComputers),
+	@Optional.Interface(iface = "li.cil.oc.api.driver.DeviceInfo", modid = Mods.OpenComputers),
 	@Optional.Interface(iface = "li.cil.oc.api.network.BlacklistedPeripheral", modid = Mods.OpenComputers),
 	@Optional.Interface(iface = "pl.asie.computronics.api.multiperipheral.IMultiPeripheral", modid = Mods.ComputerCraft)
 })
-public abstract class TileEntityPeripheralBase extends TileMachine implements Environment,
+public abstract class TileEntityPeripheralBase extends TileMachine implements Environment, DeviceInfo,
 	IMultiPeripheral, IComputronicsPeripheral, BlacklistedPeripheral, IColorable {
 
 	protected String peripheralName;
@@ -178,6 +183,24 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 			node().remove();
 		}
 	}
+
+	protected Map<String, String> deviceInfo;
+
+	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
+	public Map<String, String> getDeviceInfo() {
+		if(deviceInfo == null) {
+			OCUtils.Device device = deviceInfo();
+			if(device != null) {
+				return deviceInfo = device.deviceInfo();
+			}
+		}
+		return deviceInfo;
+	}
+
+	@Nullable
+	@Optional.Method(modid = Mods.OpenComputers)
+	protected abstract OCUtils.Device deviceInfo();
 
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void readFromNBT_OC(final NBTTagCompound nbt) {
