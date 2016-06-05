@@ -42,6 +42,7 @@ public class Mods {
 		ProjectRed = "ProjRed|Core",
 		Railcraft = "Railcraft",
 		StorageDrawers = "StorageDrawers",
+		TheOneProbe = "theoneprobe",
 		Waila = "Waila";
 
 	//APIs

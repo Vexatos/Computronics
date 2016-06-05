@@ -1,7 +1,8 @@
-package pl.asie.computronics.integration.waila;
+package pl.asie.computronics.integration.info;
 
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaRegistrar;
+import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.reference.Mods;
 
 /**
@@ -39,10 +40,12 @@ public enum ConfigValues {
 		this.modID = modID;
 	}
 
+	@Optional.Method(modid = Mods.Waila)
 	private void registerConfigRemote(IWailaRegistrar reg) {
 		reg.addConfigRemote(Mods.Computronics_NAME, key, defvalue);
 	}
 
+	@Optional.Method(modid = Mods.Waila)
 	static void registerConfigs(IWailaRegistrar reg) {
 		for(ConfigValues value : ConfigValues.values()) {
 			if(value.modID == null || Mods.isLoaded(value.modID) || Mods.API.hasAPI(value.modID)) {
@@ -51,6 +54,7 @@ public enum ConfigValues {
 		}
 	}
 
+	@Optional.Method(modid = Mods.Waila)
 	public boolean getValue(IWailaConfigHandler config) {
 		return (this.modID == null || Mods.isLoaded(this.modID) || Mods.API.hasAPI(this.modID))
 			&& config.getConfig(key, defvalue);

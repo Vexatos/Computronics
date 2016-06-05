@@ -1,17 +1,24 @@
-package pl.asie.computronics.integration.waila.providers;
+package pl.asie.computronics.integration.info.providers;
 
+import mcjty.theoneprobe.api.IProbeHitData;
+import mcjty.theoneprobe.api.IProbeInfo;
+import mcjty.theoneprobe.api.ProbeMode;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.SpecialChars;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.api.tape.IItemTapeStorage;
-import pl.asie.computronics.integration.waila.ConfigValues;
+import pl.asie.computronics.integration.info.ConfigValues;
+import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TapeDriveState;
 import pl.asie.computronics.tile.TileTapeDrive;
 import pl.asie.computronics.util.StringUtil;
@@ -19,9 +26,10 @@ import pl.asie.computronics.util.StringUtil;
 import java.util.List;
 import java.util.Locale;
 
-public class WailaTapeDrive extends ComputronicsWailaProvider {
+public class InfoTapeDrive extends ComputronicsInfoProvider {
 
 	@Override
+	@Optional.Method(modid = Mods.Waila)
 	public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip,
 		IWailaDataAccessor accessor, IWailaConfigHandler config) {
 
@@ -31,7 +39,7 @@ public class WailaTapeDrive extends ComputronicsWailaProvider {
 
 		NBTTagCompound data = accessor.getNBTData();
 		ItemStack is = ItemStack.loadItemStackFromNBT(data.getTagList("Inventory", 10).getCompoundTagAt(0));
-		if(is != null && is.getItem() instanceof IItemTapeStorage) {
+		if(is.getItem() instanceof IItemTapeStorage) {
 			String label = Computronics.itemTape.getLabel(is);
 			if(label.length() > 0 && ConfigValues.TapeName.getValue(config)) {
 				currenttip.add(StringUtil.localizeAndFormat("tooltip.computronics.waila.tape.labeltapeinserted",
@@ -51,6 +59,7 @@ public class WailaTapeDrive extends ComputronicsWailaProvider {
 	}
 
 	@Override
+	@Optional.Method(modid = Mods.Waila)
 	public NBTTagCompound getNBTData(EntityPlayerMP player, TileEntity te, NBTTagCompound tag, World world, BlockPos pos) {
 		if(te instanceof TileTapeDrive) {
 			TileTapeDrive drive = (TileTapeDrive) te;
@@ -61,6 +70,37 @@ public class WailaTapeDrive extends ComputronicsWailaProvider {
 			tag.setTag("Inventory", data.getTagList("Inventory", 10));
 		}
 		return tag;
+	}
+
+	@Override
+	@Optional.Method(modid = Mods.TheOneProbe)
+	public String getUID() {
+		return "tape_drive";
+	}
+
+	@Override
+	@Optional.Method(modid = Mods.TheOneProbe)
+	public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
+		TileEntity tileEntity = world.getTileEntity(data.getPos());
+		if(!(tileEntity instanceof TileTapeDrive)) {
+			return;
+		}
+		TileTapeDrive tile = (TileTapeDrive) tileEntity;
+		ItemStack is = tile.getStackInSlot(0);
+		if(is != null && is.getItem() instanceof IItemTapeStorage) {
+			String label = Computronics.itemTape.getLabel(is);
+			if(label.length() > 0) {
+				probeInfo.text(StringUtil.localizeAndFormat("tooltip.computronics.waila.tape.labeltapeinserted",
+					label + SpecialChars.RESET));
+			} else {
+				probeInfo.text(StringUtil.localize("tooltip.computronics.waila.tape.tapeinserted"));
+			}
+			probeInfo.text(StringUtil.localizeAndFormat("tooltip.computronics.waila.tape.state",
+				StringUtil.localize("tooltip.computronics.waila.tape.state."
+					+ tile.getEnumState().name().toLowerCase(Locale.ENGLISH))));
+		} else {
+			probeInfo.text(StringUtil.localize("tooltip.computronics.waila.tape.notapeinserted"));
+		}
 	}
 
 	/*@Override
