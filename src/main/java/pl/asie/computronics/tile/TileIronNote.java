@@ -11,6 +11,7 @@ import net.minecraft.util.ITickable;
 import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.NoteUtils;
+import pl.asie.computronics.util.OCUtils;
 import pl.asie.lib.api.tile.IBundledRedstoneProvider;
 
 import java.util.ArrayList;
@@ -74,6 +75,17 @@ public class TileIronNote extends TileEntityPeripheralBase implements IBundledRe
 			}
 		}
 		return null;
+	}
+
+	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
+	protected OCUtils.Device deviceInfo() {
+		return new OCUtils.Device(
+			DeviceClass.Multimedia,
+			"Music note emission device",
+			OCUtils.Vendors.Yanaki,
+			"Vanilla 1"
+		);
 	}
 
 	@Override

@@ -20,6 +20,7 @@ import pl.asie.computronics.cc.ISidedPeripheral;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.reference.Names;
 import pl.asie.computronics.tile.TileEntityPeripheralBase;
+import pl.asie.computronics.util.OCUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -155,11 +156,24 @@ public class TileDigitalDetector extends TileEntityPeripheralBase
 	}
 
 	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
+	protected OCUtils.Device deviceInfo() {
+		return new OCUtils.Device(
+			DeviceClass.Generic,
+			"Cart detector",
+			OCUtils.Vendors.Railcraft,
+			"Digitized Detector A12"
+		);
+	}
+
+	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
 	public Node sidedNode(ForgeDirection side) {
 		return side == this.direction ? node() : null;
 	}
 
 	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
 	public boolean canConnect(ForgeDirection side) {
 		return side == this.direction;
 	}

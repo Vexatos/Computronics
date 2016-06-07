@@ -4,6 +4,8 @@ import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import gnu.trove.set.hash.TIntHashSet;
+import li.cil.oc.api.network.Node;
+import li.cil.oc.api.network.SidedEnvironment;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
@@ -16,8 +18,12 @@ import pl.asie.computronics.api.audio.IAudioSource;
 import pl.asie.computronics.cc.ISidedPeripheral;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
+import pl.asie.computronics.util.OCUtils;
 
-public class TileSpeaker extends TileEntityPeripheralBase implements IAudioReceiver, ITickable, ISidedPeripheral {
+@Optional.InterfaceList({
+	@Optional.Interface(iface = "li.cil.oc.api.network.SidedEnvironment", modid = Mods.OpenComputers)
+})
+public class TileSpeaker extends TileEntityPeripheralBase implements IAudioReceiver, ITickable, ISidedPeripheral, SidedEnvironment {
 
 	private final TIntHashSet packetIds = new TIntHashSet();
 	private IAudioSource lastSource;
@@ -88,5 +94,23 @@ public class TileSpeaker extends TileEntityPeripheralBase implements IAudioRecei
 	@Optional.Method(modid = Mods.OpenComputers)
 	protected void initOC() {
 		// NO-OP
+	}
+
+	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
+	protected OCUtils.Device deviceInfo() {
+		return null;
+	}
+
+	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
+	public Node sidedNode(EnumFacing side) {
+		return null;
+	}
+
+	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
+	public boolean canConnect(EnumFacing side) {
+		return false;
 	}
 }

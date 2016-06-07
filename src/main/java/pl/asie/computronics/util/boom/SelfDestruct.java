@@ -42,6 +42,7 @@ public class SelfDestruct extends Explosion {
 			explosionX = position.xCoord,
 			explosionY = position.yCoord,
 			explosionZ = position.zCoord;
+		final BlockPos explosionPos = new BlockPos(explosionX, explosionY, explosionZ);
 
 		this.worldObj.playSoundEffect(explosionX, explosionY, explosionZ, "random.explode", 4.0F, (1.0F + (this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) * 0.2F) * 0.7F);
 
@@ -72,8 +73,8 @@ public class SelfDestruct extends Explosion {
 
 			if(block.getMaterial() != Material.air) {
 				if(!this.worldObj.isRemote
-					&& blockpos.equals(new BlockPos(explosionX, explosionY, explosionZ))) {
-					//This is the case.
+					&& blockpos.equals(explosionPos)) {
+					// This is the case.
 					TileEntity tile = this.worldObj.getTileEntity(blockpos);
 					if(tile != null && !tile.isInvalid() && tile instanceof IInventory) {
 						IInventory inv = (IInventory) tile;
@@ -82,6 +83,12 @@ public class SelfDestruct extends Explosion {
 				}
 
 				if(destroyBlocks) {
+					if(!blockpos.equals(explosionPos)) {
+						// This not is the case.
+						if(block.canDropFromExplosion(this)) {
+							block.dropBlockAsItemWithChance(this.worldObj, blockpos, this.worldObj.getBlockState(blockpos), 1.0F / this.explosionSize, 0);
+						}
+					}
 					block.onBlockExploded(this.worldObj, blockpos, this);
 				}
 			}

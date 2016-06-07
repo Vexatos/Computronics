@@ -7,6 +7,7 @@ import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.EnvironmentHost;
 import li.cil.oc.api.network.Visibility;
 import pl.asie.computronics.reference.Config;
+import pl.asie.computronics.util.OCUtils;
 import pl.asie.computronics.util.sound.AudioType;
 import pl.asie.computronics.util.sound.Channel;
 
@@ -75,5 +76,15 @@ public class DriverCardBeep extends DriverCardSoundBase {
 			}
 		}
 		return tryQueueSound(freqPairs, new Object[] { true }, Config.SOUND_ENERGY_COST * getNonNullCount(freqPairs) * (longest / 1000D), playMethodName);
+	}
+
+	@Override
+	protected OCUtils.Device deviceInfo() {
+		return new OCUtils.Device(
+			DeviceClass.Multimedia,
+			"Audio interface",
+			OCUtils.Vendors.Yanaki,
+			"SQ532"
+		);
 	}
 }

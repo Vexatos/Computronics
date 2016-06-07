@@ -1,5 +1,6 @@
 package pl.asie.computronics.util;
 
+import li.cil.oc.api.driver.DeviceInfo.DeviceAttribute;
 import li.cil.oc.client.KeyBindings;
 import li.cil.oc.util.ItemCosts;
 import net.minecraft.client.Minecraft;
@@ -10,7 +11,9 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Vexatos
@@ -28,6 +31,54 @@ public class OCUtils {
 			nbt.setTag("oc:data", new NBTTagCompound());
 		}
 		return nbt.getCompoundTag("oc:data");
+	}
+
+	public static class Device {
+
+		private final String Class;
+		private final String Description;
+		private final String Vendor;
+		private final String Product;
+		private final String[] other;
+
+		public Device(String Class, String Description, String Vendor, String Product, String... other) {
+			this.Class = Class;
+			this.Description = Description;
+			this.Vendor = Vendor;
+			this.Product = Product;
+			this.other = other;
+		}
+
+		public Map<String, String> deviceInfo() {
+			Map<String, String> deviceInfo = new HashMap<String, String>();
+			deviceInfo.put(DeviceAttribute.Class, Class);
+			deviceInfo.put(DeviceAttribute.Description, Description);
+			deviceInfo.put(DeviceAttribute.Vendor, Vendor);
+			deviceInfo.put(DeviceAttribute.Product, Product);
+			for(int i = 0; i + 1 < other.length; i += 2) {
+				deviceInfo.put(other[i], other[i + 1]);
+			}
+			return deviceInfo;
+		}
+	}
+
+	public static final class Vendors {
+
+		public static final String
+			ACME = "ACME Co.",
+			BuildCraft = "BuildCraft, Inc.",
+			Hosencorp = "Hosencorp AG",
+			HuggingCreeper = "Hugging Creeper Industries",
+			Lumiose = "Lumiose Lighting",
+			NSA = "National Security Agency",
+			Railcraft = "Railcraft, Inc.",
+			Siekierka = "Siekierka Innovations",
+			Soluna = "Soluna Technologies",
+			Trumbour = "Trumbour Technology",
+			Yanaki = "Yanaki Sound Systems";
+
+		private Vendors() {
+		}
 	}
 
 	private static final int maxWidth = 220;

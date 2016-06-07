@@ -9,6 +9,7 @@ import li.cil.oc.api.network.EnvironmentHost;
 import li.cil.oc.api.network.Visibility;
 import net.minecraft.nbt.NBTTagCompound;
 import pl.asie.computronics.reference.Config;
+import pl.asie.computronics.util.OCUtils;
 
 /**
  * @author Vexatos
@@ -101,5 +102,15 @@ public class RobotUpgradeColorful extends ManagedEnvironmentWithComponentConnect
 	public void save(NBTTagCompound nbt) {
 		super.save(nbt);
 		nbt.setInteger("computronics:color", this.color);
+	}
+
+	@Override
+	protected OCUtils.Device deviceInfo() {
+		return new OCUtils.Device(
+			DeviceClass.Display,
+			"Color overlay",
+			OCUtils.Vendors.Lumiose,
+			"Holonaut H4-1463 v2"
+		);
 	}
 }

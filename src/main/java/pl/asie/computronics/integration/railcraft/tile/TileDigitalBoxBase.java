@@ -6,6 +6,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import li.cil.oc.api.Network;
+import li.cil.oc.api.driver.DeviceInfo;
 import li.cil.oc.api.network.BlacklistedPeripheral;
 import li.cil.oc.api.network.Environment;
 import li.cil.oc.api.network.Message;
@@ -23,9 +24,11 @@ import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
 import pl.asie.computronics.cc.ISidedPeripheral;
 import pl.asie.computronics.reference.Mods;
+import pl.asie.computronics.util.OCUtils;
 import pl.asie.computronics.util.internal.IComputronicsPeripheral;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * @author CovertJaguar, Vexatos
@@ -33,11 +36,12 @@ import java.util.ArrayList;
 @Optional.InterfaceList({
 	@Optional.Interface(iface = "li.cil.oc.api.network.Environment", modid = Mods.OpenComputers),
 	@Optional.Interface(iface = "li.cil.oc.api.network.SidedEnvironment", modid = Mods.OpenComputers),
+	@Optional.Interface(iface = "li.cil.oc.api.driver.DeviceInfo", modid = Mods.OpenComputers),
 	@Optional.Interface(iface = "li.cil.oc.api.network.BlacklistedPeripheral", modid = Mods.OpenComputers),
 	@Optional.Interface(iface = "pl.asie.computronics.api.multiperipheral.IMultiPeripheral", modid = Mods.ComputerCraft)
 })
 public abstract class TileDigitalBoxBase extends TileBoxBase
-	implements Environment, SidedEnvironment, IMultiPeripheral, IComputronicsPeripheral,
+	implements Environment, SidedEnvironment, DeviceInfo, IMultiPeripheral, IComputronicsPeripheral,
 	ISidedPeripheral, BlacklistedPeripheral {
 
 	public TileDigitalBoxBase(String name) {
@@ -156,6 +160,23 @@ public abstract class TileDigitalBoxBase extends TileBoxBase
 	public void onMessage(Message message) {
 
 	}
+
+	protected Map<String, String> deviceInfo;
+
+	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
+	public Map<String, String> getDeviceInfo() {
+		if(deviceInfo == null) {
+			OCUtils.Device device = deviceInfo();
+			if(device != null) {
+				return deviceInfo = device.deviceInfo();
+			}
+		}
+		return deviceInfo;
+	}
+
+	@Optional.Method(modid = Mods.OpenComputers)
+	protected abstract OCUtils.Device deviceInfo();
 
 	@Override
 	@Optional.Method(modid = Mods.OpenComputers)

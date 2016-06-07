@@ -22,6 +22,7 @@ import pl.asie.computronics.network.PacketType;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TileEntityPeripheralBase;
+import pl.asie.computronics.util.OCUtils;
 import pl.asie.lib.api.tile.IBatteryProvider;
 import pl.asie.lib.api.tile.IInventoryProvider;
 import pl.asie.lib.network.Packet;
@@ -284,6 +285,17 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 
 		}
 		return 0;
+	}
+
+	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
+	protected OCUtils.Device deviceInfo() {
+		return new OCUtils.Device(
+			DeviceClass.Printer,
+			"Ticket machine",
+			OCUtils.Vendors.Railcraft,
+			"Dot matrix 3000"
+		);
 	}
 
 	// Methods for Computers

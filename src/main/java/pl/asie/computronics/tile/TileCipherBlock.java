@@ -21,6 +21,7 @@ import pl.asie.computronics.Computronics;
 import pl.asie.computronics.gui.container.ContainerCipherBlock;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
+import pl.asie.computronics.util.OCUtils;
 import pl.asie.lib.api.tile.IBundledRedstoneProvider;
 import pl.asie.lib.util.Base64;
 
@@ -106,6 +107,17 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements IBundle
 		}
 		cipher.init(Cipher.DECRYPT_MODE, skey, new IvParameterSpec(iv));
 		return new String(cipher.doFinal(Base64.decode(data)), "UTF8");
+	}
+
+	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
+	protected OCUtils.Device deviceInfo() {
+		return new OCUtils.Device(
+			DeviceClass.Processor,
+			"Data encryption device",
+			OCUtils.Vendors.Siekierka,
+			"Cryptotron 5-X"
+		);
 	}
 
 	@Callback(doc = "function(message:string):string; Encrypts the specified message", direct = true)

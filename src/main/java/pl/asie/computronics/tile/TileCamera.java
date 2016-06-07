@@ -14,6 +14,7 @@ import pl.asie.computronics.Computronics;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.Camera;
+import pl.asie.computronics.util.OCUtils;
 
 public class TileCamera extends TileEntityPeripheralBase implements ITickable {
 
@@ -49,6 +50,17 @@ public class TileCamera extends TileEntityPeripheralBase implements ITickable {
 			this.worldObj.notifyNeighborsOfStateChange(this.pos, this.getBlockType());
 		}
 		tick++;
+	}
+
+	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
+	protected OCUtils.Device deviceInfo() {
+		return new OCUtils.Device(
+			DeviceClass.Multimedia,
+			"Rangefinder",
+			OCUtils.Vendors.Siekierka,
+			"Simple Spatiometer 1"
+		);
 	}
 
 	// OpenComputers
