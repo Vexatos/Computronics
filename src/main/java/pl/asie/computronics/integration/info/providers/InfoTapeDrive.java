@@ -39,7 +39,7 @@ public class InfoTapeDrive extends ComputronicsInfoProvider {
 
 		NBTTagCompound data = accessor.getNBTData();
 		ItemStack is = ItemStack.loadItemStackFromNBT(data.getTagList("Inventory", 10).getCompoundTagAt(0));
-		if(is.getItem() instanceof IItemTapeStorage) {
+		if(is != null && is.getItem() instanceof IItemTapeStorage) {
 			String label = Computronics.itemTape.getLabel(is);
 			if(label.length() > 0 && ConfigValues.TapeName.getValue(config)) {
 				currenttip.add(StringUtil.localizeAndFormat("tooltip.computronics.waila.tape.labeltapeinserted",

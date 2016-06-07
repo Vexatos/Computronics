@@ -306,7 +306,7 @@ public class Computronics {
 		}
 
 		FMLInterModComms.sendMessage(Mods.Waila, "register", "pl.asie.computronics.integration.info.IntegrationWaila.register");
-		FMLInterModComms.sendMessage(Mods.TheOneProbe, "getTheOneProbe", "pl.asie.computronics.integration.info.IntegrationTOP.register");
+		FMLInterModComms.sendFunctionMessage(Mods.TheOneProbe, "getTheOneProbe", "pl.asie.computronics.integration.info.IntegrationTOP");
 
 		if(Mods.isLoaded(Mods.ComputerCraft)) {
 			computercraft.init();
