@@ -11,8 +11,8 @@ import net.minecraft.util.ITickable;
 import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.NoteUtils;
-import pl.asie.lib.api.tile.IBundledRedstoneProvider;
 import pl.asie.computronics.util.OCUtils;
+import pl.asie.lib.api.tile.IBundledRedstoneProvider;
 
 import java.util.ArrayList;
 import java.util.List;

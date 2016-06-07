@@ -9,7 +9,6 @@ import pl.asie.computronics.oc.manual.IItemWithDocumentation;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.OCUtils;
-import pl.asie.lib.item.ItemMultiple;
 
 import javax.annotation.Nullable;
 import java.util.List;

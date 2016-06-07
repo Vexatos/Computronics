@@ -7,6 +7,7 @@ import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.Computronics;
@@ -17,7 +18,7 @@ import pl.asie.computronics.util.OCUtils;
 
 import javax.annotation.Nullable;
 
-public class TileCamera extends TileEntityPeripheralBase {
+public class TileCamera extends TileEntityPeripheralBase implements ITickable {
 
 	private static final int CALL_LIMIT = 20;
 	private final Camera camera = new Camera();

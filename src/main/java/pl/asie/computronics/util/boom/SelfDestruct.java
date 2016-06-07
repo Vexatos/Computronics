@@ -16,7 +16,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.FakePlayer;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.network.PacketType;
 import pl.asie.lib.network.Packet;
@@ -47,6 +46,7 @@ public class SelfDestruct extends Explosion {
 			explosionX = position.xCoord,
 			explosionY = position.yCoord,
 			explosionZ = position.zCoord;
+		final BlockPos explosionPos = new BlockPos(explosionX, explosionY, explosionZ);
 
 		this.worldObj.playSound(null, explosionX, explosionY, explosionZ, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) * 0.2F) * 0.7F);
 
@@ -78,21 +78,22 @@ public class SelfDestruct extends Explosion {
 
 			if(state.getMaterial() != Material.AIR) {
 				if(!this.worldObj.isRemote
-					&& blockpos.getX() == Math.round(Math.floor(explosionX))
-					&& blockpos.getY() == Math.round(Math.floor(explosionY))
-					&& blockpos.getZ() == Math.round(Math.floor(explosionZ))) {
-					//This is the case.
+					&& blockpos.equals(explosionPos)) {
+					// This is the case.
 					TileEntity tile = this.worldObj.getTileEntity(blockpos);
 					if(tile != null && !tile.isInvalid() && tile instanceof IInventory) {
 						IInventory inv = (IInventory) tile;
 						inv.clear();
 					}
 				}
-				if(block.canDropFromExplosion(this)) {
-					block.dropBlockAsItemWithChance(this.worldObj, blockpos, this.worldObj.getBlockState(blockpos), 1.0F / this.explosionSize, 0);
-				}
 
 				if(destroyBlocks) {
+					if(!blockpos.equals(explosionPos)) {
+						// This not is the case.
+						if(block.canDropFromExplosion(this)) {
+							block.dropBlockAsItemWithChance(this.worldObj, blockpos, this.worldObj.getBlockState(blockpos), 1.0F / this.explosionSize, 0);
+						}
+					}
 					block.onBlockExploded(this.worldObj, blockpos, this);
 				}
 			}
