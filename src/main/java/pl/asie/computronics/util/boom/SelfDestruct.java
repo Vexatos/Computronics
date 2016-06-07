@@ -72,9 +72,7 @@ public class SelfDestruct extends Explosion {
 
 			if(block.getMaterial() != Material.air) {
 				if(!this.worldObj.isRemote
-					&& blockpos.getX() == Math.round(Math.floor(explosionX))
-					&& blockpos.getY() == Math.round(Math.floor(explosionY))
-					&& blockpos.getZ() == Math.round(Math.floor(explosionZ))) {
+					&& blockpos.equals(new BlockPos(explosionX, explosionY, explosionZ))) {
 					//This is the case.
 					TileEntity tile = this.worldObj.getTileEntity(blockpos);
 					if(tile != null && !tile.isInvalid() && tile instanceof IInventory) {
@@ -82,11 +80,8 @@ public class SelfDestruct extends Explosion {
 						inv.clear();
 					}
 				}
-				if(block.canDropFromExplosion(this)) {
-					block.dropBlockAsItemWithChance(this.worldObj, blockpos, this.worldObj.getBlockState(blockpos), 1.0F / this.explosionSize, 0);
-				}
 
-				if(destroyBlocks){
+				if(destroyBlocks) {
 					block.onBlockExploded(this.worldObj, blockpos, this);
 				}
 			}
