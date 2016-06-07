@@ -77,7 +77,7 @@ public class SelfDestruct extends Explosion {
 						&& i == MathHelper.floor_double(explosionX)
 						&& j == MathHelper.floor_double(explosionY)
 						&& k == MathHelper.floor_double(explosionZ)) {
-						//This is the case.
+						// This is the case.
 						TileEntity tile = this.worldObj.getTileEntity(i, j, k);
 						if(tile != null && !tile.isInvalid() && tile instanceof IInventory) {
 							IInventory inv = (IInventory) tile;
@@ -89,7 +89,15 @@ public class SelfDestruct extends Explosion {
 							}
 						}
 					}
-					if(destroyBlocks){
+					if(destroyBlocks) {
+						if(i != MathHelper.floor_double(explosionX)
+							|| j != MathHelper.floor_double(explosionY)
+							|| k != MathHelper.floor_double(explosionZ)) {
+							// This is not the case.
+							if(block.canDropFromExplosion(this)) {
+								block.dropBlockAsItemWithChance(this.worldObj, i, j, k, this.worldObj.getBlockMetadata(i, j, k), 1.0F / this.explosionSize, 0);
+							}
+						}
 						block.onBlockExploded(this.worldObj, i, j, k, this);
 					}
 				}
