@@ -90,7 +90,7 @@ import java.util.concurrent.Executors;
 		+ "after:gregtech;after:EnderIO@[1.9.4-3.0,);"
 		+ "after:forestry@[5.0.0,);after:Waila@[1.5.10,);"
 		+ "after:MekanismAPI|energy@[8.0.0,);after:Flamingo@[1.7.10-1.3,);"
-		+ "after:armourersWorkshop@[1.7.10-0.33,);after:theoneprobe[1.0.5,)"
+		+ "after:armourersWorkshop@[1.7.10-0.33,);after:theoneprobe@[1.0.5,);"
 		+ "before:CharsetAPI|Wires@[0.3,);before:CharsetWires")
 public class Computronics {
 
