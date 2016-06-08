@@ -377,7 +377,7 @@ public class Computronics {
 	}
 
 	@EventHandler
-	public void serverStart(FMLServerAboutToStartEvent event) {
+	public void serverStart(FMLServerStartedEvent event) {
 		Computronics.storage = new StorageManager();
 		if(Mods.isLoaded(Mods.ComputerCraft)) {
 			computercraft.serverStart();
