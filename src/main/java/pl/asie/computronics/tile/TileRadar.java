@@ -21,6 +21,7 @@ import pl.asie.computronics.util.RadarUtils;
 import pl.asie.computronics.util.TableUtils;
 import pl.asie.lib.api.tile.IBatteryProvider;
 
+import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -130,6 +131,7 @@ public class TileRadar extends TileEntityPeripheralBase implements IBatteryProvi
 		return CCRadarProxy.getMethodNames();
 	}
 
+	@Nullable
 	@Override
 	@Optional.Method(modid = Mods.ComputerCraft)
 	public Object[] callMethod(IComputerAccess computer, ILuaContext context,
