@@ -4,7 +4,7 @@
         "textures": {
             "all": "computronics:blocks/lamp_layer_1"
         },
-        "model": "ctm:computronics:/ctm/colorful_lamp.json"
+        "model": "ctm:computronics:ctm/colorful_lamp.json"
     },
     "variants": {
         "normal": [{ }],
