@@ -349,7 +349,7 @@ public class Computronics {
 
 		// Mod compat - GregTech
 		if(itemTape != null && Mods.hasVersion(Mods.GregTech, Mods.Versions.GregTech5) && itemPartsGreg != null) {
-			GregTechRecipes.registerGregTechTapeRecipes();
+			GregTechRecipes.registerStandardGregTechRecipes();
 		}
 
 		if(Mods.isLoaded(Mods.OpenComputers)) {
