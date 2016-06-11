@@ -29,6 +29,7 @@ public class Mods {
 		BuildCraftCore = "BuildCraft|Core",
 		BuildCraftTransport = "BuildCraft|Transport",
 		CharsetAudio = "CharsetAudio",
+		Chisel = "chisel",
 		EnderIO = "EnderIO",
 		Factorization = "factorization",
 		Flamingo = "Flamingo",
@@ -69,6 +70,7 @@ public class Mods {
 
 		public static final String
 			BuildCraftTiles = "[1.1,)",
+			Chisel = "[0.0.5,3)",
 			Gendustry = "[2.0.0,)",
 			GregTech5 = "[MC1710]";
 	}

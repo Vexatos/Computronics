@@ -12,25 +12,15 @@
     "variants": {
         "normal": [{ }],
         "inventory": [{ }],
-        "brightness": {
-            "0": { },
-            "1": { },
-            "2": { },
-            "3": { },
-            "4": { },
-            "5": { },
-            "6": { },
-            "7": { },
-            "8": { },
-            "9": { },
-            "10": { },
-            "11": { },
-            "12": { },
-            "13": { },
-            "14": { },
-            "15": { }
+        "light": {
+            "true":{},
+            "false":{}
         },
         "bundled": {
+            "true":{},
+            "false":{}
+        },
+        "ctm": {
             "true":{},
             "false":{}
         },
@@ -44,7 +34,7 @@
         ],
         "frame": [
             {
-                "model": "cube_all",
+                "model": "computronics:base_cube_all",
                 "textures": {
                     "all": "computronics:blocks/lamp_layer_1"
                 }

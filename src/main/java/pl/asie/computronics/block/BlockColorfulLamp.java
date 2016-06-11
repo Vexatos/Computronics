@@ -2,7 +2,7 @@ package pl.asie.computronics.block;
 
 import li.cil.oc.api.network.Environment;
 import net.minecraft.block.Block;
-import net.minecraft.block.properties.PropertyInteger;
+import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,17 +15,22 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
+import pl.asie.computronics.item.block.IBlockWithSpecialText;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TileColorfulLamp;
+
+import java.util.List;
 //import powercrystals.minefactoryreloaded.api.rednet.IRedNetInputNode;
 //import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
 
 /*@Optional.InterfaceList({
 	@Optional.Interface(iface = "powercrystals.minefactoryreloaded.api.rednet.IRedNetInputNode", modid = Mods.MFR)
 })*/
-public class BlockColorfulLamp extends BlockPeripheral /*implements IRedNetInputNode*/ {
+public class BlockColorfulLamp extends BlockPeripheral implements IBlockWithSpecialText/*implements IRedNetInputNode*/ {
 
-	public static final PropertyInteger BRIGHTNESS = PropertyInteger.create("brightness", 0, 15);
+	//public static final PropertyInteger BRIGHTNESS = PropertyInteger.create("brightness", 0, 15);
+	public static final PropertyBool LIGHT = PropertyBool.create("light");
+	public static final PropertyBool CTM = PropertyBool.create("ctm");
 
 	public BlockColorfulLamp() {
 		super("colorful_lamp", Rotation.NONE);
@@ -56,23 +61,28 @@ public class BlockColorfulLamp extends BlockPeripheral /*implements IRedNetInput
 
 	@Override
 	protected BlockStateContainer createActualBlockState() {
-		return new BlockStateContainer(this, BUNDLED, BRIGHTNESS);
+		return new BlockStateContainer(this, BUNDLED, LIGHT, CTM);
 	}
 
 	@Override
 	@Deprecated
 	public IBlockState getStateFromMeta(int meta) {
-		return super.getStateFromMeta(meta).withProperty(BRIGHTNESS, meta);
+		return super.getStateFromMeta(meta).withProperty(LIGHT, (meta & 1) == 1).withProperty(CTM, ((meta >> 3) & 1) == 1);
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state) {
-		return super.getMetaFromState(state) | state.getValue(BRIGHTNESS);
+		return super.getMetaFromState(state) | (state.getValue(LIGHT) ? 1 : 0) | ((state.getValue(CTM) ? 1 : 0) << 3);
 	}
 
 	@Override
 	protected IBlockState createDefaultState() {
-		return super.createDefaultState().withProperty(BRIGHTNESS, 0);
+		return super.createDefaultState().withProperty(LIGHT, false).withProperty(CTM, false);
+	}
+
+	@Override
+	public int damageDropped(IBlockState state) {
+		return super.damageDropped(state) | ((state.getValue(CTM) ? 1 : 0) << 3);
 	}
 
 	@Override
@@ -89,6 +99,7 @@ public class BlockColorfulLamp extends BlockPeripheral /*implements IRedNetInput
 	public int getLightValue(IBlockState state, IBlockAccess world, BlockPos pos) {
 		/*TileEntity tile = world.getTileEntity(pos);
 		if(tile instanceof TileColorfulLamp) {
+			return this.lightValue = ((TileColorfulLamp) tile).getLampColor() != 0 ? 15 : 0;
 			int color = ((TileColorfulLamp) tile).getLampColor();
 			//this.lightValue = world.getBlockState(pos).getValue(BRIGHTNESS);
 			this.lightValue = color == 0 ? 0 : 15;
@@ -98,7 +109,7 @@ public class BlockColorfulLamp extends BlockPeripheral /*implements IRedNetInput
 			}
 			return this.lightValue;
 		}*/
-		return this.lightValue = state.getValue(BRIGHTNESS);
+		return this.lightValue = state.getValue(LIGHT) ? 15 : 0;
 	}
 
 	@Override
@@ -111,7 +122,7 @@ public class BlockColorfulLamp extends BlockPeripheral /*implements IRedNetInput
 	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos) {
 		TileEntity tile = world.getTileEntity(pos);
 		if(tile instanceof TileColorfulLamp) {
-			return state.withProperty(BRIGHTNESS, ((TileColorfulLamp) tile).getLampColor() == 0 ? 0 : 15);
+			return state.withProperty(LIGHT, ((TileColorfulLamp) tile).getLampColor() != 0);
 		} else {
 			return state;
 		}
@@ -138,6 +149,14 @@ public class BlockColorfulLamp extends BlockPeripheral /*implements IRedNetInput
 	@Override
 	public boolean supportsBundledRedstone() {
 		return true;
+	}
+
+	@Override
+	public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
+		if(((stack.getMetadata() >> 3) & 1) == 1) {
+			tooltip.add("It connects!");
+		}
+		super.addInformation(stack, player, tooltip, advanced);
 	}
 /*@Override
 	@SideOnly(Side.CLIENT)
@@ -186,5 +205,15 @@ public class BlockColorfulLamp extends BlockPeripheral /*implements IRedNetInput
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Class<? extends Environment> getTileEntityClass(int meta) {
 		return TileColorfulLamp.class;
+	}
+
+	@Override
+	public boolean hasSubTypes() {
+		return true;
+	}
+
+	@Override
+	public String getUnlocalizedName(ItemStack stack) {
+		return this.getUnlocalizedName();
 	}
 }

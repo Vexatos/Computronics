@@ -1,0 +1,7 @@
+{
+    "type":"CTM",
+    "textures":[
+        "./lamp_layer_1",
+        "./lamp_layer_1-ctm"
+    ]
+}

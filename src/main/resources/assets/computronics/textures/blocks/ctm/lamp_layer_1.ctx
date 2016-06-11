@@ -1,0 +1,8 @@
+{
+    "type": "CTM",
+    "layer": "CUTOUT_MIPPED",
+    "textures": [
+        "./lamp_layer_1",
+        "./lamp_layer_1-ctm"
+    ]
+}

@@ -1,14 +1,11 @@
 package pl.asie.computronics.item.block;
 
 import net.minecraft.block.Block;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.asie.computronics.util.internal.IItemWithColor;
-
-import java.util.List;
 
 public class ComputronicsItemBlock extends ItemBlock implements IItemWithColor {
 
@@ -24,15 +21,6 @@ public class ComputronicsItemBlock extends ItemBlock implements IItemWithColor {
 		if(block instanceof IBlockWithDifferentColors) {
 			this.coloredBlock = ((IBlockWithDifferentColors) block);
 			this.setHasSubtypes(coloredBlock.hasSubTypes());
-		}
-	}
-
-	@Override
-	public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean advanced) {
-		if(this.specialBlock != null) {
-			this.specialBlock.addInformation(stack, player, list, advanced);
-		} else {
-			super.addInformation(stack, player, list, advanced);
 		}
 	}
 

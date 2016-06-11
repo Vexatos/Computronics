@@ -1,0 +1,6 @@
+{
+    "textures": [
+        "./lamp_layer_0.ctx",
+        "./lamp_layer_1.ctx"
+    ]
+}

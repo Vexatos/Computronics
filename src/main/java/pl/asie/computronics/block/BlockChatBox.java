@@ -35,7 +35,6 @@ public class BlockChatBox extends BlockPeripheral implements IBlockWithSpecialTe
 	public BlockChatBox() {
 		super("chatbox", Rotation.NONE);
 		this.setCreativeTab(Computronics.tab);
-		this.setDefaultState(this.blockState.getBaseState().withProperty(CREATIVE, false));
 		this.setUnlocalizedName("computronics.chatBox");
 	}
 
@@ -123,10 +122,9 @@ public class BlockChatBox extends BlockPeripheral implements IBlockWithSpecialTe
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
-	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean wat) {
+	public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
 		if(stack.getItemDamage() >= 8) {
-			list.add(TextFormatting.GRAY + StringUtil.localize("tooltip.computronics.chatBox.creative"));
+			tooltip.add(TextFormatting.GRAY + StringUtil.localize("tooltip.computronics.chatBox.creative"));
 		}
 	}
 

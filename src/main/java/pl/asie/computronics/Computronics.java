@@ -44,6 +44,7 @@ import pl.asie.computronics.gui.providers.GuiProviderCipher;
 import pl.asie.computronics.gui.providers.GuiProviderTapeDrive;
 import pl.asie.computronics.integration.ModRecipes;
 import pl.asie.computronics.integration.charset.IntegrationCharset;
+import pl.asie.computronics.integration.chisel.IntegrationChisel;
 import pl.asie.computronics.integration.forestry.IntegrationForestry;
 import pl.asie.computronics.integration.tis3d.IntegrationTIS3D;
 import pl.asie.computronics.item.ItemMultipleComputronics;
@@ -134,6 +135,7 @@ public class Computronics {
 	public static IntegrationForestry forestry;
 	public static IntegrationTIS3D tis3D;
 	public static IntegrationCharset charset;
+	public static IntegrationChisel chisel;
 
 	public static ItemTape itemTape;
 	public static ItemMultipleComputronics itemParts;
@@ -292,6 +294,11 @@ public class Computronics {
 
 		charset = new IntegrationCharset();
 		charset.preInit();
+
+		if(Mods.isLoaded(Mods.Chisel) /*TODO Chisel Version*/){
+			chisel = new IntegrationChisel();
+			chisel.preInit();
+		}
 
 		proxy.preInit();
 	}

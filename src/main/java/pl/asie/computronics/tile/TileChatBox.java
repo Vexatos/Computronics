@@ -49,7 +49,7 @@ public class TileChatBox extends TileEntityPeripheralBase implements IChatListen
 		BlockPos pos = getPos();
 		if(Config.CHATBOX_CREATIVE && worldObj != null && worldObj.isBlockLoaded(pos)) {
 			IBlockState state = worldObj.getBlockState(pos);
-			return state != null && state.getValue(BlockChatBox.CREATIVE);
+			return state.getValue(BlockChatBox.CREATIVE);
 		}
 		return false;
 	}

@@ -17,7 +17,7 @@ import pl.asie.computronics.util.LampUtil;
 import pl.asie.computronics.util.OCUtils;
 import pl.asie.lib.api.tile.IBundledRedstoneProvider;
 
-import static pl.asie.computronics.block.BlockColorfulLamp.BRIGHTNESS;
+import static pl.asie.computronics.block.BlockColorfulLamp.LIGHT;
 
 //import mods.immibis.redlogic.api.wiring.IBundledEmitter;
 //import mods.immibis.redlogic.api.wiring.IBundledUpdatable;
@@ -71,9 +71,11 @@ public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundl
 			g = value > 0x7FFF ? 15 : g < 0 ? 0 : g > 15 ? 15 : g;
 			b = value > 0x7FFF ? 15 : b < 0 ? 0 : b > 15 ? 15 : b;
 			int brightness = Math.max(Math.max(r, g), b);
-			worldObj.setBlockState(getPos(), state.withProperty(BRIGHTNESS, brightness | ((b << 15) + (g << 10) + (r << 5))));
+			//worldObj.setBlockState(getPos(), state.withProperty(BRIGHTNESS, brightness | ((b << 15) + (g << 10) + (r << 5))));
+			worldObj.setBlockState(getPos(), state.withProperty(LIGHT, brightness > 0));
 		} else {
-			worldObj.setBlockState(getPos(), state.withProperty(BRIGHTNESS, value));
+			//worldObj.setBlockState(getPos(), state.withProperty(BRIGHTNESS, value));
+			worldObj.setBlockState(getPos(), state.withProperty(LIGHT, value > 0));
 		}
 	}
 

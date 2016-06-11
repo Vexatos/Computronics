@@ -1,0 +1,25 @@
+{
+    "forge_marker": 1,
+    "defaults": {
+        "textures": {
+            "all": "computronics:blocks/lamp_layer_1"
+        },
+        "model": "ctm:computronics:/ctm/colorful_lamp.json"
+    },
+    "variants": {
+        "normal": [{ }],
+        "inventory": [{ }],
+        "light": {
+            "true": { },
+            "false": { }
+        },
+        "bundled": {
+            "true": { },
+            "false": { }
+        },
+        "ctm": {
+            "true": { },
+            "false": { }
+        }
+    }
+}

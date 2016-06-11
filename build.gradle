@@ -112,6 +112,7 @@ dependencies {
         exclude module: "buildcraft"
         exclude module: "industrialcraft-2"
     }
+    deobfCompile "team.chisel:Chisel:${config.chisel.version}"
     //compile name: "buildcraft", version: "${config.buildcraft.version}", classifier: "dev"
     /*compile("appeng:appliedenergistics2:${config.ae2.version}:dev") {
         transitive = false

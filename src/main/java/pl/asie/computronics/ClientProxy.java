@@ -85,6 +85,9 @@ public class ClientProxy extends CommonProxy {
 				Computronics.forestry.registerOCEntityRenderers();
 			}
 		}
+		if(Mods.isLoaded(Mods.Chisel) /*TODO Chisel Version*/ && Computronics.chisel != null) {
+			Computronics.chisel.preInitClient();
+		}
 	}
 
 	@Override
