@@ -4,14 +4,11 @@ import li.cil.oc.api.Network;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
-import li.cil.oc.api.network.Component;
 import li.cil.oc.api.network.EnvironmentHost;
 import li.cil.oc.api.network.Message;
 import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.Visibility;
 import net.minecraft.nbt.NBTTagCompound;
-import pl.asie.computronics.Computronics;
-import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.OCUtils;
 import pl.asie.computronics.util.boom.SelfDestruct;
 
@@ -25,9 +22,6 @@ public class DriverCardBoom extends ManagedEnvironmentWithComponentConnector {
 	public DriverCardBoom(EnvironmentHost container) {
 		this.container = container;
 		createNode();
-		if(this.node() != null) {
-			initOCFilesystem();
-		}
 	}
 
 	protected void createNode() {
@@ -36,33 +30,14 @@ public class DriverCardBoom extends ManagedEnvironmentWithComponentConnector {
 			create());
 	}
 
-	protected li.cil.oc.api.network.ManagedEnvironment oc_fs;
-
-	private void initOCFilesystem() {
-		oc_fs = li.cil.oc.api.FileSystem.asManagedEnvironment(li.cil.oc.api.FileSystem.fromClass(Computronics.class, Mods.Computronics, "lua/component/self_destruct"),
-			"self_destruct");
-		((Component) oc_fs.node()).setVisibility(Visibility.Neighbors);
-	}
-
 	@Override
 	public void onConnect(final Node node) {
-		if(node.host() instanceof Context) {
-			node.connect(oc_fs.node());
-		}
+
 	}
 
 	@Override
 	public void onDisconnect(final Node node) {
-		if(node.host() instanceof Context) {
-			// Remove our file systems when we get disconnected from a
-			// computer.
-			node.disconnect(oc_fs.node());
-		} else if(node == this.node()) {
-			setTime(-1);
-			// Remove the file system if we are disconnected, because in that
-			// case this method is only called once.
-			oc_fs.node().remove();
-		}
+
 	}
 
 	@Override
@@ -111,9 +86,6 @@ public class DriverCardBoom extends ManagedEnvironmentWithComponentConnector {
 	@Override
 	public void load(NBTTagCompound nbt) {
 		super.load(nbt);
-		if(oc_fs != null && oc_fs.node() != null) {
-			oc_fs.node().load(nbt.getCompoundTag("oc:fs"));
-		}
 		if(nbt.getBoolean("ticking")) {
 			setTime(nbt.getInteger("time"));
 		}
@@ -122,11 +94,6 @@ public class DriverCardBoom extends ManagedEnvironmentWithComponentConnector {
 	@Override
 	public void save(NBTTagCompound nbt) {
 		super.save(nbt);
-		if(oc_fs != null && oc_fs.node() != null) {
-			final NBTTagCompound fsNbt = new NBTTagCompound();
-			oc_fs.node().save(fsNbt);
-			nbt.setTag("oc:fs", fsNbt);
-		}
 		if(this.time >= 0) {
 			nbt.setBoolean("ticking", true);
 			nbt.setInteger("time", this.time);
