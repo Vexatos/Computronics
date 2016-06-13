@@ -36,9 +36,11 @@ This version comes with a 1.8.9 and 1.9 port in addition to many additions.
     - Added `getProgress()` to most machines with progress
   * CHANGED: Sangar made beep card and noise card textures a lot less boring. He also made the sound card texture to match them. Thanks a lot!
   * CHANGED: Some tweaks to beep card and noise card recipes.
+  * CHANGED: Built-in tape and explode program have been moved to floppy disks for OpenComputers to conform to OpenComputers 1.6 standard.
   * FIXED: Iron Note Blocks now properly error when used with instrument names.
   * FIXED: Tape program not displaying information properly if file size is larger than tape size
   * FIXED: OpenComputers' tape program not working with HTTPS
+  * FIXED: Explosions not dropping items when they should
 
   * [1.7.10] ADDED: Digital Signal Controller Box for Railcraft!
     - Can be paired to up to 32 receivers (sounds overpowered, definitely is overpowered, but CovertJaguar told me to do it. It's probaby better this way...)

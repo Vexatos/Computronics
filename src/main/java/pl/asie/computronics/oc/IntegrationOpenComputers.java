@@ -1,11 +1,14 @@
 package pl.asie.computronics.oc;
 
 import li.cil.oc.api.Driver;
+import li.cil.oc.api.IMC;
 import li.cil.oc.api.Network;
 import li.cil.oc.api.driver.EnvironmentProvider;
 import li.cil.oc.api.driver.Item;
+import li.cil.oc.api.fs.FileSystem;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
@@ -44,6 +47,8 @@ import pl.asie.computronics.reference.Compat;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.RecipeUtils;
+
+import java.util.concurrent.Callable;
 
 import static pl.asie.computronics.Computronics.camera;
 import static pl.asie.computronics.Computronics.chatBox;
@@ -135,11 +140,36 @@ public class IntegrationOpenComputers {
 		}*/
 	}
 
+	private static class ReadOnlyFS implements Callable<FileSystem> {
+
+		private final String name;
+
+		ReadOnlyFS(String name) {
+			this.name = name;
+		}
+
+		@Override
+		@Optional.Method(modid = Mods.OpenComputers)
+		public FileSystem call() throws Exception {
+			return li.cil.oc.api.FileSystem.asReadOnly(li.cil.oc.api.FileSystem.fromClass(Computronics.class, Mods.Computronics, "loot/" + name));
+		}
+	}
+
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void init() {
 
 		Driver.add(new ComputronicsBlockEnvironmentProvider());
 		ComputronicsPathProvider.initialize();
+
+		if(Computronics.tapeReader != null) {
+			li.cil.oc.api.Items.registerFloppy("tape", EnumDyeColor.WHITE, new ReadOnlyFS("tape"));
+			IMC.registerProgramDiskLabel("tape", "tape", "Lua 5.2", "Lua 5.3", "LuaJ");
+		}
+
+		if(Config.OC_CARD_BOOM || Config.OC_BOARD_BOOM) {
+			li.cil.oc.api.Items.registerFloppy("explode", EnumDyeColor.RED, new ReadOnlyFS("explode"));
+			IMC.registerProgramDiskLabel("explode", "explode", "Lua 5.2", "Lua 5.3", "LuaJ");
+		}
 
 		if(colorfulUpgradeHandler == null && Config.OC_UPGRADE_COLORFUL) {
 			colorfulUpgradeHandler = new ColorfulUpgradeHandler();

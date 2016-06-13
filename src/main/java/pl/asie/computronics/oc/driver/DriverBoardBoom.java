@@ -4,7 +4,6 @@ import li.cil.oc.api.Network;
 import li.cil.oc.api.component.RackBusConnectable;
 import li.cil.oc.api.component.RackMountable;
 import li.cil.oc.api.internal.Rack;
-import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.Message;
 import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.Visibility;
@@ -136,15 +135,6 @@ public class DriverBoardBoom extends DriverCardBoom implements RackMountable {
 
 	@Override
 	public void onDisconnect(final Node node) {
-		if(node.host() instanceof Context) {
-			// Remove our file systems when we get disconnected from a
-			// computer.
-			node.disconnect(oc_fs.node());
-		} else if(node == this.node()) {
-			// Remove the file system if we are disconnected, because in that
-			// case this method is only called once.
-			oc_fs.node().remove();
-		}
 	}
 
 	@Override

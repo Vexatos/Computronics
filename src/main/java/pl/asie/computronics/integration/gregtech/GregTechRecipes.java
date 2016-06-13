@@ -3,7 +3,6 @@ package pl.asie.computronics.integration.gregtech;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.registry.GameRegistry;
 import gregtech.GT_Mod;
-import gregtech.api.GregTech_API;
 import gregtech.api.enums.GT_Values;
 import gregtech.api.enums.ItemList;
 import gregtech.api.enums.Materials;
@@ -182,8 +181,7 @@ public class GregTechRecipes extends ModRecipes {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
-	public static void registerGregTechTapeRecipes() {
+	public static void registerStandardGregTechRecipes() {
 
 		RecipeUtils.addShapedRecipe(new ItemStack(Computronics.itemTape, 1, 9),
 			"psp", "tct", "prp", 'o', "dustOlivine", 'r', new ItemStack(Computronics.itemParts, 1, 0), 's', ItemList.Duct_Tape.get(1), 't', new ItemStack(Computronics.itemPartsGreg, 1, 0), 'p', "plateTungstenSteel", 'c', "circuitUltimate");
@@ -201,14 +199,14 @@ public class GregTechRecipes extends ModRecipes {
 		Materials.ChromiumDioxide.mBlastFurnaceTemp = 650;
 		Materials.ChromiumDioxide.mMeltingPoint = 650;
 
-		GregTech_API.sRecipeAdder.addDistilleryRecipe(ItemList.Circuit_Integrated.getWithDamage(0L, 1L), Materials.Air.getGas(1000L), Materials.Nitrogen.getGas(780L), 1600, 32, false);
-		GregTech_API.sRecipeAdder.addDistilleryRecipe(ItemList.Circuit_Integrated.getWithDamage(0L, 2L), Materials.Air.getGas(1000L), Materials.Oxygen.getGas(210L), 1600, 128, false);
-		GregTech_API.sRecipeAdder.addDistilleryRecipe(ItemList.Circuit_Integrated.getWithDamage(0L, 3L), Materials.Air.getGas(1000L), Materials.Argon.getGas(5L), 6000, 512, false);
+		GT_Values.RA.addDistilleryRecipe(ItemList.Circuit_Integrated.getWithDamage(0L, 1L), Materials.Air.getGas(1000L), Materials.Nitrogen.getGas(780L), 1600, 32, false);
+		GT_Values.RA.addDistilleryRecipe(ItemList.Circuit_Integrated.getWithDamage(0L, 2L), Materials.Air.getGas(1000L), Materials.Oxygen.getGas(210L), 1600, 128, false);
+		GT_Values.RA.addDistilleryRecipe(ItemList.Circuit_Integrated.getWithDamage(0L, 3L), Materials.Air.getGas(1000L), Materials.Argon.getGas(5L), 6000, 512, false);
 
-		GregTech_API.sRecipeAdder.addElectrolyzerRecipe(ItemList.Cell_Air.get(1), null, null, Materials.Air.getGas(2000L), ItemList.Cell_Empty.get(1),
+		GT_Values.RA.addElectrolyzerRecipe(ItemList.Cell_Air.get(1), null, null, Materials.Air.getGas(2000L), ItemList.Cell_Empty.get(1),
 			null, null, null, null, null, null, 800, 30);
 
-		GregTech_API.sRecipeAdder.addChemicalRecipe(GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Chrome, 1),
+		GT_Values.RA.addChemicalRecipe(GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Chrome, 1),
 			null, Materials.Oxygen.getGas(5000), null, GT_OreDictUnificator.get(OrePrefixes.dust, Materials.ChromiumDioxide, 1), 800);
 	}
 }

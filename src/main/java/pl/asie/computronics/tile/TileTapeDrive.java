@@ -10,10 +10,7 @@ import dan200.computercraft.api.peripheral.IComputerAccess;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
-import li.cil.oc.api.network.Component;
-import li.cil.oc.api.network.ManagedEnvironment;
 import li.cil.oc.api.network.Node;
-import li.cil.oc.api.network.Visibility;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -79,9 +76,6 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 		super("tape_drive");
 		this.createInventory(1);
 		this.state = new TapeDriveState();
-		if(Mods.isLoaded(Mods.OpenComputers) && node() != null) {
-			initOCFilesystem();
-		}
 	}
 
 	private static Object cc_fs;
@@ -161,55 +155,21 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 		}
 	}
 
-	private Object oc_fs;
-
-	@Optional.Method(modid = Mods.OpenComputers)
-	protected ManagedEnvironment oc_fs() {
-		return (ManagedEnvironment) this.oc_fs;
-	}
-
-	@Optional.Method(modid = Mods.OpenComputers)
-	private void initOCFilesystem() {
-		oc_fs = li.cil.oc.api.FileSystem.asManagedEnvironment(li.cil.oc.api.FileSystem.fromClass(Computronics.class, Mods.Computronics, "lua/component/tape_drive"),
-			"tape_drive");
-		((Component) oc_fs().node()).setVisibility(Visibility.Network);
-	}
-
 	@Override
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void onConnect(final Node node) {
 		super.onConnect(node);
-
-		if(node == node()) {
-			if(oc_fs() != null) {
-				node.connect(oc_fs().node());
-			}
-		}
 	}
 
 	@Override
 	@Optional.Method(modid = Mods.OpenComputers)
 	protected void onChunkUnload_OC() {
-		if(oc_fs() != null) {
-			Node node = oc_fs().node();
-			if(node != null) {
-				node.remove();
-			}
-		}
-
 		super.onChunkUnload_OC();
 	}
 
 	@Override
 	@Optional.Method(modid = Mods.OpenComputers)
 	protected void invalidate_OC() {
-		if(oc_fs() != null) {
-			Node node = oc_fs().node();
-			if(node != null) {
-				node.remove();
-			}
-		}
-
 		super.invalidate_OC();
 	}
 
@@ -503,20 +463,12 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void readFromNBT_OC(NBTTagCompound tag) {
 		super.readFromNBT_OC(tag);
-		if(oc_fs() != null && oc_fs().node() != null) {
-			oc_fs().node().load(tag.getCompoundTag("oc:fs"));
-		}
 	}
 
 	@Override
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void writeToNBT_OC(NBTTagCompound tag) {
 		super.writeToNBT_OC(tag);
-		if(oc_fs() != null && oc_fs().node() != null) {
-			final NBTTagCompound fsNbt = new NBTTagCompound();
-			oc_fs().node().save(fsNbt);
-			tag.setTag("oc:fs", fsNbt);
-		}
 	}
 
 	@Override
