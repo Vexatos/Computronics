@@ -28,6 +28,7 @@
     - Added a Server Self-Destructor in case you don't need your servers anymore.
     - Added a Rack Capacitor which is a Capacitor you can put into a Rack. Ingenious. It also provides a component that gives you the amount of energy stored in that capacitor.
     - Added a Switch Board providing four switches to manually and automatically activate and deactivate. Fires an event whenever a switch is flipped, too.
+    - Added hardware information to every component.
   * ADDED: Built-in tape utility program for ComputerCraft to write songs to tapes and to play, stop, pause etc.
   * ADDED: getPosition() to tape drives. No, I'm not joking. It's real. I'm sorry.
   * ADDED: Digital Signal Controller Box for Railcraft!
@@ -43,6 +44,7 @@
     - Allows individually querying the aspect of each paired controller
     - Sends an `aspect_changed` event containing the controller's name and new aspect.
     - Controllers must be referenced by their name, meaning you have to name all your signals using Signal Labels
+  * CHANGED: Built-in tape and explode program have been moved to floppy disks for OpenComputers to conform with OpenComputers 1.6 standard.
   * FIXED: Crash when the `openComputersBees` config option was set to `false`.
   * FIXED: Digital Locomotive Relay trying to consume OpenComputers energy even if called from ComputerCraft
   * FIXED: Updated OpenComputers integration
@@ -50,6 +52,7 @@
   * FIXED: Tape program not displaying information properly if file size is larger than tape size
   * FIXED: OpenComputers' tape program not working with HTTPS
   * FIXED: Ticket Machine's `setDestination` not working with OpenComputers when no slot is specified
+  * FIXED: Explosions not dropping items when they should
 
 ==== 1.6.0 ====
 
