@@ -7,16 +7,22 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.api.audio.AudioPacket;
 import pl.asie.computronics.api.audio.IAudioConnection;
 import pl.asie.computronics.api.audio.IAudioReceiver;
+import pl.asie.computronics.integration.charset.audio.IntegrationCharsetAudio;
+import pl.asie.computronics.reference.Mods;
 import pl.asie.lib.tile.TileEntityBase;
 import pl.asie.lib.util.ColorUtils;
 import pl.asie.lib.util.internal.IColorable;
 
-public class TileAudioCable extends TileEntityBase implements IAudioReceiver, IColorable, ITickable {
+import java.util.HashSet;
 
-	private final TIntHashSet packetIds = new TIntHashSet();
+
+public class TileAudioCable extends TileEntityBase implements IAudioReceiver, IColorable, ITickable {
+	private final HashSet<Object> packetIds = new HashSet<Object>();
 
 	private int ImmibisMicroblocks_TransformableTileEntityMarker;
 
@@ -38,7 +44,11 @@ public class TileAudioCable extends TileEntityBase implements IAudioReceiver, IC
 						continue;
 					}
 				} else if(tile instanceof IAudioConnection) {
-					if(!((IAudioConnection) tile).connectsAudio(dir.getOpposite())) {
+					if (!((IAudioConnection) tile).connectsAudio(dir.getOpposite())) {
+						continue;
+					}
+				} else if(Mods.API.hasAPI(Mods.API.CharsetAudio)) {
+					if (!IntegrationCharsetAudio.connects(tile, dir.getOpposite())) {
 						continue;
 					}
 				} else {
@@ -79,27 +89,34 @@ public class TileAudioCable extends TileEntityBase implements IAudioReceiver, IC
 		}
 	}
 
+	public boolean receivePacketID(Object o) {
+		if (packetIds.contains(o)) {
+			return false;
+		}
+
+		packetIds.add(o);
+		return true;
+	}
+
 	@Override
 	public void receivePacket(AudioPacket packet, EnumFacing side) {
-		if(packetIds.contains(packet.id)) {
+		if (!receivePacketID(packet.id)) {
 			return;
 		}
 
-		packetIds.add(packet.id);
 		for(EnumFacing dir : EnumFacing.VALUES) {
-			if(dir == side) {
+			if(dir == side || !connectsAudio(dir)) {
 				continue;
 			}
 
-			if(connectsAudio(dir)) {
-				if(!worldObj.isBlockLoaded(getPos().offset(dir))) {
-					continue;
-				}
+			BlockPos pos = getPos().offset(dir);
+			if(!worldObj.isBlockLoaded(pos)) {
+				continue;
+			}
 
-				TileEntity tile = worldObj.getTileEntity(getPos().offset(dir));
-				if(tile instanceof IAudioReceiver) {
-					((IAudioReceiver) tile).receivePacket(packet, dir.getOpposite());
-				}
+			TileEntity tile = worldObj.getTileEntity(pos);
+			if(tile instanceof IAudioReceiver) {
+				((IAudioReceiver) tile).receivePacket(packet, dir.getOpposite());
 			}
 		}
 	}

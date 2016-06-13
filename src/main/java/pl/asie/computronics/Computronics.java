@@ -374,6 +374,8 @@ public class Computronics {
 		if(Mods.isLoaded(Mods.TIS3D) && tis3D != null) {
 			tis3D.postInit();
 		}
+
+		charset.postInit();
 	}
 
 	@EventHandler

@@ -91,7 +91,7 @@ public class EntitySwarm extends EntityFlyingCreature implements IBeeHousing {
 				this.setDead();
 			}
 			if(!isTolerant() && worldObj.getTotalWorldTime() % 40 == hashCode() % 40) {
-				Biome biome = worldObj.getBiomeGenForCoords(getPosition());
+				Biome biome = worldObj.getBiome(getPosition());
 				if(!(biome instanceof BiomeDesert) && (worldObj.isRaining() || worldObj.isThundering())) {
 					this.setDead();
 				}
@@ -578,7 +578,7 @@ public class EntitySwarm extends EntityFlyingCreature implements IBeeHousing {
 
 	@Override
 	public Biome getBiome() {
-		return worldObj.getBiomeGenForCoords(getPosition());
+		return worldObj.getBiome(getPosition());
 	}
 
 	@Nullable
