@@ -16,8 +16,6 @@ import pl.asie.charset.api.audio.AudioData;
 import pl.asie.charset.api.audio.AudioSink;
 import pl.asie.charset.api.audio.IAudioReceiver;
 import pl.asie.charset.api.audio.IAudioSource;
-import pl.asie.charset.lib.audio.*;
-import pl.asie.charset.lib.audio.AudioDataDFPWM;
 import pl.asie.computronics.api.audio.AudioPacket;
 import pl.asie.computronics.api.audio.AudioPacketDFPWM;
 import pl.asie.computronics.reference.Mods;
@@ -91,9 +89,9 @@ public class IntegrationCharsetAudio {
 
 		if (packet instanceof AudioPacketDFPWM) {
 			int time = ((AudioPacketDFPWM) packet).data.length * 8000 / ((AudioPacketDFPWM) packet).frequency;
-			dataNew = new AudioDataDFPWM(((AudioPacketDFPWM) packet).data, time);
+			dataNew = new AudioDataDFPWM(packet, ((AudioPacketDFPWM) packet).data, time);
 		} else {
-			dataNew = new AudioDataDummy();
+			dataNew = new AudioDataDummy(packet);
 		}
 
 		packetNew = new pl.asie.charset.api.audio.AudioPacket(dataNew, volume);
@@ -109,9 +107,7 @@ public class IntegrationCharsetAudio {
 		}
 
 		if (packetNew.getSinkCount() > 0) {
-			for (AudioSink sink : packetNew.getSinks()) {
-				packet.addReceiver(new AudioReceiverConverted(sink));
-			}
+			packetNew.send();
 			return packetNew.getSinkCount();
 		} else {
 			return 0;

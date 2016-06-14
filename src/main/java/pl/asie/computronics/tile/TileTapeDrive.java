@@ -291,15 +291,22 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 				}
 			}
 
+			boolean sent = false;
 			if(Mods.API.hasAPI(Mods.API.CharsetAudio)) {
+				int oldReceivers = receivers;
 				receivers += IntegrationCharsetAudio.send(getWorld(), getPos(), pkt, getVolume(), false);
+				if (receivers > oldReceivers) {
+					sent = true;
+				}
 			}
 
-			if(receivers == 0) {
-				internalSpeaker.receivePacket(pkt, null);
-			}
+			if (!sent) {
+				if(receivers == 0) {
+					internalSpeaker.receivePacket(pkt, null);
+				}
 
-			pkt.sendPacket();
+				pkt.sendPacket();
+			}
 		}
 		if(!worldObj.isRemote && st != getEnumState()) {
 			sendState();

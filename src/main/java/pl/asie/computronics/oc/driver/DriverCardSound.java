@@ -474,13 +474,20 @@ public class DriverCardSound extends ManagedEnvironment implements DeviceInfo, I
 		}
 		SoundCardPacket pkt = new SoundCardPacket(this, (byte) soundVolume, node().address(), instructions);
 		int receivers = 0;
+		boolean sent = false;
 		if(host instanceof TileEntity && Mods.API.hasAPI(Mods.API.CharsetAudio)) {
+			int oldReceivers = receivers;
 			receivers += IntegrationCharsetAudio.send(host.world(), ((TileEntity) host).getPos(), pkt, 1.0F, true);
+			if (receivers > oldReceivers) {
+				sent = true;
+			}
 		}
-		if(receivers == 0) {
-			internalSpeaker.receivePacket(pkt, null);
+		if (!sent) {
+			if (receivers == 0) {
+				internalSpeaker.receivePacket(pkt, null);
+			}
+			pkt.sendPacket();
 		}
-		pkt.sendPacket();
 	}
 
 	protected void sendSound(Queue<Instruction> buffer) {

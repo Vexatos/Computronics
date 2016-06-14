@@ -2,20 +2,22 @@ package pl.asie.computronics.integration.charset.audio;
 
 import io.netty.buffer.ByteBuf;
 import pl.asie.charset.api.audio.AudioData;
+import pl.asie.charset.api.audio.AudioPacket;
 import pl.asie.charset.api.audio.IDataPCM;
 import pl.asie.lib.audio.DFPWM;
 
-public class AudioDataDFPWM extends AudioData implements IDataPCM {
+public class AudioDataDFPWM extends AudioDataDummy implements IDataPCM {
     protected byte[] decodedData;
     private byte[] data;
     private int time;
     private static final DFPWM dfpwm = new DFPWM();
 
     public AudioDataDFPWM() {
-
+        super(null);
     }
 
-    public AudioDataDFPWM(byte[] data, int time) {
+    public AudioDataDFPWM(pl.asie.computronics.api.audio.AudioPacket wrapped, byte[] data, int time) {
+        super(wrapped);
         this.data = data;
         this.time = time;
     }
@@ -37,6 +39,11 @@ public class AudioDataDFPWM extends AudioData implements IDataPCM {
     }
 
     @Override
+    public boolean isSampleBigEndian() {
+        return false;
+    }
+
+    @Override
     public byte[] getSamplePCMData() {
         if (decodedData == null) {
             decodedData = new byte[data.length * 8];
@@ -49,11 +56,6 @@ public class AudioDataDFPWM extends AudioData implements IDataPCM {
     @Override
     public int getTime() {
         return time;
-    }
-
-    @Override
-    public int getSize() {
-        return data.length;
     }
 
     @Override

@@ -2,15 +2,18 @@ package pl.asie.computronics.integration.charset.audio;
 
 import io.netty.buffer.ByteBuf;
 import pl.asie.charset.api.audio.AudioData;
+import pl.asie.charset.api.audio.AudioPacket;
+import pl.asie.charset.api.audio.AudioSink;
 
 public class AudioDataDummy extends AudioData {
-    @Override
-    public int getTime() {
-        return 0;
+    private final pl.asie.computronics.api.audio.AudioPacket wrapped;
+
+    public AudioDataDummy(pl.asie.computronics.api.audio.AudioPacket wrapped) {
+        this.wrapped = wrapped;
     }
 
     @Override
-    public int getSize() {
+    public int getTime() {
         return 0;
     }
 
@@ -22,5 +25,13 @@ public class AudioDataDummy extends AudioData {
     @Override
     public void writeData(ByteBuf byteBuf) {
 
+    }
+
+    @Override
+    protected void sendClient(AudioPacket audioPacket) {
+        for (AudioSink sink : audioPacket.getSinks()) {
+            wrapped.addReceiver(new AudioReceiverConverted(sink));
+        }
+        wrapped.sendPacket();
     }
 }
