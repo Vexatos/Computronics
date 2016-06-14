@@ -3,6 +3,8 @@ package pl.asie.computronics.integration.charset.audio;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
@@ -10,9 +12,15 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import pl.asie.charset.api.audio.AudioAPI;
+import pl.asie.charset.api.audio.AudioData;
 import pl.asie.charset.api.audio.AudioSink;
 import pl.asie.charset.api.audio.IAudioReceiver;
 import pl.asie.charset.api.audio.IAudioSource;
+import pl.asie.charset.lib.audio.*;
+import pl.asie.charset.lib.audio.AudioDataDFPWM;
+import pl.asie.computronics.api.audio.AudioPacket;
+import pl.asie.computronics.api.audio.AudioPacketDFPWM;
+import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TileAudioCable;
 import pl.asie.computronics.tile.TileSpeaker;
 
@@ -21,9 +29,9 @@ import pl.asie.computronics.tile.TileSpeaker;
  */
 public class IntegrationCharsetAudio {
 	@CapabilityInject(IAudioSource.class)
-	static Capability<IAudioSource> SOURCE_CAPABILITY;
+	public static Capability<IAudioSource> SOURCE_CAPABILITY;
 	@CapabilityInject(IAudioReceiver.class)
-	static Capability<IAudioReceiver> RECEIVER_CAPABILITY;
+	public static Capability<IAudioReceiver> RECEIVER_CAPABILITY;
 
 	private static final ResourceLocation CABLE_SINK_KEY = new ResourceLocation("computronics:cableSink");
 	private static final ResourceLocation SPEAKER_SINK_KEY = new ResourceLocation("computronics:speakerSink");
@@ -74,6 +82,39 @@ public class IntegrationCharsetAudio {
 					}
 				}
 			});
+		}
+	}
+
+	public static int send(IBlockAccess world, BlockPos pos, AudioPacket packet, float volume, boolean ignoreComputronicsAPICheck) {
+		AudioData dataNew;
+		pl.asie.charset.api.audio.AudioPacket packetNew;
+
+		if (packet instanceof AudioPacketDFPWM) {
+			int time = ((AudioPacketDFPWM) packet).data.length * 8000 / ((AudioPacketDFPWM) packet).frequency;
+			dataNew = new AudioDataDFPWM(((AudioPacketDFPWM) packet).data, time);
+		} else {
+			dataNew = new AudioDataDummy();
+		}
+
+		packetNew = new pl.asie.charset.api.audio.AudioPacket(dataNew, volume);
+		for (EnumFacing facing : EnumFacing.VALUES) {
+			BlockPos posO = pos.offset(facing);
+			TileEntity tile = world.getTileEntity(posO);
+			if (tile != null && tile.hasCapability(RECEIVER_CAPABILITY, facing.getOpposite())) {
+				if (!ignoreComputronicsAPICheck && tile instanceof pl.asie.computronics.api.audio.IAudioReceiver) {
+					continue;
+				}
+				tile.getCapability(RECEIVER_CAPABILITY, facing.getOpposite()).receive(packetNew);
+			}
+		}
+
+		if (packetNew.getSinkCount() > 0) {
+			for (AudioSink sink : packetNew.getSinks()) {
+				packet.addReceiver(new AudioReceiverConverted(sink));
+			}
+			return packetNew.getSinkCount();
+		} else {
+			return 0;
 		}
 	}
 

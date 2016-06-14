@@ -29,6 +29,7 @@ public class Mods {
 		BuildCraftCore = "BuildCraft|Core",
 		BuildCraftTransport = "BuildCraft|Transport",
 		CharsetAudio = "CharsetAudio",
+		CharsetLib = "CharsetLib",
 		EnderIO = "EnderIO",
 		Factorization = "factorization",
 		Flamingo = "Flamingo",

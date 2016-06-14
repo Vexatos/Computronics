@@ -11,10 +11,13 @@ import li.cil.oc.api.network.Visibility;
 import li.cil.oc.api.prefab.ManagedEnvironment;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.WorldEvent;
@@ -30,6 +33,7 @@ import pl.asie.computronics.api.audio.IAudioSource;
 import pl.asie.computronics.audio.AudioUtils;
 import pl.asie.computronics.audio.SoundCardPacket;
 import pl.asie.computronics.audio.SoundCardPacketClientHandler;
+import pl.asie.computronics.integration.charset.audio.IntegrationCharsetAudio;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.OCUtils;
@@ -48,6 +52,7 @@ import pl.asie.computronics.util.sound.Instruction.SetFM;
 import pl.asie.computronics.util.sound.Instruction.SetVolume;
 import pl.asie.computronics.util.sound.Instruction.SetWave;
 
+import javax.annotation.Nullable;
 import java.util.ArrayDeque;
 import java.util.Collections;
 import java.util.HashMap;
@@ -60,7 +65,7 @@ import java.util.WeakHashMap;
 /**
  * @author Vexatos, gamax92
  */
-public class DriverCardSound extends ManagedEnvironment implements DeviceInfo, IAudioSource {
+public class DriverCardSound extends ManagedEnvironment implements DeviceInfo, IAudioSource, ICapabilityProvider {
 
 	protected final EnvironmentHost host;
 
@@ -468,7 +473,13 @@ public class DriverCardSound extends ManagedEnvironment implements DeviceInfo, I
 			Computronics.opencomputers.audio.getPlayer(codecId);
 		}
 		SoundCardPacket pkt = new SoundCardPacket(this, (byte) soundVolume, node().address(), instructions);
-		internalSpeaker.receivePacket(pkt, null);
+		int receivers = 0;
+		if(host instanceof TileEntity && Mods.API.hasAPI(Mods.API.CharsetAudio)) {
+			receivers += IntegrationCharsetAudio.send(host.world(), ((TileEntity) host).getPos(), pkt, 1.0F, true);
+		}
+		if(receivers == 0) {
+			internalSpeaker.receivePacket(pkt, null);
+		}
 		pkt.sendPacket();
 	}
 
@@ -485,6 +496,33 @@ public class DriverCardSound extends ManagedEnvironment implements DeviceInfo, I
 		}
 		if(sendBuffer.size() > 0) {
 			sendMusicPacket(sendBuffer);
+		}
+	}
+
+	@Override
+	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
+		if (Mods.API.hasAPI(Mods.API.CharsetAudio)) {
+			return capability == IntegrationCharsetAudio.SOURCE_CAPABILITY;
+		} else {
+			return false;
+		}
+	}
+
+	private Object charsetAudioSource;
+
+	@Override
+	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
+		if (Mods.API.hasAPI(Mods.API.CharsetAudio)) {
+			if (capability == IntegrationCharsetAudio.SOURCE_CAPABILITY) {
+				if (charsetAudioSource == null) {
+					charsetAudioSource = new pl.asie.charset.api.audio.IAudioSource() {};
+				}
+				return (T) charsetAudioSource;
+			} else {
+				return null;
+			}
+		} else {
+			return null;
 		}
 	}
 

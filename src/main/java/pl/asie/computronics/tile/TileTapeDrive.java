@@ -29,6 +29,7 @@ import pl.asie.computronics.api.audio.IAudioReceiver;
 import pl.asie.computronics.api.audio.IAudioSource;
 import pl.asie.computronics.api.tape.IItemTapeStorage;
 import pl.asie.computronics.cc.ComputronicsFileMount;
+import pl.asie.computronics.integration.charset.audio.IntegrationCharsetAudio;
 import pl.asie.computronics.network.PacketType;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
@@ -288,6 +289,10 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 					((IAudioReceiver) tile).receivePacket(pkt, dir.getOpposite());
 					receivers++;
 				}
+			}
+
+			if(Mods.API.hasAPI(Mods.API.CharsetAudio)) {
+				receivers += IntegrationCharsetAudio.send(getWorld(), getPos(), pkt, getVolume(), false);
 			}
 
 			if(receivers == 0) {
