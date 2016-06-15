@@ -20,7 +20,7 @@ public class IntegrationCharset {
 	}
 
 	public void postInit() {
-		if(Mods.isLoaded(Mods.CharsetAudio)) {
+		if(Mods.API.hasAPI(Mods.API.CharsetAudio)) {
 			audio = new IntegrationCharsetAudio();
 			audio.postInit();
 		}
