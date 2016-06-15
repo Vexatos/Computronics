@@ -1,14 +1,11 @@
 package pl.asie.computronics.tile;
 
-import gnu.trove.set.hash.TIntHashSet;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.api.audio.AudioPacket;
 import pl.asie.computronics.api.audio.IAudioConnection;
 import pl.asie.computronics.api.audio.IAudioReceiver;
@@ -18,10 +15,11 @@ import pl.asie.lib.tile.TileEntityBase;
 import pl.asie.lib.util.ColorUtils;
 import pl.asie.lib.util.internal.IColorable;
 
+import javax.annotation.Nullable;
 import java.util.HashSet;
 
-
 public class TileAudioCable extends TileEntityBase implements IAudioReceiver, IColorable, ITickable {
+
 	private final HashSet<Object> packetIds = new HashSet<Object>();
 
 	private int ImmibisMicroblocks_TransformableTileEntityMarker;
@@ -44,11 +42,11 @@ public class TileAudioCable extends TileEntityBase implements IAudioReceiver, IC
 						continue;
 					}
 				} else if(tile instanceof IAudioConnection) {
-					if (!((IAudioConnection) tile).connectsAudio(dir.getOpposite())) {
+					if(!((IAudioConnection) tile).connectsAudio(dir.getOpposite())) {
 						continue;
 					}
 				} else if(Mods.API.hasAPI(Mods.API.CharsetAudio)) {
-					if (!IntegrationCharsetAudio.connects(tile, dir.getOpposite())) {
+					if(!IntegrationCharsetAudio.connects(tile, dir.getOpposite())) {
 						continue;
 					}
 				} else {
@@ -90,7 +88,7 @@ public class TileAudioCable extends TileEntityBase implements IAudioReceiver, IC
 	}
 
 	public boolean receivePacketID(Object o) {
-		if (packetIds.contains(o)) {
+		if(packetIds.contains(o)) {
 			return false;
 		}
 
@@ -99,8 +97,8 @@ public class TileAudioCable extends TileEntityBase implements IAudioReceiver, IC
 	}
 
 	@Override
-	public void receivePacket(AudioPacket packet, EnumFacing side) {
-		if (!receivePacketID(packet.id)) {
+	public void receivePacket(AudioPacket packet, @Nullable EnumFacing side) {
+		if(!receivePacketID(packet.id)) {
 			return;
 		}
 

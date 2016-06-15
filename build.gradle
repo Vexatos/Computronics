@@ -39,7 +39,7 @@ if (JavaVersion.current().isJava8Compatible()) {
 repositories {
     maven {
         name = "OC repo"
-        url = "http://maven.cil.li/"
+        url = "http://maven.cil.li"
     }
     maven {
         name "Mobius Repo"
@@ -47,23 +47,23 @@ repositories {
     }
     /*maven {
         name 'CB Repo'
-        url "http://chickenbones.net/maven/"
+        url "http://chickenbones.net/maven"
     }*/
     maven {
         name 'tterrag Repo'
-        url "http://maven.tterrag.com/"
+        url "http://maven.tterrag.com"
     }
     maven {
         name = "Forestry and IC2 repo"
-        url = "http://maven.ic2.player.to/"
+        url = "http://maven.ic2.player.to"
     }
     /*maven {
         name = "Bluepower Repo"
-        url = "http://maven.bluepowermod.com/"
+        url = "http://maven.bluepowermod.com"
     }
     maven {
         name = "RX14's Repo"
-        url = "http://mvn.rx14.co.uk/repo/"
+        url = "http://mvn.rx14.co.uk/repo"
     }*/
     ivy {
         name = "BuildCraft"
@@ -89,14 +89,14 @@ dependencies {
     //provided "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech.version}:dev"
     deobfCompile "mcp.mobius.waila:Waila:${config.waila.version}"
     deobfCompile "mcjty.theoneprobe:TheOneProbe:${config.top.version}"
-    /*deobfCompile "pl.asie.charset:charset-lib:${config.charset.version}"
+    deobfCompile "pl.asie.charset:charset-lib:${config.charset.version}"
     deobfCompile "pl.asie.charset:charset-audio:${config.charset.version}"
     deobfCompile "pl.asie.charset:charset-drama:${config.charset.version}"
     deobfCompile "pl.asie.charset:charset-gates:${config.charset.version}"
     deobfCompile "pl.asie.charset:charset-pipes:${config.charset.version}"
     deobfCompile "pl.asie.charset:charset-storage:${config.charset.version}"
     deobfCompile "pl.asie.charset:charset-tweaks:${config.charset.version}"
-    deobfCompile "pl.asie.charset:charset-wires:${config.charset.version}"*/
+    deobfCompile "pl.asie.charset:charset-wires:${config.charset.version}"
     deobfCompile "com.enderio.core:EnderCore:${config.endercore.version}"
     deobfCompile("com.enderio:EnderIO:${config.enderio.version}") {
         exclude module: "appliedenergistics2"

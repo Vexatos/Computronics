@@ -9,6 +9,7 @@ import pl.asie.computronics.api.audio.IAudioSource;
 import pl.asie.computronics.api.tape.ITapeStorage;
 import pl.asie.computronics.audio.AudioUtils;
 
+import javax.annotation.Nullable;
 import java.util.Arrays;
 
 public class TapeDriveState {
@@ -29,11 +30,12 @@ public class TapeDriveState {
 	protected int soundVolume = 127;
 	private ITapeStorage storage;
 
+	@Nullable
 	public ITapeStorage getStorage() {
 		return storage;
 	}
 
-	protected void setStorage(ITapeStorage storage) {
+	protected void setStorage(@Nullable ITapeStorage storage) {
 		this.storage = storage;
 	}
 
@@ -94,6 +96,7 @@ public class TapeDriveState {
 		return state;
 	}
 
+	@Nullable
 	private AudioPacket createMusicPacket(IAudioSource source, World worldObj, BlockPos pos) {
 		byte[] pktData = new byte[packetSize];
 		int amount = storage.read(pktData, false); // read data into packet array
@@ -109,6 +112,7 @@ public class TapeDriveState {
 		}
 	}
 
+	@Nullable
 	public AudioPacket update(IAudioSource source, World worldObj, BlockPos pos) {
 		if(!worldObj.isRemote) {
 			switch(state) {

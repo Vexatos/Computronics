@@ -57,7 +57,7 @@ public class TileSpeaker extends TileEntityPeripheralBase implements IAudioRecei
 	}
 
 	@Override
-	public void receivePacket(AudioPacket packet, EnumFacing direction) {
+	public void receivePacket(AudioPacket packet, @Nullable EnumFacing direction) {
 		if(!packetIds.contains(packet.id)) {
 			packetIds.add(packet.id);
 

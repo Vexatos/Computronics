@@ -39,6 +39,7 @@ import pl.asie.lib.network.Packet;
 import pl.asie.lib.util.ColorUtils;
 import pl.asie.lib.util.internal.IColorable;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 
 public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSource, ITickable {
@@ -65,7 +66,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 		}
 
 		@Override
-		public void receivePacket(AudioPacket packet, EnumFacing direction) {
+		public void receivePacket(AudioPacket packet, @Nullable EnumFacing direction) {
 			packet.addReceiver(this);
 		}
 	};
@@ -84,11 +85,13 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 	protected HashMap<IComputerAccess, String> computerMountPointsCC;
 	protected HashMap<IComputerAccess, String> computerMountPointsCC_autorun;
 
+	@Nullable
 	@Optional.Method(modid = Mods.ComputerCraft)
 	protected IMount cc_fs() {
 		return (IMount) cc_fs;
 	}
 
+	@Nullable
 	@Optional.Method(modid = Mods.ComputerCraft)
 	protected IMount cc_autorun_fs() {
 		return (IMount) cc_fs_autorun;
@@ -261,15 +264,17 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 			state.getStorage().read(data, false);
 			return data;
 		}
-		return null;
+		return new byte[0];
 	}
 
 	public void write(byte b) {
-		state.getStorage().write(b);
+		if(state.getStorage() != null) {
+			state.getStorage().write(b);
+		}
 	}
 
 	public int write(byte[] bytes) {
-		return state.getStorage().write(bytes);
+		return state.getStorage() != null ? state.getStorage().write(bytes) : 0;
 	}
 
 	@Override
@@ -295,12 +300,12 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 			if(Mods.API.hasAPI(Mods.API.CharsetAudio)) {
 				int oldReceivers = receivers;
 				receivers += IntegrationCharsetAudio.send(getWorld(), getPos(), pkt, getVolume(), false);
-				if (receivers > oldReceivers) {
+				if(receivers > oldReceivers) {
 					sent = true;
 				}
 			}
 
-			if (!sent) {
+			if(!sent) {
 				if(receivers == 0) {
 					internalSpeaker.receivePacket(pkt, null);
 				}
@@ -424,7 +429,8 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 			unloadStorage();
 		} else {
 			loadStorage();
-			if(this.getStackInSlot(0).getItem() instanceof IItemTapeStorage) {
+			ItemStack stack = this.getStackInSlot(0);
+			if(stack != null && stack.getItem() instanceof IItemTapeStorage) {
 				// Play insert sound
 				BlockPos pos = getPos();
 				worldObj.playSound(null, pos, new SoundEvent(new ResourceLocation("computronics:tape_insert")), SoundCategory.BLOCKS, 1, 0);
@@ -552,7 +558,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 		if(state.getStorage() != null) {
 			return new Object[] { seek(args.checkInteger(0)) };
 		}
-		return null;
+		return new Object[] {};
 	}
 
 	@Callback(doc = "function([length:number]):string; "
@@ -567,7 +573,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 				return new Object[] { read() };
 			}
 		} else {
-			return null;
+			return new Object[] {};
 		}
 	}
 
@@ -583,7 +589,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 				throw new IllegalArgumentException("bad arguments #1 (number or string expected)");
 			}
 		}
-		return null;
+		return new Object[] {};
 	}
 
 	@Callback(doc = "function():boolean; Make the Tape Drive start playing the tape. Returns true on success")
@@ -610,7 +616,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] setVolume(Context context, Arguments args) {
 		this.state.setVolume((float) args.checkDouble(0));
-		return null;
+		return new Object[] {};
 	}
 
 	@Callback(doc = "function():string; Returns the current state of the tape drive", direct = true)
@@ -653,7 +659,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 					if(state.getStorage() != null) {
 						return new Object[] { read() };
 					} else {
-						return null;
+						return new Object[] {};
 					}
 				}
 				break;
@@ -726,7 +732,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 				}
 				case 7: { // setVolume
 					this.state.setVolume(((Number) arguments[0]).floatValue());
-					return null;
+					return new Object[] {};
 				}
 				case 8: { // seek
 					if(state.getStorage() != null) {
@@ -742,7 +748,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 						}
 						return new Object[] { new String(read(i), Charsets.UTF_8) };
 					} else {
-						return null;
+						return new Object[] {};
 					}
 				}
 				case 10: { // write
@@ -755,7 +761,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 		}
 
 		// catch all other methods
-		return null;
+		return new Object[] {};
 	}
 
 	@Override

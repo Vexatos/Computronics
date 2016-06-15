@@ -18,14 +18,16 @@ import pl.asie.charset.api.audio.IAudioReceiver;
 import pl.asie.charset.api.audio.IAudioSource;
 import pl.asie.computronics.api.audio.AudioPacket;
 import pl.asie.computronics.api.audio.AudioPacketDFPWM;
-import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TileAudioCable;
 import pl.asie.computronics.tile.TileSpeaker;
+
+import javax.annotation.Nullable;
 
 /**
  * @author Vexatos
  */
 public class IntegrationCharsetAudio {
+
 	@CapabilityInject(IAudioSource.class)
 	public static Capability<IAudioSource> SOURCE_CAPABILITY;
 	@CapabilityInject(IAudioReceiver.class)
@@ -41,36 +43,40 @@ public class IntegrationCharsetAudio {
 
 	@SubscribeEvent
 	public void onAttach(final AttachCapabilitiesEvent.TileEntity event) {
-		if (event.getTileEntity() instanceof TileSpeaker
-				&& RECEIVER_CAPABILITY != null) {
+		if(event.getTileEntity() instanceof TileSpeaker
+			&& RECEIVER_CAPABILITY != null) {
 			event.addCapability(SPEAKER_SINK_KEY, new ICapabilityProvider() {
 				private final AudioSink sink = new AudioSinkSpeaker((TileSpeaker) event.getTileEntity());
 
 				@Override
-				public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+				public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
 					return capability == RECEIVER_CAPABILITY && facing != null;
 				}
 
+				@Nullable
 				@Override
-				public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+				@SuppressWarnings("unchecked")
+				public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
 					return capability == RECEIVER_CAPABILITY ? (T) sink : null;
 				}
 			});
-		} else if (event.getTileEntity() instanceof TileAudioCable
-				&& RECEIVER_CAPABILITY != null) {
+		} else if(event.getTileEntity() instanceof TileAudioCable
+			&& RECEIVER_CAPABILITY != null) {
 			event.addCapability(CABLE_SINK_KEY, new ICapabilityProvider() {
 				private final TileAudioCable cable = (TileAudioCable) event.getTileEntity();
 				private final AudioReceiverCable[] RECEIVERS = new AudioReceiverCable[6];
 
 				@Override
-				public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+				public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
 					return capability == RECEIVER_CAPABILITY && facing != null;
 				}
 
+				@Nullable
 				@Override
-				public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-					if (capability == RECEIVER_CAPABILITY && facing != null) {
-						if (RECEIVERS[facing.ordinal()] == null) {
+				@SuppressWarnings("unchecked")
+				public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
+					if(capability == RECEIVER_CAPABILITY && facing != null) {
+						if(RECEIVERS[facing.ordinal()] == null) {
 							RECEIVERS[facing.ordinal()] = new AudioReceiverCable(cable, facing);
 						}
 
@@ -87,7 +93,7 @@ public class IntegrationCharsetAudio {
 		AudioData dataNew;
 		pl.asie.charset.api.audio.AudioPacket packetNew;
 
-		if (packet instanceof AudioPacketDFPWM) {
+		if(packet instanceof AudioPacketDFPWM) {
 			int time = ((AudioPacketDFPWM) packet).data.length * 8000 / ((AudioPacketDFPWM) packet).frequency;
 			dataNew = new AudioDataDFPWM(packet, ((AudioPacketDFPWM) packet).data, time);
 		} else {
@@ -95,18 +101,18 @@ public class IntegrationCharsetAudio {
 		}
 
 		packetNew = new pl.asie.charset.api.audio.AudioPacket(dataNew, volume);
-		for (EnumFacing facing : EnumFacing.VALUES) {
+		for(EnumFacing facing : EnumFacing.VALUES) {
 			BlockPos posO = pos.offset(facing);
 			TileEntity tile = world.getTileEntity(posO);
-			if (tile != null && tile.hasCapability(RECEIVER_CAPABILITY, facing.getOpposite())) {
-				if (!ignoreComputronicsAPICheck && tile instanceof pl.asie.computronics.api.audio.IAudioReceiver) {
+			if(tile != null && tile.hasCapability(RECEIVER_CAPABILITY, facing.getOpposite())) {
+				if(!ignoreComputronicsAPICheck && tile instanceof pl.asie.computronics.api.audio.IAudioReceiver) {
 					continue;
 				}
 				tile.getCapability(RECEIVER_CAPABILITY, facing.getOpposite()).receive(packetNew);
 			}
 		}
 
-		if (packetNew.getSinkCount() > 0) {
+		if(packetNew.getSinkCount() > 0) {
 			packetNew.send();
 			return packetNew.getSinkCount();
 		} else {
@@ -114,8 +120,8 @@ public class IntegrationCharsetAudio {
 		}
 	}
 
-	public static boolean connects(TileEntity tile, EnumFacing dir) {
+	public static boolean connects(@Nullable TileEntity tile, EnumFacing dir) {
 		return tile != null && (tile.hasCapability(SOURCE_CAPABILITY, dir)
-				|| tile.hasCapability(RECEIVER_CAPABILITY, dir));
+			|| tile.hasCapability(RECEIVER_CAPABILITY, dir));
 	}
 }

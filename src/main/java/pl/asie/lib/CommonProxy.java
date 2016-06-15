@@ -7,6 +7,7 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import pl.asie.lib.network.MessageHandlerBase;
 import pl.asie.lib.network.Packet;
 
+import javax.annotation.Nullable;
 import java.io.File;
 
 public class CommonProxy {
@@ -19,6 +20,7 @@ public class CommonProxy {
 		return new File(".");
 	}
 
+	@Nullable
 	public World getWorld(int dimensionId) {
 		return FMLCommonHandler.instance().getMinecraftServerInstance().worldServerForDimension(dimensionId);
 	}

@@ -9,39 +9,40 @@ import pl.asie.charset.api.audio.IAudioReceiver;
 import pl.asie.computronics.tile.TileAudioCable;
 
 public class AudioReceiverCable implements IAudioReceiver {
-    private final TileAudioCable cable;
-    private final EnumFacing side;
 
-    public AudioReceiverCable(TileAudioCable cable, EnumFacing side) {
-        this.cable = cable;
-        this.side = side;
-    }
+	private final TileAudioCable cable;
+	private final EnumFacing side;
 
-    @Override
-    public boolean receive(AudioPacket packet) {
-        if (!cable.receivePacketID(packet)) {
-            return false;
-        }
+	public AudioReceiverCable(TileAudioCable cable, EnumFacing side) {
+		this.cable = cable;
+		this.side = side;
+	}
 
-        World worldObj = cable.getWorld();
-        boolean sent = false;
+	@Override
+	public boolean receive(AudioPacket packet) {
+		if(!cable.receivePacketID(packet)) {
+			return false;
+		}
 
-        for(EnumFacing dir : EnumFacing.VALUES) {
-            if(dir == side || !cable.connectsAudio(dir)) {
-                continue;
-            }
+		World worldObj = cable.getWorld();
+		boolean sent = false;
 
-            BlockPos pos = cable.getPos().offset(dir);
-            if(!worldObj.isBlockLoaded(pos)) {
-                continue;
-            }
+		for(EnumFacing dir : EnumFacing.VALUES) {
+			if(dir == side || !cable.connectsAudio(dir)) {
+				continue;
+			}
 
-            TileEntity tile = worldObj.getTileEntity(pos);
-            if(tile != null && tile.hasCapability(IntegrationCharsetAudio.RECEIVER_CAPABILITY, dir.getOpposite())) {
-                sent |= tile.getCapability(IntegrationCharsetAudio.RECEIVER_CAPABILITY, dir.getOpposite()).receive(packet);
-            }
-        }
+			BlockPos pos = cable.getPos().offset(dir);
+			if(!worldObj.isBlockLoaded(pos)) {
+				continue;
+			}
 
-        return sent;
-    }
+			TileEntity tile = worldObj.getTileEntity(pos);
+			if(tile != null && tile.hasCapability(IntegrationCharsetAudio.RECEIVER_CAPABILITY, dir.getOpposite())) {
+				sent |= tile.getCapability(IntegrationCharsetAudio.RECEIVER_CAPABILITY, dir.getOpposite()).receive(packet);
+			}
+		}
+
+		return sent;
+	}
 }

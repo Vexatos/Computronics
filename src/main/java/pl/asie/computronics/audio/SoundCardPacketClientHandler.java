@@ -25,6 +25,7 @@ import pl.asie.computronics.util.sound.Instruction.SetWhiteNoise;
 import pl.asie.lib.audio.StreamingAudioPlayer;
 import pl.asie.lib.network.Packet;
 
+import javax.annotation.Nullable;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayDeque;
@@ -41,7 +42,7 @@ public class SoundCardPacketClientHandler extends AudioPacketClientHandler {
 	private Map<String, AudioProcess> processMap = new HashMap<String, AudioProcess>();
 	private int sampleRate = Config.SOUND_SAMPLE_RATE;
 
-	public void setProcess(String address, AudioProcess process) {
+	public void setProcess(String address, @Nullable AudioProcess process) {
 		if(process != null) {
 			processMap.put(address, process);
 		} else {

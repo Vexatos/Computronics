@@ -109,7 +109,7 @@ public class DriverCardSound extends ManagedEnvironment implements DeviceInfo, I
 		}
 
 		@Override
-		public void receivePacket(AudioPacket packet, EnumFacing direction) {
+		public void receivePacket(AudioPacket packet, @Nullable EnumFacing direction) {
 			packet.addReceiver(this);
 		}
 	};
@@ -478,12 +478,12 @@ public class DriverCardSound extends ManagedEnvironment implements DeviceInfo, I
 		if(host instanceof TileEntity && Mods.API.hasAPI(Mods.API.CharsetAudio)) {
 			int oldReceivers = receivers;
 			receivers += IntegrationCharsetAudio.send(host.world(), ((TileEntity) host).getPos(), pkt, 1.0F, true);
-			if (receivers > oldReceivers) {
+			if(receivers > oldReceivers) {
 				sent = true;
 			}
 		}
-		if (!sent) {
-			if (receivers == 0) {
+		if(!sent) {
+			if(receivers == 0) {
 				internalSpeaker.receivePacket(pkt, null);
 			}
 			pkt.sendPacket();
@@ -508,7 +508,7 @@ public class DriverCardSound extends ManagedEnvironment implements DeviceInfo, I
 
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
-		if (Mods.API.hasAPI(Mods.API.CharsetAudio)) {
+		if(Mods.API.hasAPI(Mods.API.CharsetAudio)) {
 			return capability == IntegrationCharsetAudio.SOURCE_CAPABILITY;
 		} else {
 			return false;
@@ -517,12 +517,15 @@ public class DriverCardSound extends ManagedEnvironment implements DeviceInfo, I
 
 	private Object charsetAudioSource;
 
+	@Nullable
 	@Override
+	@SuppressWarnings("unchecked")
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
-		if (Mods.API.hasAPI(Mods.API.CharsetAudio)) {
-			if (capability == IntegrationCharsetAudio.SOURCE_CAPABILITY) {
-				if (charsetAudioSource == null) {
-					charsetAudioSource = new pl.asie.charset.api.audio.IAudioSource() {};
+		if(Mods.API.hasAPI(Mods.API.CharsetAudio)) {
+			if(capability == IntegrationCharsetAudio.SOURCE_CAPABILITY) {
+				if(charsetAudioSource == null) {
+					charsetAudioSource = new pl.asie.charset.api.audio.IAudioSource() {
+					};
 				}
 				return (T) charsetAudioSource;
 			} else {
