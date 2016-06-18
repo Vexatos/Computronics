@@ -47,8 +47,8 @@ public class Config {
 	public static int SOUND_SAMPLE_RATE = 44100;
 	public static int SOUND_VOLUME = 32;
 	public static int SOUND_RADIUS = 16;
-	public static int SOUND_CARD_MAX_DELAY = Integer.MAX_VALUE; // TODO
-	public static int SOUND_CARD_QUEUE_SIZE = Integer.MAX_VALUE; // TODO
+	public static int SOUND_CARD_MAX_DELAY = 5000; // TODO
+	public static int SOUND_CARD_QUEUE_SIZE = 128; // TODO
 
 	public static boolean OC_UPGRADE_CAMERA;
 	public static boolean OC_UPGRADE_CHATBOX;
