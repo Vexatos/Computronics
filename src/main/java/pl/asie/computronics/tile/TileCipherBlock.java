@@ -25,6 +25,7 @@ import pl.asie.computronics.util.OCUtils;
 import pl.asie.lib.api.tile.IBundledRedstoneProvider;
 import pl.asie.lib.util.Base64;
 
+import javax.annotation.Nullable;
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
@@ -298,17 +299,18 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements IBundle
 	}
 
 	@Override
-	public boolean canBundledConnectToInput(EnumFacing side) {
+	public boolean canBundledConnectToInput(@Nullable EnumFacing side) {
 		return worldObj != null && side == worldObj.getBlockState(getPos()).getValue(Computronics.cipher.rotation.FACING).rotateY();
 	}
 
 	@Override
-	public boolean canBundledConnectToOutput(EnumFacing side) {
+	public boolean canBundledConnectToOutput(@Nullable EnumFacing side) {
 		return worldObj != null && side == worldObj.getBlockState(getPos()).getValue(Computronics.cipher.rotation.FACING).rotateYCCW();
 	}
 
+	@Nullable
 	@Override
-	public byte[] getBundledOutput(EnumFacing side) {
+	public byte[] getBundledOutput(@Nullable EnumFacing side) {
 		if(side == worldObj.getBlockState(getPos()).getValue(Computronics.cipher.rotation.FACING).rotateYCCW()) {
 			return getBundledOutput();
 		} else {
@@ -317,7 +319,7 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements IBundle
 	}
 
 	@Override
-	public void onBundledInputChange(EnumFacing side, byte[] data) {
+	public void onBundledInputChange(@Nullable EnumFacing side, @Nullable byte[] data) {
 		if(data != null && side == worldObj.getBlockState(getPos()).getValue(Computronics.cipher.rotation.FACING).rotateY()) {
 			bundledXORData = 0;
 			for(int i = 0; i < 16; i++) {

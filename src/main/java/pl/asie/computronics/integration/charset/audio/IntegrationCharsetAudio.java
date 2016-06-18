@@ -55,9 +55,8 @@ public class IntegrationCharsetAudio {
 
 				@Nullable
 				@Override
-				@SuppressWarnings("unchecked")
 				public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
-					return capability == RECEIVER_CAPABILITY ? (T) sink : null;
+					return capability == RECEIVER_CAPABILITY ? RECEIVER_CAPABILITY.<T>cast(sink) : null;
 				}
 			});
 		} else if(event.getTileEntity() instanceof TileAudioCable
@@ -73,14 +72,13 @@ public class IntegrationCharsetAudio {
 
 				@Nullable
 				@Override
-				@SuppressWarnings("unchecked")
 				public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
 					if(capability == RECEIVER_CAPABILITY && facing != null) {
 						if(RECEIVERS[facing.ordinal()] == null) {
 							RECEIVERS[facing.ordinal()] = new AudioReceiverCable(cable, facing);
 						}
 
-						return (T) RECEIVERS[facing.ordinal()];
+						return RECEIVER_CAPABILITY.cast(RECEIVERS[facing.ordinal()]);
 					} else {
 						return null;
 					}

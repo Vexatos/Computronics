@@ -14,6 +14,7 @@ import pl.asie.computronics.util.NoteUtils;
 import pl.asie.computronics.util.OCUtils;
 import pl.asie.lib.api.tile.IBundledRedstoneProvider;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -127,7 +128,7 @@ public class TileIronNote extends TileEntityPeripheralBase implements IBundledRe
 		return null;
 	}
 
-	private void parseBundledInput(byte[] data) {
+	private void parseBundledInput(@Nullable byte[] data) {
 		int baseNote = 4;
 		if(data != null) {
 			for(int i = 0; i < 16; i++) {
@@ -142,22 +143,22 @@ public class TileIronNote extends TileEntityPeripheralBase implements IBundledRe
 	}
 
 	@Override
-	public boolean canBundledConnectToInput(EnumFacing side) {
+	public boolean canBundledConnectToInput(@Nullable EnumFacing side) {
 		return true;
 	}
 
 	@Override
-	public boolean canBundledConnectToOutput(EnumFacing side) {
+	public boolean canBundledConnectToOutput(@Nullable EnumFacing side) {
 		return false;
 	}
 
 	@Override
-	public byte[] getBundledOutput(EnumFacing side) {
+	public byte[] getBundledOutput(@Nullable EnumFacing side) {
 		return new byte[16];
 	}
 
 	@Override
-	public void onBundledInputChange(EnumFacing side, byte[] data) {
+	public void onBundledInputChange(@Nullable EnumFacing side, @Nullable byte[] data) {
 		parseBundledInput(data);
 	}
 

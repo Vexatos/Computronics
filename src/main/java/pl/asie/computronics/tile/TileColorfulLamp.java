@@ -17,6 +17,8 @@ import pl.asie.computronics.util.LampUtil;
 import pl.asie.computronics.util.OCUtils;
 import pl.asie.lib.api.tile.IBundledRedstoneProvider;
 
+import javax.annotation.Nullable;
+
 import static pl.asie.computronics.block.BlockColorfulLamp.BRIGHTNESS;
 
 //import mods.immibis.redlogic.api.wiring.IBundledEmitter;
@@ -123,6 +125,7 @@ public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundl
 		return new String[] { "getLampColor", "setLampColor" };
 	}
 
+	@Nullable
 	@Override
 	@Optional.Method(modid = Mods.ComputerCraft)
 	public Object[] callMethod(IComputerAccess computer, ILuaContext context,
@@ -204,7 +207,7 @@ public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundl
 		}
 	}
 
-	private boolean parseBundledInput(byte[] data) {
+	private boolean parseBundledInput(@Nullable byte[] data) {
 		if(data != null) {
 			int c = 0;
 			for(int i = 0; i < 15; i++) {
@@ -220,22 +223,22 @@ public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundl
 	}
 
 	@Override
-	public boolean canBundledConnectToInput(EnumFacing side) {
+	public boolean canBundledConnectToInput(@Nullable EnumFacing side) {
 		return true;
 	}
 
 	@Override
-	public boolean canBundledConnectToOutput(EnumFacing side) {
+	public boolean canBundledConnectToOutput(@Nullable EnumFacing side) {
 		return false;
 	}
 
 	@Override
-	public byte[] getBundledOutput(EnumFacing side) {
+	public byte[] getBundledOutput(@Nullable EnumFacing side) {
 		return new byte[16];
 	}
 
 	@Override
-	public void onBundledInputChange(EnumFacing side, byte[] data) {
+	public void onBundledInputChange(@Nullable EnumFacing side, @Nullable byte[] data) {
 		parseBundledInput(data);
 	}
 

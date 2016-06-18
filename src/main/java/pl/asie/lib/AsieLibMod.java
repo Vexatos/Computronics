@@ -17,6 +17,7 @@ import pl.asie.lib.api.AsieLibAPI;
 import pl.asie.lib.api.tool.IToolRegistry;
 import pl.asie.lib.integration.Integration;
 import pl.asie.lib.integration.tool.ToolProviders;
+import pl.asie.lib.reference.Capabilities;
 import pl.asie.lib.reference.Mods;
 import pl.asie.lib.tweak.enchantment.EnchantmentTweak;
 import pl.asie.lib.util.color.RecipeColorizer;
@@ -82,6 +83,8 @@ public class AsieLibMod extends AsieLibAPI {
 
 		RecipeSorter.register("asielib:colorizer", RecipeColorizer.class, RecipeSorter.Category.SHAPELESS, "after:forge:shapelessore");
 		RecipeSorter.register("asielib:decolorizer", RecipeDecolorizer.class, RecipeSorter.Category.SHAPELESS, "after:asielib:colorizer");
+
+		Capabilities.INSTANCE.init();
 	}
 
 	@EventHandler

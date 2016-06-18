@@ -1,19 +1,29 @@
 package pl.asie.computronics.util;
 
 import li.cil.oc.api.driver.DeviceInfo.DeviceAttribute;
+import li.cil.oc.api.internal.Colored;
 import li.cil.oc.client.KeyBindings;
 import li.cil.oc.util.ItemCosts;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.asie.lib.util.ColorUtils;
+import pl.asie.lib.util.internal.IColorable;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static pl.asie.lib.reference.Capabilities.COLORABLE_CAPABILITY;
 
 /**
  * @author Vexatos
@@ -124,4 +134,49 @@ public class OCUtils {
 		}
 	}
 
+	@CapabilityInject(Colored.class)
+	public static Capability<Colored> COLORED_CAPABILITY;
+
+	@Nullable
+	public static IColorable getColorable(@Nullable ICapabilityProvider provider, EnumFacing side) {
+		if(provider != null && provider.hasCapability(COLORABLE_CAPABILITY, side)) {
+			return provider.getCapability(COLORABLE_CAPABILITY, side);
+		}
+		if(provider != null && provider.hasCapability(COLORED_CAPABILITY, side)) {
+			return new ConvertedColorable(provider.getCapability(COLORED_CAPABILITY, side));
+		}
+		return null;
+	}
+
+	/**
+	 * @author Vexatos
+	 */
+	public static class ConvertedColorable implements IColorable {
+
+		private final Colored colored;
+
+		public ConvertedColorable(Colored colored) {
+			this.colored = colored;
+		}
+
+		@Override
+		public boolean canBeColored() {
+			return colored.controlsConnectivity();
+		}
+
+		@Override
+		public int getColor() {
+			return colored.getColor();
+		}
+
+		@Override
+		public int getDefaultColor() {
+			return ColorUtils.Color.LightGray.color;
+		}
+
+		@Override
+		public void setColor(int color) {
+			colored.setColor(color);
+		}
+	}
 }

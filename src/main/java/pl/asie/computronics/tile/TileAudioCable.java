@@ -10,13 +10,17 @@ import pl.asie.computronics.api.audio.AudioPacket;
 import pl.asie.computronics.api.audio.IAudioConnection;
 import pl.asie.computronics.api.audio.IAudioReceiver;
 import pl.asie.computronics.integration.charset.audio.IntegrationCharsetAudio;
+import pl.asie.computronics.reference.Capabilities;
 import pl.asie.computronics.reference.Mods;
+import pl.asie.computronics.util.ColorUtils;
 import pl.asie.lib.tile.TileEntityBase;
-import pl.asie.lib.util.ColorUtils;
 import pl.asie.lib.util.internal.IColorable;
 
 import javax.annotation.Nullable;
 import java.util.HashSet;
+
+import static pl.asie.computronics.reference.Capabilities.AUDIO_RECEIVER_CAPABILITY;
+import static pl.asie.computronics.reference.Capabilities.AUDIO_SOURCE_CAPABILITY;
 
 public class TileAudioCable extends TileEntityBase implements IAudioReceiver, IColorable, ITickable {
 
@@ -49,13 +53,20 @@ public class TileAudioCable extends TileEntityBase implements IAudioReceiver, IC
 					if(!IntegrationCharsetAudio.connects(tile, dir.getOpposite())) {
 						continue;
 					}
+				} else if(Capabilities.hasAny(tile, dir.getOpposite(), AUDIO_SOURCE_CAPABILITY, AUDIO_RECEIVER_CAPABILITY)) {
+					IAudioConnection con = Capabilities.getFirst(tile, dir.getOpposite(), AUDIO_SOURCE_CAPABILITY, AUDIO_RECEIVER_CAPABILITY);
+					if(con == null || !con.connectsAudio(dir)) {
+						continue;
+					}
 				} else {
 					continue;
 				}
 
-				if(tile instanceof IColorable && ((IColorable) tile).canBeColored()
-					&& !ColorUtils.isSameOrDefault(this, (IColorable) tile)) {
-					continue;
+				IColorable targetCol = ColorUtils.getColorable(tile, dir.getOpposite());
+				if(targetCol != null) {
+					if(targetCol.canBeColored() && !ColorUtils.isSameOrDefault(this, targetCol)) {
+						continue;
+					}
 				}
 
 				connectionMap |= 1 << dir.ordinal();
@@ -113,8 +124,8 @@ public class TileAudioCable extends TileEntityBase implements IAudioReceiver, IC
 			}
 
 			TileEntity tile = worldObj.getTileEntity(pos);
-			if(tile instanceof IAudioReceiver) {
-				((IAudioReceiver) tile).receivePacket(packet, dir.getOpposite());
+			if(tile != null && tile.hasCapability(AUDIO_RECEIVER_CAPABILITY, dir.getOpposite())) {
+				tile.getCapability(AUDIO_RECEIVER_CAPABILITY, dir.getOpposite()).receivePacket(packet, dir.getOpposite());
 			}
 		}
 	}

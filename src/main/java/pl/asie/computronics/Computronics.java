@@ -52,6 +52,7 @@ import pl.asie.computronics.item.block.ComputronicsItemBlock;
 import pl.asie.computronics.network.NetworkHandlerClient;
 import pl.asie.computronics.network.NetworkHandlerServer;
 import pl.asie.computronics.oc.IntegrationOpenComputers;
+import pl.asie.computronics.reference.Capabilities;
 import pl.asie.computronics.reference.Compat;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
@@ -324,6 +325,8 @@ public class Computronics {
 
 		achievements = new ComputronicsAchievements();
 		achievements.initialize();
+
+		Capabilities.INSTANCE.init();
 
 		proxy.init();
 		config.save();

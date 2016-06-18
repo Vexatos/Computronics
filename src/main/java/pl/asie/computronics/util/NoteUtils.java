@@ -22,7 +22,10 @@ public class NoteUtils {
 		int yCoord = pos.getY();
 		int zCoord = pos.getZ();
 
-		worldObj.playSound(null, (double) xCoord + 0.5D, (double) yCoord + 0.5D, (double) zCoord + 0.5D, SoundEvent.REGISTRY.getObject(new ResourceLocation(instrument)), SoundCategory.BLOCKS, volume, f);
+		SoundEvent ev = SoundEvent.REGISTRY.getObject(new ResourceLocation(instrument));
+		if(ev != null) {
+			worldObj.playSound(null, (double) xCoord + 0.5D, (double) yCoord + 0.5D, (double) zCoord + 0.5D, ev, SoundCategory.BLOCKS, volume, f);
+		}
 		ParticleUtils.sendParticlePacket(EnumParticleTypes.NOTE, worldObj, (double) xCoord + 0.5D, (double) yCoord + 1.2D, (double) zCoord + 0.5D, (double) note / 24.0D, 1.0D, 0.0D);
 	}
 
