@@ -48,8 +48,8 @@ public class Config {
 	public static int SOUND_SAMPLE_RATE = 44100;
 	public static int SOUND_VOLUME = 32;
 	public static int SOUND_RADIUS = 16;
-	public static int SOUND_CARD_MAX_DELAY = Integer.MAX_VALUE; // TODO
-	public static int SOUND_CARD_QUEUE_SIZE = Integer.MAX_VALUE; // TODO
+	public static int SOUND_CARD_MAX_DELAY = 5000; // TODO
+	public static int SOUND_CARD_QUEUE_SIZE = 1024; // TODO
 
 	public static boolean OC_UPGRADE_CAMERA;
 	public static boolean OC_UPGRADE_CHATBOX;
@@ -139,7 +139,7 @@ public class Config {
 
 			if(OC_CARD_SOUND) {
 				SOUND_CARD_MAX_DELAY = config.getInt("ocSoundCardMaxDelay", "sound", SOUND_CARD_MAX_DELAY, 0, Integer.MAX_VALUE, "Maximum delay allowed in a sound card's instruction queue, in milliseconds");
-				SOUND_CARD_QUEUE_SIZE = config.getInt("ocSoundCardQueueSize", "sound", SOUND_CARD_QUEUE_SIZE, 0, Integer.MAX_VALUE, "Maximum  number of instructons allowed in a sound cards instrction queue");
+				SOUND_CARD_QUEUE_SIZE = config.getInt("ocSoundCardQueueSize", "sound", SOUND_CARD_QUEUE_SIZE, 0, Integer.MAX_VALUE, "Maximum  number of instructons allowed in a sound cards instruction queue. This directly affects the maximum size of the packets sent to the client.");
 			}
 
 			// Particle Card
