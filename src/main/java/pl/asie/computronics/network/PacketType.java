@@ -1,5 +1,7 @@
 package pl.asie.computronics.network;
 
+import javax.annotation.Nullable;
+
 public enum PacketType {
 	AUDIO_DATA,
 	AUDIO_STOP,
@@ -13,6 +15,7 @@ public enum PacketType {
 
 	public static final PacketType[] VALUES = values();
 
+	@Nullable
 	public static PacketType of(int index) {
 		return index >= 0 && index < VALUES.length ? VALUES[index] : null;
 	}

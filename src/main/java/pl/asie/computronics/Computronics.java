@@ -89,7 +89,7 @@ import java.util.concurrent.Executors;
 		+ "after:MineFactoryReloaded;after:RedLogic@[59.1.9,);after:ProjRed|Core;"
 		+ "after:BuildCraft|Core@[7.2.0,);after:Railcraft@[9.10.0.0,);"
 		+ "after:gregtech;after:EnderIO@[1.9.4-3.0,);"
-		+ "after:forestry@[5.0.0,);after:Waila@[1.5.10,);"
+		+ "after:forestry@[5.0.20,);after:Waila@[1.5.10,);"
 		+ "after:MekanismAPI|energy@[8.0.0,);after:Flamingo@[1.7.10-1.3,);"
 		+ "after:armourersWorkshop@[1.7.10-0.33,);after:theoneprobe@[1.0.5,)")
 public class Computronics {

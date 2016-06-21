@@ -4,7 +4,8 @@ import forestry.api.apiculture.BeeManager;
 import forestry.api.apiculture.EnumBeeChromosome;
 import forestry.api.apiculture.FlowerManager;
 import forestry.api.apiculture.IAlleleBeeSpecies;
-import forestry.api.apiculture.IBeeMutationCustom;
+import forestry.api.apiculture.IBeeMutation;
+import forestry.api.apiculture.IBeeMutationBuilder;
 import forestry.api.core.EnumHumidity;
 import forestry.api.core.EnumTemperature;
 import forestry.api.genetics.AlleleManager;
@@ -48,8 +49,8 @@ import java.util.HashMap;
 public class IntegrationForestry {
 
 	public static IAlleleSpecies speciesScummy;
-	public static IBeeMutationCustom scummyA;
-	public static IBeeMutationCustom scummyB;
+	public static IBeeMutation scummyA;
+	public static IBeeMutation scummyB;
 	public static IAlleleFlowers sea;
 
 	public static ItemMultipleComputronics itemPartsForestry;
@@ -91,21 +92,23 @@ public class IntegrationForestry {
 			.addSpecialty(new ItemStack(itemPartsForestry, 1, 0), 0.2f).setIsSecret()
 			.setTemperature(EnumTemperature.WARM).setHumidity(EnumHumidity.DAMP).setHasEffect().setIsNotCounted().build();
 
-		scummyA = BeeManager.beeMutationFactory.createMutation(
+		IBeeMutationBuilder scummyA = BeeManager.beeMutationFactory.createMutation(
 			(IAlleleBeeSpecies) AlleleManager.alleleRegistry.getAllele(speciesAgrarian),
 			(IAlleleBeeSpecies) AlleleManager.alleleRegistry.getAllele(speciesExotic), getScummyTemplate(), 2);
 		if(shortMead != null) {
-			scummyA.requireResource(shortMead, 0);
+			scummyA.requireResource(shortMead.getDefaultState());
 		}
 		scummyA.restrictBiomeType(Type.OCEAN, Type.HOT).restrictBiomeType(Type.OCEAN, Type.WET)
 			.requireNight()
 			.restrictTemperature(EnumTemperature.WARM, EnumTemperature.HELLISH)
 			.setIsSecret();
+		IntegrationForestry.scummyA = scummyA.build();
 
-		scummyB = BeeManager.beeMutationFactory.createMutation(
+		IBeeMutationBuilder scummyB = BeeManager.beeMutationFactory.createMutation(
 			(IAlleleBeeSpecies) AlleleManager.alleleRegistry.getAllele(speciesTipsy),
 			(IAlleleBeeSpecies) AlleleManager.alleleRegistry.getAllele(speciesExotic), getScummyTemplate(), 10);
 		scummyB.requireNight().setIsSecret();
+		IntegrationForestry.scummyB = scummyB.build();
 		BeeManager.beeRoot.registerTemplate(getScummyTemplate());
 		HashMap<ItemStack, Float> acidRecipe = new HashMap<ItemStack, Float>();
 		acidRecipe.put(new ItemStack(itemPartsForestry, 1, 1), 1.0f);

@@ -40,8 +40,7 @@ public class FlowerProviderSea implements IFlowerProvider, IFlowerAcceptableRule
 	}
 
 	@Override
-	public boolean isAcceptableFlower(String flowerType, World world, BlockPos pos) {
-		IBlockState state = world.getBlockState(pos);
+	public boolean isAcceptableFlower(IBlockState state, World world, BlockPos pos, String flowerType) {
 		Fluid fluid = FluidRegistry.lookupFluidForBlock(state.getBlock());
 		if(fluid != null && FluidRegistry.isFluidRegistered(fluid)) {
 			if(!hasCheckedSaltwater) {
