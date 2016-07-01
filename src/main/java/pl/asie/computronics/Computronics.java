@@ -12,7 +12,7 @@ import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLMissingMappingsEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.event.FMLServerStartedEvent;
+import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
 import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 import cpw.mods.fml.common.network.FMLEventChannel;
 import cpw.mods.fml.common.network.NetworkRegistry;
@@ -368,7 +368,7 @@ public class Computronics {
 	}
 
 	@EventHandler
-	public void serverStart(FMLServerStartedEvent event) {
+	public void serverStart(FMLServerAboutToStartEvent event) {
 		Computronics.storage = new StorageManager();
 		if(Mods.isLoaded(Mods.ComputerCraft)) {
 			computercraft.serverStart();
