@@ -20,6 +20,7 @@ import pl.asie.computronics.api.audio.AudioPacket;
 import pl.asie.computronics.api.audio.AudioPacketDFPWM;
 import pl.asie.computronics.tile.TileAudioCable;
 import pl.asie.computronics.tile.TileSpeaker;
+import pl.asie.computronics.tile.TileTapeDrive;
 
 import javax.annotation.Nullable;
 
@@ -35,6 +36,7 @@ public class IntegrationCharsetAudio {
 
 	private static final ResourceLocation CABLE_SINK_KEY = new ResourceLocation("computronics:cableSink");
 	private static final ResourceLocation SPEAKER_SINK_KEY = new ResourceLocation("computronics:speakerSink");
+	private static final ResourceLocation TAPE_SOURCE_KEY = new ResourceLocation("computronics:tapeDriveSource");
 
 	public void postInit() {
 		AudioAPI.SINK_REGISTRY.register(AudioSinkSpeaker.class);
@@ -82,6 +84,22 @@ public class IntegrationCharsetAudio {
 					} else {
 						return null;
 					}
+				}
+			});
+		} else if(event.getTileEntity() instanceof TileTapeDrive
+			&& SOURCE_CAPABILITY != null) {
+			event.addCapability(TAPE_SOURCE_KEY, new ICapabilityProvider() {
+				private final AudioSourceDummy source = new AudioSourceDummy();
+
+				@Override
+				public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
+					return capability == SOURCE_CAPABILITY && facing != null;
+				}
+
+				@Nullable
+				@Override
+				public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
+					return capability == SOURCE_CAPABILITY ? SOURCE_CAPABILITY.<T>cast(source) : null;
 				}
 			});
 		}
