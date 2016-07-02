@@ -35,8 +35,8 @@ public class InfoPeripheral extends ComputronicsInfoProvider {
 	public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor,
 		IWailaConfigHandler config) {
 
-		NBTTagCompound nbt = accessor.getNBTData();
 		if(Mods.isLoaded(Mods.OpenComputers) && ConfigValues.OCAddress.getValue(config)) {
+			NBTTagCompound nbt = accessor.getNBTData();
 			currenttip = getInfo_OC(nbt, currenttip);
 		}
 		return currenttip;

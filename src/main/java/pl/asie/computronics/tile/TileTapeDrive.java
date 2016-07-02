@@ -290,7 +290,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 			boolean sent = false;
 			if(Mods.API.hasAPI(Mods.API.CharsetAudio)) {
 				int oldReceivers = receivers;
-				receivers += IntegrationCharsetAudio.send(getWorld(), getPos(), pkt, getVolume(), false);
+				receivers += IntegrationCharsetAudio.send(getWorld(), getPos(), pkt, getVolume(), true);
 				if(receivers > oldReceivers) {
 					sent = true;
 				}
@@ -502,7 +502,6 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 	@Override
 	public void removeFromNBTForTransfer(NBTTagCompound data) {
 		super.removeFromNBTForTransfer(data);
-		data.removeTag("oc:fs");
 		data.removeTag("state");
 	}
 
