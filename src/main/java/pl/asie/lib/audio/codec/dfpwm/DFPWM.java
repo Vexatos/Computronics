@@ -1,21 +1,20 @@
 /*
-DFPWM1a implementation in Java
+DFPWM implementation in Java
 operates on 8-bit signed PCM data and little-endian DFPWM data
 
-by Ben "GreaseMonkey" Russell, 2013, 2016 - Public Domain
+by Ben "GreaseMonkey" Russell, 2013 - Public Domain
 
 NOTE, len is in bytes relative to DFPWM (len*8 PCM bytes)
 also the main() function takes unsigned 8-bit data and converts it to suit
 */
 
-package pl.asie.lib.audio;
+package pl.asie.lib.audio.codec.dfpwm;
 
 public class DFPWM
 {
-	private final int RESP_INC = 1;
-	private final int RESP_DEC = 1;
-	private final int RESP_PREC = 10;
-	private final int LPF_STRENGTH = 140;
+	private final int RESP_INC = 7;
+	private final int RESP_DEC = 20;
+	private final int LPF_STRENGTH = 100;
 
 	private int response = 0;
 	private int level = 0;
@@ -29,34 +28,27 @@ public class DFPWM
 	private void ctx_update(boolean curbit)
 	{
 		int target = (curbit ? 127 : -128);
-		int nlevel = (level + ((response*(target - level)
-			+ (1<<(RESP_PREC-1)))>>RESP_PREC));
+		int nlevel = level + ((response * (target - level) + 128)>>8);
 		if(nlevel == level && level != target)
-			nlevel += (curbit ? 1 : -1);
+			nlevel += ((target == 127) ? 1 : -1);
 
 		int rtarget, rdelta;
 		if(curbit == lastbit)
 		{
-			rtarget = (1<<RESP_PREC)-1;
+			rtarget = 255;
 			rdelta = RESP_INC;
 		} else {
 			rtarget = 0;
 			rdelta = RESP_DEC;
 		}
 
-		int nresponse = response;
-		if(response != rtarget)
-			nresponse += (curbit == lastbit ? 1 : -1);
+		int nresponse = response + ((rdelta * (rtarget - response) + 128)>>8);
+		if(nresponse == response && response != rtarget)
+			nresponse += (rtarget == 255 ? 1 : -1);
 
-		if(RESP_PREC > 8)
-		{
-			if(nresponse < (2<<(RESP_PREC-8)))
-				nresponse = (2<<(RESP_PREC-8));
-		}
-
+		level = nlevel;
 		response = nresponse;
 		lastbit = curbit;
-		level = nlevel;
 	}
 
 	/**
@@ -71,7 +63,9 @@ public class DFPWM
 	{
 		for(int i = 0; i < len; i++)
 		{
-			byte d = src[srcoffs++];
+			if(srcoffs >= src.length) return;
+			int d = src[srcoffs++];
+			d &= 0xFF;
 			for(int j = 0; j < 8; j++)
 			{
 				// apply context
@@ -81,9 +75,9 @@ public class DFPWM
 				d >>= 1;
 
 				// apply noise shaping
-				int blevel = (byte)(curbit == lastbit
+				int blevel = (curbit == lastbit
 					? level
-					: ((flastlevel + level + 1)>>1));
+					: ((flastlevel + level)>>1));
 				flastlevel = level;
 
 				// apply low-pass filter
@@ -108,8 +102,10 @@ public class DFPWM
 			int d = 0;
 			for(int j = 0; j < 8; j++)
 			{
+				if(srcoffs >= src.length) return;
 				int inlevel = src[srcoffs++];
 				boolean curbit = (inlevel > level || (inlevel == level && level == 127));
+				//boolean curbit = !(inlevel < level || inlevel == 128);
 				d = (curbit ? (d>>1)+128 : d>>1);
 				ctx_update(curbit);
 			}
@@ -144,12 +140,8 @@ public class DFPWM
 					if(amt == -1) return;
 					ctr += amt;
 				}
-				for(int i = 0; i < 1024; i++)
-					pcmin[i] ^= (byte)0x80;
 				incodec.compress(cmpdata, pcmin, 0, 0, 128);
 				outcodec.decompress(pcmout, cmpdata, 0, 0, 128);
-				for(int i = 0; i < 1024; i++)
-					pcmout[i] ^= (byte)0x80;
 				System.out.write(pcmout, 0, 1024);
 			}
 		} else if(mode == 1) {
@@ -161,8 +153,6 @@ public class DFPWM
 					if(amt == -1) return;
 					ctr += amt;
 				}
-				for(int i = 0; i < 1024; i++)
-					pcmin[i] ^= (byte)0x80;
 				incodec.compress(cmpdata, pcmin, 0, 0, 128);
 				System.out.write(cmpdata, 0, 128);
 			}
@@ -176,11 +166,8 @@ public class DFPWM
 					ctr += amt;
 				}
 				outcodec.decompress(pcmout, cmpdata, 0, 0, 128);
-				for(int i = 0; i < 1024; i++)
-					pcmout[i] ^= (byte)0x80;
 				System.out.write(pcmout, 0, 1024);
 			}
 		}
 	}
 }
-

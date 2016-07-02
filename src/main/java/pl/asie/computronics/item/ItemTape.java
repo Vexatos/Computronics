@@ -26,6 +26,7 @@ import pl.asie.computronics.util.internal.IItemWithColor;
 import pl.asie.lib.util.color.ItemColorizer;
 
 import java.util.List;
+import java.util.Locale;
 
 @Optional.InterfaceList({
 	@Optional.Interface(iface = "dan200.computercraft.api.media.IMediaProvider", modid = Mods.ComputerCraft),
@@ -33,8 +34,9 @@ import java.util.List;
 })
 public class ItemTape extends Item implements IItemTapeStorage, IMedia, IMediaProvider, IItemWithDocumentation, IItemWithColor {
 
-	public static final int L_SECOND = 4096;
-	public static final int L_MINUTE = 4096 * 60;
+	public static final int L_SECOND = 4 * 1024;
+	public static final int L_MINUTE = 4 * 1024 * 60;
+	public static final int L_MINUTE_HIFI = 4 * 1500 * 60;
 
 	private static final int TAPE_COUNT = 10;
 	private static final int[] DEFAULT_LENGTHS = { 4, 8, 16, 32, 64, 2, 6, 16, 128, 128 };
@@ -110,7 +112,7 @@ public class ItemTape extends Item implements IItemTapeStorage, IMedia, IMediaPr
 				text.add(TextFormatting.WHITE + "" + TextFormatting.ITALIC + label);
 			}
 		}
-		text.add(TextFormatting.GRAY + StringUtil.localizeAndFormat("tooltip.computronics.tape.length", "" + len));
+		text.add(TextFormatting.GRAY + StringUtil.localizeAndFormat("tooltip.computronics.tape.length", len, String.format(Locale.ENGLISH, "%.1f", size / (float) L_MINUTE_HIFI)));
 
 		switch(stack.getItemDamage()) {
 			case 7: {

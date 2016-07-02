@@ -26,7 +26,8 @@ import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.api.audio.AudioPacket;
 import pl.asie.computronics.api.audio.IAudioReceiver;
-import pl.asie.computronics.api.audio.IAudioSource;
+import pl.asie.computronics.api.audio.IAudioSourceWithCodec;
+import pl.asie.computronics.api.audio.ICodec;
 import pl.asie.computronics.api.tape.IItemTapeStorage;
 import pl.asie.computronics.cc.ComputronicsFileMount;
 import pl.asie.computronics.integration.charset.audio.IntegrationCharsetAudio;
@@ -36,6 +37,7 @@ import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TapeDriveState.State;
 import pl.asie.computronics.util.ColorUtils;
 import pl.asie.computronics.util.OCUtils;
+import pl.asie.lib.audio.codec.Codec;
 import pl.asie.lib.network.Packet;
 import pl.asie.lib.util.internal.IColorable;
 
@@ -44,7 +46,7 @@ import java.util.HashMap;
 
 import static pl.asie.computronics.reference.Capabilities.AUDIO_RECEIVER_CAPABILITY;
 
-public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSource, ITickable {
+public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSourceWithCodec, ITickable {
 
 	private final IAudioReceiver internalSpeaker = new IAudioReceiver() {
 		@Override
@@ -229,7 +231,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 	}
 
 	public boolean isEnd() {
-		return state.getStorage() == null || state.getStorage().getPosition() + state.packetSize > state.getStorage().getSize();
+		return state.getStorage() == null || state.getStorage().getPosition() + state.realPacketSize() > state.getStorage().getSize();
 	}
 
 	public boolean isReady() {
@@ -461,6 +463,9 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 		if(tag.hasKey("sp")) {
 			this.state.packetSize = tag.getShort("sp");
 		}
+		if(tag.hasKey("vel")) {
+			this.state.speed = tag.getFloat("vel");
+		}
 		if(tag.hasKey("vo")) {
 			this.state.soundVolume = tag.getByte("vo");
 		} else {
@@ -473,6 +478,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
 		tag.setShort("sp", (short) this.state.packetSize);
+		tag.setFloat("vel", this.state.speed);
 		tag.setByte("state", (byte) this.state.getState().ordinal());
 		if(this.state.soundVolume != 127) {
 			tag.setByte("vo", (byte) this.state.soundVolume);
@@ -764,6 +770,13 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 
 		// catch all other methods
 		return new Object[] {};
+	}
+
+	private boolean hifi = false;
+
+	@Override
+	public ICodec getCodec() {
+		return hifi ? Codec.DFPWM1a : Codec.DFPWM;
 	}
 
 	@Override

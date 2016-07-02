@@ -6,6 +6,8 @@ import gnu.trove.map.hash.TIntObjectHashMap;
 import gnu.trove.map.hash.TObjectIntHashMap;
 import pl.asie.lib.audio.StreamingPlaybackManager;
 
+import javax.annotation.Nullable;
+
 public final class AudioPacketRegistry {
 
 	public static final AudioPacketRegistry INSTANCE = new AudioPacketRegistry();
@@ -13,8 +15,9 @@ public final class AudioPacketRegistry {
 	private final TObjectIntMap<Class<? extends AudioPacket>> audioPacketIdMap = new TObjectIntHashMap<Class<? extends AudioPacket>>();
 	private final TIntObjectMap<AudioPacketClientHandler> audioPacketHandlerMap = new TIntObjectHashMap<AudioPacketClientHandler>();
 	private final TIntObjectMap<StreamingPlaybackManager> playbackManagerMap = new TIntObjectHashMap<StreamingPlaybackManager>();
-	private int nextTypeId;
-	private int nextManagerId;
+	private final TIntObjectMap<ICodec> codecMap = new TIntObjectHashMap<ICodec>();
+	private int nextTypeId, nextManagerId;
+	private byte nextCodecId;
 
 	private AudioPacketRegistry() {
 
@@ -44,5 +47,17 @@ public final class AudioPacketRegistry {
 
 	public StreamingPlaybackManager getManager(int id) {
 		return playbackManagerMap.get(id);
+	}
+
+	public int registerCodec(ICodec codec) {
+		byte codecId = nextCodecId++;
+		codecMap.put(codecId, codec);
+		codec.setId(codecId);
+		return codecId;
+	}
+
+	@Nullable
+	public ICodec getCodec(int id) {
+		return codecMap.get(id);
 	}
 }

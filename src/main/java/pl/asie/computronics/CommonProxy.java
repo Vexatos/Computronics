@@ -10,6 +10,7 @@ import pl.asie.computronics.api.audio.AudioPacketRegistry;
 import pl.asie.computronics.audio.SoundCardPacket;
 import pl.asie.computronics.item.entity.EntityItemIndestructable;
 import pl.asie.computronics.reference.Mods;
+import pl.asie.lib.audio.codec.Codec;
 import pl.asie.lib.network.Packet;
 
 import java.io.IOException;
@@ -25,6 +26,8 @@ public class CommonProxy {
 		if(Mods.isLoaded(Mods.OpenComputers)) {
 			registerOpenComputersAudioHandlers();
 		}
+		AudioPacketRegistry.INSTANCE.registerCodec(Codec.DFPWM);
+		AudioPacketRegistry.INSTANCE.registerCodec(Codec.DFPWM1a);
 	}
 
 	public void registerEntities() {

@@ -4,7 +4,10 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.api.audio.AudioPacketClientHandler;
+import pl.asie.computronics.api.audio.AudioPacketRegistry;
+import pl.asie.computronics.api.audio.ICodec;
 import pl.asie.lib.audio.StreamingAudioPlayer;
+import pl.asie.lib.audio.codec.Codec;
 import pl.asie.lib.network.Packet;
 
 import java.io.IOException;
@@ -14,22 +17,26 @@ public class AudioPacketClientHandlerDFPWM extends AudioPacketClientHandler {
 
 	@Override
 	protected void readData(Packet packet, int packetId, int codecId) throws IOException {
+		ICodec codec = AudioPacketRegistry.INSTANCE.getCodec(packet.readByte());
+		if(codec == null) {
+			codec = Codec.DFPWM;
+		}
 		int sampleRate = packet.readInt();
 		short packetSize = packet.readShort();
 		byte[] data = packet.readByteArrayData(packetSize);
 
 		byte[] audio = new byte[packetSize * 8];
-		StreamingAudioPlayer codec = Computronics.instance.audio.getPlayer(codecId);
+		StreamingAudioPlayer player = Computronics.instance.audio.getPlayer(codecId);
 		codec.decompress(audio, data, 0, 0, packetSize);
 		for(int i = 0; i < (packetSize * 8); i++) {
 			// Convert signed to unsigned data
 			audio[i] = (byte) (((int) audio[i] & 0xFF) ^ 0x80);
 		}
 
-		codec.setSampleRate(sampleRate);
+		player.setSampleRate(sampleRate);
 		//codec.lastPacketId = packetId;
 
-		codec.push(audio);
+		player.push(audio);
 	}
 
 	@Override

@@ -12,15 +12,18 @@ public class AudioPacketDFPWM extends AudioPacket {
 
 	public final int frequency;
 	public final byte[] data;
+	public final IAudioSourceWithCodec source;
 
-	public AudioPacketDFPWM(IAudioSource source, byte volume, int frequency, byte[] data) {
+	public AudioPacketDFPWM(IAudioSourceWithCodec source, byte volume, int frequency, byte[] data) {
 		super(source, volume);
 		this.frequency = frequency;
 		this.data = data;
+		this.source = source;
 	}
 
 	@Override
 	protected void writeData(Packet p) throws IOException {
+		p.writeByte(source.getCodec().getId());
 		p.writeInt(frequency).writeShort((short) data.length).writeByteArrayData(data);
 	}
 }

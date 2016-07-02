@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-public class StreamingAudioPlayer extends DFPWM {
+public class StreamingAudioPlayer {
 
 	public class SourceEntry {
 

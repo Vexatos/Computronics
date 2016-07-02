@@ -5,7 +5,7 @@ import net.minecraft.world.World;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.api.audio.AudioPacket;
 import pl.asie.computronics.api.audio.AudioPacketDFPWM;
-import pl.asie.computronics.api.audio.IAudioSource;
+import pl.asie.computronics.api.audio.IAudioSourceWithCodec;
 import pl.asie.computronics.api.tape.ITapeStorage;
 import pl.asie.computronics.audio.AudioUtils;
 
@@ -26,6 +26,10 @@ public class TapeDriveState {
 	private State state = State.STOPPED;
 	private int codecId;//, packetId;
 	private long lastCodecTime;
+	protected float speed = 1F;
+	public static final int
+		DEFAULT_PACKET_SIZE = 1024,
+		HIFI_PACKET_SIZE = 1500;
 	protected int packetSize = 1024;
 	protected int soundVolume = 127;
 	private ITapeStorage storage;
@@ -47,8 +51,16 @@ public class TapeDriveState {
 		if(speed < 0.25F || speed > 2.0F) {
 			return false;
 		}
-		this.packetSize = Math.round(1024 * speed);
+		this.speed = speed;
 		return true;
+	}
+
+	public void setPacketSize(int packetSize) {
+		this.packetSize = packetSize;
+	}
+
+	public int realPacketSize() {
+		return Math.round(packetSize * speed);
 	}
 
 	public int getId() {
@@ -97,7 +109,8 @@ public class TapeDriveState {
 	}
 
 	@Nullable
-	private AudioPacket createMusicPacket(IAudioSource source, World worldObj, BlockPos pos) {
+	private AudioPacket createMusicPacket(IAudioSourceWithCodec source, World worldObj, BlockPos pos) {
+		final int packetSize = realPacketSize();
 		byte[] pktData = new byte[packetSize];
 		int amount = storage.read(pktData, false); // read data into packet array
 
@@ -113,7 +126,7 @@ public class TapeDriveState {
 	}
 
 	@Nullable
-	public AudioPacket update(IAudioSource source, World worldObj, BlockPos pos) {
+	public AudioPacket update(IAudioSourceWithCodec source, World worldObj, BlockPos pos) {
 		if(!worldObj.isRemote) {
 			switch(state) {
 				case PLAYING: {
