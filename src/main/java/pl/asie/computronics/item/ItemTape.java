@@ -33,8 +33,8 @@ import java.util.List;
 })
 public class ItemTape extends Item implements IItemTapeStorage, IMedia, IMediaProvider, IItemWithDocumentation, IItemWithColor {
 
-	public static final int L_SECOND = 4096;
-	public static final int L_MINUTE = 4096 * 60;
+	public static final int L_SECOND = 1500 * 4;
+	public static final int L_MINUTE = 1500 * 4 * 60;
 
 	private static final int TAPE_COUNT = 10;
 	private static final int[] DEFAULT_LENGTHS = { 4, 8, 16, 32, 64, 2, 6, 16, 128, 128 };
