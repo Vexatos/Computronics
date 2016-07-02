@@ -111,7 +111,7 @@ public class Config {
 
 		SOUND_SAMPLE_RATE = config.getInt("soundSampleRate", "sound.client", 44100, 0, Integer.MAX_VALUE, "The sample rate used for generating sounds. Modify at your own risk.");
 		SOUND_VOLUME = config.getInt("soundVolume", "sound.client", 64, 0, Byte.MAX_VALUE, "The base volume of generated sounds.");
-		SOUND_RADIUS = config.getInt("soundRadius", "sound.client", 16, 1, 32, "The radius in which generated sounds can be heard.");
+		SOUND_RADIUS = config.getInt("soundRadius", "sound.client", 24, 0, 64, "The radius in which generated sounds can be heard.");
 
 		if(Mods.isLoaded(Mods.OpenComputers)) {
 			//Advanced Cipher Block
