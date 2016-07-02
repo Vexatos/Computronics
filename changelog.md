@@ -1,6 +1,7 @@
 ==== 1.6.1 ====
 
-This version comes with a 1.8.9 and 1.9.4 port in addition to many additions.
+This version comes with a 1.8.9, 1.9.4 and 1.10 port in addition to many additions.
+**Note: On 1.8.9 and later, the tape drives use an updated audio codec (DFPWM 1a). Any files encoded with the old codec will still play, but the sound will be a lot more quiet.**
 
   * ADDED: Noise Card!
     - An upgraded Beep Card with slightly different syntax
@@ -63,6 +64,7 @@ This version comes with a 1.8.9 and 1.9.4 port in addition to many additions.
   * [1.8.9] ADDED: Charset Wires Bundled Cable support for ComputerCraft.
   * [1.8.9] ADDED: Charset Wires Bundled Cable support for Computronics.
   * [1.8.9] ADDED: Support for NoteBetter to the Iron Note Block and the Musical Turtle Upgrade.
+  * [1.8.9] CHANGED: Updated audio codec to DFPWM 1a. Any files encoded with the old codec will still play, but the sound will be a lot more quiet.
   
   * [1.9.4] Ported the mod to 1.9.4!
     - Mods supported right now are OpenComputers, TIS-3D, EnderIO, Charset, Forestry, Storage Drawers, Waila, The One Probe and Pink Flamingo.
