@@ -1,13 +1,5 @@
 # Mod
 
-Computronics is an addon for ComputerCraft and OpenComputers, also adding integration to a lot of other mods.
-###Downloads
-The mod's downloads can be found at http://wiki.vex.tty.sh/wiki:computronics.
-###License
-The mod's license can be found [here](http://wiki.vex.tty.sh/wiki:licensing).
-
-# Mod Pack
-
       _____                            _                   _          
      / ____|                          | |                 (_)         
     | |     ___  _ __ ___  _ __  _   _| |_ _ __ ___  _ __  _  ___ ___ 
@@ -15,24 +7,18 @@ The mod's license can be found [here](http://wiki.vex.tty.sh/wiki:licensing).
     | |___| (_) | | | | | | |_) | |_| | |_| | | (_) | | | | | (__\__ \
      \_____\___/|_| |_| |_| .__/ \__,_|\__|_|  \___/|_| |_|_|\___|___/
                           | |                                         
-                          |_| the first modpack for deobfuscated Minecraft
+                          |_|                                         
 
-This is the repository for the Computronics deobfuscated Minecraft modpack. 
-Deobfuscated code gives you many benefits, including but not limited to:
 
-* Actually understandable crash logs!
-* Crash logs you can actually understand!
-* ...Muffins? [Roll cake?](https://www.youtube.com/watch?v=_g_Qbz6T_Xg)
+Computronics is an addon for ComputerCraft and OpenComputers, also adding integration to a lot of other mods.
+###Downloads
+The mod's downloads can be found at http://wiki.vex.tty.sh/wiki:computronics.
+###License
+The mod's license can be found [here](http://wiki.vex.tty.sh/wiki:licensing).
 
-### Installation Instructions
+This is the repository for the Computronics Minecraft mod. 
 
-1. Make sure you have all the mods in the mod list in /libs! (We're too lazy to do permissions.)
-
-2. Run "./gradlew runClient" (Linux) or "gradlew.bat runClient" (Windows)
-
-3. Done! Wasn't that simple? Only three steps! You didn't even need a launcher!
-
-### Mod List
+### Probably required mods
 
 | Mod | Version | Author | URL |
 | --- | ------- | ------ | --- |

@@ -1,6 +1,6 @@
 ==== 1.6.1 ====
 
-This version comes with a 1.8.9 port in addition to many additions.
+This version comes with a 1.8.9 and 1.9.4 port in addition to many additions.
 
   * ADDED: Noise Card!
     - An upgraded Beep Card with slightly different syntax
@@ -20,6 +20,7 @@ This version comes with a 1.8.9 port in addition to many additions.
     - Added a Light Board to put into Server Racks. Allows controlling coloured lights in various layouts.
     - Added a Server Self-Destructor in case you don't need your servers anymore.
     - Added a Rack Capacitor which is a Capacitor you can put into a Rack. Ingenious. It also provides a component that gives you the amount of energy stored in that capacitor.
+    - Added a Switch Board providing four switches to manually and automatically activate and deactivate. Fires an event whenever a switch is flipped, too.
   * ADDED: getPosition() to tape drives. No, I'm not joking. It's real. I'm sorry.
   * ADDED: Built-in tape utility program for ComputerCraft to write songs to tapes and to play, stop, pause etc.
   * ADDED: Option to specify a custom timeout when writing files from a URL to a tape using the tape program on OpenComputers.
@@ -35,16 +36,18 @@ This version comes with a 1.8.9 port in addition to many additions.
     - Added `getProgress()` to most machines with progress
   * CHANGED: Sangar made beep card and noise card textures a lot less boring. He also made the sound card texture to match them. Thanks a lot!
   * CHANGED: Some tweaks to beep card and noise card recipes.
+  * CHANGED: Built-in tape and explode program have been moved to floppy disks for OpenComputers to conform to OpenComputers 1.6 standard.
   * FIXED: Iron Note Blocks now properly error when used with instrument names.
   * FIXED: Tape program not displaying information properly if file size is larger than tape size
   * FIXED: OpenComputers' tape program not working with HTTPS
+  * FIXED: Explosions not dropping items when they should
 
   * [1.7.10] ADDED: Digital Signal Controller Box for Railcraft!
     - Can be paired to up to 32 receivers (sounds overpowered, definitely is overpowered, but CovertJaguar told me to do it. It's probaby better this way...)
     - Allows individually sending aspects to each paired receiver
     - Receivers must be referenced by their name, meaning you have to name all your signals using Signal Labels
   * [1.7.10] CHANGED: Digital Signal Receiver Box
-    - Can noe be paired to up to 32 receivers, just like the controller box
+    - Can now be paired to up to 32 receivers, just like the controller box
     - Allows individually querying the aspect of each paired controller
     - Sends an `aspect_changed` event containing the controller's name and new aspect.
     - Controllers must be referenced by their name, meaning you have to name all your signals using Signal Labels
@@ -60,6 +63,11 @@ This version comes with a 1.8.9 port in addition to many additions.
   * [1.8.9] ADDED: Charset Wires Bundled Cable support for ComputerCraft.
   * [1.8.9] ADDED: Charset Wires Bundled Cable support for Computronics.
   * [1.8.9] ADDED: Support for NoteBetter to the Iron Note Block and the Musical Turtle Upgrade.
+  
+  * [1.9.4] Ported the mod to 1.9.4!
+    - Mods supported right now are OpenComputers, TIS-3D, EnderIO, Charset, Forestry, Storage Drawers, Waila, The One Probe and Pink Flamingo.
+    - asielib is no longer needed as a separate download, it is included in this mod.
+  * [1.9.4] ADDED: asie made Sound Cards, Speakers, Audio Cables and Tape Drives compatible with Charset Audio devices.
 
 ==== 1.6.0 ====
 
