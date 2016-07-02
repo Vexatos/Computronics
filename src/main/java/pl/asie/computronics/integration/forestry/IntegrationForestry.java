@@ -88,7 +88,7 @@ public class IntegrationForestry {
 		}
 		speciesScummy = BeeManager.beeFactory.createSpecies("computronics.speciesScummy", false, "Sangar",
 			"computronics.bees.species.scummy", "computronics.bees.species.scummy.description", pirates, "ebriosus", 0x00DF1F, 0xffdc16)
-			.setNocturnal().setJubilanceProvider(new JubilanceSea(shortMead, 0))
+			.setNocturnal().setJubilanceProvider(shortMead != null ? new JubilanceSea(shortMead.getDefaultState()) : new JubilanceSea())
 			.addSpecialty(new ItemStack(itemPartsForestry, 1, 0), 0.2f).setIsSecret()
 			.setTemperature(EnumTemperature.WARM).setHumidity(EnumHumidity.DAMP).setHasEffect().setIsNotCounted().build();
 

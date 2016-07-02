@@ -5,10 +5,8 @@ import forestry.api.apiculture.IAlleleBeeSpecies;
 import forestry.api.apiculture.IBeeGenome;
 import forestry.api.apiculture.IBeeHousing;
 import forestry.api.apiculture.IJubilanceProvider;
-import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.world.World;
-
-import javax.annotation.Nullable;
 
 /**
  * This is a merge of JubilanceDefault and JubilanceReqRes
@@ -18,9 +16,9 @@ public class JubilanceSea implements IJubilanceProvider {
 	private final IJubilanceProvider defaultJubilance;
 	private final IJubilanceProvider reqResJubilance;
 
-	public JubilanceSea(@Nullable Block blockRequired, int metaRequired) {
+	public JubilanceSea(IBlockState... states) {
 		this.defaultJubilance = BeeManager.jubilanceFactory.getDefault();
-		this.reqResJubilance = BeeManager.jubilanceFactory.getRequiresResource(blockRequired, metaRequired);
+		this.reqResJubilance = BeeManager.jubilanceFactory.getRequiresResource(states);
 	}
 
 	@Override

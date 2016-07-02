@@ -73,6 +73,12 @@ repositories {
         name = "Charset Maven"
         url = "http://charset.asie.pl/maven"
     }
+    maven {
+        url = 'http://maven.epoxide.xyz'
+    }
+    maven {
+        url "http://dvs1.progwml6.com/files/maven"
+    }
 }
 
 /*configurations {
@@ -108,7 +114,7 @@ dependencies {
         exclude module: "CodeChickenCore"
         exclude module: "EquivalentExchange3"
     }
-    deobfCompile("net.sengir.forestry:forestry_1.9.4:${config.forestry.version}") {
+    deobfCompile("net.sengir.forestry:forestry_1.10.2:${config.forestry.version}") {
         exclude module: "buildcraft"
         exclude module: "industrialcraft-2"
     }
