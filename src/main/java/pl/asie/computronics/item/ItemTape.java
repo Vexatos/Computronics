@@ -9,6 +9,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
@@ -245,7 +246,7 @@ public class ItemTape extends Item implements IItemTapeStorage, IMedia, IMediaPr
 
 	@Override
 	@Optional.Method(modid = Mods.ComputerCraft)
-	public String getAudioRecordName(ItemStack stack) {
+	public SoundEvent getAudio(ItemStack stack) {
 		return null;
 	}
 
