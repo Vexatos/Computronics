@@ -26,7 +26,7 @@ public class TapeDriveState {
 	private State state = State.STOPPED;
 	private int codecId;//, packetId;
 	private long lastCodecTime;
-	protected int packetSize = 1024;
+	protected int packetSize = 1500;
 	protected int soundVolume = 127;
 	private ITapeStorage storage;
 
@@ -47,7 +47,7 @@ public class TapeDriveState {
 		if(speed < 0.25F || speed > 2.0F) {
 			return false;
 		}
-		this.packetSize = Math.round(1024 * speed);
+		this.packetSize = Math.round(1500 * speed);
 		return true;
 	}
 
