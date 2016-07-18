@@ -38,7 +38,9 @@ public class TileSpeaker extends TileEntityPeripheralBase implements IAudioRecei
 	@Override
 	public void update() {
 		super.update();
-		packetIds.clear();
+		if(!packetIds.isEmpty()) {
+			packetIds.clear();
+		}
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package pl.asie.computronics.block;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
@@ -26,6 +27,8 @@ import pl.asie.lib.block.BlockBase;
 import pl.asie.lib.util.ColorUtils;
 import pl.asie.lib.util.internal.IColorable;
 
+import javax.annotation.Nullable;
+
 import static pl.asie.lib.util.WorldUtils.notifyBlockUpdate;
 
 public class BlockAudioCable extends BlockBase implements IBlockWithDocumentation, IBlockWithDifferentColors, IBlockWithColor {
@@ -44,7 +47,7 @@ public class BlockAudioCable extends BlockBase implements IBlockWithDocumentatio
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
 		TileEntity tile = world.getTileEntity(pos);
 		if(tile instanceof TileAudioCable && heldItem != null) {
 			ColorUtils.Color color = ColorUtils.getColor(heldItem);
@@ -54,7 +57,7 @@ public class BlockAudioCable extends BlockBase implements IBlockWithDocumentatio
 				return true;
 			}
 		}
-		return super.onBlockActivated(world, pos, state, player, hand, heldItem, side, hitX, hitY, hitZ);
+		return false;
 	}
 
 	public int getRenderColor() {
@@ -224,6 +227,28 @@ public class BlockAudioCable extends BlockBase implements IBlockWithDocumentatio
 		} else {
 			return state;
 		}
+	}
+
+	@Override
+	@Deprecated
+	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block) {
+		TileEntity t = world.getTileEntity(pos);
+
+		if(t instanceof TileAudioCable) {
+			((TileAudioCable) t).updateConnections();
+			world.notifyBlockUpdate(pos, state, state, 3);
+		}
+		super.neighborChanged(state, world, pos, block);
+	}
+
+	@Override
+	public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor) {
+		TileEntity t = world.getTileEntity(pos);
+
+		if(t instanceof TileAudioCable) {
+			((TileAudioCable) t).updateConnections();
+		}
+		super.onNeighborChange(world, pos, neighbor);
 	}
 
 	@Override

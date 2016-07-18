@@ -26,6 +26,7 @@ import pl.asie.lib.reference.Mods;
 import pl.asie.lib.tile.TileEntityBase;
 import pl.asie.lib.util.ItemUtils;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -335,6 +336,7 @@ public abstract class BlockBase extends Block /*implements
 		return guiProvider != null && gui >= 0;
 	}
 
+	@Nullable
 	public IGuiProvider getGuiProvider(World world, BlockPos pos, EntityPlayer player, EnumFacing side) {
 		return guiProvider;
 	}
@@ -379,7 +381,7 @@ public abstract class BlockBase extends Block /*implements
 
 	protected boolean useTool(World world, BlockPos pos, EntityPlayer player, EnumFacing side) {
 		ItemStack held = player.inventory.getCurrentItem();
-		if(held != null && held.getItem() != null && Integration.isTool(held, player, pos) && this.rotation != null) {
+		if(held != null && Integration.isTool(held, player, pos) && this.rotation != null) {
 			boolean wrenched = Integration.useTool(held, player, pos);
 			return wrenched && (this.onToolUsed(world, pos, player, side) || this.rotate(world, pos, player, side));
 		}
@@ -391,7 +393,7 @@ public abstract class BlockBase extends Block /*implements
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
 		if(!world.isRemote) {
 			if(!this.canUseTool(world, pos, player, side) || !this.useTool(world, pos, player, side)) {
 				IGuiProvider guiProvider = getGuiProvider(world, pos, player, side);

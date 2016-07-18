@@ -31,7 +31,7 @@ public class TileAudioCable extends TileEntityBase implements IAudioReceiver, IC
 	private byte connectionMap = 0;
 	private boolean initialConnect = false;
 
-	private void updateConnections() {
+	public void updateConnections() {
 		final byte oldConnections = connectionMap;
 		connectionMap = 0;
 		for(EnumFacing dir : EnumFacing.VALUES) {
@@ -92,10 +92,12 @@ public class TileAudioCable extends TileEntityBase implements IAudioReceiver, IC
 
 	@Override
 	public void update() {
-		packetIds.clear();
-		if(worldObj != null) {
-			updateConnections();
+		if(!packetIds.isEmpty()) {
+			packetIds.clear();
 		}
+		/*if(worldObj != null) {
+			updateConnections();
+		}*/
 	}
 
 	public boolean receivePacketID(Object o) {
@@ -165,6 +167,7 @@ public class TileAudioCable extends TileEntityBase implements IAudioReceiver, IC
 	@Override
 	public void setColor(int color) {
 		this.overlayColor = color;
+		this.updateConnections();
 		this.markDirty();
 	}
 
