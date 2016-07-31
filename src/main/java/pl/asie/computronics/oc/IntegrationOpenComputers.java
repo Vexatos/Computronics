@@ -399,7 +399,7 @@ public class IntegrationOpenComputers {
 		if(Config.OC_CARD_BEEP) {
 			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 5),
 				" l ", "mb ", " f ",
-				'm', li.cil.oc.api.Items.get("chip2").createItemStack(1),
+				'm', li.cil.oc.api.Items.get("chip1").createItemStack(1),
 				'f', speaker != null ? speaker : ironNote != null ? ironNote : Blocks.noteblock,
 				'b', li.cil.oc.api.Items.get("card").createItemStack(1),
 				'l', li.cil.oc.api.Items.get("cu").createItemStack(1));
@@ -427,10 +427,10 @@ public class IntegrationOpenComputers {
 		if(Config.OC_CARD_NOISE) {
 			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 8),
 				" l ", "mbn", " f ",
-				'm', li.cil.oc.api.Items.get("chip2").createItemStack(1),
+				'm', li.cil.oc.api.Items.get("ram1").createItemStack(1),
 				'f', li.cil.oc.api.Items.get("alu").createItemStack(1),
 				'b', Config.OC_CARD_BEEP ? new ItemStack(itemOCParts, 1, 5) : speaker != null ? speaker : ironNote != null ? ironNote : Blocks.noteblock,
-				'l', li.cil.oc.api.Items.get("chip3").createItemStack(1),
+				'l', li.cil.oc.api.Items.get("chip2").createItemStack(1),
 				'n', "gemQuartz");
 		}
 		if(Config.OC_CARD_SOUND) {
@@ -440,7 +440,7 @@ public class IntegrationOpenComputers {
 				'f', li.cil.oc.api.Items.get("cpu1").createItemStack(1),
 				'b', Config.OC_CARD_NOISE ? new ItemStack(itemOCParts, 1, 8) :
 					Config.OC_CARD_BEEP ? new ItemStack(itemOCParts, 1, 5) : speaker != null ? speaker : ironNote != null ? ironNote : Blocks.noteblock,
-				'l', li.cil.oc.api.Items.get("chip3").createItemStack(1));
+				'l', li.cil.oc.api.Items.get("chip2").createItemStack(1));
 		}
 		if(Config.OC_BOARD_LIGHT) {
 			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 10),
