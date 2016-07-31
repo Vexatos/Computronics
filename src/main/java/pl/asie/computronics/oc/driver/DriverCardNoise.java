@@ -67,6 +67,11 @@ public class DriverCardNoise extends DriverCardSoundBase {
 		return channel >= 0 && channel < channels.length ? channels[channel].type : AudioType.Square;
 	}
 
+	@Callback(doc = "This is the number of channels this card provides.", direct = true, getter = true)
+	public Object[] channel_count(Context context, Arguments args) {
+		return new Object[] { channels.length };
+	}
+
 	@Callback(doc = "function(channel:number):number; returns the current mode of the specified channel", direct = true)
 	public Object[] getMode(Context context, Arguments args) {
 		int channel = args.checkInteger(0) - 1;

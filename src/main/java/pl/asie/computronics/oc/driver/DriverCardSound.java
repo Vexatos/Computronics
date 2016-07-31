@@ -325,6 +325,11 @@ public class DriverCardSound extends ManagedEnvironment implements DeviceInfo, I
 		return new Object[] { compileModes() };
 	}
 
+	@Callback(doc = "This is the number of channels this card provides.", direct = true, getter = true)
+	public Object[] channel_count(Context context, Arguments args) {
+		return new Object[] { process.states.size() };
+	}
+
 	@Callback(doc = "function(volume:number); Sets the general volume of the entire sound card to a value between 0 and 1. Not an instruction, this affects all channels directly.", direct = true)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] setTotalVolume(Context context, Arguments args) {
