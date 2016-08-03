@@ -105,7 +105,7 @@ public class AudioUtil {
 		public float attenuation;
 		public int releaseDuration;
 		public Phase phase = Phase.Attack;
-		public double progress = 0;
+		public double progress;
 		private final Phase initialPhase;
 
 		// Precalculated speeds
@@ -123,8 +123,10 @@ public class AudioUtil {
 			if(this.attackDuration == 0) {
 				this.phase = Phase.Decay;
 				this.initialPhase = Phase.Decay;
+				this.progress = 1;
 			} else {
 				this.initialPhase = Phase.Attack;
+				this.progress = 0;
 			}
 			this.decaySpeed = ((this.attenuation - 1D) * 1000D) / (this.decayDuration * Config.SOUND_SAMPLE_RATE);
 			this.releaseSpeed = (-this.attenuation * 1000D) / (this.releaseDuration * Config.SOUND_SAMPLE_RATE);

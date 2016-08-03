@@ -104,7 +104,7 @@ public class SoundCardPacketClientHandler extends AudioPacketClientHandler {
 		}
 
 		if(!processMap.containsKey(address)) {
-			setProcess(address, new AudioUtil.AudioProcess(8));
+			setProcess(address, new AudioUtil.AudioProcess(Config.SOUND_CARD_CHANNEL_COUNT));
 		}
 		AudioProcess process = processMap.get(address);
 
