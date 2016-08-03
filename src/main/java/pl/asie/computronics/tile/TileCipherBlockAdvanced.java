@@ -122,10 +122,16 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 	private static final ThreadLocal<KeyFactory> keyFactory = new ThreadLocals.LocalKeyFactory();
 	private static final ThreadLocal<Cipher> cipher = new ThreadLocals.LocalCipher();
 
+	private BigInteger unsigned(byte[] src) {
+		byte[] unsigned = new byte[src.length + 1];
+		System.arraycopy(src, 0, unsigned, 1, src.length);
+		return new BigInteger(unsigned);
+	}
+
 	private Object[] encrypt(Map<Integer, String> publicKey, byte[] messageBytes) throws Exception {
-		BigInteger n = new BigInteger(Base64.decode(publicKey.get(1)));
-		BigInteger d = new BigInteger(Base64.decode(publicKey.get(2)));
 		if(("prime").equals(publicKey.get(3))) {
+			BigInteger n = unsigned(Base64.decode(publicKey.get(1)));
+			BigInteger d = unsigned(Base64.decode(publicKey.get(2)));
 			BigInteger message = new BigInteger(messageBytes);
 			if(n.toByteArray().length < messageBytes.length) {
 				throw new IllegalArgumentException("key is too small, needs to have a bit length of at least " + messageBytes.length + ", but only has " + n.toByteArray().length);
@@ -138,8 +144,8 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 				return new Object[] { null, "an error occured during encryption" };
 			}
 			PublicKey pubKey = factory.generatePublic(new RSAPublicKeySpec(
-				new BigInteger(Base64.decode(publicKey.get(1))),
-				new BigInteger(Base64.decode(publicKey.get(2)))));
+				unsigned(Base64.decode(publicKey.get(1))),
+				unsigned(Base64.decode(publicKey.get(2)))));
 			c.init(Cipher.ENCRYPT_MODE, pubKey);
 			return new Object[] { Base64.encodeBytes(c.doFinal(messageBytes)) };
 		}
@@ -147,8 +153,8 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 
 	private Object[] decrypt(Map<Integer, String> privateKey, byte[] messageBytes) throws Exception {
 		byte[] decodedBytes = Base64.decode(messageBytes);
-		BigInteger n = new BigInteger(Base64.decode(privateKey.get(1)));
-		BigInteger e = new BigInteger(Base64.decode(privateKey.get(2)));
+		BigInteger n = unsigned(Base64.decode(privateKey.get(1)));
+		BigInteger e = unsigned(Base64.decode(privateKey.get(2)));
 		if(("prime").equals(privateKey.get(3))) {
 			BigInteger message = new BigInteger(decodedBytes);
 			if(n.toByteArray().length < decodedBytes.length) {
