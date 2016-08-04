@@ -1,27 +1,25 @@
 package pl.asie.computronics.integration.railcraft;
 
-import cpw.mods.fml.client.registry.RenderingRegistry;
-import cpw.mods.fml.common.Optional;
-import cpw.mods.fml.common.event.FMLInterModComms;
-import cpw.mods.fml.common.event.FMLMissingMappingsEvent;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import li.cil.oc.common.block.Item;
+import mods.railcraft.client.render.tesr.TESRSignalBox;
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.ItemMeshDefinition;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.asie.computronics.Computronics;
-import pl.asie.computronics.integration.buildcraft.IntegrationBuildCraftBuilder;
 import pl.asie.computronics.integration.railcraft.block.BlockDigitalControllerBox;
 import pl.asie.computronics.integration.railcraft.block.BlockDigitalDetector;
 import pl.asie.computronics.integration.railcraft.block.BlockDigitalReceiverBox;
 import pl.asie.computronics.integration.railcraft.block.BlockLocomotiveRelay;
 import pl.asie.computronics.integration.railcraft.block.BlockTicketMachine;
-import pl.asie.computronics.integration.railcraft.client.SignalBoxRenderer;
 import pl.asie.computronics.integration.railcraft.gui.GuiProviderTicketMachine;
 import pl.asie.computronics.integration.railcraft.item.ItemBlockSignalBox;
 import pl.asie.computronics.integration.railcraft.item.ItemRelaySensor;
@@ -57,44 +55,34 @@ public class IntegrationRailcraft {
 	public void preInit(Configuration config) {
 		if(isEnabled(config, "locomotiveRelay", true)) {
 			locomotiveRelay = new BlockLocomotiveRelay();
-			GameRegistry.registerBlock(locomotiveRelay, "computronics.locomotiveRelay");
-			GameRegistry.registerTileEntity(TileLocomotiveRelay.class, "computronics.locomotiveRelay");
-			FMLInterModComms.sendMessage(Mods.AE2, "whitelist-spatial", TileLocomotiveRelay.class.getCanonicalName());
-			IntegrationBuildCraftBuilder.INSTANCE.registerBlockBaseSchematic(locomotiveRelay);
+			Computronics.instance.registerBlockWithTileEntity(locomotiveRelay, TileLocomotiveRelay.class, "locomotive_relay");
+			//IntegrationBuildCraftBuilder.INSTANCE.registerBlockBaseSchematic(locomotiveRelay); TODO BuildCraft
 
 			relaySensor = new ItemRelaySensor();
-			GameRegistry.registerItem(relaySensor, "computronics.relaySensor");
+			Computronics.instance.registerItem(relaySensor, "relay_sensor");
 
 			manager = new LocomotiveManager();
 			MinecraftForge.EVENT_BUS.register(manager);
 		}
 		if(isEnabled(config, "digitalReceiverBox", true)) {
 			this.digitalReceiverBox = new BlockDigitalReceiverBox();
-			GameRegistry.registerBlock(digitalReceiverBox, ItemBlockSignalBox.class, "computronics.digitalReceiverBox");
-			GameRegistry.registerTileEntity(TileDigitalReceiverBox.class, "computronics.digitalReceiverBox");
-			FMLInterModComms.sendMessage(Mods.AE2, "whitelist-spatial", TileDigitalReceiverBox.class.getCanonicalName());
+			Computronics.instance.registerBlockWithTileEntity(digitalReceiverBox, new ItemBlockSignalBox(digitalReceiverBox), TileDigitalReceiverBox.class, "digital_receiver_box");
 		}
 		if(isEnabled(config, "digitalControllerBox", true)) {
 			this.digitalControllerBox = new BlockDigitalControllerBox();
-			GameRegistry.registerBlock(digitalControllerBox, ItemBlockSignalBox.class, "computronics.digitalControllerBox");
-			GameRegistry.registerTileEntity(TileDigitalControllerBox.class, "computronics.digitalControllerBox");
-			FMLInterModComms.sendMessage(Mods.AE2, "whitelist-spatial", TileDigitalControllerBox.class.getCanonicalName());
+			Computronics.instance.registerBlockWithTileEntity(digitalControllerBox, new ItemBlockSignalBox(digitalControllerBox), TileDigitalControllerBox.class, "digital_controller_box");
 		}
 		if(isEnabled(config, "digitalDetector", true)) {
 			detector = new BlockDigitalDetector();
-			GameRegistry.registerBlock(detector, "computronics.detector");
-			GameRegistry.registerTileEntity(TileDigitalDetector.class, "computronics.detector");
-			FMLInterModComms.sendMessage(Mods.AE2, "whitelist-spatial", TileDigitalDetector.class.getCanonicalName());
-			IntegrationBuildCraftBuilder.INSTANCE.registerBlockBaseSchematic(detector);
+			Computronics.instance.registerBlockWithTileEntity(detector, TileDigitalDetector.class, "digital_detector");
+			//IntegrationBuildCraftBuilder.INSTANCE.registerBlockBaseSchematic(detector); TODO BuildCraft
 		}
 		if(isEnabled(config, "ticketMachine", true)) {
 			this.guiTicketMachine = new GuiProviderTicketMachine();
 			Computronics.gui.registerGuiProvider(guiTicketMachine);
 			ticketMachine = new BlockTicketMachine();
-			GameRegistry.registerBlock(ticketMachine, "computronics.ticketMachine");
-			GameRegistry.registerTileEntity(TileTicketMachine.class, "computronics.ticketMachine");
-			FMLInterModComms.sendMessage(Mods.AE2, "whitelist-spatial", TileTicketMachine.class.getCanonicalName());
-			IntegrationBuildCraftBuilder.INSTANCE.registerBlockBaseSchematic(ticketMachine);
+			Computronics.instance.registerBlockWithTileEntity(ticketMachine, TileTicketMachine.class, "ticket_machine");
+			//IntegrationBuildCraftBuilder.INSTANCE.registerBlockBaseSchematic(ticketMachine); TODO BuildCraft
 		}
 	}
 
@@ -120,31 +108,22 @@ public class IntegrationRailcraft {
 		}
 	}
 
-	public void remap(FMLMissingMappingsEvent e) {
-		for(FMLMissingMappingsEvent.MissingMapping mapping : e.get()) {
-			if(digitalReceiverBox != null && mapping.name.equals("computronics:computronics.digitalBox")) {
-				switch(mapping.type) {
-					case BLOCK: {
-						mapping.remap(digitalReceiverBox);
-						break;
-					}
-					case ITEM: {
-						mapping.remap(Item.getItemFromBlock(digitalReceiverBox));
-						break;
-					}
-				}
-			}
-		}
-	}
-
 	@SideOnly(Side.CLIENT)
 	@Optional.Method(modid = Mods.Railcraft)
 	public void registerRenderers() {
-		SignalBoxRenderer renderer = new SignalBoxRenderer(digitalReceiverBox, SignalTypes.DigitalReceiver);
-		RenderingRegistry.registerBlockHandler(renderer);
-		MinecraftForgeClient.registerItemRenderer(net.minecraft.item.Item.getItemFromBlock(renderer.getBlock()), renderer.getItemRenderer());
-		renderer = new SignalBoxRenderer(digitalControllerBox, SignalTypes.DigitalController);
-		RenderingRegistry.registerBlockHandler(renderer);
-		MinecraftForgeClient.registerItemRenderer(net.minecraft.item.Item.getItemFromBlock(renderer.getBlock()), renderer.getItemRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileDigitalReceiverBox.class, new TESRSignalBox());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileDigitalControllerBox.class, new TESRSignalBox());
+		ModelLoader.setCustomMeshDefinition(relaySensor, new ItemMeshDefinition() {
+			private final ModelResourceLocation icon_off = new ModelResourceLocation(Mods.Computronics + ":relay_sensor_off", "inventory");
+			private final ModelResourceLocation icon_on = new ModelResourceLocation(Mods.Computronics + ":relay_sensor_on", "inventory");
+
+			@Override
+			public ModelResourceLocation getModelLocation(ItemStack stack) {
+				if(stack.hasTagCompound() && stack.getTagCompound().getBoolean("bound")) {
+					return icon_on;
+				}
+				return icon_off;
+			}
+		});
 	}
 }

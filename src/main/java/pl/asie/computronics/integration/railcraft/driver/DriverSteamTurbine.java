@@ -7,6 +7,8 @@ import mods.railcraft.common.blocks.machine.alpha.TileSteamTurbine;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
 import pl.asie.computronics.integration.CCMultiPeripheral;
@@ -23,15 +25,15 @@ public class DriverSteamTurbine {
 			super();
 		}
 
-		public CCDriver(TileSteamTurbine tile, World world, int x, int y, int z) {
-			super(tile, Names.Railcraft_SteamTurbine, world, x, y, z);
+		public CCDriver(TileSteamTurbine tile, World world, BlockPos pos) {
+			super(tile, Names.Railcraft_SteamTurbine, world, pos);
 		}
 
 		@Override
-		public IMultiPeripheral getPeripheral(World world, int x, int y, int z, int side) {
-			TileEntity te = world.getTileEntity(x, y, z);
+		public IMultiPeripheral getPeripheral(World world, BlockPos pos, EnumFacing side) {
+			TileEntity te = world.getTileEntity(pos);
 			if(te != null && te instanceof TileSteamTurbine) {
-				return new CCDriver((TileSteamTurbine) te, world, x, y, z);
+				return new CCDriver((TileSteamTurbine) te, world, pos);
 			}
 			return null;
 		}

@@ -1,13 +1,11 @@
 package pl.asie.computronics.integration.railcraft.block;
 
-import cpw.mods.fml.common.Optional;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import li.cil.oc.api.network.Environment;
 import mods.railcraft.common.blocks.signals.ISignalTileDefinition;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.integration.railcraft.SignalTypes;
 import pl.asie.computronics.integration.railcraft.tile.TileDigitalReceiverBox;
@@ -22,24 +20,17 @@ public class BlockDigitalReceiverBox extends BlockDigitalBoxBase implements ICom
 
 	public BlockDigitalReceiverBox() {
 		super("digital_receiver_box");
-		this.setBlockName("computronics.digitalReceiverBox");
+		this.setUnlocalizedName("computronics.digitalReceiverBox");
 		this.setCreativeTab(Computronics.tab);
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister iconRegister) {
-		super.registerBlockIcons(iconRegister);
-		texturesBoxTop = iconRegister.registerIcon("computronics:digital_receiver_box");
-	}
-
-	@Override
-	public ISignalTileDefinition getSignalType(int meta) {
+	public ISignalTileDefinition getSignalType(IBlockState state) {
 		return SignalTypes.DigitalReceiver;
 	}
 
 	@Override
-	public TileEntity createTileEntity(World world, int meta) {
+	public TileEntity createTileEntity(World world, IBlockState state) {
 		return new TileDigitalReceiverBox();
 	}
 

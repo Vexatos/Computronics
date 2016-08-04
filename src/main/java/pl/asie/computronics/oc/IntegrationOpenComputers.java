@@ -33,6 +33,15 @@ import pl.asie.computronics.integration.enderio.DriverVacuumChest;
 import pl.asie.computronics.integration.enderio.DriverWeatherObelisk;
 import pl.asie.computronics.integration.flamingo.DriverFlamingo;
 import pl.asie.computronics.integration.forestry.IntegrationForestry;
+import pl.asie.computronics.integration.railcraft.driver.DriverElectricGrid;
+import pl.asie.computronics.integration.railcraft.driver.DriverRoutingDetector;
+import pl.asie.computronics.integration.railcraft.driver.DriverRoutingSwitch;
+import pl.asie.computronics.integration.railcraft.driver.track.DriverLauncherTrack;
+import pl.asie.computronics.integration.railcraft.driver.track.DriverLimiterTrack;
+import pl.asie.computronics.integration.railcraft.driver.track.DriverLocomotiveTrack;
+import pl.asie.computronics.integration.railcraft.driver.track.DriverPoweredTrack;
+import pl.asie.computronics.integration.railcraft.driver.track.DriverPrimingTrack;
+import pl.asie.computronics.integration.railcraft.driver.track.DriverRoutingTrack;
 import pl.asie.computronics.integration.storagedrawers.DriverDrawerGroup;
 import pl.asie.computronics.item.ItemOCSpecialParts;
 import pl.asie.computronics.item.ItemOpenComputers;
@@ -219,7 +228,7 @@ public class IntegrationOpenComputers {
 			if(compat.isCompatEnabled(Compat.FZ_ChargePeripheral)) {
 				Driver.add(new DriverChargeConductor.OCDriver());
 			}
-		}*//*
+		}*/
 		if(Mods.isLoaded(Mods.Railcraft)) {
 			if(compat.isCompatEnabled(Compat.Railcraft_Routing)) {
 				Driver.add(new DriverPoweredTrack.OCDriver());
@@ -232,7 +241,7 @@ public class IntegrationOpenComputers {
 				Driver.add(new DriverLauncherTrack.OCDriver());
 				Driver.add(new DriverPrimingTrack.OCDriver());
 			}
-		}*//*
+		}/*
 		if(Mods.hasVersion(Mods.GregTech, Mods.Versions.GregTech5)) {
 			if(compat.isCompatEnabled(Compat.GregTech_Machines)) {
 				Driver.add(new DriverBaseMetaTileEntity());

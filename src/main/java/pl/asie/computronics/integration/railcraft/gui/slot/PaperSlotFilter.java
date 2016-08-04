@@ -1,18 +1,29 @@
 package pl.asie.computronics.integration.railcraft.gui.slot;
 
-import mods.railcraft.api.core.items.IStackFilter;
-import net.minecraft.init.Items;
+import mods.railcraft.api.core.StackFilter;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.OreDictionary;
+
+import javax.annotation.Nullable;
 
 /**
  * @author Vexatos
  */
-public class PaperSlotFilter implements IStackFilter {
+public class PaperSlotFilter extends StackFilter {
 
 	public static final PaperSlotFilter FILTER = new PaperSlotFilter();
 
 	@Override
-	public boolean matches(ItemStack stack) {
-		return stack != null && stack.getItem().equals(Items.paper);
+	public boolean apply(@Nullable ItemStack stack) {
+		if(stack == null) {
+			return false;
+		}
+		int paperID = OreDictionary.getOreID("paper");
+		for(int id : OreDictionary.getOreIDs(stack)) {
+			if(id == paperID) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

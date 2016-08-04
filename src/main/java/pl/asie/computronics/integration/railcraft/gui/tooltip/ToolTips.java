@@ -7,6 +7,7 @@ import mods.railcraft.common.plugins.forge.LocalizationPlugin;
 import mods.railcraft.common.util.misc.Game;
 import pl.asie.computronics.util.StringUtil;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -17,10 +18,12 @@ public class ToolTips {
 	private static final Splitter keyValueSplitter = Splitter.on('=').trimResults();
 	private static final Splitter lineSplitter = Splitter.on("\n").trimResults();
 
+	@Nullable
 	public static ToolTip buildToolTip(String tipTag, String... vars) {
 		return buildToolTip(tipTag, 750, vars);
 	}
 
+	@Nullable
 	public static ToolTip buildToolTip(String tipTag, int delay, String... vars) {
 		if(!StringUtil.canTranslate(tipTag)) {
 			return null;

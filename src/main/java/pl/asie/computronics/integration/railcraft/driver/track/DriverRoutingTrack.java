@@ -9,15 +9,16 @@ import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.prefab.DriverSidedTileEntity;
 import li.cil.oc.api.prefab.ManagedEnvironment;
 import mods.railcraft.common.blocks.tracks.TileTrack;
-import mods.railcraft.common.blocks.tracks.TrackRouting;
+import mods.railcraft.common.blocks.tracks.instances.TrackRouting;
 import mods.railcraft.common.items.ItemTicketGold;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
 import pl.asie.computronics.integration.CCMultiPeripheral;
-import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
+import pl.asie.computronics.integration.NamedManagedEnvironment;
 import pl.asie.computronics.reference.Names;
 
 /**
@@ -56,7 +57,7 @@ public class DriverRoutingTrack {
 
 	public static class OCDriver extends DriverSidedTileEntity {
 
-		public static class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TrackRouting> {
+		public static class InternalManagedEnvironment extends NamedManagedEnvironment<TrackRouting> {
 
 			public InternalManagedEnvironment(TrackRouting track) {
 				super(track, Names.Railcraft_RoutingTrack);
@@ -94,15 +95,15 @@ public class DriverRoutingTrack {
 		}
 
 		@Override
-		public boolean worksWith(World world, int x, int y, int z, ForgeDirection side) {
-			TileEntity tileEntity = world.getTileEntity(x, y, z);
+		public boolean worksWith(World world, BlockPos pos, EnumFacing side) {
+			TileEntity tileEntity = world.getTileEntity(pos);
 			return (tileEntity != null) && tileEntity instanceof TileTrack
 				&& ((TileTrack) tileEntity).getTrackInstance() instanceof TrackRouting;
 		}
 
 		@Override
-		public ManagedEnvironment createEnvironment(World world, int x, int y, int z, ForgeDirection side) {
-			return new InternalManagedEnvironment((TrackRouting) ((TileTrack) world.getTileEntity(x, y, z)).getTrackInstance());
+		public ManagedEnvironment createEnvironment(World world, BlockPos pos, EnumFacing side) {
+			return new InternalManagedEnvironment((TrackRouting) ((TileTrack) world.getTileEntity(pos)).getTrackInstance());
 		}
 	}
 
@@ -111,15 +112,15 @@ public class DriverRoutingTrack {
 		public CCDriver() {
 		}
 
-		public CCDriver(TrackRouting track, World world, int x, int y, int z) {
-			super(track, Names.Railcraft_RoutingTrack, world, x, y, z);
+		public CCDriver(TrackRouting track, World world, BlockPos pos) {
+			super(track, Names.Railcraft_RoutingTrack, world, pos);
 		}
 
 		@Override
-		public IMultiPeripheral getPeripheral(World world, int x, int y, int z, int side) {
-			TileEntity te = world.getTileEntity(x, y, z);
+		public IMultiPeripheral getPeripheral(World world, BlockPos pos, EnumFacing side) {
+			TileEntity te = world.getTileEntity(pos);
 			if(te != null && te instanceof TileTrack && ((TileTrack) te).getTrackInstance() instanceof TrackRouting) {
-				return new CCDriver((TrackRouting) ((TileTrack) te).getTrackInstance(), world, x, y, z);
+				return new CCDriver((TrackRouting) ((TileTrack) te).getTrackInstance(), world, pos);
 			}
 			return null;
 		}

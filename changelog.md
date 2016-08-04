@@ -42,6 +42,7 @@ This version comes with a 1.8.9, 1.9.4 and 1.10 port in addition to many additio
   * FIXED: Tape program not displaying information properly if file size is larger than tape size
   * FIXED: OpenComputers' tape program not working with HTTPS
   * FIXED: Explosions not dropping items when they should
+  * FIXED: Advanced Cipher Block not properly converting certain keys
 
   * [1.7.10] ADDED: Digital Signal Controller Box for Railcraft!
     - Can be paired to up to 32 receivers (sounds overpowered, definitely is overpowered, but CovertJaguar told me to do it. It's probaby better this way...)
@@ -67,7 +68,7 @@ This version comes with a 1.8.9, 1.9.4 and 1.10 port in addition to many additio
   * [1.8.9] CHANGED: Updated audio codec to DFPWM 1a. Any files encoded with the old codec will still play, but the sound will be a lot more quiet.
   
   * [1.9.4] Ported the mod to 1.9.4!
-    - Mods supported right now are OpenComputers, TIS-3D, EnderIO, Charset, Forestry, Storage Drawers, Waila, The One Probe and Pink Flamingo.
+    - Mods supported right now are OpenComputers, TIS-3D, Railcraft, EnderIO, Charset, Forestry, Storage Drawers, Waila, The One Probe and Pink Flamingo.
     - asielib is no longer needed as a separate download, it is included in this mod.
   * [1.9.4] ADDED: asie made Sound Cards, Speakers, Audio Cables and Tape Drives compatible with Charset Audio devices.
 

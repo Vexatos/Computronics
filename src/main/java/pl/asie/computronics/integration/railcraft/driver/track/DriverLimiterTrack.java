@@ -8,15 +8,17 @@ import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.prefab.DriverSidedTileEntity;
 import li.cil.oc.api.prefab.ManagedEnvironment;
+import mods.railcraft.api.tracks.ITrackTile;
 import mods.railcraft.common.blocks.tracks.TileTrack;
-import mods.railcraft.common.blocks.tracks.TrackLimiter;
+import mods.railcraft.common.blocks.tracks.instances.TrackLimiter;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
 import pl.asie.computronics.integration.CCMultiPeripheral;
-import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
+import pl.asie.computronics.integration.NamedManagedEnvironment;
 import pl.asie.computronics.reference.Names;
 
 /**
@@ -42,7 +44,7 @@ public class DriverLimiterTrack {
 
 	public static class OCDriver extends DriverSidedTileEntity {
 
-		public static class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TrackLimiter> {
+		public static class InternalManagedEnvironment extends NamedManagedEnvironment<TrackLimiter> {
 
 			public InternalManagedEnvironment(TrackLimiter tile) {
 				super(tile, Names.Railcraft_LimiterTrack);
@@ -66,19 +68,19 @@ public class DriverLimiterTrack {
 
 		@Override
 		public Class<?> getTileEntityClass() {
-			return TileTrack.class;
+			return ITrackTile.class;
 		}
 
 		@Override
-		public boolean worksWith(World world, int x, int y, int z, ForgeDirection side) {
-			TileEntity tileEntity = world.getTileEntity(x, y, z);
-			return (tileEntity != null) && tileEntity instanceof TileTrack
+		public boolean worksWith(World world, BlockPos pos, EnumFacing side) {
+			TileEntity tileEntity = world.getTileEntity(pos);
+			return (tileEntity != null) && tileEntity instanceof ITrackTile
 				&& ((TileTrack) tileEntity).getTrackInstance() instanceof TrackLimiter;
 		}
 
 		@Override
-		public ManagedEnvironment createEnvironment(World world, int x, int y, int z, ForgeDirection side) {
-			return new InternalManagedEnvironment((TrackLimiter) ((TileTrack) world.getTileEntity(x, y, z)).getTrackInstance());
+		public ManagedEnvironment createEnvironment(World world, BlockPos pos, EnumFacing side) {
+			return new InternalManagedEnvironment((TrackLimiter) ((TileTrack) world.getTileEntity(pos)).getTrackInstance());
 		}
 	}
 
@@ -87,15 +89,15 @@ public class DriverLimiterTrack {
 		public CCDriver() {
 		}
 
-		public CCDriver(TrackLimiter track, World world, int x, int y, int z) {
-			super(track, Names.Railcraft_LimiterTrack, world, x, y, z);
+		public CCDriver(TrackLimiter track, World world, BlockPos pos) {
+			super(track, Names.Railcraft_LimiterTrack, world, pos);
 		}
 
 		@Override
-		public IMultiPeripheral getPeripheral(World world, int x, int y, int z, int side) {
-			TileEntity te = world.getTileEntity(x, y, z);
+		public IMultiPeripheral getPeripheral(World world, BlockPos pos, EnumFacing side) {
+			TileEntity te = world.getTileEntity(pos);
 			if(te != null && te instanceof TileTrack && ((TileTrack) te).getTrackInstance() instanceof TrackLimiter) {
-				return new CCDriver((TrackLimiter) ((TileTrack) te).getTrackInstance(), world, x, y, z);
+				return new CCDriver((TrackLimiter) ((TileTrack) te).getTrackInstance(), world, pos);
 			}
 			return null;
 		}

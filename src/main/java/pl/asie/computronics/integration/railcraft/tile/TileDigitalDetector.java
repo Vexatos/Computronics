@@ -1,27 +1,27 @@
 package pl.asie.computronics.integration.railcraft.tile;
 
 import com.mojang.authlib.GameProfile;
-import cpw.mods.fml.common.Optional;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.SidedEnvironment;
-import mods.railcraft.api.carts.CartTools;
+import mods.railcraft.api.carts.CartToolsAPI;
 import mods.railcraft.common.carts.EntityLocomotive;
-import mods.railcraft.common.carts.EnumCart;
 import mods.railcraft.common.carts.ICartType;
-import net.minecraft.block.Block;
+import mods.railcraft.common.carts.RailcraftCarts;
 import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.util.ForgeDirection;
-import pl.asie.computronics.Computronics;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ITickable;
+import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.cc.ISidedPeripheral;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.reference.Names;
 import pl.asie.computronics.tile.TileEntityPeripheralBase;
 import pl.asie.computronics.util.OCUtils;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -33,43 +33,31 @@ import java.util.Locale;
 	@Optional.Interface(iface = "li.cil.oc.api.network.SidedEnvironment", modid = Mods.OpenComputers)
 })
 public class TileDigitalDetector extends TileEntityPeripheralBase
-	implements SidedEnvironment, ISidedPeripheral {
+	implements SidedEnvironment, ISidedPeripheral, ITickable {
 
-	public ForgeDirection direction;
-	private boolean tested;
+	public EnumFacing direction;
 	private List<EntityMinecart> currentCarts = new ArrayList<EntityMinecart>();
 
 	public TileDigitalDetector() {
 		super(Names.Railcraft_DigitalDetector);
-		this.direction = ForgeDirection.UP;
+		this.direction = EnumFacing.UP;
 	}
 
 	@Override
-	public void updateEntity() {
-		super.updateEntity();
-		if(getWorldObj().isRemote) {
+	public void update() {
+		super.update();
+		if(getWorld().isRemote) {
 			return;
 		}
-		if(!this.tested) {
-			this.tested = true;
-			int meta = this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord);
-			if(meta != 0) {
-				this.worldObj.removeTileEntity(this.xCoord, this.yCoord, this.yCoord);
-				Block block = Computronics.railcraft.detector;
-				if(block != null) {
-					this.worldObj.setBlock(this.xCoord, this.yCoord, this.yCoord, block, 0, 3);
-				}
-			}
-		}
 
-		List<EntityMinecart> carts = CartTools.getMinecartsOnAllSides(this.worldObj, this.xCoord, this.yCoord, this.zCoord, 0.2F);
+		List<EntityMinecart> carts = CartToolsAPI.getMinecartsOnAllSides(this.worldObj, this.getPos(), 0.2F);
 
 		for(EntityMinecart cart : carts) {
 			if(!this.currentCarts.contains(cart)) {
 				ArrayList<Object> info = new ArrayList<Object>();
 				appendCartType(info, cart);
 				appendLocomotiveInformation(info, cart);
-				if(Mods.isLoaded(Mods.OpenComputers) && this.node() != null) {
+				if(Mods.isLoaded(Mods.OpenComputers)) {
 					this.eventOC(info);
 				}
 				if(Mods.isLoaded(Mods.ComputerCraft)) {
@@ -88,36 +76,38 @@ public class TileDigitalDetector extends TileEntityPeripheralBase
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound data) {
-		super.writeToNBT(data);
+	public NBTTagCompound writeToNBT(NBTTagCompound data) {
+		data = super.writeToNBT(data);
 		data.setByte("direction", (byte) direction.ordinal());
+		return data;
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound data) {
 		super.readFromNBT(data);
-		direction = data.hasKey("direction") ? ForgeDirection.getOrientation(data.getByte("direction")) : ForgeDirection.UP;
+		direction = data.hasKey("direction") ? EnumFacing.getFront(data.getByte("direction")) : EnumFacing.UP;
 	}
 
 	@Override
-	public void writeToRemoteNBT(NBTTagCompound tag) {
+	public NBTTagCompound writeToRemoteNBT(NBTTagCompound tag) {
 		tag.setByte("direction", (byte) direction.ordinal());
+		return tag;
 	}
 
 	@Override
 	public void readFromRemoteNBT(NBTTagCompound tag) {
-		ForgeDirection oldDir = this.direction;
-		direction = tag.hasKey("direction") ? ForgeDirection.getOrientation(tag.getByte("direction")) : ForgeDirection.UP;
+		EnumFacing oldDir = this.direction;
+		direction = tag.hasKey("direction") ? EnumFacing.getFront(tag.getByte("direction")) : EnumFacing.UP;
 		if(oldDir != direction) {
-			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+			notifyBlockUpdate();
 		}
 	}
 
 	private void appendCartType(ArrayList<Object> info, EntityMinecart cart) {
-		ICartType type = EnumCart.fromCart(cart);
-		info.add(type != null ? type.getTag().toLowerCase(Locale.ENGLISH) : "unknown");
-		String entityName = cart.func_95999_t();
-		info.add(entityName != null ? entityName : "");
+		ICartType type = RailcraftCarts.fromCart(cart);
+		info.add(type.getTag().toLowerCase(Locale.ENGLISH));
+		String entityName = cart.getName();
+		info.add(entityName);
 	}
 
 	private void appendLocomotiveInformation(ArrayList<Object> info, EntityMinecart cart) {
@@ -125,11 +115,11 @@ public class TileDigitalDetector extends TileEntityPeripheralBase
 			EntityLocomotive locomotive = (EntityLocomotive) cart;
 
 			GameProfile owner = locomotive.getOwner();
-			info.add(Math.max(15 - locomotive.getPrimaryColor(), -1));
-			info.add(Math.max(15 - locomotive.getSecondaryColor(), -1));
+			info.add(Math.max(15 - locomotive.getPrimaryColor().ordinal(), -1));
+			info.add(Math.max(15 - locomotive.getSecondaryColor().ordinal(), -1));
 			String destination = locomotive.getDestination();
-			info.add(destination != null ? destination : "");
-			info.add(owner != null ? owner.getName() : "");
+			info.add(destination);
+			info.add(owner.getName());
 		}
 	}
 
@@ -166,15 +156,16 @@ public class TileDigitalDetector extends TileEntityPeripheralBase
 		);
 	}
 
+	@Nullable
 	@Override
 	@Optional.Method(modid = Mods.OpenComputers)
-	public Node sidedNode(ForgeDirection side) {
+	public Node sidedNode(EnumFacing side) {
 		return side == this.direction ? node() : null;
 	}
 
 	@Override
 	@Optional.Method(modid = Mods.OpenComputers)
-	public boolean canConnect(ForgeDirection side) {
+	public boolean canConnect(EnumFacing side) {
 		return side == this.direction;
 	}
 
@@ -184,6 +175,7 @@ public class TileDigitalDetector extends TileEntityPeripheralBase
 		return new String[] {};
 	}
 
+	@Nullable
 	@Override
 	@Optional.Method(modid = Mods.ComputerCraft)
 	public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
@@ -191,7 +183,7 @@ public class TileDigitalDetector extends TileEntityPeripheralBase
 	}
 
 	@Override
-	public boolean canConnectPeripheralOnSide(int side) {
-		return ForgeDirection.getOrientation(side) == this.direction;
+	public boolean canConnectPeripheralOnSide(EnumFacing side) {
+		return side == this.direction;
 	}
 }

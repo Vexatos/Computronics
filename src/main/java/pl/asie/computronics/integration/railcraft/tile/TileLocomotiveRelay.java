@@ -1,6 +1,5 @@
 package pl.asie.computronics.integration.railcraft.tile;
 
-import cpw.mods.fml.common.Optional;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
@@ -11,15 +10,18 @@ import li.cil.oc.api.network.Connector;
 import mods.railcraft.common.carts.EntityLocomotiveElectric;
 import mods.railcraft.common.items.ItemTicket;
 import mods.railcraft.common.items.ItemTicketGold;
-import mods.railcraft.common.util.misc.MiscTools;
+import mods.railcraft.common.plugins.forge.NBTPlugin;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ITickable;
+import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.integration.railcraft.LocomotiveManager;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TileEntityPeripheralBase;
 import pl.asie.computronics.util.OCUtils;
 
+import javax.annotation.Nullable;
 import java.lang.ref.WeakReference;
 import java.util.Locale;
 import java.util.UUID;
@@ -27,7 +29,7 @@ import java.util.UUID;
 /**
  * @author Vexatos
  */
-public class TileLocomotiveRelay extends TileEntityPeripheralBase {
+public class TileLocomotiveRelay extends TileEntityPeripheralBase implements ITickable {
 
 	private WeakReference<EntityLocomotiveElectric> locomotive;
 	//private boolean isInitialized = false;
@@ -45,6 +47,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 		this.uuid = loco.getPersistentID();
 	}
 
+	@Nullable
 	public EntityLocomotiveElectric getLocomotive() {
 		return this.locomotive != null ? this.locomotive.get() : null;
 	}
@@ -64,8 +67,8 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 	}
 
 	@Override
-	public void updateEntity() {
-		super.updateEntity();
+	public void update() {
+		super.update();
 
 		if(worldObj.isRemote) {
 			return;
@@ -84,7 +87,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 		}
 	}
 
-	private void tryFindLocomotive(UUID uuid) {
+	private void tryFindLocomotive(@Nullable UUID uuid) {
 		if(uuid != null) {
 			EntityLocomotiveElectric cart = LocomotiveManager.instance().getCartFromUUID(uuid);
 			if(cart != null) {
@@ -103,17 +106,18 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 		super.readFromNBT(nbt);
 		this.isBound = nbt.getBoolean("bound");
 		if(isBound) {
-			this.uuid = MiscTools.readUUID(nbt, "locomotive");
+			this.uuid = NBTPlugin.readUUID(nbt, "locomotive");
 		}
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+		nbt = super.writeToNBT(nbt);
 		if(isBound && this.uuid != null) {
-			MiscTools.writeUUID(nbt, "locomotive", this.uuid);
+			NBTPlugin.writeUUID(nbt, "locomotive", this.uuid);
 		}
 		nbt.setBoolean("bound", isBound);
+		return nbt;
 	}
 
 	@Override
@@ -124,9 +128,10 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 	}
 
 	@Override
-	public void writeToRemoteNBT(NBTTagCompound nbt) {
-		super.writeToRemoteNBT(nbt);
+	public NBTTagCompound writeToRemoteNBT(NBTTagCompound nbt) {
+		nbt = super.writeToRemoteNBT(nbt);
 		nbt.setBoolean("bound", isBound);
+		return nbt;
 	}
 
 	@Override
@@ -137,6 +142,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 		}
 	}
 
+	@Nullable
 	private String cannotAccessLocomotive(double amount, boolean isOC) {
 		EntityLocomotiveElectric locomotive = getLocomotive();
 		if(!isBound) {
@@ -145,10 +151,10 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 		if(locomotive == null) {
 			return "locomotive is currently not detectable";
 		}
-		if(locomotive.dimension != this.worldObj.provider.dimensionId) {
+		if(locomotive.dimension != this.worldObj.provider.getDimension()) {
 			return "relay and locomotive are in different dimensions";
 		}
-		if(locomotive.getDistanceSq(xCoord, yCoord, zCoord) > Config.LOCOMOTIVE_RELAY_RANGE * Config.LOCOMOTIVE_RELAY_RANGE) {
+		if(locomotive.getDistanceSq(getPos()) > Config.LOCOMOTIVE_RELAY_RANGE * Config.LOCOMOTIVE_RELAY_RANGE) {
 			return "locomotive is too far away";
 		}
 		if(locomotive.isSecure()) {
@@ -169,6 +175,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 		return node() instanceof Connector && ((Connector) node()).tryChangeBuffer(-energy);
 	}
 
+	@Nullable
 	@Optional.Method(modid = Mods.OpenComputers)
 	private String cannotAccessLocomotive_OC(double amount) {
 		if(!tryConsumeEnergy(Config.LOCOMOTIVE_RELAY_BASE_POWER * amount)) {
@@ -249,7 +256,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 		if(error != null) {
 			return new Object[] { null, error };
 		}
-		return new Object[] { getLocomotive().func_95999_t() != null ? getLocomotive().func_95999_t() : "" };
+		return new Object[] { getLocomotive().getName() };
 	}
 
 	@Override
@@ -285,7 +292,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 					return new Object[] { getLocomotive().getMode().toString() };
 				}
 				case 4: {
-					return new Object[] { getLocomotive().func_95999_t() != null ? getLocomotive().func_95999_t() : "" };
+					return new Object[] { getLocomotive().getName() };
 				}
 			}
 		}

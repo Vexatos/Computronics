@@ -11,11 +11,12 @@ import li.cil.oc.api.prefab.ManagedEnvironment;
 import mods.railcraft.common.blocks.signals.TileSwitchRouting;
 import mods.railcraft.common.items.ItemRoutingTable;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
 import pl.asie.computronics.integration.CCMultiPeripheral;
-import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
+import pl.asie.computronics.integration.NamedManagedEnvironment;
 import pl.asie.computronics.integration.util.RoutingTableUtil;
 import pl.asie.computronics.reference.Names;
 
@@ -109,7 +110,7 @@ public class DriverRoutingSwitch {
 
 	public static class OCDriver extends DriverSidedTileEntity {
 
-		public static class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TileSwitchRouting> {
+		public static class InternalManagedEnvironment extends NamedManagedEnvironment<TileSwitchRouting> {
 
 			public InternalManagedEnvironment(TileSwitchRouting routingSwitch) {
 				super(routingSwitch, Names.Railcraft_RoutingSwitch);
@@ -144,8 +145,8 @@ public class DriverRoutingSwitch {
 		}
 
 		@Override
-		public ManagedEnvironment createEnvironment(World world, int x, int y, int z, ForgeDirection side) {
-			return new InternalManagedEnvironment((TileSwitchRouting) world.getTileEntity(x, y, z));
+		public ManagedEnvironment createEnvironment(World world, BlockPos pos, EnumFacing side) {
+			return new InternalManagedEnvironment((TileSwitchRouting) world.getTileEntity(pos));
 		}
 	}
 
@@ -154,15 +155,15 @@ public class DriverRoutingSwitch {
 		public CCDriver() {
 		}
 
-		public CCDriver(TileSwitchRouting routingSwitch, World world, int x, int y, int z) {
-			super(routingSwitch, Names.Railcraft_RoutingSwitch, world, x, y, z);
+		public CCDriver(TileSwitchRouting routingSwitch, World world, BlockPos pos) {
+			super(routingSwitch, Names.Railcraft_RoutingSwitch, world, pos);
 		}
 
 		@Override
-		public IMultiPeripheral getPeripheral(World world, int x, int y, int z, int side) {
-			TileEntity te = world.getTileEntity(x, y, z);
+		public IMultiPeripheral getPeripheral(World world, BlockPos pos, EnumFacing side) {
+			TileEntity te = world.getTileEntity(pos);
 			if(te != null && te instanceof TileSwitchRouting) {
-				return new CCDriver((TileSwitchRouting) te, world, x, y, z);
+				return new CCDriver((TileSwitchRouting) te, world, pos);
 			}
 			return null;
 		}

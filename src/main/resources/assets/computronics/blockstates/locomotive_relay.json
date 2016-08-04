@@ -1,0 +1,13 @@
+{
+    "forge_marker": 1,
+    "defaults": {
+        "textures": {
+            "top": "computronics:blocks/locomotive_relay_top"
+        },
+        "model": "computronics:base"
+    },
+    "variants": {
+        "normal": [{ }],
+        "inventory": [{ }]
+    }
+}

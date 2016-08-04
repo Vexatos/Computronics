@@ -1,6 +1,6 @@
 package pl.asie.computronics.integration.railcraft.gui.slot;
 
-import mods.railcraft.api.core.items.IStackFilter;
+import mods.railcraft.api.core.IStackFilter;
 import mods.railcraft.common.gui.slots.SlotSecure;
 import net.minecraft.inventory.IInventory;
 

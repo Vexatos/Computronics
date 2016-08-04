@@ -60,7 +60,7 @@ public class GuiTicketMachine extends GuiContainerRailcraft {
 		super.mouseClickMove(x, y, mouseButton, time);
 		int mX = x - this.guiLeft;
 		int mY = y - this.guiTop;
-		for(Widget widget : container.getElements()) {
+		for(Widget widget : container.getWidgets()) {
 			if(widget instanceof ButtonWidget) {
 				((ButtonWidget) widget).handleMouseMove(mX, mY, mouseButton, time);
 			}
@@ -68,11 +68,11 @@ public class GuiTicketMachine extends GuiContainerRailcraft {
 	}
 
 	@Override
-	protected void mouseMovedOrUp(int x, int y, int eventType) {
-		super.mouseMovedOrUp(x, y, eventType);
+	protected void mouseReleased(int x, int y, int eventType) {
+		super.mouseReleased(x, y, eventType);
 		int mX = x - this.guiLeft;
 		int mY = y - this.guiTop;
-		for(Widget widget : container.getElements()) {
+		for(Widget widget : container.getWidgets()) {
 			if(widget instanceof ButtonWidget) {
 				((ButtonWidget) widget).handleMouseRelease(mX, mY, eventType);
 			}
@@ -95,7 +95,7 @@ public class GuiTicketMachine extends GuiContainerRailcraft {
 			this.notmaintenanceToolTips = ToolTips.buildToolTip("tooltip.computronics.ticket.notmaintenance", 500, "{owner}=" + this.ownerName);
 		}
 
-		for(Widget widget : container.getElements()) {
+		for(Widget widget : container.getWidgets()) {
 			if(widget instanceof LockButtonWidget) {
 				if(((LockButtonWidget) widget).accessible) {
 					((LockButtonWidget) widget).setToolTip(tile.isLocked() ? this.lockedToolTips : this.unlockedToolTips);

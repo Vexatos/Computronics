@@ -13,11 +13,12 @@ import mods.railcraft.common.blocks.detector.TileDetector;
 import mods.railcraft.common.blocks.detector.types.DetectorRouting;
 import mods.railcraft.common.items.ItemRoutingTable;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
 import pl.asie.computronics.integration.CCMultiPeripheral;
-import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
+import pl.asie.computronics.integration.NamedManagedEnvironment;
 import pl.asie.computronics.integration.util.RoutingTableUtil;
 import pl.asie.computronics.reference.Names;
 
@@ -111,7 +112,7 @@ public class DriverRoutingDetector {
 
 	public static class OCDriver extends DriverSidedTileEntity {
 
-		public static class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TileDetector> {
+		public static class InternalManagedEnvironment extends NamedManagedEnvironment<TileDetector> {
 
 			public InternalManagedEnvironment(TileDetector detector) {
 				super(detector, Names.Railcraft_RoutingDetector);
@@ -146,15 +147,15 @@ public class DriverRoutingDetector {
 		}
 
 		@Override
-		public boolean worksWith(World world, int x, int y, int z, ForgeDirection side) {
-			TileEntity tileEntity = world.getTileEntity(x, y, z);
+		public boolean worksWith(World world, BlockPos pos, EnumFacing side) {
+			TileEntity tileEntity = world.getTileEntity(pos);
 			return (tileEntity != null) && tileEntity instanceof TileDetector
 				&& ((TileDetector) tileEntity).getDetector().getType() == EnumDetector.ROUTING;
 		}
 
 		@Override
-		public ManagedEnvironment createEnvironment(World world, int x, int y, int z, ForgeDirection side) {
-			return new InternalManagedEnvironment((TileDetector) world.getTileEntity(x, y, z));
+		public ManagedEnvironment createEnvironment(World world, BlockPos pos, EnumFacing side) {
+			return new InternalManagedEnvironment((TileDetector) world.getTileEntity(pos));
 		}
 	}
 
@@ -163,15 +164,15 @@ public class DriverRoutingDetector {
 		public CCDriver() {
 		}
 
-		public CCDriver(TileDetector detector, World world, int x, int y, int z) {
-			super(detector, Names.Railcraft_RoutingDetector, world, x, y, z);
+		public CCDriver(TileDetector detector, World world, BlockPos pos) {
+			super(detector, Names.Railcraft_RoutingDetector, world, pos);
 		}
 
 		@Override
-		public IMultiPeripheral getPeripheral(World world, int x, int y, int z, int side) {
-			TileEntity te = world.getTileEntity(x, y, z);
+		public IMultiPeripheral getPeripheral(World world, BlockPos pos, EnumFacing side) {
+			TileEntity te = world.getTileEntity(pos);
 			if(te != null && te instanceof TileDetector && ((TileDetector) te).getDetector().getType() == EnumDetector.ROUTING) {
-				return new CCDriver((TileDetector) te, world, x, y, z);
+				return new CCDriver((TileDetector) te, world, pos);
 			}
 			return null;
 		}

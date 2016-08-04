@@ -7,6 +7,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import pl.asie.lib.AsieLibMod;
 
+import javax.annotation.Nullable;
+
 public class WorldUtils {
 
 	public static TileEntity getTileEntity(int dimensionId, int x, int y, int z) {
@@ -42,8 +44,10 @@ public class WorldUtils {
 		notifyBlockUpdate(world, pos, world.getBlockState(pos));
 	}
 
-	public static void notifyBlockUpdate(World world, BlockPos pos, IBlockState state) {
-		world.notifyBlockUpdate(pos, state, state, 11);
+	public static void notifyBlockUpdate(@Nullable World world, BlockPos pos, IBlockState state) {
+		if(world != null) {
+			world.notifyBlockUpdate(pos, state, state, 11);
+		}
 	}
 	
 	/*public static void sendParticlePacket(String name, World worldObj, double x, double y, double z, double vx, double vy, double vz) {

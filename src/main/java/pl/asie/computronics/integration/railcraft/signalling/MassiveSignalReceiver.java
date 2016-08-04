@@ -1,7 +1,5 @@
 package pl.asie.computronics.integration.railcraft.signalling;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import mods.railcraft.api.core.WorldCoordinate;
 import mods.railcraft.api.signals.SignalAspect;
 import mods.railcraft.api.signals.SignalController;
@@ -10,6 +8,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.asie.computronics.util.collect.SimpleInvertibleDualMap;
 
 import javax.annotation.Nonnull;
@@ -159,7 +159,7 @@ public class MassiveSignalReceiver extends SignalReceiver {
 		for(Map.Entry<WorldCoordinate, SignalAspect> entry : this.aspects.entrySet()) {
 			NBTTagCompound tag = new NBTTagCompound();
 			WorldCoordinate key = entry.getKey();
-			tag.setIntArray("coords", new int[] { key.dimension, key.x, key.y, key.z });
+			tag.setIntArray("coords", new int[] { key.getDim(), key.getX(), key.getY(), key.getZ() });
 			tag.setByte("aspect", (byte) entry.getValue().ordinal());
 			String s = signalNames.inverse().get(key);
 			if(s != null) {

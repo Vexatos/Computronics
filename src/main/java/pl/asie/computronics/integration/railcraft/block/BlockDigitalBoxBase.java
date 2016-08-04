@@ -1,20 +1,16 @@
 package pl.asie.computronics.integration.railcraft.block;
 
-import cpw.mods.fml.client.registry.RenderingRegistry;
-import cpw.mods.fml.common.Optional;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import li.cil.oc.api.network.Environment;
-import mods.railcraft.client.util.textures.TextureAtlasSheet;
 import mods.railcraft.common.blocks.signals.BlockSignalBase;
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.integration.railcraft.tile.TileDigitalReceiverBox;
 import pl.asie.computronics.oc.block.IComputronicsEnvironmentBlock;
@@ -29,45 +25,23 @@ import pl.asie.computronics.reference.Mods;
 })
 public abstract class BlockDigitalBoxBase extends BlockSignalBase implements IComputronicsEnvironmentBlock, IBlockWithPrefix {
 
-	public IIcon[] texturesBox;
-	public IIcon texturesBoxTop;
-
 	public BlockDigitalBoxBase(String documentationName) {
-		super(RenderingRegistry.getNextAvailableRenderId());
+		super();
 		this.documentationName = documentationName;
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public IIcon getIcon(int side, int meta) {
-		switch(side) {
-			case 0:
-				return texturesBox[2];
-			case 1:
-				return texturesBoxTop;
-			default:
-				return texturesBox[0];
-		}
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister iconRegister) {
-		texturesBox = TextureAtlasSheet.unstitchIcons(iconRegister, "railcraft:signal.box", 6);
-	}
-
-	@Override
-	public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
+	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block neighborBlock) {
 		try {
-			TileEntity tile = world.getTileEntity(x, y, z);
+			TileEntity tile = world.getTileEntity(pos);
 			if((tile instanceof TileDigitalReceiverBox)) {
 				TileDigitalReceiverBox structure = (TileDigitalReceiverBox) tile;
 				if((structure.getSignalType().needsSupport())
-					&& (!world.isSideSolid(x, y - 1, z, ForgeDirection.UP))
-					&& !(Mods.isLoaded(Mods.OpenComputers) && world.getTileEntity(x, y - 1, z) instanceof Environment)) {
-					world.func_147480_a(x, y, z, true);
+					&& (!world.isSideSolid(pos.down(), EnumFacing.UP))
+					&& !(Mods.isLoaded(Mods.OpenComputers) && world.getTileEntity(pos.down()) instanceof Environment)) {
+					world.destroyBlock(pos, true);
 				} else {
-					structure.onNeighborBlockChange(block);
+					structure.onNeighborBlockChange(state, neighborBlock);
 				}
 			}
 		} catch(StackOverflowError error) {
@@ -77,30 +51,25 @@ public abstract class BlockDigitalBoxBase extends BlockSignalBase implements ICo
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta) {
-		return this.createTileEntity(world, meta);
-	}
-
-	@Override
-	public boolean canProvidePower() {
+	public boolean canProvidePower(IBlockState state) {
 		return false;
 	}
 
 	@Override
-	public boolean canConnectRedstone(IBlockAccess world, int i, int j, int k, int dir) {
+	public boolean canConnectRedstone(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
 		return false;
 	}
 
 	@Override
-	public int isProvidingWeakPower(IBlockAccess world, int i, int j, int k, int side) {
-		return 0;
+	public boolean shouldCheckWeakPower(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
+		return false;
 	}
 
 	private String documentationName;
 	private final String prefix = "railcraft/";
 
 	@Override
-	public String getDocumentationName(World world, int x, int y, int z) {
+	public String getDocumentationName(World world, BlockPos pos) {
 		return this.documentationName;
 	}
 
@@ -110,7 +79,7 @@ public abstract class BlockDigitalBoxBase extends BlockSignalBase implements ICo
 	}
 
 	@Override
-	public String getPrefix(World world, int x, int y, int z) {
+	public String getPrefix(World world, BlockPos pos) {
 		return this.prefix;
 	}
 

@@ -1,6 +1,5 @@
 package pl.asie.computronics.integration.railcraft.tile;
 
-import cpw.mods.fml.common.Optional;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
@@ -13,8 +12,11 @@ import mods.railcraft.api.signals.SignalAspect;
 import mods.railcraft.api.signals.SignalController;
 import mods.railcraft.common.blocks.signals.ISignalTileDefinition;
 import mods.railcraft.common.util.misc.Game;
+import mods.railcraft.common.util.network.RailcraftInputStream;
+import mods.railcraft.common.util.network.RailcraftOutputStream;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.integration.railcraft.SignalTypes;
 import pl.asie.computronics.integration.railcraft.signalling.MassiveSignalController;
 import pl.asie.computronics.reference.Mods;
@@ -22,8 +24,6 @@ import pl.asie.computronics.reference.Names;
 import pl.asie.computronics.util.OCUtils;
 import pl.asie.computronics.util.TableUtils;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -45,9 +45,9 @@ public class TileDigitalControllerBox extends TileDigitalBoxBase implements ICon
 	}
 
 	@Override
-	public void updateEntity() {
-		super.updateEntity();
-		if(Game.isNotHost(this.worldObj)) {
+	public void update() {
+		super.update();
+		if(Game.isClient(this.worldObj)) {
 			this.controller.tickClient();
 			if(this.controller.getVisualAspect().isBlinkAspect() && this.prevBlinkState != SignalAspect.isBlinkOn()) {
 				this.prevBlinkState = SignalAspect.isBlinkOn();
@@ -78,12 +78,12 @@ public class TileDigitalControllerBox extends TileDigitalBoxBase implements ICon
 	}
 
 	@Override
-	public boolean isConnected(ForgeDirection side) {
+	public boolean isConnected(EnumFacing side) {
 		return false;
 	}
 
 	@Override
-	public SignalAspect getBoxSignalAspect(ForgeDirection side) {
+	public SignalAspect getBoxSignalAspect(EnumFacing side) {
 		return this.controller.getVisualAspect();
 	}
 
@@ -93,9 +93,10 @@ public class TileDigitalControllerBox extends TileDigitalBoxBase implements ICon
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound data) {
-		super.writeToNBT(data);
+	public NBTTagCompound writeToNBT(NBTTagCompound data) {
+		data = super.writeToNBT(data);
 		this.controller.writeToNBT(data);
+		return data;
 	}
 
 	@Override
@@ -105,13 +106,13 @@ public class TileDigitalControllerBox extends TileDigitalBoxBase implements ICon
 	}
 
 	@Override
-	public void writePacketData(DataOutputStream data) throws IOException {
+	public void writePacketData(RailcraftOutputStream data) throws IOException {
 		super.writePacketData(data);
 		this.controller.writePacketData(data);
 	}
 
 	@Override
-	public void readPacketData(DataInputStream data) throws IOException {
+	public void readPacketData(RailcraftInputStream data) throws IOException {
 		super.readPacketData(data);
 		this.controller.readPacketData(data);
 		markBlockForUpdate();
@@ -129,7 +130,6 @@ public class TileDigitalControllerBox extends TileDigitalBoxBase implements ICon
 			"Digitized Signal Sender X3"
 		);
 	}
-
 
 	private Object[] setAspect(String name, int aspectIndex) {
 		if(aspectIndex > 0 && aspectIndex < SignalAspect.VALUES.length) {

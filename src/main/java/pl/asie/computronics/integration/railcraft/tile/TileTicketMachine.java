@@ -1,7 +1,6 @@
 package pl.asie.computronics.integration.railcraft.tile;
 
 import com.mojang.authlib.GameProfile;
-import cpw.mods.fml.common.Optional;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
@@ -12,10 +11,14 @@ import li.cil.oc.api.network.Connector;
 import mods.railcraft.api.core.IOwnable;
 import mods.railcraft.common.items.ItemTicket;
 import mods.railcraft.common.items.ItemTicketGold;
+import mods.railcraft.common.items.RailcraftItems;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ITickable;
+import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.integration.railcraft.gui.slot.PaperSlotFilter;
 import pl.asie.computronics.network.PacketType;
@@ -24,10 +27,10 @@ import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TileEntityPeripheralBase;
 import pl.asie.computronics.util.OCUtils;
 import pl.asie.lib.api.tile.IBatteryProvider;
-import pl.asie.lib.api.tile.IInventoryProvider;
 import pl.asie.lib.network.Packet;
 import pl.asie.lib.tile.BatteryBasic;
 
+import javax.annotation.Nullable;
 import java.util.UUID;
 
 /**
@@ -37,7 +40,7 @@ import java.util.UUID;
 @Optional.InterfaceList({
 	@Optional.Interface(iface = "mods.railcraft.api.core.IOwnable", modid = Mods.Railcraft)
 })
-public class TileTicketMachine extends TileEntityPeripheralBase implements IInventoryProvider, IOwnable, IBatteryProvider {
+public class TileTicketMachine extends TileEntityPeripheralBase implements ITickable, IOwnable, IBatteryProvider {
 
 	private GameProfile owner = new GameProfile((UUID) null, "[Railcraft]");
 	private boolean isLocked = false;
@@ -107,11 +110,6 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 		return 20;
 	}
 
-	@Override
-	public boolean canUpdate() {
-		return true;
-	}
-
 	private boolean isActive;
 
 	public void setActive(boolean active) {
@@ -126,8 +124,8 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 	}
 
 	@Override
-	public void updateEntity() {
-		super.updateEntity();
+	public void update() {
+		super.update();
 		if(lockChanged) {
 			sendLockChange();
 			lockChanged = false;
@@ -257,10 +255,11 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 		if(this.getBatteryProvider().getEnergyStored() < amount) {
 			return false;
 		}
-		this.getBatteryProvider().extract(-1, amount, false);
+		this.getBatteryProvider().extract(null, amount, false);
 		return true;
 	}
 
+	@Nullable
 	@Optional.Method(modid = Mods.OpenComputers)
 	private Object[] tryConsumeEnergy(double v, String methodName) {
 		if(this.node() instanceof Connector) {
@@ -300,18 +299,22 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 
 	// Methods for Computers
 
+	@Nullable
 	public Object[] printTicket() {
 		return printTicket(false);
 	}
 
+	@Nullable
 	public Object[] printTicket(boolean opencomputers) {
 		return printTicket(getSelectedSlot() + 1, 1, opencomputers);
 	}
 
+	@Nullable
 	public Object[] printTicket(int amount, boolean opencomputers) {
 		return printTicket(getSelectedSlot() + 1, amount, opencomputers);
 	}
 
+	@Nullable
 	public Object[] printTicket(int slot, int amount, boolean opencomputers) {
 		if(worldObj.isRemote) {
 			return null;
@@ -328,7 +331,7 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 		if(stack == null) {
 			return new Object[] { false, "no golden ticket in specified slot" };
 		}
-		ItemStack ticket = ItemTicket.getTicket();
+		ItemStack ticket = RailcraftItems.ticket.getStack();
 		if(ticket == null) {
 			return new Object[] { false, "tickets not enabled in config" };
 		}
@@ -571,7 +574,6 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 		return this.owner;
 	}
 
-	@Override
 	public String getLocalizationTag() {
 		return getBlockType().getUnlocalizedName() + ".name";
 	}
@@ -638,8 +640,8 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound tag) {
-		super.writeToNBT(tag);
+	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
+		tag = super.writeToNBT(tag);
 		if(this.owner.getName() != null) {
 			tag.setString("owner", this.owner.getName());
 		}
@@ -659,6 +661,7 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 			tag.setTag("currentTicket", currentTicketTag);
 			tag.setInteger("ticketQueue", this.ticketQueue);
 		}
+		return tag;
 	}
 
 	@Override
@@ -709,8 +712,8 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 	}
 
 	@Override
-	public void writeToRemoteNBT(NBTTagCompound tag) {
-		super.writeToRemoteNBT(tag);
+	public NBTTagCompound writeToRemoteNBT(NBTTagCompound tag) {
+		tag = super.writeToRemoteNBT(tag);
 		if(this.owner.getName() != null) {
 			tag.setString("owner", this.owner.getName());
 		}
@@ -724,6 +727,7 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 		tag.setInteger("selectedslot", selectedSlot);
 		tag.setInteger("progress", progress);
 		tag.setBoolean("isActive", isActive);
+		return tag;
 	}
 
 	// Security
@@ -735,26 +739,26 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 		}
 		switch(slot) {
 			case paperSlot: {
-				return PaperSlotFilter.FILTER.matches(stack);
+				return PaperSlotFilter.FILTER.apply(stack);
 			}
 		}
 		return false;
 	}
 
 	@Override
-	public boolean canInsertItem(int slot, ItemStack item, int side) {
+	public boolean canInsertItem(int slot, ItemStack item, EnumFacing side) {
 		return slot == paperSlot;
 	}
 
 	@Override
-	public boolean canExtractItem(int slot, ItemStack item, int side) {
+	public boolean canExtractItem(int slot, ItemStack item, EnumFacing side) {
 		return slot == ticketSlot;
 	}
 
 	private static final int[] ACCESSIBLE_SLOTS = new int[] { paperSlot, ticketSlot };
 
 	@Override
-	public int[] getAccessibleSlotsFromSide(int side) {
+	public int[] getSlotsForFace(EnumFacing side) {
 		return ACCESSIBLE_SLOTS.clone();
 	}
 }

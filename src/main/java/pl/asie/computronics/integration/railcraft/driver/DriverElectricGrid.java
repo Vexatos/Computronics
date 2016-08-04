@@ -1,5 +1,6 @@
 package pl.asie.computronics.integration.railcraft.driver;
 
+import com.reddit.user.koppeh.flamingo.TileEntityFlamingo;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
@@ -7,14 +8,15 @@ import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.ManagedEnvironment;
-import li.cil.oc.api.prefab.DriverSidedTileEntity;
 import mods.railcraft.api.electricity.GridTools;
 import mods.railcraft.api.electricity.IElectricGrid;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
 import pl.asie.computronics.integration.CCMultiPeripheral;
-import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
+import pl.asie.computronics.integration.DriverSpecificTileEntity;
+import pl.asie.computronics.integration.NamedManagedEnvironment;
 import pl.asie.computronics.reference.Names;
 
 /**
@@ -22,9 +24,9 @@ import pl.asie.computronics.reference.Names;
  */
 public class DriverElectricGrid {
 
-	public static class OCDriver extends DriverSidedTileEntity {
+	public static class OCDriver extends DriverSpecificTileEntity<TileEntityFlamingo> {
 
-		public static class InternalManagedEnvironment extends ManagedEnvironmentOCTile<IElectricGrid> {
+		public static class InternalManagedEnvironment extends NamedManagedEnvironment<IElectricGrid> {
 
 			public InternalManagedEnvironment(IElectricGrid tile) {
 				super(tile, Names.Railcraft_ElectricGrid);
@@ -62,13 +64,13 @@ public class DriverElectricGrid {
 		}
 
 		@Override
-		public boolean worksWith(World world, int x, int y, int z, ForgeDirection side) {
-			return GridTools.getGridObjectAt(world, x, y, z) != null;
+		public boolean worksWith(World world, BlockPos pos, EnumFacing side) {
+			return GridTools.getGridObjectAt(world, pos) != null;
 		}
 
 		@Override
-		public ManagedEnvironment createEnvironment(World world, int x, int y, int z, ForgeDirection side) {
-			return new InternalManagedEnvironment(GridTools.getGridObjectAt(world, x, y, z));
+		public ManagedEnvironment createEnvironment(World world, BlockPos pos, EnumFacing side) {
+			return new InternalManagedEnvironment(GridTools.getGridObjectAt(world, pos));
 		}
 	}
 
@@ -78,8 +80,8 @@ public class DriverElectricGrid {
 			super();
 		}
 
-		public CCDriver(IElectricGrid tile, World world, int x, int y, int z) {
-			super(tile, Names.Railcraft_ElectricGrid, world, x, y, z);
+		public CCDriver(IElectricGrid tile, World world, BlockPos pos) {
+			super(tile, Names.Railcraft_ElectricGrid, world, pos);
 		}
 
 		@Override
@@ -88,9 +90,9 @@ public class DriverElectricGrid {
 		}
 
 		@Override
-		public IMultiPeripheral getPeripheral(World world, int x, int y, int z, int side) {
-			if(GridTools.getGridObjectAt(world, x, y, z) != null) {
-				return new CCDriver(GridTools.getGridObjectAt(world, x, y, z), world, x, y, z);
+		public IMultiPeripheral getPeripheral(World world, BlockPos pos, EnumFacing side) {
+			if(GridTools.getGridObjectAt(world, pos) != null) {
+				return new CCDriver(GridTools.getGridObjectAt(world, pos), world, pos);
 			}
 			return null;
 		}

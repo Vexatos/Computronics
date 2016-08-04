@@ -1,16 +1,16 @@
 package pl.asie.computronics.integration.railcraft.block;
 
-import cpw.mods.fml.common.Optional;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import li.cil.oc.api.network.Environment;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.block.BlockPeripheral;
 import pl.asie.computronics.integration.railcraft.tile.TileLocomotiveRelay;
 import pl.asie.computronics.oc.manual.IBlockWithPrefix;
@@ -21,40 +21,14 @@ import pl.asie.computronics.reference.Mods;
  */
 public class BlockLocomotiveRelay extends BlockPeripheral implements IBlockWithPrefix {
 
-	private IIcon mTop, mSide, mBottom;
-
 	public BlockLocomotiveRelay() {
-		super("locomotive_relay");
-		this.setIconName("computronics:machine_top");
-		this.setBlockName("computronics.locomotiveRelay");
-		this.setRotation(Rotation.NONE);
+		super("locomotive_relay", Rotation.NONE);
+		this.setUnlocalizedName("computronics.locomotiveRelay");
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int i) {
+	public TileEntity createTileEntity(World world, IBlockState state) {
 		return new TileLocomotiveRelay();
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister r) {
-		super.registerBlockIcons(r);
-		mTop = r.registerIcon("computronics:locorelay_top");
-		mSide = r.registerIcon("computronics:machine_side");
-		mBottom = r.registerIcon("computronics:machine_bottom");
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public IIcon getAbsoluteIcon(int side, int metadata) {
-		switch(side) {
-			case 0:
-				return mBottom;
-			case 1:
-				return mTop;
-			default:
-				return mSide;
-		}
 	}
 
 	@Override
@@ -64,9 +38,9 @@ public class BlockLocomotiveRelay extends BlockPeripheral implements IBlockWithP
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int a, float _x, float _y, float _z) {
-		if(!world.isRemote && player.isSneaking() && player.getCurrentEquippedItem() == null) {
-			TileEntity tile = world.getTileEntity(x, y, z);
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+		if(!world.isRemote && player.isSneaking() && player.getHeldItemMainhand() == null && player.getHeldItemOffhand() == null) {
+			TileEntity tile = world.getTileEntity(pos);
 			if(tile instanceof TileLocomotiveRelay) {
 				String msg;
 				if(((TileLocomotiveRelay) tile).unbind()) {
@@ -74,18 +48,17 @@ public class BlockLocomotiveRelay extends BlockPeripheral implements IBlockWithP
 				} else {
 					msg = "chat.computronics.relay.notBound";
 				}
-				player.addChatComponentMessage(new ChatComponentTranslation(msg));
+				player.addChatComponentMessage(new TextComponentTranslation(msg));
 				return true;
 			}
 		}
-
-		return super.onBlockActivated(world, x, y, z, player, a, _x, _y, _z);
+		return super.onBlockActivated(world, pos, state, player, hand, heldItem, side, hitX, hitY, hitZ);
 	}
 
 	private final String prefix = "railcraft/";
 
 	@Override
-	public String getPrefix(World world, int x, int y, int z) {
+	public String getPrefix(World world, BlockPos pos) {
 		return this.prefix;
 	}
 
