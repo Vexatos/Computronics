@@ -252,7 +252,7 @@ public class ItemOpenComputers extends ItemMultipleComputronics implements Item,
 			case 8:
 				return 1; // Tier 2
 			case 9:
-				return 2; // Tier 3
+				return 1; // Tier 2
 			case 10:
 			case 11:
 			case 12:
