@@ -129,9 +129,9 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 	}
 
 	private Object[] encrypt(Map<Integer, String> publicKey, byte[] messageBytes) throws Exception {
+		BigInteger n = unsigned(Base64.decode(publicKey.get(1)));
+		BigInteger d = unsigned(Base64.decode(publicKey.get(2)));
 		if(("prime").equals(publicKey.get(3))) {
-			BigInteger n = unsigned(Base64.decode(publicKey.get(1)));
-			BigInteger d = unsigned(Base64.decode(publicKey.get(2)));
 			BigInteger message = new BigInteger(messageBytes);
 			if(n.toByteArray().length < messageBytes.length) {
 				throw new IllegalArgumentException("key is too small, needs to have a bit length of at least " + messageBytes.length + ", but only has " + n.toByteArray().length);
@@ -143,9 +143,7 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 			if(factory == null || c == null) {
 				return new Object[] { null, "an error occured during encryption" };
 			}
-			PublicKey pubKey = factory.generatePublic(new RSAPublicKeySpec(
-				unsigned(Base64.decode(publicKey.get(1))),
-				unsigned(Base64.decode(publicKey.get(2)))));
+			PublicKey pubKey = factory.generatePublic(new RSAPublicKeySpec(n, d));
 			c.init(Cipher.ENCRYPT_MODE, pubKey);
 			return new Object[] { Base64.encodeBytes(c.doFinal(messageBytes)) };
 		}
