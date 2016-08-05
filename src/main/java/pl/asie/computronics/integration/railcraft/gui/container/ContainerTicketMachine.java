@@ -143,6 +143,7 @@ public class ContainerTicketMachine extends RailcraftContainer {
 
 	@Override
 	public void addListener(IContainerListener listener) {
+		super.addListener(listener);
 		this.canLock = PlayerPlugin.isOwnerOrOp(tile.getOwner(), inventoryPlayer.player.getGameProfile());
 		updateLock();
 		listener.sendProgressBarUpdate(this, 0, this.canLock ? 1 : 0);

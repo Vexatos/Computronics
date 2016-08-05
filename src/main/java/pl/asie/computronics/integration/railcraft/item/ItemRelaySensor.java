@@ -2,6 +2,8 @@ package pl.asie.computronics.integration.railcraft.item;
 
 import mods.railcraft.common.carts.EntityLocomotive;
 import mods.railcraft.common.carts.EntityLocomotiveElectric;
+import net.minecraft.client.renderer.ItemMeshDefinition;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -16,10 +18,13 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeEventFactory;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.integration.railcraft.tile.TileLocomotiveRelay;
 import pl.asie.computronics.oc.manual.IItemWithPrefix;
 import pl.asie.computronics.reference.Config;
+import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.StringUtil;
 
 import java.util.List;
@@ -139,5 +144,20 @@ public class ItemRelaySensor extends Item implements IItemWithPrefix {
 	@Override
 	public String getPrefix(ItemStack stack) {
 		return "railcraft/";
+	}
+
+	@SideOnly(Side.CLIENT)
+	public static class MeshDefinition implements ItemMeshDefinition {
+
+		private final ModelResourceLocation icon_off = new ModelResourceLocation(Mods.Computronics + ":relay_sensor_off", "inventory");
+		private final ModelResourceLocation icon_on = new ModelResourceLocation(Mods.Computronics + ":relay_sensor_on", "inventory");
+
+		@Override
+		public ModelResourceLocation getModelLocation(ItemStack stack) {
+			if(stack.hasTagCompound() && stack.getTagCompound().getBoolean("bound")) {
+				return icon_on;
+			}
+			return icon_off;
+		}
 	}
 }

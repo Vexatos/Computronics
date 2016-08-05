@@ -62,7 +62,7 @@ public class DriverElectricGrid {
 			public Object[] getCapacity(Context c, Arguments a) {
 				ChargeNetwork.ChargeNode node = getNode(dimension, tile);
 				if(node != null) {
-					return new Object[] { /* TODO */ };
+					return new Object[] { node.getBattery() != null ? node.getBattery().getCapacity() : 0 };
 				}
 				return new Object[] { null, "no node found" };
 			}
@@ -71,7 +71,7 @@ public class DriverElectricGrid {
 			public Object[] getLoss(Context c, Arguments a) {
 				ChargeNetwork.ChargeNode node = getNode(dimension, tile);
 				if(node != null) {
-					return new Object[] { node.getChargeDef().getCost() };
+					return new Object[] { node.getChargeDef().getMaintenanceCost() };
 				}
 				return new Object[] { null, "no node found" };
 			}
@@ -85,7 +85,14 @@ public class DriverElectricGrid {
 				return new Object[] { null, "no node found" };
 			}
 
-			// TODO Network capacity
+			@Callback(doc = "function():number; Returns the maximum capacity of the charge network.")
+			public Object[] getNetworkCapacity(Context c, Arguments a) {
+				ChargeNetwork.ChargeNode node = getNode(dimension, tile);
+				if(node != null) {
+					return new Object[] { node.getChargeGraph().getCapacity() };
+				}
+				return new Object[] { null, "no node found" };
+			}
 
 			@Callback(doc = "function():number; Returns the loss per tick of the charge network.")
 			public Object[] getNetworkLoss(Context c, Arguments a) {
@@ -146,7 +153,7 @@ public class DriverElectricGrid {
 
 		@Override
 		public String[] getMethodNames() {
-			return new String[] { "getCharge", "getCapacity", "getLoss", "getDraw",
+			return new String[] { "getCharge", "getCapacity", "getLoss",
 				"getNetworkCharge", "getNetworkCapacity", "getNetworkLoss", "getNetworkDraw" };
 		}
 
@@ -163,38 +170,39 @@ public class DriverElectricGrid {
 				case 1: {
 					ChargeNetwork.ChargeNode node = getNode(dimension, tile);
 					if(node != null) {
-						return new Object[] { /* TODO */ };
+						return new Object[] { node.getBattery() != null ? node.getBattery().getCapacity() : 0 };
 					}
 					return new Object[] { null, "no node found" };
 				}
 				case 2: {
 					ChargeNetwork.ChargeNode node = getNode(dimension, tile);
 					if(node != null) {
-						return new Object[] { node.getChargeDef().getCost() };
+						return new Object[] { node.getChargeDef().getMaintenanceCost() };
 					}
 					return new Object[] { null, "no node found" };
 				}
 				case 3: {
-					return new Object[] { /* TODO */ };
-				}
-				case 4: {
 					ChargeNetwork.ChargeNode node = getNode(dimension, tile);
 					if(node != null) {
 						return new Object[] { node.getChargeGraph().getCharge() };
 					}
 					return new Object[] { null, "no node found" };
 				}
-				case 5: {
-					return new Object[] { /* TODO */ };
+				case 4: {
+					ChargeNetwork.ChargeNode node = getNode(dimension, tile);
+					if(node != null) {
+						return new Object[] { node.getChargeGraph().getCapacity() };
+					}
+					return new Object[] { null, "no node found" };
 				}
-				case 6: {
+				case 5: {
 					ChargeNetwork.ChargeNode node = getNode(dimension, tile);
 					if(node != null) {
 						return new Object[] { node.getChargeGraph().getMaintenanceCost() };
 					}
 					return new Object[] { null, "no node found" };
 				}
-				case 7: {
+				case 6: {
 					ChargeNetwork.ChargeNode node = getNode(dimension, tile);
 					if(node != null) {
 						return new Object[] { node.getChargeGraph().getAverageUsagePerTick() };

@@ -1,20 +1,21 @@
 package pl.asie.computronics.integration.railcraft.gui.slot;
 
-import mods.railcraft.api.core.StackFilter;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
 import javax.annotation.Nullable;
+import java.util.function.Predicate;
 
 /**
  * @author Vexatos
  */
-public class PaperSlotFilter extends StackFilter {
+@SuppressWarnings("Since15")
+public class PaperSlotFilter implements Predicate<ItemStack> {
 
 	public static final PaperSlotFilter FILTER = new PaperSlotFilter();
 
 	@Override
-	public boolean apply(@Nullable ItemStack stack) {
+	public boolean test(@Nullable ItemStack stack) {
 		if(stack == null) {
 			return false;
 		}

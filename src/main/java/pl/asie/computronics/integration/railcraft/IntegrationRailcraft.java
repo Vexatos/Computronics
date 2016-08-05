@@ -1,16 +1,13 @@
 package pl.asie.computronics.integration.railcraft;
 
-import mods.railcraft.client.render.tesr.TESRSignalBox;
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.ItemMeshDefinition;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -111,19 +108,10 @@ public class IntegrationRailcraft {
 	@SideOnly(Side.CLIENT)
 	@Optional.Method(modid = Mods.Railcraft)
 	public void registerRenderers() {
-		ClientRegistry.bindTileEntitySpecialRenderer(TileDigitalReceiverBox.class, new TESRSignalBox());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileDigitalControllerBox.class, new TESRSignalBox());
-		ModelLoader.setCustomMeshDefinition(relaySensor, new ItemMeshDefinition() {
-			private final ModelResourceLocation icon_off = new ModelResourceLocation(Mods.Computronics + ":relay_sensor_off", "inventory");
-			private final ModelResourceLocation icon_on = new ModelResourceLocation(Mods.Computronics + ":relay_sensor_on", "inventory");
-
-			@Override
-			public ModelResourceLocation getModelLocation(ItemStack stack) {
-				if(stack.hasTagCompound() && stack.getTagCompound().getBoolean("bound")) {
-					return icon_on;
-				}
-				return icon_off;
-			}
-		});
+		//ClientRegistry.bindTileEntitySpecialRenderer(TileDigitalReceiverBox.class, new TESRSignalBox());
+		//ClientRegistry.bindTileEntitySpecialRenderer(TileDigitalControllerBox.class, new TESRSignalBox());
+		ModelBakery.registerItemVariants(relaySensor, new ResourceLocation(Mods.Computronics + ":relay_sensor_off"));
+		ModelBakery.registerItemVariants(relaySensor, new ResourceLocation(Mods.Computronics + ":relay_sensor_on"));
+		ModelLoader.setCustomMeshDefinition(relaySensor, new ItemRelaySensor.MeshDefinition());
 	}
 }

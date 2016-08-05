@@ -41,7 +41,7 @@ public class Mods {
 		OpenPeripheral = "OpenPeripheralCore",
 		RedLogic = "RedLogic",
 		ProjectRed = "ProjRed|Core",
-		Railcraft = "Railcraft",
+		Railcraft = "railcraft",
 		StorageDrawers = "StorageDrawers",
 		TheOneProbe = "theoneprobe",
 		Waila = "Waila";

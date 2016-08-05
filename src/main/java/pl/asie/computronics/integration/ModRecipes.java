@@ -6,10 +6,10 @@ import mods.railcraft.common.blocks.detector.EnumDetector;
 import mods.railcraft.common.blocks.signals.EnumSignal;
 import mods.railcraft.common.items.ItemCircuit;
 import mods.railcraft.common.items.ItemRail;
+import mods.railcraft.common.items.Metal;
 import mods.railcraft.common.items.RailcraftItems;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -126,11 +126,10 @@ public class ModRecipes {
 
 	@Optional.Method(modid = Mods.Railcraft)
 	protected void registerRailcraftRecipes() {
-		Item item = GameRegistry.findItem(Mods.Railcraft, "part.plate");
 		if(Computronics.railcraft.locomotiveRelay != null && Computronics.railcraft.relaySensor != null) {
 			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.railcraft.locomotiveRelay, 1, 0),
 				"srs", "geg", "scs",
-				's', item != null ? new ItemStack(item, 1, 2) : Blocks.STONEBRICK,
+				's', RailcraftItems.plate.getStack(Metal.TIN),
 				'r', RailcraftItems.circuit.getRecipeObject(ItemCircuit.EnumCircuit.RECEIVER),
 				'e', RailcraftItems.circuit.getRecipeObject(ItemCircuit.EnumCircuit.CONTROLLER),
 				'c', RailcraftItems.chargeMeter.getRecipeObject(),
@@ -156,7 +155,7 @@ public class ModRecipes {
 		if(Computronics.railcraft.detector != null) {
 			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.railcraft.detector, 1, 0),
 				"sss", "sdp", "sss",
-				's', item != null ? new ItemStack(item, 1, 1) : "ingotSteel",
+				's', RailcraftItems.plate.getStack(Metal.STEEL),
 				'p', Blocks.LIGHT_WEIGHTED_PRESSURE_PLATE,
 				'd', RailcraftBlocks.detector.getRecipeObject(EnumDetector.ADVANCED));
 		}
@@ -164,8 +163,8 @@ public class ModRecipes {
 			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.railcraft.ticketMachine, 1, 0),
 				"tst", "sdg", "tpt",
 				'd', Blocks.DISPENSER,
-				't', item != null ? new ItemStack(item, 1, 2) : Blocks.STONEBRICK,
-				's', item != null ? new ItemStack(item, 1, 1) : "ingotIron",
+				't', RailcraftItems.plate.getStack(Metal.TIN),
+				's', RailcraftItems.plate.getStack(Metal.STEEL),
 				'p', Blocks.PISTON,
 				'g', "paneGlassColorless");
 		}

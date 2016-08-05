@@ -739,7 +739,7 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements ITick
 		}
 		switch(slot) {
 			case paperSlot: {
-				return PaperSlotFilter.FILTER.apply(stack);
+				return PaperSlotFilter.FILTER.test(stack);
 			}
 		}
 		return false;
