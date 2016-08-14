@@ -3,6 +3,7 @@ package pl.asie.computronics.util.achievements;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
+import gregapi.data.IL;
 import gregtech.api.enums.ItemList;
 import mods.railcraft.common.carts.EntityLocomotiveElectric;
 import mods.railcraft.common.carts.EnumCart;
@@ -71,6 +72,9 @@ public class ComputronicsAchievements {
 			if(Mods.hasVersion(Mods.GregTech, Mods.Versions.GregTech5)) {
 				this.registerAchievement(EnumAchievements.Tape_IG, 8, 2, new ItemStack(Computronics.itemTape, 1, 9), this.getAchievement(EnumAchievements.Tape_Star), true, false);
 				this.registerAchievement(EnumAchievements.Tape_IG_Dropped, 8, 10, ItemList.IC2_Scrap.get(1), this.getAchievement(EnumAchievements.Tape_IG), true, false);
+			} else if(Mods.hasVersion(Mods.GregTech, Mods.Versions.GregTech6)) {
+				this.registerAchievement(EnumAchievements.Tape_IG, 8, 2, new ItemStack(Computronics.itemTape, 1, 9), this.getAchievement(EnumAchievements.Tape_Star), true, false);
+				this.registerAchievement(EnumAchievements.Tape_IG_Dropped, 8, 10, IL.IC2_Scrap.get(1), this.getAchievement(EnumAchievements.Tape_IG), true, false);
 			}
 		}
 

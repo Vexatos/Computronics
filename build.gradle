@@ -57,13 +57,13 @@ repositories {
 		url = "http://maven.ic2.player.to/"
 	}
 	maven {
-		name = "Bluepower Repo"
-		url = "http://maven.bluepowermod.com/"
+		name = "GregTech"
+		url = "http://gregtech.overminddl1.com/"
 	}
 	maven {
 		name = "RX14's Repo"
 		url = "http://mvn.rx14.co.uk/repo/"
-    }
+	}
 	ivy {
 		name = "BuildCraft"
 		artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision]-[classifier].[ext]"
@@ -82,6 +82,7 @@ dependencies {
 	compile "li.cil.tis3d:TIS-3D:${config.tis3d.version}:dev"
 	provided "net.industrial-craft:industrialcraft-2:${config.ic2.version}:dev"
 	provided "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech.version}:dev"
+	provided "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech6.version}:dev"
 	compile "mcp.mobius.waila:Waila:${config.waila.version}:dev"
 	compile("com.enderio:EnderIO:${config.enderio.version}:dev") {
 		exclude module: "appliedenergistics2"

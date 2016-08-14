@@ -50,6 +50,8 @@ import pl.asie.computronics.integration.buildcraft.statements.StatementParameter
 import pl.asie.computronics.integration.buildcraft.statements.TriggerProvider;
 import pl.asie.computronics.integration.forestry.IntegrationForestry;
 import pl.asie.computronics.integration.gregtech.GregTechRecipes;
+import pl.asie.computronics.integration.gregtech.ItemPartsGreg;
+import pl.asie.computronics.integration.gregtech.gregtech6.GregTech6Recipes;
 import pl.asie.computronics.integration.railcraft.IntegrationRailcraft;
 import pl.asie.computronics.integration.tis3d.IntegrationTIS3D;
 import pl.asie.computronics.item.ItemTape;
@@ -254,9 +256,8 @@ public class Computronics {
 			itemTape = new ItemTape(Config.TAPE_LENGTHS);
 			GameRegistry.registerItem(itemTape, "computronics.tape");
 
-			if(Mods.hasVersion(Mods.GregTech, Mods.Versions.GregTech5)) {
-				itemPartsGreg = new ItemMultiple(Mods.Computronics, new String[] { "reelChromoxide" });
-				itemPartsGreg.setCreativeTab(tab);
+			if(Mods.isLoaded(Mods.GregTech)) {
+				itemPartsGreg = new ItemPartsGreg();
 				GameRegistry.registerItem(itemPartsGreg, "computronics.gt_parts");
 				proxy.registerEntities();
 			}
@@ -338,6 +339,8 @@ public class Computronics {
 
 		if(Mods.hasVersion(Mods.GregTech, Mods.Versions.GregTech5) && Config.GREGTECH_RECIPES) {
 			ModRecipes.instance = new GregTechRecipes();
+		} else if(Mods.hasVersion(Mods.GregTech, Mods.Versions.GregTech6) && Config.GREGTECH_RECIPES) {
+			ModRecipes.instance = new GregTech6Recipes();
 		} else {
 			ModRecipes.instance = new ModRecipes();
 		}
@@ -348,8 +351,12 @@ public class Computronics {
 		}
 
 		// Mod compat - GregTech
-		if(itemTape != null && Mods.hasVersion(Mods.GregTech, Mods.Versions.GregTech5) && itemPartsGreg != null) {
-			GregTechRecipes.registerStandardGregTechRecipes();
+		if(itemTape != null && itemPartsGreg != null) {
+			if(Mods.hasVersion(Mods.GregTech, Mods.Versions.GregTech5)) {
+				GregTechRecipes.registerStandardGregTechRecipes();
+			} else if(Mods.hasVersion(Mods.GregTech, Mods.Versions.GregTech6)) {
+				GregTech6Recipes.registerStandardGregTechRecipes();
+			}
 		}
 
 		if(Mods.isLoaded(Mods.OpenComputers)) {

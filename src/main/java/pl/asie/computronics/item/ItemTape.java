@@ -40,7 +40,7 @@ public class ItemTape extends Item implements IItemTapeStorage, IMedia, IMediaPr
 	private static final int[] DEFAULT_LENGTHS = { 4, 8, 16, 32, 64, 2, 6, 16, 128, 128 };
 
 	private int[] sizes;
-	private IIcon tape_i, tape_g, tape_d, tape_n, tape_c, tape_co, tape_st, tape_greg, tape_ig;
+	private IIcon tape_i, tape_g, tape_d, tape_n, tape_c, tape_co, tape_st, tape_greg, tape_ig, tape_ig_GT6;
 
 	public ItemTape(String lengths) {
 		super();
@@ -98,6 +98,7 @@ public class ItemTape extends Item implements IItemTapeStorage, IMedia, IMediaPr
 		tape_st = r.registerIcon("computronics:tape_steel");
 		tape_greg = r.registerIcon("computronics:tape_greg");
 		tape_ig = r.registerIcon("computronics:tape_ig");
+		tape_ig_GT6 = r.registerIcon("computronics:tape_ig_GT6");
 	}
 
 	@Override
@@ -123,6 +124,9 @@ public class ItemTape extends Item implements IItemTapeStorage, IMedia, IMediaPr
 				case 8:
 					return tape_n;
 				case 9:
+					if(Mods.hasVersion(Mods.GregTech, Mods.Versions.GregTech6)) {
+						return tape_ig_GT6;
+					}
 					return tape_ig;
 
 				default:
@@ -184,7 +188,7 @@ public class ItemTape extends Item implements IItemTapeStorage, IMedia, IMediaPr
 	@SideOnly(Side.CLIENT)
 	public void getSubItems(Item item, CreativeTabs tabs, List list) {
 		for(int i = 0; i < TAPE_COUNT; i++) {
-			if((i == 7 || i == 9) && !Mods.hasVersion(Mods.GregTech, Mods.Versions.GregTech5)) {
+			if((i == 7 || i == 9) && !Mods.isLoaded(Mods.GregTech)) {
 				//Do nothing. If we return here, we lose all new tapes.
 				continue;
 			}
