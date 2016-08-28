@@ -72,8 +72,9 @@ repositories {
 
 configurations {
 	provided
+	provided2
 	embedded
-	compile.extendsFrom provided, embedded
+	compile.extendsFrom provided, provided2, embedded
 	all*.exclude group: "codechicken"
 }
 
@@ -82,7 +83,7 @@ dependencies {
 	compile "li.cil.tis3d:TIS-3D:${config.tis3d.version}:dev"
 	provided "net.industrial-craft:industrialcraft-2:${config.ic2.version}:dev"
 	provided "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech.version}:dev"
-	provided "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech6.version}:dev"
+	provided2 "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech6.version}:dev"
 	compile "mcp.mobius.waila:Waila:${config.waila.version}:dev"
 	compile("com.enderio:EnderIO:${config.enderio.version}:dev") {
 		exclude module: "appliedenergistics2"
@@ -135,6 +136,7 @@ apply plugin: 'idea'
 idea {
 	module {
 		scopes.PROVIDED.plus += [configurations.provided]
+		scopes.PROVIDED.plus += [configurations.provided2]
 		outputDir = file('build/classes/main')
 	}
 }
