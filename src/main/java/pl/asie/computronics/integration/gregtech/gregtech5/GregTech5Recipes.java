@@ -1,4 +1,4 @@
-package pl.asie.computronics.integration.gregtech;
+package pl.asie.computronics.integration.gregtech.gregtech5;
 
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -24,7 +24,7 @@ import pl.asie.lib.util.color.RecipeColorizer;
 /**
  * @author Vexatos
  */
-public class GregTechRecipes extends ModRecipes {
+public class GregTech5Recipes extends ModRecipes {
 
 	@Override
 	public void registerRecipes() {

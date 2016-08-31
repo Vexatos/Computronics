@@ -1,4 +1,4 @@
-package pl.asie.computronics.integration.gregtech;
+package pl.asie.computronics.integration.gregtech.gregtech5;
 
 import gregtech.api.metatileentity.BaseMetaTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicBatteryBuffer;

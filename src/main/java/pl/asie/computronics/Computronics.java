@@ -49,8 +49,8 @@ import pl.asie.computronics.integration.buildcraft.statements.ActionProvider;
 import pl.asie.computronics.integration.buildcraft.statements.StatementParameters;
 import pl.asie.computronics.integration.buildcraft.statements.TriggerProvider;
 import pl.asie.computronics.integration.forestry.IntegrationForestry;
-import pl.asie.computronics.integration.gregtech.GregTechRecipes;
 import pl.asie.computronics.integration.gregtech.ItemPartsGreg;
+import pl.asie.computronics.integration.gregtech.gregtech5.GregTech5Recipes;
 import pl.asie.computronics.integration.gregtech.gregtech6.GregTech6Recipes;
 import pl.asie.computronics.integration.railcraft.IntegrationRailcraft;
 import pl.asie.computronics.integration.tis3d.IntegrationTIS3D;
@@ -338,7 +338,7 @@ public class Computronics {
 	public void postInit(FMLPostInitializationEvent event) {
 
 		if(Mods.hasVersion(Mods.GregTech, Mods.Versions.GregTech5) && Config.GREGTECH_RECIPES) {
-			ModRecipes.instance = new GregTechRecipes();
+			ModRecipes.instance = new GregTech5Recipes();
 		} else if(Mods.hasVersion(Mods.GregTech, Mods.Versions.GregTech6) && Config.GREGTECH_RECIPES) {
 			ModRecipes.instance = new GregTech6Recipes();
 		} else {
@@ -353,7 +353,7 @@ public class Computronics {
 		// Mod compat - GregTech
 		if(itemTape != null && itemPartsGreg != null) {
 			if(Mods.hasVersion(Mods.GregTech, Mods.Versions.GregTech5)) {
-				GregTechRecipes.registerStandardGregTechRecipes();
+				GregTech5Recipes.registerStandardGregTechRecipes();
 			} else if(Mods.hasVersion(Mods.GregTech, Mods.Versions.GregTech6)) {
 				GregTech6Recipes.registerStandardGregTechRecipes();
 			}
