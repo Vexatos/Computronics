@@ -1,7 +1,5 @@
 package pl.asie.computronics.util.achievements;
 
-//import net.minecraftforge.fml.common.FMLCommonHandler;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stats.Achievement;
@@ -73,6 +71,9 @@ public class ComputronicsAchievements {
 			/*if(Mods.hasVersion(Mods.GregTech, Mods.Versions.GregTech5)) { TODO GregTech
 				this.registerAchievement(EnumAchievements.Tape_IG, 8, 2, new ItemStack(Computronics.itemTape, 1, 9), this.getAchievement(EnumAchievements.Tape_Star), true, false);
 				this.registerAchievement(EnumAchievements.Tape_IG_Dropped, 8, 10, ItemList.IC2_Scrap.get(1), this.getAchievement(EnumAchievements.Tape_IG), true, false);
+			} else if(Mods.hasVersion(Mods.GregTech, Mods.Versions.GregTech6)) {
+				this.registerAchievement(EnumAchievements.Tape_IG, 8, 2, new ItemStack(Computronics.itemTape, 1, 9), this.getAchievement(EnumAchievements.Tape_Star), true, false);
+				this.registerAchievement(EnumAchievements.Tape_IG_Dropped, 8, 10, IL.IC2_Scrap.get(1), this.getAchievement(EnumAchievements.Tape_IG), true, false);
 			}*/
 		}
 

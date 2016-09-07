@@ -58,9 +58,9 @@ repositories {
         url = "http://maven.ic2.player.to"
     }
     /*maven {
-        name = "Bluepower Repo"
-        url = "http://maven.bluepowermod.com"
-    }
+		name = "GregTech"
+		url = "http://gregtech.overminddl1.com/"
+	}
     maven {
         name = "RX14's Repo"
         url = "http://mvn.rx14.co.uk/repo"
@@ -83,16 +83,18 @@ repositories {
 
 /*configurations {
 	provided
+	provided2
 	embedded
-	compile.extendsFrom provided, embedded
+	compile.extendsFrom provided, provided2, embedded
 	all*.exclude group: "codechicken"
 }*/
 
 dependencies {
     deobfCompile "li.cil.oc:OpenComputers:${config.oc.version}"
     deobfCompile "li.cil.tis3d:TIS-3D:${config.tis3d.version}"
-    //deobfCompile "net.industrial-craft:industrialcraft-2:${config.ic2.version}:dev"
-    //provided "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech.version}:dev"
+	//deobfCompile "net.industrial-craft:industrialcraft-2:${config.ic2.version}:dev"
+	//provided "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech.version}:dev"
+	//provided2 "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech6.version}:dev"
     deobfCompile "mcp.mobius.waila:Waila:${config.waila.version}"
     deobfCompile "mcjty.theoneprobe:TheOneProbe:${config.top.version}"
     deobfCompile "pl.asie.charset:charset-lib:${config.charset.version}"
@@ -189,6 +191,7 @@ sourceSets {
 idea {
     module {
         //scopes.PROVIDED.plus += [configurations.provided]
+		//scopes.PROVIDED.plus += [configurations.provided2]
         outputDir = file('build/classes/main')
     }
 }

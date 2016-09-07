@@ -47,7 +47,7 @@ public class Config {
 
 	public static int SOUND_SAMPLE_RATE = 44100;
 	public static int SOUND_VOLUME = 32;
-	public static int SOUND_RADIUS = 16;
+	public static int SOUND_RADIUS = 24;
 	public static int SOUND_CARD_MAX_DELAY = 5000; // TODO
 	public static int SOUND_CARD_QUEUE_SIZE = 1024; // TODO
 	public static int SOUND_CARD_CHANNEL_COUNT = 8; // TODO
@@ -228,7 +228,7 @@ public class Config {
 		}
 
 		// GregTech recipe mode
-		if(Mods.hasVersion(Mods.GregTech, Mods.Versions.GregTech5)) {
+		if(Mods.isLoaded(Mods.GregTech)) {
 			GREGTECH_RECIPES = config.getBoolean("gtRecipeMode", "recipes", true, "Set this to true to enable GregTech-style recipes");
 		}
 
