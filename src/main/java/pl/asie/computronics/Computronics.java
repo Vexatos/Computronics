@@ -257,10 +257,9 @@ public class Computronics {
 			registerItem(itemTape, "tape");
 			itemTape.registerItemModels();
 
-			/*if(Mods.hasVersion(Mods.GregTech, Mods.Versions.GregTech5)) { TODO GregTech
-				itemPartsGreg = new ItemMultiple(Mods.Computronics, new String[] { "reelChromoxide" });
-				itemPartsGreg.setCreativeTab(tab);
-				GameRegistry.register(itemPartsGreg, new ResourceLocation(Mods.Computronics, "computronics.gt_parts"));
+			/*if(Mods.isLoaded(Mods.GregTech)) {
+				itemPartsGreg = new ItemPartsGreg();
+				GameRegistry.registerItem(itemPartsGreg, "computronics.gt_parts");
 				proxy.registerEntities();
 			}*/
 
@@ -346,8 +345,10 @@ public class Computronics {
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
 
-		/*if(Mods.hasVersion(Mods.GregTech, Mods.Versions.GregTech5) && Config.GREGTECH_RECIPES) { TODO GregTech
-			ModRecipes.instance = new GregTechRecipes();
+		/*if(Mods.hasVersion(Mods.GregTech, Mods.Versions.GregTech5) && Config.GREGTECH_RECIPES) {
+			ModRecipes.instance = new GregTech5Recipes();
+		} else if(Mods.hasVersion(Mods.GregTech, Mods.Versions.GregTech6) && Config.GREGTECH_RECIPES) {
+			ModRecipes.instance = new GregTech6Recipes();
 		} else */
 		{
 			ModRecipes.instance = new ModRecipes();
@@ -359,8 +360,12 @@ public class Computronics {
 		}
 
 		// Mod compat - GregTech
-		/*if(itemTape != null && Mods.hasVersion(Mods.GregTech, Mods.Versions.GregTech5) && itemPartsGreg != null) { TODO GregTech
-			GregTechRecipes.registerStandardGregTechRecipes();
+		/*if(itemTape != null && itemPartsGreg != null) {
+			if(Mods.hasVersion(Mods.GregTech, Mods.Versions.GregTech5)) {
+				GregTech5Recipes.registerStandardGregTechRecipes();
+			} else if(Mods.hasVersion(Mods.GregTech, Mods.Versions.GregTech6)) {
+				GregTech6Recipes.registerStandardGregTechRecipes();
+			}
 		}*/
 
 		if(Mods.isLoaded(Mods.OpenComputers)) {

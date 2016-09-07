@@ -1,4 +1,4 @@
-package pl.asie.computronics.integration.gregtech;
+package pl.asie.computronics.integration.gregtech.gregtech5;
 
 import gregtech.api.interfaces.tileentity.IDigitalChest;
 import li.cil.oc.api.machine.Arguments;
