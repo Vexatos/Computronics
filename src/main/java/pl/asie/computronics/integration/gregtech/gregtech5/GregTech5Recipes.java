@@ -1,4 +1,4 @@
-package pl.asie.computronics.integration.gregtech;
+package pl.asie.computronics.integration.gregtech.gregtech5;
 
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -24,7 +24,7 @@ import pl.asie.lib.util.color.RecipeColorizer;
 /**
  * @author Vexatos
  */
-public class GregTechRecipes extends ModRecipes {
+public class GregTech5Recipes extends ModRecipes {
 
 	@Override
 	public void registerRecipes() {
@@ -184,7 +184,7 @@ public class GregTechRecipes extends ModRecipes {
 	public static void registerStandardGregTechRecipes() {
 
 		RecipeUtils.addShapedRecipe(new ItemStack(Computronics.itemTape, 1, 9),
-			"psp", "tct", "prp", 'o', "dustOlivine", 'r', new ItemStack(Computronics.itemParts, 1, 0), 's', ItemList.Duct_Tape.get(1), 't', new ItemStack(Computronics.itemPartsGreg, 1, 0), 'p', "plateTungstenSteel", 'c', "circuitUltimate");
+			"psp", "tct", "prp", 'r', new ItemStack(Computronics.itemParts, 1, 0), 's', ItemList.Duct_Tape.get(1), 't', new ItemStack(Computronics.itemPartsGreg, 1, 0), 'p', "plateTungstenSteel", 'c', "circuitUltimate");
 
 		RecipeUtils.addShapedRecipe(new ItemStack(Computronics.itemPartsGreg, 1, 0),
 			"srs", "fff", "hch", 's', "foilStainlessSteel", 'f', "foilChromiumDioxide", 'c', "craftingToolWireCutter", 'r', "ringNiobiumTitanium", 'h', "cellArgon");
