@@ -258,6 +258,11 @@ local function writeTape(path)
     filesize = tape.getSize()
   end
 
+  --Displays long numbers with commas
+  local function fancyNumber(n)
+    return tostring(math.floor(n)):reverse():gsub("(%d%d%d)", "%1,"):gsub("%D$", ""):reverse()
+  end
+
   repeat
     local bytes = file:read(block)
     if bytes and #bytes > 0 then
@@ -268,7 +273,8 @@ local function writeTape(path)
       end
       term.setCursor(1, y)
       bytery = bytery + #bytes
-      term.write("Read " .. tostring(math.min(bytery, filesize)) .. " of " .. tostring(filesize) .. " bytes...")
+      local displaySize = math.min(bytery, filesize)
+      term.write(string.format("Read %s of %s bytes... (%.2f %%)", fancyNumber(displaySize), fancyNumber(filesize), 100 * displaySize / filesize))
       tape.write(bytes)
     end
   until not bytes or bytery > filesize

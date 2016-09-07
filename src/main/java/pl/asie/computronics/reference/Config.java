@@ -50,6 +50,7 @@ public class Config {
 	public static int SOUND_RADIUS = 16;
 	public static int SOUND_CARD_MAX_DELAY = 5000; // TODO
 	public static int SOUND_CARD_QUEUE_SIZE = 1024; // TODO
+	public static int SOUND_CARD_CHANNEL_COUNT = 8; // TODO
 
 	public static boolean OC_UPGRADE_CAMERA;
 	public static boolean OC_UPGRADE_CHATBOX;
@@ -109,7 +110,7 @@ public class Config {
 
 		SOUND_SAMPLE_RATE = config.getInt("soundSampleRate", "sound.client", 44100, 0, Integer.MAX_VALUE, "The sample rate used for generating sounds. Modify at your own risk.");
 		SOUND_VOLUME = config.getInt("soundVolume", "sound.client", 64, 0, Byte.MAX_VALUE, "The base volume of generated sounds.");
-		SOUND_RADIUS = config.getInt("soundRadius", "sound.client", 16, 1, 32, "The radius in which generated sounds can be heard.");
+		SOUND_RADIUS = config.getInt("soundRadius", "sound.client", 24, 0, 64, "The radius in which generated sounds can be heard.");
 
 		if(Mods.isLoaded(Mods.OpenComputers)) {
 			//Advanced Cipher Block
@@ -227,7 +228,7 @@ public class Config {
 		}
 
 		// GregTech recipe mode
-		if(Mods.hasVersion(Mods.GregTech, Mods.Versions.GregTech5)) {
+		if(Mods.isLoaded(Mods.GregTech)) {
 			GREGTECH_RECIPES = config.getBoolean("gtRecipeMode", "recipes", true, "Set this to true to enable GregTech-style recipes");
 		}
 

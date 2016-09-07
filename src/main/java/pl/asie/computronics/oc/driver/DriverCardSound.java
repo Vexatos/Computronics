@@ -70,7 +70,7 @@ public class DriverCardSound extends ManagedEnvironment implements DeviceInfo, I
 			withComponent("sound").
 			withConnector(Config.SOUND_ENERGY_COST * 42).
 			create());
-		process = new AudioUtil.AudioProcess(8);
+		process = new AudioUtil.AudioProcess(Config.SOUND_CARD_CHANNEL_COUNT);
 
 		if(host.world().isRemote) {
 			SyncHandler.envs.add(this);
@@ -120,8 +120,6 @@ public class DriverCardSound extends ManagedEnvironment implements DeviceInfo, I
 	private Integer codecId;
 	private String clientAddress;
 
-	private final int maxInstructions = Config.SOUND_CARD_QUEUE_SIZE;
-	private final int maxDelayMS = Config.SOUND_CARD_MAX_DELAY;
 	private final int soundTimeoutMS = 250;
 
 	public static class SyncHandler {
@@ -275,7 +273,7 @@ public class DriverCardSound extends ManagedEnvironment implements DeviceInfo, I
 
 	private Object[] tryAdd(Instruction inst) {
 		synchronized(buildBuffer) {
-			if(buildBuffer.size() >= maxInstructions) {
+			if(buildBuffer.size() >= Config.SOUND_CARD_QUEUE_SIZE) {
 				return new Object[] { false, "too many instructions" };
 			}
 			buildBuffer.add(inst);
@@ -316,6 +314,11 @@ public class DriverCardSound extends ManagedEnvironment implements DeviceInfo, I
 	@Callback(doc = "This is a bidirectional table of all valid modes.", direct = true, getter = true)
 	public Object[] modes(Context context, Arguments args) {
 		return new Object[] { compileModes() };
+	}
+
+	@Callback(doc = "This is the number of channels this card provides.", direct = true, getter = true)
+	public Object[] channel_count(Context context, Arguments args) {
+		return new Object[] { process.states.size() };
 	}
 
 	@Callback(doc = "function(volume:number); Sets the general volume of the entire sound card to a value between 0 and 1. Not an instruction, this affects all channels directly.", direct = true)
@@ -386,10 +389,10 @@ public class DriverCardSound extends ManagedEnvironment implements DeviceInfo, I
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] delay(Context context, Arguments args) {
 		int duration = args.checkInteger(0);
-		if(duration < 0 || duration > maxDelayMS) {
-			throw new IllegalArgumentException("invalid duration. must be between 0 and " + maxDelayMS);
+		if(duration < 0 || duration > Config.SOUND_CARD_MAX_DELAY) {
+			throw new IllegalArgumentException("invalid duration. must be between 0 and " + Config.SOUND_CARD_MAX_DELAY);
 		}
-		if(buildDelay + duration > maxDelayMS) {
+		if(buildDelay + duration > Config.SOUND_CARD_MAX_DELAY) {
 			return new Object[] { false, "too many delays in queue" };
 		}
 		buildDelay += duration;
