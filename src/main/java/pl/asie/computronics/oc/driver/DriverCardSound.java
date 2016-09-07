@@ -306,7 +306,7 @@ public class DriverCardSound extends ManagedEnvironment implements DeviceInfo, I
 		if(channel >= 0 && channel < process.states.size()) {
 			return channel;
 		}
-		throw new IllegalArgumentException("invalid channel: " + index);
+		throw new IllegalArgumentException("invalid channel: " + (channel + 1));
 	}
 
 	protected int checkChannel(Arguments args) {
