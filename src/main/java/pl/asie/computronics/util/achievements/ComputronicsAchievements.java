@@ -203,13 +203,13 @@ public class ComputronicsAchievements {
 	private static class RailcraftAchievements {
 
 		private static void initializeRCAchievements() {
-			Computronics.instance.achievements.registerAchievement(EnumAchievements.Locomotive, 0, 4, RailcraftCarts.LOCO_ELECTRIC.getCartItem(), null, false, true);
+			Computronics.instance.achievements.registerAchievement(EnumAchievements.Locomotive, 0, 4, RailcraftCarts.LOCO_ELECTRIC.getStack(), null, false, true);
 			Computronics.instance.achievements.registerAchievement(EnumAchievements.Relay, 2, 6, new ItemStack(Computronics.railcraft.relaySensor), Computronics.instance.achievements.getAchievement(EnumAchievements.Locomotive), false, false);
 		}
 
 		private static void onCrafting(ItemStack stack, EntityPlayer player) {
 			if(stack.getItem() instanceof ItemLocomotive
-				&& ItemLocomotive.getModel(stack).equals(ItemLocomotive.getModel(RailcraftCarts.LOCO_ELECTRIC.getCartItem()))) {
+				&& ItemLocomotive.getModel(stack).equals(ItemLocomotive.getModel(RailcraftCarts.LOCO_ELECTRIC.getStack()))) {
 				Computronics.instance.achievements.triggerAchievement(player, EnumAchievements.Locomotive);
 			}
 		}

@@ -8,7 +8,7 @@ import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.prefab.DriverSidedTileEntity;
 import li.cil.oc.api.prefab.ManagedEnvironment;
-import mods.railcraft.common.blocks.signals.TileSwitchRouting;
+import mods.railcraft.common.blocks.wayobjects.TileSwitchRouting;
 import mods.railcraft.common.items.ItemRoutingTable;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;

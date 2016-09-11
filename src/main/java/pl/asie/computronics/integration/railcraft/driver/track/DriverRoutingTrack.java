@@ -3,13 +3,13 @@ package pl.asie.computronics.integration.railcraft.driver.track;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
+import li.cil.oc.api.driver.SidedBlock;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
-import li.cil.oc.api.prefab.DriverSidedTileEntity;
 import li.cil.oc.api.prefab.ManagedEnvironment;
-import mods.railcraft.common.blocks.tracks.TileTrack;
-import mods.railcraft.common.blocks.tracks.instances.TrackRouting;
+import mods.railcraft.api.tracks.IOutfittedTrackTile;
+import mods.railcraft.common.blocks.tracks.outfitted.kits.TrackKitRouting;
 import mods.railcraft.common.items.ItemTicketGold;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -21,12 +21,14 @@ import pl.asie.computronics.integration.CCMultiPeripheral;
 import pl.asie.computronics.integration.NamedManagedEnvironment;
 import pl.asie.computronics.reference.Names;
 
+;
+
 /**
  * @author Vexatos
  */
 public class DriverRoutingTrack {
 
-	private static Object[] setDestination(TrackRouting tile, Object[] arguments) {
+	private static Object[] setDestination(TrackKitRouting tile, Object[] arguments) {
 		ItemStack ticket = tile.getInventory().getStackInSlot(0);
 		if(ticket != null && ticket.getItem() instanceof ItemTicketGold) {
 			if(!tile.isSecure()) {
@@ -42,7 +44,7 @@ public class DriverRoutingTrack {
 		}
 	}
 
-	private static Object[] getDestination(TrackRouting tile) {
+	private static Object[] getDestination(TrackKitRouting tile) {
 		ItemStack ticket = tile.getInventory().getStackInSlot(0);
 		if(ticket != null && ticket.getItem() instanceof ItemTicketGold) {
 			if(!tile.isSecure()) {
@@ -55,11 +57,11 @@ public class DriverRoutingTrack {
 		}
 	}
 
-	public static class OCDriver extends DriverSidedTileEntity {
+	public static class OCDriver implements SidedBlock {
 
-		public static class InternalManagedEnvironment extends NamedManagedEnvironment<TrackRouting> {
+		public static class InternalManagedEnvironment extends NamedManagedEnvironment<TrackKitRouting> {
 
-			public InternalManagedEnvironment(TrackRouting track) {
+			public InternalManagedEnvironment(TrackKitRouting track) {
 				super(track, Names.Railcraft_RoutingTrack);
 			}
 
@@ -76,9 +78,9 @@ public class DriverRoutingTrack {
 
         /*@Callback(doc = "function():String; gets the current owner of the ticket inside the track")
 		public Object[] getOwner(Context c, Arguments a) {
-            ItemStack ticket = ((TrackRouting) ((ITrackTile) track).getTrackInstance()).getInventory().getStackInSlot(0);
+            ItemStack ticket = ((TrackKitRouting) ((ITrackTile) track).getTrackKitInstance()).getInventory().getStackInSlot(0);
             if(ticket != null && ticket.getItem() instanceof ItemTicketGold) {
-                if(!((TrackRouting) ((ITrackTile) track).getTrackInstance()).isSecure()) {
+                if(!((TrackKitRouting) ((ITrackTile) track).getTrackKitInstance()).isSecure()) {
                     return new Object[] { ItemTicketGold.getOwner(ticket) };
                 } else {
                     return new Object[] { false, "routing track is locked" };
@@ -90,37 +92,32 @@ public class DriverRoutingTrack {
 		}
 
 		@Override
-		public Class<?> getTileEntityClass() {
-			return TileTrack.class;
-		}
-
-		@Override
 		public boolean worksWith(World world, BlockPos pos, EnumFacing side) {
 			TileEntity tileEntity = world.getTileEntity(pos);
-			return (tileEntity != null) && tileEntity instanceof TileTrack
-				&& ((TileTrack) tileEntity).getTrackInstance() instanceof TrackRouting;
+			return (tileEntity != null) && tileEntity instanceof IOutfittedTrackTile
+				&& ((IOutfittedTrackTile) tileEntity).getTrackKitInstance() instanceof TrackKitRouting;
 		}
 
 		@Override
 		public ManagedEnvironment createEnvironment(World world, BlockPos pos, EnumFacing side) {
-			return new InternalManagedEnvironment((TrackRouting) ((TileTrack) world.getTileEntity(pos)).getTrackInstance());
+			return new InternalManagedEnvironment((TrackKitRouting) ((IOutfittedTrackTile) world.getTileEntity(pos)).getTrackKitInstance());
 		}
 	}
 
-	public static class CCDriver extends CCMultiPeripheral<TrackRouting> {
+	public static class CCDriver extends CCMultiPeripheral<TrackKitRouting> {
 
 		public CCDriver() {
 		}
 
-		public CCDriver(TrackRouting track, World world, BlockPos pos) {
+		public CCDriver(TrackKitRouting track, World world, BlockPos pos) {
 			super(track, Names.Railcraft_RoutingTrack, world, pos);
 		}
 
 		@Override
 		public IMultiPeripheral getPeripheral(World world, BlockPos pos, EnumFacing side) {
 			TileEntity te = world.getTileEntity(pos);
-			if(te != null && te instanceof TileTrack && ((TileTrack) te).getTrackInstance() instanceof TrackRouting) {
-				return new CCDriver((TrackRouting) ((TileTrack) te).getTrackInstance(), world, pos);
+			if(te != null && te instanceof IOutfittedTrackTile && ((IOutfittedTrackTile) te).getTrackKitInstance() instanceof TrackKitRouting) {
+				return new CCDriver((TrackKitRouting) ((IOutfittedTrackTile) te).getTrackKitInstance(), world, pos);
 			}
 			return null;
 		}

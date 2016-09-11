@@ -8,7 +8,7 @@ import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.SidedEnvironment;
 import mods.railcraft.api.carts.CartToolsAPI;
 import mods.railcraft.common.carts.EntityLocomotive;
-import mods.railcraft.common.carts.ICartType;
+import mods.railcraft.common.carts.IRailcraftCartContainer;
 import mods.railcraft.common.carts.RailcraftCarts;
 import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.nbt.NBTTagCompound;
@@ -104,8 +104,8 @@ public class TileDigitalDetector extends TileEntityPeripheralBase
 	}
 
 	private void appendCartType(ArrayList<Object> info, EntityMinecart cart) {
-		ICartType type = RailcraftCarts.fromCart(cart);
-		info.add(type.getTag().toLowerCase(Locale.ENGLISH));
+		IRailcraftCartContainer type = RailcraftCarts.fromCart(cart);
+		info.add(type.getBaseTag().toLowerCase(Locale.ENGLISH));
 		String entityName = cart.getName();
 		info.add(entityName);
 	}

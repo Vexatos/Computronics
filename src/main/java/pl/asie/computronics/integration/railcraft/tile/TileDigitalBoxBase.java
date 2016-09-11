@@ -10,7 +10,7 @@ import li.cil.oc.api.network.Message;
 import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.SidedEnvironment;
 import li.cil.oc.api.network.Visibility;
-import mods.railcraft.common.blocks.signals.TileBoxBase;
+import mods.railcraft.common.blocks.wayobjects.TileBoxBase;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;

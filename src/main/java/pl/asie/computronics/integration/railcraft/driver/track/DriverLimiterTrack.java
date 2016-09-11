@@ -3,14 +3,13 @@ package pl.asie.computronics.integration.railcraft.driver.track;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
+import li.cil.oc.api.driver.SidedBlock;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
-import li.cil.oc.api.prefab.DriverSidedTileEntity;
 import li.cil.oc.api.prefab.ManagedEnvironment;
-import mods.railcraft.api.tracks.ITrackTile;
-import mods.railcraft.common.blocks.tracks.TileTrack;
-import mods.railcraft.common.blocks.tracks.instances.TrackLimiter;
+import mods.railcraft.api.tracks.IOutfittedTrackTile;
+import mods.railcraft.common.blocks.tracks.outfitted.kits.TrackKitLimiter;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -26,7 +25,7 @@ import pl.asie.computronics.reference.Names;
  */
 public class DriverLimiterTrack {
 
-	private static Object[] setLimit(TrackLimiter tile, Object[] arguments) {
+	private static Object[] setLimit(TrackKitLimiter tile, Object[] arguments) {
 		byte mode = ((Double) arguments[0]).byteValue();
 		NBTTagCompound data = new NBTTagCompound();
 		tile.writeToNBT(data);
@@ -36,17 +35,17 @@ public class DriverLimiterTrack {
 		return new Object[] { true };
 	}
 
-	private static Object[] getLimit(TrackLimiter tile) {
+	private static Object[] getLimit(TrackKitLimiter tile) {
 		NBTTagCompound data = new NBTTagCompound();
 		tile.writeToNBT(data);
 		return new Object[] { data.hasKey("mode") ? Math.abs(data.getByte("mode") % 4 - 4) : null };
 	}
 
-	public static class OCDriver extends DriverSidedTileEntity {
+	public static class OCDriver implements SidedBlock {
 
-		public static class InternalManagedEnvironment extends NamedManagedEnvironment<TrackLimiter> {
+		public static class InternalManagedEnvironment extends NamedManagedEnvironment<TrackKitLimiter> {
 
-			public InternalManagedEnvironment(TrackLimiter tile) {
+			public InternalManagedEnvironment(TrackKitLimiter tile) {
 				super(tile, Names.Railcraft_LimiterTrack);
 			}
 
@@ -67,37 +66,32 @@ public class DriverLimiterTrack {
 		}
 
 		@Override
-		public Class<?> getTileEntityClass() {
-			return ITrackTile.class;
-		}
-
-		@Override
 		public boolean worksWith(World world, BlockPos pos, EnumFacing side) {
 			TileEntity tileEntity = world.getTileEntity(pos);
-			return (tileEntity != null) && tileEntity instanceof ITrackTile
-				&& ((TileTrack) tileEntity).getTrackInstance() instanceof TrackLimiter;
+			return (tileEntity != null) && tileEntity instanceof IOutfittedTrackTile
+				&& ((IOutfittedTrackTile) tileEntity).getTrackKitInstance() instanceof TrackKitLimiter;
 		}
 
 		@Override
 		public ManagedEnvironment createEnvironment(World world, BlockPos pos, EnumFacing side) {
-			return new InternalManagedEnvironment((TrackLimiter) ((TileTrack) world.getTileEntity(pos)).getTrackInstance());
+			return new InternalManagedEnvironment((TrackKitLimiter) ((IOutfittedTrackTile) world.getTileEntity(pos)).getTrackKitInstance());
 		}
 	}
 
-	public static class CCDriver extends CCMultiPeripheral<TrackLimiter> {
+	public static class CCDriver extends CCMultiPeripheral<TrackKitLimiter> {
 
 		public CCDriver() {
 		}
 
-		public CCDriver(TrackLimiter track, World world, BlockPos pos) {
+		public CCDriver(TrackKitLimiter track, World world, BlockPos pos) {
 			super(track, Names.Railcraft_LimiterTrack, world, pos);
 		}
 
 		@Override
 		public IMultiPeripheral getPeripheral(World world, BlockPos pos, EnumFacing side) {
 			TileEntity te = world.getTileEntity(pos);
-			if(te != null && te instanceof TileTrack && ((TileTrack) te).getTrackInstance() instanceof TrackLimiter) {
-				return new CCDriver((TrackLimiter) ((TileTrack) te).getTrackInstance(), world, pos);
+			if(te != null && te instanceof IOutfittedTrackTile && ((IOutfittedTrackTile) te).getTrackKitInstance() instanceof TrackKitLimiter) {
+				return new CCDriver((TrackKitLimiter) ((IOutfittedTrackTile) te).getTrackKitInstance(), world, pos);
 			}
 			return null;
 		}

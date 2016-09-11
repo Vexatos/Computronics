@@ -1,7 +1,7 @@
 package pl.asie.computronics.integration.railcraft;
 
-import mods.railcraft.common.blocks.signals.ISignalTileDefinition;
-import mods.railcraft.common.blocks.signals.TileSignalFoundation;
+import mods.railcraft.common.blocks.wayobjects.IWayObjectDefinition;
+import mods.railcraft.common.blocks.wayobjects.TileWayObject;
 import net.minecraft.block.Block;
 import net.minecraft.util.EnumFacing;
 import pl.asie.computronics.Computronics;
@@ -11,7 +11,7 @@ import pl.asie.computronics.integration.railcraft.tile.TileDigitalReceiverBox;
 /**
  * @author Vexatos
  */
-public enum SignalTypes implements ISignalTileDefinition {
+public enum SignalTypes implements IWayObjectDefinition {
 	DigitalReceiver("digitalReceiverBox", 3.0F, true, Computronics.railcraft.digitalReceiverBox, TileDigitalReceiverBox.class, EnumFacing.UP),
 	DigitalController("digitalControllerBox", 3.0F, true, Computronics.railcraft.digitalControllerBox, TileDigitalControllerBox.class, EnumFacing.UP);
 
@@ -19,10 +19,10 @@ public enum SignalTypes implements ISignalTileDefinition {
 	private final float hardness;
 	private final String tag;
 	private final EnumFacing direction;
-	private final Class<? extends TileSignalFoundation> tile;
+	private final Class<? extends TileWayObject> tile;
 	private Block block;
 
-	SignalTypes(String tag, float hardness, boolean needsSupport, Block block, Class<? extends TileSignalFoundation> tile, EnumFacing direction) {
+	SignalTypes(String tag, float hardness, boolean needsSupport, Block block, Class<? extends TileWayObject> tile, EnumFacing direction) {
 		this.tag = tag;
 		this.hardness = hardness;
 		this.needsSupport = needsSupport;
@@ -47,7 +47,7 @@ public enum SignalTypes implements ISignalTileDefinition {
 	}
 
 	@Override
-	public Class<? extends TileSignalFoundation> getTileClass() {
+	public Class<? extends TileWayObject> getTileClass() {
 		return this.tile;
 	}
 

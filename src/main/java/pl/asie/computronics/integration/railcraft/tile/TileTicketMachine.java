@@ -331,7 +331,7 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements ITick
 		if(stack == null) {
 			return new Object[] { false, "no golden ticket in specified slot" };
 		}
-		ItemStack ticket = RailcraftItems.ticket.getStack();
+		ItemStack ticket = RailcraftItems.TICKET.getStack();
 		if(ticket == null) {
 			return new Object[] { false, "tickets not enabled in config" };
 		}

@@ -1,7 +1,7 @@
 package pl.asie.computronics.integration.railcraft.block;
 
 import li.cil.oc.api.network.Environment;
-import mods.railcraft.common.blocks.signals.ISignalTileDefinition;
+import mods.railcraft.common.blocks.wayobjects.IWayObjectDefinition;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -23,7 +23,7 @@ public class BlockDigitalControllerBox extends BlockDigitalBoxBase {
 	}
 
 	@Override
-	public ISignalTileDefinition getSignalType(IBlockState state) {
+	public IWayObjectDefinition getSignalType(IBlockState state) {
 		return SignalTypes.DigitalController;
 	}
 

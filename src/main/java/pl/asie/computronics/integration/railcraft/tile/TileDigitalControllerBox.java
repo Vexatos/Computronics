@@ -10,7 +10,7 @@ import mods.railcraft.api.core.WorldCoordinate;
 import mods.railcraft.api.signals.IControllerTile;
 import mods.railcraft.api.signals.SignalAspect;
 import mods.railcraft.api.signals.SignalController;
-import mods.railcraft.common.blocks.signals.ISignalTileDefinition;
+import mods.railcraft.common.blocks.wayobjects.IWayObjectDefinition;
 import mods.railcraft.common.util.misc.Game;
 import mods.railcraft.common.util.network.RailcraftInputStream;
 import mods.railcraft.common.util.network.RailcraftOutputStream;
@@ -88,7 +88,7 @@ public class TileDigitalControllerBox extends TileDigitalBoxBase implements ICon
 	}
 
 	@Override
-	public ISignalTileDefinition getSignalType() {
+	public IWayObjectDefinition getSignalType() {
 		return SignalTypes.DigitalController;
 	}
 

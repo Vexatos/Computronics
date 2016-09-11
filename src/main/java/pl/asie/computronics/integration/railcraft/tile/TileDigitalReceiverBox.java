@@ -11,8 +11,8 @@ import mods.railcraft.api.signals.IReceiverTile;
 import mods.railcraft.api.signals.SignalAspect;
 import mods.railcraft.api.signals.SignalController;
 import mods.railcraft.api.signals.SignalReceiver;
-import mods.railcraft.common.blocks.signals.ISignalTileDefinition;
-import mods.railcraft.common.blocks.signals.TileBoxBase;
+import mods.railcraft.common.blocks.wayobjects.IWayObjectDefinition;
+import mods.railcraft.common.blocks.wayobjects.TileBoxBase;
 import mods.railcraft.common.plugins.buildcraft.triggers.IAspectProvider;
 import mods.railcraft.common.util.network.RailcraftInputStream;
 import mods.railcraft.common.util.network.RailcraftOutputStream;
@@ -141,7 +141,7 @@ public class TileDigitalReceiverBox extends TileDigitalBoxBase implements IRecei
 	}
 
 	@Override
-	public ISignalTileDefinition getSignalType() {
+	public IWayObjectDefinition getSignalType() {
 		return SignalTypes.DigitalReceiver;
 	}
 

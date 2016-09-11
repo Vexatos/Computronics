@@ -3,8 +3,8 @@ package pl.asie.computronics.integration;
 import li.cil.oc.api.detail.ItemInfo;
 import mods.railcraft.common.blocks.RailcraftBlocks;
 import mods.railcraft.common.blocks.detector.EnumDetector;
-import mods.railcraft.common.blocks.signals.EnumSignal;
-import mods.railcraft.common.items.ItemCircuit;
+import mods.railcraft.common.blocks.wayobjects.EnumWayObject;
+import mods.railcraft.common.items.ItemCircuit.EnumCircuit;
 import mods.railcraft.common.items.ItemRail;
 import mods.railcraft.common.items.Metal;
 import mods.railcraft.common.items.RailcraftItems;
@@ -129,11 +129,11 @@ public class ModRecipes {
 		if(Computronics.railcraft.locomotiveRelay != null && Computronics.railcraft.relaySensor != null) {
 			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.railcraft.locomotiveRelay, 1, 0),
 				"srs", "geg", "scs",
-				's', RailcraftItems.plate.getStack(Metal.TIN),
-				'r', RailcraftItems.circuit.getRecipeObject(ItemCircuit.EnumCircuit.RECEIVER),
-				'e', RailcraftItems.circuit.getRecipeObject(ItemCircuit.EnumCircuit.CONTROLLER),
-				'c', RailcraftItems.chargeMeter.getRecipeObject(),
-				'g', RailcraftItems.rail.getRecipeObject(ItemRail.EnumRail.ELECTRIC));
+				's', RailcraftItems.PLATE.getStack(Metal.TIN),
+				'r', RailcraftItems.CIRCUIT.getRecipeObject(EnumCircuit.RECEIVER),
+				'e', RailcraftItems.CIRCUIT.getRecipeObject(EnumCircuit.CONTROLLER),
+				'c', RailcraftItems.CHARGE_METER.getRecipeObject(),
+				'g', RailcraftItems.RAIL.getRecipeObject(ItemRail.EnumRail.ELECTRIC));
 
 			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.railcraft.relaySensor, 1, 0),
 				" n ", "npr", " r ", 'p', "paper", 'n', "nuggetTin", 'r', "dustRedstone");
@@ -141,30 +141,30 @@ public class ModRecipes {
 		if(Computronics.railcraft.digitalReceiverBox != null) {
 			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.railcraft.digitalReceiverBox, 1, 0),
 				"iri", "ibi", "isi", 'i', "ingotIron",
-				'r', RailcraftItems.circuit.getRecipeObject(ItemCircuit.EnumCircuit.RECEIVER),
-				'b', RailcraftBlocks.signal.getRecipeObject(EnumSignal.BOX_RECEIVER),
-				's', RailcraftItems.circuit.getRecipeObject(ItemCircuit.EnumCircuit.SIGNAL));
+				'r', RailcraftItems.CIRCUIT.getRecipeObject(EnumCircuit.RECEIVER),
+				'b', RailcraftBlocks.WAY_OBJECT.getRecipeObject(EnumWayObject.BOX_RECEIVER),
+				's', RailcraftItems.CIRCUIT.getRecipeObject(EnumCircuit.SIGNAL));
 		}
 		if(Computronics.railcraft.digitalControllerBox != null) {
 			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.railcraft.digitalControllerBox, 1, 0),
 				"iri", "ibi", "isi", 'i', "ingotIron",
-				'r', RailcraftItems.circuit.getRecipeObject(ItemCircuit.EnumCircuit.CONTROLLER),
-				'b', RailcraftBlocks.signal.getRecipeObject(EnumSignal.BOX_RECEIVER),
-				's', RailcraftItems.circuit.getRecipeObject(ItemCircuit.EnumCircuit.SIGNAL));
+				'r', RailcraftItems.CIRCUIT.getRecipeObject(EnumCircuit.CONTROLLER),
+				'b', RailcraftBlocks.WAY_OBJECT.getRecipeObject(EnumWayObject.BOX_RECEIVER),
+				's', RailcraftItems.CIRCUIT.getRecipeObject(EnumCircuit.SIGNAL));
 		}
 		if(Computronics.railcraft.detector != null) {
 			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.railcraft.detector, 1, 0),
 				"sss", "sdp", "sss",
-				's', RailcraftItems.plate.getStack(Metal.STEEL),
+				's', RailcraftItems.PLATE.getStack(Metal.STEEL),
 				'p', Blocks.LIGHT_WEIGHTED_PRESSURE_PLATE,
-				'd', RailcraftBlocks.detector.getRecipeObject(EnumDetector.ADVANCED));
+				'd', RailcraftBlocks.DETECTOR.getRecipeObject(EnumDetector.ADVANCED));
 		}
 		if(Computronics.railcraft.ticketMachine != null) {
 			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.railcraft.ticketMachine, 1, 0),
 				"tst", "sdg", "tpt",
 				'd', Blocks.DISPENSER,
-				't', RailcraftItems.plate.getStack(Metal.TIN),
-				's', RailcraftItems.plate.getStack(Metal.STEEL),
+				't', RailcraftItems.PLATE.getStack(Metal.TIN),
+				's', RailcraftItems.PLATE.getStack(Metal.STEEL),
 				'p', Blocks.PISTON,
 				'g', "paneGlassColorless");
 		}

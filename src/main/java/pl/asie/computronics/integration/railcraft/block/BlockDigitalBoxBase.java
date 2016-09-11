@@ -1,7 +1,7 @@
 package pl.asie.computronics.integration.railcraft.block;
 
 import li.cil.oc.api.network.Environment;
-import mods.railcraft.common.blocks.signals.BlockSignalBase;
+import mods.railcraft.common.blocks.wayobjects.BlockWayObject;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
@@ -23,7 +23,7 @@ import pl.asie.computronics.reference.Mods;
 @Optional.InterfaceList({
 	@Optional.Interface(iface = "pl.asie.computronics.oc.block.IComputronicsEnvironmentBlock", modid = Mods.OpenComputers)
 })
-public abstract class BlockDigitalBoxBase extends BlockSignalBase implements IComputronicsEnvironmentBlock, IBlockWithPrefix {
+public abstract class BlockDigitalBoxBase extends BlockWayObject implements IComputronicsEnvironmentBlock, IBlockWithPrefix {
 
 	public BlockDigitalBoxBase(String documentationName) {
 		super();

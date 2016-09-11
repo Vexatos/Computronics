@@ -3,13 +3,13 @@ package pl.asie.computronics.integration.railcraft.driver.track;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
+import li.cil.oc.api.driver.SidedBlock;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.ManagedEnvironment;
-import li.cil.oc.api.prefab.DriverSidedTileEntity;
-import mods.railcraft.common.blocks.tracks.TileTrack;
-import mods.railcraft.common.blocks.tracks.instances.TrackPriming;
+import mods.railcraft.api.tracks.IOutfittedTrackTile;
+import mods.railcraft.common.blocks.tracks.outfitted.kits.TrackKitPriming;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -24,11 +24,11 @@ import pl.asie.computronics.reference.Names;
  */
 public class DriverPrimingTrack {
 
-	private static Object[] getFuse(TrackPriming tile) {
+	private static Object[] getFuse(TrackKitPriming tile) {
 		return new Object[] { tile.getFuse() };
 	}
 
-	private static Object[] setFuse(TrackPriming tile, Object[] arguments) {
+	private static Object[] setFuse(TrackKitPriming tile, Object[] arguments) {
 		int fuse = ((Double) arguments[0]).intValue();
 		if(fuse >= 0 && fuse <= 500) {
 			tile.setFuse((short) fuse);
@@ -38,11 +38,11 @@ public class DriverPrimingTrack {
 		return new Object[] { false, "not a valid fuse time value, needs to be between 0 and 500" };
 	}
 
-	public static class OCDriver extends DriverSidedTileEntity {
+	public static class OCDriver implements SidedBlock {
 
-		public static class InternalManagedEnvironment extends NamedManagedEnvironment<TrackPriming> {
+		public static class InternalManagedEnvironment extends NamedManagedEnvironment<TrackKitPriming> {
 
-			public InternalManagedEnvironment(TrackPriming tile) {
+			public InternalManagedEnvironment(TrackKitPriming tile) {
 				super(tile, Names.Railcraft_PrimingTrack);
 			}
 
@@ -59,37 +59,32 @@ public class DriverPrimingTrack {
 		}
 
 		@Override
-		public Class<?> getTileEntityClass() {
-			return TileTrack.class;
-		}
-
-		@Override
 		public boolean worksWith(World world, BlockPos pos, EnumFacing side) {
 			TileEntity tileEntity = world.getTileEntity(pos);
-			return (tileEntity != null) && tileEntity instanceof TileTrack
-				&& ((TileTrack) tileEntity).getTrackInstance() instanceof TrackPriming;
+			return (tileEntity != null) && tileEntity instanceof IOutfittedTrackTile
+				&& ((IOutfittedTrackTile) tileEntity).getTrackKitInstance() instanceof TrackKitPriming;
 		}
 
 		@Override
 		public ManagedEnvironment createEnvironment(World world, BlockPos pos, EnumFacing side) {
-			return new InternalManagedEnvironment((TrackPriming) ((TileTrack) world.getTileEntity(pos)).getTrackInstance());
+			return new InternalManagedEnvironment((TrackKitPriming) ((IOutfittedTrackTile) world.getTileEntity(pos)).getTrackKitInstance());
 		}
 	}
 
-	public static class CCDriver extends CCMultiPeripheral<TrackPriming> {
+	public static class CCDriver extends CCMultiPeripheral<TrackKitPriming> {
 
 		public CCDriver() {
 		}
 
-		public CCDriver(TrackPriming track, World world, BlockPos pos) {
+		public CCDriver(TrackKitPriming track, World world, BlockPos pos) {
 			super(track, Names.Railcraft_PrimingTrack, world, pos);
 		}
 
 		@Override
 		public IMultiPeripheral getPeripheral(World world, BlockPos pos, EnumFacing side) {
 			TileEntity te = world.getTileEntity(pos);
-			if(te != null && te instanceof TileTrack && ((TileTrack) te).getTrackInstance() instanceof TrackPriming) {
-				return new CCDriver((TrackPriming) ((TileTrack) te).getTrackInstance(), world, pos);
+			if(te != null && te instanceof IOutfittedTrackTile && ((IOutfittedTrackTile) te).getTrackKitInstance() instanceof TrackKitPriming) {
+				return new CCDriver((TrackKitPriming) ((IOutfittedTrackTile) te).getTrackKitInstance(), world, pos);
 			}
 			return null;
 		}
