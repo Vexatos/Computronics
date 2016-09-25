@@ -34,7 +34,7 @@ public class SwarmBehavior extends AbstractBehavior {
 	@Override
 	public void onDisable(DisableReason reason) {
 		if(entity != null) {
-			if(reason == DisableReason.OutOfEnergy && (player.capabilities == null || !player.capabilities.isCreativeMode)) {
+			if(reason != DisableReason.Default && (player.capabilities == null || !player.capabilities.isCreativeMode)) {
 				entity.setPlayer(null);
 				entity.setAggressive(true);
 				entity.setAttackTarget(player);
