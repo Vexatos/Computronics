@@ -19,6 +19,7 @@ import pl.asie.lib.util.ColorUtils;
 import pl.asie.lib.util.internal.IColorable;
 
 import javax.annotation.Nullable;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -103,14 +104,18 @@ public class OCUtils {
 			String tip = StringUtil.localize(key);
 			if(!tip.equals(key)) {
 				String[] lines = tip.split("\n");
-				boolean shouldShorten = (font.getStringWidth(tip) > maxWidth) && !KeyBindings.showExtendedTooltips();
-				if(shouldShorten) {
-					tooltip.add(StringUtil.localizeAndFormat("oc:tooltip.TooLong",
-						KeyBindings.getKeyBindingName(KeyBindings.extendedTooltip())));
+				if(font == null) {
+					Collections.addAll(tooltip, lines);
 				} else {
-					for(String line : lines) {
-						List list = font.listFormattedStringToWidth(line, maxWidth);
-						tooltip.addAll(list);
+					boolean shouldShorten = (font.getStringWidth(tip) > maxWidth) && !KeyBindings.showExtendedTooltips();
+					if(shouldShorten) {
+						tooltip.add(StringUtil.localizeAndFormat("oc:tooltip.TooLong",
+							KeyBindings.getKeyBindingName(KeyBindings.extendedTooltip())));
+					} else {
+						for(String line : lines) {
+							List list = font.listFormattedStringToWidth(line, maxWidth);
+							tooltip.addAll(list);
+						}
 					}
 				}
 			}
