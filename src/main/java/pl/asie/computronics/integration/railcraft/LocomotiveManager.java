@@ -1,12 +1,16 @@
 package pl.asie.computronics.integration.railcraft;
 
 import com.google.common.collect.MapMaker;
+import mods.railcraft.common.blocks.charge.ICartBattery;
 import mods.railcraft.common.carts.EntityLocomotiveElectric;
 import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.minecart.MinecartUpdateEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -87,5 +91,13 @@ public class LocomotiveManager {
 		} else {
 			this.addLocomotive(loco);
 		}
+	}
+
+	@CapabilityInject(ICartBattery.class)
+	public static Capability<ICartBattery> CHARGE_CART_CAPABILITY;
+
+	@Nullable
+	public static ICartBattery getCartBattery(ICapabilityProvider provider) {
+		return provider.hasCapability(CHARGE_CART_CAPABILITY, null) ? provider.getCapability(CHARGE_CART_CAPABILITY, null) : null;
 	}
 }

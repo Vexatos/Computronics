@@ -12,17 +12,12 @@ import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.asie.computronics.Computronics;
-import pl.asie.computronics.integration.railcraft.block.BlockDigitalControllerBox;
 import pl.asie.computronics.integration.railcraft.block.BlockDigitalDetector;
-import pl.asie.computronics.integration.railcraft.block.BlockDigitalReceiverBox;
 import pl.asie.computronics.integration.railcraft.block.BlockLocomotiveRelay;
 import pl.asie.computronics.integration.railcraft.block.BlockTicketMachine;
 import pl.asie.computronics.integration.railcraft.gui.GuiProviderTicketMachine;
-import pl.asie.computronics.integration.railcraft.item.ItemBlockSignalBox;
 import pl.asie.computronics.integration.railcraft.item.ItemRelaySensor;
-import pl.asie.computronics.integration.railcraft.tile.TileDigitalControllerBox;
 import pl.asie.computronics.integration.railcraft.tile.TileDigitalDetector;
-import pl.asie.computronics.integration.railcraft.tile.TileDigitalReceiverBox;
 import pl.asie.computronics.integration.railcraft.tile.TileLocomotiveRelay;
 import pl.asie.computronics.integration.railcraft.tile.TileTicketMachine;
 import pl.asie.computronics.reference.Mods;
@@ -61,14 +56,14 @@ public class IntegrationRailcraft {
 			manager = new LocomotiveManager();
 			MinecraftForge.EVENT_BUS.register(manager);
 		}
-		if(isEnabled(config, "digitalReceiverBox", true)) {
+		/*if(isEnabled(config, "digitalReceiverBox", true)) { TODO Railcraft 10.1
 			this.digitalReceiverBox = new BlockDigitalReceiverBox();
 			Computronics.instance.registerBlockWithTileEntity(digitalReceiverBox, new ItemBlockSignalBox(digitalReceiverBox), TileDigitalReceiverBox.class, "digital_receiver_box");
 		}
 		if(isEnabled(config, "digitalControllerBox", true)) {
 			this.digitalControllerBox = new BlockDigitalControllerBox();
 			Computronics.instance.registerBlockWithTileEntity(digitalControllerBox, new ItemBlockSignalBox(digitalControllerBox), TileDigitalControllerBox.class, "digital_controller_box");
-		}
+		}*/
 		if(isEnabled(config, "digitalDetector", true)) {
 			detector = new BlockDigitalDetector();
 			Computronics.instance.registerBlockWithTileEntity(detector, TileDigitalDetector.class, "digital_detector");

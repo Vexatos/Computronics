@@ -2,7 +2,7 @@
     "forge_marker": 1,
     "defaults": {
         "textures": {
-            "all": "computronics:blocks/digital_detector_side",
+            "side": "computronics:blocks/digital_detector_side",
             "front": "computronics:blocks/digital_detector_front"
         },
         "model": "railcraft:detector"

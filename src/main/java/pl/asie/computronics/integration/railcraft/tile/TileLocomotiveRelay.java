@@ -7,6 +7,7 @@ import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.Connector;
+import mods.railcraft.common.blocks.charge.ICartBattery;
 import mods.railcraft.common.carts.EntityLocomotiveElectric;
 import mods.railcraft.common.items.ItemTicket;
 import mods.railcraft.common.items.ItemTicketGold;
@@ -160,8 +161,9 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase implements ITi
 		if(locomotive.isSecure()) {
 			return "locomotive is locked";
 		}
-		if(Config.LOCOMOTIVE_RELAY_CONSUME_CHARGE && (locomotive.getChargeHandler().getCharge() <= 0
-			|| locomotive.getChargeHandler().removeCharge(10 * amount) < 10 * amount)) {
+		ICartBattery cartBattery = LocomotiveManager.getCartBattery(locomotive);
+		if(Config.LOCOMOTIVE_RELAY_CONSUME_CHARGE && cartBattery != null && (cartBattery.getCharge() <= 0
+			|| cartBattery.removeCharge(10 * amount) < 10 * amount)) {
 			return "locomotive out of energy";
 		}
 		if(isOC && Mods.isLoaded(Mods.OpenComputers)) {
@@ -236,7 +238,8 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase implements ITi
 		if(error != null) {
 			return new Object[] { null, error };
 		}
-		return new Object[] { getLocomotive().getChargeHandler().getCharge() };
+		ICartBattery cartBattery = LocomotiveManager.getCartBattery(getLocomotive());
+		return new Object[] { cartBattery != null ? cartBattery.getCharge() : 0.0D };
 	}
 
 	@Callback(doc = "function():string; returns the current mode of the locomotive; can be 'running', 'idle' or 'shutdown'")
@@ -286,7 +289,8 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase implements ITi
 					return TileLocomotiveRelay.setDestination(getLocomotive(), arguments);
 				}
 				case 2: {
-					return new Object[] { getLocomotive().getChargeHandler().getCharge() };
+					ICartBattery cartBattery = LocomotiveManager.getCartBattery(getLocomotive());
+					return new Object[] { cartBattery != null ? cartBattery.getCharge() : 0.0D };
 				}
 				case 3: {
 					return new Object[] { getLocomotive().getMode().toString() };

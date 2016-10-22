@@ -33,7 +33,7 @@ public class Names {
 		Railcraft_DigitalReceiverBox = "digital_receiver_box",
 		Railcraft_ChargeBlock = "charge_conductor",
 		Railcraft_LauncherTrack = "launcher_track",
-		Railcraft_LimiterTrack = "limiter_track",
+		Railcraft_ThrottleTrack = "throttle_track",
 		Railcraft_LocomotiveTrack = "locomotive_track",
 		Railcraft_PoweredTrack = "powered_track",
 		Railcraft_PrimingTrack = "priming_track",

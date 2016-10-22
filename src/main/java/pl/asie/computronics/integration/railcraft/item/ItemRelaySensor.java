@@ -48,7 +48,7 @@ public class ItemRelaySensor extends Item implements IItemWithPrefix {
 	@Override
 	public EnumActionResult onItemUseFirst(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand) {
 		if(player.worldObj.isRemote) {
-			return EnumActionResult.FAIL;
+			return EnumActionResult.PASS;
 		}
 		TileEntity tile = world.getTileEntity(pos);
 		if(player.isSneaking() && tile != null && tile instanceof TileLocomotiveRelay) {
