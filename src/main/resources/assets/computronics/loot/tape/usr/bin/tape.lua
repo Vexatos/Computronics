@@ -19,6 +19,7 @@ local function printUsage()
   print(" - 'tape pause' to pause playing the tape")
   print(" - 'tape stop' to stop playing and rewind the tape")
   print(" - 'tape rewind' to rewind the tape")
+  print(" - 'tape wipe' to wipe any data on the tape and erase it completely")
   print(" - 'tape label [name]' to label the tape, leave 'name' empty to get current label")
   print(" - 'tape speed <speed>' to set the playback speed. Needs to be between 0.25 and 2.0")
   print(" - 'tape volume <volume>' to set the volume of the tape. Needs to be between 0.0 and 1.0")
@@ -130,11 +131,38 @@ local function volume(vol)
   print("Volume set to " .. vol)
 end
 
-local function writeTape(path)
-  tape.stop()
-  tape.seek(-tape.getSize())
-  tape.stop() --Just making sure
+local function confirm(msg)
+  if not options.y then
+    print(msg)
+    print("Type `y` to confirm, `n` to cancel.")
+    repeat
+      local response = io.read()
+      if response and response:lower():sub(1, 1) == "n" then
+        print("Canceled.")
+        return false
+      end
+    until response and response:lower():sub(1, 1) == "y"
+  end
+  return true
+end
 
+local function wipe()
+  if not confirm("Are you sure you want to wipe this tape?") then return end
+  local k = tape.getSize()
+  tape.stop()
+  tape.seek(-k)
+  tape.stop() --Just making sure
+  tape.seek(-90000)
+  local s = string.rep("\xAA", 8192)
+  for i = 1, k + 8191, 8192 do
+    tape.write(s)
+  end
+  tape.seek(-k)
+  tape.seek(-90000)
+  print("Done.")
+end
+
+local function writeTape(path)
   local file, msg, _, y
   local block = 2048 --How much to read at a time
   if options.b then
@@ -147,17 +175,11 @@ local function writeTape(path)
       return
     end
   end
-  if not options.y then
-    print("Are you sure you want to write to this tape?")
-    print("Type `y` to confirm, `n` to cancel.")
-    repeat
-      local response = io.read()
-      if response and response:lower():sub(1, 1) == "n" then
-        print("Canceled.")
-        return
-      end
-    until response and response:lower():sub(1, 1) == "y"
-  end
+  if not confirm("Are you sure you want to write to this tape?") then return end
+  tape.stop()
+  tape.seek(-tape.getSize())
+  tape.stop() --Just making sure
+
   local bytery = 0 --For the progress indicator
   local filesize = tape.getSize()
 
@@ -301,6 +323,8 @@ elseif args[1] == "volume" then
   volume(args[2])
 elseif args[1] == "write" then
   writeTape(args[2])
+elseif args[1] == "wipe" then
+  wipe()
 else
   printUsage()
 end
