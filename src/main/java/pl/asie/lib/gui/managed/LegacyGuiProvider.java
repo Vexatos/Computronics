@@ -12,6 +12,8 @@ import pl.asie.lib.gui.GuiBase;
 import pl.asie.lib.gui.container.ContainerBase;
 import pl.asie.lib.tile.TileEntityBase;
 
+import javax.annotation.Nullable;
+
 /**
  * @author Vexatos
  */
@@ -22,6 +24,7 @@ public abstract class LegacyGuiProvider extends GuiProviderBase {
 
 	protected abstract ContainerBase makeContainerBase(int guiID, EntityPlayer entityPlayer, World world, BlockPos pos, TileEntityBase tile);
 
+	@Nullable
 	@Override
 	@SideOnly(Side.CLIENT)
 	public GuiContainer makeGui(int guiID, EntityPlayer entityPlayer, World world, int x, int y, int z) {
@@ -33,6 +36,7 @@ public abstract class LegacyGuiProvider extends GuiProviderBase {
 		return null;
 	}
 
+	@Nullable
 	@Override
 	public Container makeContainer(int guiID, EntityPlayer entityPlayer, World world, int x, int y, int z) {
 		final BlockPos pos = new BlockPos(x, y, z);

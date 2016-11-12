@@ -3,21 +3,22 @@ package pl.asie.computronics.integration.railcraft.driver.track;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
+import li.cil.oc.api.driver.SidedBlock;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
-import li.cil.oc.api.prefab.DriverSidedTileEntity;
 import li.cil.oc.api.prefab.ManagedEnvironment;
-import mods.railcraft.common.blocks.tracks.TileTrack;
-import mods.railcraft.common.blocks.tracks.TrackLocomotive;
+import mods.railcraft.api.tracks.IOutfittedTrackTile;
+import mods.railcraft.common.blocks.tracks.outfitted.kits.TrackKitLocomotive;
 import mods.railcraft.common.carts.EntityLocomotive;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
 import pl.asie.computronics.integration.CCMultiPeripheral;
-import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
+import pl.asie.computronics.integration.NamedManagedEnvironment;
 import pl.asie.computronics.reference.Names;
 
 import java.util.LinkedHashMap;
@@ -28,7 +29,7 @@ import java.util.Locale;
  */
 public class DriverLocomotiveTrack {
 
-	private static Object[] setMode(TrackLocomotive tile, Object[] arguments) {
+	private static Object[] setMode(TrackKitLocomotive tile, Object[] arguments) {
 		byte mode = ((Double) arguments[0]).byteValue();
 		NBTTagCompound data = new NBTTagCompound();
 		tile.writeToNBT(data);
@@ -38,7 +39,7 @@ public class DriverLocomotiveTrack {
 		return new Object[] { true };
 	}
 
-	private static Object[] getMode(TrackLocomotive tile) {
+	private static Object[] getMode(TrackKitLocomotive tile) {
 		NBTTagCompound data = new NBTTagCompound();
 		tile.writeToNBT(data);
 		return new Object[] { data.hasKey("mode") ? Math.abs(data.getByte("mode") % EntityLocomotive.LocoMode.VALUES.length - 2) : null };
@@ -52,11 +53,11 @@ public class DriverLocomotiveTrack {
 		return new Object[] { modeMap };
 	}
 
-	public static class OCDriver extends DriverSidedTileEntity {
+	public static class OCDriver implements SidedBlock {
 
-		public static class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TrackLocomotive> {
+		public static class InternalManagedEnvironment extends NamedManagedEnvironment<TrackKitLocomotive> {
 
-			public InternalManagedEnvironment(TrackLocomotive tile) {
+			public InternalManagedEnvironment(TrackKitLocomotive tile) {
 				super(tile, Names.Railcraft_LocomotiveTrack);
 			}
 
@@ -82,37 +83,32 @@ public class DriverLocomotiveTrack {
 		}
 
 		@Override
-		public Class<?> getTileEntityClass() {
-			return TileTrack.class;
+		public boolean worksWith(World world, BlockPos pos, EnumFacing side) {
+			TileEntity tileEntity = world.getTileEntity(pos);
+			return (tileEntity != null) && tileEntity instanceof IOutfittedTrackTile
+				&& ((IOutfittedTrackTile) tileEntity).getTrackKitInstance() instanceof TrackKitLocomotive;
 		}
 
 		@Override
-		public boolean worksWith(World world, int x, int y, int z, ForgeDirection side) {
-			TileEntity tileEntity = world.getTileEntity(x, y, z);
-			return (tileEntity != null) && tileEntity instanceof TileTrack
-				&& ((TileTrack) tileEntity).getTrackInstance() instanceof TrackLocomotive;
-		}
-
-		@Override
-		public ManagedEnvironment createEnvironment(World world, int x, int y, int z, ForgeDirection side) {
-			return new InternalManagedEnvironment((TrackLocomotive) ((TileTrack) world.getTileEntity(x, y, z)).getTrackInstance());
+		public ManagedEnvironment createEnvironment(World world, BlockPos pos, EnumFacing side) {
+			return new InternalManagedEnvironment((TrackKitLocomotive) ((IOutfittedTrackTile) world.getTileEntity(pos)).getTrackKitInstance());
 		}
 	}
 
-	public static class CCDriver extends CCMultiPeripheral<TrackLocomotive> {
+	public static class CCDriver extends CCMultiPeripheral<TrackKitLocomotive> {
 
 		public CCDriver() {
 		}
 
-		public CCDriver(TrackLocomotive track, World world, int x, int y, int z) {
-			super(track, Names.Railcraft_LocomotiveTrack, world, x, y, z);
+		public CCDriver(TrackKitLocomotive track, World world, BlockPos pos) {
+			super(track, Names.Railcraft_LocomotiveTrack, world, pos);
 		}
 
 		@Override
-		public IMultiPeripheral getPeripheral(World world, int x, int y, int z, int side) {
-			TileEntity te = world.getTileEntity(x, y, z);
-			if(te != null && te instanceof TileTrack && ((TileTrack) te).getTrackInstance() instanceof TrackLocomotive) {
-				return new CCDriver((TrackLocomotive) ((TileTrack) te).getTrackInstance(), world, x, y, z);
+		public IMultiPeripheral getPeripheral(World world, BlockPos pos, EnumFacing side) {
+			TileEntity te = world.getTileEntity(pos);
+			if(te != null && te instanceof IOutfittedTrackTile && ((IOutfittedTrackTile) te).getTrackKitInstance() instanceof TrackKitLocomotive) {
+				return new CCDriver((TrackKitLocomotive) ((IOutfittedTrackTile) te).getTrackKitInstance(), world, pos);
 			}
 			return null;
 		}

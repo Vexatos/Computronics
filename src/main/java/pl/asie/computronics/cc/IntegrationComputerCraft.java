@@ -20,6 +20,17 @@ import pl.asie.computronics.integration.enderio.DriverTransceiver;
 import pl.asie.computronics.integration.enderio.DriverVacuumChest;
 import pl.asie.computronics.integration.enderio.DriverWeatherObelisk;
 import pl.asie.computronics.integration.flamingo.DriverFlamingo;
+import pl.asie.computronics.integration.railcraft.driver.DriverBoilerFirebox;
+import pl.asie.computronics.integration.railcraft.driver.DriverElectricGrid;
+import pl.asie.computronics.integration.railcraft.driver.DriverRoutingDetector;
+import pl.asie.computronics.integration.railcraft.driver.DriverRoutingSwitch;
+import pl.asie.computronics.integration.railcraft.driver.DriverSteamTurbine;
+import pl.asie.computronics.integration.railcraft.driver.track.DriverLauncherTrack;
+import pl.asie.computronics.integration.railcraft.driver.track.DriverLocomotiveTrack;
+import pl.asie.computronics.integration.railcraft.driver.track.DriverPoweredTrack;
+import pl.asie.computronics.integration.railcraft.driver.track.DriverPrimingTrack;
+import pl.asie.computronics.integration.railcraft.driver.track.DriverRoutingTrack;
+import pl.asie.computronics.integration.railcraft.driver.track.DriverThrottleTrack;
 import pl.asie.computronics.integration.storagedrawers.DriverDrawerGroup;
 import pl.asie.computronics.reference.Compat;
 import pl.asie.computronics.reference.Config;
@@ -71,7 +82,7 @@ public class IntegrationComputerCraft {
 			if(compat.isCompatEnabled(Compat.FZ_ChargePeripheral)) {
 				registerMultiPeripheralProvider(new DriverChargeConductor.CCDriver());
 			}
-		}
+		}*/
 
 		if(Mods.isLoaded(Mods.Railcraft)) {
 			if(compat.isCompatEnabled(Compat.Railcraft_Routing)) {
@@ -80,7 +91,7 @@ public class IntegrationComputerCraft {
 				registerMultiPeripheralProvider(new DriverRoutingDetector.CCDriver());
 				registerMultiPeripheralProvider(new DriverRoutingSwitch.CCDriver());
 				registerMultiPeripheralProvider(new DriverElectricGrid.CCDriver());
-				registerMultiPeripheralProvider(new DriverLimiterTrack.CCDriver());
+				registerMultiPeripheralProvider(new DriverThrottleTrack.CCDriver());
 				registerMultiPeripheralProvider(new DriverLocomotiveTrack.CCDriver());
 				registerMultiPeripheralProvider(new DriverLauncherTrack.CCDriver());
 				registerMultiPeripheralProvider(new DriverPrimingTrack.CCDriver());
@@ -89,7 +100,7 @@ public class IntegrationComputerCraft {
 			}
 		}
 
-		if(Mods.isLoaded(Mods.ArmourersWorkshop)) {
+		/*if(Mods.isLoaded(Mods.ArmourersWorkshop)) {
 			if(compat.isCompatEnabled(Compat.AW_Mannequins)) {
 				registerMultiPeripheralProvider(new DriverMannequin.CCDriver());
 			}

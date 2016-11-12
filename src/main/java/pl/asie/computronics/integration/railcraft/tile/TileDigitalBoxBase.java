@@ -1,8 +1,5 @@
 package pl.asie.computronics.integration.railcraft.tile;
 
-import cpw.mods.fml.common.Optional;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import li.cil.oc.api.Network;
@@ -13,14 +10,17 @@ import li.cil.oc.api.network.Message;
 import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.SidedEnvironment;
 import li.cil.oc.api.network.Visibility;
-import mods.railcraft.common.blocks.signals.TileBoxBase;
+import mods.railcraft.common.blocks.wayobjects.TileBoxBase;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ITickable;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
 import pl.asie.computronics.cc.ISidedPeripheral;
 import pl.asie.computronics.reference.Mods;
@@ -42,7 +42,7 @@ import java.util.Map;
 })
 public abstract class TileDigitalBoxBase extends TileBoxBase
 	implements Environment, SidedEnvironment, DeviceInfo, IMultiPeripheral, IComputronicsPeripheral,
-	ISidedPeripheral, BlacklistedPeripheral {
+	ISidedPeripheral, BlacklistedPeripheral, ITickable {
 
 	public TileDigitalBoxBase(String name) {
 		super();
@@ -61,8 +61,8 @@ public abstract class TileDigitalBoxBase extends TileBoxBase
 	}
 
 	@Override
-	public void updateEntity() {
-		super.updateEntity();
+	public void update() {
+		super.update();
 		if(!addedToNetwork && Mods.isLoaded(Mods.OpenComputers)) {
 			addedToNetwork = true;
 			Network.joinOrCreateNetwork(this);
@@ -71,31 +71,24 @@ public abstract class TileDigitalBoxBase extends TileBoxBase
 
 	@Override
 	public Block getBlockType() {
-		if(this.blockType == null) {
-			this.blockType = this.worldObj.getBlock(this.xCoord, this.yCoord, this.zCoord);
+		if(this.blockType == null && this.worldObj != null) {
+			this.blockType = this.worldObj.getBlockState(this.pos).getBlock();
 		}
 		return this.blockType;
 	}
 
 	@Override
-	public boolean isSideSolid(IBlockAccess world, int i, int j, int k, ForgeDirection side) {
-		return side == ForgeDirection.UP;
+	public boolean isSideSolid(IBlockAccess world, BlockPos pos, EnumFacing side) {
+		return side == EnumFacing.UP;
 	}
 
 	@Override
-	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
-		NBTTagCompound tag = pkt.func_148857_g();
-		if(tag != null) {
-			readFromNBT(tag);
-		}
-	}
-
-	@Override
-	public void writeToNBT(NBTTagCompound data) {
-		super.writeToNBT(data);
+	public NBTTagCompound writeToNBT(NBTTagCompound data) {
+		data = super.writeToNBT(data);
 		if(Mods.isLoaded(Mods.OpenComputers)) {
 			writeToNBT_OC(data);
 		}
+		return data;
 	}
 
 	@Override
@@ -180,15 +173,15 @@ public abstract class TileDigitalBoxBase extends TileBoxBase
 
 	@Override
 	@Optional.Method(modid = Mods.OpenComputers)
-	public Node sidedNode(ForgeDirection forgeDirection) {
-		return forgeDirection == ForgeDirection.DOWN || forgeDirection == ForgeDirection.UP ? node() : null;
+	public Node sidedNode(EnumFacing forgeDirection) {
+		return forgeDirection == EnumFacing.DOWN || forgeDirection == EnumFacing.UP ? node() : null;
 	}
 
 	@Override
 	@Optional.Method(modid = Mods.OpenComputers)
 	@SideOnly(Side.CLIENT)
-	public boolean canConnect(ForgeDirection forgeDirection) {
-		return forgeDirection == ForgeDirection.DOWN || forgeDirection == ForgeDirection.UP;
+	public boolean canConnect(EnumFacing forgeDirection) {
+		return forgeDirection == EnumFacing.DOWN || forgeDirection == EnumFacing.UP;
 	}
 
 	@Override
@@ -265,15 +258,11 @@ public abstract class TileDigitalBoxBase extends TileBoxBase
 		}
 		if(other instanceof TileEntity) {
 			TileEntity tother = (TileEntity) other;
-			if(!tother.getWorldObj().equals(worldObj)) {
-				return false;
-			}
-			if(tother.xCoord != this.xCoord || tother.yCoord != this.yCoord || tother.zCoord != this.zCoord) {
-				return false;
-			}
+			return tother.getWorld().equals(worldObj)
+				&& tother.getPos().equals(this.getPos());
 		}
 
-		return true;
+		return false;
 	}
 
 	@Override
@@ -283,8 +272,7 @@ public abstract class TileDigitalBoxBase extends TileBoxBase
 	}
 
 	@Override
-	public boolean canConnectPeripheralOnSide(int side) {
-		ForgeDirection forgeDirection = ForgeDirection.getOrientation(side);
-		return forgeDirection == ForgeDirection.DOWN || forgeDirection == ForgeDirection.UP;
+	public boolean canConnectPeripheralOnSide(EnumFacing side) {
+		return side == EnumFacing.DOWN || side == EnumFacing.UP;
 	}
 }

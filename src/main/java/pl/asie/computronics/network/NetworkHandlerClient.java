@@ -96,12 +96,12 @@ public class NetworkHandlerClient extends MessageHandlerBase {
 				}
 			}
 			break;
-			/*case TICKET_SYNC: {
+			case TICKET_SYNC: {
 				if(Mods.isLoaded(Mods.Railcraft)) {
 					Computronics.railcraft.onMessageRailcraft(packet, player, false);
 				}
 			}
-			break;*/
+			break;
 		}
 	}
 }

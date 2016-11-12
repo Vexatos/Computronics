@@ -3,20 +3,21 @@ package pl.asie.computronics.integration.railcraft.driver.track;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
+import li.cil.oc.api.driver.SidedBlock;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.ManagedEnvironment;
-import li.cil.oc.api.prefab.DriverSidedTileEntity;
-import mods.railcraft.common.blocks.tracks.TileTrack;
-import mods.railcraft.common.blocks.tracks.TrackLauncher;
+import mods.railcraft.api.tracks.IOutfittedTrackTile;
+import mods.railcraft.common.blocks.tracks.outfitted.kits.TrackKitLauncher;
 import mods.railcraft.common.core.RailcraftConfig;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
 import pl.asie.computronics.integration.CCMultiPeripheral;
-import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
+import pl.asie.computronics.integration.NamedManagedEnvironment;
 import pl.asie.computronics.reference.Names;
 
 /**
@@ -24,11 +25,11 @@ import pl.asie.computronics.reference.Names;
  */
 public class DriverLauncherTrack {
 
-	private static Object[] getForce(TrackLauncher tile) {
+	private static Object[] getForce(TrackKitLauncher tile) {
 		return new Object[] { ((int) tile.getLaunchForce()) };
 	}
 
-	private static Object[] setForce(TrackLauncher tile, Object[] arguments) {
+	private static Object[] setForce(TrackKitLauncher tile, Object[] arguments) {
 		int force = ((Double) arguments[0]).intValue();
 		if(force >= 5 && force <= RailcraftConfig.getLaunchRailMaxForce()) {
 			tile.setLaunchForce(force);
@@ -38,11 +39,11 @@ public class DriverLauncherTrack {
 		return new Object[] { false, "not a valid force value, needs to be between 5 and " + RailcraftConfig.getLaunchRailMaxForce() };
 	}
 
-	public static class OCDriver extends DriverSidedTileEntity {
+	public static class OCDriver implements SidedBlock {
 
-		public static class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TrackLauncher> {
+		public static class InternalManagedEnvironment extends NamedManagedEnvironment<TrackKitLauncher> {
 
-			public InternalManagedEnvironment(TrackLauncher tile) {
+			public InternalManagedEnvironment(TrackKitLauncher tile) {
 				super(tile, Names.Railcraft_LauncherTrack);
 			}
 
@@ -59,37 +60,32 @@ public class DriverLauncherTrack {
 		}
 
 		@Override
-		public Class<?> getTileEntityClass() {
-			return TileTrack.class;
+		public boolean worksWith(World world, BlockPos pos, EnumFacing side) {
+			TileEntity tileEntity = world.getTileEntity(pos);
+			return (tileEntity != null) && tileEntity instanceof IOutfittedTrackTile
+				&& ((IOutfittedTrackTile) tileEntity).getTrackKitInstance() instanceof TrackKitLauncher;
 		}
 
 		@Override
-		public boolean worksWith(World world, int x, int y, int z, ForgeDirection side) {
-			TileEntity tileEntity = world.getTileEntity(x, y, z);
-			return (tileEntity != null) && tileEntity instanceof TileTrack
-				&& ((TileTrack) tileEntity).getTrackInstance() instanceof TrackLauncher;
-		}
-
-		@Override
-		public ManagedEnvironment createEnvironment(World world, int x, int y, int z, ForgeDirection side) {
-			return new InternalManagedEnvironment((TrackLauncher) ((TileTrack) world.getTileEntity(x, y, z)).getTrackInstance());
+		public ManagedEnvironment createEnvironment(World world, BlockPos pos, EnumFacing side) {
+			return new InternalManagedEnvironment((TrackKitLauncher) ((IOutfittedTrackTile) world.getTileEntity(pos)).getTrackKitInstance());
 		}
 	}
 
-	public static class CCDriver extends CCMultiPeripheral<TrackLauncher> {
+	public static class CCDriver extends CCMultiPeripheral<TrackKitLauncher> {
 
 		public CCDriver() {
 		}
 
-		public CCDriver(TrackLauncher track, World world, int x, int y, int z) {
-			super(track, Names.Railcraft_LauncherTrack, world, x, y, z);
+		public CCDriver(TrackKitLauncher track, World world, BlockPos pos) {
+			super(track, Names.Railcraft_LauncherTrack, world, pos);
 		}
 
 		@Override
-		public IMultiPeripheral getPeripheral(World world, int x, int y, int z, int side) {
-			TileEntity te = world.getTileEntity(x, y, z);
-			if(te != null && te instanceof TileTrack && ((TileTrack) te).getTrackInstance() instanceof TrackLauncher) {
-				return new CCDriver((TrackLauncher) ((TileTrack) te).getTrackInstance(), world, x, y, z);
+		public IMultiPeripheral getPeripheral(World world, BlockPos pos, EnumFacing side) {
+			TileEntity te = world.getTileEntity(pos);
+			if(te != null && te instanceof IOutfittedTrackTile && ((IOutfittedTrackTile) te).getTrackKitInstance() instanceof TrackKitLauncher) {
+				return new CCDriver((TrackKitLauncher) ((IOutfittedTrackTile) te).getTrackKitInstance(), world, pos);
 			}
 			return null;
 		}

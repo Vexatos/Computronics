@@ -5,6 +5,8 @@ import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import mods.railcraft.common.blocks.machine.beta.TileBoilerFirebox;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
 import pl.asie.computronics.integration.CCMultiPeripheral;
@@ -21,15 +23,15 @@ public class DriverBoilerFirebox {
 			super();
 		}
 
-		public CCDriver(TileBoilerFirebox tile, World world, int x, int y, int z) {
-			super(tile, Names.Railcraft_BoilerFirebox, world, x, y, z);
+		public CCDriver(TileBoilerFirebox tile, World world, BlockPos pos) {
+			super(tile, Names.Railcraft_BoilerFirebox, world, pos);
 		}
 
 		@Override
-		public IMultiPeripheral getPeripheral(World world, int x, int y, int z, int side) {
-			TileEntity te = world.getTileEntity(x, y, z);
+		public IMultiPeripheral getPeripheral(World world, BlockPos pos, EnumFacing side) {
+			TileEntity te = world.getTileEntity(pos);
 			if(te != null && te instanceof TileBoilerFirebox) {
-				return new CCDriver((TileBoilerFirebox) te, world, x, y, z);
+				return new CCDriver((TileBoilerFirebox) te, world, pos);
 			}
 			return null;
 		}

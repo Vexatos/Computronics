@@ -2,6 +2,7 @@ package pl.asie.computronics;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -45,6 +46,7 @@ import pl.asie.computronics.gui.providers.GuiProviderTapeDrive;
 import pl.asie.computronics.integration.ModRecipes;
 import pl.asie.computronics.integration.charset.IntegrationCharset;
 import pl.asie.computronics.integration.forestry.IntegrationForestry;
+import pl.asie.computronics.integration.railcraft.IntegrationRailcraft;
 import pl.asie.computronics.integration.tis3d.IntegrationTIS3D;
 import pl.asie.computronics.item.ItemMultipleComputronics;
 import pl.asie.computronics.item.ItemTape;
@@ -83,11 +85,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Mod(modid = Mods.Computronics, name = Mods.Computronics_NAME, version = "@VERSION@",
-	dependencies = "required-after:asielib;required-after:Forge@[12.18.1.2011,);"
+	dependencies = "required-after:asielib;required-after:Forge@[12.18.2.2099,);"
 		+ "after:ComputerCraft@[1.80,);after:OpenComputers@[1.6.0,);after:tis3d@[0.8.3,);"
 		+ "before:OpenPeripheralCore@[1.1,);before:OpenPeripheralApi@[3.2,);"
 		+ "after:MineFactoryReloaded;after:RedLogic@[59.1.9,);after:ProjRed|Core;"
-		+ "after:BuildCraft|Core@[7.2.0,);after:Railcraft@[9.10.0.0,);"
+		+ "after:BuildCraft|Core@[7.2.0,);after:Railcraft@[10.0,);"
 		+ "after:gregtech;after:EnderIO@[1.10.2-3.0.1,);"
 		+ "after:forestry@[5.1.8,);after:Waila@[1.5.10,);"
 		+ "after:MekanismAPI|energy@[8.0.0,);after:Flamingo@[1.7.10-1.3,);"
@@ -130,7 +132,7 @@ public class Computronics {
 	public static IntegrationComputerCraft computercraft;
 
 	//public static IntegrationBuildCraft buildcraft;
-	//public static IntegrationRailcraft railcraft;
+	public static IntegrationRailcraft railcraft;
 	public static IntegrationForestry forestry;
 	public static IntegrationTIS3D tis3D;
 	public static IntegrationCharset charset;
@@ -157,11 +159,11 @@ public class Computronics {
 		return config.isEnabled(name, def);
 	}
 
-	private void registerBlockWithTileEntity(BlockBase block, Class<? extends TileEntity> tile, String name) {
+	public void registerBlockWithTileEntity(BlockBase block, Class<? extends TileEntity> tile, String name) {
 		registerBlockWithTileEntity(block, new ComputronicsItemBlock(block), tile, name);
 	}
 
-	private void registerBlockWithTileEntity(BlockBase block, ItemBlock itemBlock, Class<? extends TileEntity> tile, String name) {
+	public void registerBlockWithTileEntity(Block block, ItemBlock itemBlock, Class<? extends TileEntity> tile, String name) {
 		GameRegistry.register(block, new ResourceLocation(Mods.Computronics, name));
 		GameRegistry.register(itemBlock, block.getRegistryName());
 		GameRegistry.registerTileEntity(tile, name);
@@ -269,10 +271,10 @@ public class Computronics {
 			itemParts.registerItemModels();
 		}
 
-		/*if(Mods.isLoaded(Mods.Railcraft)) {
+		if(Mods.isLoaded(Mods.Railcraft)) {
 			railcraft = new IntegrationRailcraft();
 			railcraft.preInit(config.config);
-		}*/
+		}
 
 		if(Mods.isLoaded(Mods.ComputerCraft)) {
 			computercraft = new IntegrationComputerCraft(this);

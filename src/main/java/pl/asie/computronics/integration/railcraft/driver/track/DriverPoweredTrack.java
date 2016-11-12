@@ -3,20 +3,21 @@ package pl.asie.computronics.integration.railcraft.driver.track;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
+import li.cil.oc.api.driver.SidedBlock;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.ManagedEnvironment;
-import li.cil.oc.api.prefab.DriverSidedTileEntity;
-import mods.railcraft.api.tracks.ITrackPowered;
-import mods.railcraft.common.blocks.signals.ISecure;
-import mods.railcraft.common.blocks.tracks.TileTrack;
+import mods.railcraft.api.tracks.IOutfittedTrackTile;
+import mods.railcraft.api.tracks.ITrackKitPowered;
+import mods.railcraft.common.blocks.wayobjects.ISecure;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
 import pl.asie.computronics.integration.CCMultiPeripheral;
-import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
+import pl.asie.computronics.integration.NamedManagedEnvironment;
 import pl.asie.computronics.reference.Names;
 
 /**
@@ -24,7 +25,7 @@ import pl.asie.computronics.reference.Names;
  */
 public class DriverPoweredTrack {
 
-	private static Object[] isPowered(ITrackPowered tile) {
+	private static Object[] isPowered(ITrackKitPowered tile) {
 		if(!(tile instanceof ISecure && ((ISecure) tile).isSecure())) {
 			return new Object[] { tile.isPowered() };
 		} else {
@@ -32,11 +33,11 @@ public class DriverPoweredTrack {
 		}
 	}
 
-	public static class OCDriver extends DriverSidedTileEntity {
+	public static class OCDriver implements SidedBlock {
 
-		public static class InternalManagedEnvironment extends ManagedEnvironmentOCTile<ITrackPowered> {
+		public static class InternalManagedEnvironment extends NamedManagedEnvironment<ITrackKitPowered> {
 
-			public InternalManagedEnvironment(ITrackPowered tile) {
+			public InternalManagedEnvironment(ITrackKitPowered tile) {
 				super(tile, Names.Railcraft_PoweredTrack);
 			}
 
@@ -52,30 +53,25 @@ public class DriverPoweredTrack {
 		}
 
 		@Override
-		public Class<?> getTileEntityClass() {
-			return TileTrack.class;
+		public boolean worksWith(World world, BlockPos pos, EnumFacing side) {
+			TileEntity tileEntity = world.getTileEntity(pos);
+			return (tileEntity != null) && tileEntity instanceof IOutfittedTrackTile
+				&& ((IOutfittedTrackTile) tileEntity).getTrackKitInstance() instanceof ITrackKitPowered;
 		}
 
 		@Override
-		public boolean worksWith(World world, int x, int y, int z, ForgeDirection side) {
-			TileEntity tileEntity = world.getTileEntity(x, y, z);
-			return (tileEntity != null) && tileEntity instanceof TileTrack
-				&& ((TileTrack) tileEntity).getTrackInstance() instanceof ITrackPowered;
-		}
-
-		@Override
-		public ManagedEnvironment createEnvironment(World world, int x, int y, int z, ForgeDirection side) {
-			return new InternalManagedEnvironment((ITrackPowered) ((TileTrack) world.getTileEntity(x, y, z)).getTrackInstance());
+		public ManagedEnvironment createEnvironment(World world, BlockPos pos, EnumFacing side) {
+			return new InternalManagedEnvironment((ITrackKitPowered) ((IOutfittedTrackTile) world.getTileEntity(pos)).getTrackKitInstance());
 		}
 	}
 
-	public static class CCDriver extends CCMultiPeripheral<ITrackPowered> {
+	public static class CCDriver extends CCMultiPeripheral<ITrackKitPowered> {
 
 		public CCDriver() {
 		}
 
-		public CCDriver(ITrackPowered track, World world, int x, int y, int z) {
-			super(track, Names.Railcraft_PoweredTrack, world, x, y, z);
+		public CCDriver(ITrackKitPowered track, World world, BlockPos pos) {
+			super(track, Names.Railcraft_PoweredTrack, world, pos);
 		}
 
 		@Override
@@ -84,10 +80,10 @@ public class DriverPoweredTrack {
 		}
 
 		@Override
-		public IMultiPeripheral getPeripheral(World world, int x, int y, int z, int side) {
-			TileEntity te = world.getTileEntity(x, y, z);
-			if(te != null && te instanceof TileTrack && ((TileTrack) te).getTrackInstance() instanceof ITrackPowered) {
-				return new CCDriver((ITrackPowered) ((TileTrack) te).getTrackInstance(), world, x, y, z);
+		public IMultiPeripheral getPeripheral(World world, BlockPos pos, EnumFacing side) {
+			TileEntity te = world.getTileEntity(pos);
+			if(te != null && te instanceof IOutfittedTrackTile && ((IOutfittedTrackTile) te).getTrackKitInstance() instanceof ITrackKitPowered) {
+				return new CCDriver((ITrackKitPowered) ((IOutfittedTrackTile) te).getTrackKitInstance(), world, pos);
 			}
 			return null;
 		}

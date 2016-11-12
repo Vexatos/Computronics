@@ -19,14 +19,13 @@ import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.OCUtils;
 import pl.asie.computronics.util.RadarUtils;
 import pl.asie.computronics.util.TableUtils;
-import pl.asie.lib.api.tile.IBatteryProvider;
 
 import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class TileRadar extends TileEntityPeripheralBase implements IBatteryProvider {
+public class TileRadar extends TileEntityPeripheralBase {
 
 	public TileRadar() {
 		super("radar", Config.RADAR_ENERGY_COST_OC * Config.RADAR_RANGE * 3.5);

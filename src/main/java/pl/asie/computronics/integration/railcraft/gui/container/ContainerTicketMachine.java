@@ -1,7 +1,5 @@
 package pl.asie.computronics.integration.railcraft.gui.container;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import mods.railcraft.common.gui.containers.RailcraftContainer;
 import mods.railcraft.common.gui.slots.SlotOutput;
 import mods.railcraft.common.gui.slots.SlotSecure;
@@ -12,10 +10,13 @@ import mods.railcraft.common.items.ItemTicketGold;
 import mods.railcraft.common.plugins.forge.PlayerPlugin;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.ICrafting;
+import net.minecraft.inventory.ClickType;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.asie.computronics.integration.railcraft.gui.slot.PaperSlotFilter;
 import pl.asie.computronics.integration.railcraft.gui.slot.SlotSecureInput;
 import pl.asie.computronics.integration.railcraft.gui.widget.LockButtonWidget;
@@ -24,6 +25,8 @@ import pl.asie.computronics.integration.railcraft.gui.widget.ProgressBarWidget;
 import pl.asie.computronics.integration.railcraft.gui.widget.SlotSelectionWidget;
 import pl.asie.computronics.integration.railcraft.tile.TileTicketMachine;
 import pl.asie.computronics.reference.Config;
+
+import javax.annotation.Nullable;
 
 /**
  * @author Vexatos
@@ -82,14 +85,15 @@ public class ContainerTicketMachine extends RailcraftContainer {
 		return this.maintenanceMode;
 	}
 
+	@Nullable
 	@Override
-	public ItemStack slotClick(int slotNum, int mouseButton, int modifier, EntityPlayer player) {
+	public ItemStack slotClick(int slotId, int mouseButton, ClickType clickType, EntityPlayer player) {
 		if(!maintenanceMode()) {
 			setTicketsAndPaperLocked(true);
 		} else {
 			setTicketsAndPaperLocked(false);
 		}
-		return super.slotClick(slotNum, mouseButton, modifier, player);
+		return super.slotClick(slotId, mouseButton, clickType, player);
 	}
 
 	public void setTicketsAndPaperLocked(boolean locked) {
@@ -110,7 +114,7 @@ public class ContainerTicketMachine extends RailcraftContainer {
 	}
 
 	private void updateLock() {
-		for(Widget widget : getElements()) {
+		for(Widget widget : getWidgets()) {
 			if(widget instanceof LockButtonWidget) {
 				((LockButtonWidget) widget).accessible = this.maintenanceMode() && this.canLock;
 			}
@@ -125,28 +129,26 @@ public class ContainerTicketMachine extends RailcraftContainer {
 	@Override
 	public void sendUpdateToClient() {
 		super.sendUpdateToClient();
-		for(Object crafter : this.crafters) {
-			if(crafter instanceof ICrafting) {
-				if(this.lastEnergy != tile.getEnergyStored(ForgeDirection.UNKNOWN)) {
-					((ICrafting) crafter).sendProgressBarUpdate(this, 2, tile.getEnergyStored(ForgeDirection.UNKNOWN));
-				}
-				if(this.lastProgress != tile.getProgress()) {
-					((ICrafting) crafter).sendProgressBarUpdate(this, 3, tile.getProgress());
-				}
+		for(IContainerListener listener : this.listeners) {
+			if(this.lastEnergy != tile.getEnergyStored(EnumFacing.NORTH)) {
+				listener.sendProgressBarUpdate(this, 2, tile.getEnergyStored(EnumFacing.NORTH));
+			}
+			if(this.lastProgress != tile.getProgress()) {
+				listener.sendProgressBarUpdate(this, 3, tile.getProgress());
 			}
 		}
 		this.lastProgress = this.tile.getProgress();
-		this.lastEnergy = tile.getEnergyStored(ForgeDirection.UNKNOWN);
+		this.lastEnergy = tile.getEnergyStored(null);
 	}
 
 	@Override
-	public void addCraftingToCrafters(ICrafting player) {
-		super.addCraftingToCrafters(player);
+	public void addListener(IContainerListener listener) {
+		super.addListener(listener);
 		this.canLock = PlayerPlugin.isOwnerOrOp(tile.getOwner(), inventoryPlayer.player.getGameProfile());
 		updateLock();
-		player.sendProgressBarUpdate(this, 0, this.canLock ? 1 : 0);
-		player.sendProgressBarUpdate(this, 2, this.tile.getEnergyStored(ForgeDirection.UNKNOWN));
-		player.sendProgressBarUpdate(this, 3, tile.getProgress());
+		listener.sendProgressBarUpdate(this, 0, this.canLock ? 1 : 0);
+		listener.sendProgressBarUpdate(this, 2, this.tile.getEnergyStored(null));
+		listener.sendProgressBarUpdate(this, 3, tile.getProgress());
 	}
 
 	@Override

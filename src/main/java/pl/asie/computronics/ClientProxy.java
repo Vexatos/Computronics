@@ -85,6 +85,9 @@ public class ClientProxy extends CommonProxy {
 				Computronics.forestry.registerOCEntityRenderers();
 			}
 		}
+		if(Computronics.railcraft != null) {
+			Computronics.railcraft.registerRenderers();
+		}
 	}
 
 	@Override
@@ -116,9 +119,6 @@ public class ClientProxy extends CommonProxy {
 		}*/
 		/*if(Computronics.audioCable != null) {
 			RenderingRegistry.registerBlockHandler(new AudioCableRender());
-		}
-		if(Computronics.railcraft != null) {
-			Computronics.railcraft.registerRenderers();
 		}*/
 		if(Mods.isLoaded(Mods.OpenComputers)) {
 			registerOpenComputersRenderers();

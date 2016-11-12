@@ -1,6 +1,5 @@
 package pl.asie.computronics.integration.railcraft.tile;
 
-import cpw.mods.fml.common.Optional;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
@@ -12,12 +11,15 @@ import mods.railcraft.api.signals.IReceiverTile;
 import mods.railcraft.api.signals.SignalAspect;
 import mods.railcraft.api.signals.SignalController;
 import mods.railcraft.api.signals.SignalReceiver;
-import mods.railcraft.common.blocks.signals.ISignalTileDefinition;
-import mods.railcraft.common.blocks.signals.TileBoxBase;
+import mods.railcraft.common.blocks.wayobjects.IWayObjectDefinition;
+import mods.railcraft.common.blocks.wayobjects.TileBoxBase;
 import mods.railcraft.common.plugins.buildcraft.triggers.IAspectProvider;
+import mods.railcraft.common.util.network.RailcraftInputStream;
+import mods.railcraft.common.util.network.RailcraftOutputStream;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.integration.railcraft.SignalTypes;
 import pl.asie.computronics.integration.railcraft.signalling.MassiveSignalReceiver;
 import pl.asie.computronics.reference.Mods;
@@ -25,8 +27,6 @@ import pl.asie.computronics.reference.Names;
 import pl.asie.computronics.util.OCUtils;
 import pl.asie.computronics.util.TableUtils;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -45,8 +45,8 @@ public class TileDigitalReceiverBox extends TileDigitalBoxBase implements IRecei
 	private final MassiveSignalReceiver receiver = new MassiveSignalReceiver(getName(), this);
 
 	@Override
-	public void updateEntity() {
-		super.updateEntity();
+	public void update() {
+		super.update();
 
 		if(worldObj.isRemote) {
 			this.receiver.tickClient();
@@ -89,9 +89,10 @@ public class TileDigitalReceiverBox extends TileDigitalBoxBase implements IRecei
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound data) {
-		super.writeToNBT(data);
+	public NBTTagCompound writeToNBT(NBTTagCompound data) {
+		data = super.writeToNBT(data);
 		this.receiver.writeToNBT(data);
+		return data;
 	}
 
 	@Override
@@ -101,20 +102,20 @@ public class TileDigitalReceiverBox extends TileDigitalBoxBase implements IRecei
 	}
 
 	@Override
-	public void writePacketData(DataOutputStream data) throws IOException {
+	public void writePacketData(RailcraftOutputStream data) throws IOException {
 		super.writePacketData(data);
 		this.receiver.writePacketData(data);
 	}
 
 	@Override
-	public void readPacketData(DataInputStream data) throws IOException {
+	public void readPacketData(RailcraftInputStream data) throws IOException {
 		super.readPacketData(data);
 		this.receiver.readPacketData(data);
 		markBlockForUpdate();
 	}
 
 	@Override
-	public SignalAspect getBoxSignalAspect(ForgeDirection side) {
+	public SignalAspect getBoxSignalAspect(EnumFacing side) {
 		return this.receiver.getVisualAspect();
 	}
 
@@ -134,13 +135,13 @@ public class TileDigitalReceiverBox extends TileDigitalBoxBase implements IRecei
 	}
 
 	@Override
-	public boolean isConnected(ForgeDirection side) {
+	public boolean isConnected(EnumFacing side) {
 		TileEntity tile = this.tileCache.getTileOnSide(side);
 		return tile != null && tile instanceof TileBoxBase && ((TileBoxBase) tile).canReceiveAspect();
 	}
 
 	@Override
-	public ISignalTileDefinition getSignalType() {
+	public IWayObjectDefinition getSignalType() {
 		return SignalTypes.DigitalReceiver;
 	}
 
@@ -179,7 +180,6 @@ public class TileDigitalReceiverBox extends TileDigitalBoxBase implements IRecei
 			"Digitized Signal Receiver X3"
 		);
 	}
-
 
 	private Object[] getAspect(String name) {
 		SignalAspect aspect = this.receiver.getMostRestrictiveAspectFor(name);

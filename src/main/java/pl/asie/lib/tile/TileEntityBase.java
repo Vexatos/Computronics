@@ -94,7 +94,7 @@ public class TileEntityBase extends TileEntity {
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
-		super.writeToNBT(tag);
+		tag = super.writeToNBT(tag);
 		tag.setInteger("old_redstone", this.oldRedstoneSignal);
 		return tag;
 	}

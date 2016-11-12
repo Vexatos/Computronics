@@ -1,71 +1,91 @@
 package pl.asie.computronics.integration.railcraft.block;
 
-import cpw.mods.fml.common.Optional;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import li.cil.oc.api.network.Environment;
-import mods.railcraft.client.util.textures.TextureAtlasSheet;
 import mods.railcraft.common.util.misc.MiscTools;
-import net.minecraft.block.Block;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.SoundType;
+import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.state.BlockStateContainer;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.block.BlockPeripheral;
 import pl.asie.computronics.integration.railcraft.tile.TileDigitalDetector;
 import pl.asie.computronics.oc.manual.IBlockWithPrefix;
 import pl.asie.computronics.reference.Mods;
 
+import static pl.asie.lib.util.WorldUtils.notifyBlockUpdate;
+
 /**
  * @author CovertJaguar, Vexatos, marcin212, Kubuxu
  */
 public class BlockDigitalDetector extends BlockPeripheral implements IBlockWithPrefix {
 
+	public static final PropertyEnum<EnumFacing> FRONT = PropertyEnum.create("front", EnumFacing.class);
+
 	public BlockDigitalDetector() {
-		super("digital_detector");
-		this.setBlockName("computronics.detector");
-		this.setRotation(Rotation.NONE);
+		super("digital_detector", Rotation.NONE);
+		this.setUnlocalizedName("computronics.detector");
 		this.setResistance(4.5F);
 		this.setHardness(2.0F);
-		this.setStepSound(soundTypeStone);
+		this.setSoundType(SoundType.STONE);
 		this.setCreativeTab(Computronics.tab);
 		this.setHarvestLevel("pickaxe", 2);
 		this.setHarvestLevel("crowbar", 0);
 	}
 
+	@Deprecated
 	@Override
-	public boolean isSideSolid(IBlockAccess world, int i, int j, int k, ForgeDirection side) {
+	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
+		state = super.getActualState(state, world, pos);
+		TileEntity t = world.getTileEntity(pos);
+
+		if(t instanceof TileDigitalDetector) {
+			return state.withProperty(FRONT, ((TileDigitalDetector) t).direction);
+		}
+		return state;
+	}
+
+	@Override
+	protected BlockStateContainer createActualBlockState() {
+		return new BlockStateContainer(this, FRONT);
+	}
+
+	@Override
+	public boolean isSideSolid(IBlockState base_state, IBlockAccess world, BlockPos pos, EnumFacing side) {
 		return true;
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_) {
+	public TileEntity createTileEntity(World world, IBlockState state) {
 		return new TileDigitalDetector();
 	}
 
 	@Override
-	public void onBlockPlacedBy(World world, int i, int j, int k, EntityLivingBase entityliving, ItemStack stack) {
-		TileEntity tile = world.getTileEntity(i, j, k);
+	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+		TileEntity tile = world.getTileEntity(pos);
 		if((tile instanceof TileDigitalDetector)) {
-			((TileDigitalDetector) tile).direction = MiscTools.getSideClosestToPlayer(world, i, j, k, entityliving);
-			world.notifyBlocksOfNeighborChange(i, j, k, this);
+			((TileDigitalDetector) tile).direction = MiscTools.getSideFacingPlayer(pos, placer);
+			notifyBlockUpdate(world, pos, state);
 		}
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float u1, float u2, float u3) {
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
 		return false;
 	}
 
 	@Override
-	public boolean rotateBlock(World world, int x, int y, int z, ForgeDirection axis) {
-		TileEntity tile = world.getTileEntity(x, y, z);
+	public boolean rotateBlock(World world, BlockPos pos, EnumFacing axis) {
+		TileEntity tile = world.getTileEntity(pos);
 		if((tile instanceof TileDigitalDetector)) {
 			TileDigitalDetector detector = (TileDigitalDetector) tile;
 			if(detector.direction == axis) {
@@ -73,101 +93,42 @@ public class BlockDigitalDetector extends BlockPeripheral implements IBlockWithP
 			} else {
 				detector.direction = axis;
 			}
-			world.notifyBlocksOfNeighborChange(x, y, z, this);
-			world.markBlockForUpdate(x, y, z);
+			notifyBlockUpdate(world, pos);
 			return true;
 		}
 		return false;
 	}
 
 	@Override
-	public ForgeDirection[] getValidRotations(World worldObj, int x, int y, int z) {
-		return ForgeDirection.VALID_DIRECTIONS;
-	}
-
-	private IIcon mSide, mConnect;
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister iconRegister) {
-		IIcon[] icons = TextureAtlasSheet.unstitchIcons(iconRegister, "computronics:digital_detector", 2);
-		mSide = icons[0];
-		mConnect = icons[1];
+	public EnumFacing[] getValidRotations(World world, BlockPos pos) {
+		return EnumFacing.VALUES;
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side) {
-		TileEntity tile = world.getTileEntity(x, y, z);
-		if((tile instanceof TileDigitalDetector)) {
-			TileDigitalDetector detectorTile = (TileDigitalDetector) tile;
-			if(detectorTile.direction.ordinal() == side) {
-				return mConnect;
-			}
-			return mSide;
-		}
-		return null;
-	}
-
-	@Override
-	public int getFrontSide(int m) {
-		return ForgeDirection.NORTH.ordinal();
-	}
-
-	@Override
-	public int relToAbs(int side, int metadata) {
-		return side;
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public IIcon getAbsoluteIcon(int side, int metadata) {
-		return getIcon(side, metadata);
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public IIcon getAbsoluteIcon(World world, int x, int y, int z, int side, int metadata) {
-		return getIcon(world, x, y, z, side);
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public IIcon getIcon(int side, int meta) {
-		return side == ForgeDirection.NORTH.ordinal() ? mConnect : mSide;
-	}
-
-	@Override
-	public void onBlockAdded(World world, int i, int j, int k) {
-		super.onBlockAdded(world, i, j, k);
-		world.markBlockForUpdate(i, j, k);
+	public void onBlockAdded(World world, BlockPos pos, IBlockState state) {
+		super.onBlockAdded(world, pos, state);
+		notifyBlockUpdate(world, pos, state);
 		if(world.isRemote) {
 			return;
 		}
-		world.notifyBlocksOfNeighborChange(i + 1, j, k, this);
-		world.notifyBlocksOfNeighborChange(i - 1, j, k, this);
-		world.notifyBlocksOfNeighborChange(i, j, k + 1, this);
-		world.notifyBlocksOfNeighborChange(i, j, k - 1, this);
-		world.notifyBlocksOfNeighborChange(i, j - 1, k, this);
-		world.notifyBlocksOfNeighborChange(i, j + 1, k, this);
+		for(EnumFacing side : EnumFacing.VALUES) {
+			world.notifyNeighborsOfStateChange(pos.offset(side), state.getBlock());
+		}
 	}
 
 	@Override
-	public void breakBlock(World world, int x, int y, int z, Block block, int metadata) {
-		super.breakBlock(world, x, y, z, this, metadata);
+	public void breakBlock(World world, BlockPos pos, IBlockState state) {
+		super.breakBlock(world, pos, state);
 		if(world.isRemote) {
 			return;
 		}
-		world.notifyBlocksOfNeighborChange(x + 1, y, z, this);
-		world.notifyBlocksOfNeighborChange(x - 1, y, z, this);
-		world.notifyBlocksOfNeighborChange(x, y, z + 1, this);
-		world.notifyBlocksOfNeighborChange(x, y, z - 1, this);
-		world.notifyBlocksOfNeighborChange(x, y - 1, z, this);
-		world.notifyBlocksOfNeighborChange(x, y + 1, z, this);
+		for(EnumFacing side : EnumFacing.VALUES) {
+			world.notifyNeighborsOfStateChange(pos.offset(side), state.getBlock());
+		}
 	}
 
 	@Override
-	public boolean canConnectRedstone(IBlockAccess world, int i, int j, int k, int dir) {
+	public boolean canConnectRedstone(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing sid) {
 		return false;
 	}
 
@@ -180,7 +141,7 @@ public class BlockDigitalDetector extends BlockPeripheral implements IBlockWithP
 	private static final String prefix = "railcraft/";
 
 	@Override
-	public String getPrefix(World world, int x, int y, int z) {
+	public String getPrefix(World world, BlockPos pos) {
 		return prefix;
 	}
 

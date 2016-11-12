@@ -79,6 +79,10 @@ repositories {
     maven {
         url "http://dvs1.progwml6.com/files/maven"
     }
+    ivy {
+        name = "RailCraft"
+        url = "http://www.railcraft.info/ivy/"
+    }
 }
 
 /*configurations {
@@ -92,9 +96,15 @@ repositories {
 dependencies {
     deobfCompile "li.cil.oc:OpenComputers:${config.oc.version}"
     deobfCompile "li.cil.tis3d:TIS-3D:${config.tis3d.version}"
-	//deobfCompile "net.industrial-craft:industrialcraft-2:${config.ic2.version}:dev"
+    deobfCompile "net.industrial-craft:industrialcraft-2:${config.ic2.version}:dev"
 	//provided "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech.version}:dev"
 	//provided2 "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech6.version}:dev"
+    deobfCompile ("com.headlamp-games:Railcraft:${config.railcraft.version}") {
+        exclude module: "forestry_1.10.2"
+        exclude module: "industrialcraft-2"
+    }
+    //provided "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech.version}:dev"
+    deobfCompile "mezz.jei:jei_1.10.2:${config.jei.version}"
     deobfCompile "mcp.mobius.waila:Waila:${config.waila.version}"
     deobfCompile "mcjty.theoneprobe:TheOneProbe:${config.top.version}"
     deobfCompile "pl.asie.charset:charset-lib:${config.charset.version}"
@@ -110,7 +120,7 @@ dependencies {
         exclude module: "appliedenergistics2"
         exclude module: "buildcraft"
         exclude module: "Waila"
-        exclude module: "forestry_1.7.10"
+        exclude module: "forestry_1.10.2"
         exclude module: "OpenComputers"
         exclude module: "CodeChickenLib"
         exclude module: "CodeChickenCore"
@@ -168,7 +178,7 @@ sourceSets {
             exclude "pl/asie/computronics/integration/gregtech/**"
             exclude "pl/asie/computronics/integration/mekanism/**"
             exclude "pl/asie/computronics/integration/mfr/**"
-            exclude "pl/asie/computronics/integration/railcraft/**"
+            //exclude "pl/asie/computronics/integration/railcraft/**"
             exclude "pl/asie/computronics/integration/redlogic/**"
             //exclude "pl/asie/computronics/integration/storagedrawers/**"
             //exclude "pl/asie/computronics/integration/waila/**"

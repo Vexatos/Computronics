@@ -43,6 +43,7 @@ This version comes with a 1.8.9, 1.9.4 and 1.10 port in addition to many additio
   * FIXED: Tape program not displaying information properly if file size is larger than tape size
   * FIXED: OpenComputers' tape program not working with HTTPS
   * FIXED: Explosions not dropping items when they should
+  * FIXED: Advanced Cipher Block not properly converting certain keys
   * MISC: Some visual improvements to the `tape` program.
 
   * [1.7.10] ADDED: Digital Signal Controller Box for Railcraft!

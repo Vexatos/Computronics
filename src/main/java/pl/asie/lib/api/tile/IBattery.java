@@ -1,15 +1,18 @@
 package pl.asie.lib.api.tile;
 
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
+
+import javax.annotation.Nullable;
 
 /*
  * Interface heavily inspired by CoFH (RF) and IC2 (EU) APIs.
  */
 public interface IBattery {
 
-	public double insert(int side, double maximum, boolean simulate);
+	public double insert(@Nullable EnumFacing side, double maximum, boolean simulate);
 
-	public double extract(int side, double maximum, boolean simulate);
+	public double extract(@Nullable EnumFacing side, double maximum, boolean simulate);
 
 	public double getEnergyStored();
 
@@ -19,9 +22,9 @@ public interface IBattery {
 
 	public double getMaxEnergyExtracted();
 
-	public boolean canInsert(int side, String type);
+	public boolean canInsert(@Nullable EnumFacing side, String type);
 
-	public boolean canExtract(int side, String type);
+	public boolean canExtract(@Nullable EnumFacing side, String type);
 
 	public void readFromNBT(NBTTagCompound tag);
 

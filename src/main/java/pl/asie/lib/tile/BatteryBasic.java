@@ -1,8 +1,11 @@
 package pl.asie.lib.tile;
 
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import pl.asie.lib.AsieLibMod;
 import pl.asie.lib.api.tile.IBattery;
+
+import javax.annotation.Nullable;
 
 public class BatteryBasic implements IBattery {
 
@@ -23,7 +26,7 @@ public class BatteryBasic implements IBattery {
 	}
 
 	@Override
-	public double insert(int side, double maximum, boolean simulate) {
+	public double insert(@Nullable EnumFacing side, double maximum, boolean simulate) {
 		if(maximum > maxInsert) {
 			maximum = maxInsert;
 		}
@@ -41,7 +44,7 @@ public class BatteryBasic implements IBattery {
 	}
 
 	@Override
-	public double extract(int side, double maximum, boolean simulate) {
+	public double extract(@Nullable EnumFacing side, double maximum, boolean simulate) {
 		double amount = Math.min(energy, Math.min(maximum, maxExtract));
 		if(!simulate) {
 			energy -= amount;
@@ -70,12 +73,12 @@ public class BatteryBasic implements IBattery {
 	}
 
 	@Override
-	public boolean canInsert(int side, String type) {
+	public boolean canInsert(@Nullable EnumFacing side, String type) {
 		return (maxInsert > 0.0);
 	}
 
 	@Override
-	public boolean canExtract(int side, String type) {
+	public boolean canExtract(@Nullable EnumFacing side, String type) {
 		return (maxExtract > 0.0);
 	}
 

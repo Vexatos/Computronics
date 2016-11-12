@@ -1,6 +1,13 @@
 package pl.asie.computronics.integration;
 
 import li.cil.oc.api.detail.ItemInfo;
+import mods.railcraft.common.blocks.RailcraftBlocks;
+import mods.railcraft.common.blocks.detector.EnumDetector;
+import mods.railcraft.common.blocks.wayobjects.EnumWayObject;
+import mods.railcraft.common.items.ItemCircuit.EnumCircuit;
+import mods.railcraft.common.items.ItemRail;
+import mods.railcraft.common.items.Metal;
+import mods.railcraft.common.items.RailcraftItems;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -64,9 +71,9 @@ public class ModRecipes {
 				'c', Computronics.cipher != null ? Computronics.cipher : "gemDiamond", 'e', "enderpearl", 'i', "ingotIron",
 				'd', Computronics.cipher != null ? "gemDiamond" : "ingotGold");
 		}
-		/*if(Mods.isLoaded(Mods.Railcraft) && Computronics.railcraft != null) {
+		if(Mods.isLoaded(Mods.Railcraft) && Computronics.railcraft != null) {
 			registerRailcraftRecipes();
-		}*/
+		}
 		if(Computronics.itemTape != null) {
 			// Tape recipes
 			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.itemTape, 1, 0),
@@ -117,50 +124,49 @@ public class ModRecipes {
 		return false;
 	}
 
-	/*@Optional.Method(modid = Mods.Railcraft)
+	@Optional.Method(modid = Mods.Railcraft)
 	protected void registerRailcraftRecipes() {
-		Item item = GameRegistry.findItem(Mods.Railcraft, "part.plate");
 		if(Computronics.railcraft.locomotiveRelay != null && Computronics.railcraft.relaySensor != null) {
 			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.railcraft.locomotiveRelay, 1, 0),
 				"srs", "geg", "scs",
-				's', item != null ? new ItemStack(item, 1, 2) : Blocks.STONEBRICK,
-				'r', GameRegistry.findItemStack(Mods.Railcraft, "part.circuit.receiver", 1),
-				'e', GameRegistry.findItemStack(Mods.Railcraft, "part.circuit.controller", 1),
-				'c', ItemElectricMeter.getItem(),
-				'g', new ItemStack(RailcraftItem.rail.item(), 1, ItemRail.EnumRail.ELECTRIC.ordinal()));
+				's', RailcraftItems.PLATE.getStack(Metal.TIN),
+				'r', RailcraftItems.CIRCUIT.getRecipeObject(EnumCircuit.RECEIVER),
+				'e', RailcraftItems.CIRCUIT.getRecipeObject(EnumCircuit.CONTROLLER),
+				'c', RailcraftItems.CHARGE_METER.getRecipeObject(),
+				'g', RailcraftItems.RAIL.getRecipeObject(ItemRail.EnumRail.ELECTRIC));
 
 			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.railcraft.relaySensor, 1, 0),
-				" n ", "npr", " r ", 'p', Items.paper, 'n', "nuggetTin", 'r', "dustRedstone");
+				" n ", "npr", " r ", 'p', "paper", 'n', "nuggetTin", 'r', "dustRedstone");
 		}
 		if(Computronics.railcraft.digitalReceiverBox != null) {
 			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.railcraft.digitalReceiverBox, 1, 0),
 				"iri", "ibi", "isi", 'i', "ingotIron",
-				'r', GameRegistry.findItemStack(Mods.Railcraft, "part.circuit.receiver", 1),
-				'b', GameRegistry.findItemStack(Mods.Railcraft, "signal.box.receiver", 1),
-				's', GameRegistry.findItemStack(Mods.Railcraft, "part.circuit.signal", 1));
+				'r', RailcraftItems.CIRCUIT.getRecipeObject(EnumCircuit.RECEIVER),
+				'b', RailcraftBlocks.WAY_OBJECT.getRecipeObject(EnumWayObject.BOX_RECEIVER),
+				's', RailcraftItems.CIRCUIT.getRecipeObject(EnumCircuit.SIGNAL));
 		}
 		if(Computronics.railcraft.digitalControllerBox != null) {
 			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.railcraft.digitalControllerBox, 1, 0),
 				"iri", "ibi", "isi", 'i', "ingotIron",
-				'r', GameRegistry.findItemStack(Mods.Railcraft, "part.circuit.controller", 1),
-				'b', GameRegistry.findItemStack(Mods.Railcraft, "signal.box.controller", 1),
-				's', GameRegistry.findItemStack(Mods.Railcraft, "part.circuit.signal", 1));
+				'r', RailcraftItems.CIRCUIT.getRecipeObject(EnumCircuit.CONTROLLER),
+				'b', RailcraftBlocks.WAY_OBJECT.getRecipeObject(EnumWayObject.BOX_RECEIVER),
+				's', RailcraftItems.CIRCUIT.getRecipeObject(EnumCircuit.SIGNAL));
 		}
 		if(Computronics.railcraft.detector != null) {
 			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.railcraft.detector, 1, 0),
 				"sss", "sdp", "sss",
-				's', item != null ? new ItemStack(item, 1, 1) : "ingotSteel",
-				'p', Blocks.light_weighted_pressure_plate,
-				'd', GameRegistry.findItemStack(Mods.Railcraft, "detector.advanced", 1));
+				's', RailcraftItems.PLATE.getStack(Metal.STEEL),
+				'p', Blocks.LIGHT_WEIGHTED_PRESSURE_PLATE,
+				'd', RailcraftBlocks.DETECTOR.getRecipeObject(EnumDetector.ADVANCED));
 		}
 		if(Computronics.railcraft.ticketMachine != null) {
 			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.railcraft.ticketMachine, 1, 0),
 				"tst", "sdg", "tpt",
-				'd', Blocks.dispenser,
-				't', item != null ? new ItemStack(item, 1, 2) : Blocks.STONEBRICK,
-				's', item != null ? new ItemStack(item, 1, 1) : "ingotIron",
-				'p', Blocks.piston,
-				'g', "paneGLASSColorless");
+				'd', Blocks.DISPENSER,
+				't', RailcraftItems.PLATE.getStack(Metal.TIN),
+				's', RailcraftItems.PLATE.getStack(Metal.STEEL),
+				'p', Blocks.PISTON,
+				'g', "paneGlassColorless");
 		}
-	}*/
+	}
 }

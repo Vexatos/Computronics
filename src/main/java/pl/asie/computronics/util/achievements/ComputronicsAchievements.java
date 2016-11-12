@@ -1,31 +1,29 @@
 package pl.asie.computronics.util.achievements;
 
+//import net.minecraftforge.fml.common.FMLCommonHandler;
+
+import mods.railcraft.common.carts.EntityLocomotiveElectric;
+import mods.railcraft.common.carts.ItemLocomotive;
+import mods.railcraft.common.carts.RailcraftCarts;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.Achievement;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.AchievementPage;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import pl.asie.computronics.Computronics;
-
-import java.util.HashMap;
-
-//import gregtech.api.enums.ItemList;
-//import mods.railcraft.common.carts.EntityLocomotiveElectric;
-//import mods.railcraft.common.carts.EnumCart;
-//import mods.railcraft.common.carts.ItemLocomotive;
-//import net.minecraft.entity.item.EntityItem;
-//import net.minecraft.nbt.NBTTagCompound;
-//import net.minecraft.server.MinecraftServer;
-//import net.minecraft.util.ChatComponentText;
-/*import net.minecraftforge.event.entity.item.ItemExpireEvent;
-import net.minecraftforge.event.entity.item.ItemTossEvent;
-import net.minecraftforge.event.entity.player.AttackEntityEvent;
-import pl.asie.computronics.Computronics;
-//import pl.asie.computronics.integration.railcraft.tile.TileLocomotiveRelay;
+import pl.asie.computronics.integration.railcraft.tile.TileLocomotiveRelay;
 import pl.asie.computronics.reference.Config;
-import pl.asie.computronics.reference.Mods;*/
+import pl.asie.computronics.reference.Mods;
+
+import javax.annotation.Nullable;
+import java.util.HashMap;
 
 /**
  * @author Vexatos
@@ -77,12 +75,12 @@ public class ComputronicsAchievements {
 			}*/
 		}
 
-		/*if(Mods.isLoaded(Mods.Railcraft)) {
+		if(Mods.isLoaded(Mods.Railcraft)) {
 			RailcraftAchievements.initializeRCAchievements();
-		}*/
+		}
 	}
 
-	private Achievement registerAchievement(EnumAchievements key, int x, int y, ItemStack icon, Achievement requirement, boolean special, boolean independent) {
+	private Achievement registerAchievement(EnumAchievements key, int x, int y, ItemStack icon, @Nullable Achievement requirement, boolean special, boolean independent) {
 		Achievement achievement = new Achievement("computronics." + key.getKey(), "computronics." + key.getKey(), x, y, icon, requirement);
 		if(special) {
 			achievement.setSpecial();
@@ -95,12 +93,13 @@ public class ComputronicsAchievements {
 		return achievement;
 	}
 
-	private void triggerAchievement(EntityPlayer player, EnumAchievements key) {
+	private void triggerAchievement(@Nullable EntityPlayer player, EnumAchievements key) {
 		if(player != null && this.achievementMap.containsKey(key.getKey())) {
 			player.addStat(this.achievementMap.get(key.getKey()));
 		}
 	}
 
+	@Nullable
 	public Achievement getAchievement(EnumAchievements key) {
 		if(this.achievementMap.containsKey(key.getKey())) {
 			return this.achievementMap.get(key.getKey());
@@ -131,18 +130,18 @@ public class ComputronicsAchievements {
 					break;
 				}
 			}
-		} /*else
-		if(Mods.isLoaded(Mods.Railcraft)) { TODO Railcraft
+		} else
+		if(Mods.isLoaded(Mods.Railcraft)) {
 			RailcraftAchievements.onCrafting(stack, player);
-		}*/
+		}
 	}
 
-	/*@SubscribeEvent
+	@SubscribeEvent
 	public void onLeftClickEntity(AttackEntityEvent event) {
 		if(Mods.isLoaded(Mods.Railcraft)) {
 			RailcraftAchievements.onLeftClickEntity(event);
 		}
-	}*/
+	}
 
 	/*@SubscribeEvent
 	public void onItemDropped(ItemTossEvent event) {
@@ -201,32 +200,31 @@ public class ComputronicsAchievements {
 	/**
 	 * All the Railcraft related Achievements
 	 */
-	/*private static class RailcraftAchievements { TODO Railcraft
+	private static class RailcraftAchievements {
 
 		private static void initializeRCAchievements() {
-			Computronics.instance.achievements.registerAchievement(EnumAchievements.Locomotive, 0, 4, EnumCart.LOCO_ELECTRIC.getCartItem(), null, false, true);
+			Computronics.instance.achievements.registerAchievement(EnumAchievements.Locomotive, 0, 4, RailcraftCarts.LOCO_ELECTRIC.getStack(), null, false, true);
 			Computronics.instance.achievements.registerAchievement(EnumAchievements.Relay, 2, 6, new ItemStack(Computronics.railcraft.relaySensor), Computronics.instance.achievements.getAchievement(EnumAchievements.Locomotive), false, false);
 		}
 
 		private static void onCrafting(ItemStack stack, EntityPlayer player) {
 			if(stack.getItem() instanceof ItemLocomotive
-				&& ItemLocomotive.getModel(stack).equals(ItemLocomotive.getModel(EnumCart.LOCO_ELECTRIC.getCartItem()))) {
+				&& ItemLocomotive.getModel(stack).equals(ItemLocomotive.getModel(RailcraftCarts.LOCO_ELECTRIC.getStack()))) {
 				Computronics.instance.achievements.triggerAchievement(player, EnumAchievements.Locomotive);
 			}
 		}
 
 		private static void onLeftClickEntity(AttackEntityEvent event) {
-			if(Mods.isLoaded(Mods.Railcraft) && event != null && event.target != null
-				&& event.target instanceof EntityLocomotiveElectric) {
+			if(Mods.isLoaded(Mods.Railcraft) && event.getTarget() != null && event.getTarget() instanceof EntityLocomotiveElectric) {
 
-				EntityPlayer player = event.entityPlayer;
-				EntityLocomotiveElectric loco = (EntityLocomotiveElectric) event.target;
+				EntityPlayer player = event.getEntityPlayer();
+				EntityLocomotiveElectric loco = (EntityLocomotiveElectric) event.getTarget();
 
 				if(player == null) {
 					return;
 				}
 
-				ItemStack stack = player.getCurrentEquippedItem();
+				ItemStack stack = player.getHeldItem(EnumHand.MAIN_HAND);
 
 				if(stack == null) {
 					return;
@@ -238,18 +236,19 @@ public class ComputronicsAchievements {
 					NBTTagCompound data = stack.getTagCompound();
 					if(data != null && data.hasKey("bound") && data.getBoolean("bound")) {
 
-						int x = data.getInteger("relayX");
-						int y = data.getInteger("relayY");
-						int z = data.getInteger("relayZ");
-						if(!player.worldObj.blockExists(x, y, z)) {
+						final BlockPos pos = new BlockPos(
+							data.getInteger("relayX"),
+							data.getInteger("relayY"),
+							data.getInteger("relayZ")
+						);
+						if(!player.worldObj.isBlockLoaded(pos)) {
 							return;
 						}
-						if(loco.worldObj.getTileEntity(x, y, z) != null
-							&& loco.worldObj.getTileEntity(x, y, z) instanceof TileLocomotiveRelay) {
-
-							TileLocomotiveRelay relay = (TileLocomotiveRelay) loco.worldObj.getTileEntity(x, y, z);
-							if(loco.dimension == relay.getWorldObj().provider.dimensionId
-								&& loco.getDistanceSq(relay.xCoord, relay.yCoord, relay.zCoord) <= Config.LOCOMOTIVE_RELAY_RANGE * Config.LOCOMOTIVE_RELAY_RANGE) {
+						TileEntity tile = loco.worldObj.getTileEntity(pos);
+						if(tile != null && tile instanceof TileLocomotiveRelay) {
+							TileLocomotiveRelay relay = (TileLocomotiveRelay) tile;
+							if(loco.dimension == relay.getWorld().provider.getDimension()
+								&& loco.getDistanceSq(relay.getPos()) <= Config.LOCOMOTIVE_RELAY_RANGE * Config.LOCOMOTIVE_RELAY_RANGE) {
 
 								Computronics.instance.achievements.triggerAchievement(player, EnumAchievements.Relay);
 							}
@@ -258,5 +257,5 @@ public class ComputronicsAchievements {
 				}
 			}
 		}
-	}*/
+	}
 }

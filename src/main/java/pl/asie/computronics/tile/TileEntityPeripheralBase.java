@@ -305,7 +305,7 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 
 	@Override
 	public NBTTagCompound writeToRemoteNBT(NBTTagCompound nbt) {
-		super.writeToRemoteNBT(nbt);
+		nbt = super.writeToRemoteNBT(nbt);
 		if(overlayColor != getDefaultColor()) {
 			nbt.setInteger("computronics:color", overlayColor);
 		}
@@ -327,8 +327,8 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(final NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+		nbt = super.writeToNBT(nbt);
 		if(overlayColor != getDefaultColor()) {
 			nbt.setInteger("computronics:color", overlayColor);
 		}

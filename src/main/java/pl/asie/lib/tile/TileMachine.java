@@ -1,5 +1,9 @@
 package pl.asie.lib.tile;
 
+import ic2.api.energy.event.EnergyTileLoadEvent;
+import ic2.api.energy.event.EnergyTileUnloadEvent;
+import ic2.api.energy.tile.IEnergyEmitter;
+import ic2.api.energy.tile.IEnergyTile;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
@@ -8,7 +12,13 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.Optional;
 import pl.asie.lib.api.tile.IBattery;
+import pl.asie.lib.reference.Mods;
+import pl.asie.lib.util.EnergyConverter;
+
+import javax.annotation.Nullable;
 
 /*@Optional.InterfaceList({
 	@Optional.Interface(iface = "mods.immibis.redlogic.api.wiring.IConnectable", modid = Mods.RedLogic)
@@ -48,27 +58,27 @@ public class TileMachine extends TileEntityBase implements
 		super.validate();
 	}
 
-	/*public void update() {
+	public void update() {
 		if(!didInitIC2) {
 			if(Mods.isLoaded(Mods.IC2) && this.battery != null) {
 				this.initIC();
 			}
 			didInitIC2 = true; // Just so this check won't be done every tick.
-		}
+		}/*
 		if(!didInitIC2C) {
 			if(Mods.isLoaded(Mods.IC2Classic) && this.battery != null) {
 				this.initICClassic();
 			}
 			didInitIC2C = true; // Just so this check won't be done every tick.
 		}
-	}*/
+	}
 
 	@Override
 	public void invalidate() {
 		super.invalidate();
-		/*if(Mods.isLoaded(Mods.IC2) && this.battery != null) {
+		if(Mods.isLoaded(Mods.IC2) && this.battery != null) {
 			this.deinitIC();
-		}
+		}/*
 		if(Mods.isLoaded(Mods.IC2Classic) && this.battery != null) {
 			this.deinitICClassic();
 		}*/
@@ -77,9 +87,9 @@ public class TileMachine extends TileEntityBase implements
 	@Override
 	public void onChunkUnload() {
 		super.onChunkUnload();
-		/*if(Mods.isLoaded(Mods.IC2) && this.battery != null) {
+		if(Mods.isLoaded(Mods.IC2) && this.battery != null) {
 			this.deinitIC();
-		}
+		}/*
 		if(Mods.isLoaded(Mods.IC2Classic) && this.battery != null) {
 			this.deinitICClassic();
 		}*/
@@ -252,6 +262,7 @@ public class TileMachine extends TileEntityBase implements
 		}
 	}
 
+	@Nullable
 	@Override
 	public ItemStack getStackInSlot(int slot) {
 		if(this.items != null && slot >= 0 && slot < this.items.length) {
@@ -320,33 +331,33 @@ public class TileMachine extends TileEntityBase implements
 
 	// Energy (RF)
 
-	/*public boolean canConnectEnergy(ForgeDirection from) {
+	public boolean canConnectEnergy(EnumFacing from) {
 		if(this.battery != null) {
-			return this.battery.canInsert(from.ordinal(), "RF");
+			return this.battery.canInsert(from, "RF");
 		} else {
 			return false;
 		}
 	}
 
-	public int receiveEnergy(ForgeDirection from, int maxReceive,
+	public int receiveEnergy(EnumFacing from, int maxReceive,
 		boolean simulate) {
-		if(this.battery != null && this.battery.canInsert(from.ordinal(), "RF")) {
-			return (int) Math.floor(this.battery.insert(from.ordinal(), maxReceive, simulate));
+		if(this.battery != null && this.battery.canInsert(from, "RF")) {
+			return (int) Math.floor(this.battery.insert(from, maxReceive, simulate));
 		} else {
 			return 0;
 		}
 	}
 
-	public int extractEnergy(ForgeDirection from, int maxExtract,
+	public int extractEnergy(@Nullable EnumFacing from, int maxExtract,
 		boolean simulate) {
-		if(this.battery != null && this.battery.canExtract(from.ordinal(), "RF")) {
-			return (int) Math.floor(this.battery.extract(from.ordinal(), maxExtract, simulate));
+		if(this.battery != null && this.battery.canExtract(from, "RF")) {
+			return (int) Math.floor(this.battery.extract(from, maxExtract, simulate));
 		} else {
 			return 0;
 		}
 	}
 
-	public int getEnergyStored(ForgeDirection from) {
+	public int getEnergyStored(@Nullable EnumFacing from) {
 		if(this.battery != null) {
 			return (int) Math.floor(this.battery.getEnergyStored());
 		} else {
@@ -354,7 +365,7 @@ public class TileMachine extends TileEntityBase implements
 		}
 	}
 
-	public int getMaxEnergyStored(ForgeDirection from) {
+	public int getMaxEnergyStored(@Nullable EnumFacing from) {
 		if(this.battery != null) {
 			return (int) Math.floor(this.battery.getMaxEnergyStored());
 		} else {
@@ -383,21 +394,20 @@ public class TileMachine extends TileEntityBase implements
 	}
 
 	@Optional.Method(modid = Mods.IC2)
-	public boolean acceptsEnergyFrom(TileEntity emitter,
-		ForgeDirection direction) {
+	public boolean acceptsEnergyFrom(IEnergyEmitter emitter, EnumFacing direction) {
 		if(this.battery != null) {
-			return this.battery.canInsert(direction.ordinal(), "EU");
+			return this.battery.canInsert(direction, "EU");
 		} else {
 			return false;
 		}
 	}
 
 	@Optional.Method(modid = Mods.IC2)
-	public double injectEnergy(ForgeDirection directionFrom, double amount,
+	public double injectEnergy(EnumFacing directionFrom, double amount,
 		double voltage) {
 		if(this.battery != null) {
 			double amountRF = EnergyConverter.convertEnergy(amount, "EU", "RF");
-			double injectedRF = this.battery.insert(directionFrom.ordinal(), amountRF, false);
+			double injectedRF = this.battery.insert(directionFrom, amountRF, false);
 			return amount - EnergyConverter.convertEnergy(injectedRF, "RF", "EU");
 		} else {
 			return amount;
@@ -420,7 +430,7 @@ public class TileMachine extends TileEntityBase implements
 
 	// Energy (EU - IC2 Classic)
 
-	private boolean didInitIC2C = false;
+	/*private boolean didInitIC2C = false;
 
 	@Optional.Method(modid = Mods.IC2Classic)
 	private void initICClassic() {
@@ -501,7 +511,7 @@ public class TileMachine extends TileEntityBase implements
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound tagCompound) {
-		super.writeToNBT(tagCompound);
+		tagCompound = super.writeToNBT(tagCompound);
 		if(this.battery != null) {
 			this.battery.writeToNBT(tagCompound);
 		}
