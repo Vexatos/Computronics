@@ -29,6 +29,9 @@
     - Added a Rack Capacitor which is a Capacitor you can put into a Rack. Ingenious. It also provides a component that gives you the amount of energy stored in that capacitor.
     - Added a Switch Board providing four switches to manually and automatically activate and deactivate. Fires an event whenever a switch is flipped, too.
     - Added hardware information to every component.
+  * ADDED: GregTech Recipe Mode support for GregTech 6!
+    - Don't worry, GregTech 5 support is still there
+    - Not all recipes work yet as there are still some required items missing in GregTech 6.
   * ADDED: Built-in tape utility program for ComputerCraft to write songs to tapes and to play, stop, pause etc.
   * ADDED: getPosition() to tape drives. No, I'm not joking. It's real. I'm sorry.
   * ADDED: Digital Signal Controller Box for Railcraft!
@@ -37,6 +40,7 @@
     - Receivers must be referenced by their name, meaning you have to name all your signals using Signal Labels
   * ADDED: Option to specify a custom timeout when writing files from a URL to a tape using the tape program on OpenComputers.
   * ADDED: Colored tapes can now be crafted with a bucket of water to wash off the color.
+  * ADDED: `tape wipe` to built-in tape program. Can be used to completely erase a tape.
   * CHANGED: Sangar made beep card and noise card textures a lot less boring. He also made the sound card texture to match them. Thanks a lot!
   * CHANGED: Some tweaks to beep card and noise card recipes.
   * CHANGED: Digital Signal Receiver Box
@@ -53,6 +57,7 @@
   * FIXED: OpenComputers' tape program not working with HTTPS
   * FIXED: Ticket Machine's `setDestination` not working with OpenComputers when no slot is specified
   * FIXED: Explosions not dropping items when they should
+  * MISC: Some visual improvements to the `tape` program.
 
 ==== 1.6.0 ====
 
