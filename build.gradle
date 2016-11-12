@@ -104,6 +104,7 @@ dependencies {
         exclude module: "industrialcraft-2"
     }
     //provided "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech.version}:dev"
+    deobfCompile "mezz.jei:jei_1.10.2:${config.jei.version}"
     deobfCompile "mcp.mobius.waila:Waila:${config.waila.version}"
     deobfCompile "mcjty.theoneprobe:TheOneProbe:${config.top.version}"
     deobfCompile "pl.asie.charset:charset-lib:${config.charset.version}"
