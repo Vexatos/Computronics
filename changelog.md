@@ -1,5 +1,9 @@
 ==== 1.6.1 ====
 
+This version comes with a 1.8.9, 1.9.4 and 1.10 port in addition to many additions.
+
+**Note: On 1.8.9 and later, the tape drives use an updated audio codec (DFPWM 1a). Any files encoded with the old codec will still play, but the sound will be a lot more quiet.**
+
   * ADDED: Noise Card!
     - An upgraded Beep Card with slightly different syntax
     - Can play square waves, sine waves, triangle waves and sawtooth waves!
@@ -14,7 +18,17 @@
     - Added a Serial Interface for Flamingos to make them wiggle.
     - Documented everything in the TIS-3D manual.
     - Each module can be individually disabled in the config file.
-  * ADDED: EnderIO 2.3 integration  for OpenComputers and ComputerCraft! (Has actually existed since March 2015, just not in any official release)
+  * ADDED: OpenComputers 1.6 integration (requires OpenComputers 1.6.0 now)
+    - Added a Light Board to put into Server Racks. Allows controlling coloured lights in various layouts.
+    - Added a Server Self-Destructor in case you don't need your servers anymore.
+    - Added a Rack Capacitor which is a Capacitor you can put into a Rack. Ingenious. It also provides a component that gives you the amount of energy stored in that capacitor.
+    - Added a Switch Board providing four switches to manually and automatically activate and deactivate. Fires an event whenever a switch is flipped, too.
+  * ADDED: getPosition() to tape drives. No, I'm not joking. It's real. I'm sorry.
+  * ADDED: Built-in tape utility program for ComputerCraft to write songs to tapes and to play, stop, pause etc.
+  * ADDED: Option to specify a custom timeout when writing files from a URL to a tape using the tape program on OpenComputers.
+  * ADDED: Coloured tapes can now be crafted with a bucket of water to wash off the colour.
+  * ADDED: `tape wipe` to built-in tape program. Can be used to completely erase a tape.
+  * ADDED: EnderIO 2.3 integration  for OpenComputers and ComputerCraft! (It has actually existed since March 2015, just not in any official release)
     - Added support for the new Telepad
       - Allows full control over the coordinates set (if allowed in the EnderIO config file) as well as telepad activation
     - Added support for the new Weather Obelisk
@@ -23,41 +37,52 @@
       - This allows you to monitor input and output of your energy network separately
     - Now you can get and set the range of Vacuum Chests
     - Added `getProgress()` to most machines with progress
-  * ADDED: OpenComputers 1.6 integration (requires OpenComputers 1.6.0 now)
-    - Added a Light Board to put into Server Racks. Allows controlling coloured lights in various layouts.
-    - Added a Server Self-Destructor in case you don't need your servers anymore.
-    - Added a Rack Capacitor which is a Capacitor you can put into a Rack. Ingenious. It also provides a component that gives you the amount of energy stored in that capacitor.
-    - Added a Switch Board providing four switches to manually and automatically activate and deactivate. Fires an event whenever a switch is flipped, too.
-    - Added hardware information to every component.
-  * ADDED: GregTech Recipe Mode support for GregTech 6!
-    - Don't worry, GregTech 5 support is still there
-    - Not all recipes work yet as there are still some required items missing in GregTech 6.
-  * ADDED: Built-in tape utility program for ComputerCraft to write songs to tapes and to play, stop, pause etc.
-  * ADDED: getPosition() to tape drives. No, I'm not joking. It's real. I'm sorry.
-  * ADDED: Digital Signal Controller Box for Railcraft!
+  * CHANGED: Sangar made beep card and noise card textures a lot less boring. He also made the sound card texture to match them. Thanks a lot!
+  * CHANGED: Some tweaks to beep card and noise card recipes.
+  * CHANGED: Built-in tape and explode program have been moved to floppy disks for OpenComputers to conform to OpenComputers 1.6 standard.
+  * FIXED: Iron Note Blocks now properly error when used with instrument names.
+  * FIXED: Tape program not displaying information properly if file size is larger than tape size
+  * FIXED: OpenComputers' tape program not working with HTTPS
+  * FIXED: Explosions not dropping items when they should
+  * FIXED: Advanced Cipher Block not properly converting certain keys
+  * MISC: Some visual improvements to the `tape` program.
+
+  * [1.7.10] ADDED: Digital Signal Controller Box for Railcraft!
     - Can be paired to up to 32 receivers (sounds overpowered, definitely is overpowered, but CovertJaguar told me to do it. It's probaby better this way...)
     - Allows individually sending aspects to each paired receiver
     - Receivers must be referenced by their name, meaning you have to name all your signals using Signal Labels
-  * ADDED: Option to specify a custom timeout when writing files from a URL to a tape using the tape program on OpenComputers.
-  * ADDED: Colored tapes can now be crafted with a bucket of water to wash off the color.
-  * ADDED: `tape wipe` to built-in tape program. Can be used to completely erase a tape.
-  * CHANGED: Sangar made beep card and noise card textures a lot less boring. He also made the sound card texture to match them. Thanks a lot!
-  * CHANGED: Some tweaks to beep card and noise card recipes.
-  * CHANGED: Digital Signal Receiver Box
-    - Can noe be paired to up to 32 receivers, just like the controller box
+  * [1.7.10] CHANGED: Digital Signal Receiver Box
+    - Can now be paired to up to 32 receivers, just like the controller box
     - Allows individually querying the aspect of each paired controller
     - Sends an `aspect_changed` event containing the controller's name and new aspect.
     - Controllers must be referenced by their name, meaning you have to name all your signals using Signal Labels
-  * CHANGED: Built-in tape and explode program have been moved to floppy disks for OpenComputers to conform with OpenComputers 1.6 standard.
-  * FIXED: Crash when the `openComputersBees` config option was set to `false`.
-  * FIXED: Digital Locomotive Relay trying to consume OpenComputers energy even if called from ComputerCraft
-  * FIXED: Updated OpenComputers integration
-  * FIXED: Removed explicit dependency on GregTech 5. Computronics will launch with GregTech 6 now (but there is no integration yet).
-  * FIXED: Tape program not displaying information properly if file size is larger than tape size
-  * FIXED: OpenComputers' tape program not working with HTTPS
-  * FIXED: Ticket Machine's `setDestination` not working with OpenComputers when no slot is specified
-  * FIXED: Explosions not dropping items when they should
-  * MISC: Some visual improvements to the `tape` program.
+  * [1.7.10} ADDED: GregTech Recipe Mode support for GregTech 6!
+    - Don't worry, GregTech 5 support is still there
+    - Not all recipes work yet as there are still some required items missing in GregTech 6.
+  * [1.7.10] FIXED: Crash when the `openComputersBees` config option was set to `false`.
+  * [1.7.10] FIXED: Digital Locomotive Relay trying to consume OpenComputers energy even if called from ComputerCraft
+  * [1.7.10] FIXED: Updated OpenComputers integration
+  * [1.7.10] FIXED: Removed explicit dependency on GregTech 5. Computronics will launch with GregTech 6 now (but there is no integration yet).
+  * [1.7.10] FIXED: Ticket Machine's `setDestination` not working with OpenComputers when no slot is specified
+
+  * [1.8.9] Ported the mod to 1.8.9! Everything is resource-pack ready!
+  	- Mods supported right now are ComputerCraft, OpenComputers, TIS-3D, BuildCraft (apart from the Drone Docking Station), EnderIO, Pink Flamingo, Storage Drawers, Charset and WAILA. 
+  	- asielib is no longer needed as a separate download, it is included in this mod.
+  * [1.8.9] ADDED: Charset Wires Bundled Cable support for ComputerCraft.
+  * [1.8.9] ADDED: Charset Wires Bundled Cable support for Computronics.
+  * [1.8.9] ADDED: Support for NoteBetter to the Iron Note Block and the Musical Turtle Upgrade.
+  * [1.8.9] CHANGED: Updated audio codec to DFPWM 1a. Any files encoded with the old codec will still play, but the sound will be a lot more quiet.
+  
+  * [1.9.4] Ported the mod to 1.9.4!
+    - Mods supported right now are OpenComputers, TIS-3D, EnderIO, Charset, Forestry, Storage Drawers, Waila, The One Probe and Pink Flamingo.
+    - asielib is no longer needed as a separate download, it is included in this mod.
+  * [1.9.4] ADDED: asie made Sound Cards, Speakers, Audio Cables and Tape Drives compatible with Charset Audio devices.
+  * [1.9.4] ADDED: Computronics and Charset Audio Cables and Speakers can now be connected to OpenComputers cases containing Sound Cards.
+
+  * [1.10.2] Ported the mod to 1.10.2!
+    - Any changes done to 1.9.4 apply.
+    - Mods supported right now are OpenComputers, TIS-3D, Railcraft, EnderIO, Charset, Forestry, Storage Drawers, Waila, The One Probe and Pink Flamingo.
+    - asielib is no longer needed as a separate download, it is included in this mod.
 
 ==== 1.6.0 ====
 
