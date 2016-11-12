@@ -18,7 +18,7 @@ The mod's license can be found [here](http://wiki.vex.tty.sh/wiki:licensing).
 
 This is the repository for the Computronics Minecraft mod. 
 
-### Probably required mods
+### Mods required to compile
 
 | Mod | Version | Author | URL |
 | --- | ------- | ------ | --- |
