@@ -35,6 +35,7 @@ This version comes with a 1.8.9, 1.9.4 and 1.10 port in addition to many additio
       - This allows you to monitor input and output of your energy network separately
     - Now you can get and set the range of Vacuum Chests
     - Added `getProgress()` to most machines with progress
+  * ADDED: `tape wipe` to built-in tape program. Can be used to completely erase a tape.
   * CHANGED: Sangar made beep card and noise card textures a lot less boring. He also made the sound card texture to match them. Thanks a lot!
   * CHANGED: Some tweaks to beep card and noise card recipes.
   * CHANGED: Built-in tape and explode program have been moved to floppy disks for OpenComputers to conform to OpenComputers 1.6 standard.
@@ -42,6 +43,7 @@ This version comes with a 1.8.9, 1.9.4 and 1.10 port in addition to many additio
   * FIXED: Tape program not displaying information properly if file size is larger than tape size
   * FIXED: OpenComputers' tape program not working with HTTPS
   * FIXED: Explosions not dropping items when they should
+  * MISC: Some visual improvements to the `tape` program.
 
   * [1.7.10] ADDED: Digital Signal Controller Box for Railcraft!
     - Can be paired to up to 32 receivers (sounds overpowered, definitely is overpowered, but CovertJaguar told me to do it. It's probaby better this way...)
@@ -52,6 +54,9 @@ This version comes with a 1.8.9, 1.9.4 and 1.10 port in addition to many additio
     - Allows individually querying the aspect of each paired controller
     - Sends an `aspect_changed` event containing the controller's name and new aspect.
     - Controllers must be referenced by their name, meaning you have to name all your signals using Signal Labels
+  * [1.7.10} ADDED: GregTech Recipe Mode support for GregTech 6!
+    - Don't worry, GregTech 5 support is still there
+    - Not all recipes work yet as there are still some required items missing in GregTech 6.
   * [1.7.10] FIXED: Crash when the `openComputersBees` config option was set to `false`.
   * [1.7.10] FIXED: Digital Locomotive Relay trying to consume OpenComputers energy even if called from ComputerCraft
   * [1.7.10] FIXED: Updated OpenComputers integration
