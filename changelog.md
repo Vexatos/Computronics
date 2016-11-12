@@ -26,6 +26,7 @@ This version comes with a 1.8.9, 1.9.4 and 1.10 port in addition to many additio
   * ADDED: Built-in tape utility program for ComputerCraft to write songs to tapes and to play, stop, pause etc.
   * ADDED: Option to specify a custom timeout when writing files from a URL to a tape using the tape program on OpenComputers.
   * ADDED: Coloured tapes can now be crafted with a bucket of water to wash off the colour.
+  * ADDED: `tape wipe` to built-in tape program. Can be used to completely erase a tape.
   * ADDED: EnderIO 2.3 integration  for OpenComputers and ComputerCraft! (It has actually existed since March 2015, just not in any official release)
     - Added support for the new Telepad
       - Allows full control over the coordinates set (if allowed in the EnderIO config file) as well as telepad activation
@@ -35,7 +36,6 @@ This version comes with a 1.8.9, 1.9.4 and 1.10 port in addition to many additio
       - This allows you to monitor input and output of your energy network separately
     - Now you can get and set the range of Vacuum Chests
     - Added `getProgress()` to most machines with progress
-  * ADDED: `tape wipe` to built-in tape program. Can be used to completely erase a tape.
   * CHANGED: Sangar made beep card and noise card textures a lot less boring. He also made the sound card texture to match them. Thanks a lot!
   * CHANGED: Some tweaks to beep card and noise card recipes.
   * CHANGED: Built-in tape and explode program have been moved to floppy disks for OpenComputers to conform to OpenComputers 1.6 standard.
@@ -73,9 +73,14 @@ This version comes with a 1.8.9, 1.9.4 and 1.10 port in addition to many additio
   * [1.8.9] CHANGED: Updated audio codec to DFPWM 1a. Any files encoded with the old codec will still play, but the sound will be a lot more quiet.
   
   * [1.9.4] Ported the mod to 1.9.4!
+    - All changes done to 1.8.9 apply.
     - Mods supported right now are OpenComputers, TIS-3D, EnderIO, Charset, Forestry, Storage Drawers, Waila, The One Probe and Pink Flamingo.
     - asielib is no longer needed as a separate download, it is included in this mod.
   * [1.9.4] ADDED: asie made Sound Cards, Speakers, Audio Cables and Tape Drives compatible with Charset Audio devices.
+
+  * [1.10.2] Ported the mod to 1.10.2!
+    - All changes done to 1.8.9 and 1.9.4 apply.
+    - Mods supported right now are OpenComputers, TIS-3D, Railcraft, EnderIO, Charset, Forestry, Storage Drawers, Waila, The One Probe and Pink Flamingo.
 
 ==== 1.6.0 ====
 
