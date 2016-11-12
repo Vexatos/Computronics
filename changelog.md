@@ -47,39 +47,39 @@ This version comes with a 1.8.9, 1.9.4 and 1.10 port in addition to many additio
   * FIXED: Advanced Cipher Block not properly converting certain keys
   * MISC: Some visual improvements to the `tape` program.
 
-  * [1.7.10] ADDED: Digital Signal Controller Box for Railcraft!
+  * **[1.7.10]** ADDED: Digital Signal Controller Box for Railcraft!
     - Can be paired to up to 32 receivers (sounds overpowered, definitely is overpowered, but CovertJaguar told me to do it. It's probaby better this way...)
     - Allows individually sending aspects to each paired receiver
     - Receivers must be referenced by their name, meaning you have to name all your signals using Signal Labels
-  * [1.7.10] CHANGED: Digital Signal Receiver Box
+  * **[1.7.10]** CHANGED: Digital Signal Receiver Box
     - Can now be paired to up to 32 receivers, just like the controller box
     - Allows individually querying the aspect of each paired controller
     - Sends an `aspect_changed` event containing the controller's name and new aspect.
     - Controllers must be referenced by their name, meaning you have to name all your signals using Signal Labels
-  * [1.7.10} ADDED: GregTech Recipe Mode support for GregTech 6!
+  * **[1.7.10]** ADDED: GregTech Recipe Mode support for GregTech 6!
     - Don't worry, GregTech 5 support is still there
     - Not all recipes work yet as there are still some required items missing in GregTech 6.
-  * [1.7.10] FIXED: Crash when the `openComputersBees` config option was set to `false`.
-  * [1.7.10] FIXED: Digital Locomotive Relay trying to consume OpenComputers energy even if called from ComputerCraft
-  * [1.7.10] FIXED: Updated OpenComputers integration
-  * [1.7.10] FIXED: Removed explicit dependency on GregTech 5. Computronics will launch with GregTech 6 now (but there is no integration yet).
-  * [1.7.10] FIXED: Ticket Machine's `setDestination` not working with OpenComputers when no slot is specified
+  * **[1.7.10]** FIXED: Crash when the `openComputersBees` config option was set to `false`.
+  * **[1.7.10]** FIXED: Digital Locomotive Relay trying to consume OpenComputers energy even if called from ComputerCraft
+  * **[1.7.10]** FIXED: Updated OpenComputers integration
+  * **[1.7.10]** FIXED: Removed explicit dependency on GregTech 5. Computronics will launch with GregTech 6 now (but there is no integration yet).
+  * **[1.7.10]** FIXED: Ticket Machine's `setDestination` not working with OpenComputers when no slot is specified
 
-  * [1.8.9] Ported the mod to 1.8.9! Everything is resource-pack ready!
-  	- Mods supported right now are ComputerCraft, OpenComputers, TIS-3D, BuildCraft (apart from the Drone Docking Station), EnderIO, Pink Flamingo, Storage Drawers, Charset and WAILA. 
-  	- asielib is no longer needed as a separate download, it is included in this mod.
-  * [1.8.9] ADDED: Charset Wires Bundled Cable support for ComputerCraft.
-  * [1.8.9] ADDED: Charset Wires Bundled Cable support for Computronics.
-  * [1.8.9] ADDED: Support for NoteBetter to the Iron Note Block and the Musical Turtle Upgrade.
-  * [1.8.9] CHANGED: Updated audio codec to DFPWM 1a. Any files encoded with the old codec will still play, but the sound will be a lot more quiet.
-  
-  * [1.9.4] Ported the mod to 1.9.4!
+  * **[1.8.9]** Ported the mod to 1.8.9! Everything is resource-pack ready!
+    - Mods supported right now are ComputerCraft, OpenComputers, TIS-3D, BuildCraft (apart from the Drone Docking Station), EnderIO, Pink Flamingo, Storage Drawers, Charset and WAILA. 
+    - asielib is no longer needed as a separate download, it is included in this mod.
+  * **[1.8.9]** ADDED: Charset Wires Bundled Cable support for ComputerCraft.
+  * **[1.8.9]** ADDED: Charset Wires Bundled Cable support for Computronics.
+  * **[1.8.9]** ADDED: Support for NoteBetter to the Iron Note Block and the Musical Turtle Upgrade.
+  * **[1.8.9]** CHANGED: Updated audio codec to DFPWM 1a. Any files encoded with the old codec will still play, but the sound will be a lot more quiet.
+
+  * **[1.9.4]** Ported the mod to 1.9.4!
     - Mods supported right now are OpenComputers, TIS-3D, EnderIO, Charset, Forestry, Storage Drawers, Waila, The One Probe and Pink Flamingo.
     - asielib is no longer needed as a separate download, it is included in this mod.
-  * [1.9.4] ADDED: asie made Sound Cards, Speakers, Audio Cables and Tape Drives compatible with Charset Audio devices.
-  * [1.9.4] ADDED: Computronics and Charset Audio Cables and Speakers can now be connected to OpenComputers cases containing Sound Cards.
+  * **[1.9.4]** ADDED: asie made Sound Cards, Speakers, Audio Cables and Tape Drives compatible with Charset Audio devices.
+  * **[1.9.4]** ADDED: Computronics and Charset Audio Cables and Speakers can now be connected to OpenComputers cases containing Sound Cards.
 
-  * [1.10.2] Ported the mod to 1.10.2!
+  * **[1.10.2]** Ported the mod to 1.10.2!
     - Any changes done to 1.9.4 apply.
     - Mods supported right now are OpenComputers, TIS-3D, Railcraft, EnderIO, Charset, Forestry, Storage Drawers, Waila, The One Probe and Pink Flamingo.
     - asielib is no longer needed as a separate download, it is included in this mod.
