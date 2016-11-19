@@ -1,3 +1,7 @@
+==== 1.6.2 ====
+
+  * FIXED: Digital Signal Controller Box not showing any information on Waila
+
 ==== 1.6.1 ====
 
 This version comes with a 1.8.9, 1.9.4 and 1.10 port in addition to many additions.
@@ -66,7 +70,7 @@ This version comes with a 1.8.9, 1.9.4 and 1.10 port in addition to many additio
   * **[1.7.10]** FIXED: Ticket Machine's `setDestination` not working with OpenComputers when no slot is specified
 
   * **[1.8.9]** Ported the mod to 1.8.9! Everything is resource-pack ready!
-    - Mods supported right now are ComputerCraft, OpenComputers, TIS-3D, BuildCraft (apart from the Drone Docking Station), EnderIO, Pink Flamingo, Storage Drawers, Charset and WAILA. 
+    - Mods supported right now are ComputerCraft, OpenComputers, TIS-3D, BuildCraft (apart from the Drone Docking Station), EnderIO, Pink Flamingo, Storage Drawers, Charset and Waila. 
     - asielib is no longer needed as a separate download, it is included in this mod.
   * **[1.8.9]** ADDED: Charset Wires Bundled Cable support for ComputerCraft.
   * **[1.8.9]** ADDED: Charset Wires Bundled Cable support for Computronics.

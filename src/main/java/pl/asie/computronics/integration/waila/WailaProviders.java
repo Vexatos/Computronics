@@ -3,6 +3,7 @@ package pl.asie.computronics.integration.waila;
 import pl.asie.computronics.block.BlockColorfulLamp;
 import pl.asie.computronics.block.BlockPeripheral;
 import pl.asie.computronics.block.BlockTapeReader;
+import pl.asie.computronics.integration.railcraft.block.BlockDigitalControllerBox;
 import pl.asie.computronics.integration.railcraft.block.BlockDigitalReceiverBox;
 import pl.asie.computronics.integration.railcraft.block.BlockLocomotiveRelay;
 import pl.asie.computronics.integration.waila.providers.IComputronicsWailaProvider;
@@ -27,6 +28,7 @@ public class WailaProviders {
 		newProvider(new WailaPeripheral(), BlockPeripheral.class);
 		if(Mods.isLoaded(Mods.Railcraft)) {
 			newProvider(new WailaPeripheral(), BlockDigitalReceiverBox.class);
+			newProvider(new WailaPeripheral(), BlockDigitalControllerBox.class);
 			newProvider(new WailaLocomotiveRelay(), BlockLocomotiveRelay.class);
 		}
 		newProvider(new WailaTapeDrive(), BlockTapeReader.class);
