@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import net.minecraft.nbt.NBTTagCompound;
 import pl.asie.computronics.reference.Config;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 
 /**
@@ -185,6 +186,7 @@ public class AudioUtil {
 
 			public static final Phase[] VALUES = values();
 
+			@Nullable
 			public Phase next() {
 				int ordinal = ordinal();
 				return ordinal < VALUES.length ? VALUES[ordinal + 1] : null;

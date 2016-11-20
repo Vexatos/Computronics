@@ -3,8 +3,6 @@ package pl.asie.computronics.network;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetHandler;
 import net.minecraft.tileentity.TileEntity;
-import pl.asie.computronics.Computronics;
-import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TapeDriveState.State;
 import pl.asie.computronics.tile.TileTapeDrive;
 import pl.asie.lib.network.MessageHandlerBase;
@@ -32,15 +30,15 @@ public class NetworkHandlerServer extends MessageHandlerBase {
 			}
 			break;
 			case TICKET_SYNC: {
-				if(Mods.isLoaded(Mods.Railcraft)) {
+				/*if(Mods.isLoaded(Mods.Railcraft)) {
 					Computronics.railcraft.onMessageRailcraft(packet, player, true);
-				}
+				}*/
 			}
 			break;
 			case TICKET_PRINT: {
-				if(Mods.isLoaded(Mods.Railcraft)) {
+				/*if(Mods.isLoaded(Mods.Railcraft)) {
 					Computronics.railcraft.printTicket(packet, player, true);
-				}
+				}*/
 			}
 			break;
 		}

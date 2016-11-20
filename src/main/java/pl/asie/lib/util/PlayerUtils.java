@@ -5,22 +5,25 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
+import javax.annotation.Nullable;
+
 public class PlayerUtils {
 
+	@Nullable
 	public static EntityPlayer find(String name) {
 		//AsieLibMod.log.info("trying to find player " + name);
 		if(FMLCommonHandler.instance().getMinecraftServerInstance() == null) {
 			//AsieLibMod.log.info("No server found, trying client");
-			if(Minecraft.getMinecraft() != null && Minecraft.getMinecraft().theWorld != null) {
+			if(Minecraft.getMinecraft().world != null) {
 				//AsieLibMod.log.info(player != null ? "client player found: " + player.toString() : "No client player found");
-				return Minecraft.getMinecraft().theWorld.getPlayerEntityByName(name);
+				return Minecraft.getMinecraft().world.getPlayerEntityByName(name);
 			}
 			//AsieLibMod.log.info("nothing found");
 			return null;
 		}
 
 		//AsieLibMod.log.info("Server found! It is " + FMLCommonHandler.instance().getMinecraftServerInstance().toString());
-		for(EntityPlayerMP player : FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerList()) {
+		for(EntityPlayerMP player : FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers()) {
 			if(player != null) {
 				//AsieLibMod.log.info("Server player found: " + target.toString());
 				if(player.getName().equals(name)) {

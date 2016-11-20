@@ -6,7 +6,6 @@ import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
@@ -38,7 +37,7 @@ public class BlockColorfulLamp extends BlockPeripheral /*implements IRedNetInput
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 		/*if(!world.isRemote && Mods.isLoaded(Mods.MFR) && player.isSneaking()) {
 			TileEntity tile = world.getTileEntity(pos);
 			if(tile instanceof TileColorfulLamp) {
@@ -51,7 +50,7 @@ public class BlockColorfulLamp extends BlockPeripheral /*implements IRedNetInput
 				}
 			}
 		}*/
-		return super.onBlockActivated(world, pos, state, player, hand, heldItem, side, hitX, hitY, hitZ);
+		return super.onBlockActivated(world, pos, state, player, hand, side, hitX, hitY, hitZ);
 	}
 
 	@Override
@@ -77,12 +76,12 @@ public class BlockColorfulLamp extends BlockPeripheral /*implements IRedNetInput
 
 	@Override
 	@Deprecated
-	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block) {
+	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block, BlockPos otherPos) {
 		/*TileEntity tile = world.getTileEntity(x, y, z);
 		if(Mods.isLoaded(Mods.ProjectRed) && tile instanceof TileColorfulLamp) {
 			((TileColorfulLamp) tile).onProjectRedBundledInputChanged();
 		}*/
-		super.neighborChanged(state, world, pos, block);
+		super.neighborChanged(state, world, pos, block, otherPos);
 	}
 
 	@Override

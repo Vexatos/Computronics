@@ -130,12 +130,13 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 		}
 	}
 
+	@Override
 	public void update() {
 		//super.update();
-		if(worldObj == null) {
+		if(world == null) {
 			return;
 		}
-		if(worldObj.isRemote && hasSound()) {
+		if(world.isRemote && hasSound()) {
 			updateSound();
 		}
 	}
@@ -165,7 +166,7 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 		if(Mods.isLoaded(Mods.OpenComputers)) {
 			invalidate_OC();
 		}
-		if(worldObj.isRemote && hasSound()) {
+		if(world.isRemote && hasSound()) {
 			updateSound();
 		}
 	}
@@ -252,7 +253,7 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 		}
 		if(other instanceof TileEntity) {
 			TileEntity tother = (TileEntity) other;
-			return tother.getWorld().equals(worldObj)
+			return tother.getWorld().equals(world)
 				&& tother.getPos().equals(this.getPos());
 		}
 
@@ -299,7 +300,7 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 			this.overlayColor = getDefaultColor();
 		}
 		if(oldColor != this.overlayColor) {
-			this.worldObj.markBlockRangeForRenderUpdate(getPos(), getPos());
+			this.world.markBlockRangeForRenderUpdate(getPos(), getPos());
 		}
 	}
 
@@ -351,10 +352,12 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 
 	private ResourceLocation soundRes;
 
-	protected static ResourceLocation getSoundFor(String sound) {
+	@Nullable
+	protected static ResourceLocation getSoundFor(@Nullable String sound) {
 		return sound == null ? null : new ResourceLocation(Mods.Computronics + ":" + sound);
 	}
 
+	@Nullable
 	public String getSoundName() {
 		return null;
 	}

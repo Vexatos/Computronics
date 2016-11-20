@@ -17,6 +17,7 @@ import pl.asie.computronics.util.sound.AudioType;
 import pl.asie.computronics.util.sound.Channel;
 import pl.asie.lib.network.Packet;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.Map;
 
@@ -85,6 +86,7 @@ public abstract class DriverCardSoundBase extends ManagedEnvironment implements 
 		return c;
 	}
 
+	@Nullable
 	protected Object[] tryConsumeEnergy(double v, String methodName) {
 		if(this.node() instanceof Connector) {
 			int power = this.tryConsumeEnergy(v);
@@ -124,9 +126,9 @@ public abstract class DriverCardSoundBase extends ManagedEnvironment implements 
 		}
 		Packet packet = Computronics.packet.create(PacketType.COMPUTER_BEEP.ordinal())
 			.writeInt(world.provider.getDimension())
-			.writeInt(MathHelper.floor_double(x))
-			.writeInt(MathHelper.floor_double(y))
-			.writeInt(MathHelper.floor_double(z))
+			.writeInt(MathHelper.floor(x))
+			.writeInt(MathHelper.floor(y))
+			.writeInt(MathHelper.floor(z))
 			.writeByte(hits);
 		for(int i = 0; i < freqPairs.length; i++) {
 			Channel.FreqPair freqPair = freqPairs[i];
@@ -139,9 +141,9 @@ public abstract class DriverCardSoundBase extends ManagedEnvironment implements 
 		}
 		Computronics.packet.sendToAllAround(packet, new NetworkRegistry.TargetPoint(
 			world.provider.getDimension(),
-			MathHelper.floor_double(x),
-			MathHelper.floor_double(y),
-			MathHelper.floor_double(z), Config.SOUND_RADIUS));
+			MathHelper.floor(x),
+			MathHelper.floor(y),
+			MathHelper.floor(z), Config.SOUND_RADIUS));
 
 	}
 
@@ -177,7 +179,7 @@ public abstract class DriverCardSoundBase extends ManagedEnvironment implements 
 		return 0;
 	}
 
-	protected static double optDouble(Number value, double def) {
+	protected static double optDouble(@Nullable Number value, double def) {
 		if(value == null) {
 			return def;
 		}
@@ -185,8 +187,8 @@ public abstract class DriverCardSoundBase extends ManagedEnvironment implements 
 	}
 
 	protected static boolean isInDimension(EntityPlayer player, int dimension) {
-		return player != null && player.worldObj != null && player.worldObj.provider != null
-			&& player.worldObj.provider.getDimension() == dimension;
+		return player != null && player.world != null && player.world.provider != null
+			&& player.world.provider.getDimension() == dimension;
 	}
 
 	protected Map<String, String> deviceInfo;
@@ -195,9 +197,7 @@ public abstract class DriverCardSoundBase extends ManagedEnvironment implements 
 	public Map<String, String> getDeviceInfo() {
 		if(deviceInfo == null) {
 			OCUtils.Device device = deviceInfo();
-			if(device != null) {
-				return deviceInfo = device.deviceInfo();
-			}
+			return deviceInfo = device.deviceInfo();
 		}
 		return deviceInfo;
 	}

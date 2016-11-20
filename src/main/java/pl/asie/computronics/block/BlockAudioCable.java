@@ -47,9 +47,10 @@ public class BlockAudioCable extends BlockBase implements IBlockWithDocumentatio
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 		TileEntity tile = world.getTileEntity(pos);
-		if(tile instanceof TileAudioCable && heldItem != null) {
+		ItemStack heldItem = player.getHeldItem(hand);
+		if(tile instanceof TileAudioCable && !heldItem.isEmpty()) {
 			ColorUtils.Color color = ColorUtils.getColor(heldItem);
 			if(color != null) {
 				((TileAudioCable) tile).setColor(color.color);
@@ -70,10 +71,12 @@ public class BlockAudioCable extends BlockBase implements IBlockWithDocumentatio
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public int colorMultiplier(IBlockState state, IBlockAccess world, BlockPos pos, int renderPass) {
-		TileEntity tile = world.getTileEntity(pos);
-		if(tile instanceof IColorable) {
-			return ((IColorable) tile).getColor();
+	public int colorMultiplier(IBlockState state, @Nullable IBlockAccess world, @Nullable BlockPos pos, int renderPass) {
+		if(world != null && pos != null) {
+			TileEntity tile = world.getTileEntity(pos);
+			if(tile instanceof IColorable) {
+				return ((IColorable) tile).getColor();
+			}
 		}
 		return getRenderColor(state);
 	}
@@ -231,14 +234,14 @@ public class BlockAudioCable extends BlockBase implements IBlockWithDocumentatio
 
 	@Override
 	@Deprecated
-	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block) {
+	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block, BlockPos otherPos) {
 		TileEntity t = world.getTileEntity(pos);
 
 		if(t instanceof TileAudioCable) {
 			((TileAudioCable) t).updateConnections();
 			world.notifyBlockUpdate(pos, state, state, 3);
 		}
-		super.neighborChanged(state, world, pos, block);
+		super.neighborChanged(state, world, pos, block, otherPos);
 	}
 
 	@Override

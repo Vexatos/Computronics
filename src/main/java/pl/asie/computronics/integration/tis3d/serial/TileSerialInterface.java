@@ -4,6 +4,8 @@ import li.cil.tis3d.api.serial.SerialInterface;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 
+import javax.annotation.Nullable;
+
 /**
  * @author Vexatos
  */
@@ -32,7 +34,7 @@ public abstract class TileSerialInterface<T extends TileEntity> implements Seria
 	public void reset() {
 	}
 
-	public boolean isTileEqual(TileEntity tile) {
+	public boolean isTileEqual(@Nullable TileEntity tile) {
 		return tile != null && this.tile != null && this.tile.equals(tile);
 	}
 }

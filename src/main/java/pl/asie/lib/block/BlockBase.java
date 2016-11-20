@@ -158,7 +158,7 @@ public abstract class BlockBase extends Block /*implements
 
 	@Override
 	@Deprecated
-	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block) {
+	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block, BlockPos otherPos) {
 		if(receivesRedstone(world, pos)) {
 			TileEntity tile = world.getTileEntity(pos);
 			if(tile != null && tile instanceof TileEntityBase) {
@@ -269,6 +269,7 @@ public abstract class BlockBase extends Block /*implements
 
 	//private static final int[] ROT_TRANSFORM4 = { 2, 5, 3, 4 };
 
+	@Nullable
 	private EnumFacing determineRotation(World world, BlockPos pos, EntityLivingBase entity) {
 		if(this.rotation == Rotation.NONE) {
 			return null;
@@ -287,7 +288,7 @@ public abstract class BlockBase extends Block /*implements
 			}
 		}
 		return entity.getHorizontalFacing().getOpposite();
-		/*int l = MathHelper.floor_double((double) (entity.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+		/*int l = MathHelper.floor((double) (entity.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
 		return ROT_TRANSFORM4[l];*/
 	}
 
@@ -309,12 +310,12 @@ public abstract class BlockBase extends Block /*implements
 	}*/
 
 	@Override
-	public IBlockState onBlockPlaced(World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
+	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
 		if(this.rotation != Rotation.NONE) {
 			EnumFacing rot = determineRotation(world, pos, placer);
 			return getDefaultState().withProperty(rotation.FACING, rot);
 		}
-		return super.onBlockPlaced(world, pos, side, hitX, hitY, hitZ, meta, placer);
+		return super.getStateForPlacement(world, pos, side, hitX, hitY, hitZ, meta, placer, hand);
 	}
 
 	/*@Override
@@ -381,7 +382,7 @@ public abstract class BlockBase extends Block /*implements
 
 	protected boolean useTool(World world, BlockPos pos, EntityPlayer player, EnumFacing side) {
 		ItemStack held = player.inventory.getCurrentItem();
-		if(held != null && Integration.isTool(held, player, pos) && this.rotation != null) {
+		if(!held.isEmpty() && Integration.isTool(held, player, pos) && this.rotation != null) {
 			boolean wrenched = Integration.useTool(held, player, pos);
 			return wrenched && (this.onToolUsed(world, pos, player, side) || this.rotate(world, pos, player, side));
 		}
@@ -393,7 +394,7 @@ public abstract class BlockBase extends Block /*implements
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 		if(!world.isRemote) {
 			if(!this.canUseTool(world, pos, player, side) || !this.useTool(world, pos, player, side)) {
 				IGuiProvider guiProvider = getGuiProvider(world, pos, player, side);
@@ -464,7 +465,7 @@ public abstract class BlockBase extends Block /*implements
 	@Optional.Method(modid = Mods.GregTech)
 	public ArrayList<String> getDebugInfo(EntityPlayer aPlayer, int aX, int aY,
 		int aZ, int aLogLevel) {
-		TileEntity te = aPlayer.worldObj.getTileEntity(aX, aY, aZ);
+		TileEntity te = aPlayer.world.getTileEntity(aX, aY, aZ);
 		ArrayList<String> data = new ArrayList<String>();
 		if(te instanceof IInformationProvider) {
 			((IInformationProvider) te).getInformation(aPlayer, ForgeDirection.UNKNOWN, data, true);

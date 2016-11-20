@@ -6,6 +6,7 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.Multiset;
 import com.google.common.collect.Multisets;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -66,6 +67,7 @@ public class SimpleInvertibleDualMap<K, V> {
 		return vs;
 	}
 
+	@Nullable
 	public K removeValue(V value) {
 		K removed = inverse.remove(value);
 		if(removed != null) {

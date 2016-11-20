@@ -18,31 +18,7 @@ import org.apache.logging.log4j.Logger;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.api.audio.AudioPacketRegistry;
 import pl.asie.computronics.audio.SoundCardPlaybackManager;
-import pl.asie.computronics.integration.enderio.DriverAbstractMachine;
-import pl.asie.computronics.integration.enderio.DriverAbstractPoweredMachine;
-import pl.asie.computronics.integration.enderio.DriverCapacitorBank;
-import pl.asie.computronics.integration.enderio.DriverHasExperience;
-import pl.asie.computronics.integration.enderio.DriverIOConfigurable;
-import pl.asie.computronics.integration.enderio.DriverPowerMonitor;
-import pl.asie.computronics.integration.enderio.DriverPowerStorage;
-import pl.asie.computronics.integration.enderio.DriverProgressTile;
-import pl.asie.computronics.integration.enderio.DriverRedstoneControllable;
-import pl.asie.computronics.integration.enderio.DriverTelepad;
-import pl.asie.computronics.integration.enderio.DriverTransceiver;
-import pl.asie.computronics.integration.enderio.DriverVacuumChest;
-import pl.asie.computronics.integration.enderio.DriverWeatherObelisk;
 import pl.asie.computronics.integration.flamingo.DriverFlamingo;
-import pl.asie.computronics.integration.forestry.IntegrationForestry;
-import pl.asie.computronics.integration.railcraft.driver.DriverElectricGrid;
-import pl.asie.computronics.integration.railcraft.driver.DriverRoutingDetector;
-import pl.asie.computronics.integration.railcraft.driver.DriverRoutingSwitch;
-import pl.asie.computronics.integration.railcraft.driver.track.DriverLauncherTrack;
-import pl.asie.computronics.integration.railcraft.driver.track.DriverLocomotiveTrack;
-import pl.asie.computronics.integration.railcraft.driver.track.DriverPoweredTrack;
-import pl.asie.computronics.integration.railcraft.driver.track.DriverPrimingTrack;
-import pl.asie.computronics.integration.railcraft.driver.track.DriverRoutingTrack;
-import pl.asie.computronics.integration.railcraft.driver.track.DriverThrottleTrack;
-import pl.asie.computronics.integration.storagedrawers.DriverDrawerGroup;
 import pl.asie.computronics.item.ItemOCSpecialParts;
 import pl.asie.computronics.item.ItemOpenComputers;
 import pl.asie.computronics.oc.block.ComputronicsBlockEnvironmentProvider;
@@ -136,12 +112,12 @@ public class IntegrationOpenComputers {
 			managerId = AudioPacketRegistry.INSTANCE.registerManager(audio);
 		}
 
-		if(Mods.isLoaded(Mods.Forestry)) {
+		/*if(Mods.isLoaded(Mods.Forestry)) {
 			if(Config.FORESTRY_BEES) {
 				Computronics.forestry = new IntegrationForestry();
 				Computronics.forestry.preInitOC();
 			}
-		}
+		}*/
 
 		/*if(Mods.isLoaded(Mods.BuildCraftTransport) && Mods.isLoaded(Mods.BuildCraftCore) && Config.BUILDCRAFT_STATION) { // TODO BuildCraft Drone Docking
 			Computronics.buildcraft = new IntegrationBuildCraft();
@@ -214,11 +190,11 @@ public class IntegrationOpenComputers {
 				}
 			}
 		}*/
-		if(Mods.isLoaded(Mods.StorageDrawers)) {
+		/*if(Mods.isLoaded(Mods.StorageDrawers)) {
 			if(compat.isCompatEnabled(Compat.StorageDrawers)) {
 				Driver.add(new DriverDrawerGroup.OCDriver());
 			}
-		}/*
+		}*//*
 		if(Mods.isLoaded(Mods.FSP)) {
 			if(compat.isCompatEnabled(Compat.FSP_Steam_Transporter)) {
 				Driver.add(new DriverSteamTransporter.OCDriver());
@@ -229,7 +205,7 @@ public class IntegrationOpenComputers {
 				Driver.add(new DriverChargeConductor.OCDriver());
 			}
 		}*/
-		if(Mods.isLoaded(Mods.Railcraft)) {
+		/*if(Mods.isLoaded(Mods.Railcraft)) {
 			if(compat.isCompatEnabled(Compat.Railcraft_Routing)) {
 				Driver.add(new DriverPoweredTrack.OCDriver());
 				Driver.add(new DriverRoutingTrack.OCDriver());
@@ -241,7 +217,7 @@ public class IntegrationOpenComputers {
 				Driver.add(new DriverLauncherTrack.OCDriver());
 				Driver.add(new DriverPrimingTrack.OCDriver());
 			}
-		}/*
+		}*//*
 		if(Mods.hasVersion(Mods.GregTech, Mods.Versions.GregTech5)) {
 			if(compat.isCompatEnabled(Compat.GregTech_Machines)) {
 				Driver.add(new DriverBaseMetaTileEntity());
@@ -263,7 +239,7 @@ public class IntegrationOpenComputers {
 				Driver.add(new DriverSpatialIOPort.OCDriver());
 			}
 		}*/
-		if(Mods.isLoaded(Mods.EnderIO)) {
+		/*if(Mods.isLoaded(Mods.EnderIO)) {
 			if(compat.isCompatEnabled(Compat.EnderIO)) {
 				Driver.add(new DriverRedstoneControllable.OCDriver());
 				Driver.add(new DriverIOConfigurable.OCDriver());
@@ -279,7 +255,7 @@ public class IntegrationOpenComputers {
 				Driver.add(new DriverWeatherObelisk.OCDriver());
 				Driver.add(new DriverTelepad.OCDriver());
 			}
-		}/*
+		}*//*
 
 		if(Mods.API.hasAPI(Mods.API.DraconicEvolution)
 			&& compat.isCompatEnabled(Compat.DraconicEvolution)) {
@@ -303,9 +279,9 @@ public class IntegrationOpenComputers {
 			}
 		}
 
-		if(Computronics.forestry != null) {
+		/*if(Computronics.forestry != null) {
 			Computronics.forestry.initOC();
-		}
+		}*/
 
 		/*if(Computronics.buildcraft != null) { TODO BuildCraft Drone Docking
 			Computronics.buildcraft.initOC();

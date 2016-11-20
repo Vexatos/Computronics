@@ -7,6 +7,7 @@ import li.cil.tis3d.api.module.ModuleProvider;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.asie.computronics.Computronics;
@@ -21,7 +22,6 @@ import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.internal.IItemWithColor;
 
 import java.awt.*;
-import java.util.List;
 
 /**
  * @author Vexatos
@@ -39,7 +39,7 @@ public class ItemModules extends ItemMultipleComputronics implements ModuleProvi
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubItems(Item item, CreativeTabs tabs, List<ItemStack> list) {
+	public void getSubItems(Item item, CreativeTabs tabs, NonNullList<ItemStack> list) {
 		if(Config.TIS3D_MODULE_COLORFUL) {
 			list.add(new ItemStack(item, 1, 0));
 		}
@@ -94,7 +94,7 @@ public class ItemModules extends ItemMultipleComputronics implements ModuleProvi
 
 	@Override
 	public boolean worksWith(ItemStack stack, Casing casing, Face face) {
-		return stack.getItem() != null && stack.getItem() == IntegrationTIS3D.itemModules;
+		return stack.getItem() == IntegrationTIS3D.itemModules;
 	}
 
 	@Override

@@ -38,8 +38,8 @@ public class InfoTapeDrive extends ComputronicsInfoProvider {
 		}
 
 		NBTTagCompound data = accessor.getNBTData();
-		ItemStack is = ItemStack.loadItemStackFromNBT(data.getTagList("Inventory", 10).getCompoundTagAt(0));
-		if(is != null && is.getItem() instanceof IItemTapeStorage) {
+		ItemStack is = new ItemStack(data.getTagList("Inventory", 10).getCompoundTagAt(0));
+		if(!is.isEmpty() && is.getItem() instanceof IItemTapeStorage) {
 			String label = Computronics.itemTape.getLabel(is);
 			if(label.length() > 0 && ConfigValues.TapeName.getValue(config)) {
 				currenttip.add(StringUtil.localizeAndFormat("tooltip.computronics.waila.tape.labeltapeinserted",
@@ -87,7 +87,7 @@ public class InfoTapeDrive extends ComputronicsInfoProvider {
 		}
 		TileTapeDrive tile = (TileTapeDrive) tileEntity;
 		ItemStack is = tile.getStackInSlot(0);
-		if(is != null && is.getItem() instanceof IItemTapeStorage) {
+		if(!is.isEmpty() && is.getItem() instanceof IItemTapeStorage) {
 			String label = Computronics.itemTape.getLabel(is);
 			if(label.length() > 0) {
 				probeInfo.text(StringUtil.localizeAndFormat("tooltip.computronics.waila.tape.labeltapeinserted",

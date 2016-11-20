@@ -19,6 +19,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -307,7 +308,7 @@ public class ItemOpenComputers extends ItemMultipleComputronics implements Item,
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubItems(net.minecraft.item.Item item, CreativeTabs tabs, List<ItemStack> list) {
+	public void getSubItems(net.minecraft.item.Item item, CreativeTabs tabs, NonNullList<ItemStack> list) {
 		if(Config.OC_UPGRADE_CAMERA) {
 			list.add(new ItemStack(item, 1, 0));
 		}

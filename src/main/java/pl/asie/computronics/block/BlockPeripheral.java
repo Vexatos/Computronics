@@ -40,9 +40,10 @@ public abstract class BlockPeripheral extends BlockBase implements IComputronics
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 		TileEntity tile = world.getTileEntity(pos);
-		if(tile instanceof TileEntityPeripheralBase && ((TileEntityPeripheralBase) tile).canBeColored() && heldItem != null) {
+		ItemStack heldItem = player.getHeldItem(hand);
+		if(tile instanceof TileEntityPeripheralBase && ((TileEntityPeripheralBase) tile).canBeColored() && !heldItem.isEmpty()) {
 			Color color = ColorUtils.getColor(heldItem);
 			if(color != null) {
 				((TileEntityPeripheralBase) tile).setColor(color.color);
@@ -50,7 +51,7 @@ public abstract class BlockPeripheral extends BlockBase implements IComputronics
 				return true;
 			}
 		}
-		return super.onBlockActivated(world, pos, state, player, hand, heldItem, side, hitX, hitY, hitZ);
+		return super.onBlockActivated(world, pos, state, player, hand, side, hitX, hitY, hitZ);
 	}
 
 	public int getRenderColor(IBlockState state) {
@@ -80,8 +81,8 @@ public abstract class BlockPeripheral extends BlockBase implements IComputronics
 
 	@Override
 	@Deprecated
-	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block) {
-		super.neighborChanged(state, world, pos, block);
+	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block, BlockPos otherPos) {
+		super.neighborChanged(state, world, pos, block, otherPos);
 	}
 
 	@Override

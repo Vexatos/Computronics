@@ -11,8 +11,8 @@ import pl.asie.computronics.reference.Config;
 
 public class ChatBoxUtils {
 
-	public static void sendChatMessage(World worldObj, double xCoord, double yCoord, double zCoord, int distance, String prefix, String string, boolean sendToAll) {
-		if(worldObj.isRemote) {
+	public static void sendChatMessage(World world, double xCoord, double yCoord, double zCoord, int distance, String prefix, String string, boolean sendToAll) {
+		if(world.isRemote) {
 			return;
 		}
 		distance = Math.min(distance, 32767);
@@ -21,13 +21,13 @@ public class ChatBoxUtils {
 		TextComponentString component = new TextComponentString(text);
 		component.setStyle(component.getStyle().setColor(TextFormatting.GRAY));
 		try {
-			for(EntityPlayerMP player : FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerList()) {
+			for(EntityPlayerMP player : FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers()) {
 				if(player == null) {
 					continue;
 				}
-				if(sendToAll || (player.worldObj.provider.getDimension() == worldObj.provider.getDimension()
+				if(sendToAll || (player.world.provider.getDimension() == world.provider.getDimension()
 					&& player.getDistanceSq(xCoord, yCoord, zCoord) < distance * distance)) {
-					player.addChatMessage(component.createCopy());
+					player.sendStatusMessage(component.createCopy(), false);
 				}
 			}
 		} catch(Exception e) {
@@ -35,14 +35,11 @@ public class ChatBoxUtils {
 		}
 	}
 
-	public static void sendChatMessage(World worldObj, double xCoord, double yCoord, double zCoord, int distance, String prefix, String string) {
-		sendChatMessage(worldObj, xCoord, yCoord, zCoord, distance, prefix, string, Config.CHATBOX_MAGIC);
+	public static void sendChatMessage(World world, double xCoord, double yCoord, double zCoord, int distance, String prefix, String string) {
+		sendChatMessage(world, xCoord, yCoord, zCoord, distance, prefix, string, Config.CHATBOX_MAGIC);
 	}
 
 	public static void sendChatMessage(TileEntity te, int d, String prefix, String string, boolean sendToAll) {
-		if(te == null) {
-			return;
-		}
 		final BlockPos pos = te.getPos();
 		sendChatMessage(te.getWorld(), pos.getX(), pos.getY(), pos.getZ(), d, prefix, string, sendToAll);
 	}

@@ -12,7 +12,7 @@ public class ComputronicsModuleRenderer extends SimpleModuleRenderer {
 
 	@Override
 	protected void renderOverlay(ItemRenderType type, ItemStack stack, Object... data) {
-		if(stack == null || stack.getItem() == null) {
+		if(stack.isEmpty() || stack.getItem() == null) {
 			super.renderOverlay(type, stack, data);
 			return;
 		}

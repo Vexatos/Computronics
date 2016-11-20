@@ -6,6 +6,7 @@ import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 import pl.asie.lib.util.ColorUtils;
@@ -36,7 +37,7 @@ public class RecipeColorizer implements IRecipe {
 
 		for(int i = 0; i < crafting.getSizeInventory(); i++) {
 			ItemStack stack = crafting.getStackInSlot(i);
-			if(stack != null) {
+			if(!stack.isEmpty()) {
 				if(!hasTargetStack &&
 					(sourceItems.contains(stack.getItem())
 						|| targetItem == stack.getItem())) {
@@ -57,7 +58,7 @@ public class RecipeColorizer implements IRecipe {
 	 */
 	@Override
 	public ItemStack getCraftingResult(InventoryCrafting crafting) {
-		ItemStack targetStack = null;
+		ItemStack targetStack = ItemStack.EMPTY;
 		int[] color = new int[3];
 		int colorCount = 0;
 		int maximum = 0;
@@ -65,15 +66,15 @@ public class RecipeColorizer implements IRecipe {
 		for(int i = 0; i < crafting.getSizeInventory(); i++) {
 			ItemStack stack = crafting.getStackInSlot(i);
 
-			if(stack != null) {
+			if(!stack.isEmpty()) {
 				if(sourceItems.contains(stack.getItem())
 					|| targetItem == stack.getItem()) {
 					targetStack = stack.copy();
-					targetStack.stackSize = 1;
+					targetStack.setCount(1);
 				} else {
 					ColorUtils.Color stackColor = ColorUtils.getColor(stack);
 					if(stackColor == null) {
-						return null;
+						return ItemStack.EMPTY;
 					}
 
 					float[] itemColor = EntitySheep.getDyeRgb(EnumDyeColor.byDyeDamage(stackColor.ordinal()));
@@ -89,8 +90,8 @@ public class RecipeColorizer implements IRecipe {
 			}
 		}
 
-		if(targetStack == null) {
-			return null;
+		if(targetStack.isEmpty()) {
+			return ItemStack.EMPTY;
 		}
 
 		if(targetItem.getClass().isInstance(targetStack.getItem())) {
@@ -106,7 +107,7 @@ public class RecipeColorizer implements IRecipe {
 				colorCount++;
 			}
 		} else if(sourceItems.contains(targetStack.getItem())) {
-			targetStack = new ItemStack(targetItem, targetStack.stackSize, targetStack.getItemDamage());
+			targetStack = new ItemStack(targetItem, targetStack.getCount(), targetStack.getItemDamage());
 		}
 
 		int red = color[0] / colorCount;
@@ -131,11 +132,11 @@ public class RecipeColorizer implements IRecipe {
 
 	@Override
 	public ItemStack getRecipeOutput() {
-		return null;
+		return ItemStack.EMPTY;
 	}
 
 	@Override
-	public ItemStack[] getRemainingItems(InventoryCrafting inv) {
+	public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv) {
 		return ForgeHooks.defaultRecipeGetRemainingItems(inv);
 	}
 }

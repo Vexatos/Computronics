@@ -51,7 +51,7 @@ public class UpgradeRenderer {
 
 	@Optional.Method(modid = Mods.OpenComputers)
 	private boolean isUpgrade(ItemStack stack) {
-		return stack != null && stack.getItem() != null
+		return !stack.isEmpty() && stack.getItem() != null
 			&& stack.getItem() instanceof ItemOpenComputers
 			&& upgrades.contains(stack.getItemDamage());
 	}

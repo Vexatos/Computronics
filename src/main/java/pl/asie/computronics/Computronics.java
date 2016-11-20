@@ -6,6 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
@@ -44,9 +45,6 @@ import pl.asie.computronics.cc.multiperipheral.MultiPeripheralRegistry;
 import pl.asie.computronics.gui.providers.GuiProviderCipher;
 import pl.asie.computronics.gui.providers.GuiProviderTapeDrive;
 import pl.asie.computronics.integration.ModRecipes;
-import pl.asie.computronics.integration.charset.IntegrationCharset;
-import pl.asie.computronics.integration.forestry.IntegrationForestry;
-import pl.asie.computronics.integration.railcraft.IntegrationRailcraft;
 import pl.asie.computronics.integration.tis3d.IntegrationTIS3D;
 import pl.asie.computronics.item.ItemMultipleComputronics;
 import pl.asie.computronics.item.ItemTape;
@@ -132,10 +130,10 @@ public class Computronics {
 	public static IntegrationComputerCraft computercraft;
 
 	//public static IntegrationBuildCraft buildcraft;
-	public static IntegrationRailcraft railcraft;
-	public static IntegrationForestry forestry;
+	//public static IntegrationRailcraft railcraft;
+	//public static IntegrationForestry forestry;
 	public static IntegrationTIS3D tis3D;
-	public static IntegrationCharset charset;
+	//public static IntegrationCharset charset;
 
 	public static ItemTape itemTape;
 	public static ItemMultipleComputronics itemParts;
@@ -150,8 +148,8 @@ public class Computronics {
 
 	public static CreativeTabs tab = new CreativeTabs("tabComputronics") {
 		@Override
-		public Item getTabIconItem() {
-			return itemTape;
+		public ItemStack getTabIconItem() {
+			return new ItemStack(itemTape, 1, 0);
 		}
 	};
 
@@ -271,10 +269,10 @@ public class Computronics {
 			itemParts.registerItemModels();
 		}
 
-		if(Mods.isLoaded(Mods.Railcraft)) {
+		/*if(Mods.isLoaded(Mods.Railcraft)) {
 			railcraft = new IntegrationRailcraft();
 			railcraft.preInit(config.config);
-		}
+		}*/
 
 		if(Mods.isLoaded(Mods.ComputerCraft)) {
 			computercraft = new IntegrationComputerCraft(this);
@@ -291,8 +289,8 @@ public class Computronics {
 			tis3D.preInit();
 		}
 
-		charset = new IntegrationCharset();
-		charset.preInit();
+		//charset = new IntegrationCharset();
+		//charset.preInit();
 
 		proxy.preInit();
 	}
@@ -384,7 +382,7 @@ public class Computronics {
 			tis3D.postInit();
 		}
 
-		charset.postInit();
+		//charset.postInit();
 	}
 
 	@EventHandler

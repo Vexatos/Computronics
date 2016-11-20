@@ -8,6 +8,8 @@ import net.minecraft.util.SoundCategory;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.openal.AL;
 import org.lwjgl.openal.AL10;
@@ -25,6 +27,7 @@ import java.util.Set;
 /**
  * @author Sangar, Vexatos
  */
+@SideOnly(Side.CLIENT)
 public class Audio {
 
 	private final int sampleRate;
@@ -63,7 +66,7 @@ public class Audio {
 
 	public void play(float x, float y, float z, String pattern, AudioType type, float frequencyInHz, int durationInMilliseconds, int initialDelayInMilliseconds) {
 		Minecraft mc = Minecraft.getMinecraft();
-		float distanceBasedGain = ((float) Math.max(0, 1 - mc.thePlayer.getDistance(x, y, z) / maxDistance));
+		float distanceBasedGain = ((float) Math.max(0, 1 - mc.player.getDistance(x, y, z) / maxDistance));
 		float gain = distanceBasedGain * volume();
 		if(gain <= 0 || amplitude <= 0) {
 			return;

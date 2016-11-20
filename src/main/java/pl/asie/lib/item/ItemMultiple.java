@@ -3,10 +3,9 @@ package pl.asie.lib.item;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.List;
 
 public class ItemMultiple extends Item {
 
@@ -29,7 +28,7 @@ public class ItemMultiple extends Item {
 
 	@Override
 	public String getUnlocalizedName(ItemStack stack) {
-		if(stack == null) {
+		if(stack.isEmpty()) {
 			return "item.asielib.unknown";
 		} else {
 			return "item." + this.mod + "." + this.parts[stack.getItemDamage() % parts.length];
@@ -39,7 +38,7 @@ public class ItemMultiple extends Item {
 	@Override
 	@SideOnly(Side.CLIENT)
 	@SuppressWarnings("unchecked")
-	public void getSubItems(Item item, CreativeTabs tabs, List<ItemStack> list) {
+	public void getSubItems(Item item, CreativeTabs tabs, NonNullList<ItemStack> list) {
 		for(int i = 0; i < parts.length; i++) {
 			list.add(new ItemStack(item, 1, i));
 		}

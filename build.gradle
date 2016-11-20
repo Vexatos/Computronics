@@ -94,29 +94,29 @@ repositories {
 }*/
 
 dependencies {
-    deobfCompile "li.cil.oc:OpenComputers:${config.oc.version}"
-    deobfCompile "li.cil.tis3d:TIS-3D:${config.tis3d.version}"
-    deobfCompile "net.industrial-craft:industrialcraft-2:${config.ic2.version}:dev"
+    provided "li.cil.oc:OpenComputers:${config.oc.version}"
+    provided "li.cil.tis3d:TIS-3D:${config.tis3d.version}"
+    //deobfCompile "net.industrial-craft:industrialcraft-2:${config.ic2.version}:dev"
 	//provided "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech.version}:dev"
 	//provided2 "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech6.version}:dev"
-    deobfCompile ("com.headlamp-games:Railcraft:${config.railcraft.version}") {
+    provided ("com.headlamp-games:Railcraft:${config.railcraft.version}") {
         exclude module: "forestry_1.10.2"
         exclude module: "industrialcraft-2"
     }
     //provided "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech.version}:dev"
-    deobfCompile "mezz.jei:jei_1.10.2:${config.jei.version}"
-    deobfCompile "mcp.mobius.waila:Waila:${config.waila.version}"
+    deobfCompile "mezz.jei:jei_1.11:${config.jei.version}"
+    provided "mcp.mobius.waila:Waila:${config.waila.version}"
     deobfCompile "mcjty.theoneprobe:TheOneProbe:${config.top.version}"
-    deobfCompile "pl.asie.charset:charset-lib:${config.charset.version}"
-    deobfCompile "pl.asie.charset:charset-audio:${config.charset.version}"
-    deobfCompile "pl.asie.charset:charset-drama:${config.charset.version}"
-    deobfCompile "pl.asie.charset:charset-gates:${config.charset.version}"
-    deobfCompile "pl.asie.charset:charset-pipes:${config.charset.version}"
-    deobfCompile "pl.asie.charset:charset-storage:${config.charset.version}"
-    deobfCompile "pl.asie.charset:charset-tweaks:${config.charset.version}"
-    deobfCompile "pl.asie.charset:charset-wires:${config.charset.version}"
-    deobfCompile "com.enderio.core:EnderCore:${config.endercore.version}"
-    deobfCompile("com.enderio:EnderIO:${config.enderio.version}") {
+    //deobfCompile "pl.asie.charset:charset-lib:${config.charset.version}"
+    //deobfCompile "pl.asie.charset:charset-audio:${config.charset.version}"
+    //deobfCompile "pl.asie.charset:charset-drama:${config.charset.version}"
+    //deobfCompile "pl.asie.charset:charset-gates:${config.charset.version}"
+    //deobfCompile "pl.asie.charset:charset-pipes:${config.charset.version}"
+    //deobfCompile "pl.asie.charset:charset-storage:${config.charset.version}"
+    //deobfCompile "pl.asie.charset:charset-tweaks:${config.charset.version}"
+    //deobfCompile "pl.asie.charset:charset-wires:${config.charset.version}"
+    //deobfCompile "com.enderio.core:EnderCore:${config.endercore.version}"
+    /*deobfCompile("com.enderio:EnderIO:${config.enderio.version}") {
         exclude module: "appliedenergistics2"
         exclude module: "buildcraft"
         exclude module: "Waila"
@@ -125,11 +125,11 @@ dependencies {
         exclude module: "CodeChickenLib"
         exclude module: "CodeChickenCore"
         exclude module: "EquivalentExchange3"
-    }
+    }*//*
     deobfCompile("net.sengir.forestry:forestry_1.10.2:${config.forestry.version}") {
         exclude module: "buildcraft"
         exclude module: "industrialcraft-2"
-    }
+    }*/
     //compile name: "buildcraft", version: "${config.buildcraft.version}", classifier: "dev"
     /*compile("appeng:appliedenergistics2:${config.ae2.version}:dev") {
         transitive = false
@@ -168,27 +168,27 @@ sourceSets {
             exclude "pl/asie/computronics/integration/betterstorage/**"
             exclude "pl/asie/computronics/integration/buildcraft/**"
             exclude "pl/asie/computronics/integration/buildcraft/pluggable/**"
-            //exclude "pl/asie/computronics/integration/charset/**"
-            //exclude "pl/asie/computronics/integration/cofh/**"
+            exclude "pl/asie/computronics/integration/charset/**"
+            exclude "pl/asie/computronics/integration/cofh/**"
             exclude "pl/asie/computronics/integration/draconicevolution/**"
-            //exclude "pl/asie/computronics/integration/enderio/**"
+            exclude "pl/asie/computronics/integration/enderio/**"
             exclude "pl/asie/computronics/integration/factorization/**"
-            //exclude "pl/asie/computronics/integration/forestry/**"
+            exclude "pl/asie/computronics/integration/forestry/**"
             exclude "pl/asie/computronics/integration/fsp/**"
             exclude "pl/asie/computronics/integration/gregtech/**"
             exclude "pl/asie/computronics/integration/mekanism/**"
             exclude "pl/asie/computronics/integration/mfr/**"
-            //exclude "pl/asie/computronics/integration/railcraft/**"
+            exclude "pl/asie/computronics/integration/railcraft/**"
             exclude "pl/asie/computronics/integration/redlogic/**"
-            //exclude "pl/asie/computronics/integration/storagedrawers/**"
-            //exclude "pl/asie/computronics/integration/waila/**"
+            exclude "pl/asie/computronics/integration/storagedrawers/**"
+            exclude "pl/asie/computronics/integration/waila/**"
 
             exclude "pl/asie/lib/integration/buildcraft/*"
             exclude "pl/asie/lib/integration/tool/appeng/**"
             exclude "pl/asie/lib/integration/tool/cofh/**"
             exclude "pl/asie/lib/integration/tool/mekanism/**"
             exclude "pl/asie/lib/integration/tool/buildcraft/**"
-            //exclude "pl/asie/lib/integration/tool/enderio/**"
+            exclude "pl/asie/lib/integration/tool/enderio/**"
         }
     }
 }

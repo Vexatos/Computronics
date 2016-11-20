@@ -32,7 +32,7 @@ public class RobotUpgradeCamera extends ManagedEnvironment implements DeviceInfo
 		if(entity instanceof Rotatable) {
 			return ((Rotatable) entity).facing();
 		} else {
-			int l = MathHelper.floor_double((double) (entity.world().getClosestPlayer(entity.xPosition(), entity.yPosition(), entity.zPosition(), 1.0D, false).rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+			int l = MathHelper.floor((double) (entity.world().getClosestPlayer(entity.xPosition(), entity.yPosition(), entity.zPosition(), 1.0D, false).rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
 			return EnumFacing.getHorizontal(l);
 		}
 	}

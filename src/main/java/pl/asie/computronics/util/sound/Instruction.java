@@ -5,6 +5,7 @@ import net.minecraft.nbt.NBTTagList;
 import pl.asie.computronics.util.sound.AudioUtil.AmplitudeModulation;
 import pl.asie.computronics.util.sound.AudioUtil.AudioProcess;
 
+import javax.annotation.Nullable;
 import java.util.ArrayDeque;
 import java.util.Queue;
 
@@ -325,6 +326,7 @@ public abstract class Instruction {
 
 	}
 
+	@Nullable
 	public static Instruction load(NBTTagCompound tag) {
 		int type = tag.getByte("t");
 		switch(type) {

@@ -46,22 +46,22 @@ public class EnchantmentTweak {
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void anvilEvent(AnvilUpdateEvent e) {
-		if(e.getLeft() == null || e.getRight() == null || e.getLeft().getItem() == null || e.getRight().getItem() == null || e.isCanceled()) {
+		if(e.getLeft().isEmpty() || e.getRight().isEmpty() || e.isCanceled()) {
 			return;
 		}
 		if(e.getLeft().isItemStackDamageable() && e.getLeft().isItemEnchanted()) {
 			if(e.getRight().getItem() == Items.FERMENTED_SPIDER_EYE && !hasBaneEnchantment(e.getLeft())) {
-				if(e.getRight().stackSize == e.getRight().getMaxStackSize()) {
+				if(e.getRight().getCount() == e.getRight().getMaxStackSize()) {
 					e.setOutput(e.getLeft().copy());
 					e.setCost(37);
 					if(!addBaneEnchantment(e.getOutput(), 9)) {
-						e.setOutput(null);
+						e.setOutput(ItemStack.EMPTY);
 						if(e.isCancelable()) {
 							e.setCanceled(true);
 						}
 					}
 				} else {
-					e.setOutput(null);
+					e.setOutput(ItemStack.EMPTY);
 					if(e.isCancelable()) {
 						e.setCanceled(true);
 					}
@@ -73,10 +73,10 @@ public class EnchantmentTweak {
 	@SubscribeEvent
 	public void enchEvent(TickEvent.PlayerTickEvent e) {
 		EntityPlayer player = e.player;
-		if(player.worldObj.isRemote) {
+		if(player.world.isRemote) {
 			return;
 		}
-		if(player.getHeldItemMainhand() != null && hasBaneEnchantment(player.getHeldItemMainhand())
+		if(!player.getHeldItemMainhand().isEmpty() && hasBaneEnchantment(player.getHeldItemMainhand())
 			&& player.getHeldItemMainhand().isItemStackDamageable()) {
 
 			RayTracer.instance().fire(player, 10.0);
@@ -111,7 +111,7 @@ public class EnchantmentTweak {
 		NBTTagList list = stack.getTagCompound().getTagList("ench", 10);
 		for(int i = 0; i < list.tagCount(); i++) {
 			NBTTagCompound tag = list.getCompoundTagAt(i);
-			if(tag != null && tag.getShort("id") == Enchantment.getEnchantmentID(bane)) {
+			if(tag.getShort("id") == Enchantment.getEnchantmentID(bane)) {
 				return true;
 			}
 		}
@@ -130,8 +130,7 @@ public class EnchantmentTweak {
 		NBTTagList list = stack.getTagCompound().getTagList("ench", 10);
 		for(int i = 0; i < list.tagCount(); i++) {
 			NBTTagCompound tag = list.getCompoundTagAt(i);
-			if(tag != null && tag.getShort("id") == Enchantment.getEnchantmentID(Enchantments.BANE_OF_ARTHROPODS)
-				&& tag.getShort("lvl") == (short) 5) {
+			if(tag.getShort("id") == Enchantment.getEnchantmentID(Enchantments.BANE_OF_ARTHROPODS) && tag.getShort("lvl") == (short) 5) {
 				list.removeTag(i);
 				NBTTagCompound data = new NBTTagCompound();
 				data.setShort("id", (short) Enchantment.getEnchantmentID(bane));

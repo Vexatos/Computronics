@@ -24,8 +24,8 @@ public class TileEntityBase extends TileEntity {
 
 	}
 
-	public boolean isUseableByPlayer(EntityPlayer player) {
-		return this.worldObj.getTileEntity(getPos()) == this
+	public boolean isUsableByPlayer(EntityPlayer player) {
+		return this.world.getTileEntity(getPos()) == this
 			&& player.getDistanceSq(getPos().add(0.5, 0.5, 0.5)) <= 64.0D;
 	}
 

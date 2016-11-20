@@ -5,33 +5,7 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.cc.multiperipheral.MultiPeripheralProvider;
-import pl.asie.computronics.integration.cofh.DriverEnergyHandler;
-import pl.asie.computronics.integration.enderio.DriverAbstractMachine;
-import pl.asie.computronics.integration.enderio.DriverAbstractPoweredMachine;
-import pl.asie.computronics.integration.enderio.DriverCapacitorBank;
-import pl.asie.computronics.integration.enderio.DriverHasExperience;
-import pl.asie.computronics.integration.enderio.DriverIOConfigurable;
-import pl.asie.computronics.integration.enderio.DriverPowerMonitor;
-import pl.asie.computronics.integration.enderio.DriverPowerStorage;
-import pl.asie.computronics.integration.enderio.DriverProgressTile;
-import pl.asie.computronics.integration.enderio.DriverRedstoneControllable;
-import pl.asie.computronics.integration.enderio.DriverTelepad;
-import pl.asie.computronics.integration.enderio.DriverTransceiver;
-import pl.asie.computronics.integration.enderio.DriverVacuumChest;
-import pl.asie.computronics.integration.enderio.DriverWeatherObelisk;
 import pl.asie.computronics.integration.flamingo.DriverFlamingo;
-import pl.asie.computronics.integration.railcraft.driver.DriverBoilerFirebox;
-import pl.asie.computronics.integration.railcraft.driver.DriverElectricGrid;
-import pl.asie.computronics.integration.railcraft.driver.DriverRoutingDetector;
-import pl.asie.computronics.integration.railcraft.driver.DriverRoutingSwitch;
-import pl.asie.computronics.integration.railcraft.driver.DriverSteamTurbine;
-import pl.asie.computronics.integration.railcraft.driver.track.DriverLauncherTrack;
-import pl.asie.computronics.integration.railcraft.driver.track.DriverLocomotiveTrack;
-import pl.asie.computronics.integration.railcraft.driver.track.DriverPoweredTrack;
-import pl.asie.computronics.integration.railcraft.driver.track.DriverPrimingTrack;
-import pl.asie.computronics.integration.railcraft.driver.track.DriverRoutingTrack;
-import pl.asie.computronics.integration.railcraft.driver.track.DriverThrottleTrack;
-import pl.asie.computronics.integration.storagedrawers.DriverDrawerGroup;
 import pl.asie.computronics.reference.Compat;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
@@ -68,11 +42,11 @@ public class IntegrationComputerCraft {
 				registerMultiPeripheralProvider(new DriverDeepStorageUnit.CCDriver());
 			}
 		}*/
-		if(Mods.isLoaded(Mods.StorageDrawers)) {
+		/*if(Mods.isLoaded(Mods.StorageDrawers)) {
 			if(compat.isCompatEnabled(Compat.StorageDrawers)) {
 				registerMultiPeripheralProvider(new DriverDrawerGroup.CCDriver());
 			}
-		}/*
+		}*//*
 		if(Mods.isLoaded(Mods.FSP)) {
 			if(compat.isCompatEnabled(Compat.FSP_Steam_Transporter)) {
 				registerMultiPeripheralProvider(new DriverSteamTransporter.CCDriver());
@@ -84,7 +58,7 @@ public class IntegrationComputerCraft {
 			}
 		}*/
 
-		if(Mods.isLoaded(Mods.Railcraft)) {
+		/*if(Mods.isLoaded(Mods.Railcraft)) {
 			if(compat.isCompatEnabled(Compat.Railcraft_Routing)) {
 				registerMultiPeripheralProvider(new DriverPoweredTrack.CCDriver());
 				registerMultiPeripheralProvider(new DriverRoutingTrack.CCDriver());
@@ -98,7 +72,7 @@ public class IntegrationComputerCraft {
 				registerMultiPeripheralProvider(new DriverBoilerFirebox.CCDriver());
 				registerMultiPeripheralProvider(new DriverSteamTurbine.CCDriver());
 			}
-		}
+		}*/
 
 		/*if(Mods.isLoaded(Mods.ArmourersWorkshop)) {
 			if(compat.isCompatEnabled(Compat.AW_Mannequins)) {
@@ -112,7 +86,7 @@ public class IntegrationComputerCraft {
 			}
 		}*/
 
-		if(Mods.API.hasAPI(Mods.API.CoFHAPI_Energy)
+		/*if(Mods.API.hasAPI(Mods.API.CoFHAPI_Energy)
 			&& compat.isCompatEnabled(Compat.RedstoneFlux)) {
 			registerMultiPeripheralProvider(new DriverEnergyHandler.CCDriver());
 		}
@@ -133,7 +107,7 @@ public class IntegrationComputerCraft {
 				registerMultiPeripheralProvider(new DriverWeatherObelisk.CCDriver());
 				registerMultiPeripheralProvider(new DriverTelepad.CCDriver());
 			}
-		}
+		}*/
 
 		/*if(Mods.API.hasAPI(Mods.API.DraconicEvolution)
 			&& compat.isCompatEnabled(Compat.DraconicEvolution)) {

@@ -39,7 +39,7 @@ public class RackMountableRenderer {
 
 	@Optional.Method(modid = Mods.OpenComputers)
 	private boolean isRackMountable(ItemStack stack) {
-		return stack != null && stack.getItem() != null
+		return !stack.isEmpty()
 			&& stack.getItem() instanceof ItemOpenComputers
 			&& mountables.contains(stack.getItemDamage());
 	}

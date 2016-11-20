@@ -36,9 +36,7 @@ public abstract class ManagedEnvironmentWithComponentConnector extends ManagedEn
 	public Map<String, String> getDeviceInfo() {
 		if(deviceInfo == null) {
 			OCUtils.Device device = deviceInfo();
-			if(device != null) {
-				return deviceInfo = device.deviceInfo();
-			}
+			return deviceInfo = device.deviceInfo();
 		}
 		return deviceInfo;
 	}

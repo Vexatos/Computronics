@@ -36,7 +36,7 @@ public class NetworkHandlerClient extends MessageHandlerBase {
 				double vy = packet.readFloat();
 				double vz = packet.readFloat();
 				String name = packet.readString();
-				Minecraft.getMinecraft().thePlayer.getEntityWorld().spawnParticle(ParticleU, x, y, z, vx, vy, vz);
+				Minecraft.getMinecraft().player.getEntityWorld().spawnParticle(ParticleU, x, y, z, vx, vy, vz);
 			}
 			break;*/
 		}

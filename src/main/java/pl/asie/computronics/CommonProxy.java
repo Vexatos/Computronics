@@ -2,6 +2,7 @@ package pl.asie.computronics;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
@@ -28,7 +29,7 @@ public class CommonProxy {
 	}
 
 	public void registerEntities() {
-		EntityRegistry.registerModEntity(EntityItemIndestructable.class, "itemTape", 1, Computronics.instance, 64, 20, true);
+		EntityRegistry.registerModEntity(new ResourceLocation(Mods.Computronics, "tape_item"), EntityItemIndestructable.class, "tape_item", 1, Computronics.instance, 64, 20, true);
 	}
 
 	public void registerItemModel(Item item, int meta, String name) {
@@ -51,7 +52,7 @@ public class CommonProxy {
 		//NO-OP
 	}
 
-	public void spawnSwarmParticle(World worldObj, double xPos, double yPos, double zPos, int color) {
+	public void spawnSwarmParticle(World world, double xPos, double yPos, double zPos, int color) {
 		//NO-OP
 	}
 

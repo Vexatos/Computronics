@@ -12,6 +12,8 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.asie.computronics.item.ItemOpenComputers;
 import pl.asie.computronics.oc.driver.RobotUpgradeColorful;
 import pl.asie.computronics.reference.Mods;
@@ -30,10 +32,11 @@ public class ColorfulUpgradeHandler {
 		if(color < 0) {
 			return;
 		}
-		e.player.addChatMessage(new TextComponentTranslation("chat.computronics.colorful_upgrade.color", "0x"
-			+ String.format("%06x", color).toUpperCase(Locale.ENGLISH)));
+		e.player.sendStatusMessage(new TextComponentTranslation("chat.computronics.colorful_upgrade.color", "0x"
+			+ String.format("%06x", color).toUpperCase(Locale.ENGLISH)), false);
 	}
 
+	@SideOnly(Side.CLIENT)
 	@SubscribeEvent(priority = EventPriority.LOW)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void onRobotRender(RobotRenderEvent e) {
@@ -47,7 +50,7 @@ public class ColorfulUpgradeHandler {
 				//	break;
 				//}
 				ItemStack stack = robot.getStackInSlot(i);
-				if(stack != null && stack.getItem() instanceof ItemOpenComputers && stack.getItemDamage() == 7) {
+				if(!stack.isEmpty() && stack.getItem() instanceof ItemOpenComputers && stack.getItemDamage() == 7) {
 					NBTTagCompound tag = ((ItemOpenComputers) stack.getItem()).dataTag(stack);
 					if(tag.hasKey("computronics:color")) {
 						int newcol = tag.getInteger("computronics:color");

@@ -26,13 +26,13 @@ public class ClientProxy extends CommonProxy {
 		if(getCurrentClientDimension() != dimensionId) {
 			return null;
 		} else {
-			return Minecraft.getMinecraft().theWorld;
+			return Minecraft.getMinecraft().world;
 		}
 	}
 
 	@Override
 	public int getCurrentClientDimension() {
-		return Minecraft.getMinecraft().theWorld.provider.getDimension();
+		return Minecraft.getMinecraft().world.provider.getDimension();
 	}
 
 	@Override
@@ -41,7 +41,7 @@ public class ClientProxy extends CommonProxy {
 			switch(FMLCommonHandler.instance().getEffectiveSide()) {
 				case CLIENT:
 					if(client != null) {
-						client.onMessage(packet, handler, Minecraft.getMinecraft().thePlayer);
+						client.onMessage(packet, handler, Minecraft.getMinecraft().player);
 					}
 					break;
 				case SERVER:

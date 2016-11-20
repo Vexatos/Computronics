@@ -10,6 +10,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
@@ -63,7 +64,7 @@ public class BlockChatBox extends BlockPeripheral implements IBlockWithSpecialTe
 	}
 
 	@Override
-	public void getSubBlocks(Item item, CreativeTabs creativeTabs, List<ItemStack> blockList) {
+	public void getSubBlocks(Item item, CreativeTabs creativeTabs, NonNullList<ItemStack> blockList) {
 		blockList.add(new ItemStack(item, 1, 0));
 		if(Config.CHATBOX_CREATIVE) {
 			blockList.add(new ItemStack(item, 1, 8));

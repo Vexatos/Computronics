@@ -1,10 +1,10 @@
 package pl.asie.lib.util;
 
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidContainerItem;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
 /**
  * @author Vexatos
@@ -13,14 +13,16 @@ public class FluidUtils {
 
 	@SuppressWarnings("deprecation")
 	public static boolean containsFluid(ItemStack stack, Fluid fluid) {
-		Item item = stack.getItem();
-		FluidStack fstack = null;
-		if(item instanceof IFluidContainerItem) {
-			fstack = ((IFluidContainerItem) item).getFluid(stack);
+		if(stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) {
+			IFluidHandlerItem handler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
+			if(handler != null) {
+				for(IFluidTankProperties props : handler.getTankProperties()) {
+					if(props.getContents() != null && props.getContents().getFluid() == fluid) {
+						return true;
+					}
+				}
+			}
 		}
-		if(fstack == null) {
-			fstack = net.minecraftforge.fluids.FluidContainerRegistry.getFluidForFilledItem(stack);
-		}
-		return fstack != null && fstack.getFluid() == fluid;
+		return false;
 	}
 }

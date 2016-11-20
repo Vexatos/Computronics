@@ -20,7 +20,7 @@ public class ItemColorizer {
 
         if(stackCompound != null) {
             NBTTagCompound displayCompound = stackCompound.getCompoundTag("display");
-            return displayCompound == null ? -1 : (displayCompound.hasKey("color") ? displayCompound.getInteger("color") : -1);
+            return displayCompound.hasKey("color") ? displayCompound.getInteger("color") : -1;
         } else {
             return -1;
         }

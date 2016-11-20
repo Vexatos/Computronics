@@ -69,8 +69,8 @@ public class TileRadar extends TileEntityPeripheralBase {
 		double energyNeeded = (Config.RADAR_ENERGY_COST_OC * distance * 1.75);
 		if(((Connector) node()).tryChangeBuffer(0 - energyNeeded)) {
 			AxisAlignedBB bounds = getBounds(distance);
-			entities.addAll(RadarUtils.getEntities(worldObj, getPos(), bounds, EntityPlayer.class));
-			entities.addAll(RadarUtils.getEntities(worldObj, getPos(), bounds, EntityLiving.class));
+			entities.addAll(RadarUtils.getEntities(world, getPos(), bounds, EntityPlayer.class));
+			entities.addAll(RadarUtils.getEntities(world, getPos(), bounds, EntityLiving.class));
 			context.pause(0.5);
 		}
 		// The returned array is treated as a tuple, meaning if we return the
@@ -90,7 +90,7 @@ public class TileRadar extends TileEntityPeripheralBase {
 		double energyNeeded = (Config.RADAR_ENERGY_COST_OC * distance * 1.0);
 		if(((Connector) node()).tryChangeBuffer(0 - energyNeeded)) {
 			AxisAlignedBB bounds = getBounds(distance);
-			entities.addAll(RadarUtils.getEntities(worldObj, getPos(), bounds, EntityPlayer.class));
+			entities.addAll(RadarUtils.getEntities(world, getPos(), bounds, EntityPlayer.class));
 			context.pause(0.5);
 		}
 		return new Object[] { TableUtils.convertSetToMap(entities) };
@@ -104,7 +104,7 @@ public class TileRadar extends TileEntityPeripheralBase {
 		double energyNeeded = (Config.RADAR_ENERGY_COST_OC * distance * 1.0);
 		if(((Connector) node()).tryChangeBuffer(0 - energyNeeded)) {
 			AxisAlignedBB bounds = getBounds(distance);
-			entities.addAll(RadarUtils.getEntities(worldObj, getPos(), bounds, EntityLiving.class));
+			entities.addAll(RadarUtils.getEntities(world, getPos(), bounds, EntityLiving.class));
 			context.pause(0.5);
 		}
 		return new Object[] { TableUtils.convertSetToMap(entities) };
@@ -118,7 +118,7 @@ public class TileRadar extends TileEntityPeripheralBase {
 		double energyNeeded = (Config.RADAR_ENERGY_COST_OC * distance * 2.0);
 		if(((Connector) node()).tryChangeBuffer(0 - energyNeeded)) {
 			AxisAlignedBB bounds = getBounds(distance);
-			entities.addAll(RadarUtils.getItems(worldObj, getPos(), bounds, EntityItem.class));
+			entities.addAll(RadarUtils.getItems(world, getPos(), bounds, EntityItem.class));
 			context.pause(0.5);
 		}
 		return new Object[] { TableUtils.convertSetToMap(entities) };
@@ -136,6 +136,6 @@ public class TileRadar extends TileEntityPeripheralBase {
 	public Object[] callMethod(IComputerAccess computer, ILuaContext context,
 		int method, Object[] arguments) throws LuaException,
 		InterruptedException {
-		return CCRadarProxy.callMethod(worldObj, getPos(), computer, context, method, arguments, this);
+		return CCRadarProxy.callMethod(world, getPos(), computer, context, method, arguments, this);
 	}
 }

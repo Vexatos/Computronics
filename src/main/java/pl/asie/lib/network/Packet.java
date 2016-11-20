@@ -10,6 +10,7 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import pl.asie.lib.util.WorldUtils;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.lang.reflect.Type;
 
@@ -25,6 +26,7 @@ public class Packet implements IMessage {
 
 	// Custom read functions
 
+	@Nullable
 	public TileEntity readTileEntity() throws IOException {
 		World world = null;
 		int dimensionId = readInt();
@@ -34,6 +36,7 @@ public class Packet implements IMessage {
 		return WorldUtils.getTileEntity(dimensionId, x, y, z);
 	}
 
+	@Nullable
 	public TileEntity readTileEntityServer() throws IOException {
 		World world = null;
 		int dimensionId = readInt();

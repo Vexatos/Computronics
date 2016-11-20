@@ -312,9 +312,9 @@ public class DriverCardNoise extends DriverCardSoundBase {
 		}
 		Packet packet = Computronics.packet.create(PacketType.COMPUTER_NOISE.ordinal())
 			.writeInt(world.provider.getDimension())
-			.writeInt(MathHelper.floor_double(x))
-			.writeInt(MathHelper.floor_double(y))
-			.writeInt(MathHelper.floor_double(z))
+			.writeInt(MathHelper.floor(x))
+			.writeInt(MathHelper.floor(y))
+			.writeInt(MathHelper.floor(z))
 			.writeByte(hits);
 		for(Channel channel : channels) {
 			if(channel != null) {
@@ -333,9 +333,9 @@ public class DriverCardNoise extends DriverCardSoundBase {
 		}
 		Computronics.packet.sendToAllAround(packet, new NetworkRegistry.TargetPoint(
 			world.provider.getDimension(),
-			MathHelper.floor_double(x),
-			MathHelper.floor_double(y),
-			MathHelper.floor_double(z), Config.SOUND_RADIUS));
+			MathHelper.floor(x),
+			MathHelper.floor(y),
+			MathHelper.floor(z), Config.SOUND_RADIUS));
 	}
 
 	public static void onSound(Packet packet, EntityPlayer player) throws IOException {

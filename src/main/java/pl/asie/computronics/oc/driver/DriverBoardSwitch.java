@@ -13,6 +13,8 @@ import net.minecraft.util.EnumHand;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.util.OCUtils;
 
+import javax.annotation.Nullable;
+
 /**
  * @author Vexatos
  */
@@ -50,7 +52,7 @@ public class DriverBoardSwitch extends RackMountableWithComponentConnector {
 
 	@Override
 	public boolean onActivate(EntityPlayer player, EnumHand hand, ItemStack heldItem, float hitX, float hitY) {
-		if(player.worldObj.isRemote) {
+		if(player.world.isRemote) {
 			return true;
 		}
 		int xPix = (int) (hitX * 14);
@@ -88,6 +90,7 @@ public class DriverBoardSwitch extends RackMountableWithComponentConnector {
 		}
 	}
 
+	@Nullable
 	public Boolean isActive(int index) {
 		return index >= 0 && index < switches.length ? switches[index] : null;
 	}

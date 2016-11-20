@@ -34,8 +34,8 @@ public class BlockIronNote extends BlockPeripheral /*implements IRedNetInputNode
 
 	@Override
 	@Deprecated
-	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block) {
-		super.neighborChanged(state, world, pos, block);
+	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block, BlockPos otherPos) {
+		super.neighborChanged(state, world, pos, block, otherPos);
 		/*TileEntity tile = world.getTileEntity(pos);
 		if(Mods.isLoaded(Mods.ProjectRed))
 			((TileIronNote)tile).onProjectRedBundledInputChanged();*/

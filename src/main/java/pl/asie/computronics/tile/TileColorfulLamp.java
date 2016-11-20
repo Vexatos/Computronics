@@ -47,7 +47,7 @@ public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundl
 		Computronics.serverTickHandler.schedule(new Runnable() {
 			@Override
 			public void run() {
-				IBlockState state = worldObj.getBlockState(getPos());
+				IBlockState state = world.getBlockState(getPos());
 				if(state.getBlock() instanceof BlockColorfulLamp) {
 					if(LampUtil.shouldColorLight()) {
 						setLightValue(state, color);
@@ -73,19 +73,19 @@ public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundl
 			g = value > 0x7FFF ? 15 : g < 0 ? 0 : g > 15 ? 15 : g;
 			b = value > 0x7FFF ? 15 : b < 0 ? 0 : b > 15 ? 15 : b;
 			int brightness = Math.max(Math.max(r, g), b);
-			worldObj.setBlockState(getPos(), state.withProperty(BRIGHTNESS, brightness | ((b << 15) + (g << 10) + (r << 5))));
+			world.setBlockState(getPos(), state.withProperty(BRIGHTNESS, brightness | ((b << 15) + (g << 10) + (r << 5))));
 		} else {
-			worldObj.setBlockState(getPos(), state.withProperty(BRIGHTNESS, value));
+			world.setBlockState(getPos(), state.withProperty(BRIGHTNESS, value));
 		}
 	}
 
 	public void setLampColor(int color) {
 		this.color = color & 0x7FFF;
-		if(worldObj.getBlockState(getPos()).getBlock() instanceof BlockColorfulLamp) {
+		if(world.getBlockState(getPos()).getBlock() instanceof BlockColorfulLamp) {
 			if(LampUtil.shouldColorLight()) {
-				setLightValue(worldObj.getBlockState(getPos()), this.color);
+				setLightValue(world.getBlockState(getPos()), this.color);
 			} else {
-				setLightValue(worldObj.getBlockState(getPos()), color == 0 ? 0 : 15);
+				setLightValue(world.getBlockState(getPos()), color == 0 ? 0 : 15);
 			}
 		}
 		this.markDirty();
@@ -173,8 +173,8 @@ public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundl
 	public void setBinaryMode(boolean mode) {
 		this.binaryMode = mode;
 		this.markDirty();
-		this.worldObj.markBlockForUpdate(getPos());
-		this.worldObj.notifyBlockOfStateChange(getPos(), getBlockType());
+		this.world.markBlockForUpdate(getPos());
+		this.world.notifyBlockOfStateChange(getPos(), getBlockType());
 	}*/
 
 	@Override
@@ -203,7 +203,7 @@ public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundl
 			this.color = 0;
 		}
 		if(oldColor != this.color) {
-			this.worldObj.markBlockRangeForRenderUpdate(getPos(), getPos());
+			this.world.markBlockRangeForRenderUpdate(getPos(), getPos());
 		}
 	}
 
@@ -258,7 +258,7 @@ public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundl
 	@Optional.Method(modid = Mods.ProjectRed)
 	public void onProjectRedBundledInputChanged() {
 		for(int i = 0; i < 6; i++) {
-			if(parseBundledInput(ProjectRedAPI.transmissionAPI.getBundledInput(worldObj, xCoord, yCoord, zCoord, i))) {
+			if(parseBundledInput(ProjectRedAPI.transmissionAPI.getBundledInput(world, xCoord, yCoord, zCoord, i))) {
 				return;
 			}
 		}
@@ -281,7 +281,7 @@ public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundl
 	public void onBundledInputChanged() {
 		for(int side = 0; side < 6; side++) {
 			ForgeDirection dir = ForgeDirection.getOrientation(side);
-			TileEntity input = worldObj.getTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
+			TileEntity input = world.getTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
 			if(!(input instanceof IBundledEmitter)) {
 				continue;
 			}

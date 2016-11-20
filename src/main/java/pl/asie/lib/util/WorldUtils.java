@@ -28,9 +28,9 @@ public class WorldUtils {
 	}
 	
 	/*public static boolean equalLocation(TileEntity a, TileEntity b) {
-		if(a == null || b == null || a.getWorldObj() == null || b.getWorldObj() == null) return false;
+		if(a == null || b == null || a.getworld() == null || b.getworld() == null) return false;
 		return a.xCoord == b.xCoord && a.yCoord == b.yCoord && a.zCoord == b.zCoord
-				&& a.getWorldObj().provider.dimensionId == b.getWorldObj().provider.dimensionId;
+				&& a.getworld().provider.dimensionId == b.getworld().provider.dimensionId;
 	}
 	public static Block getBlock(World world, int x, int y, int z) {
 		return world.getBlock(x, y, z);
@@ -50,13 +50,13 @@ public class WorldUtils {
 		}
 	}
 	
-	/*public static void sendParticlePacket(String name, World worldObj, double x, double y, double z, double vx, double vy, double vz) {
+	/*public static void sendParticlePacket(String name, World world, double x, double y, double z, double vx, double vy, double vz) {
 		try {
 			Packet pkt = AsieLibMod.packet.create(Packets.SPAWN_PARTICLE)
 				.writeFloat((float)x).writeFloat((float)y).writeFloat((float)z)
 				.writeFloat((float)vx).writeFloat((float)vy).writeFloat((float)vz)
 				.writeString(name);
-			AsieLibMod.packet.sendToAllAround(pkt, new TargetPoint(worldObj.provider.dimensionId, x, y, z, 64.0D));
+			AsieLibMod.packet.sendToAllAround(pkt, new TargetPoint(world.provider.dimensionId, x, y, z, 64.0D));
 		} catch(Exception e) { e.printStackTrace(); }
     }*/
 }

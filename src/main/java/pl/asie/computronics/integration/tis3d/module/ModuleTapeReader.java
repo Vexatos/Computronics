@@ -17,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import pl.asie.computronics.tile.TapeDriveState.State;
 import pl.asie.computronics.tile.TileTapeDrive;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 
 /**
@@ -390,6 +391,7 @@ public class ModuleTapeReader extends ComputronicsModule {
 		}
 	};
 
+	@Nullable
 	private Command getCommand(short ordinal) {
 		return ordinal >= 0 && ordinal < COMMANDS.length ? COMMANDS[ordinal] : null;
 	}
@@ -466,6 +468,7 @@ public class ModuleTapeReader extends ComputronicsModule {
 
 	// ---
 
+	@Nullable
 	public TileTapeDrive getTapeDrive() {
 		TileEntity tile = getCasing().getCasingWorld().getTileEntity(getCasing().getPosition().offset(Face.toEnumFacing(getFace())));
 		return tile instanceof TileTapeDrive ? (TileTapeDrive) tile : null;

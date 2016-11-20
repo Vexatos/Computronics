@@ -45,7 +45,7 @@ public class TileSpeaker extends TileEntityPeripheralBase implements IAudioRecei
 
 	@Override
 	public World getSoundWorld() {
-		return worldObj;
+		return world;
 	}
 
 	@Override
@@ -82,8 +82,8 @@ public class TileSpeaker extends TileEntityPeripheralBase implements IAudioRecei
 
 	@Override
 	public boolean connectsAudio(EnumFacing side) {
-		if(hasWorldObj()) {
-			IBlockState state = worldObj.getBlockState(getPos());
+		if(hasWorld()) {
+			IBlockState state = world.getBlockState(getPos());
 			return state.getValue(Computronics.speaker.rotation.FACING) != side;
 		} else {
 			return false;

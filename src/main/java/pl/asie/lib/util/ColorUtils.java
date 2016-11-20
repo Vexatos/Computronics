@@ -5,6 +5,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import pl.asie.lib.util.internal.IColorable;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 
 /**
@@ -15,6 +16,7 @@ public class ColorUtils {
 	public static final HashMap<String, Color> dyes = new HashMap<String, Color>();
 	public static final HashMap<Integer, Color> colorValues = new HashMap<Integer, Color>();
 
+	@Nullable
 	public static Color getColor(ItemStack stack) {
 		int[] oreIDs = OreDictionary.getOreIDs(stack);
 		for(Color color : Color.VALUES) {

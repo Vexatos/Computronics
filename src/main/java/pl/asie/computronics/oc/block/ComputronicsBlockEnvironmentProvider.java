@@ -11,7 +11,7 @@ public class ComputronicsBlockEnvironmentProvider implements EnvironmentProvider
 
 	@Override
 	public Class<?> getEnvironment(ItemStack stack) {
-		if(stack == null || stack.getItem() == null || !(stack.getItem() instanceof ItemBlock)
+		if(stack.isEmpty() || !(stack.getItem() instanceof ItemBlock)
 			|| !(((ItemBlock) stack.getItem()).block instanceof IComputronicsEnvironmentBlock)) {
 			return null;
 		}

@@ -71,7 +71,7 @@ public class StreamingAudioPlayer extends DFPWM {
 
 	@SideOnly(Side.CLIENT)
 	private double getDistance(int x, int y, int z) {
-		Vec3d pos = Minecraft.getMinecraft().thePlayer.getPositionVector();
+		Vec3d pos = Minecraft.getMinecraft().player.getPositionVector();
 		return pos.distanceTo(new Vec3d(x, y, z));
 	}
 

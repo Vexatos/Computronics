@@ -20,6 +20,8 @@ import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.util.OCUtils;
 import pl.asie.lib.integration.Integration;
 
+import javax.annotation.Nullable;
+
 import static pl.asie.lib.util.WorldUtils.notifyBlockUpdate;
 
 /**
@@ -187,6 +189,7 @@ public class DriverBoardLight extends RackMountableWithComponentConnector {
 			background = map.registerSprite(new ResourceLocation(backgroundPath));
 		}
 
+		@Nullable
 		public static Mode fromIndex(int index) {
 			return index > 0 && index <= VALUES.length ? VALUES[index - 1] : null;
 		}
@@ -195,6 +198,7 @@ public class DriverBoardLight extends RackMountableWithComponentConnector {
 	public Mode mode;
 	public Light[] lights;
 
+	@Nullable
 	public Light getLight(int index) {
 		return index >= 0 && index < lights.length ? lights[index] : null;
 	}
@@ -226,7 +230,7 @@ public class DriverBoardLight extends RackMountableWithComponentConnector {
 		}
 	}
 
-	private void setMode(Mode mode) {
+	private void setMode(@Nullable Mode mode) {
 		if(mode == null) {
 			mode = Mode.Default;
 		}
@@ -336,11 +340,11 @@ public class DriverBoardLight extends RackMountableWithComponentConnector {
 
 	@Override
 	public boolean onActivate(EntityPlayer player, EnumHand hand, ItemStack heldItem, float hitX, float hitY) {
-		if(player.worldObj.isRemote) {
+		if(player.world.isRemote) {
 			return true;
 		}
 		final BlockPos pos = new BlockPos(host.xPosition(), host.yPosition(), host.zPosition());
-		if(heldItem != null && heldItem.getItem() != null && Integration.isTool(heldItem, player, pos) && Integration.useTool(heldItem, player, pos)) {
+		if(!heldItem.isEmpty() && Integration.isTool(heldItem, player, pos) && Integration.useTool(heldItem, player, pos)) {
 			int index = mode.index;
 			if(index >= Mode.VALUES.length) {
 				index = 0;

@@ -53,7 +53,7 @@ public class ComputronicsPathProvider implements PathProvider {
 
 	@Override
 	public String pathFor(ItemStack stack) {
-		if(stack == null || stack.getItem() == null) {
+		if(stack.isEmpty() || stack.getItem() == null) {
 			return null;
 		}
 		if(stack.getItem() instanceof IItemWithDocumentation) {
@@ -82,7 +82,7 @@ public class ComputronicsPathProvider implements PathProvider {
 			return null;
 		}
 		Block block = world.getBlockState(pos).getBlock();
-		if(block != null && block instanceof IBlockWithDocumentation) {
+		if(block instanceof IBlockWithDocumentation) {
 			return makePath("block",
 				block instanceof IBlockWithPrefix ?
 					((IBlockWithPrefix) block).getPrefix(world, pos)

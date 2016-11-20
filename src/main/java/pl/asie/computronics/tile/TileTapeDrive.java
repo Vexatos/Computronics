@@ -29,7 +29,6 @@ import pl.asie.computronics.api.audio.IAudioReceiver;
 import pl.asie.computronics.api.audio.IAudioSource;
 import pl.asie.computronics.api.tape.IItemTapeStorage;
 import pl.asie.computronics.cc.ComputronicsFileMount;
-import pl.asie.computronics.integration.charset.audio.IntegrationCharsetAudio;
 import pl.asie.computronics.network.PacketType;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
@@ -54,7 +53,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 
 		@Override
 		public World getSoundWorld() {
-			return worldObj;
+			return world;
 		}
 
 		@Override
@@ -193,7 +192,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 	// GUI/State
 
 	protected void sendState() {
-		if(worldObj.isRemote) {
+		if(world.isRemote) {
 			return;
 		}
 		try {
@@ -215,7 +214,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 	public void switchState(State s) {
 		//System.out.println("Switchy switch to " + s.name());
 		if(this.getEnumState() != s) {
-			this.state.switchState(worldObj, getPos(), s);
+			this.state.switchState(world, getPos(), s);
 			this.sendState();
 		}
 	}
@@ -283,22 +282,22 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 	public void update() {
 		super.update();
 		State st = getEnumState();
-		AudioPacket pkt = state.update(this, worldObj, getPos());
+		AudioPacket pkt = state.update(this, world, getPos());
 		if(pkt != null) {
 			int receivers = 0;
 
 			boolean sent = false;
-			if(Mods.API.hasAPI(Mods.API.CharsetAudio)) {
+			/*if(Mods.API.hasAPI(Mods.API.CharsetAudio)) { TODO Charset Audio
 				int oldReceivers = receivers;
 				receivers += IntegrationCharsetAudio.send(getWorld(), getPos(), pkt, getVolume(), true);
 				if(receivers > oldReceivers) {
 					sent = true;
 				}
-			}
+			}*/
 
 			if(!sent) {
 				for(EnumFacing dir : EnumFacing.VALUES) {
-					TileEntity tile = worldObj.getTileEntity(getPos().offset(dir));
+					TileEntity tile = world.getTileEntity(getPos().offset(dir));
 					if(tile != null && tile.hasCapability(AUDIO_RECEIVER_CAPABILITY, dir.getOpposite())) {
 						IColorable targetCol = ColorUtils.getColorable(tile, dir.getOpposite());
 						if(targetCol != null && targetCol.canBeColored()
@@ -316,7 +315,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 				pkt.sendPacket();
 			}
 		}
-		if(!worldObj.isRemote && st != getEnumState()) {
+		if(!world.isRemote && st != getEnumState()) {
 			sendState();
 		}
 	}
@@ -325,7 +324,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 
 	private void setLabel(String label) {
 		ItemStack stack = this.getStackInSlot(0);
-		if(stack != null && stack.getTagCompound() != null) {
+		if(!stack.isEmpty() && stack.getTagCompound() != null) {
 			if(label.length() == 0 && stack.getTagCompound().hasKey("label")) {
 				stack.getTagCompound().removeTag("label");
 			} else if(label.length() > 0) {
@@ -378,7 +377,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 	// Storage handling
 
 	private void loadStorage() {
-		if(worldObj != null && worldObj.isRemote) {
+		if(world != null && world.isRemote) {
 			return;
 		}
 
@@ -386,7 +385,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 			unloadStorage();
 		}
 		ItemStack stack = this.getStackInSlot(0);
-		if(stack != null) {
+		if(!stack.isEmpty()) {
 			// Get Storage.
 			Item item = stack.getItem();
 			if(item instanceof IItemTapeStorage) {
@@ -408,7 +407,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 	}
 
 	private void unloadStorage() {
-		if(worldObj.isRemote || state.getStorage() == null) {
+		if(world.isRemote || state.getStorage() == null) {
 			return;
 		}
 
@@ -423,20 +422,20 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 
 	@Override
 	public void onSlotUpdate(int slot) {
-		if(this.getStackInSlot(0) == null) {
+		if(this.getStackInSlot(0).isEmpty()) {
 			if(state.getStorage() != null) { // Tape was inserted
 				// Play eject sound
 				BlockPos pos = getPos();
-				worldObj.playSound(null, pos, new SoundEvent(new ResourceLocation("computronics:tape_eject")), SoundCategory.BLOCKS, 1, 0);
+				world.playSound(null, pos, new SoundEvent(new ResourceLocation("computronics:tape_eject")), SoundCategory.BLOCKS, 1, 0);
 			}
 			unloadStorage();
 		} else {
 			loadStorage();
 			ItemStack stack = this.getStackInSlot(0);
-			if(stack != null && stack.getItem() instanceof IItemTapeStorage) {
+			if(!stack.isEmpty() && stack.getItem() instanceof IItemTapeStorage) {
 				// Play insert sound
 				BlockPos pos = getPos();
-				worldObj.playSound(null, pos, new SoundEvent(new ResourceLocation("computronics:tape_insert")), SoundCategory.BLOCKS, 1, 0);
+				world.playSound(null, pos, new SoundEvent(new ResourceLocation("computronics:tape_insert")), SoundCategory.BLOCKS, 1, 0);
 			}
 		}
 	}
@@ -773,6 +772,6 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 
 	@Override
 	public boolean connectsAudio(EnumFacing side) {
-		return worldObj.getBlockState(getPos()).getValue(Computronics.tapeReader.rotation.FACING) != side;
+		return world.getBlockState(getPos()).getValue(Computronics.tapeReader.rotation.FACING) != side;
 	}
 }

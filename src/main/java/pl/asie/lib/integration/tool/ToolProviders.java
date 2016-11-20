@@ -3,7 +3,6 @@ package pl.asie.lib.integration.tool;
 //import pl.asie.lib.integration.tool.appeng.ToolProviderAE2;
 //import pl.asie.lib.integration.tool.cofh.ToolProviderCoFH;
 
-import pl.asie.lib.integration.tool.enderio.ToolProviderEnderIO;
 import pl.asie.lib.integration.tool.oc.ToolProviderOC;
 import pl.asie.lib.reference.Mods;
 
@@ -23,9 +22,9 @@ public class ToolProviders {
 		/*if(Mods.API.hasAPI(Mods.API.BuildCraftTools)) {
 			registerToolProvider(new ToolProviderBuildCraft());
 		}*/
-		if(Mods.API.hasAPI(Mods.API.EnderIOTools)) {
+		/*if(Mods.API.hasAPI(Mods.API.EnderIOTools)) {
 			registerToolProvider(new ToolProviderEnderIO());
-		}
+		}*/
 		/*if(Mods.API.hasAPI(Mods.API.CoFHItems)) {
 			registerToolProvider(new ToolProviderCoFH());
 		}*/

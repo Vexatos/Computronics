@@ -35,7 +35,7 @@ public class ComputronicsPathProvider implements PathProvider {
 
 	@Override
 	public String pathFor(ItemStack stack) {
-		if(stack == null || stack.getItem() == null) {
+		if(stack.isEmpty()) {
 			return null;
 		}
 		if(stack.getItem() instanceof IModuleWithDocumentation) {

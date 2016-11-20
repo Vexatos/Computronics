@@ -52,7 +52,7 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements IBundle
 		byte[] realKey = new byte[16];
 		for(int i = 0; i < 6; i++) {
 			ItemStack stack = this.getStackInSlot(i);
-			if(stack == null || stack.getItem() == null) {
+			if(stack.isEmpty() || stack.getItem() == null) {
 				key[i * 5] = 0;
 				key[i * 5 + 1] = 0;
 			} else {
@@ -60,17 +60,17 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements IBundle
 				key[i * 5 + 1] = (byte) (Item.getIdFromItem(stack.getItem()) >> 8);
 			}
 
-			if(stack == null) {
+			if(stack.isEmpty()) {
 				key[i * 5 + 2] = 0;
 				key[i * 5 + 3] = 0;
 				iv[i * 2] = 0;
 			} else {
-				key[i * 5 + 2] = (byte) ((stack.getItemDamage() & 3) | (stack.stackSize << 2));
+				key[i * 5 + 2] = (byte) ((stack.getItemDamage() & 3) | (stack.getCount() << 2));
 				key[i * 5 + 3] = (byte) (stack.getItemDamage() >> 2);
 				iv[i * 2] = (byte) (stack.getItemDamage() ^ (stack.getItemDamage() >> 8));
 			}
 
-			if(stack == null || stack.getTagCompound() == null) {
+			if(stack.isEmpty() || stack.getTagCompound() == null) {
 				key[i * 5 + 4] = 0;
 				iv[i * 2 + 1] = 0;
 			} else {
@@ -196,7 +196,7 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements IBundle
 		int key = 0;
 		for(int i = 0; i < 6; i++) {
 			ItemStack stack = this.getStackInSlot(i);
-			if(stack == null || stack.getItem() == null) {
+			if(stack.isEmpty() || stack.getItem() == null) {
 				continue;
 			}
 
@@ -206,7 +206,7 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements IBundle
 			}
 			key ^= stackId;
 			key ^= stack.getItemDamage();
-			key ^= stack.stackSize * (193 * i);
+			key ^= stack.getCount() * (193 * i);
 		}
 		return key;
 	}
@@ -220,7 +220,7 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements IBundle
 		int amountOfItems = 0;
 		for(int i = 0; i < 6; i++) {
 			ItemStack stack = this.getStackInSlot(i);
-			if(stack == null || stack.getItem() == null) {
+			if(stack.isEmpty() || stack.getItem() == null) {
 				continue;
 			}
 
@@ -230,7 +230,7 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements IBundle
 				keyPart <<= 4;
 			}
 			keyPart ^= stack.getItemDamage();
-			keyPart ^= stack.stackSize * (193 * i);
+			keyPart ^= stack.getCount() * (193 * i);
 			key ^= (keyPart << 3);
 		}
 		key ^= (amountOfItems & 1) << 31;
@@ -262,7 +262,7 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements IBundle
 	}
 
 	public void updateOutputWires() {
-		worldObj.notifyNeighborsOfStateChange(getPos(), getBlockType());
+		world.notifyNeighborsOfStateChange(getPos(), getBlockType(), true);
 	}
 
 	@Override
@@ -300,18 +300,18 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements IBundle
 
 	@Override
 	public boolean canBundledConnectToInput(@Nullable EnumFacing side) {
-		return worldObj != null && side == worldObj.getBlockState(getPos()).getValue(Computronics.cipher.rotation.FACING).rotateY();
+		return world != null && side == world.getBlockState(getPos()).getValue(Computronics.cipher.rotation.FACING).rotateY();
 	}
 
 	@Override
 	public boolean canBundledConnectToOutput(@Nullable EnumFacing side) {
-		return worldObj != null && side == worldObj.getBlockState(getPos()).getValue(Computronics.cipher.rotation.FACING).rotateYCCW();
+		return world != null && side == world.getBlockState(getPos()).getValue(Computronics.cipher.rotation.FACING).rotateYCCW();
 	}
 
 	@Nullable
 	@Override
 	public byte[] getBundledOutput(@Nullable EnumFacing side) {
-		if(side == worldObj.getBlockState(getPos()).getValue(Computronics.cipher.rotation.FACING).rotateYCCW()) {
+		if(side == world.getBlockState(getPos()).getValue(Computronics.cipher.rotation.FACING).rotateYCCW()) {
 			return getBundledOutput();
 		} else {
 			return null;
@@ -320,7 +320,7 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements IBundle
 
 	@Override
 	public void onBundledInputChange(@Nullable EnumFacing side, @Nullable byte[] data) {
-		if(data != null && side == worldObj.getBlockState(getPos()).getValue(Computronics.cipher.rotation.FACING).rotateY()) {
+		if(data != null && side == world.getBlockState(getPos()).getValue(Computronics.cipher.rotation.FACING).rotateY()) {
 			bundledXORData = 0;
 			for(int i = 0; i < 16; i++) {
 				bundledXORData |= (data[i] != 0) ? (1 << i) : 0;
@@ -334,7 +334,7 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements IBundle
 	@Override
 	public ItemStack getStackInSlot(int slot) {
 		if(isLocked()) {
-			return null;
+			return ItemStack.EMPTY;
 		} else {
 			return super.getStackInSlot(slot);
 		}
@@ -367,12 +367,13 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements IBundle
 	}
 
 	@Override
-	public boolean isUseableByPlayer(EntityPlayer player) {
-		return !isLocked() && super.isUseableByPlayer(player);
+	public boolean isUsableByPlayer(EntityPlayer player) {
+		return !isLocked() && super.isUsableByPlayer(player);
 	}
 
 	private boolean forceLocked;
 
+	@Override
 	public boolean isLocked() {
 		return this.forceLocked || (this.code != null && !this.code.isEmpty());
 	}

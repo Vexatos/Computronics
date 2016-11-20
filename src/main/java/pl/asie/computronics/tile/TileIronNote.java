@@ -44,7 +44,7 @@ public class TileIronNote extends TileEntityPeripheralBase implements IBundledRe
 		synchronized(noteBuffer) {
 			if(!noteBuffer.isEmpty()) {
 				for(NoteUtils.NoteTask task : noteBuffer) {
-					task.play(worldObj, getPos());
+					task.play(world, getPos());
 				}
 				noteBuffer.clear();
 			}
@@ -60,14 +60,14 @@ public class TileIronNote extends TileEntityPeripheralBase implements IBundledRe
 		if(args.count() >= 1) {
 			if(args.count() >= 2 && args.isInteger(1)) {
 				if(args.isInteger(0)) {
-					task = NoteUtils.playNote(worldObj, getPos(), args.checkInteger(0), args.checkInteger(1), NoteUtils.toVolume(3, args.optDouble(2, 1.0D)));
+					task = NoteUtils.playNote(world, getPos(), args.checkInteger(0), args.checkInteger(1), NoteUtils.toVolume(3, args.optDouble(2, 1.0D)));
 				} else if(args.isString(0)) {
-					task = NoteUtils.playNote(worldObj, getPos(), args.checkString(0), args.checkInteger(1), NoteUtils.toVolume(3, args.optDouble(2, 1.0D)));
+					task = NoteUtils.playNote(world, getPos(), args.checkString(0), args.checkInteger(1), NoteUtils.toVolume(3, args.optDouble(2, 1.0D)));
 				} else if(args.checkAny(0) == null) {
-					task = NoteUtils.playNote(worldObj, getPos(), -1, args.checkInteger(1), NoteUtils.toVolume(3, args.optDouble(2, 1.0D)));
+					task = NoteUtils.playNote(world, getPos(), -1, args.checkInteger(1), NoteUtils.toVolume(3, args.optDouble(2, 1.0D)));
 				}
 			} else if(args.isInteger(0)) {
-				task = NoteUtils.playNote(worldObj, getPos(), -1, args.checkInteger(0), NoteUtils.toVolume(2, args.optDouble(1, 1.0D)));
+				task = NoteUtils.playNote(world, getPos(), -1, args.checkInteger(0), NoteUtils.toVolume(2, args.optDouble(1, 1.0D)));
 			}
 		}
 		if(task != null) {
@@ -106,15 +106,15 @@ public class TileIronNote extends TileEntityPeripheralBase implements IBundledRe
 				if(arguments.length >= 2 && (arguments[1] instanceof Double)) {
 					if(arguments[0] != null) {
 						if(arguments[0] instanceof Double) {
-							task = NoteUtils.playNote(worldObj, getPos(), ((Double) arguments[0]).intValue(), ((Double) arguments[1]).intValue(), NoteUtils.toVolume(arguments, 2));
+							task = NoteUtils.playNote(world, getPos(), ((Double) arguments[0]).intValue(), ((Double) arguments[1]).intValue(), NoteUtils.toVolume(arguments, 2));
 						} else if(arguments[0] instanceof String) {
-							task = NoteUtils.playNote(worldObj, getPos(), (String) arguments[0], ((Double) arguments[1]).intValue(), NoteUtils.toVolume(arguments, 2));
+							task = NoteUtils.playNote(world, getPos(), (String) arguments[0], ((Double) arguments[1]).intValue(), NoteUtils.toVolume(arguments, 2));
 						}
 					} else {
-						task = NoteUtils.playNote(worldObj, getPos(), -1, ((Double) arguments[1]).intValue(), NoteUtils.toVolume(arguments, 2));
+						task = NoteUtils.playNote(world, getPos(), -1, ((Double) arguments[1]).intValue(), NoteUtils.toVolume(arguments, 2));
 					}
 				} else if((arguments[0] instanceof Double)) {
-					task = NoteUtils.playNote(worldObj, getPos(), -1, ((Double) arguments[0]).intValue(), NoteUtils.toVolume(arguments, 1));
+					task = NoteUtils.playNote(world, getPos(), -1, ((Double) arguments[0]).intValue(), NoteUtils.toVolume(arguments, 1));
 				}
 			}
 			if(task != null) {
@@ -133,9 +133,9 @@ public class TileIronNote extends TileEntityPeripheralBase implements IBundledRe
 		if(data != null) {
 			for(int i = 0; i < 16; i++) {
 				if(data[i] != 0) {
-					NoteUtils.NoteTask task = NoteUtils.playNote(worldObj, getPos(), -1, baseNote + i);
+					NoteUtils.NoteTask task = NoteUtils.playNote(world, getPos(), -1, baseNote + i);
 					if(task != null) {
-						task.play(worldObj, getPos());
+						task.play(world, getPos());
 					}
 				}
 			}
@@ -178,7 +178,7 @@ public class TileIronNote extends TileEntityPeripheralBase implements IBundledRe
 	@Optional.Method(modid = Mods.ProjectRed)
 	public void onProjectRedBundledInputChanged() {
 		for(int i = 0; i < 6; i++) {
-			parseBundledInput(ProjectRedAPI.transmissionAPI.getBundledInput(worldObj, xCoord, yCoord, zCoord, i));
+			parseBundledInput(ProjectRedAPI.transmissionAPI.getBundledInput(world, xCoord, yCoord, zCoord, i));
 		}
 	}
 
@@ -199,7 +199,7 @@ public class TileIronNote extends TileEntityPeripheralBase implements IBundledRe
 	public void onBundledInputChanged() {
 		for(int side = 0; side < 6; side++) {
 			ForgeDirection dir = ForgeDirection.getOrientation(side);
-			TileEntity input = worldObj.getTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
+			TileEntity input = world.getTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
 			if(!(input instanceof IBundledEmitter)) {
 				continue;
 			}

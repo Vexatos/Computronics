@@ -34,7 +34,7 @@ public class RobotUpgradeChatBox extends ManagedEnvironment implements DeviceInf
 
 	@Override
 	public void receiveChatMessage(ServerChatEvent event) {
-		if(!Config.CHATBOX_MAGIC && (event.getPlayer().worldObj != this.container.world()
+		if(!Config.CHATBOX_MAGIC && (event.getPlayer().world != this.container.world()
 			|| event.getPlayer().getDistanceSq(container.xPosition(), container.yPosition(), container.zPosition()) > distance * distance)) {
 			return;
 		}

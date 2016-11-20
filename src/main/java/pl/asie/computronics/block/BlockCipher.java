@@ -4,7 +4,6 @@ import li.cil.oc.api.network.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -36,7 +35,7 @@ public class BlockCipher extends BlockPeripheral /*implements IRedNetOmniNode*/ 
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 		boolean isLocked = false;
 		if(!world.isRemote && Config.CIPHER_CAN_LOCK) {
 			TileEntity tile = world.getTileEntity(pos);
@@ -44,10 +43,10 @@ public class BlockCipher extends BlockPeripheral /*implements IRedNetOmniNode*/ 
 				isLocked = ((TileCipherBlock) tile).isLocked();
 			}
 			if(isLocked) {
-				player.addChatMessage(new TextComponentTranslation("chat.computronics.cipher.locked"));
+				player.sendStatusMessage(new TextComponentTranslation("chat.computronics.cipher.locked"), false);
 			}
 		}
-		return isLocked || super.onBlockActivated(world, pos, state, player, hand, heldItem, side, hitX, hitY, hitZ);
+		return isLocked || super.onBlockActivated(world, pos, state, player, hand, side, hitX, hitY, hitZ);
 	}
 
 	@Override
@@ -57,8 +56,8 @@ public class BlockCipher extends BlockPeripheral /*implements IRedNetOmniNode*/ 
 
 	@Override
 	@Deprecated
-	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block) {
-		super.neighborChanged(state, world, pos, block);
+	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block, BlockPos otherPos) {
+		super.neighborChanged(state, world, pos, block, otherPos);
 		/*TileEntity tile = world.getTileEntity(pos);
 		if(Mods.isLoaded(Mods.ProjectRed))
 			((TileCipherBlock)tile).onProjectRedBundledInputChanged();*/

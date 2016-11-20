@@ -20,6 +20,7 @@ import pl.asie.computronics.Computronics;
 import pl.asie.computronics.network.PacketType;
 import pl.asie.lib.network.Packet;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 
 /**
@@ -27,13 +28,13 @@ import java.io.IOException;
  */
 public class SelfDestruct extends Explosion {
 
-	protected World worldObj;
+	protected World world;
 	protected float explosionSize;
 	private boolean destroyBlocks;
 
-	public SelfDestruct(World world, Entity exploder, double x, double y, double z, float size, boolean destroyBlocks) {
+	public SelfDestruct(World world, @Nullable Entity exploder, double x, double y, double z, float size, boolean destroyBlocks) {
 		super(world, exploder, x, y, z, size, false, true);
-		this.worldObj = world;
+		this.world = world;
 		this.destroyBlocks = destroyBlocks;
 		this.explosionSize = size;
 	}
@@ -48,39 +49,39 @@ public class SelfDestruct extends Explosion {
 			explosionZ = position.zCoord;
 		final BlockPos explosionPos = new BlockPos(explosionX, explosionY, explosionZ);
 
-		this.worldObj.playSound(null, explosionX, explosionY, explosionZ, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) * 0.2F) * 0.7F);
+		this.world.playSound(null, explosionX, explosionY, explosionZ, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
 
-		this.worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_HUGE, explosionX, explosionY, explosionZ, 1.0D, 0.0D, 0.0D);
+		this.world.spawnParticle(EnumParticleTypes.EXPLOSION_HUGE, explosionX, explosionY, explosionZ, 1.0D, 0.0D, 0.0D);
 
 		for(BlockPos blockpos : this.getAffectedBlockPositions()) {
-			IBlockState state = this.worldObj.getBlockState(blockpos);
+			IBlockState state = this.world.getBlockState(blockpos);
 			Block block = state.getBlock();
 
 			if(spawnParticles) {
-				double d0 = (double) ((float) blockpos.getX() + this.worldObj.rand.nextFloat());
-				double d1 = (double) ((float) blockpos.getY() + this.worldObj.rand.nextFloat());
-				double d2 = (double) ((float) blockpos.getZ() + this.worldObj.rand.nextFloat());
+				double d0 = (double) ((float) blockpos.getX() + this.world.rand.nextFloat());
+				double d1 = (double) ((float) blockpos.getY() + this.world.rand.nextFloat());
+				double d2 = (double) ((float) blockpos.getZ() + this.world.rand.nextFloat());
 				double d3 = d0 - explosionX;
 				double d4 = d1 - explosionY;
 				double d5 = d2 - explosionZ;
-				double d6 = (double) MathHelper.sqrt_double(d3 * d3 + d4 * d4 + d5 * d5);
+				double d6 = (double) MathHelper.sqrt(d3 * d3 + d4 * d4 + d5 * d5);
 				d3 = d3 / d6;
 				d4 = d4 / d6;
 				d5 = d5 / d6;
 				double d7 = 0.5D / (d6 / (double) this.explosionSize + 0.1D);
-				d7 = d7 * (double) (this.worldObj.rand.nextFloat() * this.worldObj.rand.nextFloat() + 0.3F);
+				d7 = d7 * (double) (this.world.rand.nextFloat() * this.world.rand.nextFloat() + 0.3F);
 				d3 = d3 * d7;
 				d4 = d4 * d7;
 				d5 = d5 * d7;
-				this.worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (d0 + explosionX * 1.0D) / 2.0D, (d1 + explosionY * 1.0D) / 2.0D, (d2 + explosionZ * 1.0D) / 2.0D, d3, d4, d5);
-				this.worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0, d1, d2, d3, d4, d5);
+				this.world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (d0 + explosionX * 1.0D) / 2.0D, (d1 + explosionY * 1.0D) / 2.0D, (d2 + explosionZ * 1.0D) / 2.0D, d3, d4, d5);
+				this.world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0, d1, d2, d3, d4, d5);
 			}
 
 			if(state.getMaterial() != Material.AIR) {
-				if(!this.worldObj.isRemote
+				if(!this.world.isRemote
 					&& blockpos.equals(explosionPos)) {
 					// This is the case.
-					TileEntity tile = this.worldObj.getTileEntity(blockpos);
+					TileEntity tile = this.world.getTileEntity(blockpos);
 					if(tile != null && !tile.isInvalid() && tile instanceof IInventory) {
 						IInventory inv = (IInventory) tile;
 						inv.clear();
@@ -91,10 +92,10 @@ public class SelfDestruct extends Explosion {
 					if(!blockpos.equals(explosionPos)) {
 						// This not is the case.
 						if(block.canDropFromExplosion(this)) {
-							block.dropBlockAsItemWithChance(this.worldObj, blockpos, this.worldObj.getBlockState(blockpos), 1.0F / this.explosionSize, 0);
+							block.dropBlockAsItemWithChance(this.world, blockpos, this.world.getBlockState(blockpos), 1.0F / this.explosionSize, 0);
 						}
 					}
-					block.onBlockExploded(this.worldObj, blockpos, this);
+					block.onBlockExploded(this.world, blockpos, this);
 				}
 			}
 		}

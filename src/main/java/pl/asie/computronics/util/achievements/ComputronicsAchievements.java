@@ -2,25 +2,14 @@ package pl.asie.computronics.util.achievements;
 
 //import net.minecraftforge.fml.common.FMLCommonHandler;
 
-import mods.railcraft.common.carts.EntityLocomotiveElectric;
-import mods.railcraft.common.carts.ItemLocomotive;
-import mods.railcraft.common.carts.RailcraftCarts;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.Achievement;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.AchievementPage;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import pl.asie.computronics.Computronics;
-import pl.asie.computronics.integration.railcraft.tile.TileLocomotiveRelay;
-import pl.asie.computronics.reference.Config;
-import pl.asie.computronics.reference.Mods;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -75,9 +64,9 @@ public class ComputronicsAchievements {
 			}*/
 		}
 
-		if(Mods.isLoaded(Mods.Railcraft)) {
+		/*if(Mods.isLoaded(Mods.Railcraft)) { TODO Railcraft
 			RailcraftAchievements.initializeRCAchievements();
-		}
+		}*/
 	}
 
 	private Achievement registerAchievement(EnumAchievements key, int x, int y, ItemStack icon, @Nullable Achievement requirement, boolean special, boolean independent) {
@@ -111,7 +100,7 @@ public class ComputronicsAchievements {
 	public void onCrafting(PlayerEvent.ItemCraftedEvent event) {
 		ItemStack stack = event.crafting;
 		EntityPlayer player = event.player;
-		if(player == null || stack == null) {
+		if(player == null || stack.isEmpty()) {
 			return;
 		}
 		if(Computronics.itemTape != null && stack.getItem() == Computronics.itemTape) {
@@ -130,30 +119,29 @@ public class ComputronicsAchievements {
 					break;
 				}
 			}
-		} else
-		if(Mods.isLoaded(Mods.Railcraft)) {
+		} /*else if(Mods.isLoaded(Mods.Railcraft)) { TODO Railcraft
 			RailcraftAchievements.onCrafting(stack, player);
-		}
+		}*/
 	}
 
-	@SubscribeEvent
+	/*@SubscribeEvent
 	public void onLeftClickEntity(AttackEntityEvent event) {
 		if(Mods.isLoaded(Mods.Railcraft)) {
 			RailcraftAchievements.onLeftClickEntity(event);
 		}
-	}
+	}*/
 
 	/*@SubscribeEvent
 	public void onItemDropped(ItemTossEvent event) {
 		if(event == null || event.player == null || event.entityItem == null
-			|| (event.entityItem.worldObj != null && event.entityItem.worldObj.isRemote)) {
+			|| (event.entityItem.world != null && event.entityItem.world.isRemote)) {
 			return;
 		}
 		EntityPlayer player = event.player;
 		EntityItem item = event.entityItem;
 		ItemStack stack = item.getEntityItem();
 
-		if(stack != null && Computronics.itemTape != null
+		if(!stack.isEmpty() && Computronics.itemTape != null
 			&& stack.getItem() == Computronics.itemTape && stack.getItemDamage() == 9) {
 			if(!stack.hasTagCompound()) {
 				stack.setTagCompound(new NBTTagCompound());
@@ -167,12 +155,12 @@ public class ComputronicsAchievements {
 	/*@SubscribeEvent
 	public void onItemDespawn(ItemExpireEvent event) {
 		if(event == null || event.entityItem == null
-			|| (event.entityItem.worldObj != null && event.entityItem.worldObj.isRemote)) {
+			|| (event.entityItem.world != null && event.entityItem.world.isRemote)) {
 			return;
 		}
 		EntityItem item = event.entityItem;
 		ItemStack stack = item.getEntityItem();
-		if(stack != null && Computronics.itemTape != null
+		if(!stack.isEmpty() && Computronics.itemTape != null
 			&& stack.getItem() == Computronics.itemTape && stack.getItemDamage() == 9) {
 			if(stack.hasTagCompound()) {
 				NBTTagCompound data = stack.getTagCompound();
@@ -197,9 +185,9 @@ public class ComputronicsAchievements {
 		}
 	}*/
 
-	/**
+	/*/**
 	 * All the Railcraft related Achievements
-	 */
+	 * /
 	private static class RailcraftAchievements {
 
 		private static void initializeRCAchievements() {
@@ -226,7 +214,7 @@ public class ComputronicsAchievements {
 
 				ItemStack stack = player.getHeldItem(EnumHand.MAIN_HAND);
 
-				if(stack == null) {
+				if(stack.isEmpty()) {
 					return;
 				}
 
@@ -241,10 +229,10 @@ public class ComputronicsAchievements {
 							data.getInteger("relayY"),
 							data.getInteger("relayZ")
 						);
-						if(!player.worldObj.isBlockLoaded(pos)) {
+						if(!player.world.isBlockLoaded(pos)) {
 							return;
 						}
-						TileEntity tile = loco.worldObj.getTileEntity(pos);
+						TileEntity tile = loco.world.getTileEntity(pos);
 						if(tile != null && tile instanceof TileLocomotiveRelay) {
 							TileLocomotiveRelay relay = (TileLocomotiveRelay) tile;
 							if(loco.dimension == relay.getWorld().provider.getDimension()
@@ -257,5 +245,5 @@ public class ComputronicsAchievements {
 				}
 			}
 		}
-	}
+	}*/
 }

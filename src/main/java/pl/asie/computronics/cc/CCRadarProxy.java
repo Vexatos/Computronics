@@ -37,7 +37,7 @@ public class CCRadarProxy {
 	}
 
 	@Optional.Method(modid = Mods.ComputerCraft)
-	public static Object[] callMethod(World worldObj, BlockPos pos, IComputerAccess computer, ILuaContext context,
+	public static Object[] callMethod(World world, BlockPos pos, IComputerAccess computer, ILuaContext context,
 		int method, Object[] arguments, Object powerProvider) throws LuaException,
 		InterruptedException {
 		int distance = Config.RADAR_RANGE;
@@ -65,13 +65,13 @@ public class CCRadarProxy {
 		AxisAlignedBB bounds = getBounds(pos, distance);
 		Set<Map> entities = new HashSet<Map>();
 		if(method == 0 || method == 1) {
-			entities.addAll(RadarUtils.getEntities(worldObj, pos, bounds, EntityPlayer.class));
+			entities.addAll(RadarUtils.getEntities(world, pos, bounds, EntityPlayer.class));
 		}
 		if(method == 0 || method == 2) {
-			entities.addAll(RadarUtils.getEntities(worldObj, pos, bounds, EntityLiving.class));
+			entities.addAll(RadarUtils.getEntities(world, pos, bounds, EntityLiving.class));
 		}
 		if(method == 3) {
-			entities.addAll(RadarUtils.getItems(worldObj, pos, bounds, EntityItem.class));
+			entities.addAll(RadarUtils.getItems(world, pos, bounds, EntityItem.class));
 		}
 
 		return new Object[] { TableUtils.convertSetToMap(entities) };

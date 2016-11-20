@@ -30,7 +30,7 @@ public class TileCamera extends TileEntityPeripheralBase implements ITickable {
 	}
 
 	private EnumFacing getFacingDirection() {
-		return Computronics.camera.getFacingDirection(worldObj, getPos());
+		return Computronics.camera.getFacingDirection(world, getPos());
 	}
 
 	@Override
@@ -48,8 +48,8 @@ public class TileCamera extends TileEntityPeripheralBase implements ITickable {
 		super.update();
 		if(tick % 20 == 0 && Config.REDSTONE_REFRESH) {
 			BlockPos pos = getPos();
-			cameraRedstone.ray(worldObj, pos.getX(), pos.getY(), pos.getZ(), getFacingDirection(), 0.0f, 0.0f);
-			this.worldObj.notifyNeighborsOfStateChange(this.pos, this.getBlockType());
+			cameraRedstone.ray(world, pos.getX(), pos.getY(), pos.getZ(), getFacingDirection(), 0.0f, 0.0f);
+			this.world.notifyNeighborsOfStateChange(this.pos, this.getBlockType(), true);
 		}
 		tick++;
 	}
@@ -78,7 +78,7 @@ public class TileCamera extends TileEntityPeripheralBase implements ITickable {
 			y = (float) args.checkDouble(1);
 		}
 		BlockPos pos = getPos();
-		camera.ray(worldObj, pos.getX(), pos.getY(), pos.getZ(), getFacingDirection(), x, y);
+		camera.ray(world, pos.getX(), pos.getY(), pos.getZ(), getFacingDirection(), x, y);
 		return new Object[] { camera.getDistance() };
 	}
 
@@ -108,7 +108,7 @@ public class TileCamera extends TileEntityPeripheralBase implements ITickable {
 					//};
 				}
 				BlockPos pos = getPos();
-				camera.ray(worldObj, pos.getX(), pos.getY(), pos.getZ(), getFacingDirection(), x, y);
+				camera.ray(world, pos.getX(), pos.getY(), pos.getZ(), getFacingDirection(), x, y);
 				return new Object[] { camera.getDistance() };
 			}
 		}

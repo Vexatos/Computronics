@@ -20,8 +20,8 @@ public class ToolProviderOC implements IToolProvider {
 	public boolean useTool(ItemStack stack, EntityPlayer player, BlockPos pos) {
 		if(stack.getItem() instanceof Wrench) {
 			Wrench wrench = (Wrench) stack.getItem();
-			if(wrench.useWrenchOnBlock(player, player.worldObj, pos, true)) {
-				wrench.useWrenchOnBlock(player, player.worldObj, pos, false);
+			if(wrench.useWrenchOnBlock(player, player.world, pos, true)) {
+				wrench.useWrenchOnBlock(player, player.world, pos, false);
 				return true;
 			}
 		}

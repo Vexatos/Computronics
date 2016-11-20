@@ -19,6 +19,7 @@ import pl.asie.lib.reference.Mods;
 import pl.asie.lib.util.EnergyConverter;
 
 import javax.annotation.Nullable;
+import java.util.Arrays;
 
 /*@Optional.InterfaceList({
 	@Optional.Interface(iface = "mods.immibis.redlogic.api.wiring.IConnectable", modid = Mods.RedLogic)
@@ -28,6 +29,7 @@ public class TileMachine extends TileEntityBase implements
 
 	private IBattery battery;
 	//private IBundledRedstoneProvider brP;
+	@Nullable
 	private ItemStack[] items;
 
 	public TileMachine() {
@@ -51,6 +53,7 @@ public class TileMachine extends TileEntityBase implements
 
 	protected void createInventory(int slots) {
 		this.items = new ItemStack[slots];
+		Arrays.fill(this.items, ItemStack.EMPTY);
 	}
 
 	@Override
@@ -99,7 +102,7 @@ public class TileMachine extends TileEntityBase implements
 	/*@Optional.Method(modid = Mods.RedLogic)
 	public boolean connects(IWire wire, int blockFace, int fromDirection) {
 		if(wire instanceof IBareRedstoneWire && this.blockType != null
-			&& ((BlockBase) this.blockType).emitsRedstone(worldObj, xCoord, yCoord, zCoord, fromDirection)) {
+			&& ((BlockBase) this.blockType).emitsRedstone(world, xCoord, yCoord, zCoord, fromDirection)) {
 			return true;
 		} else if(wire instanceof IBundledWire) {
 			if(this.brP != null) {
@@ -127,7 +130,7 @@ public class TileMachine extends TileEntityBase implements
 					if(this.brP.canBundledConnectTo(side, face)) {
 						if(be == null) {
 							ForgeDirection fd = ForgeDirection.values()[side];
-							TileEntity t = worldObj.getTileEntity(xCoord + fd.offsetX, yCoord + fd.offsetY, zCoord + fd.offsetZ);
+							TileEntity t = world.getTileEntity(xCoord + fd.offsetX, yCoord + fd.offsetY, zCoord + fd.offsetZ);
 							if(t != null && t instanceof IBundledEmitter) {
 								be = (IBundledEmitter) t;
 							} else {
@@ -171,7 +174,7 @@ public class TileMachine extends TileEntityBase implements
 				if(!this.brP.canBundledConnectTo(i, -1)) {
 					continue;
 				}
-				byte[] data = ProjectRedAPI.transmissionAPI.getBundledInput(worldObj, xCoord, yCoord, zCoord, i);
+				byte[] data = ProjectRedAPI.transmissionAPI.getBundledInput(world, xCoord, yCoord, zCoord, i);
 				if(data != null) {
 					this.brP.onBundledInputChange(i, -1, data);
 				}
@@ -197,7 +200,7 @@ public class TileMachine extends TileEntityBase implements
 	public ItemStack decrStackSize(int slot, int amount) {
 		if(this.items != null && this.items[slot] != null) {
 			ItemStack stack;
-			if(this.items[slot].stackSize <= amount) {
+			if(this.items[slot].getCount() <= amount) {
 				stack = this.items[slot];
 				this.items[slot] = null;
 				this.onSlotUpdate(slot);
@@ -205,7 +208,7 @@ public class TileMachine extends TileEntityBase implements
 			} else {
 				stack = this.items[slot].splitStack(amount);
 
-				if(this.items[slot].stackSize == 0) {
+				if(this.items[slot].getCount() == 0) {
 					this.items[slot] = null;
 				}
 
@@ -214,18 +217,18 @@ public class TileMachine extends TileEntityBase implements
 				return stack;
 			}
 		} else {
-			return null;
+			return ItemStack.EMPTY;
 		}
 	}
 
 	@Override
 	public ItemStack removeStackFromSlot(int index) {
-		return null;
+		return ItemStack.EMPTY;
 	}
 
 	@Override
 	public String getName() {
-		return this.blockType != null ? this.blockType.getUnlocalizedName() + ".inventory" : null;
+		return this.blockType != null ? this.blockType.getUnlocalizedName() + ".inventory" : "unknown.inventory";
 	}
 
 	@Override
@@ -262,13 +265,25 @@ public class TileMachine extends TileEntityBase implements
 		}
 	}
 
-	@Nullable
+	@Override
+	public boolean isEmpty() {
+		if(this.items == null) {
+			return true;
+		}
+		for(ItemStack item : this.items) {
+			if(!item.isEmpty()) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	@Override
 	public ItemStack getStackInSlot(int slot) {
 		if(this.items != null && slot >= 0 && slot < this.items.length) {
 			return this.items[slot];
 		} else {
-			return null;
+			return ItemStack.EMPTY;
 		}
 	}
 
@@ -294,8 +309,10 @@ public class TileMachine extends TileEntityBase implements
 
 	@Override
 	public void clear() {
-		for(int i = 0; i < this.items.length; i++) {
-			this.setInventorySlotContents(i, null);
+		if(this.items != null) {
+			for(int i = 0; i < this.items.length; i++) {
+				this.setInventorySlotContents(i, ItemStack.EMPTY);
+			}
 		}
 	}
 
@@ -379,7 +396,7 @@ public class TileMachine extends TileEntityBase implements
 
 	@Optional.Method(modid = Mods.IC2)
 	public void initIC() {
-		if(!didInitIC2 && (worldObj == null || !worldObj.isRemote)) {
+		if(!didInitIC2 && (world == null || !world.isRemote)) {
 			MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent((IEnergyTile) this));
 		}
 		didInitIC2 = true;
@@ -387,7 +404,7 @@ public class TileMachine extends TileEntityBase implements
 
 	@Optional.Method(modid = Mods.IC2)
 	public void deinitIC() {
-		if(didInitIC2 && (worldObj == null || !worldObj.isRemote)) {
+		if(didInitIC2 && (world == null || !world.isRemote)) {
 			MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent((IEnergyTile) this));
 		}
 		didInitIC2 = false;
@@ -503,7 +520,7 @@ public class TileMachine extends TileEntityBase implements
 				int j = nbttagcompound1.getByte("Slot") & 255;
 
 				if(j >= 0 && j < this.items.length) {
-					this.items[j] = ItemStack.loadItemStackFromNBT(nbttagcompound1);
+					this.items[j] = new ItemStack(nbttagcompound1);
 				}
 			}
 		}
@@ -519,7 +536,7 @@ public class TileMachine extends TileEntityBase implements
 			NBTTagList itemList = new NBTTagList();
 			for(int i = 0; i < items.length; i++) {
 				ItemStack stack = items[i];
-				if(stack != null) {
+				if(!stack.isEmpty()) {
 					NBTTagCompound tag = new NBTTagCompound();
 					tag.setByte("Slot", (byte) i);
 					stack.writeToNBT(tag);

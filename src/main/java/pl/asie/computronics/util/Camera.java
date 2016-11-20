@@ -7,6 +7,8 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import pl.asie.computronics.reference.Config;
 
+import javax.annotation.Nullable;
+
 public class Camera {
 
 	private World world;
@@ -17,7 +19,7 @@ public class Camera {
 		// not initialized
 	}
 
-	public boolean ray(World worldObj, float xCoord, float yCoord, float zCoord, EnumFacing dir, float x, float y) {
+	public boolean ray(World worldObj, float xCoord, float yCoord, float zCoord, @Nullable EnumFacing dir, float x, float y) {
 		hit = null;
 		if(x < -1.0F || x > 1.0F || y < -1.0F || y > 1.0F) {
 			return false;

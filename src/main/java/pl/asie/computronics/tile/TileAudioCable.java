@@ -9,9 +9,7 @@ import net.minecraft.world.World;
 import pl.asie.computronics.api.audio.AudioPacket;
 import pl.asie.computronics.api.audio.IAudioConnection;
 import pl.asie.computronics.api.audio.IAudioReceiver;
-import pl.asie.computronics.integration.charset.audio.IntegrationCharsetAudio;
 import pl.asie.computronics.reference.Capabilities;
-import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.ColorUtils;
 import pl.asie.lib.tile.TileEntityBase;
 import pl.asie.lib.util.internal.IColorable;
@@ -39,8 +37,8 @@ public class TileAudioCable extends TileEntityBase implements IAudioReceiver, IC
 				continue;
 			}
 
-			if(worldObj.isBlockLoaded(getPos().offset(dir))) {
-				TileEntity tile = worldObj.getTileEntity(getPos().offset(dir));
+			if(world.isBlockLoaded(getPos().offset(dir))) {
+				TileEntity tile = world.getTileEntity(getPos().offset(dir));
 				if(tile instanceof TileAudioCable) {
 					if(!((TileAudioCable) tile).connectsInternal(dir.getOpposite())) {
 						continue;
@@ -49,11 +47,11 @@ public class TileAudioCable extends TileEntityBase implements IAudioReceiver, IC
 					if(!((IAudioConnection) tile).connectsAudio(dir.getOpposite())) {
 						continue;
 					}
-				} else if(Mods.API.hasAPI(Mods.API.CharsetAudio)) {
+				} /*else if(Mods.API.hasAPI(Mods.API.CharsetAudio)) {
 					if(!IntegrationCharsetAudio.connects(tile, dir.getOpposite())) {
 						continue;
 					}
-				} else if(Capabilities.hasAny(tile, dir.getOpposite(), AUDIO_SOURCE_CAPABILITY, AUDIO_RECEIVER_CAPABILITY)) {
+				}*/ else if(Capabilities.hasAny(tile, dir.getOpposite(), AUDIO_SOURCE_CAPABILITY, AUDIO_RECEIVER_CAPABILITY)) {
 					IAudioConnection con = Capabilities.getFirst(tile, dir.getOpposite(), AUDIO_SOURCE_CAPABILITY, AUDIO_RECEIVER_CAPABILITY);
 					if(con == null || !con.connectsAudio(dir)) {
 						continue;
@@ -73,7 +71,7 @@ public class TileAudioCable extends TileEntityBase implements IAudioReceiver, IC
 			}
 		}
 		if(connectionMap != oldConnections) {
-			worldObj.markBlockRangeForRenderUpdate(getPos(), getPos());
+			world.markBlockRangeForRenderUpdate(getPos(), getPos());
 		}
 	}
 
@@ -95,7 +93,7 @@ public class TileAudioCable extends TileEntityBase implements IAudioReceiver, IC
 		if(!packetIds.isEmpty()) {
 			packetIds.clear();
 		}
-		/*if(worldObj != null) {
+		/*if(world != null) {
 			updateConnections();
 		}*/
 	}
@@ -121,11 +119,11 @@ public class TileAudioCable extends TileEntityBase implements IAudioReceiver, IC
 			}
 
 			BlockPos pos = getPos().offset(dir);
-			if(!worldObj.isBlockLoaded(pos)) {
+			if(!world.isBlockLoaded(pos)) {
 				continue;
 			}
 
-			TileEntity tile = worldObj.getTileEntity(pos);
+			TileEntity tile = world.getTileEntity(pos);
 			if(tile != null && tile.hasCapability(AUDIO_RECEIVER_CAPABILITY, dir.getOpposite())) {
 				tile.getCapability(AUDIO_RECEIVER_CAPABILITY, dir.getOpposite()).receivePacket(packet, dir.getOpposite());
 			}
@@ -186,7 +184,7 @@ public class TileAudioCable extends TileEntityBase implements IAudioReceiver, IC
 			this.connectionMap = nbt.getByte("con");
 		}
 		if(oldColor != this.overlayColor || oldConnections != this.connectionMap) {
-			this.worldObj.markBlockRangeForRenderUpdate(getPos(), getPos());
+			this.world.markBlockRangeForRenderUpdate(getPos(), getPos());
 		}
 	}
 

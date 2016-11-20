@@ -75,7 +75,7 @@ public class NetworkHandlerClient extends MessageHandlerBase {
 				double vy = packet.readFloat();
 				double vz = packet.readFloat();
 				int particle = packet.readInt();
-				Minecraft.getMinecraft().thePlayer.getEntityWorld().spawnParticle(EnumParticleTypes.getParticleFromId(particle), x, y, z, vx, vy, vz);
+				Minecraft.getMinecraft().player.getEntityWorld().spawnParticle(EnumParticleTypes.getParticleFromId(particle), x, y, z, vx, vy, vz);
 			}
 			break;
 			case COMPUTER_BEEP: {
@@ -97,9 +97,9 @@ public class NetworkHandlerClient extends MessageHandlerBase {
 			}
 			break;
 			case TICKET_SYNC: {
-				if(Mods.isLoaded(Mods.Railcraft)) {
+				/*if(Mods.isLoaded(Mods.Railcraft)) { TODO Railcraft
 					Computronics.railcraft.onMessageRailcraft(packet, player, false);
-				}
+				}*/
 			}
 			break;
 		}

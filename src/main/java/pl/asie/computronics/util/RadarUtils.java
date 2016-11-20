@@ -59,7 +59,7 @@ public class RadarUtils {
 				entry.put("name", Item.REGISTRY.getNameForObject(stack.getItem()));
 				entry.put("damage", stack.getItemDamage());
 				entry.put("hasTag", stack.hasTagCompound());
-				entry.put("size", stack.stackSize);
+				entry.put("size", stack.getCount());
 				entry.put("label", stack.getDisplayName());
 
 				if(!Config.RADAR_ONLY_DISTANCE) {

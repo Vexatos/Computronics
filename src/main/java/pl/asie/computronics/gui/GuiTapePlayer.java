@@ -125,7 +125,7 @@ public class GuiTapePlayer extends GuiBase {
 	// Uses NBT data.
 	private String getLabel() {
 		ItemStack stack = this.container.getInventory().get(0);
-		if(stack != null && stack.getItem() instanceof ItemTape) {
+		if(!stack.isEmpty() && stack.getItem() instanceof ItemTape) {
 			String label = StringUtil.localize("tooltip.computronics.tape.unnamed");
 			if(stack.getTagCompound() != null && stack.getTagCompound().hasKey("label")) {
 				label = stack.getTagCompound().getString("label");

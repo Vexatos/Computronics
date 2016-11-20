@@ -1,13 +1,6 @@
 package pl.asie.computronics.integration;
 
 import li.cil.oc.api.detail.ItemInfo;
-import mods.railcraft.common.blocks.RailcraftBlocks;
-import mods.railcraft.common.blocks.detector.EnumDetector;
-import mods.railcraft.common.blocks.wayobjects.EnumWayObject;
-import mods.railcraft.common.items.ItemCircuit.EnumCircuit;
-import mods.railcraft.common.items.ItemRail;
-import mods.railcraft.common.items.Metal;
-import mods.railcraft.common.items.RailcraftItems;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -71,9 +64,9 @@ public class ModRecipes {
 				'c', Computronics.cipher != null ? Computronics.cipher : "gemDiamond", 'e', "enderpearl", 'i', "ingotIron",
 				'd', Computronics.cipher != null ? "gemDiamond" : "ingotGold");
 		}
-		if(Mods.isLoaded(Mods.Railcraft) && Computronics.railcraft != null) {
+		/*if(Mods.isLoaded(Mods.Railcraft) && Computronics.railcraft != null) { TODO Railcraft
 			registerRailcraftRecipes();
-		}
+		}*/
 		if(Computronics.itemTape != null) {
 			// Tape recipes
 			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.itemTape, 1, 0),
@@ -124,7 +117,7 @@ public class ModRecipes {
 		return false;
 	}
 
-	@Optional.Method(modid = Mods.Railcraft)
+	/*@Optional.Method(modid = Mods.Railcraft) TODO Railcraft
 	protected void registerRailcraftRecipes() {
 		if(Computronics.railcraft.locomotiveRelay != null && Computronics.railcraft.relaySensor != null) {
 			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.railcraft.locomotiveRelay, 1, 0),
@@ -168,5 +161,5 @@ public class ModRecipes {
 				'p', Blocks.PISTON,
 				'g', "paneGlassColorless");
 		}
-	}
+	}*/
 }

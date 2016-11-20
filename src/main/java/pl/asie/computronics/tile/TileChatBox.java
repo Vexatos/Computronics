@@ -47,9 +47,9 @@ public class TileChatBox extends TileEntityPeripheralBase implements IChatListen
 
 	public boolean isCreative() {
 		BlockPos pos = getPos();
-		if(Config.CHATBOX_CREATIVE && worldObj != null && worldObj.isBlockLoaded(pos)) {
-			IBlockState state = worldObj.getBlockState(pos);
-			return state != null && state.getValue(BlockChatBox.CREATIVE);
+		if(Config.CHATBOX_CREATIVE && world != null && world.isBlockLoaded(pos)) {
+			IBlockState state = world.getBlockState(pos);
+			return state.getValue(BlockChatBox.CREATIVE);
 		}
 		return false;
 	}
@@ -60,7 +60,7 @@ public class TileChatBox extends TileEntityPeripheralBase implements IChatListen
 		if(Config.REDSTONE_REFRESH && ticksUntilOff > 0) {
 			ticksUntilOff--;
 			if(ticksUntilOff == 0 || mustRefresh) {
-				this.worldObj.notifyNeighborsOfStateChange(getPos(), this.getBlockType());
+				this.world.notifyNeighborsOfStateChange(getPos(), this.getBlockType(), true);
 			}
 		}
 	}
@@ -88,10 +88,10 @@ public class TileChatBox extends TileEntityPeripheralBase implements IChatListen
 
 	@Override
 	public void receiveChatMessage(ServerChatEvent event) {
-		if(!worldObj.isBlockLoaded(getPos())) {
+		if(!world.isBlockLoaded(getPos())) {
 			return;
 		}
-		if(Config.CHATBOX_MAGIC && !isCreative() && (event.getPlayer().worldObj != this.worldObj || event.getPlayer().getDistanceSq(getPos()) > distance * distance)) {
+		if(Config.CHATBOX_MAGIC && !isCreative() && (event.getPlayer().world != this.world || event.getPlayer().getDistanceSq(getPos()) > distance * distance)) {
 			return;
 		}
 

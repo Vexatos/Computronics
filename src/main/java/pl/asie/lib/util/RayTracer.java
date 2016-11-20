@@ -35,7 +35,7 @@ public class RayTracer {
 	 * @param distance The max distance the ray can go
 	 */
 	public void fire(EntityLivingBase entity, double distance) {
-		if(entity.worldObj.isRemote) {
+		if(entity.world.isRemote) {
 			return;
 		}
 		this.target = this.rayTrace(entity, distance);
@@ -64,7 +64,7 @@ public class RayTracer {
 			AxisAlignedBB searchBox = new AxisAlignedBB(
 				search.xCoord - 0.1, search.yCoord - 0.1, search.zCoord - 0.1,
 				search.xCoord + 0.1, search.yCoord + 0.1, search.zCoord + 0.1);
-			RayTraceResult blockCheck = entity.worldObj.rayTraceBlocks(
+			RayTraceResult blockCheck = entity.world.rayTraceBlocks(
 				new Vec3d(position.xCoord, position.yCoord, position.zCoord), search, false);
 			if(blockCheck != null && blockCheck.typeOfHit == RayTraceResult.Type.BLOCK) {
 				/*double d1 = position.squareDistanceTo(blockCheck.hitVec);
@@ -86,7 +86,7 @@ public class RayTracer {
 	@Nullable
 	protected Entity getEntity(EntityLivingBase base, Vec3d position, Vec3d search, Vec3d look, AxisAlignedBB searchBox, double v) {
 		ArrayList<Entity> entityList = new ArrayList<Entity>();
-		List<Entity> entityObjects = base.worldObj.getEntitiesWithinAABB(Entity.class, searchBox);
+		List<Entity> entityObjects = base.world.getEntitiesWithinAABB(Entity.class, searchBox);
 		for(Entity entity : entityObjects) {
 			if(entity != null && entity != base && entity.canBeCollidedWith()) {
 				entityList.add(entity);

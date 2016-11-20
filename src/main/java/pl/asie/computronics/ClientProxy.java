@@ -10,7 +10,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Optional;
@@ -80,14 +79,14 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void preInit() {
 		super.preInit();
-		if(Mods.isLoaded(Mods.OpenComputers)) {
+		/*if(Mods.isLoaded(Mods.OpenComputers)) {
 			if(Computronics.forestry != null) {
 				Computronics.forestry.registerOCEntityRenderers();
 			}
 		}
 		if(Computronics.railcraft != null) {
 			Computronics.railcraft.registerRenderers();
-		}
+		}*/
 	}
 
 	@Override
@@ -142,7 +141,7 @@ public class ClientProxy extends CommonProxy {
 		float force = p.readFloat();
 		boolean destroyBlocks = p.readByte() != 0;
 		Minecraft minecraft = Minecraft.getMinecraft();
-		SelfDestruct explosion = new SelfDestruct(minecraft.theWorld,
+		SelfDestruct explosion = new SelfDestruct(minecraft.world,
 			null, x, y, z, force, destroyBlocks);
 		int size = p.readInt();
 		ArrayList<BlockPos> list = new ArrayList<BlockPos>(size);
@@ -162,16 +161,16 @@ public class ClientProxy extends CommonProxy {
 		explosion.getAffectedBlockPositions().clear();
 		explosion.getAffectedBlockPositions().addAll(list);
 		explosion.doExplosionB(true);
-		minecraft.thePlayer.motionX += (double) p.readFloat();
-		minecraft.thePlayer.motionY += (double) p.readFloat();
-		minecraft.thePlayer.motionZ += (double) p.readFloat();
+		minecraft.player.motionX += (double) p.readFloat();
+		minecraft.player.motionY += (double) p.readFloat();
+		minecraft.player.motionZ += (double) p.readFloat();
 	}
 
-	@Override
+	/*@Override
 	@Optional.Method(modid = Mods.Forestry)
-	public void spawnSwarmParticle(World worldObj, double xPos, double yPos, double zPos, int color) {
-		Computronics.forestry.spawnSwarmParticle(worldObj, xPos, yPos, zPos, color);
-	}
+	public void spawnSwarmParticle(World world, double xPos, double yPos, double zPos, int color) {
+		Computronics.forestry.spawnSwarmParticle(world, xPos, yPos, zPos, color);
+	}*/
 
 	@Optional.Method(modid = Mods.OpenComputers)
 	private void registerOpenComputersRenderers() {

@@ -15,7 +15,7 @@ public class NoteUtils {
 
 	private static final String[] instruments = new String[] { "harp", "bd", "snare", "hat", "bassattack", "pling", "bass" };
 
-	public static void playNoteRaw(World worldObj, BlockPos pos, String instrument, int note, float volume) {
+	public static void playNoteRaw(World world, BlockPos pos, String instrument, int note, float volume) {
 		float f = (float) Math.pow(2.0D, (double) (note - 12) / 12.0D);
 
 		int xCoord = pos.getX();
@@ -24,35 +24,35 @@ public class NoteUtils {
 
 		SoundEvent ev = SoundEvent.REGISTRY.getObject(new ResourceLocation(instrument));
 		if(ev != null) {
-			worldObj.playSound(null, (double) xCoord + 0.5D, (double) yCoord + 0.5D, (double) zCoord + 0.5D, ev, SoundCategory.BLOCKS, volume, f);
+			world.playSound(null, (double) xCoord + 0.5D, (double) yCoord + 0.5D, (double) zCoord + 0.5D, ev, SoundCategory.BLOCKS, volume, f);
 		}
-		ParticleUtils.sendParticlePacket(EnumParticleTypes.NOTE, worldObj, (double) xCoord + 0.5D, (double) yCoord + 1.2D, (double) zCoord + 0.5D, (double) note / 24.0D, 1.0D, 0.0D);
+		ParticleUtils.sendParticlePacket(EnumParticleTypes.NOTE, world, (double) xCoord + 0.5D, (double) yCoord + 1.2D, (double) zCoord + 0.5D, (double) note / 24.0D, 1.0D, 0.0D);
 	}
 
-	public static NoteTask playNote(World worldObj, BlockPos pos, String instrument, int note, float volume) {
+	public static NoteTask playNote(World world, BlockPos pos, String instrument, int note, float volume) {
 		return new NoteTask(checkInstrument(instrument), note, volume);
 	}
 
-	public static NoteTask playNote(World worldObj, BlockPos pos, String instrument, int note) {
+	public static NoteTask playNote(World world, BlockPos pos, String instrument, int note) {
 		return new NoteTask(checkInstrument(instrument), note, 3.0F);
 	}
 
-	public static NoteTask playNote(World worldObj, BlockPos pos, int instrument, int note) {
-		return playNote(worldObj, pos, instrument, note, -1F);
+	public static NoteTask playNote(World world, BlockPos pos, int instrument, int note) {
+		return playNote(world, pos, instrument, note, -1F);
 	}
 
-	public static NoteTask playNote(World worldObj, BlockPos pos, int instrument, int note, final float volume) {
+	public static NoteTask playNote(World world, BlockPos pos, int instrument, int note, final float volume) {
 		if(instrument < 0) {
 			// Get default instrument
 			byte b0 = 0;
 			if(pos.getY() > 0) {
 				/*if(Mods.API.hasAPI(Mods.API.NoteBetter)) { TODO NoteBetter
-					NoteTask task = playNoteNoteBetter(worldObj, pos, note, volume);
+					NoteTask task = playNoteNoteBetter(world, pos, note, volume);
 					if(task != null) {
 						return task;
 					}
 				}*/
-				final IBlockState state = worldObj.getBlockState(pos.down());
+				final IBlockState state = world.getBlockState(pos.down());
 				Material m = state.getMaterial();
 				if(m == Material.ROCK) {
 					b0 = 1;
@@ -140,10 +140,10 @@ public class NoteUtils {
 			this.volume = volume;
 		}
 
-		public void play(World worldObj, BlockPos pos) {
+		public void play(World world, BlockPos pos) {
 			if(instrument == null && instrumentID >= 0) {
 				if(instrumentID <= 4) {
-					NoteBlockEvent.Play e = new NoteBlockEvent.Play(worldObj, pos, worldObj.getBlockState(pos), note, instrumentID);
+					NoteBlockEvent.Play e = new NoteBlockEvent.Play(world, pos, world.getBlockState(pos), note, instrumentID);
 					if(MinecraftForge.EVENT_BUS.post(e)) {
 						return;
 					}
@@ -158,7 +158,7 @@ public class NoteUtils {
 				instrument = "note." + instrument;
 			}
 			if(instrument != null) {
-				playNoteRaw(worldObj, pos, instrument, note, volume);
+				playNoteRaw(world, pos, instrument, note, volume);
 			}
 		}
 	}

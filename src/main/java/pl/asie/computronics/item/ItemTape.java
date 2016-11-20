@@ -9,6 +9,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
@@ -93,7 +94,7 @@ public class ItemTape extends Item implements IItemTapeStorage, IMedia, IMediaPr
 
 	@Override
 	public boolean setLabel(ItemStack stack, String label) {
-		if(stack == null) {
+		if(stack.isEmpty()) {
 			return false;
 		}
 		stack.getTagCompound().setString("label", label);
@@ -133,7 +134,7 @@ public class ItemTape extends Item implements IItemTapeStorage, IMedia, IMediaPr
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubItems(Item item, CreativeTabs tabs, List<ItemStack> list) {
+	public void getSubItems(Item item, CreativeTabs tabs, NonNullList<ItemStack> list) {
 		for(int i = 0; i < TAPE_COUNT; i++) {
 			if((i == 7 || i == 9) && !Mods.isLoaded(Mods.GregTech)) {
 				//Do nothing. If we return here, we lose all new tapes.
@@ -176,7 +177,7 @@ public class ItemTape extends Item implements IItemTapeStorage, IMedia, IMediaPr
 
 	@Override
 	public String getUnlocalizedName(ItemStack itemstack) {
-		if(itemstack != null && itemstack.getItemDamage() == 9) {
+		if(itemstack.isEmpty() && itemstack.getItemDamage() == 9) {
 			return "item.computronics.tape.ig";
 		}
 		return super.getUnlocalizedName(itemstack);
@@ -184,12 +185,12 @@ public class ItemTape extends Item implements IItemTapeStorage, IMedia, IMediaPr
 
 	@Override
 	public boolean hasCustomEntity(ItemStack stack) {
-		return stack != null && stack.getItemDamage() == 9;
+		return !stack.isEmpty() && stack.getItemDamage() == 9;
 	}
 
 	@Override
 	public Entity createEntity(World world, Entity location, ItemStack itemstack) {
-		if(itemstack != null && itemstack.getItemDamage() == 9) {
+		if(itemstack.isEmpty() && itemstack.getItemDamage() == 9) {
 			EntityItemIndestructable newTapeEntity = new EntityItemIndestructable(
 				world, location.posX, location.posY, location.posZ, itemstack);
 			newTapeEntity.setPickupDelay(40);
@@ -232,7 +233,7 @@ public class ItemTape extends Item implements IItemTapeStorage, IMedia, IMediaPr
 	@Override
 	@Optional.Method(modid = Mods.ComputerCraft)
 	public IMedia getMedia(ItemStack stack) {
-		if(stack != null && stack.stackSize > 0 && stack.getItem() != null && stack.getItem() instanceof ItemTape) {
+		if(!stack.isEmpty() && stack.getCount() > 0 && stack.getItem() instanceof ItemTape) {
 			return ((IMedia) stack.getItem());
 		}
 		return null;

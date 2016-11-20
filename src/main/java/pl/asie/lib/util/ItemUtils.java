@@ -15,10 +15,10 @@ public class ItemUtils {
 		for(int i = 0; i < inventory.getSizeInventory(); i++) {
 			ItemStack item = inventory.getStackInSlot(i);
 
-			if(item != null && item.stackSize > 0) {
-				inventory.setInventorySlotContents(i, null);
+			if(!item.isEmpty() && item.getCount() > 0) {
+				inventory.setInventorySlotContents(i, ItemStack.EMPTY);
 				dropItem(world, pos, item);
-				item.stackSize = 0;
+				item.setCount(0);
 			}
 		}
 	}
@@ -39,7 +39,7 @@ public class ItemUtils {
 
 		EntityItem entityItem = new EntityItem(world,
 			pos.getX() + rx, pos.getY() + ry, pos.getZ() + rz,
-			new ItemStack(item.getItem(), item.stackSize, item.getItemDamage()));
+			new ItemStack(item.getItem(), item.getCount(), item.getItemDamage()));
 
 		if(item.hasTagCompound()) {
 			entityItem.getEntityItem().setTagCompound((NBTTagCompound) item.getTagCompound().copy());
@@ -49,6 +49,6 @@ public class ItemUtils {
 		entityItem.motionX = AsieLibMod.rand.nextGaussian() * factor;
 		entityItem.motionY = AsieLibMod.rand.nextGaussian() * factor + 0.2F;
 		entityItem.motionZ = AsieLibMod.rand.nextGaussian() * factor;
-		world.spawnEntityInWorld(entityItem);
+		world.spawnEntity(entityItem);
 	}
 }
