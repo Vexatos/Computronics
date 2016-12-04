@@ -1,6 +1,7 @@
 ==== 1.6.2 ====
 
   * FIXED: Digital Signal Controller Box not showing any information on Waila
+  * FIXED: Some sounds not having rolloff.
 
 ==== 1.6.1 ====
 
