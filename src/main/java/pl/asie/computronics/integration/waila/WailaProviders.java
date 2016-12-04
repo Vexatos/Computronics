@@ -22,8 +22,9 @@ public class WailaProviders {
 	static void initialize() {
 		newProvider(new WailaPeripheral(), BlockPeripheral.class);
 		/*if(Mods.isLoaded(Mods.Railcraft)) { TODO Railcraft
-			//newProvider(new WailaPeripheral(), BlockDigitalReceiverBox.class);
-			//newProvider(new WailaLocomotiveRelay(), BlockLocomotiveRelay.class);
+			newProvider(new WailaPeripheral(), BlockDigitalReceiverBox.class);
+			newProvider(new WailaPeripheral(), BlockDigitalControllerBox.class);
+			newProvider(new WailaLocomotiveRelay(), BlockLocomotiveRelay.class);
 		}*/
 		newProvider(new WailaTapeDrive(), BlockTapeReader.class);
 		newProvider(new WailaColorfulLamp(), BlockColorfulLamp.class);

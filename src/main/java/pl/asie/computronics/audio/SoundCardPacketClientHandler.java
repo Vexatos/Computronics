@@ -139,7 +139,7 @@ public class SoundCardPacketClientHandler extends AudioPacketClientHandler {
 
 		codec.setHearing(distance, volume / 127.0F);
 		try {
-			codec.play(x, y, z);
+			codec.play(x, y, z, 0.25f);
 		} catch(NullPointerException e) {
 			// This exception occurs when there is no data to play, and is harmless.
 		}
