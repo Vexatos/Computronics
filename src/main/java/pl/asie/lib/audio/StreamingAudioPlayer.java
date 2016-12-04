@@ -96,6 +96,11 @@ public class StreamingAudioPlayer extends DFPWM {
 
 	@SideOnly(Side.CLIENT)
 	public void play(int x, int y, int z) {
+		play(x, y, z, 0.0f);
+	}
+
+	@SideOnly(Side.CLIENT)
+	public void play(int x, int y, int z, float rolloff) {
 		FloatBuffer sourcePos = (FloatBuffer) (BufferUtils.createFloatBuffer(3).put(new float[]{x, y, z}).rewind());
 		FloatBuffer sourceVel = (FloatBuffer) (BufferUtils.createFloatBuffer(3).put(new float[]{0.0f, 0.0f, 0.0f}).rewind());
 
@@ -113,7 +118,7 @@ public class StreamingAudioPlayer extends DFPWM {
 		// Calculate distance
 		float playerDistance = (float) getDistance(x, y, z);
 		float distanceUsed = distance * (0.2F + (volume * 0.8F));
-		float distanceReal = 1 - (playerDistance / distanceUsed);
+		float distanceReal = rolloff <= 0 ? 1 - (playerDistance / distanceUsed) : playerDistance / distanceUsed >= 1 ? 0 : 1;
 
 		float gain = distanceReal * volume * Minecraft.getMinecraft().gameSettings.getSoundLevel(SoundCategory.RECORDS);
 		if (gain < 0.0F) {
@@ -128,7 +133,7 @@ public class StreamingAudioPlayer extends DFPWM {
 		AL10.alSourcef(source.src.get(0), AL10.AL_GAIN, gain);
 		AL10.alSource(source.src.get(0), AL10.AL_POSITION, sourcePos);
 		AL10.alSource(source.src.get(0), AL10.AL_VELOCITY, sourceVel);
-		AL10.alSourcef(source.src.get(0), AL10.AL_ROLLOFF_FACTOR, 0.0f);
+		AL10.alSourcef(source.src.get(0), AL10.AL_ROLLOFF_FACTOR, rolloff);
 
 		// Play audio
 		AL10.alSourceQueueBuffers(source.src.get(0), currentBuffer);
