@@ -15,6 +15,8 @@ public class IntegrationWaila {
 		/*if(Mods.isLoaded(Mods.Railcraft)) {
 			reg.registerBodyProvider(provider, BlockDigitalReceiverBox.class);
 			reg.registerNBTProvider(provider, BlockDigitalReceiverBox.class);
+			reg.registerBodyProvider(provider, BlockDigitalControllerBox.class);
+			reg.registerNBTProvider(provider, BlockDigitalControllerBox.class);
 		}*/
 
 		ConfigValues.registerConfigs(reg);

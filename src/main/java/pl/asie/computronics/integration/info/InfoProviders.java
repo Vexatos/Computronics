@@ -29,8 +29,9 @@ public class InfoProviders {
 		init = true;
 		newProvider(new InfoPeripheral(), BlockPeripheral.class);
 		/*if(Mods.isLoaded(Mods.Railcraft)) { TODO Railcraft
-			//newProvider(new WailaPeripheral(), BlockDigitalReceiverBox.class);
-			//newProvider(new WailaLocomotiveRelay(), BlockLocomotiveRelay.class);
+			newProvider(new WailaPeripheral(), BlockDigitalReceiverBox.class);
+			newProvider(new WailaPeripheral(), BlockDigitalControllerBox.class);
+			newProvider(new WailaLocomotiveRelay(), BlockLocomotiveRelay.class);
 		}*/
 		newProvider(new InfoTapeDrive(), BlockTapeReader.class);
 		newProvider(new InfoColorfulLamp(), BlockColorfulLamp.class);
