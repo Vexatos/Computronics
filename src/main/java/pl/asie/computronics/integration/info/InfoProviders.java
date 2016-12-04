@@ -8,6 +8,7 @@ import pl.asie.computronics.integration.info.providers.InfoColorfulLamp;
 import pl.asie.computronics.integration.info.providers.InfoLocomotiveRelay;
 import pl.asie.computronics.integration.info.providers.InfoPeripheral;
 import pl.asie.computronics.integration.info.providers.InfoTapeDrive;
+import pl.asie.computronics.integration.railcraft.block.BlockDigitalControllerBox;
 import pl.asie.computronics.integration.railcraft.block.BlockDigitalReceiverBox;
 import pl.asie.computronics.integration.railcraft.block.BlockLocomotiveRelay;
 import pl.asie.computronics.reference.Mods;
@@ -34,6 +35,7 @@ public class InfoProviders {
 		newProvider(new InfoPeripheral(), BlockPeripheral.class);
 		if(Mods.isLoaded(Mods.Railcraft)) {
 			newProvider(new InfoPeripheral(), BlockDigitalReceiverBox.class);
+			newProvider(new InfoPeripheral(), BlockDigitalControllerBox.class);
 			newProvider(new InfoLocomotiveRelay(), BlockLocomotiveRelay.class);
 		}
 		newProvider(new InfoTapeDrive(), BlockTapeReader.class);

@@ -2,6 +2,7 @@ package pl.asie.computronics.integration.info;
 
 import mcp.mobius.waila.api.IWailaRegistrar;
 import pl.asie.computronics.block.BlockPeripheral;
+import pl.asie.computronics.integration.railcraft.block.BlockDigitalControllerBox;
 import pl.asie.computronics.integration.railcraft.block.BlockDigitalReceiverBox;
 import pl.asie.computronics.reference.Mods;
 
@@ -17,6 +18,8 @@ public class IntegrationWaila {
 		if(Mods.isLoaded(Mods.Railcraft)) {
 			reg.registerBodyProvider(provider, BlockDigitalReceiverBox.class);
 			reg.registerNBTProvider(provider, BlockDigitalReceiverBox.class);
+			reg.registerBodyProvider(provider, BlockDigitalControllerBox.class);
+			reg.registerNBTProvider(provider, BlockDigitalControllerBox.class);
 		}
 
 		ConfigValues.registerConfigs(reg);
