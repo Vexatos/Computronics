@@ -17,11 +17,11 @@ public class NoteUtils {
 	}
 
 	public static NoteTask playNote(World world, int x, int y, int z, String instrument, int note, float volume) {
-		return new NoteTask(checkInstrument(instrument), note, volume);
+		return new NoteTask(checkInstrument(instrument), checkNote(note), volume);
 	}
 
 	public static NoteTask playNote(World world, int x, int y, int z, String instrument, int note) {
-		return new NoteTask(checkInstrument(instrument), note, 3.0F);
+		return new NoteTask(checkInstrument(instrument), checkNote(note), 3.0F);
 	}
 
 	public static NoteTask playNote(World world, int x, int y, int z, int instrument, int note) {
@@ -51,7 +51,7 @@ public class NoteUtils {
 		}
 		instrument %= 7;
 
-		return new NoteTask(instrument, note, volume < 0 ? 3.0F : volume);
+		return new NoteTask(instrument, checkNote(note), volume < 0 ? 3.0F : volume);
 	}
 
 	public static float toVolume(int index, double value) {
@@ -79,6 +79,13 @@ public class NoteUtils {
 			}
 		}
 		throw new IllegalArgumentException("invalid instrument: " + instrument);
+	}
+
+	public static int checkNote(int note) {
+		if(note >= 0) {
+			return note;
+		}
+		throw new IllegalArgumentException("invalid note: " + note);
 	}
 
 	public static class NoteTask {

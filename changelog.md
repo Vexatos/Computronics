@@ -2,6 +2,7 @@
 
   * FIXED: Digital Signal Controller Box not showing any information on Waila
   * FIXED: Some sounds not having rolloff.
+  * FIXED: Crash with Iron Note Block when entering invalid notes.
 
 ==== 1.6.1 ====
 
