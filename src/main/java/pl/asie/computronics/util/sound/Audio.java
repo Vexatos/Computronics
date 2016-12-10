@@ -64,7 +64,8 @@ public class Audio {
 	public void play(float x, float y, float z, String pattern, AudioType type, float frequencyInHz, int durationInMilliseconds, int initialDelayInMilliseconds) {
 		Minecraft mc = Minecraft.getMinecraft();
 		float distanceBasedGain = ((float) Math.max(0, 1 - mc.thePlayer.getDistance(x, y, z) / maxDistance));
-		float gain = distanceBasedGain * volume();
+		//float gain = distanceBasedGain * volume();
+		float gain = volume();
 		if(gain <= 0 || amplitude <= 0) {
 			return;
 		}
@@ -79,7 +80,7 @@ public class Audio {
 			float clampedFrequency = Math.min(Math.max(frequencyInHz - 20, 0), 1980) / 1980f + 0.5f;
 			int delay = 0;
 			for(char ch : pattern.toCharArray()) {
-				PositionedSoundRecord record = new PositionedSoundRecord(new ResourceLocation("note.harp"), gain, clampedFrequency, x, y, z);
+				PositionedSoundRecord record = new PositionedSoundRecord(new ResourceLocation("note.harp"), distanceBasedGain * gain, clampedFrequency, x, y, z);
 				if(delay == 0) {
 					mc.getSoundHandler().playSound(record);
 				} else {
