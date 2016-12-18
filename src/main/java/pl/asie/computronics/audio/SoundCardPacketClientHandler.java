@@ -114,8 +114,9 @@ public class SoundCardPacketClientHandler extends AudioPacketClientHandler {
 				for(int i = 0; i < sampleCount; ++i) {
 					double sample = 0;
 					for(AudioUtil.State state : process.states) {
-						sample += state.gate.getValue(process, state) / 8;
+						sample += state.gate.getValue(process, state);
 					}
+					sample = Math.max(Math.min(sample, 1), -1);
 					int value = ((byte) (sample * 127)) ^ 0x80;
 					data.write((byte) value);
 				}
@@ -137,7 +138,7 @@ public class SoundCardPacketClientHandler extends AudioPacketClientHandler {
 	protected void playData(int packetId, int codecId, int x, int y, int z, int distance, byte volume) {
 		StreamingAudioPlayer codec = Computronics.opencomputers.audio.getPlayer(codecId);
 
-		codec.setHearing(distance, volume / 127.0F);
+		codec.setHearing(distance, (volume * Config.SOUND_VOLUME) / (127.0F * 127.0F));
 		try {
 			codec.play(x, y, z, 0.25f);
 		} catch(NullPointerException e) {
