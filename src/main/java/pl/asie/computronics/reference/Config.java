@@ -46,7 +46,7 @@ public class Config {
 	public static boolean NOTEBETTER_ANY_INSTRUMENT = false;
 
 	public static int SOUND_SAMPLE_RATE = 44100;
-	public static int SOUND_VOLUME = 32;
+	public static byte SOUND_VOLUME = 32;
 	public static int SOUND_RADIUS = 24;
 	public static int SOUND_CARD_MAX_DELAY = 5000; // TODO
 	public static int SOUND_CARD_QUEUE_SIZE = 1024; // TODO
@@ -109,7 +109,7 @@ public class Config {
 		CIPHER_CAN_LOCK = config.getBoolean("canLock", "cipherblock", true, "Decides whether Cipher Blocks can or cannot be locked.");
 
 		SOUND_SAMPLE_RATE = config.getInt("soundSampleRate", "sound.client", 44100, 0, Integer.MAX_VALUE, "The sample rate used for generating sounds. Modify at your own risk.");
-		SOUND_VOLUME = config.getInt("soundVolume", "sound.client", 64, 0, Byte.MAX_VALUE, "The base volume of generated sounds.");
+		SOUND_VOLUME = (byte) config.getInt("soundVolume", "sound.client", 127, 0, Byte.MAX_VALUE, "The base volume of generated sounds.");
 		SOUND_RADIUS = config.getInt("soundRadius", "sound.client", 24, 0, 64, "The radius in which generated sounds can be heard.");
 
 		if(Mods.isLoaded(Mods.OpenComputers)) {

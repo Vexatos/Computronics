@@ -29,7 +29,7 @@ tooltip.computronics.tape.ig=Der Standard-CDVR für\nSchiffe von GregTech Interg
 tooltip.computronics.ticket.print=Ticket Drucken
 tooltip.computronics.ticket.printLocked=§cManuelles Drucken deaktiviert
 tooltip.computronics.ticket.locked=Ist gesperrt von\n {owner}.\n Nur der Eigentümer oder\n ein Op kann ihn warten.
-tooltip.computronics.ticket.notmaintenance=Shift-rechtsklicke\n diesen Automaten mit \nnichts in der Hand, um\n ihn zu warten.
+tooltip.computronics.ticket.notmaintenance=Shift-rechtsklicke\n diesen Automaten mit\n nichts in der Hand, um\n ihn zu warten.
 tooltip.computronics.ticket.notowner=Du bist nicht der\n Eigentümer des Automats.\n Sie gehört\n {owner}.
 tooltip.computronics.ticket.unlocked=Klicken um zu sperren.\n Wenn gesperrt, kann er\n nur von Dir oder einem Op\n gewartet werden
 

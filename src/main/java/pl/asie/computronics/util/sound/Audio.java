@@ -64,7 +64,8 @@ public class Audio {
 	public void play(float x, float y, float z, String pattern, AudioType type, float frequencyInHz, int durationInMilliseconds, int initialDelayInMilliseconds) {
 		Minecraft mc = Minecraft.getMinecraft();
 		float distanceBasedGain = ((float) Math.max(0, 1 - mc.thePlayer.getDistance(x, y, z) / maxDistance));
-		float gain = distanceBasedGain * volume();
+		//float gain = distanceBasedGain * volume();
+		float gain = volume();
 		if(gain <= 0 || amplitude <= 0) {
 			return;
 		}
@@ -79,7 +80,7 @@ public class Audio {
 			float clampedFrequency = Math.min(Math.max(frequencyInHz - 20, 0), 1980) / 1980f + 0.5f;
 			int delay = 0;
 			for(char ch : pattern.toCharArray()) {
-				PositionedSoundRecord record = new PositionedSoundRecord(new ResourceLocation("note.harp"), gain, clampedFrequency, x, y, z);
+				PositionedSoundRecord record = new PositionedSoundRecord(new ResourceLocation("note.harp"), distanceBasedGain * gain, clampedFrequency, x, y, z);
 				if(delay == 0) {
 					mc.getSoundHandler().playSound(record);
 				} else {
@@ -228,9 +229,10 @@ public class Audio {
 					}
 
 					AL10.alSource3f(source, AL10.AL_POSITION, x, y, z);
-					AL10.alSourcef(source, AL10.AL_REFERENCE_DISTANCE, maxDistance);
-					AL10.alSourcef(source, AL10.AL_MAX_DISTANCE, maxDistance);
+					//AL10.alSourcef(source, AL10.AL_REFERENCE_DISTANCE, maxDistance);
+					//AL10.alSourcef(source, AL10.AL_MAX_DISTANCE, maxDistance);
 					AL10.alSourcef(source, AL10.AL_GAIN, gain * 0.3f);
+					AL10.alSourcef(source, AL10.AL_ROLLOFF_FACTOR, (24F * 0.25F) / maxDistance); // At a distance of 24, a rolloff factor of 0.25 sounds good enough.
 					checkALError();
 
 					AL10.alSourcePlay(source);
