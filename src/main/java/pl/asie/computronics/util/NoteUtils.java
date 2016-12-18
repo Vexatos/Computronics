@@ -29,12 +29,12 @@ public class NoteUtils {
 		ParticleUtils.sendParticlePacket(EnumParticleTypes.NOTE, worldObj, (double) xCoord + 0.5D, (double) yCoord + 1.2D, (double) zCoord + 0.5D, (double) note / 24.0D, 1.0D, 0.0D);
 	}
 
-	public static NoteTask playNote(World worldObj, BlockPos pos, String instrument, int note, float volume) {
-		return new NoteTask(checkInstrument(instrument), note, volume);
+	public static NoteTask playNote(World world, BlockPos pos, String instrument, int note, float volume) {
+		return new NoteTask(checkInstrument(instrument), checkNote(note), volume);
 	}
 
-	public static NoteTask playNote(World worldObj, BlockPos pos, String instrument, int note) {
-		return new NoteTask(checkInstrument(instrument), note, 3.0F);
+	public static NoteTask playNote(World world, BlockPos pos, String instrument, int note) {
+		return new NoteTask(checkInstrument(instrument), checkNote(note), 3.0F);
 	}
 
 	public static NoteTask playNote(World worldObj, BlockPos pos, int instrument, int note) {
@@ -71,7 +71,7 @@ public class NoteUtils {
 		}
 		instrument %= 7;
 
-		return new NoteTask(instrument, note, volume < 0 ? 3.0F : volume);
+		return new NoteTask(instrument, checkNote(note), volume < 0 ? 3.0F : volume);
 	}
 
 	/*@Optional.Method(modid = Mods.API.NoteBetter)
@@ -119,6 +119,13 @@ public class NoteUtils {
 			}
 		}*/
 		throw new IllegalArgumentException("invalid instrument: " + instrument);
+	}
+
+	public static int checkNote(int note) {
+		if(note >= 0) {
+			return note;
+		}
+		throw new IllegalArgumentException("invalid note: " + note);
 	}
 
 	public static class NoteTask {
