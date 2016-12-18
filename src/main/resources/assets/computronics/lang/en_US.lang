@@ -29,7 +29,7 @@ tooltip.computronics.tape.ig=The standard CDVR for\nGregTech Intergalactical's s
 tooltip.computronics.ticket.print=Print Ticket
 tooltip.computronics.ticket.printLocked=§cManual printing disabled
 tooltip.computronics.ticket.locked=This device is locked to\n {owner}.\n Only the owner or an Op\n can do maintenance work.
-tooltip.computronics.ticket.notmaintenance=Shift-right click\n this device with an \nempty hand to do\n maintenance work.
+tooltip.computronics.ticket.notmaintenance=Shift-right click\n this device with an\n empty hand to do\n maintenance work.
 tooltip.computronics.ticket.notowner=You are not the\n owner of this device.\n It belongs to\n {owner}.
 tooltip.computronics.ticket.unlocked=Click to lock device.\n Once locked, only you\n or an Op can\n do maintenance work.
 
