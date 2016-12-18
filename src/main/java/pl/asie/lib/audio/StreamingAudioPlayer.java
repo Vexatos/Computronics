@@ -133,7 +133,7 @@ public class StreamingAudioPlayer extends DFPWM {
 		AL10.alSourcef(source.src.get(0), AL10.AL_GAIN, gain);
 		AL10.alSource(source.src.get(0), AL10.AL_POSITION, sourcePos);
 		AL10.alSource(source.src.get(0), AL10.AL_VELOCITY, sourceVel);
-		AL10.alSourcef(source.src.get(0), AL10.AL_ROLLOFF_FACTOR, rolloff);
+		AL10.alSourcef(source.src.get(0), AL10.AL_ROLLOFF_FACTOR, (24F * 0.25F) / distanceUsed); // At a distance of 24, a rolloff factor of 0.25 sounds good enough.
 
 		// Play audio
 		AL10.alSourceQueueBuffers(source.src.get(0), currentBuffer);
