@@ -232,7 +232,7 @@ public class Audio {
 					//AL10.alSourcef(source, AL10.AL_REFERENCE_DISTANCE, maxDistance);
 					//AL10.alSourcef(source, AL10.AL_MAX_DISTANCE, maxDistance);
 					AL10.alSourcef(source, AL10.AL_GAIN, gain * 0.3f);
-					AL10.alSourcef(source, AL10.AL_ROLLOFF_FACTOR, 0.25f);
+					AL10.alSourcef(source, AL10.AL_ROLLOFF_FACTOR, (24F * 0.25F) / maxDistance); // At a distance of 24, a rolloff factor of 0.25 sounds good enough.
 					checkALError();
 
 					AL10.alSourcePlay(source);
