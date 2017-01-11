@@ -8,6 +8,6 @@ Due to the low filesize, Audio is recorded in the DFPWM format. Converting from 
 
 The tape drive also has a `seek()` function, allowing fast-forwarding to a specific point on the [cassette tape](../item/tape.md). Providing a negative value to the `seek()` rewinds the [cassette tape](../item/tape.md) to an earlier point. 
 
-The tape drive provides a program called `tape` which allows for convenient reading, writing and playing of tapes.
+You can create a floppy disk called `tape` containing a program with the same name which allows for convenient reading, writing and playing of tapes.
 
 If an [audio cable](audio_cable.md) is connected to the drive, it will send the audio signal generated through the cable while playing instead of generating sound itself.

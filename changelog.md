@@ -5,6 +5,8 @@
   * FIXED: Beep, Noise and Sound Card generating sounds too quietly.
   * FIXED: Crash with Iron Note Block when entering invalid notes.
 
+  * **[1.10.2]** FIXED: Unintentional GregTech dependency.
+
 ==== 1.6.1 ====
 
 This version comes with a 1.8.9, 1.9.4 and 1.10 port in addition to many additions.
