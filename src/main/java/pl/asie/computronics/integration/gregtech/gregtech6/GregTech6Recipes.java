@@ -7,7 +7,6 @@ import gregapi.data.IL;
 import gregapi.data.MT;
 import gregapi.data.OP;
 import gregapi.recipes.Recipe;
-import li.cil.oc.api.detail.ItemInfo;
 import mods.railcraft.common.items.ItemElectricMeter;
 import mods.railcraft.common.items.ItemRail;
 import mods.railcraft.common.items.RailcraftItem;
@@ -133,21 +132,14 @@ public class GregTech6Recipes extends ModRecipes {
 	@Override
 	@Optional.Method(modid = Mods.OpenComputers)
 	protected boolean registerOCRecipes() {
-		ItemInfo cpu = li.cil.oc.api.Items.get("cpu2");
-		ItemInfo chip = li.cil.oc.api.Items.get("chip2");
-		ItemInfo capacitor = li.cil.oc.api.Items.get("capacitor");
-		if(cpu != null && chip != null && capacitor != null) {
-			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.cipher_advanced, 1, 0),
-				"gdg", "ece", "gig",
-				'g', "screwStainlessSteel",
-				'c', Computronics.cipher != null ? Computronics.cipher : cpu.createItemStack(1),
-				'e', chip.createItemStack(1),
-				'i', capacitor.block(),
-				'd', Computronics.cipher != null ? cpu.createItemStack(1) : IL.Robot_Arm_HV.get(1));
-			return true;
-		}
-		Computronics.log.warn("An error occured during registering OpenComputers-style recipes, falling back to default ones");
-		return false;
+		RecipeUtils.addShapedRecipe(new ItemStack(Computronics.cipher_advanced, 1, 0),
+			"gdg", "ece", "gig",
+			'g', "screwStainlessSteel",
+			'c', Computronics.cipher != null ? Computronics.cipher : "oc:cpu2",
+			'e', "oc:circuitChip2",
+			'i', "oc:capacitor",
+			'd', Computronics.cipher != null ? "oc:cpu2" : IL.Robot_Arm_HV.get(1));
+		return true;
 	}
 
 	@Override

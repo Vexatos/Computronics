@@ -56,16 +56,17 @@ public class IntegrationBuildCraft {
 			robotStation = new ItemStack(Items.ender_pearl, 1, 0);
 		}
 		RecipeUtils.addShapedRecipe(new ItemStack(droneStationItem, 1, 0),
-			" a ", "tst", " c ", 's', robotStation, 'a', li.cil.oc.api.Items.get("chip1").createItemStack(1),
-			'c', li.cil.oc.api.Items.get("cable").createItemStack(1), 't', li.cil.oc.api.Items.get("transistor").createItemStack(1)
+			" a ", "tst", " c ", 's', robotStation, 'a', "oc:circuitChip1",
+			'c', "oc:cable", 't', "oc:materialTransistor"
 		);
 		ItemStack pipe = GameRegistry.findItemStack(Mods.BuildCraftTransport, "item.buildcraftPipe.pipeitemsquartz", 1);
+		Object p = pipe;
 		if(pipe == null || pipe.getItem() == null) {
-			pipe = li.cil.oc.api.Items.get("cable").createItemStack(1);
+			p = "oc:cable";
 		}
 		RecipeUtils.addShapedRecipe(new ItemStack(dockingUpgrade, 1, 0),
-			" a ", "tst", " c ", 's', new ItemStack(droneStationItem, 1, 0), 'a', li.cil.oc.api.Items.get("chip1").createItemStack(1),
-			'c', pipe, 't', li.cil.oc.api.Items.get("transistor").createItemStack(1)
+			" a ", "tst", " c ", 's', new ItemStack(droneStationItem, 1, 0), 'a', "oc:circuitChip1",
+			'c', p, 't', "oc:materialTransistor"
 		);
 	}
 }
