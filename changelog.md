@@ -4,6 +4,8 @@
   * FIXED: Some sounds not having rolloff.
   * FIXED: Beep, Noise and Sound Card generating sounds too quietly.
   * FIXED: Crash with Iron Note Block when entering invalid notes.
+  * FIXED: Recipes using OpenComputers items not using the Ore Dictionary properly.
+    - Now you can properly use GregTech 6 circuit boards instead of PCBs, for instance.
 
   * **[1.10.2]** FIXED: Unintentional GregTech dependency.
 
