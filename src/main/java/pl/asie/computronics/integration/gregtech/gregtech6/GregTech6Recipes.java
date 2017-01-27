@@ -7,6 +7,7 @@ import gregapi.data.IL;
 import gregapi.data.MT;
 import gregapi.data.OP;
 import gregapi.recipes.Recipe;
+import gregapi.util.OM;
 import mods.railcraft.common.items.ItemElectricMeter;
 import mods.railcraft.common.items.ItemRail;
 import mods.railcraft.common.items.RailcraftItem;
@@ -102,7 +103,8 @@ public class GregTech6Recipes extends ModRecipes {
 				"sps", "pep", "sTs", 'T', new ItemStack(Computronics.itemParts, 1, 0), 's', "screwStainlessSteel", 'p', "plateGemDiamond", 'e', "circuitElite");
 
 			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.itemTape, 1, 4),
-				"dnd", "ncn", "dTd", 'T', new ItemStack(Computronics.itemParts, 1, 0), 'd', IL.Duct_Tape.get(1), 'c', IL.Processor_Crystal_Diamond.get(1), 'n', "plateGemNetherStar");
+				"dnd", "ncn", "dTd", 'T', new ItemStack(Computronics.itemParts, 1, 0), 'd',
+				IL.Duct_Tape.exists() ? IL.Duct_Tape.get(1) : "bottleGlue", 'c', IL.Processor_Crystal_Diamond.get(1), 'n', "plateGemNetherStar");
 
 			//RecipeUtils.addShapedRecipe(new ItemStack(itemTape, 1, 8),
 			//	" n ", "nnn", " T ", 'T', new ItemStack(itemParts, 1, 0), 'n', Items.nether_star));
@@ -180,16 +182,19 @@ public class GregTech6Recipes extends ModRecipes {
 				't', "plateSteel",
 				's', "circuitGood",
 				'p', IL.Electric_Piston_LV.get(1),
-				'g', IL.Cover_Screen.get(1));
+				'g', IL.Cover_Screen.exists() ? IL.Cover_Screen.get(1) : "plateGemGlass");
 		}
 	}
 
 	public static void registerStandardGregTechRecipes() {
 
 		RecipeUtils.addShapedRecipe(new ItemStack(Computronics.itemTape, 1, 9),
-			"psp", "tct", "prp", 'r', new ItemStack(Computronics.itemParts, 1, 0), 's', IL.Duct_Tape.get(1), 't', new ItemStack(Computronics.itemPartsGreg, 1, 0), 'p', "plateTungstenSteel", 'c', IL.Processor_Crystal_Sapphire.get(1));
+			"psp", "tct", "prp", 'r', new ItemStack(Computronics.itemParts, 1, 0), 's', IL.Duct_Tape.exists() ? IL.Duct_Tape.get(1) :
+				"craftingToolHardHammer", 't', new ItemStack(Computronics.itemPartsGreg, 1, 0), 'p', "plateQuadrupleTungstenSteel", 'c', IL.Processor_Crystal_Sapphire.get(1));
 
 		RecipeUtils.addShapedRecipe(new ItemStack(Computronics.itemPartsGreg, 1, 0),
-			"srs", "fff", "hch", 's', "foilStainlessSteel", 'f', "foilChromiumDioxide", 'c', "craftingToolWireCutter", 'r', "ringOsmiridium", 'h', "cellArgon");
+			"srs", "fff", "hch", 's', "foilStainlessSteel", 'f', "foilChromiumDioxide", 'c', "craftingToolPincers", 'r', "ringOsmiridium", 'h', "cellArgon");
+
+		Recipe.RecipeMap.sCannerRecipes.addRecipe2(true, 16, 16, null, IL.Cell_Empty.get(1), MT.Argon.fluid(CS.U, true), null, OM.get(OP.cell, MT.Argon, 1));
 	}
 }
