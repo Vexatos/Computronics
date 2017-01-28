@@ -13,7 +13,8 @@ import net.minecraftforge.event.world.NoteBlockEvent;
 
 public class NoteUtils {
 
-	private static final String[] instruments = new String[] { "harp", "bd", "snare", "hat", "bassattack", "pling", "bass" };
+	// Make sure to check BlockNote.INSTRUMENTS during updates
+	private static final String[] instruments = new String[] { "harp", "basedrum", "snare", "hat", "bass", "pling" };
 
 	public static void playNoteRaw(World worldObj, BlockPos pos, String instrument, int note, float volume) {
 		float f = (float) Math.pow(2.0D, (double) (note - 12) / 12.0D);
@@ -162,7 +163,7 @@ public class NoteUtils {
 				if(instrumentID > 0 && instrumentID < instruments.length) {
 					instrument = instruments[instrumentID];
 				}
-				instrument = "note." + instrument;
+				instrument = "block.note." + instrument;
 			}
 			if(instrument != null) {
 				playNoteRaw(worldObj, pos, instrument, note, volume);
