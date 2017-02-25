@@ -162,12 +162,12 @@ public class IntegrationOpenComputers {
 		ComputronicsPathProvider.initialize();
 
 		if(Computronics.tapeReader != null) {
-			li.cil.oc.api.Items.registerFloppy("tape", EnumDyeColor.WHITE, new ReadOnlyFS("tape"));
+			li.cil.oc.api.Items.registerFloppy("tape", EnumDyeColor.WHITE, new ReadOnlyFS("tape"), true);
 			IMC.registerProgramDiskLabel("tape", "tape", "Lua 5.2", "Lua 5.3", "LuaJ");
 		}
 
 		if(Config.OC_CARD_BOOM || Config.OC_BOARD_BOOM) {
-			li.cil.oc.api.Items.registerFloppy("explode", EnumDyeColor.RED, new ReadOnlyFS("explode"));
+			li.cil.oc.api.Items.registerFloppy("explode", EnumDyeColor.RED, new ReadOnlyFS("explode"), true);
 			IMC.registerProgramDiskLabel("explode", "explode", "Lua 5.2", "Lua 5.3", "LuaJ");
 		}
 
@@ -314,11 +314,11 @@ public class IntegrationOpenComputers {
 				RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 0),
 					"mcm", 'c',
 					new ItemStack(camera, 1, 0),
-					'm', li.cil.oc.api.Items.get("chip2").createItemStack(1));
+					'm', "oc:circuitChip2");
 				RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 0),
 					"m", "c", "m",
 					'c', new ItemStack(camera, 1, 0),
-					'm', li.cil.oc.api.Items.get("chip2").createItemStack(1));
+					'm', "oc:circuitChip2");
 			} else {
 				log.warn("Could not add Camera Upgrade Recipe because Radar is disabled in the config.");
 			}
@@ -328,11 +328,11 @@ public class IntegrationOpenComputers {
 				RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 1),
 					"mcm", 'c',
 					new ItemStack(chatBox, 1, 0),
-					'm', li.cil.oc.api.Items.get("chip2").createItemStack(1));
+					'm', "oc:circuitChip2");
 				RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 1),
 					"m", "c", "m",
 					'c', new ItemStack(chatBox, 1, 0),
-					'm', li.cil.oc.api.Items.get("chip2").createItemStack(1));
+					'm', "oc:circuitChip2");
 			} else {
 				log.warn("Could not add Chat Box Upgrade Recipe because Radar is disabled in the config.");
 			}
@@ -342,11 +342,11 @@ public class IntegrationOpenComputers {
 				RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 2),
 					"mcm", 'c',
 					new ItemStack(radar, 1, 0),
-					'm', li.cil.oc.api.Items.get("chip3").createItemStack(1));
+					'm', "oc:circuitChip3");
 				RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 2),
 					"m", "c", "m",
 					'c', new ItemStack(radar, 1, 0),
-					'm', li.cil.oc.api.Items.get("chip3").createItemStack(1));
+					'm', "oc:circuitChip3");
 			} else {
 				log.warn("Could not add Radar Upgrade Recipe because Radar is disabled in the config.");
 			}
@@ -354,106 +354,106 @@ public class IntegrationOpenComputers {
 		if(Config.OC_CARD_FX) {
 			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 3),
 				"mf", " b",
-				'm', li.cil.oc.api.Items.get("chip2").createItemStack(1),
+				'm', "oc:circuitChip2",
 				'f', Items.FIRE_CHARGE,
-				'b', li.cil.oc.api.Items.get("card").createItemStack(1));
+				'b', "oc:materialCard");
 
 		}
 		if(Config.OC_CARD_SPOOF) {
 			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 4),
 				"mfl", "pb ", "   ",
-				'm', li.cil.oc.api.Items.get("ram2").createItemStack(1),
-				'f', li.cil.oc.api.Items.get("chip2").createItemStack(1),
-				'b', li.cil.oc.api.Items.get("lanCard").createItemStack(1),
-				'p', li.cil.oc.api.Items.get("printedCircuitBoard").createItemStack(1),
+				'm', "oc:ram2",
+				'f', "oc:circuitChip2",
+				'b', "oc:lanCard",
+				'p', "oc:materialCircuitBoardPrinted",
 				'l', Items.BRICK);
 		}
 		if(Config.OC_CARD_BEEP) {
 			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 5),
 				" l ", "mb ", " f ",
-				'm', li.cil.oc.api.Items.get("chip1").createItemStack(1),
+				'm', "oc:circuitChip1",
 				'f', speaker != null ? speaker : ironNote != null ? ironNote : Blocks.NOTEBLOCK,
-				'b', li.cil.oc.api.Items.get("card").createItemStack(1),
-				'l', li.cil.oc.api.Items.get("cu").createItemStack(1));
+				'b', "oc:materialCard",
+				'l', "oc:materialCU");
 		}
 		if(Config.OC_CARD_BOOM) {
 			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 6),
 				"mf", "fb",
-				'm', li.cil.oc.api.Items.get("cu").createItemStack(1),
+				'm', "oc:materialCU",
 				'f', Blocks.TNT,
-				'b', li.cil.oc.api.Items.get("redstoneCard1").createItemStack(1));
+				'b', "oc:redstoneCard1");
 
 		}
 		if(Config.OC_UPGRADE_COLORFUL) {
 			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 7),
 				" f ", "mcm", " f ",
 				'c', colorfulLamp != null ? colorfulLamp : "glowstone",
-				'm', li.cil.oc.api.Items.get("chip2").createItemStack(1),
-				'f', li.cil.oc.api.Items.get("chamelium").createItemStack(1));
+				'm', "oc:circuitChip2",
+				'f', "oc:chamelium");
 			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 7),
 				" m ", "fcf", " m ",
 				'c', colorfulLamp != null ? colorfulLamp : "glowstone",
-				'm', li.cil.oc.api.Items.get("chip2").createItemStack(1),
-				'f', li.cil.oc.api.Items.get("chamelium").createItemStack(1));
+				'm', "oc:circuitChip2",
+				'f', "oc:chamelium");
 		}
 		if(Config.OC_CARD_NOISE) {
 			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 8),
 				" l ", "mbn", " f ",
-				'm', li.cil.oc.api.Items.get("ram1").createItemStack(1),
-				'f', li.cil.oc.api.Items.get("alu").createItemStack(1),
+				'm', "oc:ram1",
+				'f', "oc:materialALU",
 				'b', Config.OC_CARD_BEEP ? new ItemStack(itemOCParts, 1, 5) : speaker != null ? speaker : ironNote != null ? ironNote : Blocks.NOTEBLOCK,
-				'l', li.cil.oc.api.Items.get("chip2").createItemStack(1),
+				'l', "oc:circuitChip2",
 				'n', "gemQuartz");
 		}
 		if(Config.OC_CARD_SOUND) {
 			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 9),
 				" l ", "mb ", " f ",
-				'm', li.cil.oc.api.Items.get("ram5").createItemStack(1),
-				'f', li.cil.oc.api.Items.get("cpu1").createItemStack(1),
+				'm', "oc:ram5",
+				'f', "oc:cpu1",
 				'b', Config.OC_CARD_NOISE ? new ItemStack(itemOCParts, 1, 8) :
 					Config.OC_CARD_BEEP ? new ItemStack(itemOCParts, 1, 5) : speaker != null ? speaker : ironNote != null ? ironNote : Blocks.NOTEBLOCK,
-				'l', li.cil.oc.api.Items.get("chip2").createItemStack(1));
+				'l', "oc:circuitChip2");
 		}
 		if(Config.OC_BOARD_LIGHT) {
 			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 10),
 				"oso", "gcg", "opo",
 				's', "paneGlassColorless",
-				'g', li.cil.oc.api.Items.get("chip1").createItemStack(1),
+				'g', "oc:circuitChip1",
 				'c', colorfulLamp != null ? colorfulLamp : "glowstone",
 				'o', "obsidian",
-				'p', li.cil.oc.api.Items.get("printedCircuitBoard").createItemStack(1)
+				'p', "oc:materialCircuitBoardPrinted"
 			);
 		}
 		if(Config.OC_BOARD_BOOM) {
 			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 11),
 				"lsl", "gcg", "opo",
-				's', li.cil.oc.api.Items.get("chip1").createItemStack(1),
+				's', "oc:circuitChip1",
 				'g', Config.OC_CARD_BOOM ? new ItemStack(itemOCParts, 1, 6) : Items.BLAZE_POWDER,
 				'c', Blocks.TNT,
 				'o', "obsidian",
 				'l', "gunpowder",
-				'p', li.cil.oc.api.Items.get("printedCircuitBoard").createItemStack(1)
+				'p', "oc:materialCircuitBoardPrinted"
 			);
 		}
 		if(Config.OC_BOARD_CAPACITOR) {
 			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 12),
 				"lsl", "gcg", "opo",
-				's', li.cil.oc.api.Items.get("chip1").createItemStack(1),
+				's', "oc:circuitChip1",
 				'g', "nuggetGold",
-				'c', li.cil.oc.api.Items.get("capacitor").createItemStack(1),
+				'c', "oc:capacitor",
 				'o', "obsidian",
 				'l', "ingotIron",
-				'p', li.cil.oc.api.Items.get("printedCircuitBoard").createItemStack(1)
+				'p', "oc:materialCircuitBoardPrinted"
 			);
 		}
 		if(Config.OC_BOARD_SWITCH) {
 			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 13),
 				"oso", "gcg", "opo",
 				's', "paneGlassColorless",
-				'g', li.cil.oc.api.Items.get("chip1").createItemStack(1),
-				'c', li.cil.oc.api.Items.get("buttonGroup").createItemStack(1),
+				'g', "oc:circuitChip1",
+				'c', "oc:materialButtonGroup",
 				'o', "obsidian",
-				'p', li.cil.oc.api.Items.get("printedCircuitBoard").createItemStack(1)
+				'p', "oc:materialCircuitBoardPrinted"
 			);
 		}
 		/*if(Computronics.buildcraft != null) { TODO BuildCraft Drone Docking

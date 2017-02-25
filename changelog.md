@@ -4,6 +4,17 @@
   * FIXED: Some sounds not having rolloff.
   * FIXED: Beep, Noise and Sound Card generating sounds too quietly.
   * FIXED: Crash with Iron Note Block when entering invalid notes.
+  * FIXED: Recipes using OpenComputers items not using the Ore Dictionary properly.
+    - Now you can properly use GregTech 6 circuit boards instead of PCBs, for instance.
+  * FIXED: `tape` and `explode` floppy disks being unobtainable.
+
+  * **[1.7.10]** ADDED: Temporary alternative recipes for GregTech 6.
+
+  * **[1.9.4]** FIXED: Iron Note Blocks not producing any sound at all.
+
+  * **[1.10.2]** ADDED: Re-added support for NoteBetter.
+  * **[1.10.2]** FIXED: Unintentional GregTech dependency.
+  * **[1.10.2]** FIXED: Wrong sound category for Iron Note Block.
 
 ==== 1.6.1 ====
 
