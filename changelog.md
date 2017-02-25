@@ -8,6 +8,8 @@
     - Now you can properly use GregTech 6 circuit boards instead of PCBs, for instance.
   * FIXED: `tape` and `explode` floppy disks being unobtainable.
 
+  * **[1.7.10]** ADDED: Temporary alternative recipes for GregTech 6.
+
   * **[1.9.4]** FIXED: Iron Note Blocks not producing any sound at all.
 
   * **[1.10.2]** ADDED: Re-added support for NoteBetter.

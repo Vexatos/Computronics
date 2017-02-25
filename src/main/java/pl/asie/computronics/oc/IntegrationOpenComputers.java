@@ -189,12 +189,12 @@ public class IntegrationOpenComputers {
 		ComputronicsPathProvider.initialize();
 
 		if(Computronics.tapeReader != null) {
-			li.cil.oc.api.Items.registerFloppy("tape", Color.White.ordinal(), new ReadOnlyFS("tape"));
+			li.cil.oc.api.Items.registerFloppy("tape", Color.White.ordinal(), new ReadOnlyFS("tape"), true);
 			IMC.registerProgramDiskLabel("tape", "tape", "Lua 5.2", "Lua 5.3", "LuaJ");
 		}
 
 		if(Config.OC_CARD_BOOM || Config.OC_BOARD_BOOM) {
-			li.cil.oc.api.Items.registerFloppy("explode", Color.Red.ordinal(), new ReadOnlyFS("explode"));
+			li.cil.oc.api.Items.registerFloppy("explode", Color.Red.ordinal(), new ReadOnlyFS("explode"), true);
 			IMC.registerProgramDiskLabel("explode", "explode", "Lua 5.2", "Lua 5.3", "LuaJ");
 		}
 
