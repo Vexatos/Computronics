@@ -110,11 +110,9 @@ dependencies {
     deobfCompile "pl.asie.charset:charset-lib:${config.charset.version}"
     deobfCompile "pl.asie.charset:charset-audio:${config.charset.version}"
     deobfCompile "pl.asie.charset:charset-drama:${config.charset.version}"
-    deobfCompile "pl.asie.charset:charset-gates:${config.charset.version}"
     deobfCompile "pl.asie.charset:charset-pipes:${config.charset.version}"
     deobfCompile "pl.asie.charset:charset-storage:${config.charset.version}"
     deobfCompile "pl.asie.charset:charset-tweaks:${config.charset.version}"
-    deobfCompile "pl.asie.charset:charset-wires:${config.charset.version}"
     deobfCompile "com.enderio.core:EnderCore:${config.endercore.version}"
     deobfCompile("com.enderio:EnderIO:${config.enderio.version}") {
         exclude module: "appliedenergistics2"

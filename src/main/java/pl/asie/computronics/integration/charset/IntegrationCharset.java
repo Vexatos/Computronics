@@ -15,7 +15,6 @@ public class IntegrationCharset {
 	public void preInit() {
 		if(Mods.API.hasAPI(Mods.API.CharsetWires)) {
 			wires = new IntegrationCharsetWires();
-			wires.preInit();
 		}
 	}
 

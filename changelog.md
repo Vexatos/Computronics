@@ -1,3 +1,7 @@
+==== 1.6.3 ====
+
+  * **[1.10.2]** FIXED: Charset's Bundled Redstone integration
+
 ==== 1.6.2 ====
 
   * FIXED: Digital Signal Controller Box not showing any information on Waila
