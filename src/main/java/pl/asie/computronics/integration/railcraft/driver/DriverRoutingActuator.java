@@ -27,7 +27,7 @@ import java.util.Map;
 /**
  * @author Vexatos
  */
-public class DriverRoutingSwitch {
+public class DriverRoutingActuator {
 
 	private static Object[] getRoutingTable(TileActuatorRouting tile) {
 		if(tile.getInventory().getStackInSlot(0) != null
@@ -118,24 +118,24 @@ public class DriverRoutingSwitch {
 
 			@Callback(doc = "function():table; returns the full routing table inside the switch motor, or false and an error message if the table is empty or cannot be accessed")
 			public Object[] getRoutingTable(Context c, Arguments a) {
-				return DriverRoutingSwitch.getRoutingTable(tile);
+				return DriverRoutingActuator.getRoutingTable(tile);
 			}
 
 			@Callback(doc = "function(routingTable:table):boolean; Sets the routing table inside the switch; argument needs to be a table with number indices and string values, every value being a new line, for a new page, use '{newline}' as a value; returns 'true' on success, 'false' and an error message otherwise")
 			public Object[] setRoutingTable(Context c, Arguments a) {
 				a.checkTable(0);
-				return DriverRoutingSwitch.setRoutingTable(tile, a.toArray());
+				return DriverRoutingActuator.setRoutingTable(tile, a.toArray());
 			}
 
 			@Callback(doc = "function():string; Returns the name of the routing table inside the switch motor")
 			public Object[] getRoutingTableTitle(Context c, Arguments a) {
-				return DriverRoutingSwitch.getRoutingTableTitle(tile);
+				return DriverRoutingActuator.getRoutingTableTitle(tile);
 			}
 
 			@Callback(doc = "function(name:string):boolean; Sets the name of the routing table inside the switch motor; returns true on success")
 			public Object[] setRoutingTableTitle(Context c, Arguments a) {
 				a.checkString(0);
-				return DriverRoutingSwitch.setRoutingTableTitle(tile, a.toArray());
+				return DriverRoutingActuator.setRoutingTableTitle(tile, a.toArray());
 			}
 		}
 
@@ -179,22 +179,22 @@ public class DriverRoutingSwitch {
 			InterruptedException {
 			switch(method) {
 				case 0: {
-					return DriverRoutingSwitch.getRoutingTable(tile);
+					return DriverRoutingActuator.getRoutingTable(tile);
 				}
 				case 1: {
 					if(arguments.length < 1 || !(arguments[0] instanceof Map)) {
 						throw new LuaException("first argument needs to be a table");
 					}
-					return DriverRoutingSwitch.setRoutingTable(tile, arguments);
+					return DriverRoutingActuator.setRoutingTable(tile, arguments);
 				}
 				case 2: {
-					return DriverRoutingSwitch.getRoutingTableTitle(tile);
+					return DriverRoutingActuator.getRoutingTableTitle(tile);
 				}
 				case 3: {
 					if(arguments.length < 1 || !(arguments[0] instanceof String)) {
 						throw new LuaException("first argument needs to be a string");
 					}
-					return DriverRoutingSwitch.setRoutingTableTitle(tile, arguments);
+					return DriverRoutingActuator.setRoutingTableTitle(tile, arguments);
 				}
 			}
 			return null;

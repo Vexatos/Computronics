@@ -34,8 +34,8 @@ import pl.asie.computronics.integration.enderio.DriverWeatherObelisk;
 import pl.asie.computronics.integration.flamingo.DriverFlamingo;
 import pl.asie.computronics.integration.forestry.IntegrationForestry;
 import pl.asie.computronics.integration.railcraft.driver.DriverElectricGrid;
+import pl.asie.computronics.integration.railcraft.driver.DriverRoutingActuator;
 import pl.asie.computronics.integration.railcraft.driver.DriverRoutingDetector;
-import pl.asie.computronics.integration.railcraft.driver.DriverRoutingSwitch;
 import pl.asie.computronics.integration.railcraft.driver.track.DriverLauncherTrack;
 import pl.asie.computronics.integration.railcraft.driver.track.DriverLocomotiveTrack;
 import pl.asie.computronics.integration.railcraft.driver.track.DriverMessengerTrack;
@@ -235,7 +235,7 @@ public class IntegrationOpenComputers {
 				Driver.add(new DriverPoweredTrack.OCDriver());
 				Driver.add(new DriverRoutingTrack.OCDriver());
 				Driver.add(new DriverRoutingDetector.OCDriver());
-				Driver.add(new DriverRoutingSwitch.OCDriver());
+				Driver.add(new DriverRoutingActuator.OCDriver());
 				Driver.add(new DriverElectricGrid.OCDriver());
 				Driver.add(new DriverLocomotiveTrack.OCDriver());
 				Driver.add(new DriverLauncherTrack.OCDriver());

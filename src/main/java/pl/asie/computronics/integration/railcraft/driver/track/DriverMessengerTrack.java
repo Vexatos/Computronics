@@ -35,12 +35,12 @@ public class DriverMessengerTrack {
 
 			@Callback(doc = "function():string; Returns the title the track is set to.")
 			public Object[] getTitle(Context c, Arguments a) {
-				return new Object[] { tile.getTitle() };
+				return new Object[] { tile.getTitle().getFormattedText() };
 			}
 
 			@Callback(doc = "function():string; Returns the subtitle the track is set to.")
 			public Object[] getSubtitle(Context c, Arguments a) {
-				return new Object[] { tile.getSubtitle() };
+				return new Object[] { tile.getSubtitle().getFormattedText() };
 			}
 
 			@Callback(doc = "function(title:string):string; Sets the title the track is set to. Returns true on success.")
@@ -99,10 +99,10 @@ public class DriverMessengerTrack {
 		public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
 			switch(method) {
 				case 0: {
-					return new Object[] { tile.getTitle() };
+					return new Object[] { tile.getTitle().getFormattedText() };
 				}
 				case 1: {
-					return new Object[] { tile.getSubtitle() };
+					return new Object[] { tile.getSubtitle().getFormattedText() };
 				}
 				case 2: {
 					if(arguments.length < 1 || !(arguments[0] instanceof String)) {

@@ -22,8 +22,8 @@ import pl.asie.computronics.integration.enderio.DriverWeatherObelisk;
 import pl.asie.computronics.integration.flamingo.DriverFlamingo;
 import pl.asie.computronics.integration.railcraft.driver.DriverBoilerFirebox;
 import pl.asie.computronics.integration.railcraft.driver.DriverElectricGrid;
+import pl.asie.computronics.integration.railcraft.driver.DriverRoutingActuator;
 import pl.asie.computronics.integration.railcraft.driver.DriverRoutingDetector;
-import pl.asie.computronics.integration.railcraft.driver.DriverRoutingSwitch;
 import pl.asie.computronics.integration.railcraft.driver.DriverSteamTurbine;
 import pl.asie.computronics.integration.railcraft.driver.track.DriverLauncherTrack;
 import pl.asie.computronics.integration.railcraft.driver.track.DriverLocomotiveTrack;
@@ -90,7 +90,7 @@ public class IntegrationComputerCraft {
 				registerMultiPeripheralProvider(new DriverPoweredTrack.CCDriver());
 				registerMultiPeripheralProvider(new DriverRoutingTrack.CCDriver());
 				registerMultiPeripheralProvider(new DriverRoutingDetector.CCDriver());
-				registerMultiPeripheralProvider(new DriverRoutingSwitch.CCDriver());
+				registerMultiPeripheralProvider(new DriverRoutingActuator.CCDriver());
 				registerMultiPeripheralProvider(new DriverElectricGrid.CCDriver());
 				registerMultiPeripheralProvider(new DriverLocomotiveTrack.CCDriver());
 				registerMultiPeripheralProvider(new DriverLauncherTrack.CCDriver());
