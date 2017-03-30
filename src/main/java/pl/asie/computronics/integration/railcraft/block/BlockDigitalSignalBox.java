@@ -23,11 +23,10 @@ import pl.asie.computronics.reference.Mods;
 	@Optional.Interface(iface = "pl.asie.computronics.oc.block.IComputronicsEnvironmentBlock", modid = Mods.OpenComputers)
 })
 @RailcraftBlockMetadata(variant = SignalTypes.class)
-public class BlockDigitalBoxBase extends BlockMachineSignalBox<SignalTypes> implements IComputronicsEnvironmentBlock, IBlockWithPrefix {
+public class BlockDigitalSignalBox extends BlockMachineSignalBox<SignalTypes> implements IComputronicsEnvironmentBlock, IBlockWithPrefix {
 
-	public BlockDigitalBoxBase() {
+	public BlockDigitalSignalBox() {
 		super();
-		//this.documentationName = documentationName;
 		this.setUnlocalizedName("computronics.digital_box");
 		this.setCreativeTab(Computronics.tab);
 	}

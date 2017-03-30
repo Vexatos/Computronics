@@ -11,7 +11,7 @@
         "inventory": [{"transform": "forge:default-block"}],
         "variant": {
             "digital_receiver_box": {
-                "textures": {"up": "computronics:blocks/digital_controller_box"}
+                "textures": {"up": "computronics:blocks/digital_receiver_box"}
             },
             "digital_controller_box": {
                 "textures": {"up": "computronics:blocks/digital_controller_box"}

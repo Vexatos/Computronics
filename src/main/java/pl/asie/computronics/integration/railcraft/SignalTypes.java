@@ -33,10 +33,9 @@ public enum SignalTypes implements IEnumMachine<SignalTypes> {
 	public static final SignalTypes[] VALUES = values();
 	private final Definition def;
 	private ToolTip tip;
-	//private Block block;
+	boolean enabled = false;
 
 	SignalTypes(String tag, Block block, Class<? extends TileMachineBase> tile) {
-		//this.block = block;
 		this.def = new Definition(null, tag, tile);
 	}
 
@@ -77,7 +76,7 @@ public enum SignalTypes implements IEnumMachine<SignalTypes> {
 
 	@Override
 	public boolean isEnabled() {
-		return this.block() != null;
+		return this.enabled;
 	}
 
 	@Override

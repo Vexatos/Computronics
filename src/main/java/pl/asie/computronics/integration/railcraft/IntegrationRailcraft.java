@@ -17,8 +17,8 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.asie.computronics.Computronics;
-import pl.asie.computronics.integration.railcraft.block.BlockDigitalBoxBase;
 import pl.asie.computronics.integration.railcraft.block.BlockDigitalDetector;
+import pl.asie.computronics.integration.railcraft.block.BlockDigitalSignalBox;
 import pl.asie.computronics.integration.railcraft.block.BlockLocomotiveRelay;
 import pl.asie.computronics.integration.railcraft.block.BlockTicketMachine;
 import pl.asie.computronics.integration.railcraft.gui.GuiProviderTicketMachine;
@@ -41,7 +41,7 @@ public class IntegrationRailcraft {
 	public BlockLocomotiveRelay locomotiveRelay;
 	public BlockDigitalDetector detector;
 	public ItemRelaySensor relaySensor;
-	public BlockDigitalBoxBase digitalBox;
+	public BlockDigitalSignalBox digitalBox;
 	public ItemMachine digitalBoxItem;
 	public BlockTicketMachine ticketMachine;
 
@@ -64,16 +64,10 @@ public class IntegrationRailcraft {
 			manager = new LocomotiveManager();
 			MinecraftForge.EVENT_BUS.register(manager);
 		}
-		/*if(isEnabled(config, "digitalReceiverBox", true)) {
-			this.digitalReceiverBox = new BlockDigitalReceiverBox();
-			Computronics.instance.registerBlockWithTileEntity(digitalReceiverBox, new ItemMachine(digitalReceiverBox), TileDigitalReceiverBox.class, "digital_receiver_box");
-		}
-		if(isEnabled(config, "digitalControllerBox", true)) {
-			this.digitalControllerBox = new BlockDigitalControllerBox();
-			Computronics.instance.registerBlockWithTileEntity(digitalControllerBox, new ItemMachine(digitalControllerBox), TileDigitalControllerBox.class, "digital_controller_box");
-		}*/
 		{
-			digitalBox = new BlockDigitalBoxBase();
+			SignalTypes.DigitalReceiver.enabled = isEnabled(config, "digitalReceiverBox", true);
+			SignalTypes.DigitalController.enabled = isEnabled(config, "digitalControllerBox", true);
+			digitalBox = new BlockDigitalSignalBox();
 			GameRegistry.register(digitalBox, new ResourceLocation(Mods.Computronics, "digital_box"));
 			digitalBoxItem = new ItemMachine(digitalBox) {
 				@Override
