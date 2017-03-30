@@ -1,6 +1,7 @@
 ==== 1.6.3 ====
 
   * **[1.10.2]** FIXED: Charset's Bundled Redstone integration
+  * **[1.10.2]** FIXED: TIS-3D module models
 
 ==== 1.6.2 ====
 
