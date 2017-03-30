@@ -10,6 +10,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
+import pl.asie.computronics.Computronics;
 import pl.asie.computronics.integration.railcraft.SignalTypes;
 import pl.asie.computronics.oc.block.IComputronicsEnvironmentBlock;
 import pl.asie.computronics.oc.manual.IBlockWithPrefix;
@@ -24,9 +25,11 @@ import pl.asie.computronics.reference.Mods;
 @RailcraftBlockMetadata(variant = SignalTypes.class)
 public class BlockDigitalBoxBase extends BlockMachineSignalBox<SignalTypes> implements IComputronicsEnvironmentBlock, IBlockWithPrefix {
 
-	public BlockDigitalBoxBase(String documentationName) {
+	public BlockDigitalBoxBase() {
 		super();
-		this.documentationName = documentationName;
+		//this.documentationName = documentationName;
+		this.setUnlocalizedName("computronics.digital_box");
+		this.setCreativeTab(Computronics.tab);
 	}
 
 	@Override
@@ -44,17 +47,17 @@ public class BlockDigitalBoxBase extends BlockMachineSignalBox<SignalTypes> impl
 		return false;
 	}
 
-	private String documentationName;
+	//private String documentationName;
 	private final String prefix = "railcraft/";
 
 	@Override
 	public String getDocumentationName(World world, BlockPos pos) {
-		return this.documentationName;
+		return getMachineType(world.getBlockState(pos)).getBaseTag();
 	}
 
 	@Override
 	public String getDocumentationName(ItemStack stack) {
-		return this.documentationName;
+		return getMachineType(getStateFromMeta(stack.getItemDamage())).getBaseTag();
 	}
 
 	@Override

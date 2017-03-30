@@ -27,16 +27,16 @@ import java.util.Optional;
  * @author Vexatos
  */
 public enum SignalTypes implements IEnumMachine<SignalTypes> {
-	DigitalReceiver("digital_receiver_box", Computronics.railcraft.digitalReceiverBox, TileDigitalReceiverBox.class),
-	DigitalController("digital_controller_box", Computronics.railcraft.digitalControllerBox, TileDigitalControllerBox.class);
+	DigitalReceiver("digital_receiver_box", Computronics.railcraft.digitalBox, TileDigitalReceiverBox.class),
+	DigitalController("digital_controller_box", Computronics.railcraft.digitalBox, TileDigitalControllerBox.class);
 
 	public static final SignalTypes[] VALUES = values();
 	private final Definition def;
 	private ToolTip tip;
-	private Block block;
+	//private Block block;
 
 	SignalTypes(String tag, Block block, Class<? extends TileMachineBase> tile) {
-		this.block = block;
+		//this.block = block;
 		this.def = new Definition(null, tag, tile);
 	}
 
@@ -53,6 +53,11 @@ public enum SignalTypes implements IEnumMachine<SignalTypes> {
 	@Override
 	public String getName() {
 		return this.getBaseTag();
+	}
+
+	@Override
+	public String getLocalizationTag() {
+		return this.getTag();
 	}
 
 	@Nullable
@@ -72,7 +77,7 @@ public enum SignalTypes implements IEnumMachine<SignalTypes> {
 
 	@Override
 	public boolean isEnabled() {
-		return this.block != null;
+		return this.block() != null;
 	}
 
 	@Override
@@ -81,13 +86,13 @@ public enum SignalTypes implements IEnumMachine<SignalTypes> {
 			@Nullable
 			@Override
 			public IBlockState getState(@Nullable IVariantEnum variant) {
-				return SignalTypes.this.block instanceof IRailcraftBlock ? ((IRailcraftBlock) SignalTypes.this.block).getState(variant) : this.getDefaultState();
+				return block() instanceof IRailcraftBlock ? ((IRailcraftBlock) block()).getState(variant) : this.getDefaultState();
 			}
 
 			@Nullable
 			@Override
 			public Block block() {
-				return SignalTypes.this.block;
+				return Computronics.railcraft.digitalBox;
 			}
 
 			@Nullable
@@ -100,12 +105,12 @@ public enum SignalTypes implements IEnumMachine<SignalTypes> {
 			@Nullable
 			@Override
 			public IBlockState getDefaultState() {
-				return SignalTypes.this.block == null ? null : SignalTypes.this.block.getDefaultState();
+				return block() == null ? null : block().getDefaultState();
 			}
 
 			@Override
 			public boolean isEqual(@Nullable ItemStack stack) {
-				return stack != null && SignalTypes.this.block != null && InvTools.getBlockFromStack(stack) == SignalTypes.this.block;
+				return stack != null && block() != null && InvTools.getBlockFromStack(stack) == block();
 			}
 
 			@Override
@@ -115,7 +120,7 @@ public enum SignalTypes implements IEnumMachine<SignalTypes> {
 
 			@Override
 			public Optional<IRailcraftBlock> getObject() {
-				return Optional.ofNullable((IRailcraftBlock) SignalTypes.this.block);
+				return Optional.ofNullable((IRailcraftBlock) block());
 			}
 
 			@Override
@@ -125,7 +130,7 @@ public enum SignalTypes implements IEnumMachine<SignalTypes> {
 
 			@Override
 			public boolean isLoaded() {
-				return SignalTypes.this.block != null;
+				return block() != null;
 			}
 		};
 	}

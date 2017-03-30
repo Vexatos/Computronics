@@ -13,6 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.integration.railcraft.SignalTypes;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.RecipeUtils;
@@ -130,15 +131,15 @@ public class ModRecipes {
 			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.railcraft.relaySensor, 1, 0),
 				" n ", "npr", " r ", 'p', "paper", 'n', "nuggetTin", 'r', "dustRedstone");
 		}
-		if(Computronics.railcraft.digitalReceiverBox != null) {
-			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.railcraft.digitalReceiverBox, 1, 0),
+		if(SignalTypes.DigitalReceiver.isEnabled()) {
+			RecipeUtils.addShapedRecipe(SignalTypes.DigitalReceiver.getItem(),
 				"iri", "ibi", "isi", 'i', "ingotIron",
 				'r', RailcraftItems.CIRCUIT.getRecipeObject(EnumCircuit.RECEIVER),
 				'b', RailcraftBlocks.SIGNAL_BOX.getRecipeObject(SignalBoxVariant.RECEIVER),
 				's', RailcraftItems.CIRCUIT.getRecipeObject(EnumCircuit.SIGNAL));
 		}
-		if(Computronics.railcraft.digitalControllerBox != null) {
-			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.railcraft.digitalControllerBox, 1, 0),
+		if(SignalTypes.DigitalController.isEnabled()) {
+			RecipeUtils.addShapedRecipe(SignalTypes.DigitalController.getItem(),
 				"iri", "ibi", "isi", 'i', "ingotIron",
 				'r', RailcraftItems.CIRCUIT.getRecipeObject(EnumCircuit.CONTROLLER),
 				'b', RailcraftBlocks.SIGNAL_BOX.getRecipeObject(SignalBoxVariant.CONTROLLER),

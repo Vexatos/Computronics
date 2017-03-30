@@ -20,8 +20,8 @@ import pl.asie.computronics.reference.Mods;
 @RailcraftBlockMetadata(variant = SignalTypes.class)
 public class BlockDigitalReceiverBox extends BlockDigitalBoxBase implements IComputronicsEnvironmentBlock, IBlockWithPrefix {
 
-	public BlockDigitalReceiverBox() {
-		super("digital_receiver_box");
+	private BlockDigitalReceiverBox() {
+		//super("digital_receiver_box");
 		this.setUnlocalizedName("computronics.digitalReceiverBox");
 		this.setCreativeTab(Computronics.tab);
 	}

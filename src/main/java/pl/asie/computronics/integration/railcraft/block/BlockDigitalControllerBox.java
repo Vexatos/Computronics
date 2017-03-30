@@ -18,8 +18,8 @@ import pl.asie.computronics.reference.Mods;
 @RailcraftBlockMetadata(variant = SignalTypes.class)
 public class BlockDigitalControllerBox extends BlockDigitalBoxBase {
 
-	public BlockDigitalControllerBox() {
-		super("digital_controller_box");
+	private BlockDigitalControllerBox() {
+		//super("digital_controller_box");
 		this.setUnlocalizedName("computronics.digitalControllerBox");
 		this.setCreativeTab(Computronics.tab);
 	}
