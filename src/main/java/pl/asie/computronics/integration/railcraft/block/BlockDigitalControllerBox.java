@@ -1,7 +1,8 @@
 package pl.asie.computronics.integration.railcraft.block;
 
 import li.cil.oc.api.network.Environment;
-import mods.railcraft.common.blocks.wayobjects.IWayObjectDefinition;
+import mods.railcraft.common.blocks.machine.IEnumMachine;
+import mods.railcraft.common.blocks.machine.RailcraftBlockMetadata;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -14,6 +15,7 @@ import pl.asie.computronics.reference.Mods;
 /**
  * @author Vexatos
  */
+@RailcraftBlockMetadata(variant = SignalTypes.class)
 public class BlockDigitalControllerBox extends BlockDigitalBoxBase {
 
 	public BlockDigitalControllerBox() {
@@ -23,7 +25,7 @@ public class BlockDigitalControllerBox extends BlockDigitalBoxBase {
 	}
 
 	@Override
-	public IWayObjectDefinition getSignalType(IBlockState state) {
+	public IEnumMachine<SignalTypes> getMachineType(IBlockState state) {
 		return SignalTypes.DigitalController;
 	}
 

@@ -3,14 +3,12 @@ package pl.asie.computronics.integration.railcraft.driver.track;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
-import li.cil.oc.api.driver.SidedBlock;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
-import li.cil.oc.api.network.ManagedEnvironment;
 import mods.railcraft.api.tracks.IOutfittedTrackTile;
 import mods.railcraft.api.tracks.ITrackKitPowered;
-import mods.railcraft.common.blocks.wayobjects.ISecure;
+import mods.railcraft.common.util.misc.ISecureObject;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -20,20 +18,22 @@ import pl.asie.computronics.integration.CCMultiPeripheral;
 import pl.asie.computronics.integration.NamedManagedEnvironment;
 import pl.asie.computronics.reference.Names;
 
+import javax.annotation.Nullable;
+
 /**
  * @author Vexatos
  */
 public class DriverPoweredTrack {
 
 	private static Object[] isPowered(ITrackKitPowered tile) {
-		if(!(tile instanceof ISecure && ((ISecure) tile).isSecure())) {
+		if(!(tile instanceof ISecureObject && ((ISecureObject) tile).isSecure())) {
 			return new Object[] { tile.isPowered() };
 		} else {
 			return new Object[] { null, "track is locked" };
 		}
 	}
 
-	public static class OCDriver implements SidedBlock {
+	public static class OCDriver extends DriverTrack<ITrackKitPowered> {
 
 		public static class InternalManagedEnvironment extends NamedManagedEnvironment<ITrackKitPowered> {
 
@@ -52,16 +52,14 @@ public class DriverPoweredTrack {
 			}
 		}
 
-		@Override
-		public boolean worksWith(World world, BlockPos pos, EnumFacing side) {
-			TileEntity tileEntity = world.getTileEntity(pos);
-			return (tileEntity != null) && tileEntity instanceof IOutfittedTrackTile
-				&& ((IOutfittedTrackTile) tileEntity).getTrackKitInstance() instanceof ITrackKitPowered;
+		public OCDriver() {
+			super(ITrackKitPowered.class);
 		}
 
+		@Nullable
 		@Override
-		public ManagedEnvironment createEnvironment(World world, BlockPos pos, EnumFacing side) {
-			return new InternalManagedEnvironment((ITrackKitPowered) ((IOutfittedTrackTile) world.getTileEntity(pos)).getTrackKitInstance());
+		protected NamedManagedEnvironment<ITrackKitPowered> createEnvironment(World world, BlockPos pos, EnumFacing side, ITrackKitPowered tile) {
+			return new InternalManagedEnvironment(tile);
 		}
 	}
 

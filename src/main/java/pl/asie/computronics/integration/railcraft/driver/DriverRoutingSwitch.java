@@ -6,9 +6,7 @@ import dan200.computercraft.api.peripheral.IComputerAccess;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
-import li.cil.oc.api.prefab.DriverSidedTileEntity;
-import li.cil.oc.api.prefab.ManagedEnvironment;
-import mods.railcraft.common.blocks.wayobjects.TileSwitchRouting;
+import mods.railcraft.common.blocks.machine.wayobjects.actuators.TileActuatorRouting;
 import mods.railcraft.common.items.ItemRoutingTable;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -16,10 +14,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
 import pl.asie.computronics.integration.CCMultiPeripheral;
+import pl.asie.computronics.integration.DriverSpecificTileEntity;
 import pl.asie.computronics.integration.NamedManagedEnvironment;
 import pl.asie.computronics.integration.util.RoutingTableUtil;
 import pl.asie.computronics.reference.Names;
 
+import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -29,7 +29,7 @@ import java.util.Map;
  */
 public class DriverRoutingSwitch {
 
-	private static Object[] getRoutingTable(TileSwitchRouting tile) {
+	private static Object[] getRoutingTable(TileActuatorRouting tile) {
 		if(tile.getInventory().getStackInSlot(0) != null
 			&& tile.getInventory().getStackInSlot(0).getItem() instanceof ItemRoutingTable) {
 			if(!tile.isSecure()) {
@@ -56,7 +56,7 @@ public class DriverRoutingSwitch {
 		return new Object[] { false, "no routing table found" };
 	}
 
-	private static Object[] setRoutingTable(TileSwitchRouting tile, Object[] arguments) {
+	private static Object[] setRoutingTable(TileActuatorRouting tile, Object[] arguments) {
 		Map pageMap = (Map) arguments[0];
 		if(tile.getInventory().getStackInSlot(0) != null
 			&& tile.getInventory().getStackInSlot(0).getItem() instanceof ItemRoutingTable) {
@@ -84,10 +84,10 @@ public class DriverRoutingSwitch {
 		return new Object[] { false, "no routing table found" };
 	}
 
-	private static Object[] getRoutingTableTitle(TileSwitchRouting tile) {
-		if((((TileSwitchRouting) tile)).getInventory().getStackInSlot(0) != null
+	private static Object[] getRoutingTableTitle(TileActuatorRouting tile) {
+		if((((TileActuatorRouting) tile)).getInventory().getStackInSlot(0) != null
 			&& tile.getInventory().getStackInSlot(0).getItem() instanceof ItemRoutingTable) {
-			if(!(((TileSwitchRouting) tile)).isSecure()) {
+			if(!(((TileActuatorRouting) tile)).isSecure()) {
 				return new Object[] { RoutingTableUtil.getRoutingTableTitle(tile.getInventory().getStackInSlot(0)) };
 			} else {
 				return new Object[] { false, "routing switch is locked" };
@@ -96,7 +96,7 @@ public class DriverRoutingSwitch {
 		return new Object[] { false, "no routing table found" };
 	}
 
-	private static Object[] setRoutingTableTitle(TileSwitchRouting tile, Object[] arguments) {
+	private static Object[] setRoutingTableTitle(TileActuatorRouting tile, Object[] arguments) {
 		if(tile.getInventory().getStackInSlot(0) != null
 			&& tile.getInventory().getStackInSlot(0).getItem() instanceof ItemRoutingTable) {
 			if(!tile.isSecure()) {
@@ -108,11 +108,11 @@ public class DriverRoutingSwitch {
 		return new Object[] { false, "no routing table found" };
 	}
 
-	public static class OCDriver extends DriverSidedTileEntity {
+	public static class OCDriver extends DriverSpecificTileEntity<TileActuatorRouting> {
 
-		public static class InternalManagedEnvironment extends NamedManagedEnvironment<TileSwitchRouting> {
+		public static class InternalManagedEnvironment extends NamedManagedEnvironment<TileActuatorRouting> {
 
-			public InternalManagedEnvironment(TileSwitchRouting routingSwitch) {
+			public InternalManagedEnvironment(TileActuatorRouting routingSwitch) {
 				super(routingSwitch, Names.Railcraft_RoutingSwitch);
 			}
 
@@ -139,31 +139,31 @@ public class DriverRoutingSwitch {
 			}
 		}
 
-		@Override
-		public Class<?> getTileEntityClass() {
-			return TileSwitchRouting.class;
+		public OCDriver() {
+			super(TileActuatorRouting.class);
 		}
 
+		@Nullable
 		@Override
-		public ManagedEnvironment createEnvironment(World world, BlockPos pos, EnumFacing side) {
-			return new InternalManagedEnvironment((TileSwitchRouting) world.getTileEntity(pos));
+		protected NamedManagedEnvironment<TileActuatorRouting> createEnvironment(World world, BlockPos pos, EnumFacing side, TileActuatorRouting tile) {
+			return new InternalManagedEnvironment(tile);
 		}
 	}
 
-	public static class CCDriver extends CCMultiPeripheral<TileSwitchRouting> {
+	public static class CCDriver extends CCMultiPeripheral<TileActuatorRouting> {
 
 		public CCDriver() {
 		}
 
-		public CCDriver(TileSwitchRouting routingSwitch, World world, BlockPos pos) {
+		public CCDriver(TileActuatorRouting routingSwitch, World world, BlockPos pos) {
 			super(routingSwitch, Names.Railcraft_RoutingSwitch, world, pos);
 		}
 
 		@Override
 		public IMultiPeripheral getPeripheral(World world, BlockPos pos, EnumFacing side) {
 			TileEntity te = world.getTileEntity(pos);
-			if(te != null && te instanceof TileSwitchRouting) {
-				return new CCDriver((TileSwitchRouting) te, world, pos);
+			if(te != null && te instanceof TileActuatorRouting) {
+				return new CCDriver((TileActuatorRouting) te, world, pos);
 			}
 			return null;
 		}

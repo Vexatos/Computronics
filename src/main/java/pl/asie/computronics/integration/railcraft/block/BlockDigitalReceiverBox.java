@@ -1,7 +1,8 @@
 package pl.asie.computronics.integration.railcraft.block;
 
 import li.cil.oc.api.network.Environment;
-import mods.railcraft.common.blocks.wayobjects.IWayObjectDefinition;
+import mods.railcraft.common.blocks.machine.IEnumMachine;
+import mods.railcraft.common.blocks.machine.RailcraftBlockMetadata;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -16,6 +17,7 @@ import pl.asie.computronics.reference.Mods;
 /**
  * @author CovertJaguar, Vexatos
  */
+@RailcraftBlockMetadata(variant = SignalTypes.class)
 public class BlockDigitalReceiverBox extends BlockDigitalBoxBase implements IComputronicsEnvironmentBlock, IBlockWithPrefix {
 
 	public BlockDigitalReceiverBox() {
@@ -25,7 +27,7 @@ public class BlockDigitalReceiverBox extends BlockDigitalBoxBase implements ICom
 	}
 
 	@Override
-	public IWayObjectDefinition getSignalType(IBlockState state) {
+	public IEnumMachine<SignalTypes> getMachineType(IBlockState state) {
 		return SignalTypes.DigitalReceiver;
 	}
 

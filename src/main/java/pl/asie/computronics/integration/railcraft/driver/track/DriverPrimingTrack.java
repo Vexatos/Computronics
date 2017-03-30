@@ -3,11 +3,9 @@ package pl.asie.computronics.integration.railcraft.driver.track;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
-import li.cil.oc.api.driver.SidedBlock;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
-import li.cil.oc.api.network.ManagedEnvironment;
 import mods.railcraft.api.tracks.IOutfittedTrackTile;
 import mods.railcraft.common.blocks.tracks.outfitted.kits.TrackKitPriming;
 import net.minecraft.tileentity.TileEntity;
@@ -18,6 +16,8 @@ import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
 import pl.asie.computronics.integration.CCMultiPeripheral;
 import pl.asie.computronics.integration.NamedManagedEnvironment;
 import pl.asie.computronics.reference.Names;
+
+import javax.annotation.Nullable;
 
 /**
  * @author Vexatos
@@ -38,7 +38,7 @@ public class DriverPrimingTrack {
 		return new Object[] { false, "not a valid fuse time value, needs to be between 0 and 500" };
 	}
 
-	public static class OCDriver implements SidedBlock {
+	public static class OCDriver extends DriverTrack<TrackKitPriming> {
 
 		public static class InternalManagedEnvironment extends NamedManagedEnvironment<TrackKitPriming> {
 
@@ -58,16 +58,14 @@ public class DriverPrimingTrack {
 			}
 		}
 
-		@Override
-		public boolean worksWith(World world, BlockPos pos, EnumFacing side) {
-			TileEntity tileEntity = world.getTileEntity(pos);
-			return (tileEntity != null) && tileEntity instanceof IOutfittedTrackTile
-				&& ((IOutfittedTrackTile) tileEntity).getTrackKitInstance() instanceof TrackKitPriming;
+		public OCDriver() {
+			super(TrackKitPriming.class);
 		}
 
+		@Nullable
 		@Override
-		public ManagedEnvironment createEnvironment(World world, BlockPos pos, EnumFacing side) {
-			return new InternalManagedEnvironment((TrackKitPriming) ((IOutfittedTrackTile) world.getTileEntity(pos)).getTrackKitInstance());
+		protected NamedManagedEnvironment<TrackKitPriming> createEnvironment(World world, BlockPos pos, EnumFacing side, TrackKitPriming tile) {
+			return new InternalManagedEnvironment(tile);
 		}
 	}
 

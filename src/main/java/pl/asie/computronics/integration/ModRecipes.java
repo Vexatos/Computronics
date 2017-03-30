@@ -1,9 +1,8 @@
 package pl.asie.computronics.integration;
 
-import li.cil.oc.api.detail.ItemInfo;
 import mods.railcraft.common.blocks.RailcraftBlocks;
 import mods.railcraft.common.blocks.detector.EnumDetector;
-import mods.railcraft.common.blocks.wayobjects.EnumWayObject;
+import mods.railcraft.common.blocks.machine.wayobjects.boxes.SignalBoxVariant;
 import mods.railcraft.common.items.ItemCircuit.EnumCircuit;
 import mods.railcraft.common.items.ItemRail;
 import mods.railcraft.common.items.Metal;
@@ -135,14 +134,14 @@ public class ModRecipes {
 			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.railcraft.digitalReceiverBox, 1, 0),
 				"iri", "ibi", "isi", 'i', "ingotIron",
 				'r', RailcraftItems.CIRCUIT.getRecipeObject(EnumCircuit.RECEIVER),
-				'b', RailcraftBlocks.WAY_OBJECT.getRecipeObject(EnumWayObject.BOX_RECEIVER),
+				'b', RailcraftBlocks.SIGNAL_BOX.getRecipeObject(SignalBoxVariant.RECEIVER),
 				's', RailcraftItems.CIRCUIT.getRecipeObject(EnumCircuit.SIGNAL));
 		}
 		if(Computronics.railcraft.digitalControllerBox != null) {
 			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.railcraft.digitalControllerBox, 1, 0),
 				"iri", "ibi", "isi", 'i', "ingotIron",
 				'r', RailcraftItems.CIRCUIT.getRecipeObject(EnumCircuit.CONTROLLER),
-				'b', RailcraftBlocks.WAY_OBJECT.getRecipeObject(EnumWayObject.BOX_RECEIVER),
+				'b', RailcraftBlocks.SIGNAL_BOX.getRecipeObject(SignalBoxVariant.CONTROLLER),
 				's', RailcraftItems.CIRCUIT.getRecipeObject(EnumCircuit.SIGNAL));
 		}
 		if(Computronics.railcraft.detector != null) {

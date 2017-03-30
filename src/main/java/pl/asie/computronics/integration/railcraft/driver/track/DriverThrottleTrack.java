@@ -3,11 +3,9 @@ package pl.asie.computronics.integration.railcraft.driver.track;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
-import li.cil.oc.api.driver.SidedBlock;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
-import li.cil.oc.api.prefab.ManagedEnvironment;
 import mods.railcraft.api.tracks.IOutfittedTrackTile;
 import mods.railcraft.common.blocks.tracks.outfitted.kits.TrackKitThrottle;
 import net.minecraft.nbt.NBTTagCompound;
@@ -19,6 +17,8 @@ import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
 import pl.asie.computronics.integration.CCMultiPeripheral;
 import pl.asie.computronics.integration.NamedManagedEnvironment;
 import pl.asie.computronics.reference.Names;
+
+import javax.annotation.Nullable;
 
 /**
  * @author Vexatos
@@ -41,7 +41,7 @@ public class DriverThrottleTrack {
 		return new Object[] { data.hasKey("mode") ? Math.abs(data.getByte("mode") % 4 - 4) : null };
 	}
 
-	public static class OCDriver implements SidedBlock {
+	public static class OCDriver extends DriverTrack<TrackKitThrottle> {
 
 		public static class InternalManagedEnvironment extends NamedManagedEnvironment<TrackKitThrottle> {
 
@@ -65,16 +65,14 @@ public class DriverThrottleTrack {
 			}
 		}
 
-		@Override
-		public boolean worksWith(World world, BlockPos pos, EnumFacing side) {
-			TileEntity tileEntity = world.getTileEntity(pos);
-			return (tileEntity != null) && tileEntity instanceof IOutfittedTrackTile
-				&& ((IOutfittedTrackTile) tileEntity).getTrackKitInstance() instanceof TrackKitThrottle;
+		public OCDriver() {
+			super(TrackKitThrottle.class);
 		}
 
+		@Nullable
 		@Override
-		public ManagedEnvironment createEnvironment(World world, BlockPos pos, EnumFacing side) {
-			return new InternalManagedEnvironment((TrackKitThrottle) ((IOutfittedTrackTile) world.getTileEntity(pos)).getTrackKitInstance());
+		protected NamedManagedEnvironment<TrackKitThrottle> createEnvironment(World world, BlockPos pos, EnumFacing side, TrackKitThrottle tile) {
+			return new InternalManagedEnvironment(tile);
 		}
 	}
 

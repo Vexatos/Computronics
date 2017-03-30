@@ -1,12 +1,12 @@
 package pl.asie.computronics.integration.railcraft.signalling;
 
-import mods.railcraft.api.core.WorldCoordinate;
 import mods.railcraft.api.signals.SignalAspect;
 import mods.railcraft.api.signals.SignalController;
 import mods.railcraft.api.signals.SignalReceiver;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -26,8 +26,8 @@ import java.util.Set;
  */
 public class MassiveSignalReceiver extends SignalReceiver {
 
-	private final Map<WorldCoordinate, SignalAspect> aspects = new HashMap<WorldCoordinate, SignalAspect>();
-	private final SimpleInvertibleDualMap<String, WorldCoordinate> signalNames = SimpleInvertibleDualMap.create();
+	private final Map<BlockPos, SignalAspect> aspects = new HashMap<BlockPos, SignalAspect>();
+	private final SimpleInvertibleDualMap<String, BlockPos> signalNames = SimpleInvertibleDualMap.create();
 	private SignalAspect visualAspect = SignalAspect.BLINK_RED;
 	private SignalAspect mostRestrictive;
 
@@ -35,7 +35,7 @@ public class MassiveSignalReceiver extends SignalReceiver {
 		super(locTag, tile, 32);
 	}
 
-	public SignalAspect getAspectFor(WorldCoordinate coord) {
+	public SignalAspect getAspectFor(BlockPos coord) {
 		return this.aspects.get(coord);
 	}
 
@@ -47,17 +47,17 @@ public class MassiveSignalReceiver extends SignalReceiver {
 		this.visualAspect = aspect;
 	}
 
-	public String getNameFor(WorldCoordinate coord) {
+	public String getNameFor(BlockPos coord) {
 		return this.signalNames.inverse().get(coord);
 	}
 
-	public Collection<WorldCoordinate> getCoordsFor(String name) {
+	public Collection<BlockPos> getCoordsFor(String name) {
 		return this.signalNames.get(name);
 	}
 
 	public SignalAspect getMostRestrictiveAspectFor(String name) {
 		SignalAspect mostRestrictive = null;
-		for(WorldCoordinate coord : this.signalNames.get(name)) {
+		for(BlockPos coord : this.signalNames.get(name)) {
 			if(mostRestrictive == null) {
 				mostRestrictive = this.aspects.get(coord);
 			} else {
@@ -99,7 +99,7 @@ public class MassiveSignalReceiver extends SignalReceiver {
 
 	@Override
 	public void onControllerAspectChange(SignalController con, @Nonnull SignalAspect aspect) {
-		WorldCoordinate coords = con.getCoords();
+		BlockPos coords = con.getCoords();
 		SignalAspect oldAspect = this.aspects.get(coords);
 		if(oldAspect != aspect) {
 			this.aspects.put(coords, aspect);
@@ -113,7 +113,7 @@ public class MassiveSignalReceiver extends SignalReceiver {
 	}
 
 	@Override
-	public void onPairNameChange(WorldCoordinate coords, String name) {
+	public void onPairNameChange(BlockPos coords, String name) {
 		super.onPairNameChange(coords, name);
 		if(name != null) {
 			this.signalNames.put(name, coords);
@@ -125,7 +125,7 @@ public class MassiveSignalReceiver extends SignalReceiver {
 	@Override
 	public void cleanPairings() {
 		super.cleanPairings();
-		Collection<WorldCoordinate> pairs = getPairs();
+		Collection<BlockPos> pairs = getPairs();
 		if(this.aspects.keySet().retainAll(pairs)) {
 			this.mostRestrictive = null;
 		}
@@ -142,9 +142,9 @@ public class MassiveSignalReceiver extends SignalReceiver {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void removePair(int x, int y, int z) {
-		super.removePair(x, y, z);
-		Collection<WorldCoordinate> pairs = getPairs();
+	public void removePair(BlockPos pos) {
+		super.removePair(pos);
+		Collection<BlockPos> pairs = getPairs();
 		if(this.aspects.keySet().retainAll(pairs)) {
 			this.mostRestrictive = null;
 		}
@@ -156,10 +156,10 @@ public class MassiveSignalReceiver extends SignalReceiver {
 		super.saveNBT(data);
 		NBTTagList list = new NBTTagList();
 
-		for(Map.Entry<WorldCoordinate, SignalAspect> entry : this.aspects.entrySet()) {
+		for(Map.Entry<BlockPos, SignalAspect> entry : this.aspects.entrySet()) {
 			NBTTagCompound tag = new NBTTagCompound();
-			WorldCoordinate key = entry.getKey();
-			tag.setIntArray("coords", new int[] { key.getDim(), key.getX(), key.getY(), key.getZ() });
+			BlockPos key = entry.getKey();
+			tag.setIntArray("coords", new int[] { key.getX(), key.getY(), key.getZ() });
 			tag.setByte("aspect", (byte) entry.getValue().ordinal());
 			String s = signalNames.inverse().get(key);
 			if(s != null) {
@@ -178,7 +178,7 @@ public class MassiveSignalReceiver extends SignalReceiver {
 		for(byte entry = 0; entry < list.tagCount(); ++entry) {
 			NBTTagCompound tag = list.getCompoundTagAt(entry);
 			int[] c = tag.getIntArray("coords");
-			WorldCoordinate coord = new WorldCoordinate(c[0], c[1], c[2], c[3]);
+			BlockPos coord = new BlockPos(c[0], c[1], c[2]);
 			this.aspects.put(coord, SignalAspect.fromOrdinal(tag.getByte("aspect")));
 			if(tag.hasKey("name")) {
 				signalNames.put(tag.getString("name"), coord);

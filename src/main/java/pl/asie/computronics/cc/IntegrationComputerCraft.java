@@ -27,6 +27,7 @@ import pl.asie.computronics.integration.railcraft.driver.DriverRoutingSwitch;
 import pl.asie.computronics.integration.railcraft.driver.DriverSteamTurbine;
 import pl.asie.computronics.integration.railcraft.driver.track.DriverLauncherTrack;
 import pl.asie.computronics.integration.railcraft.driver.track.DriverLocomotiveTrack;
+import pl.asie.computronics.integration.railcraft.driver.track.DriverMessengerTrack;
 import pl.asie.computronics.integration.railcraft.driver.track.DriverPoweredTrack;
 import pl.asie.computronics.integration.railcraft.driver.track.DriverPrimingTrack;
 import pl.asie.computronics.integration.railcraft.driver.track.DriverRoutingTrack;
@@ -91,10 +92,11 @@ public class IntegrationComputerCraft {
 				registerMultiPeripheralProvider(new DriverRoutingDetector.CCDriver());
 				registerMultiPeripheralProvider(new DriverRoutingSwitch.CCDriver());
 				registerMultiPeripheralProvider(new DriverElectricGrid.CCDriver());
-				registerMultiPeripheralProvider(new DriverThrottleTrack.CCDriver());
 				registerMultiPeripheralProvider(new DriverLocomotiveTrack.CCDriver());
 				registerMultiPeripheralProvider(new DriverLauncherTrack.CCDriver());
+				registerMultiPeripheralProvider(new DriverMessengerTrack.CCDriver());
 				registerMultiPeripheralProvider(new DriverPrimingTrack.CCDriver());
+				registerMultiPeripheralProvider(new DriverThrottleTrack.CCDriver());
 				registerMultiPeripheralProvider(new DriverBoilerFirebox.CCDriver());
 				registerMultiPeripheralProvider(new DriverSteamTurbine.CCDriver());
 			}

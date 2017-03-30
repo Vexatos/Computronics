@@ -28,6 +28,9 @@ def asielib_version = "${config.minecraft.version}-${config.asielib.version}"
 group = "pl.asie.computronics" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "Computronics"
 
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
 if (JavaVersion.current().isJava8Compatible()) {
     allprojects {
         tasks.withType(Javadoc) {

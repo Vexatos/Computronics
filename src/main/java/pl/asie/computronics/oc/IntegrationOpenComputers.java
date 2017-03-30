@@ -38,6 +38,7 @@ import pl.asie.computronics.integration.railcraft.driver.DriverRoutingDetector;
 import pl.asie.computronics.integration.railcraft.driver.DriverRoutingSwitch;
 import pl.asie.computronics.integration.railcraft.driver.track.DriverLauncherTrack;
 import pl.asie.computronics.integration.railcraft.driver.track.DriverLocomotiveTrack;
+import pl.asie.computronics.integration.railcraft.driver.track.DriverMessengerTrack;
 import pl.asie.computronics.integration.railcraft.driver.track.DriverPoweredTrack;
 import pl.asie.computronics.integration.railcraft.driver.track.DriverPrimingTrack;
 import pl.asie.computronics.integration.railcraft.driver.track.DriverRoutingTrack;
@@ -236,10 +237,11 @@ public class IntegrationOpenComputers {
 				Driver.add(new DriverRoutingDetector.OCDriver());
 				Driver.add(new DriverRoutingSwitch.OCDriver());
 				Driver.add(new DriverElectricGrid.OCDriver());
-				Driver.add(new DriverThrottleTrack.OCDriver());
 				Driver.add(new DriverLocomotiveTrack.OCDriver());
 				Driver.add(new DriverLauncherTrack.OCDriver());
+				Driver.add(new DriverMessengerTrack.OCDriver());
 				Driver.add(new DriverPrimingTrack.OCDriver());
+				Driver.add(new DriverThrottleTrack.OCDriver());
 			}
 		}/*
 		if(Mods.hasVersion(Mods.GregTech, Mods.Versions.GregTech5)) {

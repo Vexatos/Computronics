@@ -1,18 +1,16 @@
 package pl.asie.computronics.integration.railcraft.block;
 
 import li.cil.oc.api.network.Environment;
-import mods.railcraft.common.blocks.wayobjects.BlockWayObject;
-import net.minecraft.block.Block;
+import mods.railcraft.common.blocks.machine.RailcraftBlockMetadata;
+import mods.railcraft.common.blocks.machine.wayobjects.boxes.BlockMachineSignalBox;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
-import pl.asie.computronics.Computronics;
-import pl.asie.computronics.integration.railcraft.tile.TileDigitalReceiverBox;
+import pl.asie.computronics.integration.railcraft.SignalTypes;
 import pl.asie.computronics.oc.block.IComputronicsEnvironmentBlock;
 import pl.asie.computronics.oc.manual.IBlockWithPrefix;
 import pl.asie.computronics.reference.Mods;
@@ -23,31 +21,12 @@ import pl.asie.computronics.reference.Mods;
 @Optional.InterfaceList({
 	@Optional.Interface(iface = "pl.asie.computronics.oc.block.IComputronicsEnvironmentBlock", modid = Mods.OpenComputers)
 })
-public abstract class BlockDigitalBoxBase extends BlockWayObject implements IComputronicsEnvironmentBlock, IBlockWithPrefix {
+@RailcraftBlockMetadata(variant = SignalTypes.class)
+public class BlockDigitalBoxBase extends BlockMachineSignalBox<SignalTypes> implements IComputronicsEnvironmentBlock, IBlockWithPrefix {
 
 	public BlockDigitalBoxBase(String documentationName) {
 		super();
 		this.documentationName = documentationName;
-	}
-
-	@Override
-	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block neighborBlock) {
-		try {
-			TileEntity tile = world.getTileEntity(pos);
-			if((tile instanceof TileDigitalReceiverBox)) {
-				TileDigitalReceiverBox structure = (TileDigitalReceiverBox) tile;
-				if((structure.getSignalType().needsSupport())
-					&& (!world.isSideSolid(pos.down(), EnumFacing.UP))
-					&& !(Mods.isLoaded(Mods.OpenComputers) && world.getTileEntity(pos.down()) instanceof Environment)) {
-					world.destroyBlock(pos, true);
-				} else {
-					structure.onNeighborBlockChange(state, neighborBlock);
-				}
-			}
-		} catch(StackOverflowError error) {
-			Computronics.log.error("Error in BlockDigitalReceiverBox.onNeighborBlockChange()");
-			throw error;
-		}
 	}
 
 	@Override
@@ -88,4 +67,10 @@ public abstract class BlockDigitalBoxBase extends BlockWayObject implements ICom
 		return this.prefix;
 	}
 
+	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
+	@SuppressWarnings("unchecked")
+	public Class<? extends Environment> getTileEntityClass(int meta) {
+		return (Class<? extends Environment>) this.getMachineType(getStateFromMeta(meta)).getTileClass();
+	}
 }

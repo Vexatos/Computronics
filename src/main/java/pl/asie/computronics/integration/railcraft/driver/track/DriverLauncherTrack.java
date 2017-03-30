@@ -3,11 +3,9 @@ package pl.asie.computronics.integration.railcraft.driver.track;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
-import li.cil.oc.api.driver.SidedBlock;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
-import li.cil.oc.api.network.ManagedEnvironment;
 import mods.railcraft.api.tracks.IOutfittedTrackTile;
 import mods.railcraft.common.blocks.tracks.outfitted.kits.TrackKitLauncher;
 import mods.railcraft.common.core.RailcraftConfig;
@@ -19,6 +17,8 @@ import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
 import pl.asie.computronics.integration.CCMultiPeripheral;
 import pl.asie.computronics.integration.NamedManagedEnvironment;
 import pl.asie.computronics.reference.Names;
+
+import javax.annotation.Nullable;
 
 /**
  * @author Vexatos
@@ -39,7 +39,7 @@ public class DriverLauncherTrack {
 		return new Object[] { false, "not a valid force value, needs to be between 5 and " + RailcraftConfig.getLaunchRailMaxForce() };
 	}
 
-	public static class OCDriver implements SidedBlock {
+	public static class OCDriver extends DriverTrack<TrackKitLauncher> {
 
 		public static class InternalManagedEnvironment extends NamedManagedEnvironment<TrackKitLauncher> {
 
@@ -59,16 +59,14 @@ public class DriverLauncherTrack {
 			}
 		}
 
-		@Override
-		public boolean worksWith(World world, BlockPos pos, EnumFacing side) {
-			TileEntity tileEntity = world.getTileEntity(pos);
-			return (tileEntity != null) && tileEntity instanceof IOutfittedTrackTile
-				&& ((IOutfittedTrackTile) tileEntity).getTrackKitInstance() instanceof TrackKitLauncher;
+		public OCDriver() {
+			super(TrackKitLauncher.class);
 		}
 
+		@Nullable
 		@Override
-		public ManagedEnvironment createEnvironment(World world, BlockPos pos, EnumFacing side) {
-			return new InternalManagedEnvironment((TrackKitLauncher) ((IOutfittedTrackTile) world.getTileEntity(pos)).getTrackKitInstance());
+		protected NamedManagedEnvironment<TrackKitLauncher> createEnvironment(World world, BlockPos pos, EnumFacing side, TrackKitLauncher tile) {
+			return new InternalManagedEnvironment(tile);
 		}
 	}
 

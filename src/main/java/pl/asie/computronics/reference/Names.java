@@ -33,14 +33,15 @@ public class Names {
 		Railcraft_DigitalReceiverBox = "digital_receiver_box",
 		Railcraft_ChargeBlock = "charge_conductor",
 		Railcraft_LauncherTrack = "launcher_track",
-		Railcraft_ThrottleTrack = "throttle_track",
 		Railcraft_LocomotiveTrack = "locomotive_track",
+		Railcraft_MessengerTrack = "messenger_track",
 		Railcraft_PoweredTrack = "powered_track",
 		Railcraft_PrimingTrack = "priming_track",
 		Railcraft_RoutingDetector = "routing_detector",
 		Railcraft_RoutingSwitch = "routing_switch",
 		Railcraft_RoutingTrack = "routing_track",
 		Railcraft_SteamTurbine = "steam_turbine",
+		Railcraft_ThrottleTrack = "throttle_track",
 		RedLogic_Lamp = "lamp",
 		StorageDrawers_DrawerGroup = "drawer";
 }
