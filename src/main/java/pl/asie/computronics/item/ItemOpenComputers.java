@@ -1,7 +1,7 @@
 package pl.asie.computronics.item;
 
+import li.cil.oc.api.driver.DriverItem;
 import li.cil.oc.api.driver.EnvironmentProvider;
-import li.cil.oc.api.driver.Item;
 import li.cil.oc.api.driver.item.HostAware;
 import li.cil.oc.api.driver.item.Slot;
 import li.cil.oc.api.driver.item.UpgradeRenderer;
@@ -50,12 +50,12 @@ import java.util.List;
 import java.util.Set;
 
 @Optional.InterfaceList({
-	@Optional.Interface(iface = "li.cil.oc.api.driver.Item", modid = Mods.OpenComputers),
+	@Optional.Interface(iface = "li.cil.oc.api.driver.DriverItem", modid = Mods.OpenComputers),
 	@Optional.Interface(iface = "li.cil.oc.api.driver.EnvironmentProvider", modid = Mods.OpenComputers),
 	@Optional.Interface(iface = "li.cil.oc.api.driver.item.HostAware", modid = Mods.OpenComputers),
 	@Optional.Interface(iface = "li.cil.oc.api.driver.item.UpgradeRenderer", modid = Mods.OpenComputers)
 })
-public class ItemOpenComputers extends ItemMultipleComputronics implements Item, EnvironmentProvider, HostAware, UpgradeRenderer, IItemWithDocumentation, IItemWithColor {
+public class ItemOpenComputers extends ItemMultipleComputronics implements DriverItem, EnvironmentProvider, HostAware, UpgradeRenderer, IItemWithDocumentation, IItemWithColor {
 
 	public ItemOpenComputers() {
 		super(Mods.Computronics, new String[] {

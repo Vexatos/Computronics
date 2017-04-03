@@ -4,8 +4,8 @@ import li.cil.tis3d.api.machine.Casing;
 import li.cil.tis3d.api.machine.Face;
 import li.cil.tis3d.api.module.traits.BlockChangeAware;
 import li.cil.tis3d.api.prefab.module.AbstractModule;
-import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.BlockPos;
 
 /**
  * @author Vexatos
@@ -32,7 +32,7 @@ public class ComputronicsModule extends AbstractModule implements BlockChangeAwa
 	}
 
 	@Override
-	public void onNeighborBlockChange(Block neighborBlock) {
+	public void onNeighborBlockChange(BlockPos blockPos, boolean b) {
 		if(isVisible()) {
 			sendDataToClient();
 		}

@@ -1,6 +1,6 @@
 package pl.asie.computronics.integration;
 
-import li.cil.oc.api.driver.SidedBlock;
+import li.cil.oc.api.driver.DriverBlock;
 import li.cil.oc.api.network.ManagedEnvironment;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -12,7 +12,7 @@ import javax.annotation.Nullable;
 /**
  * @author Vexatos
  */
-public abstract class DriverSpecificTileEntity<T> implements SidedBlock {
+public abstract class DriverSpecificTileEntity<T> implements DriverBlock {
 
 	protected final Class<T> tileClass;
 

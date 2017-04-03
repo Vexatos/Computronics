@@ -32,7 +32,7 @@ public class CommonProxy {
 	public void handlePacket(MessageHandlerBase client, MessageHandlerBase server, Packet packet, INetHandler handler) {
 		try {
 			if(server != null) {
-				server.onMessage(packet, handler, ((NetHandlerPlayServer) handler).playerEntity);
+				server.onMessage(packet, handler, ((NetHandlerPlayServer) handler).player);
 			}
 		} catch(Exception e) {
 			AsieLibMod.log.warn("Caught a network exception! Is someone sending malformed packets?");

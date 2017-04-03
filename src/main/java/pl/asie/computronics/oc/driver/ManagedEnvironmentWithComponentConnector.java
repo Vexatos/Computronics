@@ -3,7 +3,7 @@ package pl.asie.computronics.oc.driver;
 import li.cil.oc.api.driver.DeviceInfo;
 import li.cil.oc.api.network.ComponentConnector;
 import li.cil.oc.api.network.Node;
-import li.cil.oc.api.prefab.ManagedEnvironment;
+import li.cil.oc.api.prefab.AbstractManagedEnvironment;
 import pl.asie.computronics.util.OCUtils;
 
 import java.util.Map;
@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * @author Vexatos
  */
-public abstract class ManagedEnvironmentWithComponentConnector extends ManagedEnvironment implements DeviceInfo {
+public abstract class ManagedEnvironmentWithComponentConnector extends AbstractManagedEnvironment implements DeviceInfo {
 
 	protected ComponentConnector node;
 

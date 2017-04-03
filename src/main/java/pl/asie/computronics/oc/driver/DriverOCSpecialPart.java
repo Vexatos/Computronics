@@ -1,6 +1,6 @@
 package pl.asie.computronics.oc.driver;
 
-import li.cil.oc.api.driver.Item;
+import li.cil.oc.api.driver.DriverItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import pl.asie.computronics.oc.IntegrationOpenComputers;
@@ -9,7 +9,7 @@ import pl.asie.computronics.util.OCUtils;
 /**
  * @author Vexatos
  */
-public abstract class DriverOCSpecialPart implements Item {
+public abstract class DriverOCSpecialPart implements DriverItem {
 
 	private final int metadata;
 

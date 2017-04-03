@@ -41,7 +41,7 @@ public class Mods {
 			CoFHTileEntities = "CoFHAPI|tileentity",
 			EiraIRC = "EiraIRC|API",
 			EnderIOTools = "EnderIOAPI|Tools",
-			OpenComputersInternal = "OpenComputersAPI|Internal";
+			OpenComputersInternal = "openComputersapi|internal";
 
 		public static boolean hasAPI(String name) {
 			return ModAPIManager.INSTANCE.hasAPI(name);

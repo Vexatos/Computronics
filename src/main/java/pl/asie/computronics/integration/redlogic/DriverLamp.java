@@ -4,7 +4,7 @@ import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import li.cil.oc.api.Network;
-import li.cil.oc.api.driver.SidedBlock;
+import li.cil.oc.api.driver.DriverBlock;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
@@ -21,9 +21,9 @@ import pl.asie.computronics.reference.Names;
 
 public class DriverLamp {
 
-	public static class OCDriver implements SidedBlock {
+	public static class OCDriver implements DriverBlock {
 
-		public static class InternalManagedEnvironment extends li.cil.oc.api.prefab.ManagedEnvironment {
+		public static class InternalManagedEnvironment extends li.cil.oc.api.prefab.AbstractManagedEnvironment {
 
 			private ILampBlock block;
 			private IBlockAccess w;

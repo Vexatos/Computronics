@@ -3,7 +3,7 @@ package pl.asie.computronics.oc.driver;
 import li.cil.oc.api.driver.DeviceInfo;
 import li.cil.oc.api.network.Connector;
 import li.cil.oc.api.network.EnvironmentHost;
-import li.cil.oc.api.prefab.ManagedEnvironment;
+import li.cil.oc.api.prefab.AbstractManagedEnvironment;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -24,7 +24,7 @@ import java.util.Map;
 /**
  * @author Vexatos
  */
-public abstract class DriverCardSoundBase extends ManagedEnvironment implements DeviceInfo {
+public abstract class DriverCardSoundBase extends AbstractManagedEnvironment implements DeviceInfo {
 
 	protected final EnvironmentHost host;
 	protected final Long[] expirationList;

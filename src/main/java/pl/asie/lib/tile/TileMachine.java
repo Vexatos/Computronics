@@ -1,9 +1,5 @@
 package pl.asie.lib.tile;
 
-import ic2.api.energy.event.EnergyTileLoadEvent;
-import ic2.api.energy.event.EnergyTileUnloadEvent;
-import ic2.api.energy.tile.IEnergyEmitter;
-import ic2.api.energy.tile.IEnergyTile;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
@@ -12,11 +8,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.Optional;
 import pl.asie.lib.api.tile.IBattery;
-import pl.asie.lib.reference.Mods;
-import pl.asie.lib.util.EnergyConverter;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -62,12 +54,12 @@ public class TileMachine extends TileEntityBase implements
 	}
 
 	public void update() {
-		if(!didInitIC2) {
+		/*if(!didInitIC2) {
 			if(Mods.isLoaded(Mods.IC2) && this.battery != null) {
 				this.initIC();
 			}
 			didInitIC2 = true; // Just so this check won't be done every tick.
-		}/*
+		}*//*
 		if(!didInitIC2C) {
 			if(Mods.isLoaded(Mods.IC2Classic) && this.battery != null) {
 				this.initICClassic();
@@ -90,9 +82,9 @@ public class TileMachine extends TileEntityBase implements
 	@Override
 	public void onChunkUnload() {
 		super.onChunkUnload();
-		if(Mods.isLoaded(Mods.IC2) && this.battery != null) {
+		/*if(Mods.isLoaded(Mods.IC2) && this.battery != null) {
 			this.deinitIC();
-		}/*
+		}*//*
 		if(Mods.isLoaded(Mods.IC2Classic) && this.battery != null) {
 			this.deinitICClassic();
 		}*/
@@ -394,7 +386,7 @@ public class TileMachine extends TileEntityBase implements
 
 	private boolean didInitIC2 = false;
 
-	@Optional.Method(modid = Mods.IC2)
+	/*@Optional.Method(modid = Mods.IC2)
 	public void initIC() {
 		if(!didInitIC2 && (world == null || !world.isRemote)) {
 			MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent((IEnergyTile) this));
@@ -443,7 +435,7 @@ public class TileMachine extends TileEntityBase implements
 	@Optional.Method(modid = Mods.IC2)
 	public int getSinkTier() {
 		return Integer.MAX_VALUE;
-	}
+	}*/
 
 	// Energy (EU - IC2 Classic)
 
@@ -523,6 +515,11 @@ public class TileMachine extends TileEntityBase implements
 					this.items[j] = new ItemStack(nbttagcompound1);
 				}
 			}
+			for(int i = 0; i < items.length; i++) {
+				if(items[i] == null) {
+					items[i] = ItemStack.EMPTY;
+				}
+			}
 		}
 	}
 
@@ -536,7 +533,7 @@ public class TileMachine extends TileEntityBase implements
 			NBTTagList itemList = new NBTTagList();
 			for(int i = 0; i < items.length; i++) {
 				ItemStack stack = items[i];
-				if(!stack.isEmpty()) {
+				if(stack != null && !stack.isEmpty()) {
 					NBTTagCompound tag = new NBTTagCompound();
 					tag.setByte("Slot", (byte) i);
 					stack.writeToNBT(tag);

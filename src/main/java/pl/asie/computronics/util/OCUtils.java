@@ -3,7 +3,6 @@ package pl.asie.computronics.util;
 import li.cil.oc.api.driver.DeviceInfo.DeviceAttribute;
 import li.cil.oc.api.internal.Colored;
 import li.cil.oc.client.KeyBindings;
-import li.cil.oc.util.ItemCosts;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
@@ -99,7 +98,7 @@ public class OCUtils {
 	@SuppressWarnings("unchecked")
 	public static void addTooltip(ItemStack stack, List tooltip) {
 		{
-			FontRenderer font = Minecraft.getMinecraft().fontRendererObj;
+			FontRenderer font = Minecraft.getMinecraft().fontRenderer;
 			final String key = stack.getUnlocalizedName() + ".tip";
 			String tip = StringUtil.localize(key);
 			if(!tip.equals(key)) {
@@ -109,7 +108,7 @@ public class OCUtils {
 				} else {
 					boolean shouldShorten = (font.getStringWidth(tip) > maxWidth) && !KeyBindings.showExtendedTooltips();
 					if(shouldShorten) {
-						tooltip.add(StringUtil.localizeAndFormat("oc:tooltip.TooLong",
+						tooltip.add(StringUtil.localizeAndFormat("oc:tooltip.toolong",
 							KeyBindings.getKeyBindingName(KeyBindings.extendedTooltip())));
 					} else {
 						for(String line : lines) {
@@ -118,15 +117,6 @@ public class OCUtils {
 						}
 					}
 				}
-			}
-		}
-		if(ItemCosts.hasCosts(stack)) {
-			if(KeyBindings.showMaterialCosts()) {
-				ItemCosts.addTooltip(stack, tooltip);
-			} else {
-				tooltip.add(StringUtil.localizeAndFormat(
-					"oc:tooltip.MaterialCosts",
-					KeyBindings.getKeyBindingName(KeyBindings.materialCosts())));
 			}
 		}
 		if(stack.hasTagCompound() && stack.getTagCompound().hasKey("oc:data")) {

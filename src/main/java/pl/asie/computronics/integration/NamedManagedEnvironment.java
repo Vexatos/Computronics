@@ -3,9 +3,9 @@ package pl.asie.computronics.integration;
 import li.cil.oc.api.Network;
 import li.cil.oc.api.driver.NamedBlock;
 import li.cil.oc.api.network.Visibility;
-import li.cil.oc.api.prefab.ManagedEnvironment;
+import li.cil.oc.api.prefab.AbstractManagedEnvironment;
 
-public abstract class NamedManagedEnvironment<T> extends ManagedEnvironment implements NamedBlock {
+public abstract class NamedManagedEnvironment<T> extends AbstractManagedEnvironment implements NamedBlock {
 
 	protected final T tile;
 	protected final String name;

@@ -8,7 +8,7 @@ import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.Connector;
 import li.cil.oc.api.network.EnvironmentHost;
 import li.cil.oc.api.network.Visibility;
-import li.cil.oc.api.prefab.ManagedEnvironment;
+import li.cil.oc.api.prefab.AbstractManagedEnvironment;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class RobotUpgradeRadar extends ManagedEnvironment implements DeviceInfo {
+public class RobotUpgradeRadar extends AbstractManagedEnvironment implements DeviceInfo {
 
 	private final EnvironmentHost container;
 	private static final int CALL_LIMIT = 15;

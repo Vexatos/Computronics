@@ -9,14 +9,14 @@ import pl.asie.computronics.reference.Mods;
  */
 public class IntegrationCharset {
 
-	public static IntegrationCharsetWires wires;
+	//public static IntegrationCharsetWires wires;
 	public static IntegrationCharsetAudio audio;
 
-	public void preInit() {
+	/*public void preInit() {
 		if(Mods.API.hasAPI(Mods.API.CharsetWires)) {
 			wires = new IntegrationCharsetWires();
 		}
-	}
+	}*/
 
 	public void postInit() {
 		if(Mods.API.hasAPI(Mods.API.CharsetAudio)) {

@@ -162,6 +162,6 @@ public class GuiTapePlayer extends GuiBase {
 		if(label.length() > 24) {
 			label = label.substring(0, 22) + "...";
 		}
-		this.drawCenteredString(this.fontRendererObj, label, this.xCenter + 88, this.yCenter + 15, labelColor);
+		this.drawCenteredString(this.fontRenderer, label, this.xCenter + 88, this.yCenter + 15, labelColor);
 	}
 }

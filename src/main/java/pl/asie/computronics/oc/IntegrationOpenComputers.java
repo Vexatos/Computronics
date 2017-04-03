@@ -3,8 +3,8 @@ package pl.asie.computronics.oc;
 import li.cil.oc.api.Driver;
 import li.cil.oc.api.IMC;
 import li.cil.oc.api.Network;
+import li.cil.oc.api.driver.DriverItem;
 import li.cil.oc.api.driver.EnvironmentProvider;
-import li.cil.oc.api.driver.Item;
 import li.cil.oc.api.fs.FileSystem;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -87,7 +87,7 @@ public class IntegrationOpenComputers {
 			itemOCParts = new ItemOpenComputers();
 			Computronics.instance.registerItem(itemOCParts, "oc_parts");
 			itemOCParts.registerItemModels();
-			Driver.add((Item) itemOCParts);
+			Driver.add((DriverItem) itemOCParts);
 			Driver.add((EnvironmentProvider) itemOCParts);
 		}
 

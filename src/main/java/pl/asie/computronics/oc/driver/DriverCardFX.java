@@ -8,7 +8,7 @@ import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.Connector;
 import li.cil.oc.api.network.EnvironmentHost;
 import li.cil.oc.api.network.Visibility;
-import li.cil.oc.api.prefab.ManagedEnvironment;
+import li.cil.oc.api.prefab.AbstractManagedEnvironment;
 import net.minecraft.util.EnumParticleTypes;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.util.OCUtils;
@@ -17,7 +17,7 @@ import pl.asie.computronics.util.ParticleUtils;
 import java.util.Map;
 import java.util.Random;
 
-public class DriverCardFX extends ManagedEnvironment implements DeviceInfo {
+public class DriverCardFX extends AbstractManagedEnvironment implements DeviceInfo {
 
 	protected final EnvironmentHost container;
 

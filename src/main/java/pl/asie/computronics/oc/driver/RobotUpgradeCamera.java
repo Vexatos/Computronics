@@ -8,7 +8,7 @@ import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.EnvironmentHost;
 import li.cil.oc.api.network.Visibility;
-import li.cil.oc.api.prefab.ManagedEnvironment;
+import li.cil.oc.api.prefab.AbstractManagedEnvironment;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.MathHelper;
 import pl.asie.computronics.util.Camera;
@@ -16,7 +16,7 @@ import pl.asie.computronics.util.OCUtils;
 
 import java.util.Map;
 
-public class RobotUpgradeCamera extends ManagedEnvironment implements DeviceInfo {
+public class RobotUpgradeCamera extends AbstractManagedEnvironment implements DeviceInfo {
 
 	private final EnvironmentHost entity;
 

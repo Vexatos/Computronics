@@ -17,8 +17,8 @@ public class Mods {
 
 	//Computer mods
 	public static final String
-		OpenComputers = "OpenComputers",
-		ComputerCraft = "ComputerCraft",
+		OpenComputers = "opencomputers",
+		ComputerCraft = "computercraft",
 		TIS3D = "tis3d";
 
 	//Other mods
@@ -32,7 +32,7 @@ public class Mods {
 		CharsetLib = "CharsetLib",
 		EnderIO = "EnderIO",
 		Factorization = "factorization",
-		Flamingo = "Flamingo",
+		Flamingo = "flamingo",
 		Forestry = "forestry",
 		FSP = "Steamcraft",
 		GregTech = "gregtech",
@@ -44,7 +44,7 @@ public class Mods {
 		Railcraft = "railcraft",
 		StorageDrawers = "StorageDrawers",
 		TheOneProbe = "theoneprobe",
-		Waila = "Waila";
+		Waila = "waila";
 
 	//APIs
 	public static class API {

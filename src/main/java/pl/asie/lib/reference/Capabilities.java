@@ -33,8 +33,8 @@ public class Capabilities {
 	}
 
 	@SubscribeEvent
-	public void onAttachCapabilities(AttachCapabilitiesEvent.TileEntity e) {
-		final TileEntity tile = e.getTileEntity();
+	public void onAttachCapabilities(AttachCapabilitiesEvent<TileEntity> e) {
+		final TileEntity tile = e.getObject();
 		if(tile instanceof IColorable) {
 			e.addCapability(COLORABLE_KEY, new ICapabilityProvider() {
 				@Override

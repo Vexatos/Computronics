@@ -41,7 +41,7 @@ public class DriverMagicalMemory extends DriverOCSpecialPart implements Memory {
 		return 0;
 	}
 
-	private static class InternalManagedEnvironment extends li.cil.oc.api.prefab.ManagedEnvironment implements DeviceInfo {
+	private static class InternalManagedEnvironment extends li.cil.oc.api.prefab.AbstractManagedEnvironment implements DeviceInfo {
 
 		public InternalManagedEnvironment() {
 			this.setNode(Network.newNode(this, Visibility.Neighbors).create());

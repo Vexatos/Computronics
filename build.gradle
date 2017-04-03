@@ -85,24 +85,23 @@ repositories {
     }
 }
 
-/*configurations {
+configurations {
 	provided
 	provided2
 	embedded
 	compile.extendsFrom provided, provided2, embedded
-	all*.exclude group: "codechicken"
-}*/
+}
 
 dependencies {
-    provided "li.cil.oc:OpenComputers:${config.oc.version}"
-    provided "li.cil.tis3d:TIS-3D:${config.tis3d.version}"
+    deobfCompile "li.cil.oc:OpenComputers:${config.oc.version}"
+    deobfCompile "li.cil.tis3d:TIS-3D:${config.tis3d.version}"
     //deobfCompile "net.industrial-craft:industrialcraft-2:${config.ic2.version}:dev"
 	//provided "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech.version}:dev"
 	//provided2 "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech6.version}:dev"
-    provided ("com.headlamp-games:Railcraft:${config.railcraft.version}") {
+    /*provided ("com.headlamp-games:Railcraft:${config.railcraft.version}") {
         exclude module: "forestry_1.10.2"
         exclude module: "industrialcraft-2"
-    }
+    }*/
     //provided "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech.version}:dev"
     deobfCompile "mezz.jei:jei_1.11:${config.jei.version}"
     provided "mcp.mobius.waila:Waila:${config.waila.version}"
@@ -197,11 +196,11 @@ sourceSets {
 	exclude 'cofh/**'
 }*/
 
-//apply plugin: 'idea'
+apply plugin: 'idea'
 idea {
     module {
-        //scopes.PROVIDED.plus += [configurations.provided]
-		//scopes.PROVIDED.plus += [configurations.provided2]
+        scopes.PROVIDED.plus += [configurations.provided]
+		scopes.PROVIDED.plus += [configurations.provided2]
         outputDir = file('build/classes/main')
     }
 }

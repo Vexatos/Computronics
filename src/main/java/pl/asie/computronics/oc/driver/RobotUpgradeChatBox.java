@@ -8,7 +8,7 @@ import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.EnvironmentHost;
 import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.Visibility;
-import li.cil.oc.api.prefab.ManagedEnvironment;
+import li.cil.oc.api.prefab.AbstractManagedEnvironment;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.api.chat.ChatAPI;
@@ -20,7 +20,7 @@ import pl.asie.computronics.util.OCUtils;
 
 import java.util.Map;
 
-public class RobotUpgradeChatBox extends ManagedEnvironment implements DeviceInfo, IChatListener {
+public class RobotUpgradeChatBox extends AbstractManagedEnvironment implements DeviceInfo, IChatListener {
 
 	private final EnvironmentHost container;
 	private int distance;

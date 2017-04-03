@@ -9,7 +9,7 @@ import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.EnvironmentHost;
 import li.cil.oc.api.network.Message;
 import li.cil.oc.api.network.Visibility;
-import li.cil.oc.api.prefab.ManagedEnvironment;
+import li.cil.oc.api.prefab.AbstractManagedEnvironment;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
@@ -70,7 +70,7 @@ import static pl.asie.computronics.reference.Capabilities.AUDIO_SOURCE_CAPABILIT
 /**
  * @author Vexatos, gamax92
  */
-public class DriverCardSound extends ManagedEnvironment implements DeviceInfo, IAudioSource, ICapabilityProvider {
+public class DriverCardSound extends AbstractManagedEnvironment implements DeviceInfo, IAudioSource, ICapabilityProvider {
 
 	protected final EnvironmentHost host;
 
