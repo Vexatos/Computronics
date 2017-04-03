@@ -8,7 +8,7 @@ public class IntegrationCharsetWires {
 	//public static CCBundledRedstoneIntegration bundledRedstoneCC;
 	public static ComputronicsBundledRedstoneIntegration bundledRedstone;
 
-	public void preInit() {
+	static {
 		bundledRedstone = new ComputronicsBundledRedstoneIntegration();
 
 		/*if(Mods.isLoaded(Mods.ComputerCraft)) { TODO ComputerCraft

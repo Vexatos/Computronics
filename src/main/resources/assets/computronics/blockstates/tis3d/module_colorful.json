@@ -16,7 +16,7 @@
             {
                 "model": "tis3d:module",
                 "textures": {
-                    "all": "tis3d:blocks/casingModule"
+                    "all": "tis3d:blocks/casing_module"
                 },
                 "transform": {
                     "translation": [0.5, 0, 0],
@@ -26,7 +26,7 @@
         ],
         "overlay": [
             {
-                "model": "tis3d:moduleOverlay",
+                "model": "tis3d:module_overlay",
                 "textures": {
                     "overlay": "computronics:items/module_colorful"
                 },

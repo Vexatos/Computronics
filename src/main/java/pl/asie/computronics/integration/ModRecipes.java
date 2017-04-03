@@ -100,21 +100,14 @@ public class ModRecipes {
 
 	@Optional.Method(modid = Mods.OpenComputers)
 	protected boolean registerOCRecipes() {
-		ItemInfo cpu = li.cil.oc.api.Items.get("cpu2");
-		ItemInfo chip = li.cil.oc.api.Items.get("chip2");
-		ItemInfo capacitor = li.cil.oc.api.Items.get("capacitor");
-		if(cpu != null && chip != null && capacitor != null) {
-			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.cipher_advanced, 1, 0),
-				"gdg", "mcm", "gbg",
-				'g', "ingotGold",
-				'd', Computronics.cipher != null ? cpu.createItemStack(1) : "gemDiamond",
-				'm', chip.createItemStack(1),
-				'c', Computronics.cipher != null ? Computronics.cipher : cpu.createItemStack(1),
-				'b', capacitor.block());
-			return true;
-		}
-		Computronics.log.warn("An error occured during registering OpenComputers-style recipes, falling back to default ones");
-		return false;
+		RecipeUtils.addShapedRecipe(new ItemStack(Computronics.cipher_advanced, 1, 0),
+			"gdg", "mcm", "gbg",
+			'g', "ingotGold",
+			'd', Computronics.cipher != null ? "oc:cpu2" : "gemDiamond",
+			'm', "oc:circuitChip2",
+			'c', Computronics.cipher != null ? Computronics.cipher : "oc:cpu2",
+			'b', "oc:capacitor");
+		return true;
 	}
 
 	/*@Optional.Method(modid = Mods.Railcraft) TODO Railcraft
