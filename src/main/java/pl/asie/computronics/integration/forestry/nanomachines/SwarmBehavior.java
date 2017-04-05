@@ -52,8 +52,8 @@ public class SwarmBehavior extends AbstractBehavior {
 	}
 
 	public void spawnNewEntity(double x, double y, double z, int color, boolean tolerant, ItemStack queen) {
-		if(!player.worldObj.isRemote) {
-			entity = new EntitySwarm(player.worldObj, x, y, z, queen);
+		if(!player.world.isRemote) {
+			entity = new EntitySwarm(player.world, x, y, z, queen);
 			//if(entityTag != null) {
 			//	entity.readFromNBT(entityTag);
 			//}
@@ -63,20 +63,20 @@ public class SwarmBehavior extends AbstractBehavior {
 			entity.setTolerant(tolerant);
 			entity.setPlayer(player);
 			//entity.setPosition(x, y, z);
-			player.worldObj.spawnEntityInWorld(entity);
+			player.world.spawnEntity(entity);
 		}
 	}
 
 	@Override
 	public void update() {
-		if(!player.worldObj.isRemote && entity != null) {
+		if(!player.world.isRemote && entity != null) {
 			if(entity.isDead) {
 				entity = null;
 				return;
 			}
 			Controller controller = Nanomachines.getController(player);
 			int amplifier = controller.getInputCount(this);
-			if(player.worldObj.getTotalWorldTime() % 10 == 0) {
+			if(player.world.getTotalWorldTime() % 10 == 0) {
 				controller.changeBuffer(amplifier * 10 * -0.5);
 			}
 			entity.setAmplifier(amplifier);

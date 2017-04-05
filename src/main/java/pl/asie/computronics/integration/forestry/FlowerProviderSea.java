@@ -7,6 +7,7 @@ import forestry.api.genetics.IIndividual;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
@@ -73,7 +74,7 @@ public class FlowerProviderSea implements IFlowerProvider, IFlowerAcceptableRule
 	}
 
 	@Override
-	public ItemStack[] affectProducts(World world, IIndividual individual, BlockPos pos, ItemStack[] products) {
+	public NonNullList<ItemStack> affectProducts(World world, IIndividual individual, BlockPos pos, NonNullList<ItemStack> products) {
 		return products;
 	}
 }

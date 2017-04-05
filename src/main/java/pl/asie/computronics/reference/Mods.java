@@ -42,7 +42,7 @@ public class Mods {
 		RedLogic = "RedLogic",
 		ProjectRed = "ProjRed|Core",
 		Railcraft = "railcraft",
-		StorageDrawers = "StorageDrawers",
+		StorageDrawers = "storagedrawers",
 		TheOneProbe = "theoneprobe",
 		Waila = "waila";
 

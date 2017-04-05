@@ -10,6 +10,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Optional;
@@ -79,12 +80,12 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void preInit() {
 		super.preInit();
-		/*if(Mods.isLoaded(Mods.OpenComputers)) {
+		if(Mods.isLoaded(Mods.OpenComputers)) {
 			if(Computronics.forestry != null) {
 				Computronics.forestry.registerOCEntityRenderers();
 			}
 		}
-		if(Computronics.railcraft != null) {
+		/*if(Computronics.railcraft != null) {
 			Computronics.railcraft.registerRenderers();
 		}*/
 	}
@@ -166,11 +167,11 @@ public class ClientProxy extends CommonProxy {
 		minecraft.player.motionZ += (double) p.readFloat();
 	}
 
-	/*@Override
+	@Override
 	@Optional.Method(modid = Mods.Forestry)
 	public void spawnSwarmParticle(World world, double xPos, double yPos, double zPos, int color) {
 		Computronics.forestry.spawnSwarmParticle(world, xPos, yPos, zPos, color);
-	}*/
+	}
 
 	@Optional.Method(modid = Mods.OpenComputers)
 	private void registerOpenComputersRenderers() {

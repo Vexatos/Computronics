@@ -129,9 +129,9 @@ public class SwarmProvider extends AbstractProvider {
 	@SubscribeEvent
 	public void onPlayerInteract(PlayerInteractEvent e) {
 		EntityPlayer player = e.getEntityPlayer();
-		if(player != null && !player.worldObj.isRemote) {
+		if(player != null && !player.world.isRemote) {
 			ItemStack heldItem = e.getItemStack();
-			if(heldItem != null && heldItem.getItem() == IntegrationForestry.itemStickImpregnated) {
+			if(!heldItem.isEmpty() && heldItem.getItem() == IntegrationForestry.itemStickImpregnated) {
 				if(e instanceof PlayerInteractEvent.RightClickItem) {
 					findTarget(player, e.getHand(), heldItem, e);
 				} else if(e instanceof PlayerInteractEvent.RightClickBlock) {
@@ -147,7 +147,7 @@ public class SwarmProvider extends AbstractProvider {
 						findTarget(player, e.getHand(), heldItem, e);
 					}
 				}
-			} else if(heldItem == null && e.getHand() == EnumHand.MAIN_HAND && e instanceof PlayerInteractEvent.RightClickBlock) {
+			} else if(heldItem.isEmpty() && e.getHand() == EnumHand.MAIN_HAND && e instanceof PlayerInteractEvent.RightClickBlock) {
 				if(player.isSneaking() && e.getWorld().isBlockLoaded(e.getPos())) {
 					TileEntity te = e.getWorld().getTileEntity(e.getPos());
 					if(te instanceof IBeeHousing) {
@@ -162,15 +162,15 @@ public class SwarmProvider extends AbstractProvider {
 	@SubscribeEvent
 	public void onMinecartInteract(MinecartInteractEvent e) {
 		EntityPlayer player = e.getPlayer();
-		if(player != null && !player.worldObj.isRemote) {
+		if(player != null && !player.world.isRemote) {
 			ItemStack heldItem = e.getItem();
-			if(heldItem != null && heldItem.getItem() == IntegrationForestry.itemStickImpregnated) {
+			if(!heldItem.isEmpty() && heldItem.getItem() == IntegrationForestry.itemStickImpregnated) {
 				if(player.isSneaking() && e.getMinecart() instanceof IBeeHousing) {
 					makeSwarm(e.getMinecart().posX, e.getMinecart().posY + 0.25, e.getMinecart().posZ, player, e.getHand(), heldItem, (IBeeHousing) e.getMinecart(), e);
 				} else {
 					findTarget(player, e.getHand(), heldItem, e);
 				}
-			} else if(heldItem == null && e.getHand() == EnumHand.MAIN_HAND) {
+			} else if(heldItem.isEmpty() && e.getHand() == EnumHand.MAIN_HAND) {
 				if(player.isSneaking() && e.getMinecart() instanceof IBeeHousing) {
 					makeSwarm(e.getMinecart().posX, e.getMinecart().posY + 0.25, e.getMinecart().posZ, player, e.getHand(), null, (IBeeHousing) e.getMinecart(), e);
 				}
@@ -216,6 +216,7 @@ public class SwarmProvider extends AbstractProvider {
 
 	//private final HashMap<String, SwarmBehavior> behaviors = new HashMap<String, SwarmBehavior>();
 
+	@Nullable
 	private SwarmBehavior getSwarmBehavior(EntityPlayer player) {
 		Controller controller = Nanomachines.getController(player);
 		if(controller != null) {
@@ -225,6 +226,7 @@ public class SwarmProvider extends AbstractProvider {
 					return (SwarmBehavior) behavior;
 				}
 			}
+			controller.setInput(0, true);
 		}
 		return null;
 

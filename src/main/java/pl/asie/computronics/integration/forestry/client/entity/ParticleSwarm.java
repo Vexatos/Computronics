@@ -1,6 +1,6 @@
 package pl.asie.computronics.integration.forestry.client.entity;
 
-import forestry.apiculture.proxy.ProxyApicultureClient;
+import forestry.apiculture.PluginApiculture;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.entity.Entity;
@@ -13,7 +13,7 @@ public class ParticleSwarm extends Particle {
 
 	public ParticleSwarm(World world, double x, double y, double z, int color) {
 		super(world, x, y, z, 0D, 0D, 0D);
-		setParticleTexture(ProxyApicultureClient.beeSprite);
+		setParticleTexture(PluginApiculture.getBeeSprite());
 
 		//From EntityFX.java
 		this.motionX = (Math.random() * 2.0D - 1.0D) * 0.4D;
@@ -51,7 +51,7 @@ public class ParticleSwarm extends Particle {
 		this.prevPosX = this.posX;
 		this.prevPosY = this.posY;
 		this.prevPosZ = this.posZ;
-		this.moveEntity(this.motionX, this.motionY, this.motionZ);
+		this.move(this.motionX, this.motionY, this.motionZ);
 		this.motionX *= 1.08D;
 		this.motionY *= 1.08D;
 		this.motionZ *= 1.08D;
@@ -100,8 +100,8 @@ public class ParticleSwarm extends Particle {
 
 	// avoid calculating collisions
 	@Override
-	public void moveEntity(double x, double y, double z) {
-		this.setEntityBoundingBox(this.getEntityBoundingBox().offset(x, y, z));
+	public void move(double x, double y, double z) {
+		this.setBoundingBox(this.getBoundingBox().offset(x, y, z));
 		this.resetPositionToBB();
 	}
 

@@ -128,8 +128,8 @@ public class IntegrationForestry {
 			registerBees();
 		}*/
 
-		itemStickImpregnated = Item.REGISTRY.getObject(new ResourceLocation(Mods.Forestry, "oakStick"));
-		EntityRegistry.registerModEntity(EntitySwarm.class, "swarm", 9, Computronics.instance, 64, 1, true);
+		itemStickImpregnated = Item.REGISTRY.getObject(new ResourceLocation(Mods.Forestry, "oak_stick"));
+		EntityRegistry.registerModEntity(new ResourceLocation(Mods.Computronics, "swarm"), EntitySwarm.class, "swarm", 9, Computronics.instance, 64, 1, true);
 		SwarmProvider provider = new SwarmProvider();
 		MinecraftForge.EVENT_BUS.register(provider);
 		//FMLCommonHandler.instance().bus().register(provider);

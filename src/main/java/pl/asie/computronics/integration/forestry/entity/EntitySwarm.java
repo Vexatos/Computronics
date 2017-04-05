@@ -80,9 +80,9 @@ public class EntitySwarm extends EntityFlyingCreature implements IBeeHousing {
 	@Override
 	public void onEntityUpdate() {
 		super.onEntityUpdate();
-		if(!worldObj.isRemote) {
+		if(!world.isRemote) {
 			if(player != null) {
-				if(player.isDead || (player.worldObj.provider.getDimension() != this.worldObj.provider.getDimension()) || this.isInsideOfMaterial(Material.WATER)
+				if(player.isDead || (player.world.provider.getDimension() != this.world.provider.getDimension()) || this.isInsideOfMaterial(Material.WATER)
 					|| (getAttackTarget() == null
 					&& ((player.getDistanceSqToEntity(this) > 2500 && !canEntityBeSeen(player)) || player.isInsideOfMaterial(Material.WATER)))) {
 					this.setDead();
@@ -90,9 +90,9 @@ public class EntitySwarm extends EntityFlyingCreature implements IBeeHousing {
 			} else if(!aggressive || getAttackTarget() == null) {
 				this.setDead();
 			}
-			if(!isTolerant() && worldObj.getTotalWorldTime() % 40 == hashCode() % 40) {
-				Biome biome = worldObj.getBiome(getPosition());
-				if(!(biome instanceof BiomeDesert) && (worldObj.isRaining() || worldObj.isThundering())) {
+			if(!isTolerant() && world.getTotalWorldTime() % 40 == hashCode() % 40) {
+				Biome biome = world.getBiome(getPosition());
+				if(!(biome instanceof BiomeDesert) && (world.isRaining() || world.isThundering())) {
 					this.setDead();
 				}
 			}
@@ -112,25 +112,25 @@ public class EntitySwarm extends EntityFlyingCreature implements IBeeHousing {
 			memberCountMax = Math.max(m, (int) (memberCountMax * (getHealth() / getMaxHealth())));
 			if(swarmMembers.size() < memberCountMax) {
 				for(int i = 0; i < (memberCountMax - swarmMembers.size()); ++i) {
-					double xPos = posX + (width / 2) + (worldObj.rand.nextDouble() * (worldObj.rand.nextBoolean() ? 0.5 : -0.5)),
-						yPos = posY + (height / 2) + (worldObj.rand.nextDouble() * (worldObj.rand.nextBoolean() ? 0.5 : -0.5)),
-						zPos = posZ + (width / 2) + (worldObj.rand.nextDouble() * (worldObj.rand.nextBoolean() ? 0.5 : -0.5));
-					EntitySwarmFX member = new EntitySwarmFX(worldObj, xPos, yPos, zPos, 0xF0F000, this);
+					double xPos = posX + (width / 2) + (world.rand.nextDouble() * (world.rand.nextBoolean() ? 0.5 : -0.5)),
+						yPos = posY + (height / 2) + (world.rand.nextDouble() * (world.rand.nextBoolean() ? 0.5 : -0.5)),
+						zPos = posZ + (width / 2) + (world.rand.nextDouble() * (world.rand.nextBoolean() ? 0.5 : -0.5));
+					EntitySwarmFX member = new EntitySwarmFX(world, xPos, yPos, zPos, 0xF0F000, this);
 					swarmMembers.add(member);
 					Computronics.proxy.spawnSwarmParticle(member);
 				}
 			}*/
-			//if(worldObj.getTotalWorldTime() % 1 == hashCode() % 1) {
+			//if(world.getTotalWorldTime() % 1 == hashCode() % 1) {
 			int m = 10;
 			int memberCountMax = getAmplifier() * m;
 			memberCountMax = Math.max(Math.min(m, (int) (memberCountMax * (getHealth() / getMaxHealth()))), 1);
 			for(int i = 0; i < (memberCountMax); ++i) {
-				double xPos = posX /*+ (width / 2f)*/ + (worldObj.rand.nextDouble() * (worldObj.rand.nextBoolean() ? 0.5 : -0.5));
-				double yPos = posY + (height / 2f) + (worldObj.rand.nextDouble() * (worldObj.rand.nextBoolean() ? 0.5 : -0.5));
-				double zPos = posZ /*+ (width / 2f)*/ + (worldObj.rand.nextDouble() * (worldObj.rand.nextBoolean() ? 0.5 : -0.5));
-				Computronics.proxy.spawnSwarmParticle(worldObj, xPos, yPos, zPos, getColor());
+				double xPos = posX /*+ (width / 2f)*/ + (world.rand.nextDouble() * (world.rand.nextBoolean() ? 0.5 : -0.5));
+				double yPos = posY + (height / 2f) + (world.rand.nextDouble() * (world.rand.nextBoolean() ? 0.5 : -0.5));
+				double zPos = posZ /*+ (width / 2f)*/ + (world.rand.nextDouble() * (world.rand.nextBoolean() ? 0.5 : -0.5));
+				Computronics.proxy.spawnSwarmParticle(world, xPos, yPos, zPos, getColor());
 			}
-			//EntityBeeFX member = new EntityBeeFX(worldObj, posX /*+ (width / 2f)*/, posY + (height / 2f), posZ /*+ (width / 2f)*/, 0f, 0f, 0f, 0xF0F000);
+			//EntityBeeFX member = new EntityBeeFX(world, posX /*+ (width / 2f)*/, posY + (height / 2f), posZ /*+ (width / 2f)*/, 0f, 0f, 0f, 0xF0F000);
 			//Computronics.proxy.spawnSwarmParticle(member);
 			//}
 		}
@@ -258,23 +258,23 @@ public class EntitySwarm extends EntityFlyingCreature implements IBeeHousing {
 	}
 
 	@Override
-	protected boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack) {
-		if(!worldObj.isRemote && this.player != null) {
-			if(player == this.player && player.isSneaking() && hand == EnumHand.MAIN_HAND && stack == null) {
+	protected boolean processInteract(EntityPlayer player, EnumHand hand) {
+		if(!world.isRemote && this.player != null) {
+			if(player == this.player && player.isSneaking() && hand == EnumHand.MAIN_HAND && player.getHeldItem(hand).isEmpty()) {
 				setDead();
 				SwarmProvider.swingItem(player, hand, null);
 				return true;
 			}
 		}
-		return super.processInteract(player, hand, stack);
+		return super.processInteract(player, hand);
 	}
 
 	private static final List<String> damageTypesImmune = Arrays.asList(
-		DamageSource.inWall.getDamageType(),
-		DamageSource.cactus.getDamageType(),
-		DamageSource.anvil.getDamageType(),
-		DamageSource.fallingBlock.getDamageType(),
-		DamageSource.fall.getDamageType()
+		DamageSource.IN_WALL.getDamageType(),
+		DamageSource.CACTUS.getDamageType(),
+		DamageSource.ANVIL.getDamageType(),
+		DamageSource.FALLING_BLOCK.getDamageType(),
+		DamageSource.FALL.getDamageType()
 	);
 
 	@Override
@@ -434,21 +434,21 @@ public class EntitySwarm extends EntityFlyingCreature implements IBeeHousing {
 
 	@Override
 	protected void collideWithNearbyEntities() {
-		/*if(!worldObj.isRemote && player != null && player.getHeldItem() != null && player.isBlocking()) {
+		/*if(!world.isRemote && player != null && player.getHeldItem() != null && player.isBlocking()) {
 			super.collideWithNearbyEntities();
 		}*/
 	}
 
 	@Override
 	protected void collideWithEntity(Entity entity) {
-		/*if(!worldObj.isRemote && player != null && entity != player && player.getHeldItem() != null && player.isBlocking()) {
+		/*if(!world.isRemote && player != null && entity != player && player.getHeldItem() != null && player.isBlocking()) {
 			//super.collideWithEntity(entity);
 		}*/
 	}
 
 	@Override
 	public void applyEntityCollision(Entity entity) {
-		if(!worldObj.isRemote && player != null && entity != player && player.isActiveItemStackBlocking()) {
+		if(!world.isRemote && player != null && entity != player && player.isActiveItemStackBlocking()) {
 			//entity.attackEntityFrom(new BeeDamageSource(), 2 * getAmplifier());
 			entity.motionX /= 2.0D;
 			entity.motionY /= 2.0D;
@@ -456,7 +456,7 @@ public class EntitySwarm extends EntityFlyingCreature implements IBeeHousing {
 			double deltaX = this.posX - entity.posX;
 			double deltaZ = this.posZ - entity.posZ;
 			double modifier = 0.1D * (getHealth() / getMaxHealth());
-			float dist = MathHelper.sqrt_double(deltaX * deltaX + deltaZ * deltaZ);
+			float dist = MathHelper.sqrt(deltaX * deltaX + deltaZ * deltaZ);
 			entity.motionX -= deltaX / dist * modifier;
 			entity.motionZ -= deltaZ / dist * modifier;
 			/*float health = getHealth();
@@ -490,12 +490,14 @@ public class EntitySwarm extends EntityFlyingCreature implements IBeeHousing {
 		if(tag.hasKey("swarm:amplifier")) {
 			setAmplifier(tag.getInteger("swarm:amplifier"));
 		}
+		beeLogic.readFromNBT(tag);
 	}
 
 	@Override
 	public void writeEntityToNBT(NBTTagCompound tag) {
 		super.writeEntityToNBT(tag);
 		tag.setInteger("swarm:amplifier", getAmplifier());
+		beeLogic.writeToNBT(tag);
 	}
 
 	public static class BeeDamageSource extends DamageSource {
@@ -513,7 +515,7 @@ public class EntitySwarm extends EntityFlyingCreature implements IBeeHousing {
 		@Override
 		public ITextComponent getDeathMessage(EntityLivingBase victim) {
 			EntityLivingBase damager = victim.getAttackingEntity();
-			String format = "death.attack." + this.damageType + (numCauses > 1 ? "." + (victim.worldObj.rand.nextInt(this.numCauses) + 1) : "");
+			String format = "death.attack." + this.damageType + (numCauses > 1 ? "." + (victim.world.rand.nextInt(this.numCauses) + 1) : "");
 			String withCauseFormat = format + ".player";
 			return damager != null && StringUtil.canTranslate(withCauseFormat) ?
 				new TextComponentTranslation(withCauseFormat, victim.getDisplayName(), damager.getDisplayName()) :
@@ -558,7 +560,7 @@ public class EntitySwarm extends EntityFlyingCreature implements IBeeHousing {
 
 	@Override
 	public EnumTemperature getTemperature() {
-		return EnumTemperature.getFromBiome(getBiome(), worldObj, getPosition());
+		return EnumTemperature.getFromBiome(getBiome(), world, getPosition());
 	}
 
 	@Override
@@ -568,22 +570,27 @@ public class EntitySwarm extends EntityFlyingCreature implements IBeeHousing {
 
 	@Override
 	public int getBlockLightValue() {
-		return worldObj.getLightFromNeighbors(getPosition().add(0, +1, 0));
+		return world.getLightFromNeighbors(getPosition().add(0, +1, 0));
 	}
 
 	@Override
 	public boolean canBlockSeeTheSky() {
-		return worldObj.canBlockSeeSky(getPosition().add(0, +1, 0));
+		return world.canBlockSeeSky(getPosition().add(0, +1, 0));
 	}
 
 	@Override
 	public World getWorldObj() {
-		return worldObj;
+		return world;
 	}
 
 	@Override
 	public Biome getBiome() {
-		return worldObj.getBiome(getPosition());
+		return world.getBiome(getPosition());
+	}
+
+	@Override
+	public boolean isRaining() {
+		return world.isRainingAt(getPosition().up());
 	}
 
 	@Nullable

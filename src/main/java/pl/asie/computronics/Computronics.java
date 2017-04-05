@@ -45,6 +45,7 @@ import pl.asie.computronics.cc.multiperipheral.MultiPeripheralRegistry;
 import pl.asie.computronics.gui.providers.GuiProviderCipher;
 import pl.asie.computronics.gui.providers.GuiProviderTapeDrive;
 import pl.asie.computronics.integration.ModRecipes;
+import pl.asie.computronics.integration.forestry.IntegrationForestry;
 import pl.asie.computronics.integration.tis3d.IntegrationTIS3D;
 import pl.asie.computronics.item.ItemMultipleComputronics;
 import pl.asie.computronics.item.ItemTape;
@@ -89,7 +90,7 @@ import java.util.concurrent.Executors;
 		+ "after:MineFactoryReloaded;after:RedLogic@[59.1.9,);after:ProjRed|Core;"
 		+ "after:BuildCraft|Core@[7.2.0,);after:railcraft@[10.0,);"
 		+ "after:gregtech;after:EnderIO@[1.10.2-3.0.1,);"
-		+ "after:forestry@[5.1.8,);after:waila@[1.5.10,);"
+		+ "after:forestry@[5.3.2,);after:waila@[1.5.10,);"
 		+ "after:MekanismAPI|energy@[8.0.0,);after:Flamingo@[1.7.10-1.3,);"
 		+ "after:armourersWorkshop@[1.7.10-0.33,);after:theoneprobe@[1.0.5,)")
 public class Computronics {
@@ -131,7 +132,7 @@ public class Computronics {
 
 	//public static IntegrationBuildCraft buildcraft;
 	//public static IntegrationRailcraft railcraft;
-	//public static IntegrationForestry forestry;
+	public static IntegrationForestry forestry;
 	public static IntegrationTIS3D tis3D;
 	//public static IntegrationCharset charset;
 
