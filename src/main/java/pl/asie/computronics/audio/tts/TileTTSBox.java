@@ -66,7 +66,7 @@ public class TileTTSBox extends TileEntityPeripheralBase implements IAudioSource
 
 		@Override
 		public int getSoundDistance() {
-			return Config.TAPEDRIVE_DISTANCE; // TODO TTS
+			return Config.TAPEDRIVE_DISTANCE;
 		}
 
 		@Override
@@ -121,20 +121,24 @@ public class TileTTSBox extends TileEntityPeripheralBase implements IAudioSource
 			return;
 		}
 		storage = new ByteArrayInputStream(data);
-		codecId = Computronics.tts.audio.newPlayer();
-		Computronics.tts.audio.getPlayer(codecId);
+		codecId = Computronics.instance.audio.newPlayer();
+		Computronics.instance.audio.getPlayer(codecId);
 		lastCodecTime = System.nanoTime();
 	}
 
 	private void stopTalking() {
-		AudioUtils.removePlayer(Computronics.tts.managerId, codecId);
+		AudioUtils.removePlayer(Computronics.instance.managerId, codecId);
 		locked = false;
 		storage = null;
 	}
 
 	private Object[] sendNewText(String text) throws IOException {
 		locked = true;
-		Computronics.tts.say(text, worldObj.provider.dimensionId, xCoord, yCoord, zCoord);
+		if(Computronics.tts != null) {
+			Computronics.tts.say(text, worldObj.provider.dimensionId, xCoord, yCoord, zCoord);
+		} else {
+			return new Object[] { false, "" };
+		}
 		return new Object[] { true };
 	}
 
@@ -158,10 +162,14 @@ public class TileTTSBox extends TileEntityPeripheralBase implements IAudioSource
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] say(Context context, Arguments args) {
 		if(locked || storage != null) {
-			return new Object[] { false, "already talking" };
+			return new Object[] { false, "already processing" };
+		}
+		String text = args.checkString(0);
+		if(text.length() > Config.TTS_MAX_LENGTH) {
+			return new Object[] { false, "text too long" };
 		}
 		try {
-			return this.sendNewText(args.checkString(0));
+			return this.sendNewText(text);
 		} catch(IOException e) {
 			throw new IllegalArgumentException("could not send string");
 		} catch(Exception e) {
@@ -196,10 +204,14 @@ public class TileTTSBox extends TileEntityPeripheralBase implements IAudioSource
 					throw new LuaException("first argument needs to be a string");
 				}
 				if(locked || storage != null) {
-					return new Object[] { false, "already talking" };
+					return new Object[] { false, "already processing" };
+				}
+				String text = (String) arguments[0];
+				if(text.length() > Config.TTS_MAX_LENGTH) {
+					return new Object[] { false, "text too long" };
 				}
 				try {
-					return new Object[] { this.sendNewText((String) arguments[0]) };
+					return new Object[] { this.sendNewText(text) };
 				} catch(IOException e) {
 					throw new LuaException("could not send string");
 				}

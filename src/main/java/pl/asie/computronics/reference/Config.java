@@ -51,6 +51,9 @@ public class Config {
 	public static int SOUND_CARD_QUEUE_SIZE = 1024; // TODO
 	public static int SOUND_CARD_CHANNEL_COUNT = 8; // TODO
 
+	public static boolean TTS_ENABLED;
+	public static int TTS_MAX_LENGTH = 300; // TODO
+
 	public static boolean OC_UPGRADE_CAMERA;
 	public static boolean OC_UPGRADE_CHATBOX;
 	public static boolean OC_UPGRADE_RADAR;
@@ -112,6 +115,9 @@ public class Config {
 		SOUND_SAMPLE_RATE = config.getInt("soundSampleRate", "sound.client", 44100, 0, Integer.MAX_VALUE, "The sample rate used for generating sounds. Modify at your own risk.");
 		SOUND_VOLUME = (byte) config.getInt("soundVolume", "sound.client", 127, 0, Byte.MAX_VALUE, "The base volume of generated sounds.");
 		SOUND_RADIUS = config.getInt("soundRadius", "sound.client", 24, 0, 64, "The radius in which generated sounds can be heard.");
+
+		TTS_ENABLED = config.getBoolean("enableTextToSpeech", "tts", true, "Enable Text To Speech. To use it, install MaryTTS, a language and a corresponding voice into the marytts directory of your minecraft instance.");
+		TTS_MAX_LENGTH = config.getInt("maxPhraseLength", "tts", 300, 0, 100000, "The maximum number of text bytes the speech box can process at a time.");
 
 		if(Mods.isLoaded(Mods.OpenComputers)) {
 			//Advanced Cipher Block

@@ -28,6 +28,8 @@ import pl.asie.computronics.api.audio.AudioPacketRegistry;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheralProvider;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheralRegistry;
 import pl.asie.computronics.audio.DFPWMPlaybackManager;
+import pl.asie.computronics.audio.tts.BlockTTSBox;
+import pl.asie.computronics.audio.tts.TileTTSBox;
 import pl.asie.computronics.audio.tts.core.TextToSpeech;
 import pl.asie.computronics.audio.tts.core.TextToSpeechLoader;
 import pl.asie.computronics.block.BlockAudioCable;
@@ -127,6 +129,7 @@ public class Computronics {
 	public static BlockTapeReader tapeReader;
 	public static BlockAudioCable audioCable;
 	public static BlockSpeaker speaker;
+	public static BlockTTSBox ttsBox;
 	public static BlockCamera camera;
 	public static BlockChatBox chatBox;
 	public static BlockCipher cipher;
@@ -284,12 +287,17 @@ public class Computronics {
 			opencomputers.preInit();
 		}
 
-		if(config.config.get("enable.tts", "textToSpeech", true, "Enable Text To Speech. Requires MaryTTS to be installed.").getBoolean()) {
+		if(Config.TTS_ENABLED) {
 			log.info("Initializing Text To Speech");
 			boolean success = TextToSpeechLoader.INSTANCE.preInit();
 			if(success) {
 				tts = new TextToSpeech();
 				tts.preInit(this);
+			}
+			if(isEnabled("ttsBox", true)) {
+				ttsBox = new BlockTTSBox();
+				GameRegistry.registerBlock(ttsBox, "computronics.ttsBox");
+				GameRegistry.registerTileEntity(TileTTSBox.class, "computronics.ttsBox");
 			}
 		}
 

@@ -1,25 +1,21 @@
 package pl.asie.computronics.audio.tts.core;
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
-import cpw.mods.fml.common.registry.GameRegistry;
 import marytts.LocalMaryInterface;
 import marytts.MaryInterface;
 import marytts.exceptions.MaryConfigurationException;
 import marytts.exceptions.SynthesisException;
 import marytts.server.Mary;
 import marytts.util.data.audio.AudioPlayer;
-import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pl.asie.computronics.Computronics;
-import pl.asie.computronics.api.audio.AudioPacketRegistry;
-import pl.asie.computronics.audio.DFPWMPlaybackManager;
-import pl.asie.computronics.audio.tts.BlockTTSBox;
 import pl.asie.computronics.audio.tts.TileTTSBox;
 import pl.asie.computronics.audio.tts.synth.SynthesizeTask;
 import pl.asie.computronics.reference.Mods;
@@ -34,16 +30,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import static pl.asie.computronics.Computronics.proxy;
-
 /**
  * @author Vexatos
  */
 public class TextToSpeech {
 
 	public MaryInterface marytts;
-	public DFPWMPlaybackManager audio;
-	public int managerId;
 
 	private ExecutorService ttsThreads;
 	public final ArrayList<Future<Result>> processes = new ArrayList<Future<Result>>();
@@ -104,8 +96,6 @@ public class TextToSpeech {
 		}
 	}
 
-	public Block ttsBox;
-
 	public void preInit(Computronics computronics) {
 		try {
 			marytts = new LocalMaryInterface();
@@ -114,23 +104,13 @@ public class TextToSpeech {
 			//marytts.setLocale(Locale.US);
 			//marytts.setVoice(voices.iterator().next());
 			marytts.setOutputType("AUDIO");
-			ttsThreads = Executors.newCachedThreadPool();
+			ttsThreads = Executors.newFixedThreadPool(2, new ThreadFactoryBuilder().setPriority(Thread.MIN_PRIORITY).build());
 		} catch(Exception e) {
 			log.error("Text To Speech initialization failed, you will not be able to hear anything", e);
 			if(Mary.currentState() == 2) {
 				Mary.shutdown();
 				marytts = null;
 			}
-			return;
-		}
-		if(computronics.isEnabled("ttsBox", true)) {
-			ttsBox = new BlockTTSBox();
-			GameRegistry.registerBlock(ttsBox, "computronics.ttsBox");
-			GameRegistry.registerTileEntity(TileTTSBox.class, "computronics.ttsBox");
-
-			audio = new DFPWMPlaybackManager(proxy.isClient());
-
-			managerId = AudioPacketRegistry.INSTANCE.registerManager(audio);
 		}
 	}
 

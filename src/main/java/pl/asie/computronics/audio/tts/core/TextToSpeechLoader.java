@@ -56,11 +56,11 @@ public class TextToSpeechLoader {
 		ttsDir = new File(System.getProperty("user.dir"));
 		ttsDir = new File(ttsDir, "marytts");
 		if(!ttsDir.exists()) {
-			log.info("No MaryTTS directory found, disable Text To Speech");
+			log.info("No MaryTTS directory found, you will not be able to use Text To Speech unless the server you are playing on has MaryTTS installed. To use TTS, install MaryTTS into the marytts directory of your minecraft instance.");
 			return hasDoneInit = false;
 		}
 		if(!ttsDir.isDirectory()) {
-			log.error("Could not read MaryTTS directory - found a file, not a directory!");
+			log.error("Could not load MaryTTS - found a file, not a directory!");
 			return hasDoneInit = false;
 		}
 		File[] files = ttsDir.listFiles(new FilenameFilter() {
