@@ -114,30 +114,15 @@ public class TextToSpeechLoader {
 			this.classLoader = classLoader;
 		}
 
-		/**
-		 * Adds a file to the classpath.
-		 * @param path a String pointing to the file
-		 * @throws IOException
-		 */
 		private void addFile(String path) throws IOException {
 			File f = new File(path);
 			addFile(f);
 		}
 
-		/**
-		 * Adds a file to the classpath
-		 * @param file the file to be added
-		 * @throws IOException
-		 */
 		private void addFile(File file) throws IOException {
 			addURL(file.toURI().toURL());
 		}
 
-		/**
-		 * Adds the content pointed by the URL to the classpath.
-		 * @param url the URL pointing to the content to be added
-		 * @throws IOException
-		 */
 		private void addURL(URL url) throws IOException {
 			try {
 				ClassLoader parent = this.classLoader.getParent();

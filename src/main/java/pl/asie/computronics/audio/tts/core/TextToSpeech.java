@@ -13,7 +13,6 @@ import marytts.server.Mary;
 import marytts.util.data.audio.AudioPlayer;
 import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -24,7 +23,7 @@ import pl.asie.computronics.audio.tts.BlockTTSBox;
 import pl.asie.computronics.audio.tts.TileTTSBox;
 import pl.asie.computronics.audio.tts.synth.SynthesizeTask;
 import pl.asie.computronics.reference.Mods;
-import pl.asie.lib.AsieLibMod;
+import pl.asie.lib.util.WorldUtils;
 
 import javax.sound.sampled.AudioInputStream;
 import java.util.ArrayList;
@@ -63,7 +62,7 @@ public class TextToSpeech {
 
 	@SubscribeEvent
 	public void onTick(ServerTickEvent e) {
-		if(e.phase == Phase.END) {
+		if(e.phase == Phase.START) {
 			ArrayList<Integer> toRemove = new ArrayList<Integer>();
 			for(int i = 0; i < processes.size(); i++) {
 				Future<Result> process = processes.get(i);
@@ -71,12 +70,9 @@ public class TextToSpeech {
 					try {
 						Result result = process.get();
 						if(result != null) {
-							World world = AsieLibMod.proxy.getWorld(result.dimID);
-							if(world != null) {
-								TileEntity tile = world.getTileEntity(result.x, result.y, result.z);
-								if(tile instanceof TileTTSBox) {
-									((TileTTSBox) tile).startTalking(result.data);
-								}
+							TileEntity tile = WorldUtils.getTileEntityServer(result.dimID, result.x, result.y, result.z);
+							if(tile instanceof TileTTSBox) {
+								((TileTTSBox) tile).startTalking(result.data);
 							}
 						}
 					} catch(Throwable t) {
@@ -113,6 +109,7 @@ public class TextToSpeech {
 	public void preInit(Computronics computronics) {
 		if(computronics.isEnabled("ttsBox", Mods.isClassLoaded("marytts.LocalMaryInterface"))) {
 			log.info("Initializing Text To Speech");
+			new TextToSpeechLoader().preInit();
 			try {
 				marytts = new LocalMaryInterface();
 				//Set<String> voices = marytts.getAvailableVoices();

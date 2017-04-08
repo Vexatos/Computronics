@@ -111,18 +111,25 @@ public class TileTTSBox extends TileEntityPeripheralBase implements IAudioSource
 
 			pkt.sendPacket();
 		}
-		if(storage != null && storage.available() <= 0) {
-			AudioUtils.removePlayer(Computronics.tts.managerId, codecId);
-			locked = false;
-			storage = null;
+		if(!worldObj.isRemote && storage != null && storage.available() <= 0) {
+			stopTalking();
 		}
 	}
 
 	public void startTalking(byte[] data) {
+		if(worldObj.isRemote) {
+			return;
+		}
 		storage = new ByteArrayInputStream(data);
 		codecId = Computronics.tts.audio.newPlayer();
 		Computronics.tts.audio.getPlayer(codecId);
 		lastCodecTime = System.nanoTime();
+	}
+
+	private void stopTalking() {
+		AudioUtils.removePlayer(Computronics.tts.managerId, codecId);
+		locked = false;
+		storage = null;
 	}
 
 	private Object[] sendNewText(String text) throws IOException {
@@ -147,7 +154,7 @@ public class TileTTSBox extends TileEntityPeripheralBase implements IAudioSource
 		}
 	}
 
-	@Callback
+	@Callback(doc = "function(text:string):boolean; Say the specified message. Returns true on success, false and an error message otherwise.")
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] say(Context context, Arguments args) {
 		if(locked || storage != null) {
@@ -164,10 +171,20 @@ public class TileTTSBox extends TileEntityPeripheralBase implements IAudioSource
 		return new Object[] { false };
 	}
 
+	@Callback(doc = "function():boolean; Stops the currently spoken phrase. Returns true on success, false and an error message otherwise.")
+	@Optional.Method(modid = Mods.OpenComputers)
+	public Object[] stop(Context context, Arguments args) {
+		if(locked || storage != null) {
+			stopTalking();
+			return new Object[] { true };
+		}
+		return new Object[] { false, "not talking" };
+	}
+
 	@Override
 	@Optional.Method(modid = Mods.ComputerCraft)
 	public String[] getMethodNames() {
-		return new String[] { "say" };
+		return new String[] { "say", "stop" };
 	}
 
 	@Override
@@ -186,6 +203,13 @@ public class TileTTSBox extends TileEntityPeripheralBase implements IAudioSource
 				} catch(IOException e) {
 					throw new LuaException("could not send string");
 				}
+			}
+			case 1: {
+				if(locked || storage != null) {
+					stopTalking();
+					return new Object[] { true };
+				}
+				return new Object[] { false, "not talking" };
 			}
 		}
 		return null;
