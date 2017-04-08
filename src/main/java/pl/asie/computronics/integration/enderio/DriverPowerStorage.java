@@ -8,9 +8,10 @@ import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.ManagedEnvironment;
-import li.cil.oc.api.prefab.DriverTileEntity;
+import li.cil.oc.api.prefab.DriverSidedTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.integration.CCMultiPeripheral;
 import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
 import pl.asie.computronics.reference.Names;
@@ -20,8 +21,10 @@ import pl.asie.computronics.reference.Names;
  */
 public class DriverPowerStorage {
 
-	public static class OCDriver extends DriverTileEntity{
-		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<IPowerStorage> {
+	public static class OCDriver extends DriverSidedTileEntity {
+
+		public static class InternalManagedEnvironment extends ManagedEnvironmentOCTile<IPowerStorage> {
+
 			public InternalManagedEnvironment(IPowerStorage tile) {
 				super(tile, Names.EnderIO_CapacitorBank);
 			}
@@ -43,12 +46,12 @@ public class DriverPowerStorage {
 
 			@Callback(doc = "function():number;  Returns the total amount of stored energy.")
 			public Object[] getEnergyStored(final Context context, final Arguments args) {
-				return new Object[]{tile.getEnergyStoredL()};
+				return new Object[] { tile.getEnergyStoredL() };
 			}
 
 			@Callback(doc = "function():number;  Returns the maximum amount of stored energy.")
 			public Object[] getMaxEnergyStored(final Context context, final Arguments args) {
-				return new Object[]{tile.getMaxEnergyStoredL()};
+				return new Object[] { tile.getMaxEnergyStoredL() };
 			}
 		}
 
@@ -58,7 +61,7 @@ public class DriverPowerStorage {
 		}
 
 		@Override
-		public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
+		public ManagedEnvironment createEnvironment(World world, int x, int y, int z, ForgeDirection side) {
 			return new InternalManagedEnvironment(((IPowerStorage) world.getTileEntity(x, y, z)));
 		}
 	}
@@ -93,17 +96,17 @@ public class DriverPowerStorage {
 
 		@Override
 		public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
-			switch(method){
-				case 0:{
+			switch(method) {
+				case 0: {
 					return new Object[] { tile.getMaxInput() };
 				}
-				case 1:{
+				case 1: {
 					return new Object[] { tile.getMaxOutput() };
 				}
-				case 2:{
+				case 2: {
 					return new Object[] { tile.getEnergyStoredL() };
 				}
-				case 3:{
+				case 3: {
 					return new Object[] { tile.getMaxEnergyStoredL() };
 				}
 			}

@@ -11,6 +11,7 @@ import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.Connector;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
+import pl.asie.computronics.util.OCUtils;
 import pl.asie.computronics.util.cipher.RSAValue;
 import pl.asie.computronics.util.cipher.ThreadLocals;
 import pl.asie.lib.util.Base64;
@@ -42,6 +43,17 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 	@Override
 	public boolean canBeColored() {
 		return false;
+	}
+
+	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
+	protected OCUtils.Device deviceInfo() {
+		return new OCUtils.Device(
+			DeviceClass.Processor,
+			"Data encryption device",
+			OCUtils.Vendors.Siekierka,
+			"Cryptotron 6-X"
+		);
 	}
 
 	/**
@@ -110,9 +122,15 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 	private static final ThreadLocal<KeyFactory> keyFactory = new ThreadLocals.LocalKeyFactory();
 	private static final ThreadLocal<Cipher> cipher = new ThreadLocals.LocalCipher();
 
+	private BigInteger unsigned(byte[] src) {
+		byte[] unsigned = new byte[src.length + 1];
+		System.arraycopy(src, 0, unsigned, 1, src.length);
+		return new BigInteger(unsigned);
+	}
+
 	private Object[] encrypt(Map<Integer, String> publicKey, byte[] messageBytes) throws Exception {
-		BigInteger n = new BigInteger(Base64.decode(publicKey.get(1)));
-		BigInteger d = new BigInteger(Base64.decode(publicKey.get(2)));
+		BigInteger n = unsigned(Base64.decode(publicKey.get(1)));
+		BigInteger d = unsigned(Base64.decode(publicKey.get(2)));
 		if(("prime").equals(publicKey.get(3))) {
 			BigInteger message = new BigInteger(messageBytes);
 			if(n.toByteArray().length < messageBytes.length) {
@@ -125,9 +143,7 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 			if(factory == null || c == null) {
 				return new Object[] { null, "an error occured during encryption" };
 			}
-			PublicKey pubKey = factory.generatePublic(new RSAPublicKeySpec(
-				new BigInteger(Base64.decode(publicKey.get(1))),
-				new BigInteger(Base64.decode(publicKey.get(2)))));
+			PublicKey pubKey = factory.generatePublic(new RSAPublicKeySpec(n, d));
 			c.init(Cipher.ENCRYPT_MODE, pubKey);
 			return new Object[] { Base64.encodeBytes(c.doFinal(messageBytes)) };
 		}
@@ -135,8 +151,8 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 
 	private Object[] decrypt(Map<Integer, String> privateKey, byte[] messageBytes) throws Exception {
 		byte[] decodedBytes = Base64.decode(messageBytes);
-		BigInteger n = new BigInteger(Base64.decode(privateKey.get(1)));
-		BigInteger e = new BigInteger(Base64.decode(privateKey.get(2)));
+		BigInteger n = unsigned(Base64.decode(privateKey.get(1)));
+		BigInteger e = unsigned(Base64.decode(privateKey.get(2)));
 		if(("prime").equals(privateKey.get(3))) {
 			BigInteger message = new BigInteger(decodedBytes);
 			if(n.toByteArray().length < decodedBytes.length) {
@@ -298,23 +314,5 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 			throw new LuaException(e.getMessage());
 		}
 		return null;
-	}
-
-	@Override
-	@Optional.Method(modid = Mods.NedoComputers)
-	public boolean connectable(int side) {
-		return false;
-	}
-
-	@Override
-	@Optional.Method(modid = Mods.NedoComputers)
-	public short busRead(int addr) {
-		return 0;
-	}
-
-	@Override
-	@Optional.Method(modid = Mods.NedoComputers)
-	public void busWrite(int addr, short data) {
-
 	}
 }

@@ -20,6 +20,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.block.BlockColorfulLamp;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.LampUtil;
+import pl.asie.computronics.util.OCUtils;
 
 @Optional.InterfaceList({
 	@Optional.Interface(iface = "mods.immibis.redlogic.api.wiring.IBundledUpdatable", modid = Mods.RedLogic),
@@ -84,6 +85,17 @@ public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundl
 	}
 
 	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
+	protected OCUtils.Device deviceInfo() {
+		return new OCUtils.Device(
+			DeviceClass.Display,
+			"Colored Lamp",
+			OCUtils.Vendors.Lumiose,
+			"LED-4"
+		);
+	}
+
+	@Override
 	@Optional.Method(modid = Mods.ComputerCraft)
 	public String[] getMethodNames() {
 		return new String[] { "getLampColor", "setLampColor" };
@@ -106,18 +118,6 @@ public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundl
 			break;
 		}
 		return null;
-	}
-
-	@Override
-	@Optional.Method(modid = Mods.NedoComputers)
-	public short busRead(int addr) {
-		return (short) color;
-	}
-
-	@Override
-	@Optional.Method(modid = Mods.NedoComputers)
-	public void busWrite(int addr, short data) {
-		this.setLampColor(((int) data) & 0x7FFF);
 	}
 
 	@Override
@@ -207,6 +207,7 @@ public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundl
 		return true;
 	}
 
+	@Override
 	@Optional.Method(modid = Mods.ProjectRed)
 	public void onProjectRedBundledInputChanged() {
 		for(int i = 0; i < 6; i++) {

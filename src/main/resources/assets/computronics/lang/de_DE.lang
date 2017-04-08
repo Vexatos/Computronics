@@ -8,11 +8,13 @@ tile.computronics.cipher.name=Chiffrierblock
 tile.computronics.cipher_advanced.name=Asymmetrischer Chiffrierblock
 tile.computronics.radar.name=Radarblock
 tile.computronics.colorfulLamp.name=Farbenfrohe Lampe
-tile.computronics.eepromReader.name=EEPROM-Lesegerät
 tile.computronics.locomotiveRelay.name=Digitales Lokomotivenrelais
-tile.computronics.digitalBox.name=Digitale Signalempfängerbox
+tile.computronics.digitalControllerBox.name=Digitale Signalsteuerbox
+tile.computronics.digitalReceiverBox.name=Digitale Signalempfängerbox
 tile.computronics.detector.name=Detektor - Digital
 tile.computronics.ticketMachine.name=Ticketautomat
+tile.computronics.audiocable.name=Tonkabel
+tile.computronics.speaker.name=Lautsprecher
 
 tooltip.computronics.chatBox.creative=Die NSA für zu Hause!
 tooltip.computronics.cipher.advanced=Für die Starchaser!
@@ -27,7 +29,7 @@ tooltip.computronics.tape.ig=Der Standard-CDVR für\nSchiffe von GregTech Interg
 tooltip.computronics.ticket.print=Ticket Drucken
 tooltip.computronics.ticket.printLocked=§cManuelles Drucken deaktiviert
 tooltip.computronics.ticket.locked=Ist gesperrt von\n {owner}.\n Nur der Eigentümer oder\n ein Op kann ihn warten.
-tooltip.computronics.ticket.notmaintenance=Shift-rechtsklicke\n diesen Automaten mit \nnichts in der Hand, um\n ihn zu warten.
+tooltip.computronics.ticket.notmaintenance=Shift-rechtsklicke\n diesen Automaten mit\n nichts in der Hand, um\n ihn zu warten.
 tooltip.computronics.ticket.notowner=Du bist nicht der\n Eigentümer des Automats.\n Sie gehört\n {owner}.
 tooltip.computronics.ticket.unlocked=Klicken um zu sperren.\n Wenn gesperrt, kann er\n nur von Dir oder einem Op\n gewartet werden
 
@@ -65,11 +67,13 @@ tooltip.computronics.waila.lamp.red=Rot: %s
 tooltip.computronics.waila.lamp.green=Grün: %s
 tooltip.computronics.waila.lamp.blue=Blau: %s
 
-tooltip.computronics.manual.tab.blocks=Computronics: Blöcke
-tooltip.computronics.manual.tab.items=Computronics: Items
+tooltip.computronics.manual.oc.tab.blocks=Computronics: Blöcke
+tooltip.computronics.manual.oc.tab.items=Computronics: Items
+
+tooltip.computronics.manual.tis3d.tab.items=Computronics: Items
+tooltip.computronics.manual.tis3d.port.flamingo=Pinker Flamingo
 
 option.computronics.enableOCAddress=Komponentenaddresse
-option.computronics.enableNCAddress=NedoComputers Bus ID
 option.computronics.enableTape=Enthaltene Kassette
 option.computronics.enableTapeName=Kassettenname
 option.computronics.enableDriveState=Kassettenspielerstatus
@@ -82,7 +86,8 @@ item.computronics.dockingStation.name=Dronen-Dockingstation
 item.computronics.robot_upgrade_camera.name=Kamera-Upgrade
 item.computronics.robot_upgrade_chatbox.name=Chat-Upgrade
 item.computronics.robot_upgrade_radar.name=Radar-Upgrade
-item.computronics.card_beep.name=Piepsende Karte
+item.computronics.card_beep.name=Piepende Karte
+item.computronics.card_noise.name=Lärmende Karte
 item.computronics.card_fx.name=Partikeleffektkarte
 item.computronics.card_spoof.name=Spoofing-Karte
 item.computronics.card_spoof.tip=Funktioniert wie eine Netzwerkkarte, aber erlaubt es, die Sendeaddresse festzulegen
@@ -90,12 +95,25 @@ item.computronics.card_boom.name=Selbstzerstörungskarte
 item.computronics.card_boom.tip=Jeder vernünftige Bösewicht braucht so etwas.
 item.computronics.robot_upgrade_colorful.name=Das Bunte Upgrade
 item.computronics.robot_upgrade_colorful.tip=Bunt, bunt, bunt, sind alle meine Kleider...
+item.computronics.rack_board_light.name=Serverschrank-Lichtpult
+item.computronics.rack_board_light.tip=Fast so sperrig wie ihr Name
+item.computronics.rack_board_boom.name=Server-Selbstzerstörer
+item.computronics.rack_board_boom.tip=Lass uns den Mond anzünden!
+item.computronics.rack_board_capacitor.name=Serverschrankkondensator
+item.computronics.rack_board_capacitor.tip=So viel Strom, wie du nur essen könntest.
+item.computronics.rack_board_switch.name=Serverschrank-Schaltpult
+item.computronics.rack_board_switch.tip=Nicht wirklich ein Pult, hat aber immerhin Schalter.
+item.computronics.magical_memory.name=Wundersamer Speicher (Kreativ)
+item.computronics.magical_memory.tip=So viele Erinnerungen!
 item.computronics.for.combAcid.name=Kaustische Wabe
 item.computronics.for.dropAcid.name=Kaustischer Tropfen
 item.computronics.relaySensor.name=Digitaler Relaissensor
 item.computronics.part_tape_track.name=Bandspur
 item.computronics.tape.ig.name=Intergalaktischer CDVR
 item.computronics.tape.name=Kasettenband
+item.computronics.module_colorful.name=Das Bunte Modul
+item.computronics.module_tape_reader.name=Kassettenlesemodul
+item.computronics.module_boom.name=Selbstzerstörungsmodul
 
 itemGroup.tabComputronics=Computronics
 

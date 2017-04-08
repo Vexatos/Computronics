@@ -3,7 +3,7 @@ package pl.asie.computronics.integration.railcraft.gui.widget;
 import mods.railcraft.client.gui.GuiContainerRailcraft;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.integration.railcraft.tile.TileTicketMachine;
-import pl.asie.computronics.network.Packets;
+import pl.asie.computronics.network.PacketType;
 
 import java.io.IOException;
 
@@ -36,7 +36,7 @@ public class PrintButtonWidget extends ButtonWidget {
 			return;
 		}
 		try {
-			Computronics.packet.sendToServer(Computronics.packet.create(Packets.PACKET_TICKET_PRINT).writeTileLocation(tile));
+			Computronics.packet.sendToServer(Computronics.packet.create(PacketType.TICKET_PRINT.ordinal()).writeTileLocation(tile));
 		} catch(IOException e) {
 			e.printStackTrace();
 		}

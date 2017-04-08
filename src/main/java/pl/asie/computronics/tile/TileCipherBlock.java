@@ -14,6 +14,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
+import pl.asie.computronics.util.OCUtils;
 import pl.asie.lib.api.tile.IBundledRedstoneProvider;
 import pl.asie.lib.util.Base64;
 
@@ -110,6 +111,17 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements IBundle
 		return new String(cipher.doFinal(Base64.decode(data)), "UTF8");
 	}
 
+	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
+	protected OCUtils.Device deviceInfo() {
+		return new OCUtils.Device(
+			DeviceClass.Processor,
+			"Data encryption device",
+			OCUtils.Vendors.Siekierka,
+			"Cryptotron 5-X"
+		);
+	}
+
 	@Callback(doc = "function(message:string):string; Encrypts the specified message", direct = true)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] encrypt(Context context, Arguments args) throws Exception {
@@ -177,62 +189,6 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements IBundle
 			throw new LuaException(e.getMessage());
 		}
 		return null;
-	}
-
-	private short[] _nedo_cipher = new short[16];
-	private byte _nedo_status = 0;
-
-	@Override
-	@Optional.Method(modid = Mods.NedoComputers)
-	public short busRead(int addr) {
-		int a = ((addr & 0xFFFE)) >> 1;
-		if(a < 16) {
-			return _nedo_cipher[a];
-		} else if(a == 16) {
-			return _nedo_status;
-		} else if(a == 18) {
-			return (short) (isLocked ? 1 : 0);
-		} else {
-			return 0;
-		}
-	}
-
-	@Override
-	@Optional.Method(modid = Mods.NedoComputers)
-	public void busWrite(int addr, short data) {
-		if(cipher == null) {
-			return;
-		}
-
-		int a = ((addr & 0xFFFE)) >> 1;
-		if(a < 16) {
-			_nedo_cipher[a] = data;
-		} else if(a == 16) {
-			if(skey == null) {
-				updateKey();
-			}
-			try {
-				if(data == 1) { // Encrypt
-					cipher.init(Cipher.ENCRYPT_MODE, skey, new IvParameterSpec(iv));
-				} else if(data == 2) { // Decrypt
-					cipher.init(Cipher.DECRYPT_MODE, skey, new IvParameterSpec(iv));
-				}
-				byte[] _data = new byte[32];
-				for(int i = 0; i < 16; i++) {
-					_data[i * 2] = (byte) (_nedo_cipher[i] & 255);
-					_data[i * 2 + 1] = (byte) (_nedo_cipher[i] >> 8);
-				}
-				byte[] _out = cipher.doFinal(_data);
-				for(int i = 0; i < 16; i++) {
-					_nedo_cipher[i] = (short) (_out[i * 2] | (_out[i * 2 + 1] << 8));
-				}
-				_nedo_status = 0;
-			} catch(Exception e) {
-				_nedo_status = 1;
-			}
-		} else if(a == 18) {
-			isLocked = (data != 0);
-		}
 	}
 
 	private int bundledXORData;

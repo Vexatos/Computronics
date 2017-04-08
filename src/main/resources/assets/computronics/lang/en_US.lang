@@ -8,11 +8,13 @@ tile.computronics.cipher.name=Cipher Block
 tile.computronics.cipher_advanced.name=Advanced Cipher Block
 tile.computronics.radar.name=Radar
 tile.computronics.colorfulLamp.name=Colorful Lamp
-tile.computronics.eepromReader.name=EEPROM Reader
 tile.computronics.locomotiveRelay.name=Digital Locomotive Relay
-tile.computronics.digitalBox.name=Digital Signal Receiver Box
+tile.computronics.digitalControllerBox.name=Digital Signal Controller Box
+tile.computronics.digitalReceiverBox.name=Digital Signal Receiver Box
 tile.computronics.detector.name=Detector - Digital
 tile.computronics.ticketMachine.name=Ticket Machine
+tile.computronics.audiocable.name=Audio Cable
+tile.computronics.speaker.name=Speaker
 
 tooltip.computronics.chatBox.creative=NSA in a box!
 tooltip.computronics.cipher.advanced=For the Starchasers!
@@ -27,7 +29,7 @@ tooltip.computronics.tape.ig=The standard CDVR for\nGregTech Intergalactical's s
 tooltip.computronics.ticket.print=Print Ticket
 tooltip.computronics.ticket.printLocked=§cManual printing disabled
 tooltip.computronics.ticket.locked=This device is locked to\n {owner}.\n Only the owner or an Op\n can do maintenance work.
-tooltip.computronics.ticket.notmaintenance=Shift-right click\n this device with an \nempty hand to do\n maintenance work.
+tooltip.computronics.ticket.notmaintenance=Shift-right click\n this device with an\n empty hand to do\n maintenance work.
 tooltip.computronics.ticket.notowner=You are not the\n owner of this device.\n It belongs to\n {owner}.
 tooltip.computronics.ticket.unlocked=Click to lock device.\n Once locked, only you\n or an Op can\n do maintenance work.
 
@@ -65,11 +67,13 @@ tooltip.computronics.waila.lamp.red=Red: %s
 tooltip.computronics.waila.lamp.green=Green: %s
 tooltip.computronics.waila.lamp.blue=Blue: %s
 
-tooltip.computronics.manual.tab.blocks=Computronics: Blocks
-tooltip.computronics.manual.tab.items=Computronics: Items
+tooltip.computronics.manual.oc.tab.blocks=Computronics: Blocks
+tooltip.computronics.manual.oc.tab.items=Computronics: Items
+
+tooltip.computronics.manual.tis3d.tab.items=Computronics: Items
+tooltip.computronics.manual.tis3d.port.flamingo=Pink Flamingo
 
 option.computronics.enableOCAddress=Component address
-option.computronics.enableNCAddress=NedoComputers Bus ID
 option.computronics.enableTape=Inserted tape
 option.computronics.enableTapeName=Tape name
 option.computronics.enableDriveState=Tape Drive state
@@ -83,6 +87,8 @@ item.computronics.robot_upgrade_camera.name=Camera Upgrade
 item.computronics.robot_upgrade_chatbox.name=Chat Upgrade
 item.computronics.robot_upgrade_radar.name=Radar Upgrade
 item.computronics.card_beep.name=Beep Card
+item.computronics.card_noise.name=Noise Card
+item.computronics.card_sound.name=Sound Card
 item.computronics.card_fx.name=Particle Effects Card
 item.computronics.card_spoof.name=Spoofing Card
 item.computronics.card_spoof.tip=Works just like a Network Card, but allows specifying the sending address
@@ -90,12 +96,25 @@ item.computronics.card_boom.name=Self-Destructing Card
 item.computronics.card_boom.tip=Any proper villain needs such a thing.
 item.computronics.robot_upgrade_colorful.name=Colorful Upgrade
 item.computronics.robot_upgrade_colorful.tip=Make your bots more colorful!
+item.computronics.rack_board_light.name=Light Board
+item.computronics.rack_board_light.tip=Quite bulky for something that just controls four lights...
+item.computronics.rack_board_boom.name=Server Self-Destructor
+item.computronics.rack_board_boom.tip=Commonly known as an SSD.
+item.computronics.rack_board_capacitor.name=Rack Capacitor
+item.computronics.rack_board_capacitor.tip=Capacitates racks... Or something like that.
+item.computronics.rack_board_switch.name=Switch Board
+item.computronics.rack_board_switch.tip=It is a board with switches. What did you expect?
+item.computronics.magical_memory.name=Magical Memory (Creative)
+item.computronics.magical_memory.tip=Basically memory, just more.
 item.computronics.for.combAcid.name=Caustic Comb
 item.computronics.for.dropAcid.name=Caustic Drop
 item.computronics.relaySensor.name=Digital Relay Sensor
 item.computronics.part_tape_track.name=Tape Track
 item.computronics.tape.ig.name=Intergalactical CDVR
 item.computronics.tape.name=Cassette Tape
+item.computronics.module_colorful.name=Colorful Module
+item.computronics.module_tape_reader.name=Tape Reader Module
+item.computronics.module_boom.name=Self-Destructing Module
 
 itemGroup.tabComputronics=Computronics
 

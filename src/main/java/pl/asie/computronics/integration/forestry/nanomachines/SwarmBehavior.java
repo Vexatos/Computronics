@@ -5,6 +5,7 @@ import li.cil.oc.api.nanomachines.Controller;
 import li.cil.oc.api.nanomachines.DisableReason;
 import li.cil.oc.api.prefab.AbstractBehavior;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import pl.asie.computronics.integration.forestry.entity.EntitySwarm;
 
 /**
@@ -33,7 +34,7 @@ public class SwarmBehavior extends AbstractBehavior {
 	@Override
 	public void onDisable(DisableReason reason) {
 		if(entity != null) {
-			if(reason == DisableReason.OutOfEnergy && (player.capabilities == null || !player.capabilities.isCreativeMode)) {
+			if(reason != DisableReason.Default && (player.capabilities == null || !player.capabilities.isCreativeMode)) {
 				entity.setPlayer(null);
 				entity.setAggressive(true);
 				entity.setAttackTarget(player);
@@ -46,13 +47,13 @@ public class SwarmBehavior extends AbstractBehavior {
 		}
 	}
 
-	public void spawnNewEntity(double x, double y, double z) {
-		spawnNewEntity(x, y, z, 0xF0F000, true);
+	public void spawnNewEntity(double x, double y, double z, ItemStack queen) {
+		spawnNewEntity(x, y, z, 0xF0F000, true, queen);
 	}
 
-	public void spawnNewEntity(double x, double y, double z, int color, boolean tolerant) {
+	public void spawnNewEntity(double x, double y, double z, int color, boolean tolerant, ItemStack queen) {
 		if(!player.worldObj.isRemote) {
-			entity = new EntitySwarm(player.worldObj, x, y, z);
+			entity = new EntitySwarm(player.worldObj, x, y, z, queen);
 			//if(entityTag != null) {
 			//	entity.readFromNBT(entityTag);
 			//}

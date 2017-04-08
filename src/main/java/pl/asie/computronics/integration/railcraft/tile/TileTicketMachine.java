@@ -18,10 +18,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.integration.railcraft.gui.slot.PaperSlotFilter;
-import pl.asie.computronics.network.Packets;
+import pl.asie.computronics.network.PacketType;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TileEntityPeripheralBase;
+import pl.asie.computronics.util.OCUtils;
 import pl.asie.lib.api.tile.IBatteryProvider;
 import pl.asie.lib.api.tile.IInventoryProvider;
 import pl.asie.lib.network.Packet;
@@ -76,7 +77,7 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 			i |= isPrintLocked() ? 1 << 2 : 0;
 			i |= isActive ? 1 << 3 : 0;
 
-			Packet packet = Computronics.packet.create(Packets.PACKET_TICKET_SYNC)
+			Packet packet = Computronics.packet.create(PacketType.TICKET_SYNC.ordinal())
 				.writeTileLocation(this)
 				.writeInt(i)
 				.writeInt(selectedSlot);
@@ -286,6 +287,17 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 		return 0;
 	}
 
+	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
+	protected OCUtils.Device deviceInfo() {
+		return new OCUtils.Device(
+			DeviceClass.Printer,
+			"Ticket machine",
+			OCUtils.Vendors.Railcraft,
+			"Dot matrix 3000"
+		);
+	}
+
 	// Methods for Computers
 
 	public Object[] printTicket() {
@@ -399,14 +411,14 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 		return printTicket(true);
 	}
 
-	@Callback(doc = "function(allowed:boolean):boolean; permits or prohibits manual printing; Returns true if manual printing is blocked")
+	@Callback(doc = "function(allowed:boolean):boolean; permits or prohibits manual printing; Returns true if manual printing is allowed")
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] setManualPrintingAllowed(Context c, Arguments a) {
 		this.setPrintLocked(!a.checkBoolean(0));
 		return new Object[] { !this.isPrintLocked() };
 	}
 
-	@Callback(doc = "function():boolean; Returns true if manual printing is blocked", direct = true)
+	@Callback(doc = "function():boolean; Returns true if manual printing is allowed", direct = true)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] isManualPrintingAllowed(Context c, Arguments a) {
 		return new Object[] { !this.isPrintLocked() };
@@ -431,7 +443,7 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 		if(a.count() >= 2) {
 			return setDestination(a.checkInteger(0), a.checkString(1), true);
 		}
-		return setDestination(this.getSelectedSlot() + 1, a.checkString(1), true);
+		return setDestination(this.getSelectedSlot() + 1, a.checkString(0), true);
 	}
 
 	@Callback(doc = "function([slot:number]):string; Returns the destination of the currently selected or the specified ticket")
@@ -587,6 +599,7 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 		return 0.5f;
 	}
 
+	@Override
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
 		String ownerName = "[Unknown]";
@@ -624,6 +637,7 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 		}
 	}
 
+	@Override
 	public void writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
 		if(this.owner.getName() != null) {
@@ -712,24 +726,6 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 		tag.setBoolean("isActive", isActive);
 	}
 
-	@Override
-	@Optional.Method(modid = Mods.NedoComputers)
-	public boolean connectable(int side) {
-		return false;
-	}
-
-	@Override
-	@Optional.Method(modid = Mods.NedoComputers)
-	public short busRead(int addr) {
-		return 0;
-	}
-
-	@Override
-	@Optional.Method(modid = Mods.NedoComputers)
-	public void busWrite(int addr, short data) {
-
-	}
-
 	// Security
 
 	@Override
@@ -759,6 +755,6 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements IInve
 
 	@Override
 	public int[] getAccessibleSlotsFromSide(int side) {
-		return ACCESSIBLE_SLOTS;
+		return ACCESSIBLE_SLOTS.clone();
 	}
 }

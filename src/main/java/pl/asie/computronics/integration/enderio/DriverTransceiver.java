@@ -13,15 +13,16 @@ import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.ManagedEnvironment;
-import li.cil.oc.api.prefab.DriverTileEntity;
+import li.cil.oc.api.prefab.DriverSidedTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.integration.CCMultiPeripheral;
 import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
 import pl.asie.computronics.reference.Names;
 
+import java.util.Collection;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Locale;
 
 /**
@@ -29,7 +30,7 @@ import java.util.Locale;
  */
 public class DriverTransceiver {
 
-	private static Object[] parseChannels(List<Channel> channelList) {
+	private static Object[] parseChannels(Collection<Channel> channelList) {
 		LinkedHashMap<Integer, String> channelMap = new LinkedHashMap<Integer, String>();
 		if(channelList != null) {
 			int i = 1;
@@ -38,11 +39,11 @@ public class DriverTransceiver {
 			}
 			return new Object[] { channelMap };
 		}
-		return new Object[] { };
+		return new Object[] {};
 	}
 
 	private static Object[] getSendChannels(TileTransceiver tile, Object[] arguments) {
-		List<Channel> channelList;
+		Collection<Channel> channelList;
 		try {
 			channelList = tile.getSendChannels(ChannelType.valueOf(((String) arguments[0]).toUpperCase(Locale.ENGLISH)));
 		} catch(IllegalArgumentException e) {
@@ -52,7 +53,7 @@ public class DriverTransceiver {
 	}
 
 	private static Object[] setSendChannel(TileTransceiver tile, Object[] arguments) {
-		List<Channel> channels;
+		Collection<Channel> channels;
 		boolean shouldAdd = ((Boolean) arguments[2]);
 		try {
 			channels = shouldAdd
@@ -77,7 +78,7 @@ public class DriverTransceiver {
 	}
 
 	private static Object[] getReceiveChannels(TileTransceiver tile, Object[] arguments) {
-		List<Channel> channelList;
+		Collection<Channel> channelList;
 		try {
 			channelList = tile.getRecieveChannels(ChannelType.valueOf(((String) arguments[0]).toUpperCase(Locale.ENGLISH)));
 		} catch(IllegalArgumentException e) {
@@ -87,7 +88,7 @@ public class DriverTransceiver {
 	}
 
 	private static Object[] setReceiveChannel(TileTransceiver tile, Object[] arguments) {
-		List<Channel> channels;
+		Collection<Channel> channels;
 		boolean shouldAdd = ((Boolean) arguments[2]);
 		try {
 			channels = shouldAdd
@@ -112,7 +113,7 @@ public class DriverTransceiver {
 	}
 
 	private static Object[] addChannel(TileTransceiver tile, Object[] arguments) {
-		List<Channel> channels;
+		Collection<Channel> channels;
 		try {
 			channels = ServerChannelRegister.instance.getChannelsForType(ChannelType.valueOf(((String) arguments[0]).toUpperCase(Locale.ENGLISH)));
 		} catch(IllegalArgumentException e) {
@@ -124,7 +125,7 @@ public class DriverTransceiver {
 					return new Object[] { false };
 				}
 			}
-			Channel channel = new Channel(((String) arguments[1]), null, ChannelType.valueOf(((String) arguments[0]).toUpperCase(Locale.ENGLISH)));
+			Channel channel = new Channel(((String) arguments[1]), ChannelType.valueOf(((String) arguments[0]).toUpperCase(Locale.ENGLISH)));
 			ServerChannelRegister.instance.addChannel(channel);
 			PacketHandler.INSTANCE.sendToAll(new PacketAddRemoveChannel(channel, true));
 			return new Object[] { true };
@@ -133,7 +134,7 @@ public class DriverTransceiver {
 	}
 
 	private static Object[] removeChannel(TileTransceiver tile, Object[] arguments) {
-		List<Channel> channels;
+		Collection<Channel> channels;
 		try {
 			channels = ServerChannelRegister.instance.getChannelsForType(ChannelType.valueOf(((String) arguments[0]).toUpperCase(Locale.ENGLISH)));
 		} catch(IllegalArgumentException e) {
@@ -152,7 +153,7 @@ public class DriverTransceiver {
 	}
 
 	private static Object[] isChannelExisting(TileTransceiver tile, Object[] arguments) {
-		List<Channel> channels;
+		Collection<Channel> channels;
 		try {
 			channels = ServerChannelRegister.instance.getChannelsForType(ChannelType.valueOf(((String) arguments[0]).toUpperCase(Locale.ENGLISH)));
 		} catch(IllegalArgumentException e) {
@@ -169,7 +170,7 @@ public class DriverTransceiver {
 	}
 
 	private static Object[] getChannels(TileTransceiver tile, Object[] arguments) {
-		List<Channel> channelList;
+		Collection<Channel> channelList;
 		try {
 			channelList = ServerChannelRegister.instance.getChannelsForType(ChannelType.valueOf(((String) arguments[0]).toUpperCase(Locale.ENGLISH)));
 		} catch(IllegalArgumentException e) {
@@ -179,7 +180,7 @@ public class DriverTransceiver {
 	}
 
 	private static Object[] isSendChannel(TileTransceiver tile, Object[] arguments) {
-		List<Channel> channels;
+		Collection<Channel> channels;
 		try {
 			channels = tile.getSendChannels(ChannelType.valueOf(((String) arguments[0]).toUpperCase(Locale.ENGLISH)));
 		} catch(IllegalArgumentException e) {
@@ -196,7 +197,7 @@ public class DriverTransceiver {
 	}
 
 	private static Object[] isReceiveChannel(TileTransceiver tile, Object[] arguments) {
-		List<Channel> channels;
+		Collection<Channel> channels;
 		try {
 			channels = tile.getRecieveChannels(ChannelType.valueOf(((String) arguments[0]).toUpperCase(Locale.ENGLISH)));
 		} catch(IllegalArgumentException e) {
@@ -221,9 +222,10 @@ public class DriverTransceiver {
 		return new Object[] { types };
 	}
 
-	public static class OCDriver extends DriverTileEntity {
+	public static class OCDriver extends DriverSidedTileEntity {
 
-		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TileTransceiver> {
+		public static class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TileTransceiver> {
+
 			public InternalManagedEnvironment(TileTransceiver tile) {
 				super(tile, Names.EnderIO_Transceiver);
 			}
@@ -314,7 +316,7 @@ public class DriverTransceiver {
 		}
 
 		@Override
-		public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
+		public ManagedEnvironment createEnvironment(World world, int x, int y, int z, ForgeDirection side) {
 			return new InternalManagedEnvironment(((TileTransceiver) world.getTileEntity(x, y, z)));
 		}
 	}

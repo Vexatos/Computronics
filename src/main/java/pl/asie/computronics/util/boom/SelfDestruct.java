@@ -3,13 +3,20 @@ package pl.asie.computronics.util.boom;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.ChunkPosition;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
+import pl.asie.computronics.Computronics;
+import pl.asie.computronics.network.PacketType;
+import pl.asie.lib.network.Packet;
+
+import java.io.IOException;
 
 /**
  * @author Vexatos
@@ -17,10 +24,12 @@ import net.minecraft.world.World;
 public class SelfDestruct extends Explosion {
 
 	private World worldObj;
+	private boolean destroyBlocks;
 
-	public SelfDestruct(World world, Entity exploder, double x, double y, double z, float size) {
+	public SelfDestruct(World world, Entity exploder, double x, double y, double z, float size, boolean destroyBlocks) {
 		super(world, exploder, x, y, z, size);
 		this.worldObj = world;
+		this.destroyBlocks = destroyBlocks;
 	}
 
 	//Unfortunately I had to copy a lot of code for this one.
@@ -65,12 +74,12 @@ public class SelfDestruct extends Explosion {
 
 				if(block.getMaterial() != Material.air) {
 					if(!this.worldObj.isRemote
-						&& i == Math.round(Math.floor(explosionX))
-						&& j == Math.round(Math.floor(explosionY))
-						&& k == Math.round(Math.floor(explosionZ))) {
-						//This is the case.
+						&& i == MathHelper.floor_double(explosionX)
+						&& j == MathHelper.floor_double(explosionY)
+						&& k == MathHelper.floor_double(explosionZ)) {
+						// This is the case.
 						TileEntity tile = this.worldObj.getTileEntity(i, j, k);
-						if(tile != null && tile instanceof IInventory) {
+						if(tile != null && !tile.isInvalid() && tile instanceof IInventory) {
 							IInventory inv = (IInventory) tile;
 							for(int slot = 0; slot < inv.getSizeInventory(); slot++) {
 								ItemStack stack = inv.getStackInSlot(slot);
@@ -80,7 +89,77 @@ public class SelfDestruct extends Explosion {
 							}
 						}
 					}
-					block.onBlockExploded(this.worldObj, i, j, k, this);
+					if(destroyBlocks) {
+						if(i != MathHelper.floor_double(explosionX)
+							|| j != MathHelper.floor_double(explosionY)
+							|| k != MathHelper.floor_double(explosionZ)) {
+							// This is not the case.
+							if(block.canDropFromExplosion(this)) {
+								block.dropBlockAsItemWithChance(this.worldObj, i, j, k, this.worldObj.getBlockMetadata(i, j, k), 1.0F / this.explosionSize, 0);
+							}
+						}
+						block.onBlockExploded(this.worldObj, i, j, k, this);
+					}
+				}
+			}
+		}
+	}
+
+	public static void goBoom(World world, double xPos, double yPos, double zPos, boolean destroyBlocks) {
+		SelfDestruct explosion = new SelfDestruct(world, null, xPos, yPos, zPos, 4.0F, destroyBlocks);
+		explosion.isSmoking = true;
+		explosion.isFlaming = false;
+		explosion.doExplosionA();
+		explosion.doExplosionB(false);
+
+		int x = (int) xPos;
+		int y = (int) yPos;
+		int z = (int) zPos;
+
+		for(Object playerEntity : world.playerEntities) {
+			if(playerEntity instanceof EntityPlayerMP) {
+				EntityPlayerMP entityplayer = (EntityPlayerMP) playerEntity;
+
+				if(entityplayer.getDistanceSq(xPos, yPos, zPos) < 4096.0D) {
+					try {
+						Packet p = Computronics.packet.create(PacketType.COMPUTER_BOOM.ordinal())
+							.writeDouble(xPos)
+							.writeDouble(yPos)
+							.writeDouble(zPos)
+							.writeFloat(4.0F)
+							.writeByte((byte) (destroyBlocks ? 1 : 0));
+						p.writeInt(explosion.affectedBlockPositions.size());
+
+						{
+							byte j, k, l;
+							for(Object affectedBlockPosition1 : explosion.affectedBlockPositions) {
+								ChunkPosition chunkposition = (ChunkPosition) affectedBlockPosition1;
+								j = (byte) (chunkposition.chunkPosX - x);
+								k = (byte) (chunkposition.chunkPosY - y);
+								l = (byte) (chunkposition.chunkPosZ - z);
+								p.writeByte(j);
+								p.writeByte(k);
+								p.writeByte(l);
+							}
+						}
+
+						Vec3 motion = (Vec3) explosion.func_77277_b().get(entityplayer);
+						float motionX = 0;
+						float motionY = 0;
+						float motionZ = 0;
+						if(motion != null) {
+							motionY = (float) motion.xCoord;
+							motionX = (float) motion.yCoord;
+							motionZ = (float) motion.zCoord;
+						}
+						p.writeFloat(motionY);
+						p.writeFloat(motionX);
+						p.writeFloat(motionZ);
+
+						Computronics.packet.sendTo(p, entityplayer);
+					} catch(IOException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		}

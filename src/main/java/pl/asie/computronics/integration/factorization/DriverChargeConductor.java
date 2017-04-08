@@ -8,9 +8,10 @@ import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.ManagedEnvironment;
-import li.cil.oc.api.prefab.DriverTileEntity;
+import li.cil.oc.api.prefab.DriverSidedTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
 import pl.asie.computronics.integration.CCMultiPeripheral;
 import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
@@ -25,8 +26,10 @@ public class DriverChargeConductor {
 		return new Object[] { tile.getCharge().getValue() };
 	}
 
-	public static class OCDriver extends DriverTileEntity {
-		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<IChargeConductor> {
+	public static class OCDriver extends DriverSidedTileEntity {
+
+		public static class InternalManagedEnvironment extends ManagedEnvironmentOCTile<IChargeConductor> {
+
 			public InternalManagedEnvironment(IChargeConductor tile) {
 				super(tile, Names.FZ_ChargeConductor);
 			}
@@ -43,7 +46,7 @@ public class DriverChargeConductor {
 		}
 
 		@Override
-		public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
+		public ManagedEnvironment createEnvironment(World world, int x, int y, int z, ForgeDirection side) {
 			return new InternalManagedEnvironment((IChargeConductor) world.getTileEntity(x, y, z));
 		}
 	}
@@ -75,8 +78,8 @@ public class DriverChargeConductor {
 		public Object[] callMethod(IComputerAccess computer, ILuaContext context,
 			int method, Object[] arguments) throws LuaException,
 			InterruptedException {
-			switch(method){
-				case 0:{
+			switch(method) {
+				case 0: {
 					return DriverChargeConductor.getCharge(tile);
 				}
 			}

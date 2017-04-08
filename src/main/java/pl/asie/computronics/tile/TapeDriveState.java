@@ -2,40 +2,55 @@ package pl.asie.computronics.tile;
 
 import net.minecraft.world.World;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.api.audio.AudioPacket;
+import pl.asie.computronics.api.audio.AudioPacketDFPWM;
+import pl.asie.computronics.api.audio.IAudioSource;
 import pl.asie.computronics.api.tape.ITapeStorage;
-import pl.asie.computronics.network.Packets;
-import pl.asie.lib.network.Packet;
+import pl.asie.computronics.audio.AudioUtils;
+
+import java.util.Arrays;
 
 public class TapeDriveState {
 	public enum State {
 		STOPPED,
 		PLAYING,
 		REWINDING,
-		FORWARDING
+		FORWARDING;
+
+		public static final State[] VALUES = values();
 	}
-	
+
 	private State state = State.STOPPED;
-	private int codecId, codecTick, packetId;
+	private int codecId;//, packetId;
+    private long lastCodecTime;
 	protected int packetSize = 1024;
 	protected int soundVolume = 127;
 	private ITapeStorage storage;
-	
+
 	public ITapeStorage getStorage() { return storage; }
 	protected void setStorage(ITapeStorage storage) { this.storage = storage; }
 	protected void setState(State state) { this.state = state; }
-	
+
 	public boolean setSpeed(float speed) {
 		if(speed < 0.25F || speed > 2.0F) return false;
 		this.packetSize = Math.round(1024*speed);
 		return true;
 	}
-	
+
+	public int getId() {
+		return codecId;
+	}
+
+	public byte getVolume() {
+		return (byte) soundVolume;
+	}
+
 	public void setVolume(float volume) {
 		if(volume < 0.0F) volume = 0.0F;
 		if(volume > 1.0F) volume = 1.0F;
-		this.soundVolume = (int)Math.floor(volume*127);
+		this.soundVolume = (int) Math.floor(volume * 127.0F);
 	}
-	
+
 	public void switchState(World worldObj, int x, int y, int z, State newState) {
 		if(worldObj.isRemote) { // Client-side happening
 			if(newState == state) return;
@@ -43,56 +58,47 @@ public class TapeDriveState {
 		if(!worldObj.isRemote) { // Server-side happening
 			if(this.storage == null) newState = State.STOPPED;
 			if(state == State.PLAYING) { // State is playing - stop playback
-				Computronics.instance.audio.removePlayer(codecId);
-				try {
-					Packet pkt = Computronics.packet.create(Packets.PACKET_AUDIO_STOP)
-						.writeInt(codecId);
-					Computronics.packet.sendToAll(pkt);
-				} catch(Exception e) { e.printStackTrace(); }
+				AudioUtils.removePlayer(Computronics.instance.managerId, codecId);
 			}
 			if(newState == State.PLAYING) { // Time to play again!
 				codecId = Computronics.instance.audio.newPlayer();
 				Computronics.instance.audio.getPlayer(codecId);
-				codecTick = 0;
-				packetId = 0;
+				lastCodecTime = System.nanoTime();
 			}
 		}
 		state = newState;
 		//sendState();
 	}
-	
+
 	public State getState() {
 		return state;
 	}
 
-	private Packet createMusicPacket(World worldObj, int x, int y, int z) {
-		byte[] packet = new byte[packetSize];
-		int amount = storage.read(packet, false); // read data into packet array
-		try {
-			Packet pkt = Computronics.packet.create(Packets.PACKET_AUDIO_DATA)
-				.writeInt(worldObj.provider.dimensionId)
-				.writeInt(x).writeInt(y).writeInt(z)
-				.writeInt(packetId++)
-				.writeInt(codecId)
-				.writeShort((short)packetSize)
-				.writeByte((byte)soundVolume)
-				.writeByteArrayData(packet);
-			if(amount < packetSize) switchState(worldObj, x, y, z, State.STOPPED);
-			return pkt;
-		} catch(Exception e) { e.printStackTrace(); return null; }
+	private AudioPacket createMusicPacket(IAudioSource source, World worldObj, int x, int y, int z) {
+		byte[] pktData = new byte[packetSize];
+		int amount = storage.read(pktData, false); // read data into packet array
+
+		if (amount < packetSize) switchState(worldObj, x, y, z, State.STOPPED);
+
+		if (amount > 0) {
+			return new AudioPacketDFPWM(source, getVolume(), packetSize * 8 * 4, amount == packetSize ? pktData : Arrays.copyOf(pktData, amount));
+		} else {
+			return null;
+		}
 	}
-	
-	public Packet update(World worldObj, int x, int y, int z) {
+
+	public AudioPacket update(IAudioSource source, World worldObj, int x, int y, int z) {
 		if(!worldObj.isRemote) {
 			switch(state) {
 				case PLAYING: {
 					if(storage.getPosition() >= storage.getSize() || storage.getPosition() < 0){
 						storage.setPosition(storage.getPosition());
 					}
-					if(codecTick % 5 == 0) {
-						codecTick++;
-						return createMusicPacket(worldObj, x, y, z);
-					} else codecTick++;
+                    long time = System.nanoTime();
+					if ((time - (250 * 1000000)) > lastCodecTime) {
+                        lastCodecTime += (250 * 1000000);
+						return createMusicPacket(source, worldObj, x, y, z);
+					}
 				} break;
 				case REWINDING: {
 					int seeked = storage.seek(-2048);
@@ -101,7 +107,7 @@ public class TapeDriveState {
 				case FORWARDING: {
 					int seeked = storage.seek(2048);
 					if(seeked < 2048) switchState(worldObj, x, y, z, State.STOPPED);
-				} break;	
+				} break;
 				case STOPPED: {
 				} break;
 			}

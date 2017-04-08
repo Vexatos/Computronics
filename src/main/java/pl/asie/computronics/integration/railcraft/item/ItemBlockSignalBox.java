@@ -19,6 +19,7 @@ public class ItemBlockSignalBox extends ItemBlock {
 	}
 
 	// Taken from Railcraft code
+	@Override
 	public boolean func_150936_a(World world, int x, int y, int z, int side, EntityPlayer player, ItemStack stack) {
 		Block oldBlock = world.getBlock(x, y, z);
 		if(oldBlock == Blocks.snow_layer) {
@@ -49,6 +50,6 @@ public class ItemBlockSignalBox extends ItemBlock {
 			}
 		}
 
-		return world.canPlaceEntityOnSide(this.field_150939_a, x, y, z, false, side, null, stack) && (!SignalTypes.Digital.needsSupport() || world.isSideSolid(x, y - 1, z, ForgeDirection.UP));
+		return world.canPlaceEntityOnSide(this.field_150939_a, x, y, z, false, side, null, stack) && (!SignalTypes.DigitalReceiver.needsSupport() || world.isSideSolid(x, y - 1, z, ForgeDirection.UP));
 	}
 }

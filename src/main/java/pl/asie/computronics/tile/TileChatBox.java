@@ -14,6 +14,7 @@ import pl.asie.computronics.api.chat.IChatListener;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.ChatBoxUtils;
+import pl.asie.computronics.util.OCUtils;
 
 public class TileChatBox extends TileEntityPeripheralBase implements IChatListener {
 
@@ -75,6 +76,7 @@ public class TileChatBox extends TileEntityPeripheralBase implements IChatListen
 		}
 	}
 
+	@Override
 	public void receiveChatMessage(ServerChatEvent event) {
 		if(!worldObj.blockExists(xCoord, yCoord, zCoord)) {
 			return;
@@ -132,6 +134,16 @@ public class TileChatBox extends TileEntityPeripheralBase implements IChatListen
 		}
 	}
 
+	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
+	protected OCUtils.Device deviceInfo() {
+		return new OCUtils.Device(
+			DeviceClass.Multimedia,
+			"Chat interface",
+			OCUtils.Vendors.NSA,
+			"[CLASSIFIED]"
+		);
+	}
 	// OpenComputers API
 
 	@Callback(doc = "function(text:string [, distance:number]):boolean; "
@@ -281,23 +293,5 @@ public class TileChatBox extends TileEntityPeripheralBase implements IChatListen
 			}
 		}
 		return null;
-	}
-
-	@Override
-	@Optional.Method(modid = Mods.NedoComputers)
-	public short busRead(int addr) {
-		return 0;
-	}
-
-	@Override
-	@Optional.Method(modid = Mods.NedoComputers)
-	public void busWrite(int addr, short data) {
-		switch((addr & 0xFFFE)) {
-			case 0:
-				if(data > 0) {
-					distance = data;
-				}
-				break;
-		}
 	}
 }

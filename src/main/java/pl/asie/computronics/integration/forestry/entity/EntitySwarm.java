@@ -1,16 +1,31 @@
 package pl.asie.computronics.integration.forestry.entity;
 
+import com.mojang.authlib.GameProfile;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import forestry.api.apiculture.BeeManager;
+import forestry.api.apiculture.DefaultBeeListener;
+import forestry.api.apiculture.DefaultBeeModifier;
+import forestry.api.apiculture.IBeeGenome;
+import forestry.api.apiculture.IBeeHousing;
+import forestry.api.apiculture.IBeeHousingInventory;
+import forestry.api.apiculture.IBeeListener;
+import forestry.api.apiculture.IBeeModifier;
+import forestry.api.apiculture.IBeekeepingLogic;
+import forestry.api.core.EnumHumidity;
+import forestry.api.core.EnumTemperature;
+import forestry.api.core.ForestryAPI;
+import forestry.api.core.IErrorLogic;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.MathHelper;
@@ -23,12 +38,13 @@ import pl.asie.computronics.Computronics;
 import pl.asie.computronics.integration.forestry.nanomachines.SwarmProvider;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
  * @author Vexatos
  */
-public class EntitySwarm extends EntityFlyingCreature {
+public class EntitySwarm extends EntityFlyingCreature implements IBeeHousing {
 
 	public static final DamageSource beeDamageSource = new BeeDamageSource("computronics.sting", 5);
 	public static final DamageSource beeDamageSourceSelf = new BeeDamageSource("computronics.sting.self", 1);
@@ -38,10 +54,13 @@ public class EntitySwarm extends EntityFlyingCreature {
 	public EntitySwarm(World world) {
 		super(world);
 		this.setSize(1.0F, 1.0F);
+		this.inventory = new SwarmHousingInventory();
 	}
 
-	public EntitySwarm(World world, double x, double y, double z) {
+	public EntitySwarm(World world, double x, double y, double z, ItemStack queen) {
 		this(world);
+		this.setSize(1.0F, 1.0F);
+		this.inventory.setQueen(queen);
 		this.setPosition(x, y, z);
 		this.prevPosX = x;
 		this.prevPosY = y;
@@ -69,6 +88,9 @@ public class EntitySwarm extends EntityFlyingCreature {
 				if(!(biome instanceof BiomeGenDesert) && (worldObj.isRaining() || worldObj.isThundering())) {
 					this.setDead();
 				}
+			}
+			if(beeLogic.canWork()) {
+				beeLogic.doWork();
 			}
 		} else {
 			/*ArrayList<Entity> toKeep = new ArrayList<Entity>();
@@ -127,7 +149,7 @@ public class EntitySwarm extends EntityFlyingCreature {
 
 				//this.faceEntity(target, 10.0F, (float) this.getVerticalFaceSpeed());
 
-				if(dist < 1f && !(target instanceof EntityPlayer && BeeManager.armorApiaristHelper.wearsItems((EntityPlayer) target, "computronics:swarm", true) >= 4)) {
+				if(dist < 1f && !(target instanceof EntityPlayer && BeeManager.armorApiaristHelper.wearsItems(target, "computronics:swarm", true) >= 4)) {
 					target.attackEntityFrom(!aggressive ? beeDamageSource : beeDamageSourceSelf, getAmplifier() + (aggressive ? 1F : 0F));
 				}
 			}
@@ -137,9 +159,44 @@ public class EntitySwarm extends EntityFlyingCreature {
 				moveTo(player.posX + look.xCoord, player.posY + look.yCoord, player.posZ + look.zCoord,
 					player.width / 2f, ((player.height / 2f) + player.getEyeHeight()) / 2f, 0.3f, 1f, 0.5f);
 			} else {
-				moveTo(player, 3f, 0.3f, 1f);
+				circle(player, 3f, 0.3f, 1f, 1f);
 			}
 		}
+	}
+
+	private double circle(EntityLivingBase target, float yOffset, float modifier, float xFuzzy, float radius) {
+		final Vec3 direction;
+		{
+			Vec3 pos = Vec3.createVectorHelper(posX, posY, posZ);
+			double y = pos.yCoord;
+			pos = pos.addVector(0, -pos.yCoord, 0);
+			Vec3 targetPos = Vec3.createVectorHelper(target.posX, target.posY, target.posZ);
+			y = targetPos.yCoord + yOffset - y;
+			y /= Math.abs(y);
+			targetPos = targetPos.addVector(0, -targetPos.yCoord, 0);
+			final Vec3 between = pos.subtract(targetPos);
+			final Vec3 betweenX = Vec3.createVectorHelper(between.xCoord / Math.abs(between.xCoord), between.yCoord / Math.abs(between.xCoord), between.zCoord / Math.abs(between.xCoord));
+			final double normdist = betweenX.lengthVector();
+			Vec3 targetRadius = Vec3.createVectorHelper(betweenX.xCoord * radius / normdist, betweenX.yCoord * radius / normdist, betweenX.zCoord * radius / normdist);
+			{
+				final Vec3 dir = Vec3.createVectorHelper(0, 1, 0).crossProduct(between).normalize();
+				targetRadius = targetRadius.addVector(dir.xCoord, dir.yCoord, dir.zCoord);
+			}
+			direction = targetRadius.subtract(between).addVector(0, y, 0).normalize();
+		}
+
+		modifier /= 10f;
+
+		double res = direction.xCoord * direction.xCoord + direction.yCoord * direction.yCoord + direction.zCoord * direction.zCoord;
+
+		double ndeltaX = maxAbs(direction.xCoord, Math.signum(direction.xCoord), xFuzzy) * modifier;
+		double ndeltaY = maxAbs(direction.yCoord, Math.signum(direction.yCoord), xFuzzy) /*vec3.yCoord*/ * modifier;
+		double ndeltaZ = maxAbs(direction.zCoord, Math.signum(direction.zCoord), xFuzzy) * modifier;
+		motionX += minAbs(ndeltaX, Math.signum(ndeltaX), 0.5);
+		motionY += minAbs(ndeltaY, Math.signum(ndeltaY), 0.5);
+		motionZ += minAbs(ndeltaZ, Math.signum(ndeltaZ), 0.5);
+
+		return res;
 	}
 
 	private double moveTo(EntityLivingBase target, double yOffset, float modifier, float xFuzzy) {
@@ -197,7 +254,7 @@ public class EntitySwarm extends EntityFlyingCreature {
 	protected boolean interact(EntityPlayer player) {
 		if(!worldObj.isRemote && this.player != null && player == this.player && player.isSneaking() && player.getHeldItem() == null) {
 			setDead();
-			SwarmProvider.swingItem(player);
+			SwarmProvider.swingItem(player, null);
 			return true;
 		}
 		return super.interact(player);
@@ -422,6 +479,7 @@ public class EntitySwarm extends EntityFlyingCreature {
 			this.numCauses = numCauses;
 		}
 
+		@Override
 		public IChatComponent func_151519_b(EntityLivingBase victim) {
 			EntityLivingBase damager = victim.func_94060_bK();
 			String format = "death.attack." + this.damageType + (numCauses > 1 ? "." + (victim.worldObj.rand.nextInt(this.numCauses) + 1) : "");
@@ -440,5 +498,166 @@ public class EntitySwarm extends EntityFlyingCreature {
 		public Entity getEntity() {
 			return this.entity;
 		}*/
+	}
+
+	private final IBeekeepingLogic beeLogic = BeeManager.beeRoot.createBeekeepingLogic(this);
+	private final IErrorLogic errorLogic = ForestryAPI.errorStateRegistry.createErrorLogic();
+	private final IBeeHousingInventory inventory;
+	private final IBeeListener beeListener = new SwarmBeeListener();
+
+	@Override
+	public Iterable<IBeeModifier> getBeeModifiers() {
+		return Collections.singletonList(SwarmBeeModifier.instance);
+	}
+
+	@Override
+	public Iterable<IBeeListener> getBeeListeners() {
+		return Collections.singletonList(beeListener);
+	}
+
+	@Override
+	public IBeeHousingInventory getBeeInventory() {
+		return inventory;
+	}
+
+	@Override
+	public IBeekeepingLogic getBeekeepingLogic() {
+		return beeLogic;
+	}
+
+	@Override
+	public EnumTemperature getTemperature() {
+		return EnumTemperature.getFromBiome(getBiome(), getX(), getY(), getZ());
+	}
+
+	@Override
+	public EnumHumidity getHumidity() {
+		return EnumHumidity.getFromValue(getBiome().rainfall);
+	}
+
+	@Override
+	public int getBlockLightValue() {
+		return worldObj.getBlockLightValue(getX(), getY(), getZ());
+	}
+
+	@Override
+	public boolean canBlockSeeTheSky() {
+		return worldObj.canBlockSeeTheSky(getX(), getY() + 1, getZ());
+	}
+
+	@Override
+	public World getWorld() {
+		return worldObj;
+	}
+
+	@Override
+	public BiomeGenBase getBiome() {
+		return worldObj.getBiomeGenForCoords(getX(), getZ());
+	}
+
+	@Override
+	public GameProfile getOwner() {
+		return player != null ? player.getGameProfile() : null;
+	}
+
+	@Override
+	public Vec3 getBeeFXCoordinates() {
+		return Vec3.createVectorHelper(posX, posY + 0.25, posZ);
+	}
+
+	@Override
+	public IErrorLogic getErrorLogic() {
+		return errorLogic;
+	}
+
+	@Override
+	public ChunkCoordinates getCoordinates() {
+		return new ChunkCoordinates(getX(), getY(), getZ());
+	}
+
+	public int getX() {
+		return MathHelper.floor_double(posX);
+	}
+
+	public int getY() {
+		return MathHelper.floor_double(posY);
+	}
+
+	public int getZ() {
+		return MathHelper.floor_double(posZ);
+	}
+
+	public static class SwarmHousingInventory implements IBeeHousingInventory {
+
+		private ItemStack queenStack;
+
+		@Override
+		public ItemStack getQueen() {
+			return queenStack;
+		}
+
+		@Override
+		public ItemStack getDrone() {
+			return null;
+		}
+
+		@Override
+		public void setQueen(ItemStack stack) {
+			this.queenStack = stack;
+		}
+
+		@Override
+		public void setDrone(ItemStack stack) {
+			// NO-OP
+		}
+
+		@Override
+		public boolean addProduct(ItemStack product, boolean all) {
+			return true; // Consume all products without doing anything.
+		}
+	}
+
+	public class SwarmBeeListener extends DefaultBeeListener {
+
+		@Override
+		public void onQueenDeath() {
+			super.onQueenDeath();
+			setDead();
+		}
+	}
+
+	public static class SwarmBeeModifier extends DefaultBeeModifier {
+
+		public static final IBeeModifier instance = new SwarmBeeModifier();
+
+		@Override
+		public float getTerritoryModifier(IBeeGenome genome, float currentModifier) {
+			return 0.5f;
+		}
+
+		@Override
+		public float getMutationModifier(IBeeGenome genome, IBeeGenome mate, float currentModifier) {
+			return 0.0f;
+		}
+
+		@Override
+		public float getLifespanModifier(IBeeGenome genome, IBeeGenome mate, float currentModifier) {
+			return 1.1f;
+		}
+
+		@Override
+		public float getProductionModifier(IBeeGenome genome, float currentModifier) {
+			return 0.0f;
+		}
+
+		@Override
+		public float getFloweringModifier(IBeeGenome genome, float currentModifier) {
+			return 0.0f;
+		}
+
+		@Override
+		public float getGeneticDecay(IBeeGenome genome, float currentModifier) {
+			return 100f;
+		}
 	}
 }

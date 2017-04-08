@@ -7,11 +7,12 @@ import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.ManagedEnvironment;
-import li.cil.oc.api.prefab.DriverTileEntity;
+import li.cil.oc.api.prefab.DriverSidedTileEntity;
 import mods.railcraft.common.blocks.tracks.TileTrack;
 import mods.railcraft.common.blocks.tracks.TrackPriming;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
 import pl.asie.computronics.integration.CCMultiPeripheral;
 import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
@@ -36,9 +37,9 @@ public class DriverPrimingTrack {
 		return new Object[] { false, "not a valid fuse time value, needs to be between 0 and 500" };
 	}
 
-	public static class OCDriver extends DriverTileEntity {
+	public static class OCDriver extends DriverSidedTileEntity {
 
-		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TrackPriming> {
+		public static class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TrackPriming> {
 
 			public InternalManagedEnvironment(TrackPriming tile) {
 				super(tile, Names.Railcraft_PrimingTrack);
@@ -62,19 +63,20 @@ public class DriverPrimingTrack {
 		}
 
 		@Override
-		public boolean worksWith(World world, int x, int y, int z) {
+		public boolean worksWith(World world, int x, int y, int z, ForgeDirection side) {
 			TileEntity tileEntity = world.getTileEntity(x, y, z);
 			return (tileEntity != null) && tileEntity instanceof TileTrack
 				&& ((TileTrack) tileEntity).getTrackInstance() instanceof TrackPriming;
 		}
 
 		@Override
-		public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
+		public ManagedEnvironment createEnvironment(World world, int x, int y, int z, ForgeDirection side) {
 			return new InternalManagedEnvironment((TrackPriming) ((TileTrack) world.getTileEntity(x, y, z)).getTrackInstance());
 		}
 	}
 
 	public static class CCDriver extends CCMultiPeripheral<TrackPriming> {
+
 		public CCDriver() {
 		}
 
@@ -98,11 +100,11 @@ public class DriverPrimingTrack {
 
 		@Override
 		public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
-			switch(method){
-				case 0:{
+			switch(method) {
+				case 0: {
 					return DriverPrimingTrack.getFuse(tile);
 				}
-				case 1:{
+				case 1: {
 					if(arguments.length < 1 || !(arguments[0] instanceof Double)) {
 						throw new LuaException("first argument needs to be a number");
 					}

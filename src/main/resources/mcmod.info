@@ -2,7 +2,7 @@
 {
   "modid": "computronics",
   "name": "Computronics",
-  "description": "A ComputerCraft/OpenComputers/NedoComputers addon mod.",
+  "description": "A ComputerCraft/OpenComputers addon mod.",
   "version": "${version}",
   "credits": "",
   "logoFile": "",

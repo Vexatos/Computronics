@@ -2,31 +2,79 @@ package pl.asie.computronics.tile;
 
 //import java.nio.file.FileSystem;
 
+import com.google.common.base.Charsets;
 import cpw.mods.fml.common.Optional;
+import dan200.computercraft.api.filesystem.IMount;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
-import li.cil.oc.api.network.Component;
-import li.cil.oc.api.network.ManagedEnvironment;
 import li.cil.oc.api.network.Node;
-import li.cil.oc.api.network.Visibility;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.api.audio.AudioPacket;
+import pl.asie.computronics.api.audio.IAudioReceiver;
+import pl.asie.computronics.api.audio.IAudioSource;
 import pl.asie.computronics.api.tape.IItemTapeStorage;
-import pl.asie.computronics.item.ItemTape;
-import pl.asie.computronics.network.Packets;
+import pl.asie.computronics.cc.ComputronicsFileMount;
+import pl.asie.computronics.network.PacketType;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TapeDriveState.State;
+import pl.asie.computronics.util.OCUtils;
 import pl.asie.lib.api.tile.IInventoryProvider;
 import pl.asie.lib.network.Packet;
+import pl.asie.lib.util.ColorUtils;
+import pl.asie.lib.util.internal.IColorable;
 
-public class TileTapeDrive extends TileEntityPeripheralBase implements IInventoryProvider {
+import java.util.HashMap;
+
+public class TileTapeDrive extends TileEntityPeripheralBase implements IInventoryProvider, IAudioSource {
+
+	private final IAudioReceiver internalSpeaker = new IAudioReceiver() {
+		@Override
+		public boolean connectsAudio(ForgeDirection side) {
+			return true;
+		}
+
+		@Override
+		public World getSoundWorld() {
+			return worldObj;
+		}
+
+		@Override
+		public int getSoundX() {
+			return xCoord;
+		}
+
+		@Override
+		public int getSoundY() {
+			return yCoord;
+		}
+
+		@Override
+		public int getSoundZ() {
+			return zCoord;
+		}
+
+		@Override
+		public int getSoundDistance() {
+			return Config.TAPEDRIVE_DISTANCE;
+		}
+
+		@Override
+		public void receivePacket(AudioPacket packet, ForgeDirection direction) {
+			packet.addReceiver(this);
+		}
+	};
+
 	private String storageName = "";
 	private TapeDriveState state;
 
@@ -34,49 +82,122 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 		super("tape_drive");
 		this.createInventory(1);
 		this.state = new TapeDriveState();
-		if(Mods.isLoaded(Mods.OpenComputers) && node() != null) {
-			initOCFilesystem();
+	}
+
+	private static Object cc_fs;
+	private static Object cc_fs_autorun; // dan200, why?
+	protected HashMap<IComputerAccess, String> computerMountPointsCC;
+	protected HashMap<IComputerAccess, String> computerMountPointsCC_autorun;
+
+	@Optional.Method(modid = Mods.ComputerCraft)
+	protected IMount cc_fs() {
+		return (IMount) cc_fs;
+	}
+
+	@Optional.Method(modid = Mods.ComputerCraft)
+	protected IMount cc_autorun_fs() {
+		return (IMount) cc_fs_autorun;
+	}
+
+	@Optional.Method(modid = Mods.ComputerCraft)
+	public static void initCCFilesystem() {
+		if(cc_fs == null) {
+			cc_fs = ComputronicsFileMount.createMount(Computronics.class, Mods.Computronics, "lua/peripheral/tape_drive/programs/tape_drive");
+			if(cc_fs == null) {
+				Computronics.log.error("Unable to create ComputerCraft mount for tape drive programs.");
+			}
+		}
+		if(cc_fs_autorun == null) {
+			cc_fs_autorun = ComputronicsFileMount.createMount(Computronics.class, Mods.Computronics, "lua/peripheral/tape_drive/autorun/tape_drive");
+			if(cc_fs == null) {
+				Computronics.log.error("Unable to create ComputerCraft mount for tape drive autorun program.");
+			}
 		}
 	}
 
-	private ManagedEnvironment oc_fs;
+	@Override
+	@Optional.Method(modid = Mods.ComputerCraft)
+	public void attach(IComputerAccess computer) {
+		super.attach(computer);
+		if(computerMountPointsCC == null) {
+			computerMountPointsCC = new HashMap<IComputerAccess, String>(2);
+		}
+		IMount mount = cc_fs();
+		if(mount != null) {
+			String mountPoint = computer.mount("rom/programs/tape_drive", mount);
+			if(mountPoint != null) {
+				computerMountPointsCC.put(computer, mountPoint);
+			}
+		}
+		if(computerMountPointsCC_autorun == null) {
+			computerMountPointsCC_autorun = new HashMap<IComputerAccess, String>(2);
+		}
+		mount = cc_autorun_fs();
+		if(mount != null) {
+			String mountPoint = computer.mount("rom/autorun/tape_drive", mount);
+			if(mountPoint != null) {
+				computerMountPointsCC_autorun.put(computer, mountPoint);
+			}
+		}
+	}
 
-	@Optional.Method(modid = Mods.OpenComputers)
-	private void initOCFilesystem() {
-		oc_fs = li.cil.oc.api.FileSystem.asManagedEnvironment(li.cil.oc.api.FileSystem.fromClass(Computronics.class, Mods.Computronics, "lua/component/tape_drive"),
-			"tape_drive");
-		((Component) oc_fs.node()).setVisibility(Visibility.Network);
+	@Override
+	@Optional.Method(modid = Mods.ComputerCraft)
+	public void detach(IComputerAccess computer) {
+		super.detach(computer);
+		if(computerMountPointsCC == null) {
+			computerMountPointsCC = new HashMap<IComputerAccess, String>(2);
+		}
+		String mountPoint = computerMountPointsCC.remove(computer);
+		if(mountPoint != null) {
+			computer.unmount(mountPoint);
+		}
+		if(computerMountPointsCC_autorun == null) {
+			computerMountPointsCC_autorun = new HashMap<IComputerAccess, String>(2);
+		}
+		mountPoint = computerMountPointsCC_autorun.remove(computer);
+		if(mountPoint != null) {
+			computer.unmount(mountPoint);
+		}
 	}
 
 	@Override
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void onConnect(final Node node) {
-		if(node.host() instanceof Context) {
-			node.connect(oc_fs.node());
-		}
+		super.onConnect(node);
 	}
-	// GUI/State
 
 	@Override
 	@Optional.Method(modid = Mods.OpenComputers)
-	public void onDisconnect(final Node node) {
-		if(node.host() instanceof Context) {
-			// Remove our file systems when we get disconnected from a
-			// computer.
-			node.disconnect(oc_fs.node());
-		} else if(node == this.node()) {
-			// Remove the file system if we are disconnected, because in that
-			// case this method is only called once.
-			oc_fs.node().remove();
-		}
+	protected void onChunkUnload_OC() {
+		super.onChunkUnload_OC();
 	}
+
+	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
+	protected void invalidate_OC() {
+		super.invalidate_OC();
+	}
+
+	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
+	protected OCUtils.Device deviceInfo() {
+		return new OCUtils.Device(
+			DeviceClass.Tape,
+			"Tape drive",
+			OCUtils.Vendors.Yanaki,
+			"DFPWM 1"
+		);
+	}
+
+	// GUI/State
 
 	protected void sendState() {
 		if(worldObj.isRemote) {
 			return;
 		}
 		try {
-			Packet packet = Computronics.packet.create(Packets.PACKET_TAPE_GUI_STATE)
+			Packet packet = Computronics.packet.create(PacketType.TAPE_GUI_STATE.ordinal())
 				.writeTileLocation(this)
 				.writeByte((byte) state.getState().ordinal());
 			//.writeByte((byte)soundVolume);
@@ -99,13 +220,88 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 		}
 	}
 
+	public void setSpeed(float speed) {
+		this.state.setSpeed(speed);
+	}
+
+	public void setVolume(float vol) {
+		this.state.setVolume(vol);
+	}
+
+	public boolean isEnd() {
+		return state.getStorage() == null || state.getStorage().getPosition() + state.packetSize > state.getStorage().getSize();
+	}
+
+	public boolean isReady() {
+		return state.getStorage() != null;
+	}
+
+	public int getSize() {
+		return (state.getStorage() != null ? state.getStorage().getSize() : 0);
+	}
+
+	public int getPosition() {
+		return state.getStorage() != null ? state.getStorage().getPosition() : 0;
+	}
+
+	public int seek(int bytes) {
+		return state.getStorage() != null ? state.getStorage().seek(bytes) : 0;
+	}
+
+	public int read() {
+		return read(false);
+	}
+
+	public int read(boolean simulate) {
+		if(state.getStorage() != null) {
+			return state.getStorage().read(simulate) & 0xFF;
+		} else {
+			return 0;
+		}
+	}
+
+	public byte[] read(int amount) {
+		if(state.getStorage() != null) {
+			byte[] data = new byte[amount];
+			state.getStorage().read(data, false);
+			return data;
+		}
+		return null;
+	}
+
+	public void write(byte b) {
+		state.getStorage().write(b);
+	}
+
+	public int write(byte[] bytes) {
+		return state.getStorage().write(bytes);
+	}
+
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
 		State st = getEnumState();
-		Packet pkt = state.update(worldObj, xCoord, yCoord, zCoord);
+		AudioPacket pkt = state.update(this, worldObj, xCoord, yCoord, zCoord);
 		if(pkt != null) {
-			Computronics.packet.sendToAllAround(pkt, this, Config.TAPEDRIVE_DISTANCE * 2);
+			int receivers = 0;
+			for(int i = 0; i < 6; i++) {
+				ForgeDirection dir = ForgeDirection.getOrientation(i);
+				TileEntity tile = worldObj.getTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
+				if(tile instanceof IAudioReceiver) {
+					if(tile instanceof IColorable && ((IColorable) tile).canBeColored()
+						&& !ColorUtils.isSameOrDefault(this, (IColorable) tile)) {
+						continue;
+					}
+					((IAudioReceiver) tile).receivePacket(pkt, dir.getOpposite());
+					receivers++;
+				}
+			}
+
+			if(receivers == 0) {
+				internalSpeaker.receivePacket(pkt, ForgeDirection.UNKNOWN);
+			}
+
+			pkt.sendPacket();
 		}
 		if(!worldObj.isRemote && st != getEnumState()) {
 			sendState();
@@ -248,7 +444,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
 		if(tag.hasKey("state")) {
-			this.state.setState(State.values()[tag.getByte("state")]);
+			this.state.setState(State.VALUES[tag.getByte("state")]);
 		}
 		if(tag.hasKey("sp")) {
 			this.state.packetSize = tag.getShort("sp");
@@ -275,20 +471,12 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void readFromNBT_OC(NBTTagCompound tag) {
 		super.readFromNBT_OC(tag);
-		if(oc_fs != null && oc_fs.node() != null) {
-			oc_fs.node().load(tag.getCompoundTag("oc:fs"));
-		}
 	}
 
 	@Override
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void writeToNBT_OC(NBTTagCompound tag) {
 		super.writeToNBT_OC(tag);
-		if(oc_fs != null && oc_fs.node() != null) {
-			final NBTTagCompound fsNbt = new NBTTagCompound();
-			oc_fs.node().save(fsNbt);
-			tag.setTag("oc:fs", fsNbt);
-		}
 	}
 
 	@Override
@@ -308,7 +496,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 	public void readFromRemoteNBT(NBTTagCompound tag) {
 		super.readFromRemoteNBT(tag);
 		if(tag.hasKey("state")) {
-			this.state.setState(State.values()[tag.getByte("state")]);
+			this.state.setState(State.VALUES[tag.getByte("state")]);
 		}
 	}
 
@@ -317,23 +505,25 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 	@Callback(doc = "function():boolean; Returns true if the tape drive is empty or the inserted tape has reached its end", direct = true)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] isEnd(Context context, Arguments args) {
-		if(state.getStorage() != null) {
-			return new Object[] { state.getStorage().getPosition() + state.packetSize > state.getStorage().getSize() };
-		} else {
-			return new Object[] { true };
-		}
+		return new Object[] { isEnd() };
 	}
 
 	@Callback(doc = "function():boolean; Returns true if there is a tape inserted", direct = true)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] isReady(Context context, Arguments args) {
-		return new Object[] { state.getStorage() != null };
+		return new Object[] { isReady() };
 	}
 
 	@Callback(doc = "function():number; Returns the size of the tape, in bytes", direct = true)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] getSize(Context context, Arguments args) {
-		return new Object[] { (state.getStorage() != null ? state.getStorage().getSize() : 0) };
+		return new Object[] { getSize() };
+	}
+
+	@Callback(doc = "function():number; Returns the position of the tape, in bytes", direct = true)
+	@Optional.Method(modid = Mods.OpenComputers)
+	public Object[] getPosition(Context context, Arguments args) {
+		return new Object[] { getPosition() };
 	}
 
 	@Callback(doc = "function(label:string):string; Sets the label of the tape. "
@@ -355,7 +545,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] seek(Context context, Arguments args) {
 		if(state.getStorage() != null) {
-			return new Object[] { state.getStorage().seek(args.checkInteger(0)) };
+			return new Object[] { seek(args.checkInteger(0)) };
 		}
 		return null;
 	}
@@ -367,11 +557,9 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 	public Object[] read(Context context, Arguments args) {
 		if(state.getStorage() != null) {
 			if(args.count() >= 1 && args.isInteger(0) && (args.checkInteger(0) >= 0)) {
-				byte[] data = new byte[args.checkInteger(0)];
-				state.getStorage().read(data, false);
-				return new Object[] { data };
+				return new Object[] { read(args.checkInteger(0)) };
 			} else {
-				return new Object[] { state.getStorage().read(false) & 0xFF };
+				return new Object[] { read() };
 			}
 		} else {
 			return null;
@@ -383,9 +571,9 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 	public Object[] write(Context context, Arguments args) {
 		if(state.getStorage() != null && args.count() >= 1) {
 			if(args.isInteger(0)) {
-				state.getStorage().write((byte) args.checkInteger(0));
+				write((byte) args.checkInteger(0));
 			} else if(args.isByteArray(0)) {
-				state.getStorage().write(args.checkByteArray(0));
+				write(args.checkByteArray(0));
 			} else {
 				throw new IllegalArgumentException("bad arguments #1 (number or string expected)");
 			}
@@ -429,7 +617,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 	@Override
 	@Optional.Method(modid = Mods.ComputerCraft)
 	public String[] getMethodNames() {
-		return new String[] { "isEnd", "isReady", "getSize", "getLabel", "getState", "setLabel", "setSpeed", "setVolume", "seek", "read", "write", "play", "stop" };
+		return new String[] { "isEnd", "isReady", "getSize", "getLabel", "getState", "setLabel", "setSpeed", "setVolume", "seek", "read", "write", "play", "stop", "getPosition" };
 	}
 
 	@Override
@@ -441,17 +629,13 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 		// methods which don't take any arguments
 		switch(method) {
 			case 0: { // isEnd
-				if(state.getStorage() != null) {
-					return new Object[] { state.getStorage().getPosition() + state.packetSize > state.getStorage().getSize() };
-				} else {
-					return new Object[] { true };
-				}
+				return new Object[] { isEnd() };
 			}
 			case 1: { // isReady
-				return new Object[] { state.getStorage() != null };
+				return new Object[] { isReady() };
 			}
 			case 2: { // getSize
-				return new Object[] { (state.getStorage() != null ? state.getStorage().getSize() : 0) };
+				return new Object[] { getSize() };
 			}
 			case 3: { // getLabel
 				return new Object[] { (state.getStorage() != null ? storageName : null) };
@@ -462,7 +646,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 			case 9: { // read
 				if(arguments.length < 1) {
 					if(state.getStorage() != null) {
-						return new Object[] { state.getStorage().read(false) & 0xFF };
+						return new Object[] { read() };
 					} else {
 						return null;
 					}
@@ -476,6 +660,9 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 			case 12: { // stop
 				switchState(State.STOPPED);
 				return new Object[] { state.getStorage() != null && this.getEnumState() == State.STOPPED };
+			}
+			case 13: { // getPosition
+				return new Object[] { getPosition() };
 			}
 		}
 
@@ -522,7 +709,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 					return new Object[] { (state.getStorage() != null ? storageName : null) };
 				case 10: // write
 					if(state.getStorage() != null) {
-						return new Object[] { state.getStorage().write(((String) arguments[0]).getBytes()) };
+						return new Object[] { write(((String) arguments[0]).getBytes(Charsets.UTF_8)) };
 					}
 					break;
 			}
@@ -548,16 +735,14 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 						if(i >= 256) {
 							i = 256;
 						}
-						byte[] data = new byte[i];
-						state.getStorage().read(data, false);
-						return new Object[] { new String(data) };
+						return new Object[] { new String(read(i), Charsets.UTF_8) };
 					} else {
 						return null;
 					}
 				}
 				case 10: { // write
 					if(state.getStorage() != null) {
-						state.getStorage().write((byte) ((Number) arguments[0]).intValue());
+						write((byte) ((Number) arguments[0]).intValue());
 					}
 					break;
 				}
@@ -568,50 +753,13 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 		return null;
 	}
 
-	private int _nedo_lastSeek = 0;
-
 	@Override
-	@Optional.Method(modid = Mods.NedoComputers)
-	public short busRead(int addr) {
-		switch(addr & 0xFFFE) {
-			case 0:
-				return (short) state.getState().ordinal();
-			case 2:
-				return 0; // speed?
-			case 4:
-				return (short) state.soundVolume;
-			case 6:
-				return (state.getStorage() != null ? (short) (state.getStorage().getSize() / ItemTape.L_MINUTE) : 0);
-			case 8:
-				return (short) _nedo_lastSeek;
-			case 10:
-				return (state.getStorage() != null ? (short) state.getStorage().read(false) : 0);
-		}
-		return 0;
+	public int getSourceId() {
+		return state.getId();
 	}
 
 	@Override
-	@Optional.Method(modid = Mods.NedoComputers)
-	public void busWrite(int addr, short data) {
-		switch(addr & 0xFFFE) {
-			case 0:
-				switchState(State.values()[data % State.values().length]);
-				break;
-			case 2:
-				break; // speed?
-			case 4:
-				state.soundVolume = Math.max(0, Math.min(data, 127));
-				break;
-			case 6:
-				break; // tape size is read-only!
-			case 8:
-				_nedo_lastSeek = state.getStorage().seek(data);
-				break;
-			case 10:
-				if(state.getStorage() != null) {
-					state.getStorage().write((byte) (data & 0xFF));
-				}
-				break;
-		}
+	public boolean connectsAudio(ForgeDirection side) {
+		return true;
 	}
 }

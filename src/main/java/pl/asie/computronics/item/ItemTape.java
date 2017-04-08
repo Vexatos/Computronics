@@ -40,7 +40,7 @@ public class ItemTape extends Item implements IItemTapeStorage, IMedia, IMediaPr
 	private static final int[] DEFAULT_LENGTHS = { 4, 8, 16, 32, 64, 2, 6, 16, 128, 128 };
 
 	private int[] sizes;
-	private IIcon tape_i, tape_g, tape_d, tape_n, tape_c, tape_co, tape_st, tape_greg, tape_ig;
+	private IIcon tape_i, tape_g, tape_d, tape_n, tape_c, tape_co, tape_st, tape_greg, tape_ig, tape_ig_GT6;
 
 	public ItemTape(String lengths) {
 		super();
@@ -98,6 +98,7 @@ public class ItemTape extends Item implements IItemTapeStorage, IMedia, IMediaPr
 		tape_st = r.registerIcon("computronics:tape_steel");
 		tape_greg = r.registerIcon("computronics:tape_greg");
 		tape_ig = r.registerIcon("computronics:tape_ig");
+		tape_ig_GT6 = r.registerIcon("computronics:tape_ig_GT6");
 	}
 
 	@Override
@@ -123,6 +124,9 @@ public class ItemTape extends Item implements IItemTapeStorage, IMedia, IMediaPr
 				case 8:
 					return tape_n;
 				case 9:
+					if(Mods.hasVersion(Mods.GregTech, Mods.Versions.GregTech6)) {
+						return tape_ig_GT6;
+					}
 					return tape_ig;
 
 				default:
@@ -133,11 +137,13 @@ public class ItemTape extends Item implements IItemTapeStorage, IMedia, IMediaPr
 		}
 	}
 
+	@Override
 	public String getLabel(ItemStack stack) {
 		return stack.hasTagCompound() && stack.getTagCompound().hasKey("label")
 			? stack.getTagCompound().getString("label") : "";
 	}
 
+	@Override
 	public boolean setLabel(ItemStack stack, String label) {
 		if(stack == null) {
 			return false;
@@ -190,6 +196,7 @@ public class ItemTape extends Item implements IItemTapeStorage, IMedia, IMediaPr
 		}
 	}
 
+	@Override
 	public int getSize(ItemStack stack) {
 		return getSize(stack.getItemDamage());
 	}
@@ -198,6 +205,7 @@ public class ItemTape extends Item implements IItemTapeStorage, IMedia, IMediaPr
 		return sizes[meta % sizes.length];
 	}
 
+	@Override
 	public ITapeStorage getStorage(ItemStack stack) {
 		int size = getSize(stack);
 

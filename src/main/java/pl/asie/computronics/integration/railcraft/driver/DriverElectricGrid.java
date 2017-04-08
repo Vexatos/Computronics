@@ -7,10 +7,11 @@ import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.ManagedEnvironment;
-import li.cil.oc.api.prefab.DriverTileEntity;
+import li.cil.oc.api.prefab.DriverSidedTileEntity;
 import mods.railcraft.api.electricity.GridTools;
 import mods.railcraft.api.electricity.IElectricGrid;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
 import pl.asie.computronics.integration.CCMultiPeripheral;
 import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
@@ -21,9 +22,9 @@ import pl.asie.computronics.reference.Names;
  */
 public class DriverElectricGrid {
 
-	public static class OCDriver extends DriverTileEntity {
+	public static class OCDriver extends DriverSidedTileEntity {
 
-		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<IElectricGrid> {
+		public static class InternalManagedEnvironment extends ManagedEnvironmentOCTile<IElectricGrid> {
 
 			public InternalManagedEnvironment(IElectricGrid tile) {
 				super(tile, Names.Railcraft_ElectricGrid);
@@ -61,12 +62,12 @@ public class DriverElectricGrid {
 		}
 
 		@Override
-		public boolean worksWith(World world, int x, int y, int z) {
+		public boolean worksWith(World world, int x, int y, int z, ForgeDirection side) {
 			return GridTools.getGridObjectAt(world, x, y, z) != null;
 		}
 
 		@Override
-		public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
+		public ManagedEnvironment createEnvironment(World world, int x, int y, int z, ForgeDirection side) {
 			return new InternalManagedEnvironment(GridTools.getGridObjectAt(world, x, y, z));
 		}
 	}
@@ -101,17 +102,17 @@ public class DriverElectricGrid {
 
 		@Override
 		public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
-			switch(method){
-				case 0:{
+			switch(method) {
+				case 0: {
 					return new Object[] { tile.getChargeHandler().getCharge() };
 				}
-				case 1:{
+				case 1: {
 					return new Object[] { tile.getChargeHandler().getCapacity() };
 				}
-				case 2:{
+				case 2: {
 					return new Object[] { tile.getChargeHandler().getLosses() };
 				}
-				case 3:{
+				case 3: {
 					return new Object[] { tile.getChargeHandler().getDraw() };
 				}
 			}

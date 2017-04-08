@@ -19,7 +19,7 @@ public class Mods {
 	public static final String
 		OpenComputers = "OpenComputers",
 		ComputerCraft = "ComputerCraft",
-		NedoComputers = "nedocomputers";
+		TIS3D = "tis3d";
 
 	//Other mods
 	public static final String
@@ -34,9 +34,7 @@ public class Mods {
 		Forestry = "Forestry",
 		FSP = "Steamcraft",
 		GregTech = "gregtech",
-		JABBA = "JABBA",
 		MFR = "MineFactoryReloaded",
-		QuantumStorage = "QuantumStorage",
 		OpenBlocks = "OpenBlocks",
 		OpenPeripheral = "OpenPeripheralCore",
 		RedLogic = "RedLogic",
@@ -57,23 +55,32 @@ public class Mods {
 			Gendustry = "gendustryAPI",
 			Mekanism_Energy = "MekanismAPI|energy";
 
-		private static HashMap<String, ArtifactVersion> apiList;
-
-		public static ArtifactVersion getVersion(String name) {
-			return pl.asie.lib.reference.Mods.API.getVersion(name);
-		}
-
-		public static boolean hasVersion(String name, String version) {
-			return pl.asie.lib.reference.Mods.API.hasVersion(name, version);
-		}
-
 		public static boolean hasAPI(String name) {
 			return pl.asie.lib.reference.Mods.API.hasAPI(name);
 		}
 	}
 
+	// Mod Versions
+	public static class Versions {
+
+		public static final String
+			BuildCraftTiles = "[1.1,)",
+			Forestry = "[4.2.0,)",
+			Gendustry = "[2.0.0,)",
+			GregTech5 = "[MC1710]",
+			GregTech6 = "[GT6-MC1710]";
+	}
+
 	public static boolean isLoaded(String name) {
 		return pl.asie.lib.reference.Mods.isLoaded(name);
+	}
+
+	public static ArtifactVersion getVersion(String name) {
+		return pl.asie.lib.reference.Mods.getVersion(name);
+	}
+
+	public static boolean hasVersion(String name, String version) {
+		return pl.asie.lib.reference.Mods.hasVersion(name, version);
 	}
 
 	public static boolean hasEnergyMod() {

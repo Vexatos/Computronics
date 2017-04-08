@@ -12,8 +12,10 @@ import pl.asie.computronics.Computronics;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.Camera;
+import pl.asie.computronics.util.OCUtils;
 
 public class TileCamera extends TileEntityPeripheralBase {
+
 	private static final int CALL_LIMIT = 20;
 	private final Camera camera = new Camera();
 	private final Camera cameraRedstone = new Camera();
@@ -36,7 +38,7 @@ public class TileCamera extends TileEntityPeripheralBase {
 	public int requestCurrentRedstoneValue(int side) {
 		double distance = cameraRedstone.getDistance();
 		if(distance > 0.0) {
-			return 15 - (int) Math.min(15, Math.round(distance / 2));
+			return 15 - (int) Math.min(15, Math.round(distance / 2D));
 		} else {
 			return 0;
 		}
@@ -50,6 +52,17 @@ public class TileCamera extends TileEntityPeripheralBase {
 			this.worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, this.getBlockType());
 		}
 		tick++;
+	}
+
+	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
+	protected OCUtils.Device deviceInfo() {
+		return new OCUtils.Device(
+			DeviceClass.Multimedia,
+			"Rangefinder",
+			OCUtils.Vendors.Siekierka,
+			"Simple Spatiometer 1"
+		);
 	}
 
 	// OpenComputers
@@ -98,34 +111,5 @@ public class TileCamera extends TileEntityPeripheralBase {
 			}
 		}
 		return null;
-	}
-
-	private float _nedo_xDir, _nedo_yDir;
-
-	@Override
-	@Optional.Method(modid = Mods.NedoComputers)
-	public short busRead(int addr) {
-		switch((addr & 0xFFFE)) {
-			case 4:
-				return ((short) (camera.getDistance() * 64));
-		}
-		return 0;
-	}
-
-	@Override
-	@Optional.Method(modid = Mods.NedoComputers)
-	public void busWrite(int addr, short data) {
-		float dataAsDir = (data / 32768.0F);
-		switch((addr & 0xFFFE)) {
-			case 0:
-				_nedo_xDir = dataAsDir;
-				break;
-			case 2:
-				_nedo_yDir = dataAsDir;
-				break;
-		}
-		if(addr < 4) {
-			camera.ray(worldObj, xCoord, yCoord, zCoord, getFacingDirection(), _nedo_xDir, _nedo_yDir);
-		}
 	}
 }

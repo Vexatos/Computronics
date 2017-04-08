@@ -1,7 +1,130 @@
+==== 1.6.2 ====
+
+  * FIXED: Digital Signal Controller Box not showing any information on Waila
+  * FIXED: Some sounds not having rolloff.
+  * FIXED: Beep, Noise and Sound Card generating sounds too quietly.
+  * FIXED: Crash with Iron Note Block when entering invalid notes.
+  * FIXED: Recipes not using the Ore Dictionary properly.
+    - Now you can properly use GregTech 6 circuit boards instead of PCBs, for instance.
+  * FIXED: `tape` and `explode` floppy disks being unobtainable.
+
+  * **[1.7.10]** ADDED: Temporary alternative recipes for GregTech 6.
+
+  * **[1.9.4]** FIXED: Iron Note Blocks not producing any sound at all.
+
+  * **[1.10.2]** ADDED: Re-added support for NoteBetter.
+  * **[1.10.2]** FIXED: Unintentional GregTech dependency.
+  * **[1.10.2]** FIXED: Wrong sound category for Iron Note Block.
+
+==== 1.6.1 ====
+
+This version comes with a 1.8.9, 1.9.4 and 1.10 port in addition to many additions.
+
+**Note: On 1.8.9 and later, the tape drives use an updated audio codec (DFPWM 1a). Any files encoded with the old codec will still play, but the sound will be a lot more quiet.**
+
+  * ADDED: Noise Card!
+    - An upgraded Beep Card with slightly different syntax
+    - Can play square waves, sine waves, triangle waves and sawtooth waves!
+  * ADDED: Sound Card! Lots of thanks to gamax92 for having done a big part of this! Also thanks to Temia for helping us design this!
+    - Plays generated sounds of various types akin to a noise card
+    - Supports frequency modulation, amplitude modulation, general volume changes, wave type changes, certain types of noise generation, frequency changes and ADSR on 8 channels, allowing for highly customizable sound synthesis!
+    - Works on an instruction-based system; instructions are added to a queue and processed when wanted.
+  * ADDED: Support for TIS-3D!
+    - Added a Colorful Module to display any colour you want, akin to a Colorful Lamp.
+    - Added a Tape Reader Module which allows you to interface with an adjacent Tape Drive.
+    - Added a Self-Destructing Module which allows you to dispose of your casings with style.
+    - Added a Serial Interface for Flamingos to make them wiggle.
+    - Documented everything in the TIS-3D manual.
+    - Each module can be individually disabled in the config file.
+  * ADDED: OpenComputers 1.6 integration (requires OpenComputers 1.6.0 now)
+    - Added a Light Board to put into Server Racks. Allows controlling coloured lights in various layouts.
+    - Added a Server Self-Destructor in case you don't need your servers anymore.
+    - Added a Rack Capacitor which is a Capacitor you can put into a Rack. Ingenious. It also provides a component that gives you the amount of energy stored in that capacitor.
+    - Added a Switch Board providing four switches to manually and automatically activate and deactivate. Fires an event whenever a switch is flipped, too.
+  * ADDED: getPosition() to tape drives. No, I'm not joking. It's real. I'm sorry.
+  * ADDED: Built-in tape utility program for ComputerCraft to write songs to tapes and to play, stop, pause etc.
+  * ADDED: Option to specify a custom timeout when writing files from a URL to a tape using the tape program on OpenComputers.
+  * ADDED: Coloured tapes can now be crafted with a bucket of water to wash off the colour.
+  * ADDED: `tape wipe` to built-in tape program. Can be used to completely erase a tape.
+  * ADDED: EnderIO 2.3 integration  for OpenComputers and ComputerCraft! (It has actually existed since March 2015, just not in any official release)
+    - Added support for the new Telepad
+      - Allows full control over the coordinates set (if allowed in the EnderIO config file) as well as telepad activation
+    - Added support for the new Weather Obelisk
+      - Allows control over the weather, provided the Obelisk has the correct items.
+    - The Capacitor Bank now provides two additional functions, `getAverageInputPerTick()` and `getAverageOutputPerTick()`
+      - This allows you to monitor input and output of your energy network separately
+    - Now you can get and set the range of Vacuum Chests
+    - Added `getProgress()` to most machines with progress
+  * CHANGED: Sangar made beep card and noise card textures a lot less boring. He also made the sound card texture to match them. Thanks a lot!
+  * CHANGED: Some tweaks to beep card and noise card recipes.
+  * CHANGED: Built-in tape and explode program have been moved to floppy disks for OpenComputers to conform to OpenComputers 1.6 standard.
+  * FIXED: Iron Note Blocks now properly error when used with instrument names.
+  * FIXED: Tape program not displaying information properly if file size is larger than tape size
+  * FIXED: OpenComputers' tape program not working with HTTPS
+  * FIXED: Explosions not dropping items when they should
+  * FIXED: Advanced Cipher Block not properly converting certain keys
+  * MISC: Some visual improvements to the `tape` program.
+
+  * **[1.7.10]** ADDED: Digital Signal Controller Box for Railcraft!
+    - Can be paired to up to 32 receivers (sounds overpowered, definitely is overpowered, but CovertJaguar told me to do it. It's probaby better this way...)
+    - Allows individually sending aspects to each paired receiver
+    - Receivers must be referenced by their name, meaning you have to name all your signals using Signal Labels
+  * **[1.7.10]** CHANGED: Digital Signal Receiver Box
+    - Can now be paired to up to 32 receivers, just like the controller box
+    - Allows individually querying the aspect of each paired controller
+    - Sends an `aspect_changed` event containing the controller's name and new aspect.
+    - Controllers must be referenced by their name, meaning you have to name all your signals using Signal Labels
+  * **[1.7.10]** ADDED: GregTech Recipe Mode support for GregTech 6!
+    - Don't worry, GregTech 5 support is still there
+    - Not all recipes work yet as there are still some required items missing in GregTech 6.
+  * **[1.7.10]** FIXED: Crash when the `openComputersBees` config option was set to `false`.
+  * **[1.7.10]** FIXED: Digital Locomotive Relay trying to consume OpenComputers energy even if called from ComputerCraft
+  * **[1.7.10]** FIXED: Updated OpenComputers integration
+  * **[1.7.10]** FIXED: Removed explicit dependency on GregTech 5. Computronics will launch with GregTech 6 now (but there is no integration yet).
+  * **[1.7.10]** FIXED: Ticket Machine's `setDestination` not working with OpenComputers when no slot is specified
+
+  * **[1.8.9]** Ported the mod to 1.8.9! Everything is resource-pack ready!
+    - Mods supported right now are ComputerCraft, OpenComputers, TIS-3D, BuildCraft (apart from the Drone Docking Station), EnderIO, Pink Flamingo, Storage Drawers, Charset and Waila. 
+    - asielib is no longer needed as a separate download, it is included in this mod.
+  * **[1.8.9]** ADDED: Charset Wires Bundled Cable support for ComputerCraft.
+  * **[1.8.9]** ADDED: Charset Wires Bundled Cable support for Computronics.
+  * **[1.8.9]** ADDED: Support for NoteBetter to the Iron Note Block and the Musical Turtle Upgrade.
+  * **[1.8.9]** CHANGED: Updated audio codec to DFPWM 1a. Any files encoded with the old codec will still play, but the sound will be a lot more quiet.
+
+  * **[1.9.4]** Ported the mod to 1.9.4!
+    - Mods supported right now are OpenComputers, TIS-3D, EnderIO, Charset, Forestry, Storage Drawers, Waila, The One Probe and Pink Flamingo.
+    - asielib is no longer needed as a separate download, it is included in this mod.
+  * **[1.9.4]** ADDED: asie made Sound Cards, Speakers, Audio Cables and Tape Drives compatible with Charset Audio devices.
+  * **[1.9.4]** ADDED: Computronics and Charset Audio Cables and Speakers can now be connected to OpenComputers cases containing Sound Cards.
+
+  * **[1.10.2]** Ported the mod to 1.10.2!
+    - Any changes done to 1.9.4 apply.
+    - Mods supported right now are OpenComputers, TIS-3D, Railcraft, EnderIO, Charset, Forestry, Storage Drawers, Waila, The One Probe and Pink Flamingo.
+    - asielib is no longer needed as a separate download, it is included in this mod.
+
+==== 1.6.0 ====
+
+  * ADDED: Audio Cables!
+    - Connects audio players (like Tape Drives) to audio receivers (Like Speakers)
+    - If you connect one to a Tape Drive, it will stop playing itself and instead send the sound across the cables.
+    - Can be coloured. When coloured, they won't connect to cables with a different colour and won't connect to coloured audio senders/receivers with a different colour.
+    - They also support Immibis' Microblocks for separation, if you like covering up your cabling.
+  * ADDED: Speakers!
+    - Can be connected to Tape Drives or Cables
+    - Plays any sound it receives through the cables
+    - Allows you to play sound in multiple places at once using only a single Tape Drive.
+  * ADDED: Audio API!
+    - Now you can create your own audio packets! Sort of - it's a bit rough around the edges.
+  * CHANGED: NedoComputers is no longer supported. Removed the EEPROM Reader and any kind of NedoComputers support there was.
+  * FIXED: More crashes related to invalid crafting recipes.
+
 ==== 1.5.9 ====
 
   * ADDED: New config option (disabled by default) to make the normal Chat Box have no range limit and work interdimensionally unless you specify a distance.
   * CHANGED: The Creative Chat Box can now send messages interdimensionally and has no range limit anymore unless you specify a distance.
+  * FIXED: Various crashes related to invalid crafting recipes.
+  * FIXED: Crash when disabling the Digital Signal Receiver Box.
+  * FIXED: Updated Railcraft integration to version 9.8.0.0; requires Railcraft 9.8.0.0 now.
 
 ==== 1.5.8 ====
 
@@ -518,7 +641,7 @@ This is semi-officially known as "The Kodos Update".
 
   * Added: A rewrite of the Tape Drive mechanics.
     * Tape Drives now remember their state on unload (persistence!).
-    * [[http://i.imgur.com/FCFiPfd.png|A slick new GUI]] - makes it possible to use Tape Drives without computers!
+    * [A slick new GUI](http://i.imgur.com/FCFiPfd.png) - makes it possible to use Tape Drives without computers!
     * Tape Drive playback can be controlled with redstone.
   * Added: Tape Drives and Cameras can now be rotated with BuildCraft or compatible wrenches.
   * Added: Iron Note Blocks support the two noteblock sounds that are in the Minecraft assets/ folder but were never used ("pling" and "bass", respectively).

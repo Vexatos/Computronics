@@ -9,9 +9,10 @@ import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.ManagedEnvironment;
-import li.cil.oc.api.prefab.DriverTileEntity;
+import li.cil.oc.api.prefab.DriverSidedTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.integration.CCMultiPeripheral;
 import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
 import pl.asie.computronics.reference.Names;
@@ -34,7 +35,7 @@ public class DriverRedstoneControllable {
 		} catch(IllegalArgumentException e) {
 			throw new IllegalArgumentException("No valid Redstone mode given");
 		}
-		return new Object[] { };
+		return new Object[] {};
 	}
 
 	private static Object[] modes() {
@@ -46,9 +47,9 @@ public class DriverRedstoneControllable {
 		return new Object[] { modes };
 	}
 
-	public static class OCDriver extends DriverTileEntity {
+	public static class OCDriver extends DriverSidedTileEntity {
 
-		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<IRedstoneModeControlable> {
+		public static class InternalManagedEnvironment extends ManagedEnvironmentOCTile<IRedstoneModeControlable> {
 
 			public InternalManagedEnvironment(IRedstoneModeControlable tile) {
 				super(tile, Names.EnderIO_RedstoneTile);
@@ -81,7 +82,7 @@ public class DriverRedstoneControllable {
 		}
 
 		@Override
-		public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
+		public ManagedEnvironment createEnvironment(World world, int x, int y, int z, ForgeDirection side) {
 			return new InternalManagedEnvironment(((IRedstoneModeControlable) world.getTileEntity(x, y, z)));
 		}
 	}

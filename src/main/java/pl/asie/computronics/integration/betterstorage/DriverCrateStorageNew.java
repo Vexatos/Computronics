@@ -4,17 +4,20 @@ import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.ManagedEnvironment;
-import li.cil.oc.api.prefab.DriverTileEntity;
+import li.cil.oc.api.prefab.DriverSidedTileEntity;
 import net.mcft.copy.betterstorage.api.crate.ICrateStorage;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DriverCrateStorageNew extends DriverTileEntity {
-	public class ManagedEnvironmentCrate extends ManagedEnvironmentOCTile<ICrateStorage> {
+public class DriverCrateStorageNew extends DriverSidedTileEntity {
+
+	public static class ManagedEnvironmentCrate extends ManagedEnvironmentOCTile<ICrateStorage> {
+
 		public ManagedEnvironmentCrate(ICrateStorage tile, String name) {
 			super(tile, name);
 		}
@@ -40,7 +43,7 @@ public class DriverCrateStorageNew extends DriverTileEntity {
 	}
 
 	@Override
-	public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
+	public ManagedEnvironment createEnvironment(World world, int x, int y, int z, ForgeDirection side) {
 		return new ManagedEnvironmentCrate((ICrateStorage) world.getTileEntity(x, y, z), "crate");
 	}
 }

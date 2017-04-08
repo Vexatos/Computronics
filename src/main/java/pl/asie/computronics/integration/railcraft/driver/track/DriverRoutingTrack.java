@@ -6,7 +6,7 @@ import dan200.computercraft.api.peripheral.IComputerAccess;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
-import li.cil.oc.api.prefab.DriverTileEntity;
+import li.cil.oc.api.prefab.DriverSidedTileEntity;
 import li.cil.oc.api.prefab.ManagedEnvironment;
 import mods.railcraft.common.blocks.tracks.TileTrack;
 import mods.railcraft.common.blocks.tracks.TrackRouting;
@@ -14,6 +14,7 @@ import mods.railcraft.common.items.ItemTicketGold;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
 import pl.asie.computronics.integration.CCMultiPeripheral;
 import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
@@ -53,9 +54,9 @@ public class DriverRoutingTrack {
 		}
 	}
 
-	public static class OCDriver extends DriverTileEntity {
+	public static class OCDriver extends DriverSidedTileEntity {
 
-		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TrackRouting> {
+		public static class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TrackRouting> {
 
 			public InternalManagedEnvironment(TrackRouting track) {
 				super(track, Names.Railcraft_RoutingTrack);
@@ -93,14 +94,14 @@ public class DriverRoutingTrack {
 		}
 
 		@Override
-		public boolean worksWith(World world, int x, int y, int z) {
+		public boolean worksWith(World world, int x, int y, int z, ForgeDirection side) {
 			TileEntity tileEntity = world.getTileEntity(x, y, z);
 			return (tileEntity != null) && tileEntity instanceof TileTrack
 				&& ((TileTrack) tileEntity).getTrackInstance() instanceof TrackRouting;
 		}
 
 		@Override
-		public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
+		public ManagedEnvironment createEnvironment(World world, int x, int y, int z, ForgeDirection side) {
 			return new InternalManagedEnvironment((TrackRouting) ((TileTrack) world.getTileEntity(x, y, z)).getTrackInstance());
 		}
 	}
@@ -132,14 +133,14 @@ public class DriverRoutingTrack {
 		public Object[] callMethod(IComputerAccess computer, ILuaContext context,
 			int method, Object[] arguments) throws LuaException,
 			InterruptedException {
-			switch(method){
-				case 0:{
+			switch(method) {
+				case 0: {
 					if(arguments.length < 1 || !(arguments[0] instanceof String)) {
 						throw new LuaException("first argument needs to be a string");
 					}
 					return DriverRoutingTrack.setDestination(tile, arguments);
 				}
-				case 1:{
+				case 1: {
 					return DriverRoutingTrack.getDestination(tile);
 				}
 			}

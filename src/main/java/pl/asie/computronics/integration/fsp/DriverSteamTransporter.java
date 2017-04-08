@@ -8,17 +8,21 @@ import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.ManagedEnvironment;
-import li.cil.oc.api.prefab.DriverTileEntity;
+import li.cil.oc.api.prefab.DriverSidedTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
 import pl.asie.computronics.integration.CCMultiPeripheral;
 import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
 import pl.asie.computronics.reference.Names;
 
 public class DriverSteamTransporter {
-	public static class OCDriver extends DriverTileEntity {
-		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<ISteamTransporter> {
+
+	public static class OCDriver extends DriverSidedTileEntity {
+
+		public static class InternalManagedEnvironment extends ManagedEnvironmentOCTile<ISteamTransporter> {
+
 			public InternalManagedEnvironment(ISteamTransporter tile) {
 				super(tile, Names.FSP_SteamTransporter);
 			}
@@ -45,7 +49,7 @@ public class DriverSteamTransporter {
 		}
 
 		@Override
-		public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
+		public ManagedEnvironment createEnvironment(World world, int x, int y, int z, ForgeDirection side) {
 			return new InternalManagedEnvironment((ISteamTransporter) world.getTileEntity(x, y, z));
 		}
 	}
@@ -77,7 +81,7 @@ public class DriverSteamTransporter {
 		public Object[] callMethod(IComputerAccess computer, ILuaContext context,
 			int method, Object[] arguments) throws LuaException,
 			InterruptedException {
-			switch(method){
+			switch(method) {
 				case 0:
 					return new Object[] { (double) tile.getPressure() };
 				case 1:

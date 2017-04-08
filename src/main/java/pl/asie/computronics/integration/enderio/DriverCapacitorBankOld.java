@@ -9,9 +9,10 @@ import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.ManagedEnvironment;
-import li.cil.oc.api.prefab.DriverTileEntity;
+import li.cil.oc.api.prefab.DriverSidedTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.integration.CCMultiPeripheral;
 import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
 import pl.asie.computronics.reference.Names;
@@ -41,7 +42,7 @@ public class DriverCapacitorBankOld {
 		} catch(IllegalArgumentException e) {
 			throw new IllegalArgumentException("No valid Redstone mode given");
 		}
-		return new Object[] { };
+		return new Object[] {};
 	}
 
 	private static Object[] modes() {
@@ -53,8 +54,10 @@ public class DriverCapacitorBankOld {
 		return new Object[] { modes };
 	}
 
-	public static class OCDriver extends DriverTileEntity {
-		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TileCapacitorBank> {
+	public static class OCDriver extends DriverSidedTileEntity {
+
+		public static class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TileCapacitorBank> {
+
 			public InternalManagedEnvironment(TileCapacitorBank tile) {
 				super(tile, Names.EnderIO_CapacitorBank);
 			}
@@ -67,13 +70,13 @@ public class DriverCapacitorBankOld {
 			@Callback(doc = "function(max:number); Sets the max input of the capacitor bank")
 			public Object[] setMaxInput(Context c, Arguments a) {
 				tile.setMaxInput(a.checkInteger(0));
-				return new Object[] { };
+				return new Object[] {};
 			}
 
 			@Callback(doc = "function(max:number); Sets the max output of the capacitor bank")
 			public Object[] setMaxOutput(Context c, Arguments a) {
 				tile.setMaxOutput(a.checkInteger(0));
-				return new Object[] { };
+				return new Object[] {};
 			}
 
 			@Callback(doc = "function():string; Returns the current Redstone control mode for input")
@@ -108,7 +111,7 @@ public class DriverCapacitorBankOld {
 		}
 
 		@Override
-		public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
+		public ManagedEnvironment createEnvironment(World world, int x, int y, int z, ForgeDirection side) {
 			return new InternalManagedEnvironment(((TileCapacitorBank) world.getTileEntity(x, y, z)));
 		}
 	}
@@ -149,14 +152,14 @@ public class DriverCapacitorBankOld {
 						throw new LuaException("first argument needs to be a number");
 					}
 					tile.setMaxInput(((Double) arguments[0]).intValue());
-					return new Object[] { };
+					return new Object[] {};
 				}
 				case 1: {
 					if(arguments.length < 1 || !(arguments[0] instanceof Double)) {
 						throw new LuaException("first argument needs to be a number");
 					}
 					tile.setMaxOutput(((Double) arguments[0]).intValue());
-					return new Object[] { };
+					return new Object[] {};
 				}
 				case 2: {
 					return DriverCapacitorBankOld.getRedstoneMode(tile, true);

@@ -18,6 +18,7 @@ import pl.asie.computronics.integration.railcraft.LocomotiveManager;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TileEntityPeripheralBase;
+import pl.asie.computronics.util.OCUtils;
 
 import java.lang.ref.WeakReference;
 import java.util.Locale;
@@ -136,7 +137,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 		}
 	}
 
-	private String cannotAccessLocomotive(double amount) {
+	private String cannotAccessLocomotive(double amount, boolean isOC) {
 		EntityLocomotiveElectric locomotive = getLocomotive();
 		if(!isBound) {
 			return "relay is not bound to a locomotive";
@@ -157,7 +158,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 			|| locomotive.getChargeHandler().removeCharge(10 * amount) < 10 * amount)) {
 			return "locomotive out of energy";
 		}
-		if(Mods.isLoaded(Mods.OpenComputers)) {
+		if(isOC && Mods.isLoaded(Mods.OpenComputers)) {
 			return cannotAccessLocomotive_OC(amount);
 		}
 		return null;
@@ -176,6 +177,17 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 		return null;
 	}
 
+	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
+	protected OCUtils.Device deviceInfo() {
+		return new OCUtils.Device(
+			DeviceClass.Communication,
+			"Locomotive interface",
+			OCUtils.Vendors.Railcraft,
+			"Locoremotive (TM)"
+		);
+	}
+
 	//Computer stuff
 
 	private static Object[] setDestination(EntityLocomotiveElectric locomotive, Object[] arguments) {
@@ -192,7 +204,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 	@Callback(doc = "function():string; gets the destination the locomotive is currently set to")
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] getDestination(Context context, Arguments args) {
-		String error = cannotAccessLocomotive(1.0);
+		String error = cannotAccessLocomotive(1.0, true);
 		if(error != null) {
 			return new Object[] { null, error };
 		}
@@ -202,7 +214,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 	@Callback(doc = "function(destination:string):boolean; Sets the locomotive's destination; there needs to be a golden ticket inside the locomotive")
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] setDestination(Context c, Arguments a) {
-		String error = cannotAccessLocomotive(3.0);
+		String error = cannotAccessLocomotive(3.0, true);
 		if(error != null) {
 			return new Object[] { null, error };
 		}
@@ -213,7 +225,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 	@Callback(doc = "function():number; gets the current charge of the locomotive")
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] getCharge(Context context, Arguments args) {
-		String error = cannotAccessLocomotive(1.0);
+		String error = cannotAccessLocomotive(1.0, true);
 		if(error != null) {
 			return new Object[] { null, error };
 		}
@@ -223,7 +235,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 	@Callback(doc = "function():string; returns the current mode of the locomotive; can be 'running', 'idle' or 'shutdown'")
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] getMode(Context context, Arguments args) {
-		String error = cannotAccessLocomotive(1.0);
+		String error = cannotAccessLocomotive(1.0, true);
 		if(error != null) {
 			return new Object[] { null, error };
 		}
@@ -233,7 +245,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 	@Callback(doc = "function():string; returns the current name of the locomotive")
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] getName(Context context, Arguments args) {
-		String error = cannotAccessLocomotive(1.0);
+		String error = cannotAccessLocomotive(1.0, true);
 		if(error != null) {
 			return new Object[] { null, error };
 		}
@@ -251,7 +263,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 	public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments)
 		throws LuaException, InterruptedException {
 		if(method < getMethodNames().length) {
-			String error = cannotAccessLocomotive(method == 1 ? 3.0 : 1.0);
+			String error = cannotAccessLocomotive(method == 1 ? 3.0 : 1.0, false);
 			if(error != null) {
 				return new Object[] { null, error };
 			}
@@ -278,23 +290,5 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 			}
 		}
 		return null;
-	}
-
-	@Override
-	@Optional.Method(modid = Mods.NedoComputers)
-	public boolean connectable(int side) {
-		return false;
-	}
-
-	@Override
-	@Optional.Method(modid = Mods.NedoComputers)
-	public short busRead(int addr) {
-		return 0;
-	}
-
-	@Override
-	@Optional.Method(modid = Mods.NedoComputers)
-	public void busWrite(int addr, short data) {
-
 	}
 }

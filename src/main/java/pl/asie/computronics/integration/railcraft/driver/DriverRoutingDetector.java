@@ -6,7 +6,7 @@ import dan200.computercraft.api.peripheral.IComputerAccess;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
-import li.cil.oc.api.prefab.DriverTileEntity;
+import li.cil.oc.api.prefab.DriverSidedTileEntity;
 import li.cil.oc.api.prefab.ManagedEnvironment;
 import mods.railcraft.common.blocks.detector.EnumDetector;
 import mods.railcraft.common.blocks.detector.TileDetector;
@@ -14,15 +14,15 @@ import mods.railcraft.common.blocks.detector.types.DetectorRouting;
 import mods.railcraft.common.items.ItemRoutingTable;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
 import pl.asie.computronics.integration.CCMultiPeripheral;
 import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
 import pl.asie.computronics.integration.util.RoutingTableUtil;
 import pl.asie.computronics.reference.Names;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.LinkedList;
 import java.util.Map;
 
 /**
@@ -34,13 +34,13 @@ public class DriverRoutingDetector {
 		if(((DetectorRouting) tile.getDetector()).getInventory().getStackInSlot(0) != null
 			&& ((DetectorRouting) tile.getDetector()).getInventory().getStackInSlot(0).getItem() instanceof ItemRoutingTable) {
 			if(!((DetectorRouting) tile.getDetector()).isSecure()) {
-				List<List<String>> pages = ItemRoutingTable.getPages(((DetectorRouting) tile.getDetector()).getInventory().getStackInSlot(0));
+				LinkedList<LinkedList<String>> pages = ItemRoutingTable.getPages(((DetectorRouting) tile.getDetector()).getInventory().getStackInSlot(0));
 				if(pages == null) {
-					return new Object[] { false, "no valid routing table found"};
+					return new Object[] { false, "no valid routing table found" };
 				}
 				LinkedHashMap<Integer, String> pageMap = new LinkedHashMap<Integer, String>();
 				int i = 1;
-				for(List<String> currentPage : pages) {
+				for(LinkedList<String> currentPage : pages) {
 					for(String currentLine : currentPage) {
 						pageMap.put(i++, currentLine);
 					}
@@ -62,14 +62,14 @@ public class DriverRoutingDetector {
 		if(((DetectorRouting) tile.getDetector()).getInventory().getStackInSlot(0) != null
 			&& ((DetectorRouting) tile.getDetector()).getInventory().getStackInSlot(0).getItem() instanceof ItemRoutingTable) {
 			if(!((DetectorRouting) tile.getDetector()).isSecure()) {
-				List<List<String>> pages = new ArrayList<List<String>>();
-				pages.add(new ArrayList<String>());
+				LinkedList<LinkedList<String>> pages = new LinkedList<LinkedList<String>>();
+				pages.add(new LinkedList<String>());
 				int pageIndex = 0;
-				for(Object key : pageMap.keySet()) {
-					Object line = pageMap.get(key);
+				for(Object line : pageMap.values()) {
+					//Object line = pageMap.get(key);
 					if(line instanceof String) {
 						if(((String) line).toLowerCase().equals("{newline}")) {
-							pages.add(new ArrayList<String>());
+							pages.add(new LinkedList<String>());
 							pageIndex++;
 						} else {
 							pages.get(pageIndex).add((String) line);
@@ -109,8 +109,9 @@ public class DriverRoutingDetector {
 		return new Object[] { false, "no routing table found" };
 	}
 
-	public static class OCDriver extends DriverTileEntity {
-		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TileDetector> {
+	public static class OCDriver extends DriverSidedTileEntity {
+
+		public static class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TileDetector> {
 
 			public InternalManagedEnvironment(TileDetector detector) {
 				super(detector, Names.Railcraft_RoutingDetector);
@@ -145,14 +146,14 @@ public class DriverRoutingDetector {
 		}
 
 		@Override
-		public boolean worksWith(World world, int x, int y, int z) {
+		public boolean worksWith(World world, int x, int y, int z, ForgeDirection side) {
 			TileEntity tileEntity = world.getTileEntity(x, y, z);
 			return (tileEntity != null) && tileEntity instanceof TileDetector
 				&& ((TileDetector) tileEntity).getDetector().getType() == EnumDetector.ROUTING;
 		}
 
 		@Override
-		public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
+		public ManagedEnvironment createEnvironment(World world, int x, int y, int z, ForgeDirection side) {
 			return new InternalManagedEnvironment((TileDetector) world.getTileEntity(x, y, z));
 		}
 	}

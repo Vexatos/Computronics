@@ -15,12 +15,12 @@ public class SlotSelectionWidget extends Widget {
 
 	private List<SelectedSlotWidget> slots = new ArrayList<SelectedSlotWidget>(10);
 	private final TileTicketMachine tile;
-	private boolean maintenanceMode;
+	//private boolean maintenanceMode;
 
 	public SlotSelectionWidget(TileTicketMachine tile, int x, int y, int u, int v, int w, int h, boolean maintenanceMode) {
 		super(x, y, u, v, w, h);
 		this.tile = tile;
-		this.maintenanceMode = maintenanceMode;
+		//this.maintenanceMode = maintenanceMode;
 		this.hidden = true;
 
 		for(int i = 0; i < 5; i++) {

@@ -13,7 +13,7 @@ import pl.asie.computronics.Computronics;
 import pl.asie.computronics.reference.Mods;
 
 public class RadarTurtleUpgrade extends TurtleUpgradeBase {
-	private class RadarTurtlePeripheral extends TurtlePeripheralBase {
+	private static class RadarTurtlePeripheral extends TurtlePeripheralBase {
 		public RadarTurtlePeripheral(ITurtleAccess access) {
 			super(access);
 		}

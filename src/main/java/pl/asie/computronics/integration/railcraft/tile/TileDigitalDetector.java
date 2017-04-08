@@ -10,6 +10,7 @@ import li.cil.oc.api.network.SidedEnvironment;
 import mods.railcraft.api.carts.CartTools;
 import mods.railcraft.common.carts.EntityLocomotive;
 import mods.railcraft.common.carts.EnumCart;
+import mods.railcraft.common.carts.ICartType;
 import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.nbt.NBTTagCompound;
@@ -19,6 +20,7 @@ import pl.asie.computronics.cc.ISidedPeripheral;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.reference.Names;
 import pl.asie.computronics.tile.TileEntityPeripheralBase;
+import pl.asie.computronics.util.OCUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -112,8 +114,8 @@ public class TileDigitalDetector extends TileEntityPeripheralBase
 	}
 
 	private void appendCartType(ArrayList<Object> info, EntityMinecart cart) {
-		EnumCart type = EnumCart.fromCart(cart);
-		info.add(type != null ? type.name().toLowerCase(Locale.ENGLISH) : "unknown");
+		ICartType type = EnumCart.fromCart(cart);
+		info.add(type != null ? type.getTag().toLowerCase(Locale.ENGLISH) : "unknown");
 		String entityName = cart.func_95999_t();
 		info.add(entityName != null ? entityName : "");
 	}
@@ -154,11 +156,24 @@ public class TileDigitalDetector extends TileEntityPeripheralBase
 	}
 
 	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
+	protected OCUtils.Device deviceInfo() {
+		return new OCUtils.Device(
+			DeviceClass.Generic,
+			"Cart detector",
+			OCUtils.Vendors.Railcraft,
+			"Digitized Detector A12"
+		);
+	}
+
+	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
 	public Node sidedNode(ForgeDirection side) {
 		return side == this.direction ? node() : null;
 	}
 
 	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
 	public boolean canConnect(ForgeDirection side) {
 		return side == this.direction;
 	}
@@ -178,20 +193,5 @@ public class TileDigitalDetector extends TileEntityPeripheralBase
 	@Override
 	public boolean canConnectPeripheralOnSide(int side) {
 		return ForgeDirection.getOrientation(side) == this.direction;
-	}
-
-	@Override
-	public boolean connectable(int side) {
-		return false;
-	}
-
-	@Override
-	public short busRead(int addr) {
-		return 0;
-	}
-
-	@Override
-	public void busWrite(int addr, short data) {
-
 	}
 }

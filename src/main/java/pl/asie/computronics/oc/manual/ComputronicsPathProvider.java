@@ -23,11 +23,11 @@ public class ComputronicsPathProvider implements PathProvider {
 
 	public static void initialize() {
 		Manual.addProvider(new ComputronicsPathProvider());
-		Manual.addProvider(new ResourceContentProvider("computronics", "doc/"));
+		Manual.addProvider(new ResourceContentProvider("computronics", "doc/opencomputers/"));
 		Manual.addTab(findTabIconRenderer(),
-			"tooltip.computronics.manual.tab.blocks", "computronics/%LANGUAGE%/block/index.md");
+			"tooltip.computronics.manual.oc.tab.blocks", "computronics/%LANGUAGE%/block/index.md");
 		Manual.addTab(new TextureTabIconRenderer(new ResourceLocation("computronics", "textures/items/tape_steel.png")),
-			"tooltip.computronics.manual.tab.items", "computronics/%LANGUAGE%/item/index.md");
+			"tooltip.computronics.manual.oc.tab.items", "computronics/%LANGUAGE%/item/index.md");
 	}
 
 	private static TabIconRenderer findTabIconRenderer() {

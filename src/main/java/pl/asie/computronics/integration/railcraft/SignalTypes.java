@@ -7,13 +7,15 @@ import net.minecraft.block.Block;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.integration.railcraft.tile.TileDigitalControllerBox;
 import pl.asie.computronics.integration.railcraft.tile.TileDigitalReceiverBox;
 
 /**
  * @author Vexatos
  */
 public enum SignalTypes implements IIconProvider, ISignalTileDefinition {
-	Digital("digitalBox", 3.0F, true, Computronics.railcraft.digitalBox, TileDigitalReceiverBox.class, ForgeDirection.UP);
+	DigitalReceiver("digitalReceiverBox", 3.0F, true, Computronics.railcraft.digitalReceiverBox, TileDigitalReceiverBox.class, ForgeDirection.UP),
+	DigitalController("digitalControllerBox", 3.0F, true, Computronics.railcraft.digitalControllerBox, TileDigitalControllerBox.class, ForgeDirection.UP);
 
 	private final boolean needsSupport;
 	private final float hardness;
@@ -66,6 +68,7 @@ public enum SignalTypes implements IIconProvider, ISignalTileDefinition {
 		return block;
 	}
 
+	@Override
 	public IIcon getIcon() {
 		return block.getIcon(direction.ordinal(), getMeta());
 	}

@@ -6,7 +6,7 @@ import dan200.computercraft.api.peripheral.IComputerAccess;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
-import li.cil.oc.api.prefab.DriverTileEntity;
+import li.cil.oc.api.prefab.DriverSidedTileEntity;
 import li.cil.oc.api.prefab.ManagedEnvironment;
 import mods.railcraft.common.blocks.tracks.TileTrack;
 import mods.railcraft.common.blocks.tracks.TrackLocomotive;
@@ -14,6 +14,7 @@ import mods.railcraft.common.carts.EntityLocomotive;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
 import pl.asie.computronics.integration.CCMultiPeripheral;
 import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
@@ -51,8 +52,9 @@ public class DriverLocomotiveTrack {
 		return new Object[] { modeMap };
 	}
 
-	public static class OCDriver extends DriverTileEntity {
-		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TrackLocomotive> {
+	public static class OCDriver extends DriverSidedTileEntity {
+
+		public static class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TrackLocomotive> {
 
 			public InternalManagedEnvironment(TrackLocomotive tile) {
 				super(tile, Names.Railcraft_LocomotiveTrack);
@@ -85,19 +87,20 @@ public class DriverLocomotiveTrack {
 		}
 
 		@Override
-		public boolean worksWith(World world, int x, int y, int z) {
+		public boolean worksWith(World world, int x, int y, int z, ForgeDirection side) {
 			TileEntity tileEntity = world.getTileEntity(x, y, z);
 			return (tileEntity != null) && tileEntity instanceof TileTrack
 				&& ((TileTrack) tileEntity).getTrackInstance() instanceof TrackLocomotive;
 		}
 
 		@Override
-		public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
+		public ManagedEnvironment createEnvironment(World world, int x, int y, int z, ForgeDirection side) {
 			return new InternalManagedEnvironment((TrackLocomotive) ((TileTrack) world.getTileEntity(x, y, z)).getTrackInstance());
 		}
 	}
 
 	public static class CCDriver extends CCMultiPeripheral<TrackLocomotive> {
+
 		public CCDriver() {
 		}
 
@@ -123,8 +126,8 @@ public class DriverLocomotiveTrack {
 		public Object[] callMethod(IComputerAccess computer, ILuaContext context,
 			int method, Object[] arguments) throws LuaException,
 			InterruptedException {
-			switch(method){
-				case 0:{
+			switch(method) {
+				case 0: {
 					if(arguments.length < 1 || !(arguments[0] instanceof Double)) {
 						throw new LuaException("first argument needs to be a number");
 					}
@@ -133,10 +136,10 @@ public class DriverLocomotiveTrack {
 					}
 					return DriverLocomotiveTrack.setMode(tile, arguments);
 				}
-				case 1:{
+				case 1: {
 					return DriverLocomotiveTrack.getMode(tile);
 				}
-				case 2:{
+				case 2: {
 					return DriverLocomotiveTrack.modes();
 				}
 			}

@@ -32,12 +32,12 @@ public enum Actions implements IActionExternal {
 
 	private int minParams = 0, maxParams = 0;
 
-	private Actions(String tag, IComputronicsAction action) {
+	Actions(String tag, IComputronicsAction action) {
 		this.tag = tag;
 		this.action = action;
 	}
 
-	private Actions(String tag, IComputronicsAction action, int minParams, int maxParams) {
+	Actions(String tag, IComputronicsAction action, int minParams, int maxParams) {
 		this(tag, action);
 		this.minParams = minParams;
 		this.maxParams = maxParams;

@@ -27,6 +27,7 @@ import net.bdew.gendustry.api.GendustryAPI;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.common.MinecraftForge;
@@ -39,6 +40,7 @@ import pl.asie.computronics.integration.forestry.entity.EntitySwarm;
 import pl.asie.computronics.integration.forestry.entity.SwarmRenderer;
 import pl.asie.computronics.integration.forestry.nanomachines.SwarmProvider;
 import pl.asie.computronics.reference.Mods;
+import pl.asie.computronics.util.RecipeUtils;
 import pl.asie.lib.item.ItemMultiple;
 
 import java.util.HashMap;
@@ -78,7 +80,7 @@ public class IntegrationForestry {
 		IClassification pirates = BeeManager.beeFactory.createBranch("pirates", "Piraticus");
 		AlleleManager.alleleRegistry.getClassification("family.apidae").addMemberGroup(pirates);
 		FlowerProviderSea providerSea = new FlowerProviderSea();
-		sea = AlleleManager.alleleFactory.createFlowers(Mods.Computronics, "flowers", "sea", providerSea, true);
+		sea = AlleleManager.alleleFactory.createFlowers(Mods.Computronics, "flowers", "sea", providerSea, true, EnumBeeChromosome.FLOWER_PROVIDER);
 		FlowerManager.flowerRegistry.registerAcceptableFlowerRule(providerSea, providerSea.getFlowerType());
 
 		Block shortMead = null;
@@ -100,7 +102,7 @@ public class IntegrationForestry {
 		if(shortMead != null) {
 			scummyA.requireResource(shortMead, 0);
 		}
-		scummyA.restrictBiomeType(Type.OCEAN)
+		scummyA.restrictBiomeType(Type.OCEAN, Type.HOT).restrictBiomeType(Type.OCEAN, Type.WET)
 			.requireNight()
 			.restrictTemperature(EnumTemperature.WARM, EnumTemperature.HELLISH)
 			.setIsSecret();
@@ -119,12 +121,12 @@ public class IntegrationForestry {
 		Item bottleItem = GameRegistry.findItem(Mods.Forestry, "beverage");
 		ItemStack bottle = bottleItem != null ? new ItemStack(bottleItem, 1, 0)
 			: new ItemStack(net.minecraft.init.Items.potionitem, 1, 32);
-		GameRegistry.addShapelessRecipe(Items.get("acid").createItemStack(1),
+		RecipeUtils.addShapelessRecipe(undisassemblable(Items.get("acid").createItemStack(1)),
 			new ItemStack(itemPartsForestry, 1, 1),
 			new ItemStack(itemPartsForestry, 1, 1),
 			bottle);
 
-		if(Mods.API.hasVersion(Mods.API.Gendustry, "[2.0.0,)")) {
+		if(Mods.hasVersion(Mods.API.Gendustry, Mods.Versions.Gendustry)) {
 			registerBees();
 		}
 
@@ -134,6 +136,15 @@ public class IntegrationForestry {
 		MinecraftForge.EVENT_BUS.register(provider);
 		//FMLCommonHandler.instance().bus().register(provider);
 		Nanomachines.addProvider(provider);
+	}
+
+	private ItemStack undisassemblable(ItemStack stack) {
+		NBTTagCompound tag = stack.getTagCompound();
+		if(tag == null)
+			tag = new NBTTagCompound();
+		tag.setBoolean("oc:undisassemblable", true);
+		stack.setTagCompound(tag);
+		return stack;
 	}
 
 	@Optional.Method(modid = Mods.OpenComputers)

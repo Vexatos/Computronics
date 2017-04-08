@@ -253,7 +253,7 @@ public class DroneStationRenderer implements IPipePluggableRenderer {
 			}
 		}
 
-		static enum Textures {
+		enum Textures {
 			DRONE_STATION_TOP("drone_station_top"),
 			DRONE_STATION_BOTTOM("drone_station_bottom"),
 			DRONE_STATION_SIDE("drone_station_side");
@@ -262,7 +262,7 @@ public class DroneStationRenderer implements IPipePluggableRenderer {
 			private final String location;
 			public static final Textures[] VALUES = values();
 
-			private Textures(String location) {
+			Textures(String location) {
 				this.location = location;
 			}
 

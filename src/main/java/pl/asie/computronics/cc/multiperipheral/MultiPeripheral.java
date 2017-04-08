@@ -75,7 +75,7 @@ public class MultiPeripheral implements IPeripheral, BlacklistedPeripheral {
 
 	@Override
 	public String[] getMethodNames() {
-		return methodNames;
+		return methodNames.clone();
 	}
 
 	@Override
@@ -169,7 +169,7 @@ public class MultiPeripheral implements IPeripheral, BlacklistedPeripheral {
 
 		try {
 			if(blacklist == null) {
-				blacklist = new HashSet<Class<?>>();
+				HashSet<Class<?>> newBlacklist = new HashSet<Class<?>>();
 				for(String name : Settings.get().peripheralBlacklist()) {
 					Class<?> clazz;
 					try {
@@ -178,9 +178,10 @@ public class MultiPeripheral implements IPeripheral, BlacklistedPeripheral {
 						clazz = null;
 					}
 					if(clazz != null) {
-						blacklist.add(clazz);
+						newBlacklist.add(clazz);
 					}
 				}
+				blacklist = newBlacklist;
 			}
 		} catch(Exception e) {
 			blacklist = new HashSet<Class<?>>();

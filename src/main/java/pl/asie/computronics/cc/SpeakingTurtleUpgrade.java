@@ -15,7 +15,7 @@ import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.ChatBoxUtils;
 
 public class SpeakingTurtleUpgrade extends TurtleUpgradeBase {
-	private class SpeakingTurtlePeripheral extends TurtlePeripheralBase {
+	private static class SpeakingTurtlePeripheral extends TurtlePeripheralBase {
 		public SpeakingTurtlePeripheral(ITurtleAccess access) {
 			super(access);
 		}

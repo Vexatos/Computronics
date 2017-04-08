@@ -1,16 +1,23 @@
 package pl.asie.computronics.oc;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.event.FMLMissingMappingsEvent;
+import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import li.cil.oc.api.Driver;
+import li.cil.oc.api.IMC;
+import li.cil.oc.api.driver.EnvironmentProvider;
+import li.cil.oc.api.driver.Item;
+import li.cil.oc.api.fs.FileSystem;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import org.apache.logging.log4j.Logger;
 import pl.asie.computronics.Computronics;
-import pl.asie.computronics.client.UpgradeRenderer;
+import pl.asie.computronics.api.audio.AudioPacketRegistry;
+import pl.asie.computronics.audio.SoundCardPlaybackManager;
 import pl.asie.computronics.integration.appeng.DriverSpatialIOPort;
 import pl.asie.computronics.integration.armourersworkshop.DriverMannequin;
 import pl.asie.computronics.integration.betterstorage.DriverCrateStorageNew;
@@ -26,17 +33,21 @@ import pl.asie.computronics.integration.enderio.DriverHasExperience;
 import pl.asie.computronics.integration.enderio.DriverIOConfigurable;
 import pl.asie.computronics.integration.enderio.DriverPowerMonitor;
 import pl.asie.computronics.integration.enderio.DriverPowerStorage;
+import pl.asie.computronics.integration.enderio.DriverProgressTile;
 import pl.asie.computronics.integration.enderio.DriverRedstoneControllable;
+import pl.asie.computronics.integration.enderio.DriverTelepad;
 import pl.asie.computronics.integration.enderio.DriverTransceiver;
+import pl.asie.computronics.integration.enderio.DriverVacuumChest;
+import pl.asie.computronics.integration.enderio.DriverWeatherObelisk;
 import pl.asie.computronics.integration.factorization.DriverChargeConductor;
 import pl.asie.computronics.integration.flamingo.DriverFlamingo;
 import pl.asie.computronics.integration.forestry.IntegrationForestry;
 import pl.asie.computronics.integration.fsp.DriverSteamTransporter;
-import pl.asie.computronics.integration.gregtech.DriverBaseMetaTileEntity;
-import pl.asie.computronics.integration.gregtech.DriverBatteryBuffer;
-import pl.asie.computronics.integration.gregtech.DriverDeviceInformation;
-import pl.asie.computronics.integration.gregtech.DriverDigitalChest;
-import pl.asie.computronics.integration.gregtech.DriverMachine;
+import pl.asie.computronics.integration.gregtech.gregtech5.DriverBaseMetaTileEntity;
+import pl.asie.computronics.integration.gregtech.gregtech5.DriverBatteryBuffer;
+import pl.asie.computronics.integration.gregtech.gregtech5.DriverDeviceInformation;
+import pl.asie.computronics.integration.gregtech.gregtech5.DriverDigitalChest;
+import pl.asie.computronics.integration.gregtech.gregtech5.DriverMachine;
 import pl.asie.computronics.integration.mekanism.DriverStrictEnergyStorage;
 import pl.asie.computronics.integration.railcraft.driver.DriverElectricGrid;
 import pl.asie.computronics.integration.railcraft.driver.DriverRoutingDetector;
@@ -49,17 +60,30 @@ import pl.asie.computronics.integration.railcraft.driver.track.DriverPrimingTrac
 import pl.asie.computronics.integration.railcraft.driver.track.DriverRoutingTrack;
 import pl.asie.computronics.integration.redlogic.DriverLamp;
 import pl.asie.computronics.integration.storagedrawers.DriverDrawerGroup;
+import pl.asie.computronics.item.ItemOCSpecialParts;
 import pl.asie.computronics.item.ItemOpenComputers;
-import pl.asie.computronics.oc.block.DriverBlockEnvironments;
+import pl.asie.computronics.oc.block.ComputronicsBlockEnvironmentProvider;
+import pl.asie.computronics.oc.client.RackMountableRenderer;
+import pl.asie.computronics.oc.client.UpgradeRenderer;
+import pl.asie.computronics.oc.driver.DriverBoardBoom;
+import pl.asie.computronics.oc.driver.DriverCardSound;
+import pl.asie.computronics.oc.driver.DriverMagicalMemory;
 import pl.asie.computronics.oc.manual.ComputronicsPathProvider;
 import pl.asie.computronics.reference.Compat;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
+import pl.asie.computronics.util.RecipeUtils;
+import pl.asie.lib.util.ColorUtils.Color;
+
+import java.util.concurrent.Callable;
 
 import static pl.asie.computronics.Computronics.camera;
 import static pl.asie.computronics.Computronics.chatBox;
 import static pl.asie.computronics.Computronics.colorfulLamp;
+import static pl.asie.computronics.Computronics.ironNote;
+import static pl.asie.computronics.Computronics.proxy;
 import static pl.asie.computronics.Computronics.radar;
+import static pl.asie.computronics.Computronics.speaker;
 
 /**
  * @author Vexatos
@@ -71,8 +95,13 @@ public class IntegrationOpenComputers {
 	private final Logger log;
 
 	public static ItemOpenComputers itemOCParts;
+	public static ItemOCSpecialParts itemOCSpecialParts;
 	public static UpgradeRenderer upgradeRenderer;
+	public static RackMountableRenderer mountableRenderer;
 	public static ColorfulUpgradeHandler colorfulUpgradeHandler;
+	public static DriverBoardBoom.BoomHandler boomBoardHandler;
+	public SoundCardPlaybackManager audio;
+	public int managerId;
 
 	public IntegrationOpenComputers(Computronics computronics) {
 		this.computronics = computronics;
@@ -88,12 +117,28 @@ public class IntegrationOpenComputers {
 			|| Config.OC_UPGRADE_RADAR
 			|| Config.OC_CARD_FX
 			|| Config.OC_CARD_SPOOF
-			|| Config.OC_CARD_SOUND
+			|| Config.OC_CARD_BEEP
 			|| Config.OC_CARD_BOOM
-			|| Config.OC_UPGRADE_COLORFUL) {
+			|| Config.OC_UPGRADE_COLORFUL
+			|| Config.OC_CARD_NOISE
+			|| Config.OC_CARD_SOUND
+			|| Config.OC_BOARD_LIGHT
+			|| Config.OC_BOARD_BOOM
+			|| Config.OC_BOARD_CAPACITOR
+			|| Config.OC_BOARD_SWITCH) {
 			itemOCParts = new ItemOpenComputers();
 			GameRegistry.registerItem(itemOCParts, "computronics.ocParts");
-			Driver.add(itemOCParts);
+			Driver.add((Item) itemOCParts);
+			Driver.add((EnvironmentProvider) itemOCParts);
+		}
+
+		if(Config.OC_MAGICAL_MEMORY) {
+			itemOCSpecialParts = new ItemOCSpecialParts();
+			GameRegistry.registerItem(itemOCSpecialParts, "computronics.ocSpecialParts");
+			Driver.add(itemOCSpecialParts);
+			if(Config.OC_MAGICAL_MEMORY) {
+				Driver.add(new DriverMagicalMemory());
+			}
 		}
 
 		// OpenComputers needs a hook in updateEntity in order to proprly register peripherals.
@@ -101,9 +146,19 @@ public class IntegrationOpenComputers {
 		// To ensure less TE ticks for those who don't use OC, we keep this tidbit around.
 		Config.MUST_UPDATE_TILE_ENTITIES = true;
 
-		if(Mods.isLoaded(Mods.Forestry) && Config.FORESTRY_BEES) {
-			Computronics.forestry = new IntegrationForestry();
-			Computronics.forestry.preInitOC();
+		if(Config.OC_CARD_SOUND) {
+			audio = new SoundCardPlaybackManager(proxy.isClient());
+
+			managerId = AudioPacketRegistry.INSTANCE.registerManager(audio);
+		}
+
+		if(Mods.hasVersion(Mods.Forestry, Mods.Versions.Forestry)) {
+			if(Config.FORESTRY_BEES) {
+				Computronics.forestry = new IntegrationForestry();
+				Computronics.forestry.preInitOC();
+			}
+		} else {
+			log.warn("Detected outdated version of Forestry, Forestry integration will not be enabled. Please update to Forestry " + Mods.Versions.Forestry + " or later.");
 		}
 
 		if(Mods.isLoaded(Mods.BuildCraftTransport) && Mods.isLoaded(Mods.BuildCraftCore) && Config.BUILDCRAFT_STATION) {
@@ -112,17 +167,46 @@ public class IntegrationOpenComputers {
 		}
 	}
 
+	private static class ReadOnlyFS implements Callable<FileSystem> {
+
+		private final String name;
+
+		ReadOnlyFS(String name) {
+			this.name = name;
+		}
+
+		@Override
+		@Optional.Method(modid = Mods.OpenComputers)
+		public FileSystem call() throws Exception {
+			return li.cil.oc.api.FileSystem.asReadOnly(li.cil.oc.api.FileSystem.fromClass(Computronics.class, Mods.Computronics, "loot/" + name));
+		}
+	}
+
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void init() {
 
-		Driver.add(new DriverBlockEnvironments());
+		Driver.add(new ComputronicsBlockEnvironmentProvider());
 		ComputronicsPathProvider.initialize();
 
-		if(colorfulUpgradeHandler == null) {
-			colorfulUpgradeHandler = new ColorfulUpgradeHandler();
+		if(Computronics.tapeReader != null) {
+			li.cil.oc.api.Items.registerFloppy("tape", Color.White.ordinal(), new ReadOnlyFS("tape"), true);
+			IMC.registerProgramDiskLabel("tape", "tape", "Lua 5.2", "Lua 5.3", "LuaJ");
 		}
 
-		MinecraftForge.EVENT_BUS.register(colorfulUpgradeHandler);
+		if(Config.OC_CARD_BOOM || Config.OC_BOARD_BOOM) {
+			li.cil.oc.api.Items.registerFloppy("explode", Color.Red.ordinal(), new ReadOnlyFS("explode"), true);
+			IMC.registerProgramDiskLabel("explode", "explode", "Lua 5.2", "Lua 5.3", "LuaJ");
+		}
+
+		if(colorfulUpgradeHandler == null && Config.OC_UPGRADE_COLORFUL) {
+			colorfulUpgradeHandler = new ColorfulUpgradeHandler();
+			MinecraftForge.EVENT_BUS.register(colorfulUpgradeHandler);
+		}
+
+		if(boomBoardHandler == null && Config.OC_BOARD_BOOM) {
+			boomBoardHandler = new DriverBoardBoom.BoomHandler();
+			FMLCommonHandler.instance().bus().register(boomBoardHandler);
+		}
 
 		if(Mods.isLoaded(Mods.RedLogic)) {
 			if(compat.isCompatEnabled(Compat.RedLogic_Lamps)) {
@@ -176,7 +260,7 @@ public class IntegrationOpenComputers {
 				Driver.add(new DriverPrimingTrack.OCDriver());
 			}
 		}
-		if(Mods.isLoaded(Mods.GregTech)) {
+		if(Mods.hasVersion(Mods.GregTech, Mods.Versions.GregTech5)) {
 			if(compat.isCompatEnabled(Compat.GregTech_Machines)) {
 				Driver.add(new DriverBaseMetaTileEntity());
 				Driver.add(new DriverDeviceInformation());
@@ -203,12 +287,16 @@ public class IntegrationOpenComputers {
 				Driver.add(new DriverIOConfigurable.OCDriver());
 				Driver.add(new DriverHasExperience.OCDriver());
 				Driver.add(new DriverPowerStorage.OCDriver());
+				Driver.add(new DriverProgressTile.OCDriver());
 				Driver.add(new DriverAbstractMachine.OCDriver());
 				Driver.add(new DriverAbstractPoweredMachine.OCDriver());
 				Driver.add(new DriverPowerMonitor.OCDriver());
 				Driver.add(new DriverCapacitorBank.OCDriver());
 				Driver.add(new DriverCapacitorBankOld.OCDriver());
 				Driver.add(new DriverTransceiver.OCDriver());
+				Driver.add(new DriverVacuumChest.OCDriver());
+				Driver.add(new DriverWeatherObelisk.OCDriver());
+				Driver.add(new DriverTelepad.OCDriver());
 			}
 		}
 
@@ -222,7 +310,7 @@ public class IntegrationOpenComputers {
 			Driver.add(new DriverStrictEnergyStorage.OCDriver());
 		}
 
-		if(Mods.API.hasVersion(Mods.API.BuildCraftTiles, "[1.1,)")) {
+		if(Mods.hasVersion(Mods.API.BuildCraftTiles, Mods.Versions.BuildCraftTiles)) {
 			if(compat.isCompatEnabled(Compat.BuildCraft_Drivers)) {
 				Driver.add(new DriverHeatable.OCDriver());
 			}
@@ -241,103 +329,169 @@ public class IntegrationOpenComputers {
 		if(Computronics.buildcraft != null) {
 			Computronics.buildcraft.initOC();
 		}
+
+		if(Config.OC_CARD_SOUND && proxy.isClient()) {
+			MinecraftForge.EVENT_BUS.register(new DriverCardSound.SyncHandler());
+		}
 	}
 
 	@Optional.Method(modid = Mods.OpenComputers)
 	public void postInit() {
 		if(Config.OC_UPGRADE_CAMERA) {
 			if(camera != null) {
-				GameRegistry.addShapedRecipe(new ItemStack(itemOCParts, 1, 0),
+				RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 0),
 					"mcm", 'c',
 					new ItemStack(camera, 1, 0),
-					'm', li.cil.oc.api.Items.get("chip2").createItemStack(1));
-				GameRegistry.addShapedRecipe(new ItemStack(itemOCParts, 1, 0),
+					'm', "oc:circuitChip2");
+				RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 0),
 					"m", "c", "m",
 					'c', new ItemStack(camera, 1, 0),
-					'm', li.cil.oc.api.Items.get("chip2").createItemStack(1));
+					'm', "oc:circuitChip2");
 			} else {
 				log.warn("Could not add Camera Upgrade Recipe because Radar is disabled in the config.");
 			}
 		}
 		if(Config.OC_UPGRADE_CHATBOX) {
 			if(chatBox != null) {
-				GameRegistry.addShapedRecipe(new ItemStack(itemOCParts, 1, 1),
+				RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 1),
 					"mcm", 'c',
 					new ItemStack(chatBox, 1, 0),
-					'm', li.cil.oc.api.Items.get("chip2").createItemStack(1));
-				GameRegistry.addShapedRecipe(new ItemStack(itemOCParts, 1, 1),
+					'm', "oc:circuitChip2");
+				RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 1),
 					"m", "c", "m",
 					'c', new ItemStack(chatBox, 1, 0),
-					'm', li.cil.oc.api.Items.get("chip2").createItemStack(1));
+					'm', "oc:circuitChip2");
 			} else {
 				log.warn("Could not add Chat Box Upgrade Recipe because Radar is disabled in the config.");
 			}
 		}
 		if(Config.OC_UPGRADE_RADAR) {
 			if(radar != null) {
-				GameRegistry.addShapedRecipe(new ItemStack(itemOCParts, 1, 2),
+				RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 2),
 					"mcm", 'c',
 					new ItemStack(radar, 1, 0),
-					'm', li.cil.oc.api.Items.get("chip3").createItemStack(1));
-				GameRegistry.addShapedRecipe(new ItemStack(itemOCParts, 1, 2),
+					'm', "oc:circuitChip3");
+				RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 2),
 					"m", "c", "m",
 					'c', new ItemStack(radar, 1, 0),
-					'm', li.cil.oc.api.Items.get("chip3").createItemStack(1));
+					'm', "oc:circuitChip3");
 			} else {
 				log.warn("Could not add Radar Upgrade Recipe because Radar is disabled in the config.");
 			}
 		}
 		if(Config.OC_CARD_FX) {
-			GameRegistry.addShapedRecipe(new ItemStack(itemOCParts, 1, 3),
+			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 3),
 				"mf", " b",
-				'm', li.cil.oc.api.Items.get("chip2").createItemStack(1),
+				'm', "oc:circuitChip2",
 				'f', Items.firework_charge,
-				'b', li.cil.oc.api.Items.get("card").createItemStack(1));
+				'b', "oc:materialCard");
 
 		}
 		if(Config.OC_CARD_SPOOF) {
-			GameRegistry.addShapedRecipe(new ItemStack(itemOCParts, 1, 4),
+			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 4),
 				"mfl", "pb ", "   ",
-				'm', li.cil.oc.api.Items.get("ram2").createItemStack(1),
-				'f', li.cil.oc.api.Items.get("chip2").createItemStack(1),
-				'b', li.cil.oc.api.Items.get("lanCard").createItemStack(1),
-				'p', li.cil.oc.api.Items.get("printedCircuitBoard").createItemStack(1),
+				'm', "oc:ram2",
+				'f', "oc:circuitChip2",
+				'b', "oc:lanCard",
+				'p', "oc:materialCircuitBoardPrinted",
 				'l', Items.brick);
 		}
-		if(Config.OC_CARD_SOUND) {
-			GameRegistry.addShapedRecipe(new ItemStack(itemOCParts, 1, 5),
+		if(Config.OC_CARD_BEEP) {
+			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 5),
 				" l ", "mb ", " f ",
-				'm', li.cil.oc.api.Items.get("chip2").createItemStack(1),
-				'f', Computronics.ironNote,
-				'b', li.cil.oc.api.Items.get("card").createItemStack(1),
-				'l', li.cil.oc.api.Items.get("cu").createItemStack(1));
+				'm', "oc:circuitChip1",
+				'f', speaker != null ? speaker : ironNote != null ? ironNote : Blocks.noteblock,
+				'b', "oc:materialCard",
+				'l', "oc:materialCU");
 		}
 		if(Config.OC_CARD_BOOM) {
-			GameRegistry.addShapedRecipe(new ItemStack(itemOCParts, 1, 6),
+			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 6),
 				"mf", "fb",
-				'm', li.cil.oc.api.Items.get("cu").createItemStack(1),
+				'm', "oc:materialCU",
 				'f', Blocks.tnt,
-				'b', li.cil.oc.api.Items.get("redstoneCard1").createItemStack(1));
+				'b', "oc:redstoneCard1");
 
 		}
 		if(Config.OC_UPGRADE_COLORFUL) {
-			if(colorfulLamp != null) {
-				GameRegistry.addShapedRecipe(new ItemStack(itemOCParts, 1, 7),
-					" f ", "mcm", " f ", 'c',
-					new ItemStack(colorfulLamp, 1, 0),
-					'm', li.cil.oc.api.Items.get("chip2").createItemStack(1),
-					'f', li.cil.oc.api.Items.get("chamelium").createItemStack(1));
-				GameRegistry.addShapedRecipe(new ItemStack(itemOCParts, 1, 7),
-					" m ", "fcf", " m ",
-					'c', new ItemStack(colorfulLamp, 1, 0),
-					'm', li.cil.oc.api.Items.get("chip2").createItemStack(1),
-					'f', li.cil.oc.api.Items.get("chamelium").createItemStack(1));
-			} else {
-				log.warn("Could not add Colorful Upgrade Recipe because Colorful Lamp is disabled in the config.");
-			}
+			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 7),
+				" f ", "mcm", " f ",
+				'c', colorfulLamp != null ? colorfulLamp : "glowstone",
+				'm', "oc:circuitChip2",
+				'f', "oc:chamelium");
+			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 7),
+				" m ", "fcf", " m ",
+				'c', colorfulLamp != null ? colorfulLamp : "glowstone",
+				'm', "oc:circuitChip2",
+				'f', "oc:chamelium");
+		}
+		if(Config.OC_CARD_NOISE) {
+			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 8),
+				" l ", "mbn", " f ",
+				'm', "oc:ram1",
+				'f', "oc:materialALU",
+				'b', Config.OC_CARD_BEEP ? new ItemStack(itemOCParts, 1, 5) : speaker != null ? speaker : ironNote != null ? ironNote : Blocks.noteblock,
+				'l', "oc:circuitChip2",
+				'n', "gemQuartz");
+		}
+		if(Config.OC_CARD_SOUND) {
+			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 9),
+				" l ", "mb ", " f ",
+				'm', "oc:ram5",
+				'f', "oc:cpu1",
+				'b', Config.OC_CARD_NOISE ? new ItemStack(itemOCParts, 1, 8) :
+					Config.OC_CARD_BEEP ? new ItemStack(itemOCParts, 1, 5) : speaker != null ? speaker : ironNote != null ? ironNote : Blocks.noteblock,
+				'l', "oc:circuitChip2");
+		}
+		if(Config.OC_BOARD_LIGHT) {
+			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 10),
+				"oso", "gcg", "opo",
+				's', "paneGlassColorless",
+				'g', "oc:circuitChip1",
+				'c', colorfulLamp != null ? colorfulLamp : "glowstone",
+				'o', "obsidian",
+				'p', "oc:materialCircuitBoardPrinted"
+			);
+		}
+		if(Config.OC_BOARD_BOOM) {
+			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 11),
+				"lsl", "gcg", "opo",
+				's', "oc:circuitChip1",
+				'g', Config.OC_CARD_BOOM ? new ItemStack(itemOCParts, 1, 6) : Items.blaze_powder,
+				'c', Blocks.tnt,
+				'o', "obsidian",
+				'l', Items.gunpowder,
+				'p', "oc:materialCircuitBoardPrinted"
+			);
+		}
+		if(Config.OC_BOARD_CAPACITOR) {
+			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 12),
+				"lsl", "gcg", "opo",
+				's', "oc:circuitChip1",
+				'g', "nuggetGold",
+				'c', "oc:capacitor",
+				'o', "obsidian",
+				'l', "ingotIron",
+				'p', "oc:materialCircuitBoardPrinted"
+			);
+		}
+		if(Config.OC_BOARD_SWITCH) {
+			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 13),
+				"oso", "gcg", "opo",
+				's', "paneGlassColorless",
+				'g', "oc:circuitChip1",
+				'c', "oc:materialButtonGroup",
+				'o', "obsidian",
+				'p', "oc:materialCircuitBoardPrinted"
+			);
 		}
 		if(Computronics.buildcraft != null) {
 			Computronics.buildcraft.postInitOC();
+		}
+	}
+
+	public void onServerStop(FMLServerStoppedEvent event) {
+		if(Config.OC_CARD_SOUND && this.audio != null) {
+			this.audio.removeAll();
 		}
 	}
 

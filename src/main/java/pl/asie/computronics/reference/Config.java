@@ -28,7 +28,12 @@ public class Config {
 	public static double FX_ENERGY_COST = 0.2;
 	public static double SOUND_ENERGY_COST = 1.0;
 	public static double SPOOFING_ENERGY_COST = 0.2;
-	public static double COLOR_CHANGE_COST = 0.2;
+	public static double COLORFUL_UPGRADE_COLOR_CHANGE_COST = 0.2;
+	public static double LIGHT_BOARD_COLOR_CHANGE_COST = 0.2;
+	public static double LIGHT_BOARD_COLOR_MAINTENANCE_COST = 0.02;
+	public static double BOOM_BOARD_MAINTENANCE_COST = 0.02;
+	public static double RACK_CAPACITOR_CAPACITY = 7500;
+	public static double SWITCH_BOARD_MAINTENANCE_COST = 0.02;
 	public static String CHATBOX_PREFIX = "ChatBox";
 	public static double LOCOMOTIVE_RELAY_RANGE = 128.0;
 	public static double LOCOMOTIVE_RELAY_BASE_POWER = 20.0;
@@ -39,18 +44,37 @@ public class Config {
 	public static boolean FORESTRY_BEES = true;
 	public static boolean BUILDCRAFT_STATION = true;
 
+	public static int SOUND_SAMPLE_RATE = 44100;
+	public static byte SOUND_VOLUME = 32;
+	public static int SOUND_RADIUS = 24;
+	public static int SOUND_CARD_MAX_DELAY = 5000; // TODO
+	public static int SOUND_CARD_QUEUE_SIZE = 1024; // TODO
+	public static int SOUND_CARD_CHANNEL_COUNT = 8; // TODO
+
 	public static boolean OC_UPGRADE_CAMERA;
 	public static boolean OC_UPGRADE_CHATBOX;
 	public static boolean OC_UPGRADE_RADAR;
 	public static boolean OC_CARD_FX;
 	public static boolean OC_CARD_SPOOF;
-	public static boolean OC_CARD_SOUND;
+	public static boolean OC_CARD_BEEP;
 	public static boolean OC_CARD_BOOM;
 	public static boolean OC_UPGRADE_COLORFUL;
+	public static boolean OC_CARD_NOISE;
+	public static boolean OC_CARD_SOUND;
+	public static boolean OC_BOARD_LIGHT;
+	public static boolean OC_BOARD_BOOM;
+	public static boolean OC_BOARD_CAPACITOR;
+	public static boolean OC_BOARD_SWITCH;
+
+	public static boolean OC_MAGICAL_MEMORY;
 
 	public static boolean CC_OPEN_MULTI_PERIPHERAL = true;
 	public static boolean CC_ALL_MULTI_PERIPHERALS = true;
 	public static boolean CC_ALWAYS_FIRST = true;
+
+	public static boolean TIS3D_MODULE_COLORFUL = true;
+	public static boolean TIS3D_MODULE_TAPE_READER = true;
+	public static boolean TIS3D_MODULE_BOOM = true;
 
 	public static String TAPE_LENGTHS;
 	public static boolean REDSTONE_REFRESH, CHATBOX_CREATIVE;
@@ -85,6 +109,10 @@ public class Config {
 		// Cipher Block
 		CIPHER_CAN_LOCK = config.getBoolean("canLock", "cipherblock", true, "Decides whether Cipher Blocks can or cannot be locked.");
 
+		SOUND_SAMPLE_RATE = config.getInt("soundSampleRate", "sound.client", 44100, 0, Integer.MAX_VALUE, "The sample rate used for generating sounds. Modify at your own risk.");
+		SOUND_VOLUME = (byte) config.getInt("soundVolume", "sound.client", 127, 0, Byte.MAX_VALUE, "The base volume of generated sounds.");
+		SOUND_RADIUS = config.getInt("soundRadius", "sound.client", 24, 0, 64, "The radius in which generated sounds can be heard.");
+
 		if(Mods.isLoaded(Mods.OpenComputers)) {
 			//Advanced Cipher Block
 			CIPHER_ENERGY_STORAGE = convertRFtoOC(
@@ -99,9 +127,22 @@ public class Config {
 			OC_UPGRADE_RADAR = config.get("enable.opencomputers", "radarUpgrade", true).getBoolean(true);
 			OC_CARD_FX = config.get("enable.opencomputers", "particleCard", true).getBoolean(true);
 			OC_CARD_SPOOF = config.get("enable.opencomputers", "spoofingCard", true).getBoolean(true);
-			OC_CARD_SOUND = config.get("enable.opencomputers", "soundCard", true).getBoolean(true);
+			OC_CARD_BEEP = config.get("enable.opencomputers", "beepCard", true).getBoolean(true);
 			OC_CARD_BOOM = config.get("enable.opencomputers", "boomCard", true).getBoolean(true);
 			OC_UPGRADE_COLORFUL = config.get("enable.opencomputers", "colorfulUpgrade", true).getBoolean(true);
+			OC_CARD_NOISE = config.get("enable.opencomputers", "noiseCard", true).getBoolean(true);
+			OC_CARD_SOUND = config.get("enable.opencomputers", "soundCard", true).getBoolean(true);
+			OC_BOARD_LIGHT = config.get("enable.opencomputers", "lightBoard", true).getBoolean(true);
+			OC_BOARD_BOOM = config.get("enable.opencomputers", "boomBoard", true).getBoolean(true);
+			OC_BOARD_CAPACITOR = config.get("enable.opencomputers", "rackCapacitor", true).getBoolean(true);
+			OC_BOARD_SWITCH = config.get("enable.opencomputers", "switchBoard", true).getBoolean(true);
+
+			OC_MAGICAL_MEMORY = config.get("enable.opencomputers", "magicalMemory", true).getBoolean(true);
+
+			if(OC_CARD_SOUND) {
+				SOUND_CARD_MAX_DELAY = config.getInt("ocSoundCardMaxDelay", "sound", SOUND_CARD_MAX_DELAY, 0, Integer.MAX_VALUE, "Maximum delay allowed in a sound card's instruction queue, in milliseconds");
+				SOUND_CARD_QUEUE_SIZE = config.getInt("ocSoundCardQueueSize", "sound", SOUND_CARD_QUEUE_SIZE, 0, Integer.MAX_VALUE, "Maximum  number of instructons allowed in a sound cards instruction queue. This directly affects the maximum size of the packets sent to the client.");
+			}
 
 			// Particle Card
 			FX_ENERGY_COST = convertRFtoOC(
@@ -113,8 +154,20 @@ public class Config {
 			SOUND_ENERGY_COST = convertRFtoOC(
 				config.getFloat("ocBeepCardCostPerSound", "power", 10.0f, 0.0f, 10000.0f, "How much energy a single beep will cost for 1 second"));
 			// Colorful Upgrade
-			COLOR_CHANGE_COST = convertRFtoOC(
+			COLORFUL_UPGRADE_COLOR_CHANGE_COST = convertRFtoOC(
 				config.getFloat("ocColorfulUpgradeColorChangeCost", "power", 2.0f, 0.0f, 10000.0f, "How much energy changing the color of the Colorful Upgrade will cost"));
+
+			// Rack Mountables
+			LIGHT_BOARD_COLOR_CHANGE_COST = convertRFtoOC(
+				config.getFloat("ocLightBoardColorChangeCost", "power", 2.0f, 0.0f, 10000.0f, "How much energy changing the color or state of a Light Board's light will cost"));
+			LIGHT_BOARD_COLOR_MAINTENANCE_COST = convertRFtoOC(
+				config.getFloat("ocLightBoardColorMaintenanceCost", "power", 0.2f, 0.0f, 10000.0f, "How much energy will be consumed per tick to keep a Light Board's light running. Note that this value is consumed for each active light on the board."));
+			BOOM_BOARD_MAINTENANCE_COST = convertRFtoOC(
+				config.getFloat("ocBoomBoardMaintenanceCost", "power", 0.2f, 0.0f, 10000.0f, "How much energy will be consumed per tick to keep a Server Self-Destructor active."));
+			RACK_CAPACITOR_CAPACITY = convertRFtoOC(
+				config.getFloat("ocRackCapacitorCapacity", "power", 7500f, 0.0f, 10000.0f, "How much energy a Rack Capacitor can store."));
+			SWITCH_BOARD_MAINTENANCE_COST = convertRFtoOC(
+				config.getFloat("ocSwitchBoardMaintenanceCost", "power", 0.2f, 0.0f, 10000.0f, "How much energy will be consumed per tick to keep a Switch Board's switch active. Note that this value is consumed for each active switch on the board."));
 
 			if(Mods.isLoaded(Mods.Railcraft)) {
 				LOCOMOTIVE_RELAY_BASE_POWER = convertRFtoOC(
@@ -123,7 +176,7 @@ public class Config {
 
 			NON_OC_RECIPES = config.getBoolean("easyRecipeMode", "recipes", false, "Set this to true to make some recipes not require OpenComputers blocks and items");
 
-			if(Mods.isLoaded(Mods.Forestry)) {
+			if(Mods.hasVersion(Mods.Forestry, Mods.Versions.Forestry)) {
 				FORESTRY_BEES = config.getBoolean("opencomputersBees", "enable.forestry", true, "Set this to false to disable Forestry bee species for OpenComputers");
 			}
 			if(Mods.isLoaded(Mods.BuildCraftTransport) && Mods.isLoaded(Mods.BuildCraftCore)) {
@@ -142,6 +195,12 @@ public class Config {
 				Computronics.log.info("Multiperipheral system for ComputerCraft engaged. Hooray!");
 				Computronics.log.info("Multiple mods registering peripherals for the same block now won't be a problem anymore.");
 			}
+		}
+
+		if(Mods.isLoaded(Mods.TIS3D)) {
+			TIS3D_MODULE_COLORFUL = config.get("enable.tis3d", "colorfulModule", true).getBoolean(true);
+			TIS3D_MODULE_TAPE_READER = config.get("enable.tis3d", "tapeReaderModule", true).getBoolean(true);
+			TIS3D_MODULE_BOOM = config.get("enable.tis3d", "boomModule", true).getBoolean(true);
 		}
 
 		// Radar
@@ -173,10 +232,12 @@ public class Config {
 		if(Mods.isLoaded(Mods.GregTech)) {
 			GREGTECH_RECIPES = config.getBoolean("gtRecipeMode", "recipes", true, "Set this to true to enable GregTech-style recipes");
 		}
-	}
 
-	public void setCategoryComment(String category, String comment) {
-		config.setCategoryComment(category, comment);
+		config.setCategoryComment("power", "Every value related to energy in this section uses RF as the base power unit.");
+		config.setCategoryComment("sound", "Configs for sounds generated by devices like the Beep Card.");
+		if(Mods.isLoaded(Mods.OpenComputers) || Mods.isLoaded(Mods.ComputerCraft)) {
+			config.setCategoryComment(Compat.Compatibility, "Set anything here to false to prevent Computronics from adding the respective Peripherals and Drivers");
+		}
 	}
 
 	public void save() {

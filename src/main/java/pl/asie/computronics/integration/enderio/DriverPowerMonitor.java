@@ -8,9 +8,10 @@ import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.ManagedEnvironment;
-import li.cil.oc.api.prefab.DriverTileEntity;
+import li.cil.oc.api.prefab.DriverSidedTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
 import pl.asie.computronics.integration.CCMultiPeripheral;
 import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
@@ -20,9 +21,10 @@ import pl.asie.computronics.reference.Names;
  * @author Vexatos
  */
 public class DriverPowerMonitor {
-	public static class OCDriver extends DriverTileEntity {
 
-		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TilePowerMonitor> {
+	public static class OCDriver extends DriverSidedTileEntity {
+
+		public static class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TilePowerMonitor> {
 
 			public InternalManagedEnvironment(TilePowerMonitor tile) {
 				super(tile, Names.EnderIO_PowerMonitor);
@@ -39,7 +41,7 @@ public class DriverPowerMonitor {
 			}
 
 			@Callback(doc = "function():number; Returns the max energy that can be in the conduit network")
-			public Object[] getMaxPowerInCoduits(Context c, Arguments a) {
+			public Object[] getMaxPowerInConduits(Context c, Arguments a) {
 				return new Object[] { tile.getMaxPowerInConduits() };
 			}
 
@@ -81,7 +83,7 @@ public class DriverPowerMonitor {
 			@Callback(doc = "function(control:boolean); Sets whether Engine Control is enabled")
 			public Object[] setEngineControlEnabled(Context c, Arguments a) {
 				tile.setEngineControlEnabled(a.checkBoolean(0));
-				return new Object[] { };
+				return new Object[] {};
 			}
 
 			@Callback(doc = "function():number; Returns the level at which the monitor should start emitting redstone")
@@ -92,7 +94,7 @@ public class DriverPowerMonitor {
 			@Callback(doc = "function(level:number); Sets the level at which the monitor should start emitting redstone")
 			public Object[] setStartLevel(Context c, Arguments a) {
 				tile.setStartLevel((float) a.checkDouble(0));
-				return new Object[] { };
+				return new Object[] {};
 			}
 
 			@Callback(doc = "function():number; Returns the level at which the monitor should stop emitting redstone")
@@ -103,7 +105,7 @@ public class DriverPowerMonitor {
 			@Callback(doc = "function(level:number); Sets the level at which the monitor should stop emitting redstone")
 			public Object[] setStopLevel(Context c, Arguments a) {
 				tile.setStopLevel((float) a.checkDouble(0));
-				return new Object[] { };
+				return new Object[] {};
 			}
 		}
 
@@ -113,7 +115,7 @@ public class DriverPowerMonitor {
 		}
 
 		@Override
-		public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
+		public ManagedEnvironment createEnvironment(World world, int x, int y, int z, ForgeDirection side) {
 			return new InternalManagedEnvironment(((TilePowerMonitor) world.getTileEntity(x, y, z)));
 		}
 	}
@@ -143,67 +145,67 @@ public class DriverPowerMonitor {
 
 		@Override
 		public String[] getMethodNames() {
-			return new String[] { "getPowerInConduits", "getMaxPowerInCoduits", "getPowerInCapBanks", "getMaxPowerInCapBanks",
+			return new String[] { "getPowerInConduits", "getMaxPowerInConduits", "getPowerInCapBanks", "getMaxPowerInCapBanks",
 				"getPowerInMachines", "getMaxPowerInMachines", "getAverageEnergySent", "getAverageEnergyReceived",
 				"isEngineControlEnabled", "setEngineControlEnabled", "getStartLevel", "setStartLevel", "getStopLevel", "setStopLevel" };
 		}
 
 		@Override
 		public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
-			switch(method){
-				case 0:{
+			switch(method) {
+				case 0: {
 					return new Object[] { tile.getPowerInConduits() };
 				}
-				case 1:{
+				case 1: {
 					return new Object[] { tile.getMaxPowerInConduits() };
 				}
-				case 2:{
+				case 2: {
 					return new Object[] { tile.getPowerInCapBanks() };
 				}
-				case 3:{
+				case 3: {
 					return new Object[] { tile.getMaxPowerInCapBanks() };
 				}
-				case 4:{
+				case 4: {
 					return new Object[] { tile.getPowerInMachines() };
 				}
-				case 5:{
+				case 5: {
 					return new Object[] { tile.getMaxPowerInMachines() };
 				}
-				case 6:{
+				case 6: {
 					return new Object[] { tile.getAveRfSent() };
 				}
-				case 7:{
+				case 7: {
 					return new Object[] { tile.getAveRfReceived() };
 				}
-				case 8:{
+				case 8: {
 					return new Object[] { tile.isEngineControlEnabled() };
 				}
-				case 9:{
+				case 9: {
 					if(arguments.length < 1 || !(arguments[0] instanceof Boolean)) {
 						throw new LuaException("first argument needs to be a number");
 					}
 					tile.setEngineControlEnabled((Boolean) arguments[0]);
-					return new Object[] { };
+					return new Object[] {};
 				}
-				case 10:{
+				case 10: {
 					return new Object[] { tile.getStartLevel() };
 				}
-				case 11:{
+				case 11: {
 					if(arguments.length < 1 || !(arguments[0] instanceof Number)) {
 						throw new LuaException("first argument needs to be a number");
 					}
 					tile.setStartLevel(((Number) arguments[0]).floatValue());
-					return new Object[] { };
+					return new Object[] {};
 				}
-				case 12:{
+				case 12: {
 					return new Object[] { tile.getStopLevel() };
 				}
-				case 13:{
+				case 13: {
 					if(arguments.length < 1 || !(arguments[0] instanceof Number)) {
 						throw new LuaException("first argument needs to be a number");
 					}
 					tile.setStopLevel(((Number) arguments[0]).floatValue());
-					return new Object[] { };
+					return new Object[] {};
 				}
 			}
 			return null;

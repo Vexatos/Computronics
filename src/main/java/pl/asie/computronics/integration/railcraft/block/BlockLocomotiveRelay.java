@@ -26,7 +26,6 @@ public class BlockLocomotiveRelay extends BlockPeripheral implements IBlockWithP
 		super("locomotive_relay");
 		this.setIconName("computronics:machine_top");
 		this.setBlockName("computronics.locomotiveRelay");
-		this.setNoNedoComputers(true);
 		this.setRotation(Rotation.NONE);
 	}
 
@@ -44,6 +43,7 @@ public class BlockLocomotiveRelay extends BlockPeripheral implements IBlockWithP
 		mBottom = r.registerIcon("computronics:machine_bottom");
 	}
 
+	@Override
 	@SideOnly(Side.CLIENT)
 	public IIcon getAbsoluteIcon(int side, int metadata) {
 		switch(side) {

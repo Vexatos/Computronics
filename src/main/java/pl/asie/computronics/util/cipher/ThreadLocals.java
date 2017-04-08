@@ -3,7 +3,6 @@ package pl.asie.computronics.util.cipher;
 import javax.crypto.Cipher;
 import java.security.KeyFactory;
 import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
 
 /**
  * @author Vexatos

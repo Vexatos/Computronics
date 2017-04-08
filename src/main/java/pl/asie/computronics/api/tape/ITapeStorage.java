@@ -24,7 +24,7 @@ public interface ITapeStorage {
 	/**
 	 * Sets the position of the tape. I would very much ask for you **NEVER** to interface this to players
 	 * in any way, shape or form, due to it breaking the delicate balance of the ITapeStorage system.
-	 * @param newPosition
+	 * @param newPosition The new position of the tape
 	 * @return The position the tape is now set to.
 	 */
 	public int setPosition(int newPosition);

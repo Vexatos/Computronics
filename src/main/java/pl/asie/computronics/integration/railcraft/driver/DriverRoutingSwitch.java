@@ -6,21 +6,21 @@ import dan200.computercraft.api.peripheral.IComputerAccess;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
-import li.cil.oc.api.prefab.DriverTileEntity;
+import li.cil.oc.api.prefab.DriverSidedTileEntity;
 import li.cil.oc.api.prefab.ManagedEnvironment;
 import mods.railcraft.common.blocks.signals.TileSwitchRouting;
 import mods.railcraft.common.items.ItemRoutingTable;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
 import pl.asie.computronics.integration.CCMultiPeripheral;
 import pl.asie.computronics.integration.ManagedEnvironmentOCTile;
 import pl.asie.computronics.integration.util.RoutingTableUtil;
 import pl.asie.computronics.reference.Names;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.LinkedList;
 import java.util.Map;
 
 /**
@@ -32,13 +32,13 @@ public class DriverRoutingSwitch {
 		if(tile.getInventory().getStackInSlot(0) != null
 			&& tile.getInventory().getStackInSlot(0).getItem() instanceof ItemRoutingTable) {
 			if(!tile.isSecure()) {
-				List<List<String>> pages = ItemRoutingTable.getPages(tile.getInventory().getStackInSlot(0));
+				LinkedList<LinkedList<String>> pages = ItemRoutingTable.getPages(tile.getInventory().getStackInSlot(0));
 				if(pages == null) {
 					return new Object[] { false, "no valid routing table found" };
 				}
 				LinkedHashMap<Integer, String> pageMap = new LinkedHashMap<Integer, String>();
 				int i = 1;
-				for(List<String> currentPage : pages) {
+				for(LinkedList<String> currentPage : pages) {
 					for(String currentLine : currentPage) {
 						pageMap.put(i++, currentLine);
 					}
@@ -60,14 +60,14 @@ public class DriverRoutingSwitch {
 		if(tile.getInventory().getStackInSlot(0) != null
 			&& tile.getInventory().getStackInSlot(0).getItem() instanceof ItemRoutingTable) {
 			if(!tile.isSecure()) {
-				List<List<String>> pages = new ArrayList<List<String>>();
-				pages.add(new ArrayList<String>());
+				LinkedList<LinkedList<String>> pages = new LinkedList<LinkedList<String>>();
+				pages.add(new LinkedList<String>());
 				int pageIndex = 0;
-				for(Object key : pageMap.keySet()) {
-					Object line = pageMap.get(key);
+				for(Object line : pageMap.values()) {
+					//Object line = pageMap.get(key);
 					if(line instanceof String) {
 						if(((String) line).toLowerCase().equals("{newline}")) {
-							pages.add(new ArrayList<String>());
+							pages.add(new LinkedList<String>());
 							pageIndex++;
 						} else {
 							pages.get(pageIndex).add((String) line);
@@ -107,8 +107,9 @@ public class DriverRoutingSwitch {
 		return new Object[] { false, "no routing table found" };
 	}
 
-	public static class OCDriver extends DriverTileEntity {
-		public class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TileSwitchRouting> {
+	public static class OCDriver extends DriverSidedTileEntity {
+
+		public static class InternalManagedEnvironment extends ManagedEnvironmentOCTile<TileSwitchRouting> {
 
 			public InternalManagedEnvironment(TileSwitchRouting routingSwitch) {
 				super(routingSwitch, Names.Railcraft_RoutingSwitch);
@@ -143,7 +144,7 @@ public class DriverRoutingSwitch {
 		}
 
 		@Override
-		public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
+		public ManagedEnvironment createEnvironment(World world, int x, int y, int z, ForgeDirection side) {
 			return new InternalManagedEnvironment((TileSwitchRouting) world.getTileEntity(x, y, z));
 		}
 	}

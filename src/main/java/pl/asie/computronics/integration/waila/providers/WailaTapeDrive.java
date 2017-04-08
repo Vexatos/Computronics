@@ -41,7 +41,7 @@ public class WailaTapeDrive extends ComputronicsWailaProvider {
 			if(ConfigValues.DriveState.getValue(config)) {
 				currenttip.add(StringUtil.localizeAndFormat("tooltip.computronics.waila.tape.state",
 					StringUtil.localize("tooltip.computronics.waila.tape.state."
-						+ TapeDriveState.State.values()[data.getByte("state")].name().toLowerCase(Locale.ENGLISH))));
+						+ TapeDriveState.State.VALUES[data.getByte("state")].name().toLowerCase(Locale.ENGLISH))));
 			}
 		} else {
 			currenttip.add(StringUtil.localize("tooltip.computronics.waila.tape.notapeinserted"));

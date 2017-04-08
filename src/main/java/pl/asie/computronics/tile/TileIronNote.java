@@ -15,9 +15,12 @@ import mrtjp.projectred.api.IBundledTile;
 import mrtjp.projectred.api.ProjectRedAPI;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
-import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.NoteUtils;
+import pl.asie.computronics.util.OCUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Optional.InterfaceList({
 	@Optional.Interface(iface = "mods.immibis.redlogic.api.wiring.IBundledUpdatable", modid = Mods.RedLogic),
@@ -25,35 +28,67 @@ import pl.asie.computronics.util.NoteUtils;
 	@Optional.Interface(iface = "mrtjp.projectred.api.IBundledTile", modid = Mods.ProjectRed)
 })
 public class TileIronNote extends TileEntityPeripheralBase implements IBundledTile, IBundledUpdatable, IConnectable {
+
 	public TileIronNote() {
 		super("iron_noteblock");
 	}
 
 	@Override
 	public boolean canUpdate() {
-		return Config.MUST_UPDATE_TILE_ENTITIES;
+		return true;
 	}
 
+	protected final List<NoteUtils.NoteTask> noteBuffer = new ArrayList<NoteUtils.NoteTask>();
+
+	@Override
+	public void updateEntity() {
+		super.updateEntity();
+		synchronized(noteBuffer) {
+			if(!noteBuffer.isEmpty()) {
+				for(NoteUtils.NoteTask task : noteBuffer) {
+					task.play(worldObj, xCoord, yCoord, zCoord);
+				}
+				noteBuffer.clear();
+			}
+		}
+	}
 	// OpenComputers
 
 	@Callback(direct = true, limit = 10, doc = "function([instrument:number or string,] note:number [, volume:number]); "
 		+ "Plays the specified note with the specified instrument or the default one; volume may be a number between 0 and 1")
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] playNote(Context context, Arguments args) {
+		NoteUtils.NoteTask task = null;
 		if(args.count() >= 1) {
 			if(args.count() >= 2 && args.isInteger(1)) {
 				if(args.isInteger(0)) {
-					NoteUtils.playNote(worldObj, xCoord, yCoord, zCoord, args.checkInteger(0), args.checkInteger(1), NoteUtils.toVolume(3, args.optDouble(2, 1.0D)));
+					task = NoteUtils.playNote(worldObj, xCoord, yCoord, zCoord, args.checkInteger(0), args.checkInteger(1), NoteUtils.toVolume(3, args.optDouble(2, 1.0D)));
 				} else if(args.isString(0)) {
-					NoteUtils.playNote(worldObj, xCoord, yCoord, zCoord, args.checkString(0), args.checkInteger(1), NoteUtils.toVolume(3, args.optDouble(2, 1.0D)));
+					task = NoteUtils.playNote(worldObj, xCoord, yCoord, zCoord, args.checkString(0), args.checkInteger(1), NoteUtils.toVolume(3, args.optDouble(2, 1.0D)));
 				} else if(args.checkAny(0) == null) {
-					NoteUtils.playNote(worldObj, xCoord, yCoord, zCoord, -1, args.checkInteger(1), NoteUtils.toVolume(3, args.optDouble(2, 1.0D)));
+					task = NoteUtils.playNote(worldObj, xCoord, yCoord, zCoord, -1, args.checkInteger(1), NoteUtils.toVolume(3, args.optDouble(2, 1.0D)));
 				}
 			} else if(args.isInteger(0)) {
-				NoteUtils.playNote(worldObj, xCoord, yCoord, zCoord, -1, args.checkInteger(0), NoteUtils.toVolume(2, args.optDouble(1, 1.0D)));
+				task = NoteUtils.playNote(worldObj, xCoord, yCoord, zCoord, -1, args.checkInteger(0), NoteUtils.toVolume(2, args.optDouble(1, 1.0D)));
+			}
+		}
+		if(task != null) {
+			synchronized(noteBuffer) {
+				noteBuffer.add(task);
 			}
 		}
 		return null;
+	}
+
+	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
+	protected OCUtils.Device deviceInfo() {
+		return new OCUtils.Device(
+			DeviceClass.Multimedia,
+			"Music note emission device",
+			OCUtils.Vendors.Yanaki,
+			"Vanilla 1"
+		);
 	}
 
 	@Override
@@ -68,19 +103,25 @@ public class TileIronNote extends TileEntityPeripheralBase implements IBundledTi
 		int method, Object[] arguments) throws LuaException,
 		InterruptedException {
 		try {
+			NoteUtils.NoteTask task = null;
 			if(arguments.length >= 1) {
 				if(arguments.length >= 2 && (arguments[1] instanceof Double)) {
 					if(arguments[0] != null) {
 						if(arguments[0] instanceof Double) {
-							NoteUtils.playNote(worldObj, xCoord, yCoord, zCoord, ((Double) arguments[0]).intValue(), ((Double) arguments[1]).intValue(), NoteUtils.toVolume(arguments, 2));
+							task = NoteUtils.playNote(worldObj, xCoord, yCoord, zCoord, ((Double) arguments[0]).intValue(), ((Double) arguments[1]).intValue(), NoteUtils.toVolume(arguments, 2));
 						} else if(arguments[0] instanceof String) {
-							NoteUtils.playNote(worldObj, xCoord, yCoord, zCoord, (String) arguments[0], ((Double) arguments[1]).intValue(), NoteUtils.toVolume(arguments, 2));
+							task = NoteUtils.playNote(worldObj, xCoord, yCoord, zCoord, (String) arguments[0], ((Double) arguments[1]).intValue(), NoteUtils.toVolume(arguments, 2));
 						}
 					} else {
-						NoteUtils.playNote(worldObj, xCoord, yCoord, zCoord, -1, ((Double) arguments[1]).intValue(), NoteUtils.toVolume(arguments, 2));
+						task = NoteUtils.playNote(worldObj, xCoord, yCoord, zCoord, -1, ((Double) arguments[1]).intValue(), NoteUtils.toVolume(arguments, 2));
 					}
 				} else if((arguments[0] instanceof Double)) {
-					NoteUtils.playNote(worldObj, xCoord, yCoord, zCoord, -1, ((Double) arguments[0]).intValue(), NoteUtils.toVolume(arguments, 1));
+					task = NoteUtils.playNote(worldObj, xCoord, yCoord, zCoord, -1, ((Double) arguments[0]).intValue(), NoteUtils.toVolume(arguments, 1));
+				}
+			}
+			if(task != null) {
+				synchronized(noteBuffer) {
+					noteBuffer.add(task);
 				}
 			}
 		} catch(IllegalArgumentException e) {
@@ -89,24 +130,15 @@ public class TileIronNote extends TileEntityPeripheralBase implements IBundledTi
 		return null;
 	}
 
-	@Override
-	@Optional.Method(modid = Mods.NedoComputers)
-	public short busRead(int addr) {
-		return 0;
-	}
-
-	@Override
-	@Optional.Method(modid = Mods.NedoComputers)
-	public void busWrite(int addr, short data) {
-		NoteUtils.playNote(worldObj, xCoord, yCoord, zCoord, (data >> 5), (data & 31));
-	}
-
 	private void parseBundledInput(byte[] data) {
 		int baseNote = 4;
 		if(data != null) {
 			for(int i = 0; i < 16; i++) {
 				if(data[i] != 0) {
-					NoteUtils.playNote(worldObj, xCoord, yCoord, zCoord, -1, baseNote + i);
+					NoteUtils.NoteTask task = NoteUtils.playNote(worldObj, xCoord, yCoord, zCoord, -1, baseNote + i);
+					if(task != null) {
+						task.play(worldObj, xCoord, yCoord, zCoord);
+					}
 				}
 			}
 		}

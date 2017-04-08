@@ -9,6 +9,7 @@ import buildcraft.transport.PipeTransportItems;
 import buildcraft.transport.TileGenericPipe;
 import buildcraft.transport.TravelingItem;
 import li.cil.oc.api.Network;
+import li.cil.oc.api.driver.DeviceInfo;
 import li.cil.oc.api.internal.Drone;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
@@ -24,11 +25,14 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.integration.buildcraft.pluggable.DroneStationPluggable.DroneStationState;
+import pl.asie.computronics.util.OCUtils;
+
+import java.util.Map;
 
 /**
  * @author Vexatos
  */
-public class DriverDockingUpgrade extends ManagedEnvironment {
+public class DriverDockingUpgrade extends ManagedEnvironment implements DeviceInfo {
 
 	protected final Drone drone;
 
@@ -260,5 +264,20 @@ public class DriverDockingUpgrade extends ManagedEnvironment {
 			targetY = nbt.getFloat("drone:targetY");
 			targetZ = nbt.getFloat("drone:targetZ");
 		}
+	}
+
+	protected Map<String, String> deviceInfo;
+
+	@Override
+	public Map<String, String> getDeviceInfo() {
+		if(deviceInfo == null) {
+			return deviceInfo = new OCUtils.Device(
+				DeviceClass.Bus,
+				"Drone pipe connector",
+				OCUtils.Vendors.BuildCraft,
+				"DroneDock 233-B Deluxe"
+			).deviceInfo();
+		}
+		return deviceInfo;
 	}
 }
