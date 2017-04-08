@@ -10,10 +10,11 @@ import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import net.minecraft.nbt.NBTTagCompound;
 import pl.asie.computronics.Computronics;
-import pl.asie.computronics.network.Packets;
+import pl.asie.computronics.network.PacketType;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TileEntityPeripheralBase;
+import pl.asie.computronics.util.OCUtils;
 import pl.asie.lib.network.Packet;
 
 import java.io.IOException;
@@ -45,12 +46,23 @@ public class TileTTSBox extends TileEntityPeripheralBase {
 		}
 	}
 
+	@Override
+	@Optional.Method(modid = Mods.OpenComputers)
+	protected OCUtils.Device deviceInfo() {
+		return new OCUtils.Device(
+			DeviceClass.Multimedia,
+			"Text-To-Speech Interface",
+			OCUtils.Vendors.Yanaki,
+			"Mary 2"
+		);
+	}
+
 	public void setLocked(int ticks) {
 		this.lockedTicks = ticks;
 	}
 
 	private Object[] sendNewText(String text) throws IOException {
-		Packet packet = Computronics.packet.create(Packets.PACKET_TTS).writeTileLocation(this).writeString(text);
+		Packet packet = Computronics.packet.create(PacketType.TTS.ordinal()).writeTileLocation(this).writeString(text);
 		Computronics.packet.sendToAllAround(packet, this, Config.TAPEDRIVE_DISTANCE);
 		return new Object[] { true };
 	}
@@ -97,24 +109,6 @@ public class TileTTSBox extends TileEntityPeripheralBase {
 			}
 		}
 		return null;
-	}
-
-	@Override
-	@Optional.Method(modid = Mods.NedoComputers)
-	public boolean connectable(int side) {
-		return false;
-	}
-
-	@Override
-	@Optional.Method(modid = Mods.NedoComputers)
-	public short busRead(int addr) {
-		return 0;
-	}
-
-	@Override
-	@Optional.Method(modid = Mods.NedoComputers)
-	public void busWrite(int addr, short data) {
-
 	}
 
 	@Override

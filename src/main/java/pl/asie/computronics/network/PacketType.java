@@ -9,7 +9,8 @@ public enum PacketType {
 	COMPUTER_NOISE,
 	COMPUTER_BOOM,
 	TICKET_SYNC,
-	TICKET_PRINT;
+	TICKET_PRINT,
+	TTS;
 
 	public static final PacketType[] VALUES = values();
 

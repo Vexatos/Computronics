@@ -5,10 +5,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetHandler;
 import net.minecraft.tileentity.TileEntity;
 import pl.asie.computronics.Computronics;
-import pl.asie.computronics.audio.tts.TileTTSBox;
-import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.api.audio.AudioPacketClientHandler;
 import pl.asie.computronics.api.audio.AudioPacketRegistry;
+import pl.asie.computronics.audio.tts.TileTTSBox;
 import pl.asie.computronics.oc.driver.DriverCardNoise;
 import pl.asie.computronics.oc.driver.DriverCardSoundBase;
 import pl.asie.computronics.reference.Mods;
@@ -89,7 +88,7 @@ public class NetworkHandlerClient extends MessageHandlerBase {
 				}
 			}
 			break;
-			case PACKET_TTS: {
+			case TTS: {
 				if(Mods.isClassLoaded("marytts.LocalMaryInterface")) {
 					TileEntity tile = packet.readTileEntity();
 					if(tile instanceof TileTTSBox) {

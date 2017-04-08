@@ -10,6 +10,7 @@ import java.util.Map;
 /**
  * @author Vexatos
  */
+@IFMLLoadingPlugin.TransformerExclusions("pl.asie.computronics.audio.tts.core")
 @MCVersion("1.7.10")
 public class TextToSpeechCore extends DummyModContainer implements IFMLLoadingPlugin {
 

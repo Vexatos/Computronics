@@ -116,9 +116,9 @@ dependencies {
 	//provided("qmunity:QmunityLib:${config.qmunitylib.version}:deobf") {
 	//	transitive = false
 	//}
-	provided "de.dfki.mary:marytts-runtime:5.1.2:jar-with-dependencies"
-	provided "de.dfki.mary:marytts-lang-en:5.1.2"
-	provided "de.dfki.mary:voice-cmu-slt-hsmm:5.1.2"
+	provided "de.dfki.mary:marytts-runtime:${config.mary.version}:jar-with-dependencies"
+	provided "de.dfki.mary:marytts-lang-en:${config.mary.version}"
+	provided "de.dfki.mary:voice-cmu-slt-hsmm:${config.mary.version}"
 }
 
 minecraft {
