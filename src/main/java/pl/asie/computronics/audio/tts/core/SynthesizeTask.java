@@ -1,8 +1,7 @@
-package pl.asie.computronics.audio.tts.synth;
+package pl.asie.computronics.audio.tts.core;
 
 import marytts.exceptions.SynthesisException;
 import pl.asie.computronics.Computronics;
-import pl.asie.computronics.audio.tts.core.TextToSpeech;
 import pl.asie.computronics.audio.tts.core.TextToSpeech.Result;
 import pl.asie.lib.audio.DFPWM;
 

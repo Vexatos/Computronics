@@ -17,7 +17,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.audio.tts.TileTTSBox;
-import pl.asie.computronics.audio.tts.synth.SynthesizeTask;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.lib.util.WorldUtils;
 
