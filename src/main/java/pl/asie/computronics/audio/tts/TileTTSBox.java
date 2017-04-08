@@ -8,69 +8,149 @@ import dan200.computercraft.api.peripheral.IComputerAccess;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.MathHelper;
+import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.Computronics;
-import pl.asie.computronics.network.PacketType;
+import pl.asie.computronics.api.audio.AudioPacket;
+import pl.asie.computronics.api.audio.AudioPacketDFPWM;
+import pl.asie.computronics.api.audio.IAudioReceiver;
+import pl.asie.computronics.api.audio.IAudioSource;
+import pl.asie.computronics.audio.AudioUtils;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TileEntityPeripheralBase;
 import pl.asie.computronics.util.OCUtils;
-import pl.asie.lib.network.Packet;
+import pl.asie.lib.util.ColorUtils;
+import pl.asie.lib.util.internal.IColorable;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * @author Vexatos
  */
-public class TileTTSBox extends TileEntityPeripheralBase {
+public class TileTTSBox extends TileEntityPeripheralBase implements IAudioSource {
 
 	public TileTTSBox() {
 		super("speech_box");
 	}
 
-	@Override
-	public boolean canUpdate() {
-		return true;
-	}
+	private final IAudioReceiver internalSpeaker = new IAudioReceiver() {
+		@Override
+		public boolean connectsAudio(ForgeDirection side) {
+			return true;
+		}
 
-	private int lockedTicks = 0;
+		@Override
+		public World getSoundWorld() {
+			return worldObj;
+		}
+
+		@Override
+		public int getSoundX() {
+			return MathHelper.floor_double(xCoord);
+		}
+
+		@Override
+		public int getSoundY() {
+			return MathHelper.floor_double(yCoord);
+		}
+
+		@Override
+		public int getSoundZ() {
+			return MathHelper.floor_double(zCoord);
+		}
+
+		@Override
+		public int getSoundDistance() {
+			return Config.TAPEDRIVE_DISTANCE; // TODO TTS
+		}
+
+		@Override
+		public void receivePacket(AudioPacket packet, ForgeDirection direction) {
+			packet.addReceiver(this);
+		}
+	};
+
+	private long lastCodecTime;
+	private Integer codecId;
+	protected int packetSize = 1024;
+	protected int soundVolume = 127;
+	private boolean locked = false;
 
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
-		if(lockedTicks > 0) {
-			--lockedTicks;
-			if(lockedTicks <= 0 && worldObj.isRemote) {
-				Computronics.tts.stopSource(this);
+		AudioPacket pkt = null;
+		long time = System.nanoTime();
+		if((time - (250 * 1000000)) > lastCodecTime) {
+			lastCodecTime += (250 * 1000000);
+			pkt = createMusicPacket(this, worldObj, xCoord, yCoord, zCoord);
+		}
+		if(pkt != null) {
+			int receivers = 0;
+			for(int i = 0; i < 6; i++) {
+				ForgeDirection dir = ForgeDirection.getOrientation(i);
+				TileEntity tile = worldObj.getTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
+				if(tile instanceof IAudioReceiver) {
+					if(tile instanceof IColorable && ((IColorable) tile).canBeColored()
+						&& !ColorUtils.isSameOrDefault(this, (IColorable) tile)) {
+						continue;
+					}
+					((IAudioReceiver) tile).receivePacket(pkt, dir.getOpposite());
+					receivers++;
+				}
 			}
+
+			if(receivers == 0) {
+				internalSpeaker.receivePacket(pkt, ForgeDirection.UNKNOWN);
+			}
+
+			pkt.sendPacket();
+		}
+		if(storage != null && storage.available() <= 0) {
+			AudioUtils.removePlayer(Computronics.tts.managerId, codecId);
+			locked = false;
+			storage = null;
 		}
 	}
 
-	@Override
-	@Optional.Method(modid = Mods.OpenComputers)
-	protected OCUtils.Device deviceInfo() {
-		return new OCUtils.Device(
-			DeviceClass.Multimedia,
-			"Text-To-Speech Interface",
-			OCUtils.Vendors.Yanaki,
-			"Mary 2"
-		);
-	}
-
-	public void setLocked(int ticks) {
-		this.lockedTicks = ticks;
+	public void startTalking(byte[] data) {
+		storage = new ByteArrayInputStream(data);
+		codecId = Computronics.tts.audio.newPlayer();
+		Computronics.tts.audio.getPlayer(codecId);
+		lastCodecTime = System.nanoTime();
 	}
 
 	private Object[] sendNewText(String text) throws IOException {
-		Packet packet = Computronics.packet.create(PacketType.TTS.ordinal()).writeTileLocation(this).writeString(text);
-		Computronics.packet.sendToAllAround(packet, this, Config.TAPEDRIVE_DISTANCE);
+		locked = true;
+		Computronics.tts.say(text, worldObj.provider.dimensionId, xCoord, yCoord, zCoord);
 		return new Object[] { true };
+	}
+
+	public ByteArrayInputStream storage;
+
+	private AudioPacket createMusicPacket(IAudioSource source, World worldObj, int x, int y, int z) {
+		if(storage == null) {
+			return null;
+		}
+		byte[] pktData = new byte[packetSize];
+		int amount = storage.read(pktData, 0, pktData.length); // read data into packet array
+
+		if(amount > 0) {
+			return new AudioPacketDFPWM(source, (byte) soundVolume, packetSize * 8 * 4, amount == packetSize ? pktData : Arrays.copyOf(pktData, amount));
+		} else {
+			return null;
+		}
 	}
 
 	@Callback
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] say(Context context, Arguments args) {
-		if(lockedTicks > 0) {
+		if(locked || storage != null) {
 			return new Object[] { false, "already talking" };
 		}
 		try {
@@ -98,7 +178,7 @@ public class TileTTSBox extends TileEntityPeripheralBase {
 				if(arguments.length < 1 || !(arguments[0] instanceof String)) {
 					throw new LuaException("first argument needs to be a string");
 				}
-				if(lockedTicks > 0) {
+				if(locked || storage != null) {
 					return new Object[] { false, "already talking" };
 				}
 				try {
@@ -112,16 +192,23 @@ public class TileTTSBox extends TileEntityPeripheralBase {
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
-		/*if(nbt.hasKey("lockedTicks")) {
-			lockedTicks = nbt.getInteger("lockedTicks");
-		}*/
+	@Optional.Method(modid = Mods.OpenComputers)
+	protected OCUtils.Device deviceInfo() {
+		return new OCUtils.Device(
+			DeviceClass.Multimedia,
+			"Text-To-Speech Interface",
+			OCUtils.Vendors.Yanaki,
+			"Mary 2"
+		);
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
-		//nbt.setInteger("lockedTicks", lockedTicks);
+	public int getSourceId() {
+		return codecId;
+	}
+
+	@Override
+	public boolean connectsAudio(ForgeDirection side) {
+		return true;
 	}
 }

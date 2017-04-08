@@ -4,7 +4,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetHandler;
 import net.minecraft.tileentity.TileEntity;
 import pl.asie.computronics.Computronics;
-import pl.asie.computronics.audio.tts.TileTTSBox;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TapeDriveState.State;
 import pl.asie.computronics.tile.TileTapeDrive;
@@ -47,9 +46,9 @@ public class NetworkHandlerServer extends MessageHandlerBase {
 			case TTS: {
 				if(Mods.isClassLoaded("marytts.LocalMaryInterface")) {
 					TileEntity tile = packet.readTileEntityServer();
-					if(tile instanceof TileTTSBox) {
+					/*if(tile instanceof TileTTSBox) {
 						((TileTTSBox) tile).setLocked(packet.readInt());
-					}
+					}*/
 					//Computronics.tts.say(x, y, z, packet.readString());
 				}
 			}

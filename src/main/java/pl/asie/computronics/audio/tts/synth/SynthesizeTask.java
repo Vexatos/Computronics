@@ -1,16 +1,15 @@
 package pl.asie.computronics.audio.tts.synth;
 
 import marytts.exceptions.SynthesisException;
-import net.minecraft.client.Minecraft;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.audio.tts.core.TextToSpeech;
 import pl.asie.computronics.audio.tts.core.TextToSpeech.Result;
-import pl.asie.computronics.audio.tts.core.TextToSpeechLoader;
+import pl.asie.lib.audio.DFPWM;
 
-import javax.sound.sampled.AudioFileFormat;
+import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
-import java.io.File;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.concurrent.Callable;
 
@@ -18,6 +17,7 @@ import java.util.concurrent.Callable;
  * @author Vexatos
  */
 public class SynthesizeTask implements Callable<Result> {
+
 	private final String text;
 	private final int dimID;
 	private final int x, y, z;
@@ -37,27 +37,28 @@ public class SynthesizeTask implements Callable<Result> {
 		}
 		try {
 			AudioInputStream audio = Computronics.tts.marytts.generateAudio(text);
-			//AudioFormat audioFormat = audio.getFormat();
-			//AudioFormat e = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, audioFormat.getSampleRate(), audioFormat.getSampleSizeInBits(), 2, audioFormat.getFrameSize(), audioFormat.getSampleRate(), audioFormat.isBigEndian());
-			//audio = AudioSystem.getAudioInputStream(e, audio);
-			//WaveData data = WaveData.create(audio);*/
-			File tmpDir = TextToSpeechLoader.ttsDir.exists() ? new File(TextToSpeechLoader.ttsDir, "synth_tmp") : new File(Minecraft.getMinecraft().mcDataDir, "marytts_tmp");
-			if(!tmpDir.exists()) {
-				tmpDir.mkdir();
-			}
-			File tempFile = File.createTempFile("tts_", ".wav", tmpDir);
-			tempFile.deleteOnExit();
-			AudioSystem.write(audio, AudioFileFormat.Type.WAVE, tempFile);
-			//AudioFileFormat audioFileFormat = AudioSystem.getAudioFileFormat(tempFile);
-			//sndSys.quickPlay(false, tempFile.toURI().toURL(), tempFile.getName(), false, x, y, z, SoundSystemConfig.ATTENUATION_LINEAR, 16);
-			//SoundSystem sndSys = getSoundSystem();
-			//sndSys.newSource(false, tempFile.getName(), tempFile.toURI().toURL(), tempFile.getName(), false, x, y, z, 2, 16);
-			//sndSys.play(tempFile.getName());
-			//AudioPlayer player = new AudioPlayer(audio);
-			//ttsThreads.submit(player);
-			if(tempFile.exists()) {
-				return new Result(tempFile, dimID, x, y, z);
-			}
+			AudioFormat convertFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 32768, 8, 1, 1, 32768, false);
+			AudioInputStream inFile = AudioSystem.getAudioInputStream(convertFormat, audio);
+			byte[] readBuffer = new byte[1024];
+			byte[] outBuffer = new byte[readBuffer.length / 8];
+			DFPWM converter = new DFPWM();
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+			int read;
+			do {
+				for(read = 0; read < readBuffer.length; ) {
+					int amt = inFile.read(readBuffer, read, readBuffer.length - read);
+					if(amt == -1) {
+						break;
+					}
+					read += amt;
+				}
+				read &= ~0x07;
+				converter.compress(outBuffer, readBuffer, 0, 0, read / 8);
+				out.write(outBuffer, 0, read / 8);
+			} while(read == readBuffer.length);
+
+			return new Result(out.toByteArray(), dimID, x, y, z);
 		} catch(SynthesisException e) {
 			TextToSpeech.log.error("Text To Speech synthesis failed");
 			e.printStackTrace();
