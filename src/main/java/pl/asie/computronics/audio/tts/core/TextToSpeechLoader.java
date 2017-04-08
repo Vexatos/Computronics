@@ -6,14 +6,15 @@ import net.minecraft.launchwrapper.LaunchClassLoader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pl.asie.computronics.reference.Mods;
-import sun.misc.JarFilter;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Arrays;
+import java.util.Locale;
 
 /**
  * MaryTTS cannot load in FML's class loader, this is why we have to add it ourselves.
@@ -63,7 +64,13 @@ public class TextToSpeechLoader {
 			log.error("Could not read MaryTTS folder - found a file, not a directory!");
 			return hasDoneInit = false;
 		}
-		File[] files = ttsDir.listFiles(new JarFilter());
+		File[] files = ttsDir.listFiles(new FilenameFilter() {
+			@Override
+			public boolean accept(File dir, String name) {
+				name = name.toLowerCase(Locale.ROOT);
+				return name.endsWith(".jar") || name.endsWith(".zip");
+			}
+		});
 		if(files == null || files.length <= 0) {
 			log.error("Found an empty or invalid marytts directory, Text To Speech will not be initialized");
 			return hasDoneInit = false;
