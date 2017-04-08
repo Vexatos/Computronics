@@ -3,9 +3,6 @@ package pl.asie.computronics.audio.tts.core;
 import marytts.util.MaryRuntimeUtils;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.launchwrapper.LaunchClassLoader;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import pl.asie.computronics.reference.Mods;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -16,6 +13,8 @@ import java.net.URLClassLoader;
 import java.util.Arrays;
 import java.util.Locale;
 
+import static pl.asie.computronics.Computronics.log;
+
 /**
  * MaryTTS cannot load in FML's class loader, this is why we have to add it ourselves.
  * @author Vexatos
@@ -24,7 +23,7 @@ public class TextToSpeechLoader {
 
 	public static final TextToSpeechLoader INSTANCE = new TextToSpeechLoader();
 	private boolean hasDoneInit = false;
-	public static Logger log = LogManager.getLogger(Mods.Computronics + "-text-to-spech-loader");
+	//public static Logger log = LogManager.getLogger(Mods.Computronics + "-text-to-spech-loader");
 	public static File ttsDir;
 
 	private ClasspathAdder classpathAdder;
@@ -57,11 +56,11 @@ public class TextToSpeechLoader {
 		ttsDir = new File(System.getProperty("user.dir"));
 		ttsDir = new File(ttsDir, "marytts");
 		if(!ttsDir.exists()) {
-			log.info("No MaryTTS folder found, disable Text To Speech");
+			log.info("No MaryTTS directory found, disable Text To Speech");
 			return hasDoneInit = false;
 		}
 		if(!ttsDir.isDirectory()) {
-			log.error("Could not read MaryTTS folder - found a file, not a directory!");
+			log.error("Could not read MaryTTS directory - found a file, not a directory!");
 			return hasDoneInit = false;
 		}
 		File[] files = ttsDir.listFiles(new FilenameFilter() {
@@ -101,7 +100,7 @@ public class TextToSpeechLoader {
 			MaryRuntimeUtils.ensureMaryStarted();
 			return hasDoneInit = true;
 		} catch(Exception e) {
-			log.error("Text To Speech folder initialization failed, you will not be able to hear anything", e);
+			log.error("Text To Speech directory initialization failed, you will not be able to hear anything", e);
 			return hasDoneInit = false;
 		}
 	}

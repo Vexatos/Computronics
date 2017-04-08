@@ -107,25 +107,23 @@ public class TextToSpeech {
 	public Block ttsBox;
 
 	public void preInit(Computronics computronics) {
-		if(computronics.isEnabled("ttsBox", Mods.isClassLoaded("marytts.LocalMaryInterface"))) {
-			log.info("Initializing Text To Speech");
-			new TextToSpeechLoader().preInit();
-			try {
-				marytts = new LocalMaryInterface();
-				//Set<String> voices = marytts.getAvailableVoices();
-				marytts.setStreamingAudio(true);
-				//marytts.setLocale(Locale.US);
-				//marytts.setVoice(voices.iterator().next());
-				marytts.setOutputType("AUDIO");
-				ttsThreads = Executors.newCachedThreadPool();
-			} catch(Exception e) {
-				log.error("Text To Speech initialization failed, you will not be able to hear anything", e);
-				if(Mary.currentState() == 2) {
-					Mary.shutdown();
-					marytts = null;
-				}
-				return;
+		try {
+			marytts = new LocalMaryInterface();
+			//Set<String> voices = marytts.getAvailableVoices();
+			marytts.setStreamingAudio(true);
+			//marytts.setLocale(Locale.US);
+			//marytts.setVoice(voices.iterator().next());
+			marytts.setOutputType("AUDIO");
+			ttsThreads = Executors.newCachedThreadPool();
+		} catch(Exception e) {
+			log.error("Text To Speech initialization failed, you will not be able to hear anything", e);
+			if(Mary.currentState() == 2) {
+				Mary.shutdown();
+				marytts = null;
 			}
+			return;
+		}
+		if(computronics.isEnabled("ttsBox", true)) {
 			ttsBox = new BlockTTSBox();
 			GameRegistry.registerBlock(ttsBox, "computronics.ttsBox");
 			GameRegistry.registerTileEntity(TileTTSBox.class, "computronics.ttsBox");

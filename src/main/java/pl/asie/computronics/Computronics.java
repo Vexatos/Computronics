@@ -284,9 +284,13 @@ public class Computronics {
 			opencomputers.preInit();
 		}
 
-		if(config.config.get("enable.tts", "textToSpeech", TextToSpeechLoader.INSTANCE.hasDoneInit()).getBoolean()) {
-			tts = new TextToSpeech();
-			tts.preInit(this);
+		if(config.config.get("enable.tts", "textToSpeech", true, "Enable Text To Speech. Requires MaryTTS to be installed.").getBoolean()) {
+			log.info("Initializing Text To Speech");
+			boolean success = TextToSpeechLoader.INSTANCE.preInit();
+			if(success) {
+				tts = new TextToSpeech();
+				tts.preInit(this);
+			}
 		}
 
 		if(Mods.isLoaded(Mods.TIS3D)) {
