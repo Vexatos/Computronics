@@ -9,7 +9,6 @@ import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.Computronics;
@@ -51,17 +50,17 @@ public class TileTTSBox extends TileEntityPeripheralBase implements IAudioSource
 
 		@Override
 		public int getSoundX() {
-			return MathHelper.floor_double(xCoord);
+			return xCoord;
 		}
 
 		@Override
 		public int getSoundY() {
-			return MathHelper.floor_double(yCoord);
+			return yCoord;
 		}
 
 		@Override
 		public int getSoundZ() {
-			return MathHelper.floor_double(zCoord);
+			return zCoord;
 		}
 
 		@Override
