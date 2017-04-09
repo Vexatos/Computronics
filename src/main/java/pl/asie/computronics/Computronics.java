@@ -54,6 +54,7 @@ import pl.asie.computronics.integration.gregtech.gregtech5.GregTech5Recipes;
 import pl.asie.computronics.integration.gregtech.gregtech6.GregTech6Recipes;
 import pl.asie.computronics.integration.railcraft.IntegrationRailcraft;
 import pl.asie.computronics.integration.tis3d.IntegrationTIS3D;
+import pl.asie.computronics.item.ItemPortableTapeDrive;
 import pl.asie.computronics.item.ItemTape;
 import pl.asie.computronics.item.block.IBlockWithSpecialText;
 import pl.asie.computronics.item.block.ItemBlockWithSpecialText;
@@ -140,6 +141,7 @@ public class Computronics {
 	public static IntegrationForestry forestry;
 	public static IntegrationTIS3D tis3D;
 
+	public static ItemPortableTapeDrive portableTapeDrive;
 	public static ItemTape itemTape;
 	public static ItemMultiple itemParts;
 	public static ItemMultiple itemPartsGreg;
@@ -265,6 +267,9 @@ public class Computronics {
 			itemParts = new ItemMultiple(Mods.Computronics, new String[] { "part_tape_track" });
 			itemParts.setCreativeTab(tab);
 			GameRegistry.registerItem(itemParts, "computronics.parts");
+
+			portableTapeDrive = new ItemPortableTapeDrive();
+			GameRegistry.registerItem(portableTapeDrive, "computronics.portableTapeDrive");
 		}
 
 		if(Mods.isLoaded(Mods.Railcraft)) {

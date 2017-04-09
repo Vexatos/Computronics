@@ -7,6 +7,7 @@ import net.minecraft.tileentity.TileEntity;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.api.audio.AudioPacketClientHandler;
 import pl.asie.computronics.api.audio.AudioPacketRegistry;
+import pl.asie.computronics.item.ItemPortableTapeDrive;
 import pl.asie.computronics.oc.driver.DriverCardNoise;
 import pl.asie.computronics.oc.driver.DriverCardSoundBase;
 import pl.asie.computronics.reference.Mods;
@@ -99,6 +100,10 @@ public class NetworkHandlerClient extends MessageHandlerBase {
 				if(Mods.isLoaded(Mods.Railcraft)) {
 					Computronics.railcraft.onMessageRailcraft(packet, player, false);
 				}
+			}
+			break;
+			case PORTABLE_TAPE_STOP: {
+				ItemPortableTapeDrive.PortableDriveManager.INSTANCE.stopTapeDrive(packet.readString());
 			}
 			break;
 		}

@@ -23,13 +23,19 @@ public class TapeDriveState {
 	private State state = State.STOPPED;
 	private int codecId;//, packetId;
     private long lastCodecTime;
-	protected int packetSize = 1024;
-	protected int soundVolume = 127;
+	public int packetSize = 1024;
+	public int soundVolume = 127;
 	private ITapeStorage storage;
 
 	public ITapeStorage getStorage() { return storage; }
-	protected void setStorage(ITapeStorage storage) { this.storage = storage; }
-	protected void setState(State state) { this.state = state; }
+
+	public void setStorage(ITapeStorage storage) {
+		this.storage = storage;
+	}
+
+	public void setState(State state) {
+		this.state = state;
+	}
 
 	public boolean setSpeed(float speed) {
 		if(speed < 0.25F || speed > 2.0F) return false;
