@@ -239,8 +239,8 @@ public class TileTTSBox extends TileEntityPeripheralBase implements IAudioSource
 		return new OCUtils.Device(
 			DeviceClass.Multimedia,
 			"Text-To-Speech Interface",
-			OCUtils.Vendors.Yanaki,
-			"Mary 2"
+			OCUtils.Vendors.DFKI,
+			"Mary"
 		);
 	}
 
