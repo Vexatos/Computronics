@@ -38,12 +38,11 @@ public class TextToSpeech {
 
 	private ExecutorService ttsThreads;
 	public final ArrayList<Future<Result>> processes = new ArrayList<Future<Result>>();
-	public static Logger log;
+	public static final Logger log = LogManager.getLogger(Mods.Computronics + "-text-to-speech");
 
 	public TextToSpeech() {
 		MinecraftForge.EVENT_BUS.register(this);
 		FMLCommonHandler.instance().bus().register(this);
-		log = LogManager.getLogger(Mods.Computronics + "-text-to-speech");
 	}
 
 	public void say(String text, int dimID, int x, int y, int z) {
