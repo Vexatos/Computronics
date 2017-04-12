@@ -113,6 +113,7 @@ public class ItemPortableTapeDrive extends Item {
 				drive.switchState(State.STOPPED);
 				drive.updateSound();
 				drive.carrier = null;
+				drives.remove(id);
 			}
 		}
 	}
