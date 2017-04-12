@@ -186,10 +186,16 @@ public class TileTTSBox extends TileEntityPeripheralBase implements IAudioSource
 		return new Object[] { false, "not talking" };
 	}
 
+	@Callback(doc = "function():boolean; Returns true if the device is currently processing text.", direct = true)
+	@Optional.Method(modid = Mods.OpenComputers)
+	public Object[] isProcessing(Context context, Arguments args) {
+		return new Object[] { locked || storage != null };
+	}
+
 	@Override
 	@Optional.Method(modid = Mods.ComputerCraft)
 	public String[] getMethodNames() {
-		return new String[] { "say", "stop" };
+		return new String[] { "say", "stop", "isProcessing" };
 	}
 
 	@Override
@@ -219,6 +225,9 @@ public class TileTTSBox extends TileEntityPeripheralBase implements IAudioSource
 					return new Object[] { true };
 				}
 				return new Object[] { false, "not talking" };
+			}
+			case 2: {
+				return new Object[] { locked || storage != null };
 			}
 		}
 		return null;

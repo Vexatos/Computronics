@@ -57,6 +57,9 @@ public class SynthesizeTask implements Callable<Result> {
 				out.write(outBuffer, 0, read / 8);
 			} while(read == readBuffer.length);
 
+			// Need to add some padding due to the system immediately stopping once the end is reached.
+			out.write(new byte[4096]);
+
 			return new Result(out.toByteArray(), dimID, x, y, z);
 		} catch(SynthesisException e) {
 			TextToSpeech.log.error("Text To Speech synthesis failed");
