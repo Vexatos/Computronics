@@ -110,9 +110,6 @@ public class TileTTSBox extends TileEntityPeripheralBase implements IAudioSource
 
 			pkt.sendPacket();
 		}
-		if(!worldObj.isRemote && storage != null && storage.available() <= 0) {
-			stopTalking();
-		}
 	}
 
 	public void startTalking(byte[] data) {
@@ -141,7 +138,7 @@ public class TileTTSBox extends TileEntityPeripheralBase implements IAudioSource
 		return new Object[] { true };
 	}
 
-	public ByteArrayInputStream storage;
+	private ByteArrayInputStream storage;
 
 	private AudioPacket createMusicPacket(IAudioSource source, World worldObj, int x, int y, int z) {
 		if(storage == null) {
@@ -153,6 +150,7 @@ public class TileTTSBox extends TileEntityPeripheralBase implements IAudioSource
 		if(amount > 0) {
 			return new AudioPacketDFPWM(source, (byte) soundVolume, packetSize * 8 * 4, amount == packetSize ? pktData : Arrays.copyOf(pktData, amount));
 		} else {
+			stopTalking();
 			return null;
 		}
 	}
