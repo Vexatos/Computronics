@@ -51,12 +51,12 @@ public class BlockDigitalSignalBox extends BlockMachineSignalBox<SignalTypes> im
 
 	@Override
 	public String getDocumentationName(World world, BlockPos pos) {
-		return getMachineType(world.getBlockState(pos)).getBaseTag();
+		return getVariant(world.getBlockState(pos)).getBaseTag();
 	}
 
 	@Override
 	public String getDocumentationName(ItemStack stack) {
-		return getMachineType(getStateFromMeta(stack.getItemDamage())).getBaseTag();
+		return getVariant(getStateFromMeta(stack.getItemDamage())).getBaseTag();
 	}
 
 	@Override
@@ -73,6 +73,6 @@ public class BlockDigitalSignalBox extends BlockMachineSignalBox<SignalTypes> im
 	@Optional.Method(modid = Mods.OpenComputers)
 	@SuppressWarnings("unchecked")
 	public Class<? extends Environment> getTileEntityClass(int meta) {
-		return (Class<? extends Environment>) this.getMachineType(getStateFromMeta(meta)).getTileClass();
+		return (Class<? extends Environment>) this.getVariant(getStateFromMeta(meta)).getTileClass();
 	}
 }

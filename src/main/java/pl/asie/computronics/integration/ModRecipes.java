@@ -132,14 +132,14 @@ public class ModRecipes {
 				" n ", "npr", " r ", 'p', "paper", 'n', "nuggetTin", 'r', "dustRedstone");
 		}
 		if(SignalTypes.DigitalReceiver.isEnabled()) {
-			RecipeUtils.addShapedRecipe(SignalTypes.DigitalReceiver.getItem(),
+			RecipeUtils.addShapedRecipe(SignalTypes.DigitalReceiver.getStack(),
 				"iri", "ibi", "isi", 'i', "ingotIron",
 				'r', RailcraftItems.CIRCUIT.getRecipeObject(EnumCircuit.RECEIVER),
 				'b', RailcraftBlocks.SIGNAL_BOX.getRecipeObject(SignalBoxVariant.RECEIVER),
 				's', RailcraftItems.CIRCUIT.getRecipeObject(EnumCircuit.SIGNAL));
 		}
 		if(SignalTypes.DigitalController.isEnabled()) {
-			RecipeUtils.addShapedRecipe(SignalTypes.DigitalController.getItem(),
+			RecipeUtils.addShapedRecipe(SignalTypes.DigitalController.getStack(),
 				"iri", "ibi", "isi", 'i', "ingotIron",
 				'r', RailcraftItems.CIRCUIT.getRecipeObject(EnumCircuit.CONTROLLER),
 				'b', RailcraftBlocks.SIGNAL_BOX.getRecipeObject(SignalBoxVariant.CONTROLLER),

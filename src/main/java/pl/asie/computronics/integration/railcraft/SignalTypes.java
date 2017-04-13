@@ -36,7 +36,7 @@ public enum SignalTypes implements IEnumMachine<SignalTypes> {
 	boolean enabled = false;
 
 	SignalTypes(String tag, Block block, Class<? extends TileMachineBase> tile) {
-		this.def = new Definition(null, tag, tile);
+		this.def = new Definition(tag, tile);
 	}
 
 	@Override
