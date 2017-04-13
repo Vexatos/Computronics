@@ -58,7 +58,9 @@ public class SynthesizeTask implements Callable<Result> {
 			} while(read == readBuffer.length);
 
 			// Need to add some padding due to the system immediately stopping once the end is reached.
-			out.write(new byte[4096]);
+			outBuffer = new byte[4096];
+			converter.compress(outBuffer, new byte[32768], 0, 0, 4096);
+			out.write(outBuffer);
 
 			return new Result(out.toByteArray(), dimID, x, y, z);
 		} catch(SynthesisException e) {
