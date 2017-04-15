@@ -131,7 +131,7 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 	}
 
 	public void update() {
-		//super.update();
+		super.update();
 		if(worldObj == null) {
 			return;
 		}
