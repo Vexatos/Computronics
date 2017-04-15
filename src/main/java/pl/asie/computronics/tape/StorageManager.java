@@ -14,7 +14,11 @@ public class StorageManager {
 	private static Random rand = new Random();
 
 	private File saveDir() {
-		File saveDir = new File(DimensionManager.getCurrentSaveRootDirectory(), Mods.Computronics);
+		File currentSaveRootDirectory = DimensionManager.getCurrentSaveRootDirectory();
+		if(currentSaveRootDirectory == null) {
+			Computronics.log.error("COULD NOT CREATE SAVE DIRECTORY: No parent save directory found!");
+		}
+		File saveDir = new File(currentSaveRootDirectory, Mods.Computronics);
 		if(!saveDir.exists() && !saveDir.mkdir()) {
 			Computronics.log.error("COULD NOT CREATE SAVE DIRECTORY: " + saveDir.getAbsolutePath());
 		}
