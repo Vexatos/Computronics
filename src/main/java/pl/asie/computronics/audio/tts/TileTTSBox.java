@@ -133,7 +133,7 @@ public class TileTTSBox extends TileEntityPeripheralBase implements IAudioSource
 		if(Computronics.tts != null) {
 			Computronics.tts.say(text, worldObj.provider.dimensionId, xCoord, yCoord, zCoord);
 		} else {
-			return new Object[] { false, "" };
+			return new Object[] { false, "text-to-speech system not available" };
 		}
 		return new Object[] { true };
 	}
