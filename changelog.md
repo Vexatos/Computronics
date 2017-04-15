@@ -1,3 +1,10 @@
+==== 1.6.3 ====
+
+  * FIXED: Issues with tape data save directory. It now should always properly save to the world's save directory.
+
+  * [1.10.2] FIXED: Charset's Bundled Redstone integration
+  * [1.10.2] FIXED: TIS-3D module models
+
 ==== 1.6.2 ====
 
   * FIXED: Digital Signal Controller Box not showing any information on Waila
