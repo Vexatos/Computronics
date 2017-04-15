@@ -81,7 +81,7 @@ public class AudioUtil {
 		@Override
 		public double getModifiedValue(AudioProcess process, State state, double value) {
 			State mstate = process.states.get(modulatorIndex);
-			double deviation = mstate.gate.getValue(process, mstate, true) * index * mstate.frequencyInHz;
+			double deviation = mstate.gate.getValue(process, mstate, true) * index;
 			state.offset += (state.frequencyInHz + deviation) / Config.SOUND_SAMPLE_RATE;
 			return value;
 		}
