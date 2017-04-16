@@ -116,7 +116,7 @@ public class Config {
 		SOUND_VOLUME = (byte) config.getInt("soundVolume", "sound.client", 127, 0, Byte.MAX_VALUE, "The base volume of generated sounds.");
 		SOUND_RADIUS = config.getInt("soundRadius", "sound.client", 24, 0, 64, "The radius in which generated sounds can be heard.");
 
-		TTS_ENABLED = config.getBoolean("enableTextToSpeech", "tts", true, "Enable Text To Speech. To use it, install MaryTTS, a language and a corresponding voice into the marytts directory of your minecraft instance.");
+		TTS_ENABLED = config.getBoolean("enableTextToSpeech", "tts", true, "Enable Text To Speech. To use it, install MaryTTS, a language and a corresponding voice into the marytts directory of your minecraft instance. For installation instructions, see http://wiki.vex.tty.sh/wiki:computronics:mary");
 		TTS_MAX_LENGTH = config.getInt("maxPhraseLength", "tts", 300, 0, 100000, "The maximum number of text bytes the speech box can process at a time.");
 
 		if(Mods.isLoaded(Mods.OpenComputers)) {
