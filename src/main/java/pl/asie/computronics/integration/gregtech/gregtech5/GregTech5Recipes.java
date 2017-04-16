@@ -53,10 +53,17 @@ public class GregTech5Recipes extends ModRecipes {
 				's', Computronics.audioCable != null ? new ItemStack(Computronics.audioCable, 1, 0) : "cableGt02Silver",
 				'c', "screwSteel", 'w', "craftingToolScrewdriver");
 		}
+		if(Computronics.speechBox != null) {
+			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.speechBox, 1, 0),
+				"crc", "mim", "tat", 'i', ItemList.Hull_MV.get(1), 'r', "circuitElite",
+				'a', Computronics.speaker != null ? Computronics.speaker : Computronics.ironNote != null ? Computronics.ironNote : Blocks.noteblock,
+				'm', "plateSilicon", 't', "wireGt02Gold", 'c', "screwAluminium"
+			);
+		}
 		if(Computronics.tapeReader != null) {
 			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.tapeReader, 1, 0),
 				"trt", "mim", "cac", 'i', ItemList.Hull_LV.get(1), 'r', "circuitBasic",
-				'a', Computronics.ironNote != null ? Computronics.ironNote : Blocks.noteblock,
+				'a', Computronics.speaker != null ? Computronics.speaker : Computronics.ironNote != null ? Computronics.ironNote : Blocks.noteblock,
 				'm', ItemList.Electric_Motor_LV.get(1), 't', "cableGt01Tin", 'c', "plateIronMagnetic");
 		}
 		if(Computronics.cipher != null) {
