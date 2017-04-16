@@ -8,9 +8,9 @@ import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.Computronics;
@@ -121,7 +121,7 @@ public class TileSpeechBox extends TileEntityPeripheralBase implements IAudioSou
 	private Object[] sendNewText(String text) throws IOException {
 		locked = true;
 		if(Computronics.tts != null) {
-			Computronics.tts.say(text, worldObj.provider.getDimensionId(), pos);
+			Computronics.tts.say(text, worldObj.provider.getDimension(), pos);
 		} else {
 			return new Object[] { false, "text-to-speech system not available" };
 		}
