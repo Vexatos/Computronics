@@ -81,6 +81,7 @@ public class OCUtils {
 		public static final String
 			ACME = "ACME Co.",
 			BuildCraft = "BuildCraft, Inc.",
+			DFKI = "DFKI GmbH",
 			Hosencorp = "Hosencorp AG",
 			HuggingCreeper = "Hugging Creeper Industries",
 			Lumiose = "Lumiose Lighting",

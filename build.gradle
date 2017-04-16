@@ -73,6 +73,10 @@ repositories {
         name = "Charset Maven"
         url = "http://charset.asie.pl/maven"
     }
+	/*maven {
+		name 'MaryTTS repo'
+		url 'http://dl.bintray.com/marytts/marytts'
+	}*/
     maven {
         url = 'http://maven.epoxide.xyz'
     }
@@ -195,7 +199,7 @@ sourceSets {
 	exclude 'cofh/**'
 }*/
 
-//apply plugin: 'idea'
+apply plugin: 'idea'
 idea {
     module {
         //scopes.PROVIDED.plus += [configurations.provided]
