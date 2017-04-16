@@ -2,11 +2,14 @@ package pl.asie.computronics.util;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import li.cil.oc.api.Driver;
 import li.cil.oc.api.driver.DeviceInfo.DeviceAttribute;
+import li.cil.oc.api.driver.Item;
 import li.cil.oc.client.KeyBindings;
 import li.cil.oc.util.ItemCosts;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
@@ -88,7 +91,7 @@ public class OCUtils {
 	//Mostly stolen from Sangar
 	@SideOnly(Side.CLIENT)
 	@SuppressWarnings("unchecked")
-	public static void addTooltip(ItemStack stack, List tooltip) {
+	public static void addTooltip(ItemStack stack, List tooltip, boolean advanced) {
 		{
 			FontRenderer font = Minecraft.getMinecraft().fontRenderer;
 			final String key = stack.getUnlocalizedName() + ".tip";
@@ -128,6 +131,21 @@ public class OCUtils {
 					+ EnumChatFormatting.GRAY);
 			}
 		}
+		if(advanced) {
+			Item item = Driver.driverFor(stack);
+			tooltip.add(StringUtil.localizeAndFormat("oc:tooltip.Tier", item != null ? item.tier(stack) + 1 : 0));
+		}
 	}
 
+	private static final EnumRarity[] rarities = new EnumRarity[] { EnumRarity.common, EnumRarity.uncommon, EnumRarity.rare, EnumRarity.epic };
+
+	public static EnumRarity getRarityByTier(ItemStack stack) {
+		Item item = Driver.driverFor(stack);
+		int tier = item != null ? Math.min(Math.max(item.tier(stack), 0), rarities.length - 1) : 0;
+		return rarities[tier];
+	}
+
+	public static EnumRarity getRarityByTier(int tier) {
+		return rarities[Math.min(Math.max(tier, 0), rarities.length - 1)];
+	}
 }
