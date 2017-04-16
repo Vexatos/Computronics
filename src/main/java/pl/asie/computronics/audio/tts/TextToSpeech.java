@@ -1,10 +1,6 @@
 package pl.asie.computronics.audio.tts;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent.Phase;
-import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
 import marytts.LocalMaryInterface;
 import marytts.MaryInterface;
 import marytts.exceptions.MaryConfigurationException;
@@ -12,7 +8,11 @@ import marytts.exceptions.SynthesisException;
 import marytts.server.Mary;
 import marytts.util.data.audio.AudioPlayer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ServerTickEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pl.asie.computronics.Computronics;
@@ -42,11 +42,10 @@ public class TextToSpeech {
 
 	public TextToSpeech() {
 		MinecraftForge.EVENT_BUS.register(this);
-		FMLCommonHandler.instance().bus().register(this);
 	}
 
-	public void say(String text, int dimID, int x, int y, int z) {
-		Future<Result> fut = ttsThreads.submit(new SynthesizeTask(text, dimID, x, y, z));
+	public void say(String text, int dimID, BlockPos pos) {
+		Future<Result> fut = ttsThreads.submit(new SynthesizeTask(text, dimID, pos.getX(), pos.getY(), pos.getZ()));
 		processes.add(fut);
 	}
 

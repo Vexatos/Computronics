@@ -35,7 +35,7 @@ public class SynthesizeTask implements Callable<TextToSpeech.Result> {
 		}
 		try {
 			AudioInputStream audio = Computronics.tts.marytts.generateAudio(text);
-			AudioFormat convertFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 32768, 8, 1, 1, 32768, false);
+			AudioFormat convertFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 48000, 8, 1, 1, 48000, false);
 			AudioInputStream inFile = AudioSystem.getAudioInputStream(convertFormat, audio);
 			byte[] readBuffer = new byte[1024];
 			byte[] outBuffer = new byte[readBuffer.length / 8];
@@ -57,8 +57,8 @@ public class SynthesizeTask implements Callable<TextToSpeech.Result> {
 			} while(read == readBuffer.length);
 
 			// Need to add some padding due to the system immediately stopping once the end is reached.
-			outBuffer = new byte[4096];
-			converter.compress(outBuffer, new byte[32768], 0, 0, 4096);
+			outBuffer = new byte[6000];
+			converter.compress(outBuffer, new byte[48000], 0, 0, 6000);
 			out.write(outBuffer);
 
 			return new TextToSpeech.Result(out.toByteArray(), dimID, x, y, z);

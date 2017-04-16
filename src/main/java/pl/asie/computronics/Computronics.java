@@ -297,8 +297,7 @@ public class Computronics {
 			}
 			if(isEnabled("speechBox", true)) {
 				speechBox = new BlockSpeechBox();
-				GameRegistry.registerBlock(speechBox, "computronics.speechBox");
-				GameRegistry.registerTileEntity(TileSpeechBox.class, "computronics.speechBox");
+				registerBlockWithTileEntity(speechBox, TileSpeechBox.class, "speech_box");
 			}
 		}
 

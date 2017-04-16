@@ -1,7 +1,6 @@
 package pl.asie.computronics.tile;
 
 import com.google.common.base.Throwables;
-import cpw.mods.fml.common.Optional;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
@@ -9,8 +8,11 @@ import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ITickable;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.api.audio.AudioPacket;
 import pl.asie.computronics.api.audio.AudioPacketDFPWM;
@@ -30,7 +32,7 @@ import java.util.Arrays;
 /**
  * @author Vexatos
  */
-public class TileSpeechBox extends TileEntityPeripheralBase implements IAudioSource {
+public class TileSpeechBox extends TileEntityPeripheralBase implements IAudioSource, ITickable {
 
 	public TileSpeechBox() {
 		super("speech_box");
@@ -38,7 +40,7 @@ public class TileSpeechBox extends TileEntityPeripheralBase implements IAudioSou
 
 	private final IAudioReceiver internalSpeaker = new IAudioReceiver() {
 		@Override
-		public boolean connectsAudio(ForgeDirection side) {
+		public boolean connectsAudio(EnumFacing side) {
 			return true;
 		}
 
@@ -48,18 +50,8 @@ public class TileSpeechBox extends TileEntityPeripheralBase implements IAudioSou
 		}
 
 		@Override
-		public int getSoundX() {
-			return xCoord;
-		}
-
-		@Override
-		public int getSoundY() {
-			return yCoord;
-		}
-
-		@Override
-		public int getSoundZ() {
-			return zCoord;
+		public BlockPos getSoundPos() {
+			return pos;
 		}
 
 		@Override
@@ -68,31 +60,30 @@ public class TileSpeechBox extends TileEntityPeripheralBase implements IAudioSou
 		}
 
 		@Override
-		public void receivePacket(AudioPacket packet, ForgeDirection direction) {
+		public void receivePacket(AudioPacket packet, EnumFacing direction) {
 			packet.addReceiver(this);
 		}
 	};
 
 	private long lastCodecTime;
 	private Integer codecId;
-	protected int packetSize = 1024;
+	protected int packetSize = 1500;
 	protected int soundVolume = 127;
 	private boolean locked = false;
 
 	@Override
-	public void updateEntity() {
-		super.updateEntity();
+	public void update() {
+		super.update();
 		AudioPacket pkt = null;
 		long time = System.nanoTime();
 		if((time - (250 * 1000000)) > lastCodecTime) {
 			lastCodecTime += (250 * 1000000);
-			pkt = createMusicPacket(this, worldObj, xCoord, yCoord, zCoord);
+			pkt = createMusicPacket(this);
 		}
 		if(pkt != null) {
 			int receivers = 0;
-			for(int i = 0; i < 6; i++) {
-				ForgeDirection dir = ForgeDirection.getOrientation(i);
-				TileEntity tile = worldObj.getTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
+			for(EnumFacing dir : EnumFacing.VALUES) {
+				TileEntity tile = worldObj.getTileEntity(getPos().offset(dir));
 				if(tile instanceof IAudioReceiver) {
 					if(tile instanceof IColorable && ((IColorable) tile).canBeColored()
 						&& !ColorUtils.isSameOrDefault(this, (IColorable) tile)) {
@@ -104,7 +95,7 @@ public class TileSpeechBox extends TileEntityPeripheralBase implements IAudioSou
 			}
 
 			if(receivers == 0) {
-				internalSpeaker.receivePacket(pkt, ForgeDirection.UNKNOWN);
+				internalSpeaker.receivePacket(pkt, null);
 			}
 
 			pkt.sendPacket();
@@ -130,7 +121,7 @@ public class TileSpeechBox extends TileEntityPeripheralBase implements IAudioSou
 	private Object[] sendNewText(String text) throws IOException {
 		locked = true;
 		if(Computronics.tts != null) {
-			Computronics.tts.say(text, worldObj.provider.dimensionId, xCoord, yCoord, zCoord);
+			Computronics.tts.say(text, worldObj.provider.getDimensionId(), pos);
 		} else {
 			return new Object[] { false, "text-to-speech system not available" };
 		}
@@ -139,7 +130,7 @@ public class TileSpeechBox extends TileEntityPeripheralBase implements IAudioSou
 
 	private ByteArrayInputStream storage;
 
-	private AudioPacket createMusicPacket(IAudioSource source, World worldObj, int x, int y, int z) {
+	private AudioPacket createMusicPacket(IAudioSource source) {
 		if(storage == null) {
 			return null;
 		}
@@ -249,7 +240,7 @@ public class TileSpeechBox extends TileEntityPeripheralBase implements IAudioSou
 	}
 
 	@Override
-	public boolean connectsAudio(ForgeDirection side) {
+	public boolean connectsAudio(EnumFacing side) {
 		return true;
 	}
 }

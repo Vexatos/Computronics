@@ -37,7 +37,7 @@ public class StreamingAudioPlayer extends DFPWM {
 
 	private IntBuffer currentBuffer;
 
-	private int sampleRate = 32768;
+	private int sampleRate = 48000;
 	private float volume = 1.0F;
 	private float distance = 24.0F;
 

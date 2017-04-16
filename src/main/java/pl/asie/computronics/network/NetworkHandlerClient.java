@@ -21,7 +21,7 @@ import java.io.IOException;
 
 public class NetworkHandlerClient extends MessageHandlerBase {
 
-	private static final AudioFormat DFPWM_DECODED_FORMAT = new AudioFormat(32768, 8, 1, false, false);
+	private static final AudioFormat DFPWM_DECODED_FORMAT = new AudioFormat(48000, 8, 1, false, false);
 
 	@Override
 	public void onMessage(Packet packet, INetHandler handler, EntityPlayer player, int command)

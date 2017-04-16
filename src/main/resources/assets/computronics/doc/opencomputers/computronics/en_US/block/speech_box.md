@@ -1,6 +1,6 @@
 # Speech Box
 
-![It only took two years.](block:computronics:computronics.speechBox)
+![It only took two years.](block:computronics:speech_box)
 
 The Speech Box can talk! It utilizes a text-to-speech system called [MaryTTS](http://mary.dfki.de/) to synthesize speech from any given message. Simply give it a sentence or phrase to say and, after a bit of intense processing, it will do so.
 
