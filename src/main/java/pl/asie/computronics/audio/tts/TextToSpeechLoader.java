@@ -39,6 +39,7 @@ public class TextToSpeechLoader {
 	}*/
 
 	public boolean preInit() {
+		log.info("Initializing Text To Speech");
 		LaunchClassLoader classLoader = Launch.classLoader;
 		ClassLoader ownClassLoader = getClass().getClassLoader();
 		if(ownClassLoader instanceof LaunchClassLoader) {
@@ -131,6 +132,7 @@ public class TextToSpeechLoader {
 
 				PropertyConfigurator.configure(logprops);
 			}
+			log.info("Text To Speech successfully initialized.");
 			return hasDoneInit = true;
 		} catch(Exception e) {
 			log.error("Text To Speech directory initialization failed, you will not be able to hear anything", e);

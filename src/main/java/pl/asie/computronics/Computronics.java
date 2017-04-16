@@ -289,7 +289,6 @@ public class Computronics {
 		}
 
 		if(Config.TTS_ENABLED) {
-			log.info("Initializing Text To Speech");
 			boolean success = TextToSpeechLoader.INSTANCE.preInit();
 			if(success) {
 				tts = new TextToSpeech();
