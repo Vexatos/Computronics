@@ -27,6 +27,8 @@ import pl.asie.computronics.api.audio.AudioPacketRegistry;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheralProvider;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheralRegistry;
 import pl.asie.computronics.audio.DFPWMPlaybackManager;
+import pl.asie.computronics.audio.tts.TextToSpeech;
+import pl.asie.computronics.audio.tts.TextToSpeechLoader;
 import pl.asie.computronics.block.BlockAudioCable;
 import pl.asie.computronics.block.BlockCamera;
 import pl.asie.computronics.block.BlockChatBox;
@@ -36,6 +38,7 @@ import pl.asie.computronics.block.BlockColorfulLamp;
 import pl.asie.computronics.block.BlockIronNote;
 import pl.asie.computronics.block.BlockRadar;
 import pl.asie.computronics.block.BlockSpeaker;
+import pl.asie.computronics.block.BlockSpeechBox;
 import pl.asie.computronics.block.BlockTapeReader;
 import pl.asie.computronics.cc.IntegrationComputerCraft;
 import pl.asie.computronics.cc.multiperipheral.MultiPeripheralRegistry;
@@ -68,6 +71,7 @@ import pl.asie.computronics.tile.TileColorfulLamp;
 import pl.asie.computronics.tile.TileIronNote;
 import pl.asie.computronics.tile.TileRadar;
 import pl.asie.computronics.tile.TileSpeaker;
+import pl.asie.computronics.tile.TileSpeechBox;
 import pl.asie.computronics.tile.TileTapeDrive;
 import pl.asie.computronics.util.achievements.ComputronicsAchievements;
 import pl.asie.computronics.util.chat.ChatHandler;
@@ -121,6 +125,7 @@ public class Computronics {
 	public static BlockTapeReader tapeReader;
 	public static BlockAudioCable audioCable;
 	public static BlockSpeaker speaker;
+	public static BlockSpeechBox speechBox;
 	public static BlockCamera camera;
 	public static BlockChatBox chatBox;
 	public static BlockCipher cipher;
@@ -283,6 +288,20 @@ public class Computronics {
 			opencomputers.preInit();
 		}
 
+		if(Config.TTS_ENABLED) {
+			log.info("Initializing Text To Speech");
+			boolean success = TextToSpeechLoader.INSTANCE.preInit();
+			if(success) {
+				tts = new TextToSpeech();
+				tts.preInit(this);
+			}
+			if(isEnabled("speechBox", true)) {
+				speechBox = new BlockSpeechBox();
+				GameRegistry.registerBlock(speechBox, "computronics.speechBox");
+				GameRegistry.registerTileEntity(TileSpeechBox.class, "computronics.speechBox");
+			}
+		}
+
 		if(Mods.isLoaded(Mods.TIS3D)) {
 			tis3D = new IntegrationTIS3D();
 			tis3D.preInit();
@@ -293,6 +312,8 @@ public class Computronics {
 
 		proxy.registerAudioHandlers();
 	}
+
+	public static TextToSpeech tts;
 
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
