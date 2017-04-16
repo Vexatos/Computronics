@@ -185,6 +185,8 @@ public class Computronics {
 
 		config = new Config(event);
 
+		storage = new StorageManager();
+
 		audio = new DFPWMPlaybackManager(proxy.isClient());
 
 		managerId = AudioPacketRegistry.INSTANCE.registerManager(audio);
@@ -389,7 +391,6 @@ public class Computronics {
 
 	@EventHandler
 	public void serverStart(FMLServerAboutToStartEvent event) {
-		Computronics.storage = new StorageManager();
 		if(Mods.isLoaded(Mods.ComputerCraft)) {
 			computercraft.serverStart();
 		}
@@ -397,7 +398,6 @@ public class Computronics {
 
 	@EventHandler
 	public void serverStop(FMLServerStoppedEvent event) {
-		storage = null;
 		proxy.onServerStop();
 		if(Mods.isLoaded(Mods.OpenComputers)) {
 			opencomputers.onServerStop(event);

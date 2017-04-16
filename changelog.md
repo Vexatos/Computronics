@@ -1,7 +1,11 @@
 ==== 1.6.3 ====
 
-  * **[1.10.2]** FIXED: Charset's Bundled Redstone integration
-  * **[1.10.2]** FIXED: TIS-3D module models
+  * ADDED: OpenComputers-style recipes if OpenComputers is installed. Enable 'easyRecipeMode' in the config to get the old recipes back.
+  * FIXED: Issues with tape data save directory. It now should always properly save to the world's save directory instead of the Minecraft instance directory. You might need to move the data directory into the world save directory after updating.
+  * FIXED: Sound Card modulation not working at all
+
+  * [1.10.2] FIXED: Charset's Bundled Redstone integration
+  * [1.10.2] FIXED: TIS-3D module models
 
 ==== 1.6.2 ====
 

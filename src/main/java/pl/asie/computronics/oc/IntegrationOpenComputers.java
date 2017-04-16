@@ -321,41 +321,41 @@ public class IntegrationOpenComputers {
 		if(Config.OC_UPGRADE_CAMERA) {
 			if(camera != null) {
 				RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 0),
-					"mcm", 'c',
-					new ItemStack(camera, 1, 0),
-					'm', "oc:circuitChip2");
-				RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 0),
-					"m", "c", "m",
-					'c', new ItemStack(camera, 1, 0),
-					'm', "oc:circuitChip2");
+					"idi", "mcm", "ibi",
+					'c', camera,
+					'd', "oc:materialCircuitBoard",
+					'm', "oc:circuitChip2",
+					'i', "ingotIron",
+					'b', "oc:materialCircuitBoardPrinted"
+				);
 			} else {
-				log.warn("Could not add Camera Upgrade Recipe because Radar is disabled in the config.");
+				log.warn("Could not add Camera Upgrade Recipe because Camera is disabled in the config.");
 			}
 		}
 		if(Config.OC_UPGRADE_CHATBOX) {
 			if(chatBox != null) {
 				RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 1),
-					"mcm", 'c',
-					new ItemStack(chatBox, 1, 0),
-					'm', "oc:circuitChip2");
-				RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 1),
-					"m", "c", "m",
+					"idi", "mcm", "ibi",
 					'c', new ItemStack(chatBox, 1, 0),
-					'm', "oc:circuitChip2");
+					'd', "oc:materialTransistor",
+					'm', "oc:circuitChip2",
+					'i', "ingotIron",
+					'b', "oc:materialCircuitBoardPrinted"
+				);
 			} else {
-				log.warn("Could not add Chat Box Upgrade Recipe because Radar is disabled in the config.");
+				log.warn("Could not add Chat Box Upgrade Recipe because Chat Box is disabled in the config.");
 			}
 		}
 		if(Config.OC_UPGRADE_RADAR) {
 			if(radar != null) {
 				RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 2),
-					"mcm", 'c',
-					new ItemStack(radar, 1, 0),
-					'm', "oc:circuitChip3");
-				RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 2),
-					"m", "c", "m",
-					'c', new ItemStack(radar, 1, 0),
-					'm', "oc:circuitChip3");
+					"idi", "mcm", "ibi",
+					'c', radar,
+					'd', "oc:materialInterweb",
+					'm', "oc:circuitChip3",
+					'i', "ingotGold",
+					'b', "oc:materialCircuitBoardPrinted"
+				);
 			} else {
 				log.warn("Could not add Radar Upgrade Recipe because Radar is disabled in the config.");
 			}
@@ -395,15 +395,13 @@ public class IntegrationOpenComputers {
 		}
 		if(Config.OC_UPGRADE_COLORFUL) {
 			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 7),
-				" f ", "mcm", " f ",
+				"fdf", "mcm", "fbf",
 				'c', colorfulLamp != null ? colorfulLamp : "glowstone",
+				'd', "oc:materialTransistor",
 				'm', "oc:circuitChip2",
-				'f', "oc:chamelium");
-			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 7),
-				" m ", "fcf", " m ",
-				'c', colorfulLamp != null ? colorfulLamp : "glowstone",
-				'm', "oc:circuitChip2",
-				'f', "oc:chamelium");
+				'f', "oc:chamelium",
+				'b', "oc:materialCircuitBoardPrinted"
+			);
 		}
 		if(Config.OC_CARD_NOISE) {
 			RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 8),
