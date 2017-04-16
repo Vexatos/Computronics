@@ -2,7 +2,10 @@ package pl.asie.computronics.item;
 
 import li.cil.oc.api.driver.EnvironmentProvider;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.oc.driver.DriverMagicalMemory;
 import pl.asie.computronics.oc.manual.IItemWithDocumentation;
@@ -36,8 +39,19 @@ public class ItemOCSpecialParts extends ItemMultipleComputronics implements IIte
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean par4) {
-		OCUtils.addTooltip(stack, tooltip);
+	public EnumRarity getRarity(ItemStack stack) {
+		switch(stack.getItemDamage()) {
+			case 0:
+				return EnumRarity.EPIC;
+			default:
+				return OCUtils.getRarityByTier(stack);
+		}
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
+		OCUtils.addTooltip(stack, tooltip, advanced);
 	}
 
 	@Nullable

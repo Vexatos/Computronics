@@ -1,5 +1,6 @@
 ==== 1.6.3 ====
 
+  * ADDED: OpenComputers-style recipes if OpenComputers is installed. Enable 'easyRecipeMode' in the config to get the old recipes back.
   * FIXED: Issues with tape data save directory. It now should always properly save to the world's save directory instead of the Minecraft instance directory. You might need to move the data directory into the world save directory after updating.
   * FIXED: Sound Card modulation not working at all
 
