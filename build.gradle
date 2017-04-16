@@ -68,10 +68,10 @@ repositories {
 		name = "BuildCraft"
 		artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision]-[classifier].[ext]"
 	}
-	maven {
+	/*maven {
 		name 'MaryTTS repo'
 		url 'http://dl.bintray.com/marytts/marytts'
-	}
+	}*/
 }
 
 configurations {
