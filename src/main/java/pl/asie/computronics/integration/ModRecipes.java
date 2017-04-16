@@ -24,14 +24,6 @@ public class ModRecipes {
 	public static ModRecipes instance;
 
 	public void registerRecipes() {
-		if(Computronics.camera != null) {
-			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.camera, 1, 0),
-				"sss", "geg", "iii", 's', Blocks.stonebrick, 'i', "ingotIron", 'e', Items.ender_pearl, 'g', "blockGlassColorless");
-		}
-		if(Computronics.chatBox != null) {
-			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.chatBox, 1, 0),
-				"sss", "ses", "iri", 's', Blocks.stonebrick, 'i', "ingotIron", 'e', Items.ender_pearl, 'r', "dustRedstone");
-		}
 		if(Computronics.ironNote != null) {
 			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.ironNote, 1, 0),
 				"iii", "ini", "iii", 'i', "ingotIron", 'n', Blocks.noteblock);
@@ -40,32 +32,43 @@ public class ModRecipes {
 			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.audioCable, 8, 0),
 				"ini", 'i', "ingotIron", 'n', Blocks.noteblock);
 		}
-		if(Computronics.speaker != null) {
-			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.speaker, 1, 0),
-				"sIs", "ini", "sIs", 's', Blocks.stonebrick, 'I', "ingotIron", 'i', Blocks.iron_bars, 'n', Blocks.noteblock);
-		}
-		if(Computronics.tapeReader != null) {
-			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.tapeReader, 1, 0),
-				"iii", "iri", "iai", 'i', "ingotIron", 'r', "dustRedstone",
-				'a', Computronics.ironNote != null ? Computronics.ironNote : Blocks.noteblock);
-		}
-		if(Computronics.cipher != null) {
-			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.cipher, 1, 0),
-				"sss", "srs", "eie", 'i', "ingotIron", 'r', "dustRedstone", 'e', Items.ender_pearl, 's', Blocks.stonebrick);
-		}
-		if(Computronics.radar != null) {
-			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.radar, 1, 0),
-				"sts", "rbr", "scs", 'i', "ingotIron", 'r', "dustRedstone", 't', Blocks.redstone_torch, 's', Blocks.stonebrick, 'b', Items.bowl, 'c', Items.comparator);
-		}
 		if(Computronics.colorfulLamp != null) {
 			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.colorfulLamp, 1, 0),
 				"igi", "glg", "igi", 'i', "ingotIron", 'g', "blockGlassColorless", 'l', "dustGlowstone");
 		}
+
 		if(!(Mods.isLoaded(Mods.OpenComputers) && !Config.NON_OC_RECIPES && registerOCRecipes())) {
-			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.cipher_advanced, 1, 0),
-				"gdg", "gcg", "eie", 'g', "ingotGold",
-				'c', Computronics.cipher != null ? Computronics.cipher : "gemDiamond", 'e', Items.ender_pearl, 'i', "ingotIron",
-				'd', Computronics.cipher != null ? "gemDiamond" : "ingotGold");
+			if(Computronics.camera != null) {
+				RecipeUtils.addShapedRecipe(new ItemStack(Computronics.camera, 1, 0),
+					"sss", "geg", "iii", 's', Blocks.stonebrick, 'i', "ingotIron", 'e', Items.ender_pearl, 'g', "blockGlassColorless");
+			}
+			if(Computronics.chatBox != null) {
+				RecipeUtils.addShapedRecipe(new ItemStack(Computronics.chatBox, 1, 0),
+					"sss", "ses", "iri", 's', Blocks.stonebrick, 'i', "ingotIron", 'e', Items.ender_pearl, 'r', "dustRedstone");
+			}
+			if(Computronics.speaker != null) {
+				RecipeUtils.addShapedRecipe(new ItemStack(Computronics.speaker, 1, 0),
+					"sIs", "ini", "sIs", 's', Blocks.stonebrick, 'I', "ingotIron", 'i', Blocks.iron_bars, 'n', Blocks.noteblock);
+			}
+			if(Computronics.tapeReader != null) {
+				RecipeUtils.addShapedRecipe(new ItemStack(Computronics.tapeReader, 1, 0),
+					"iii", "iri", "iai", 'i', "ingotIron", 'r', "dustRedstone",
+					'a', Computronics.ironNote != null ? Computronics.ironNote : Blocks.noteblock);
+			}
+			if(Computronics.cipher != null) {
+				RecipeUtils.addShapedRecipe(new ItemStack(Computronics.cipher, 1, 0),
+					"sss", "srs", "eie", 'i', "ingotIron", 'r', "dustRedstone", 'e', Items.ender_pearl, 's', Blocks.stonebrick);
+			}
+			if(Computronics.radar != null) {
+				RecipeUtils.addShapedRecipe(new ItemStack(Computronics.radar, 1, 0),
+					"sts", "rbr", "scs", 'i', "ingotIron", 'r', "dustRedstone", 't', Blocks.redstone_torch, 's', Blocks.stonebrick, 'b', Items.bowl, 'c', Items.comparator);
+			}
+			if(Computronics.cipher_advanced != null) {
+				RecipeUtils.addShapedRecipe(new ItemStack(Computronics.cipher_advanced, 1, 0),
+					"gdg", "gcg", "eie", 'g', "ingotGold",
+					'c', Computronics.cipher != null ? Computronics.cipher : "gemDiamond", 'e', Items.ender_pearl, 'i', "ingotIron",
+					'd', Computronics.cipher != null ? "gemDiamond" : "ingotGold");
+			}
 		}
 		/*if(Mods.isLoaded(Mods.Railcraft) && Computronics.railcraft != null) {
 			registerRailcraftRecipes();
@@ -103,13 +106,79 @@ public class ModRecipes {
 
 	@Optional.Method(modid = Mods.OpenComputers)
 	protected boolean registerOCRecipes() {
-		RecipeUtils.addShapedRecipe(new ItemStack(Computronics.cipher_advanced, 1, 0),
-			"gdg", "mcm", "gbg",
-			'g', "ingotGold",
-			'd', Computronics.cipher != null ? "oc:cpu2" : "gemDiamond",
-			'm', "oc:circuitChip2",
-			'c', Computronics.cipher != null ? Computronics.cipher : "oc:cpu2",
-			'b', "oc:capacitor");
+		if(Computronics.camera != null) {
+			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.camera, 1, 0),
+				"ipi", "seg", "ibi",
+				'p', "oc:circuitChip1",
+				'i', "ingotIron",
+				's', "dustRedstone",
+				'e', Items.ender_pearl,
+				'g', "blockGlassColorless",
+				'b', "oc:materialCircuitBoardPrinted"
+			);
+		}
+		if(Computronics.chatBox != null) {
+			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.chatBox, 1, 0),
+				"igi", "ses", "ibi",
+				's', "oc:circuitChip1",
+				'i', "ingotIron",
+				'e', "oc:materialInterweb",
+				'g', "oc:circuitChip2",
+				'b', "oc:materialCircuitBoardPrinted"
+			);
+		}
+		if(Computronics.speaker != null) {
+			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.speaker, 1, 0),
+				"ItI", "ini", "IcI",
+				't', "oc:materialTransistor",
+				'I', "ingotIron",
+				'i', Blocks.iron_bars,
+				'n', Blocks.noteblock,
+				'c', "oc:circuitChip1"
+			);
+		}
+		if(Computronics.tapeReader != null) {
+			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.tapeReader, 1, 0),
+				"ici", "sag", "ibi",
+				'i', "ingotIron",
+				'c', "oc:circuitChip2",
+				's', "craftingPiston",
+				'g', Blocks.iron_bars,
+				'a', Computronics.speaker != null ? Computronics.speaker : Computronics.ironNote != null ? Computronics.ironNote : Blocks.noteblock,
+				'b', "oc:materialCircuitBoardPrinted"
+			);
+		}
+		if(Computronics.cipher != null) {
+			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.cipher, 1, 0),
+				"ipi", "srs", "ibi",
+				'i', "ingotIron",
+				'r', "oc:dataCard2",
+				'p', Items.ender_pearl,
+				's', "oc:circuitChip2",
+				'b', "oc:materialCircuitBoardPrinted"
+			);
+		}
+		if(Computronics.radar != null) {
+			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.radar, 1, 0),
+				"idi", "rmr", "ibi",
+				'i', "ingotIron",
+				'r', "oc:circuitChip3",
+				'm', "oc:motionSensor",
+				'd', Items.bowl,
+				'c', Items.comparator,
+				'b', "oc:materialCircuitBoardPrinted"
+			);
+		}
+		if(Computronics.cipher_advanced != null) {
+			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.cipher_advanced, 1, 0),
+				"gdg", "mcm", "gbg",
+				'g', "ingotGold",
+				'd', Computronics.cipher != null ? "oc:cpu2" : "gemDiamond",
+				'm', "oc:circuitChip2",
+				'c', Computronics.cipher != null ? Computronics.cipher : "oc:cpu2",
+				'b', "oc:capacitor"
+			);
+		}
 		return true;
 	}
 

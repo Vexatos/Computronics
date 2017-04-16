@@ -402,7 +402,7 @@ public class DriverCardSound extends ManagedEnvironment implements DeviceInfo, I
 	@Callback(doc = "function(channel:number, modIndex:number, intensity:number); Instruction; Assigns a frequency modulator channel to the specified channel with the specified intensity.", direct = true)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] setFM(Context context, Arguments args) {
-		return tryAdd(new SetFM(checkChannel(args), checkChannel(args), (float) args.checkDouble(2)));
+		return tryAdd(new SetFM(checkChannel(args), checkChannel(args, 1), (float) args.checkDouble(2)));
 	}
 
 	@Callback(doc = "function(channel:number); Instruction; Removes the specified channel's frequency modulator.", direct = true)
