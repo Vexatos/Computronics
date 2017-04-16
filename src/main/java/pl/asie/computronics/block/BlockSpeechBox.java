@@ -6,7 +6,6 @@ import li.cil.oc.api.network.Environment;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.tile.TileSpeechBox;
@@ -19,20 +18,9 @@ public class BlockSpeechBox extends BlockMachineSidedIcon {
 	private IIcon mFront;
 
 	public BlockSpeechBox() {
-		super("speechbox");
+		super("speech_box");
 		this.setCreativeTab(Computronics.tab);
-		this.setIconName("computronics:speechbox");
 		this.setBlockName("computronics.speechBox");
-	}
-
-	@Override
-	public int getRenderColor(int meta) {
-		return 0x00FFFF;
-	}
-
-	@Override
-	public int colorMultiplier(IBlockAccess blockAccess, int x, int y, int z) {
-		return getRenderColor(blockAccess.getBlockMetadata(x, y, z));
 	}
 
 	@Override
@@ -50,7 +38,7 @@ public class BlockSpeechBox extends BlockMachineSidedIcon {
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister r) {
 		super.registerBlockIcons(r);
-		mFront = r.registerIcon("computronics:speechbox_front");
+		mFront = r.registerIcon("computronics:speech_box_front");
 	}
 
 	@Override
