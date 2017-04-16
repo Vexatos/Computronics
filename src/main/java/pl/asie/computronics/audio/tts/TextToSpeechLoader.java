@@ -1,4 +1,4 @@
-package pl.asie.computronics.audio.tts.core;
+package pl.asie.computronics.audio.tts;
 
 import marytts.server.MaryProperties;
 import net.minecraft.launchwrapper.Launch;
@@ -94,14 +94,14 @@ public class TextToSpeechLoader {
 		}
 		//Check for marytts to be present
 		try {
-			classLoader.findClass("marytts.MaryInterface");
-			classLoader.findClass("marytts.LocalMaryInterface");
-			classLoader.findClass("marytts.server.Mary");
-			//classLoader.findClass("pl.asie.computronics.audio.tts.core.TextToSpeech");
+			//classLoader.findClass("marytts.MaryInterface");
+			//classLoader.findClass("marytts.LocalMaryInterface");
+			//classLoader.findClass("marytts.server.Mary");
+			//classLoader.findClass("pl.asie.computronics.audio.tts.TextToSpeech");
 			Class.forName("marytts.MaryInterface");
 			Class.forName("marytts.LocalMaryInterface");
 			Class.forName("marytts.server.Mary");
-			//Class.forName("pl.asie.computronics.audio.tts.core.TextToSpeech");
+			//Class.forName("pl.asie.computronics.audio.tts.TextToSpeech");
 
 			// Taken from Mary.configureLogging, needs to be called manually due to the logger already being loaded by this time.
 			{

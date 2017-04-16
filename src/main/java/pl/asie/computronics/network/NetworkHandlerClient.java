@@ -7,7 +7,6 @@ import net.minecraft.tileentity.TileEntity;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.api.audio.AudioPacketClientHandler;
 import pl.asie.computronics.api.audio.AudioPacketRegistry;
-import pl.asie.computronics.audio.tts.TileTTSBox;
 import pl.asie.computronics.oc.driver.DriverCardNoise;
 import pl.asie.computronics.oc.driver.DriverCardSoundBase;
 import pl.asie.computronics.reference.Mods;
@@ -20,6 +19,7 @@ import javax.sound.sampled.AudioFormat;
 import java.io.IOException;
 
 public class NetworkHandlerClient extends MessageHandlerBase {
+
 	private static final AudioFormat DFPWM_DECODED_FORMAT = new AudioFormat(32768, 8, 1, false, false);
 
 	@Override
@@ -85,16 +85,6 @@ public class NetworkHandlerClient extends MessageHandlerBase {
 			case TICKET_SYNC: {
 				if(Mods.isLoaded(Mods.Railcraft)) {
 					Computronics.railcraft.onMessageRailcraft(packet, player, false);
-				}
-			}
-			break;
-			case TTS: {
-				if(Mods.isClassLoaded("marytts.LocalMaryInterface")) {
-					TileEntity tile = packet.readTileEntity();
-					if(tile instanceof TileTTSBox) {
-						Computronics.tts.say(packet.readString(), tile.getWorldObj().provider.dimensionId, tile.xCoord, tile.yCoord, tile.zCoord);
-					}
-					//Computronics.tts.say(x, y, z, packet.readString());
 				}
 			}
 			break;

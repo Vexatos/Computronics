@@ -15,7 +15,7 @@ tile.computronics.detector.name=Detector - Digital
 tile.computronics.ticketMachine.name=Ticket Machine
 tile.computronics.audiocable.name=Audio Cable
 tile.computronics.speaker.name=Speaker
-tile.computronics.ttsBox.name=Speech Box
+tile.computronics.speechBox.name=Speech Box
 
 tooltip.computronics.chatBox.creative=NSA in a box!
 tooltip.computronics.cipher.advanced=For the Starchasers!

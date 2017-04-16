@@ -43,17 +43,6 @@ public class NetworkHandlerServer extends MessageHandlerBase {
 				}
 			}
 			break;
-			case TTS: {
-				if(Mods.isClassLoaded("marytts.LocalMaryInterface")) {
-					TileEntity tile = packet.readTileEntityServer();
-					/*if(tile instanceof TileTTSBox) {
-						((TileTTSBox) tile).setLocked(packet.readInt());
-					}*/
-					//Computronics.tts.say(x, y, z, packet.readString());
-				}
-			}
-			break;
-
 		}
 	}
 }

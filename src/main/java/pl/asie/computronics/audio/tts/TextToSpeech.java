@@ -1,4 +1,4 @@
-package pl.asie.computronics.audio.tts.core;
+package pl.asie.computronics.audio.tts;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -16,8 +16,8 @@ import net.minecraftforge.common.MinecraftForge;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pl.asie.computronics.Computronics;
-import pl.asie.computronics.audio.tts.TileTTSBox;
 import pl.asie.computronics.reference.Mods;
+import pl.asie.computronics.tile.TileSpeechBox;
 import pl.asie.lib.util.WorldUtils;
 
 import javax.sound.sampled.AudioInputStream;
@@ -61,8 +61,8 @@ public class TextToSpeech {
 						Result result = process.get();
 						if(result != null) {
 							TileEntity tile = WorldUtils.getTileEntityServer(result.dimID, result.x, result.y, result.z);
-							if(tile instanceof TileTTSBox) {
-								((TileTTSBox) tile).startTalking(result.data);
+							if(tile instanceof TileSpeechBox) {
+								((TileSpeechBox) tile).startTalking(result.data);
 							}
 						}
 					} catch(Throwable t) {

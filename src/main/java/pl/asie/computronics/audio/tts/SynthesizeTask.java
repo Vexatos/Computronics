@@ -1,8 +1,7 @@
-package pl.asie.computronics.audio.tts.core;
+package pl.asie.computronics.audio.tts;
 
 import marytts.exceptions.SynthesisException;
 import pl.asie.computronics.Computronics;
-import pl.asie.computronics.audio.tts.core.TextToSpeech.Result;
 import pl.asie.lib.audio.DFPWM;
 
 import javax.sound.sampled.AudioFormat;
@@ -15,7 +14,7 @@ import java.util.concurrent.Callable;
 /**
  * @author Vexatos
  */
-public class SynthesizeTask implements Callable<Result> {
+public class SynthesizeTask implements Callable<TextToSpeech.Result> {
 
 	private final String text;
 	private final int dimID;
@@ -30,7 +29,7 @@ public class SynthesizeTask implements Callable<Result> {
 	}
 
 	@Override
-	public Result call() throws Exception {
+	public TextToSpeech.Result call() throws Exception {
 		if(Computronics.tts.marytts == null /*|| ttsThreads == null*/) {
 			return null;
 		}
@@ -62,7 +61,7 @@ public class SynthesizeTask implements Callable<Result> {
 			converter.compress(outBuffer, new byte[32768], 0, 0, 4096);
 			out.write(outBuffer);
 
-			return new Result(out.toByteArray(), dimID, x, y, z);
+			return new TextToSpeech.Result(out.toByteArray(), dimID, x, y, z);
 		} catch(SynthesisException e) {
 			TextToSpeech.log.error("Text To Speech synthesis failed");
 			e.printStackTrace();
