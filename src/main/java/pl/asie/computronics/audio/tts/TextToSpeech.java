@@ -15,7 +15,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import pl.asie.computronics.Computronics;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TileSpeechBox;
 import pl.asie.lib.util.WorldUtils;
@@ -94,21 +93,34 @@ public class TextToSpeech {
 		}
 	}
 
-	public void preInit(Computronics computronics) {
+	public boolean preInit() {
 		try {
 			marytts = new LocalMaryInterface();
 			//Set<String> voices = marytts.getAvailableVoices();
 			marytts.setStreamingAudio(true);
+			String voice = marytts.getVoice();
+			Locale locale = marytts.getLocale();
+			if(voice == null) {
+				log.error("No voice found for selected locale " + locale + ", please install a voice file.");
+				if(Mary.currentState() == 2) {
+					Mary.shutdown();
+				}
+				marytts = null;
+				return false;
+			}
 			//marytts.setLocale(Locale.US);
 			//marytts.setVoice(voices.iterator().next());
 			marytts.setOutputType("AUDIO");
 			ttsThreads = Executors.newFixedThreadPool(2, new ThreadFactoryBuilder().setPriority(Thread.MIN_PRIORITY).build());
+			log.info("Text To Speech successfully initialized.");
+			return true;
 		} catch(Exception e) {
 			log.error("Text To Speech initialization failed, you will not be able to hear anything", e);
 			if(Mary.currentState() == 2) {
 				Mary.shutdown();
-				marytts = null;
 			}
+			marytts = null;
+			return false;
 		}
 	}
 
