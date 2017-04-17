@@ -297,7 +297,9 @@ public class Computronics {
 			boolean success = TextToSpeechLoader.INSTANCE.preInit();
 			if(success) {
 				tts = new TextToSpeech();
-				tts.preInit(this);
+				if(!tts.preInit()) {
+					tts = null;
+				}
 			}
 			if(isEnabled("speechBox", true)) {
 				speechBox = new BlockSpeechBox();
