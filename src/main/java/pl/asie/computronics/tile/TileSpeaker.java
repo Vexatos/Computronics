@@ -9,6 +9,7 @@ import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.SidedEnvironment;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import pl.asie.computronics.Computronics;
 import pl.asie.computronics.api.audio.AudioPacket;
 import pl.asie.computronics.api.audio.IAudioReceiver;
 import pl.asie.computronics.api.audio.IAudioSource;
@@ -83,7 +84,7 @@ public class TileSpeaker extends TileEntityPeripheralBase implements IAudioRecei
 
 	@Override
 	public boolean connectsAudio(ForgeDirection side) {
-		return true;
+		return Computronics.speaker.getFrontSide(getBlockMetadata()) != side.ordinal();
 	}
 
 	@Override

@@ -250,6 +250,6 @@ public class TileSpeechBox extends TileEntityPeripheralBase implements IAudioSou
 
 	@Override
 	public boolean connectsAudio(ForgeDirection side) {
-		return true;
+		return Computronics.speechBox.getFrontSide(getBlockMetadata()) != side.ordinal();
 	}
 }
