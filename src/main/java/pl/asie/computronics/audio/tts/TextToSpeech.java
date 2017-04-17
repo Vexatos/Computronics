@@ -122,7 +122,7 @@ public class TextToSpeech {
 			//marytts.setVoice(voices.iterator().next());
 			marytts.setOutputType("AUDIO");
 			ttsThreads = Executors.newFixedThreadPool(2, new ThreadFactoryBuilder().setPriority(Thread.MIN_PRIORITY).build());
-			log.info("Text To Speech successfully initialized.");
+			log.info("Text To Speech successfully initialized with language " + marytts.getLocale() + " and voice " + voice + ".");
 			return true;
 		} catch(Exception e) {
 			log.error("Text To Speech initialization failed, you will not be able to hear anything", e);
