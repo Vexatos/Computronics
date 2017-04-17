@@ -179,6 +179,9 @@ public class AudioUtil {
 
 		public void reset() {
 			phase = this.initialPhase;
+			if(initialPhase == Phase.Decay) {
+				progress = 1;
+			}
 		}
 
 		private enum Phase {
