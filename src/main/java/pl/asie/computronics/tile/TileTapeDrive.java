@@ -760,6 +760,6 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 
 	@Override
 	public boolean connectsAudio(ForgeDirection side) {
-		return true;
+		return Computronics.tapeReader.getFrontSide(getBlockMetadata()) != side.ordinal();
 	}
 }

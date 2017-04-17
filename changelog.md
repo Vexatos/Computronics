@@ -1,6 +1,8 @@
 ==== 1.6.3 ====
 
   * ADDED: OpenComputers-style recipes if OpenComputers is installed. Enable 'easyRecipeMode' in the config to get the old recipes back.
+  * CHANGED: Speakers can now face any of the six sides.
+  * CHANGED: Audio Cables no longer connect to the front side of audio devices.
   * FIXED: Issues with tape data save directory. It now should always properly save to the world's save directory instead of the Minecraft instance directory. You might need to move the data directory into the world save directory after updating.
   * FIXED: Sound Card modulation not working at all
   * FIXED: Sound Card ADSR not working properly if the attack phase is skipped. Thanks to gamax92 for this as well.

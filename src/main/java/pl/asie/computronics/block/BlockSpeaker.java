@@ -17,6 +17,7 @@ public class BlockSpeaker extends BlockMachineSidedIcon {
 	public BlockSpeaker() {
 		super("speaker");
 		this.setBlockName("computronics.speaker");
+		this.setRotation(Rotation.SIX);
 	}
 
 	@Override
