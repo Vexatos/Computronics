@@ -128,8 +128,8 @@ public class TileSpeechBox extends TileEntityPeripheralBase implements IAudioSou
 	}
 
 	private Object[] sendNewText(String text) throws IOException {
-		locked = true;
 		if(Computronics.tts != null) {
+			locked = true;
 			Computronics.tts.say(text, worldObj.provider.dimensionId, xCoord, yCoord, zCoord);
 		} else {
 			return new Object[] { false, "text-to-speech system not available" };
