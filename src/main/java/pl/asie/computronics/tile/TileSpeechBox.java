@@ -241,6 +241,6 @@ public class TileSpeechBox extends TileEntityPeripheralBase implements IAudioSou
 
 	@Override
 	public boolean connectsAudio(EnumFacing side) {
-		return true;
+		return worldObj.getBlockState(getPos()).getValue(Computronics.speechBox.rotation.FACING) != side;
 	}
 }
