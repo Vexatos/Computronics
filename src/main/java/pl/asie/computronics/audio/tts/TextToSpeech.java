@@ -13,9 +13,9 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ServerTickEvent;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import pl.asie.computronics.Computronics;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TileSpeechBox;
 import pl.asie.lib.util.WorldUtils;
@@ -93,21 +93,43 @@ public class TextToSpeech {
 		}
 	}
 
-	public void preInit(Computronics computronics) {
+	public boolean preInit() {
 		try {
 			marytts = new LocalMaryInterface();
 			//Set<String> voices = marytts.getAvailableVoices();
 			marytts.setStreamingAudio(true);
+			String voice = marytts.getVoice();
+			if(voice == null) {
+				Set<Locale> availableLocales = marytts.getAvailableLocales();
+				for(Locale locale : availableLocales) {
+					marytts.setLocale(locale);
+					voice = marytts.getVoice();
+					if(voice != null) {
+						break;
+					}
+				}
+				if(voice == null) {
+					log.error("No voice found for available locales, please install a matching voice file. Available locales: " + StringUtils.join(availableLocales, ", "));
+					if(Mary.currentState() == 2) {
+						Mary.shutdown();
+					}
+					marytts = null;
+					return false;
+				}
+			}
 			//marytts.setLocale(Locale.US);
 			//marytts.setVoice(voices.iterator().next());
 			marytts.setOutputType("AUDIO");
 			ttsThreads = Executors.newFixedThreadPool(2, new ThreadFactoryBuilder().setPriority(Thread.MIN_PRIORITY).build());
+			log.info("Text To Speech successfully initialized with language " + marytts.getLocale() + " and voice " + voice + ".");
+			return true;
 		} catch(Exception e) {
 			log.error("Text To Speech initialization failed, you will not be able to hear anything", e);
 			if(Mary.currentState() == 2) {
 				Mary.shutdown();
-				marytts = null;
 			}
+			marytts = null;
+			return false;
 		}
 	}
 

@@ -132,7 +132,6 @@ public class TextToSpeechLoader {
 
 				PropertyConfigurator.configure(logprops);
 			}
-			log.info("Text To Speech successfully initialized.");
 			return hasDoneInit = true;
 		} catch(Exception e) {
 			log.error("Text To Speech directory initialization failed, you will not be able to hear anything", e);
