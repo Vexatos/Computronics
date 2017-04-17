@@ -13,6 +13,7 @@ import marytts.server.Mary;
 import marytts.util.data.audio.AudioPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pl.asie.computronics.reference.Mods;
@@ -99,14 +100,23 @@ public class TextToSpeech {
 			//Set<String> voices = marytts.getAvailableVoices();
 			marytts.setStreamingAudio(true);
 			String voice = marytts.getVoice();
-			Locale locale = marytts.getLocale();
 			if(voice == null) {
-				log.error("No voice found for selected locale " + locale + ", please install a voice file.");
-				if(Mary.currentState() == 2) {
-					Mary.shutdown();
+				Set<Locale> availableLocales = marytts.getAvailableLocales();
+				for(Locale locale : availableLocales) {
+					marytts.setLocale(locale);
+					voice = marytts.getVoice();
+					if(voice != null) {
+						break;
+					}
 				}
-				marytts = null;
-				return false;
+				if(voice == null) {
+					log.error("No voice found for available locales, please install a matching voice file. Available locales: " + StringUtils.join(availableLocales, ", "));
+					if(Mary.currentState() == 2) {
+						Mary.shutdown();
+					}
+					marytts = null;
+					return false;
+				}
 			}
 			//marytts.setLocale(Locale.US);
 			//marytts.setVoice(voices.iterator().next());
