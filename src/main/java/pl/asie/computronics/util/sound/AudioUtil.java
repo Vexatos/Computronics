@@ -179,7 +179,7 @@ public class AudioUtil {
 
 		public void reset() {
 			phase = this.initialPhase;
-			if(initialPhase == Phase.Decay) {
+			if(this.initialPhase == Phase.Decay) {
 				progress = 1;
 			}
 		}
@@ -252,7 +252,7 @@ public class AudioUtil {
 
 		@Override
 		protected double generate(State state) {
-			return Math.random()*2-1;
+			return Math.random() * 2 - 1;
 		}
 
 		@Override
