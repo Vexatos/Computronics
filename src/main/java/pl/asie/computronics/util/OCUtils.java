@@ -1,10 +1,13 @@
 package pl.asie.computronics.util;
 
+import li.cil.oc.api.Driver;
 import li.cil.oc.api.driver.DeviceInfo.DeviceAttribute;
+import li.cil.oc.api.driver.DriverItem;
 import li.cil.oc.api.internal.Colored;
 import li.cil.oc.client.KeyBindings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -77,6 +80,7 @@ public class OCUtils {
 		public static final String
 			ACME = "ACME Co.",
 			BuildCraft = "BuildCraft, Inc.",
+			DFKI = "DFKI GmbH",
 			Hosencorp = "Hosencorp AG",
 			HuggingCreeper = "Hugging Creeper Industries",
 			Lumiose = "Lumiose Lighting",
@@ -96,7 +100,7 @@ public class OCUtils {
 	//Mostly stolen from Sangar
 	@SideOnly(Side.CLIENT)
 	@SuppressWarnings("unchecked")
-	public static void addTooltip(ItemStack stack, List tooltip) {
+	public static void addTooltip(ItemStack stack, List tooltip, boolean advanced) {
 		{
 			FontRenderer font = Minecraft.getMinecraft().fontRenderer;
 			final String key = stack.getUnlocalizedName() + ".tip";
@@ -127,6 +131,22 @@ public class OCUtils {
 					+ TextFormatting.GRAY);
 			}
 		}
+		if(advanced) {
+			DriverItem item = Driver.driverFor(stack);
+			tooltip.add(StringUtil.localizeAndFormat("oc:tooltip.Tier", item != null ? item.tier(stack) + 1 : 0));
+		}
+	}
+
+	private static final EnumRarity[] rarities = new EnumRarity[] { EnumRarity.COMMON, EnumRarity.UNCOMMON, EnumRarity.RARE, EnumRarity.EPIC };
+
+	public static EnumRarity getRarityByTier(ItemStack stack) {
+		DriverItem item = Driver.driverFor(stack);
+		int tier = item != null ? Math.min(Math.max(item.tier(stack), 0), rarities.length - 1) : 0;
+		return rarities[tier];
+	}
+
+	public static EnumRarity getRarityByTier(int tier) {
+		return rarities[Math.min(Math.max(tier, 0), rarities.length - 1)];
 	}
 
 	@CapabilityInject(Colored.class)

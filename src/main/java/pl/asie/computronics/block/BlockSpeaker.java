@@ -11,7 +11,7 @@ import pl.asie.computronics.tile.TileSpeaker;
 public class BlockSpeaker extends BlockPeripheral {
 
 	public BlockSpeaker() {
-		super("speaker", Rotation.FOUR);
+		super("speaker", Rotation.SIX);
 		this.setUnlocalizedName("computronics.speaker");
 	}
 

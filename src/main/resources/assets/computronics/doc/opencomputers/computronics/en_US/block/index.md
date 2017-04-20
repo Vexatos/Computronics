@@ -13,6 +13,7 @@ Keep in mind that some of these may not be available, depending on the recipe se
 * [Colorful Lamp](colorful_lamp.md)
 * [Iron Note Block](iron_noteblock.md)
 * [Radar](radar.md)
+* [Speech Box](speech_box.md)
 * [Tape Drive](tape_drive.md)
 * [Audio Cable](audio_cable.md)
 * [Speaker](speaker.md)

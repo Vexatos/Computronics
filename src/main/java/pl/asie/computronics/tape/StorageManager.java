@@ -13,14 +13,17 @@ public class StorageManager {
 	// Map
 	private static Random rand = new Random();
 
-	// Class
-	private File saveDir;
 
-	public StorageManager() {
-		this.saveDir = new File(DimensionManager.getCurrentSaveRootDirectory(), Mods.Computronics);
-		if(!this.saveDir.exists() && !this.saveDir.mkdir()) {
-			Computronics.log.error("COULD NOT CREATE SAVE DIRECTORY: " + this.saveDir.getAbsolutePath());
+	private File saveDir() {
+		File currentSaveRootDirectory = DimensionManager.getCurrentSaveRootDirectory();
+		if(currentSaveRootDirectory == null) {
+			Computronics.log.error("COULD NOT CREATE SAVE DIRECTORY: No parent save directory found!");
 		}
+		File saveDir = new File(currentSaveRootDirectory, Mods.Computronics);
+		if(!saveDir.exists() && !saveDir.mkdir()) {
+			Computronics.log.error("COULD NOT CREATE SAVE DIRECTORY: " + saveDir.getAbsolutePath());
+		}
+		return saveDir;
 	}
 
 	private String filename(String storageName) {
@@ -41,10 +44,10 @@ public class StorageManager {
 	}
 
 	public boolean exists(String name) {
-		return new File(saveDir, filename(name)).exists();
+		return new File(saveDir(), filename(name)).exists();
 	}
 
 	public TapeStorage get(String name, int size, int position) {
-		return new TapeStorage(name, new File(saveDir, filename(name)), size, position);
+		return new TapeStorage(name, new File(saveDir(), filename(name)), size, position);
 	}
 }

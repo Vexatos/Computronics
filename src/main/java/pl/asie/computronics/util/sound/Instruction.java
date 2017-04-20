@@ -103,7 +103,7 @@ public abstract class Instruction {
 
 		@Override
 		public void encounter(AudioProcess process, State state) {
-			if(state.isFreqMod) {
+			if(state.isAmpMod || state.isFreqMod) {
 				return;
 			}
 			if(state.freqMod != null) {
@@ -155,7 +155,7 @@ public abstract class Instruction {
 
 		@Override
 		public void encounter(AudioProcess process, State state) {
-			if(state.isAmpMod) {
+			if(state.isAmpMod || state.isFreqMod) {
 				return;
 			}
 			if(state.ampMod != null) {
