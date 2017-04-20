@@ -13,6 +13,9 @@
 
   * [1.10.2] FIXED: Charset's Bundled Redstone integration
   * [1.10.2] FIXED: TIS-3D module models
+  * [1.10.2] FIXED: Updated Railcraft integration to version 10.1.0; requires Railcraft 10.1.0 or later now.
+    - This means that the Digital Signal Boxes are back.
+  * [1.10.2] FIXED: Ticket Machine not accepting IC2 energy.
 
 ==== 1.6.2 ====
 
