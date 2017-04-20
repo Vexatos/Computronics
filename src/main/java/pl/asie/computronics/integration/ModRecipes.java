@@ -50,6 +50,11 @@ public class ModRecipes {
 				RecipeUtils.addShapedRecipe(new ItemStack(Computronics.speaker, 1, 0),
 					"sIs", "ini", "sIs", 's', Blocks.stonebrick, 'I', "ingotIron", 'i', Blocks.iron_bars, 'n', Blocks.noteblock);
 			}
+			if(Computronics.speechBox != null) {
+				RecipeUtils.addShapedRecipe(new ItemStack(Computronics.speechBox, 1, 0),
+					"iii", "iai", "iri", 'i', "ingotIron", 'r', Items.ender_pearl,
+					'a', Computronics.speaker != null ? Computronics.speaker : Computronics.ironNote != null ? Computronics.ironNote : Blocks.noteblock);
+			}
 			if(Computronics.tapeReader != null) {
 				RecipeUtils.addShapedRecipe(new ItemStack(Computronics.tapeReader, 1, 0),
 					"iii", "iri", "iai", 'i', "ingotIron", 'r', "dustRedstone",
@@ -135,6 +140,17 @@ public class ModRecipes {
 				'i', Blocks.iron_bars,
 				'n', Blocks.noteblock,
 				'c', "oc:circuitChip1"
+			);
+		}
+		if(Computronics.speechBox != null) {
+			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.speechBox, 1, 0),
+				"ici", "sag", "ibi",
+				'i', "ingotIron",
+				'c', "oc:cpu2",
+				's', "oc:circuitChip3",
+				'g', Blocks.iron_bars,
+				'a', Computronics.speaker != null ? Computronics.speaker : Computronics.ironNote != null ? Computronics.ironNote : Blocks.noteblock,
+				'b', "oc:materialCircuitBoardPrinted"
 			);
 		}
 		if(Computronics.tapeReader != null) {

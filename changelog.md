@@ -1,5 +1,8 @@
 ==== 1.6.3 ====
 
+  * ADDED: Speech Box! Once again thanks to gamax92 for helping me do this!
+    - Uses a text-to-speech system called [MaryTTS](http://mary.dfki.de/) to synthesize speech from text
+    - Due to the size of MaryTTS, it is not there by default and requires installation into the Minecraft instance directory as described [here](https://wiki.vexatos.com/wiki:computronics:mary).
   * ADDED: OpenComputers-style recipes if OpenComputers is installed. Enable 'easyRecipeMode' in the config to get the old recipes back.
   * CHANGED: Speakers can now face any of the six sides.
   * CHANGED: Audio Cables no longer connect to the front side of audio devices.

@@ -20,19 +20,6 @@ import java.io.IOException;
 
 public class NetworkHandlerClient extends MessageHandlerBase {
 
-	private static class CodecData {
-
-		public final int x, y, z;
-		public final byte[] data;
-
-		public CodecData(int x, int y, int z, byte[] data) {
-			this.x = x;
-			this.y = y;
-			this.z = z;
-			this.data = data;
-		}
-	}
-
 	private static final AudioFormat DFPWM_DECODED_FORMAT = new AudioFormat(32768, 8, 1, false, false);
 
 	@Override
