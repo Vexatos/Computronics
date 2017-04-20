@@ -147,13 +147,14 @@ public class TileSpeechBox extends TileEntityPeripheralBase implements IAudioSou
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound tag) {
+	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
 		if(tag.hasKey("vo")) {
 			this.soundVolume = tag.getByte("vo");
 		} else {
 			this.soundVolume = 127;
 		}
+		return tag;
 	}
 
 	@Override
