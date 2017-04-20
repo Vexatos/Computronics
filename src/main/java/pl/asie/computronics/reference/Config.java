@@ -147,6 +147,7 @@ public class Config {
 			if(OC_CARD_SOUND) {
 				SOUND_CARD_MAX_DELAY = config.getInt("ocSoundCardMaxDelay", "sound", SOUND_CARD_MAX_DELAY, 0, Integer.MAX_VALUE, "Maximum delay allowed in a sound card's instruction queue, in milliseconds");
 				SOUND_CARD_QUEUE_SIZE = config.getInt("ocSoundCardQueueSize", "sound", SOUND_CARD_QUEUE_SIZE, 0, Integer.MAX_VALUE, "Maximum  number of instructons allowed in a sound cards instruction queue. This directly affects the maximum size of the packets sent to the client.");
+				SOUND_CARD_CHANNEL_COUNT = config.getInt("ocSoundCardChannelCount", "sound", SOUND_CARD_CHANNEL_COUNT, 1, 65536, "The number of audio channels each sound card has.");
 			}
 
 			// Particle Card

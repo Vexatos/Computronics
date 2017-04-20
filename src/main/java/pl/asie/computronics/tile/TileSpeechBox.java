@@ -7,6 +7,7 @@ import dan200.computercraft.api.peripheral.IComputerAccess;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
@@ -145,6 +146,34 @@ public class TileSpeechBox extends TileEntityPeripheralBase implements IAudioSou
 		}
 	}
 
+	@Override
+	public void writeToNBT(NBTTagCompound tag) {
+		super.writeToNBT(tag);
+		if(tag.hasKey("vo")) {
+			this.soundVolume = tag.getByte("vo");
+		} else {
+			this.soundVolume = 127;
+		}
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound tag) {
+		super.readFromNBT(tag);
+		if(this.soundVolume != 127) {
+			tag.setByte("vo", (byte) this.soundVolume);
+		}
+	}
+
+	public void setVolume(float volume) {
+		if(volume < 0.0F) {
+			volume = 0.0F;
+		}
+		if(volume > 1.0F) {
+			volume = 1.0F;
+		}
+		this.soundVolume = (int) Math.floor(volume * 127.0F);
+	}
+
 	@Callback(doc = "function(text:string):boolean; Say the specified message. Returns true on success, false and an error message otherwise.")
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] say(Context context, Arguments args) {
@@ -182,10 +211,17 @@ public class TileSpeechBox extends TileEntityPeripheralBase implements IAudioSou
 		return new Object[] { locked || storage != null };
 	}
 
+	@Callback(doc = "function(speed:number); Sets the volume of the speech box. Needs to be beween 0 and 1")
+	@Optional.Method(modid = Mods.OpenComputers)
+	public Object[] setVolume(Context context, Arguments args) {
+		this.setVolume((float) args.checkDouble(0));
+		return null;
+	}
+
 	@Override
 	@Optional.Method(modid = Mods.ComputerCraft)
 	public String[] getMethodNames() {
-		return new String[] { "say", "stop", "isProcessing" };
+		return new String[] { "say", "stop", "isProcessing", "setVolume" };
 	}
 
 	@Override
@@ -218,6 +254,13 @@ public class TileSpeechBox extends TileEntityPeripheralBase implements IAudioSou
 			}
 			case 2: {
 				return new Object[] { locked || storage != null };
+			}
+			case 3: {
+				if(arguments.length < 1 || !(arguments[0] instanceof Number)) {
+					throw new LuaException("first argument needs to be a number");
+				}
+				this.setVolume(((Number) arguments[0]).floatValue());
+				return null;
 			}
 		}
 		return null;
