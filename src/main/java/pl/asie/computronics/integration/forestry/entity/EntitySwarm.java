@@ -577,6 +577,11 @@ public class EntitySwarm extends EntityFlyingCreature implements IBeeHousing {
 	}
 
 	@Override
+	public boolean isRaining() {
+		return worldObj.isRainingAt(getPosition().up());
+	}
+
+	@Override
 	public World getWorldObj() {
 		return worldObj;
 	}

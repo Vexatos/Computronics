@@ -104,7 +104,7 @@ public class SwarmProvider extends AbstractProvider {
 		if(stack != null && player.getCooldownTracker().hasCooldown(stack.getItem())) {
 			return;
 		}
-		if(tile.getBeekeepingLogic() != null && tile.getBeeInventory() != null && tile.getBeekeepingLogic().canDoBeeFX()) {
+		if(tile.getBeekeepingLogic() != null && tile.getBeekeepingLogic().canWork()) {
 			ItemStack queenStack = tile.getBeeInventory().getQueen();
 			IBee member = BeeManager.beeRoot.getMember(queenStack);
 			if(member != null) {
@@ -216,6 +216,7 @@ public class SwarmProvider extends AbstractProvider {
 
 	//private final HashMap<String, SwarmBehavior> behaviors = new HashMap<String, SwarmBehavior>();
 
+	@Nullable
 	private SwarmBehavior getSwarmBehavior(EntityPlayer player) {
 		Controller controller = Nanomachines.getController(player);
 		if(controller != null) {
