@@ -18,6 +18,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
 import pl.asie.computronics.integration.CCMultiPeripheral;
+import pl.asie.computronics.integration.DriverSpecificTileEntity;
 import pl.asie.computronics.integration.NamedManagedEnvironment;
 import pl.asie.computronics.integration.util.RoutingTableUtil;
 import pl.asie.computronics.reference.Names;
@@ -110,7 +111,7 @@ public class DriverRoutingDetector {
 		return new Object[] { false, "no routing table found" };
 	}
 
-	public static class OCDriver extends DriverSidedTileEntity {
+	public static class OCDriver extends DriverSpecificTileEntity<TileDetector> {
 
 		public static class InternalManagedEnvironment extends NamedManagedEnvironment<TileDetector> {
 
@@ -141,9 +142,8 @@ public class DriverRoutingDetector {
 			}
 		}
 
-		@Override
-		public Class<?> getTileEntityClass() {
-			return TileDetector.class;
+		public OCDriver() {
+			super(TileDetector.class);
 		}
 
 		@Override
@@ -154,8 +154,8 @@ public class DriverRoutingDetector {
 		}
 
 		@Override
-		public ManagedEnvironment createEnvironment(World world, BlockPos pos, EnumFacing side) {
-			return new InternalManagedEnvironment((TileDetector) world.getTileEntity(pos));
+		public NamedManagedEnvironment<TileDetector> createEnvironment(World world, BlockPos pos, EnumFacing side, TileDetector tile) {
+			return new InternalManagedEnvironment(tile);
 		}
 	}
 

@@ -1,8 +1,8 @@
-# Digital Detector
+# Digital Cart Detector
 
-![Detects digitally.](block:computronics:detector)
+![Detects digitally.](block:computronics:digital_detector)
 
-The Digital detector block detects when a minecart passes adjacent to the block, firing a `minecart` lua event, which can be detected by a computer. The digital detector must be connected to a computer from the correct side.
+The Digital Cart Detector detects when a minecart passes adjacent to the block, firing a `minecart` lua event, which can be detected by a computer. The digital detector must be connected to a computer from the correct side.
 
 The `minecart` event looks like the following, refer to [this guide](http://ocdoc.cil.li/component:signals) if you don't understand the signal syntax.
 

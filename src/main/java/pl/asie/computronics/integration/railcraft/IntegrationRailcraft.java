@@ -1,23 +1,31 @@
 package pl.asie.computronics.integration.railcraft;
 
-import net.minecraft.block.Block;
+import mods.railcraft.client.render.tesr.TESRSignalBox;
+import mods.railcraft.common.blocks.machine.ItemMachine;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.common.event.FMLInterModComms;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.integration.railcraft.block.BlockDigitalDetector;
+import pl.asie.computronics.integration.railcraft.block.BlockDigitalSignalBox;
 import pl.asie.computronics.integration.railcraft.block.BlockLocomotiveRelay;
 import pl.asie.computronics.integration.railcraft.block.BlockTicketMachine;
 import pl.asie.computronics.integration.railcraft.gui.GuiProviderTicketMachine;
 import pl.asie.computronics.integration.railcraft.item.ItemRelaySensor;
+import pl.asie.computronics.integration.railcraft.tile.TileDigitalControllerBox;
 import pl.asie.computronics.integration.railcraft.tile.TileDigitalDetector;
+import pl.asie.computronics.integration.railcraft.tile.TileDigitalReceiverBox;
 import pl.asie.computronics.integration.railcraft.tile.TileLocomotiveRelay;
 import pl.asie.computronics.integration.railcraft.tile.TileTicketMachine;
 import pl.asie.computronics.reference.Mods;
@@ -33,8 +41,8 @@ public class IntegrationRailcraft {
 	public BlockLocomotiveRelay locomotiveRelay;
 	public BlockDigitalDetector detector;
 	public ItemRelaySensor relaySensor;
-	public Block digitalReceiverBox;
-	public Block digitalControllerBox;
+	public BlockDigitalSignalBox digitalBox;
+	public ItemMachine digitalBoxItem;
 	public BlockTicketMachine ticketMachine;
 
 	LocomotiveManager manager;
@@ -56,14 +64,23 @@ public class IntegrationRailcraft {
 			manager = new LocomotiveManager();
 			MinecraftForge.EVENT_BUS.register(manager);
 		}
-		/*if(isEnabled(config, "digitalReceiverBox", true)) { TODO Railcraft 10.1
-			this.digitalReceiverBox = new BlockDigitalReceiverBox();
-			Computronics.instance.registerBlockWithTileEntity(digitalReceiverBox, new ItemBlockSignalBox(digitalReceiverBox), TileDigitalReceiverBox.class, "digital_receiver_box");
+		{
+			SignalTypes.DigitalReceiver.enabled = isEnabled(config, "digitalReceiverBox", true);
+			SignalTypes.DigitalController.enabled = isEnabled(config, "digitalControllerBox", true);
+			digitalBox = new BlockDigitalSignalBox();
+			GameRegistry.register(digitalBox, new ResourceLocation(Mods.Computronics, "digital_box"));
+			digitalBoxItem = new ItemMachine(digitalBox) {
+				@Override
+				public String getUnlocalizedName() {
+					return this.block.getUnlocalizedName();
+				}
+			};
+			GameRegistry.register(digitalBoxItem, digitalBox.getRegistryName());
+			GameRegistry.registerTileEntity(TileDigitalControllerBox.class, "digital_controller_box");
+			GameRegistry.registerTileEntity(TileDigitalReceiverBox.class, "digital_receiver_box");
+			FMLInterModComms.sendMessage(Mods.AE2, "whitelist-spatial", TileDigitalControllerBox.class.getCanonicalName());
+			FMLInterModComms.sendMessage(Mods.AE2, "whitelist-spatial", TileDigitalReceiverBox.class.getCanonicalName());
 		}
-		if(isEnabled(config, "digitalControllerBox", true)) {
-			this.digitalControllerBox = new BlockDigitalControllerBox();
-			Computronics.instance.registerBlockWithTileEntity(digitalControllerBox, new ItemBlockSignalBox(digitalControllerBox), TileDigitalControllerBox.class, "digital_controller_box");
-		}*/
 		if(isEnabled(config, "digitalDetector", true)) {
 			detector = new BlockDigitalDetector();
 			Computronics.instance.registerBlockWithTileEntity(detector, TileDigitalDetector.class, "digital_detector");
@@ -103,8 +120,16 @@ public class IntegrationRailcraft {
 	@SideOnly(Side.CLIENT)
 	@Optional.Method(modid = Mods.Railcraft)
 	public void registerRenderers() {
-		//ClientRegistry.bindTileEntitySpecialRenderer(TileDigitalReceiverBox.class, new TESRSignalBox());
-		//ClientRegistry.bindTileEntitySpecialRenderer(TileDigitalControllerBox.class, new TESRSignalBox());
+		digitalBox.initializeClient();
+		for(SignalTypes type : SignalTypes.VALUES) {
+			ItemStack stack = digitalBox.getStack(type);
+			if(stack != null) {
+				digitalBox.registerItemModel(stack, type);
+			}
+		}
+		digitalBoxItem.initializeClient();
+		ClientRegistry.bindTileEntitySpecialRenderer(TileDigitalReceiverBox.class, new TESRSignalBox());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileDigitalControllerBox.class, new TESRSignalBox());
 		ModelBakery.registerItemVariants(relaySensor, new ResourceLocation(Mods.Computronics + ":relay_sensor_off"));
 		ModelBakery.registerItemVariants(relaySensor, new ResourceLocation(Mods.Computronics + ":relay_sensor_on"));
 		ModelLoader.setCustomMeshDefinition(relaySensor, new ItemRelaySensor.MeshDefinition());

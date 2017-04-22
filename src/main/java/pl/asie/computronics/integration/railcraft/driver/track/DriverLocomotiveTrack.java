@@ -3,11 +3,9 @@ package pl.asie.computronics.integration.railcraft.driver.track;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
-import li.cil.oc.api.driver.SidedBlock;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
-import li.cil.oc.api.prefab.AbstractManagedEnvironment;
 import mods.railcraft.api.tracks.IOutfittedTrackTile;
 import mods.railcraft.common.blocks.tracks.outfitted.kits.TrackKitLocomotive;
 import mods.railcraft.common.carts.EntityLocomotive;
@@ -21,6 +19,7 @@ import pl.asie.computronics.integration.CCMultiPeripheral;
 import pl.asie.computronics.integration.NamedManagedEnvironment;
 import pl.asie.computronics.reference.Names;
 
+import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 
@@ -53,7 +52,7 @@ public class DriverLocomotiveTrack {
 		return new Object[] { modeMap };
 	}
 
-	public static class OCDriver implements SidedBlock {
+	public static class OCDriver extends DriverTrack<TrackKitLocomotive> {
 
 		public static class InternalManagedEnvironment extends NamedManagedEnvironment<TrackKitLocomotive> {
 
@@ -82,16 +81,14 @@ public class DriverLocomotiveTrack {
 			}
 		}
 
-		@Override
-		public boolean worksWith(World world, BlockPos pos, EnumFacing side) {
-			TileEntity tileEntity = world.getTileEntity(pos);
-			return (tileEntity != null) && tileEntity instanceof IOutfittedTrackTile
-				&& ((IOutfittedTrackTile) tileEntity).getTrackKitInstance() instanceof TrackKitLocomotive;
+		public OCDriver() {
+			super(TrackKitLocomotive.class);
 		}
 
+		@Nullable
 		@Override
-		public ManagedEnvironment createEnvironment(World world, BlockPos pos, EnumFacing side) {
-			return new InternalManagedEnvironment((TrackKitLocomotive) ((IOutfittedTrackTile) world.getTileEntity(pos)).getTrackKitInstance());
+		protected NamedManagedEnvironment<TrackKitLocomotive> createEnvironment(World world, BlockPos pos, EnumFacing side, TrackKitLocomotive tile) {
+			return new InternalManagedEnvironment(tile);
 		}
 	}
 

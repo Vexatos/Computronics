@@ -212,12 +212,13 @@ public class IntegrationOpenComputers {
 				Driver.add(new DriverPoweredTrack.OCDriver());
 				Driver.add(new DriverRoutingTrack.OCDriver());
 				Driver.add(new DriverRoutingDetector.OCDriver());
-				Driver.add(new DriverRoutingSwitch.OCDriver());
+				Driver.add(new DriverRoutingActuator.OCDriver());
 				Driver.add(new DriverElectricGrid.OCDriver());
-				Driver.add(new DriverThrottleTrack.OCDriver());
 				Driver.add(new DriverLocomotiveTrack.OCDriver());
 				Driver.add(new DriverLauncherTrack.OCDriver());
+				Driver.add(new DriverMessengerTrack.OCDriver());
 				Driver.add(new DriverPrimingTrack.OCDriver());
+				Driver.add(new DriverThrottleTrack.OCDriver());
 			}
 		}*//*
 		if(Mods.hasVersion(Mods.GregTech, Mods.Versions.GregTech5)) {

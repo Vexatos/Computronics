@@ -99,8 +99,7 @@ public class OCUtils {
 
 	//Mostly stolen from Sangar
 	@SideOnly(Side.CLIENT)
-	@SuppressWarnings("unchecked")
-	public static void addTooltip(ItemStack stack, List tooltip, boolean advanced) {
+	public static void addTooltip(ItemStack stack, List<String> tooltip, boolean advanced) {
 		{
 			FontRenderer font = Minecraft.getMinecraft().fontRenderer;
 			final String key = stack.getUnlocalizedName() + ".tip";
@@ -116,7 +115,7 @@ public class OCUtils {
 							KeyBindings.getKeyBindingName(KeyBindings.extendedTooltip())));
 					} else {
 						for(String line : lines) {
-							List list = font.listFormattedStringToWidth(line, maxWidth);
+							List<String> list = font.listFormattedStringToWidth(line, maxWidth);
 							tooltip.addAll(list);
 						}
 					}

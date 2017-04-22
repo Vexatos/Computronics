@@ -13,7 +13,6 @@ public class StorageManager {
 	// Map
 	private static Random rand = new Random();
 
-
 	private File saveDir() {
 		File currentSaveRootDirectory = DimensionManager.getCurrentSaveRootDirectory();
 		if(currentSaveRootDirectory == null) {

@@ -64,12 +64,13 @@ public class IntegrationComputerCraft {
 				registerMultiPeripheralProvider(new DriverPoweredTrack.CCDriver());
 				registerMultiPeripheralProvider(new DriverRoutingTrack.CCDriver());
 				registerMultiPeripheralProvider(new DriverRoutingDetector.CCDriver());
-				registerMultiPeripheralProvider(new DriverRoutingSwitch.CCDriver());
+				registerMultiPeripheralProvider(new DriverRoutingActuator.CCDriver());
 				registerMultiPeripheralProvider(new DriverElectricGrid.CCDriver());
-				registerMultiPeripheralProvider(new DriverThrottleTrack.CCDriver());
 				registerMultiPeripheralProvider(new DriverLocomotiveTrack.CCDriver());
 				registerMultiPeripheralProvider(new DriverLauncherTrack.CCDriver());
+				registerMultiPeripheralProvider(new DriverMessengerTrack.CCDriver());
 				registerMultiPeripheralProvider(new DriverPrimingTrack.CCDriver());
+				registerMultiPeripheralProvider(new DriverThrottleTrack.CCDriver());
 				registerMultiPeripheralProvider(new DriverBoilerFirebox.CCDriver());
 				registerMultiPeripheralProvider(new DriverSteamTurbine.CCDriver());
 			}

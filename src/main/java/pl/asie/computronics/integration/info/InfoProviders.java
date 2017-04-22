@@ -29,8 +29,7 @@ public class InfoProviders {
 		init = true;
 		newProvider(new InfoPeripheral(), BlockPeripheral.class);
 		/*if(Mods.isLoaded(Mods.Railcraft)) { TODO Railcraft
-			newProvider(new InfoPeripheral(), BlockDigitalReceiverBox.class);
-			newProvider(new InfoPeripheral(), BlockDigitalControllerBox.class);
+			newProvider(new InfoPeripheral(), BlockDigitalSignalBox.class);
 			newProvider(new InfoLocomotiveRelay(), BlockLocomotiveRelay.class);
 		}*/
 		newProvider(new InfoTapeDrive(), BlockTapeReader.class);

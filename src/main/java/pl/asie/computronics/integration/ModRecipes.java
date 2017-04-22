@@ -201,18 +201,18 @@ public class ModRecipes {
 			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.railcraft.relaySensor, 1, 0),
 				" n ", "npr", " r ", 'p', "paper", 'n', "nuggetTin", 'r', "dustRedstone");
 		}
-		if(Computronics.railcraft.digitalReceiverBox != null) {
-			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.railcraft.digitalReceiverBox, 1, 0),
+		if(SignalTypes.DigitalReceiver.isEnabled()) {
+			RecipeUtils.addShapedRecipe(SignalTypes.DigitalReceiver.getStack(),
 				"iri", "ibi", "isi", 'i', "ingotIron",
 				'r', RailcraftItems.CIRCUIT.getRecipeObject(EnumCircuit.RECEIVER),
-				'b', RailcraftBlocks.WAY_OBJECT.getRecipeObject(EnumWayObject.BOX_RECEIVER),
+				'b', RailcraftBlocks.SIGNAL_BOX.getRecipeObject(SignalBoxVariant.RECEIVER),
 				's', RailcraftItems.CIRCUIT.getRecipeObject(EnumCircuit.SIGNAL));
 		}
-		if(Computronics.railcraft.digitalControllerBox != null) {
-			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.railcraft.digitalControllerBox, 1, 0),
+		if(SignalTypes.DigitalController.isEnabled()) {
+			RecipeUtils.addShapedRecipe(SignalTypes.DigitalController.getStack(),
 				"iri", "ibi", "isi", 'i', "ingotIron",
 				'r', RailcraftItems.CIRCUIT.getRecipeObject(EnumCircuit.CONTROLLER),
-				'b', RailcraftBlocks.WAY_OBJECT.getRecipeObject(EnumWayObject.BOX_RECEIVER),
+				'b', RailcraftBlocks.SIGNAL_BOX.getRecipeObject(SignalBoxVariant.CONTROLLER),
 				's', RailcraftItems.CIRCUIT.getRecipeObject(EnumCircuit.SIGNAL));
 		}
 		if(Computronics.railcraft.detector != null) {

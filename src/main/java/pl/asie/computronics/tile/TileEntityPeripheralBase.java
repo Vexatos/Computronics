@@ -132,7 +132,7 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 
 	@Override
 	public void update() {
-		//super.update();
+		super.update();
 		if(world == null) {
 			return;
 		}

@@ -6,16 +6,16 @@ import dan200.computercraft.api.peripheral.IComputerAccess;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
-import mods.railcraft.api.core.WorldCoordinate;
 import mods.railcraft.api.signals.IControllerTile;
 import mods.railcraft.api.signals.SignalAspect;
 import mods.railcraft.api.signals.SignalController;
-import mods.railcraft.common.blocks.wayobjects.IWayObjectDefinition;
+import mods.railcraft.common.blocks.machine.IEnumMachine;
 import mods.railcraft.common.util.misc.Game;
 import mods.railcraft.common.util.network.RailcraftInputStream;
 import mods.railcraft.common.util.network.RailcraftOutputStream;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.integration.railcraft.SignalTypes;
 import pl.asie.computronics.integration.railcraft.signalling.MassiveSignalController;
@@ -88,7 +88,7 @@ public class TileDigitalControllerBox extends TileDigitalBoxBase implements ICon
 	}
 
 	@Override
-	public IWayObjectDefinition getSignalType() {
+	public IEnumMachine<?> getMachineType() {
 		return SignalTypes.DigitalController;
 	}
 
@@ -154,9 +154,9 @@ public class TileDigitalControllerBox extends TileDigitalBoxBase implements ICon
 	}
 
 	private Object[] removeSignal(String name) {
-		Collection<WorldCoordinate> coords = this.controller.getCoordsFor(name);
+		Collection<BlockPos> coords = this.controller.getCoordsFor(name);
 		if(!coords.isEmpty()) {
-			for(WorldCoordinate coord : coords) {
+			for(BlockPos coord : coords) {
 				this.controller.clearPairing(coord);
 			}
 			return new Object[] { true };
