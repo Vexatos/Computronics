@@ -1,3 +1,7 @@
+==== 1.6.4 ====
+
+  * FIXED: Chat Box not respecting range when listening to messages.
+
 ==== 1.6.3 ====
 
   * ADDED: Speech Box! Once again thanks to gamax92 for helping me do this!

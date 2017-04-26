@@ -81,7 +81,7 @@ public class TileChatBox extends TileEntityPeripheralBase implements IChatListen
 		if(!worldObj.blockExists(xCoord, yCoord, zCoord)) {
 			return;
 		}
-		if(Config.CHATBOX_MAGIC && !isCreative() && (event.player.worldObj != this.worldObj || event.player.getDistanceSq(xCoord, yCoord, zCoord) > distance * distance)) {
+		if(!Config.CHATBOX_MAGIC && !isCreative() && (event.player.worldObj != this.worldObj || event.player.getDistanceSq(xCoord, yCoord, zCoord) > distance * distance)) {
 			return;
 		}
 
