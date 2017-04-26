@@ -1,3 +1,7 @@
+==== 1.6.4 ====
+
+  * FIXED: Chat Box not respecting range when listening to messages.
+
 ==== 1.6.3 ====
 
   * ADDED: Speech Box! Once again thanks to gamax92 for helping me do this!
@@ -5,13 +9,17 @@
     - Due to the size of MaryTTS, it is not there by default and requires installation into the Minecraft instance directory as described [here](https://wiki.vexatos.com/wiki:computronics:mary).
   * ADDED: OpenComputers-style recipes if OpenComputers is installed. Enable 'easyRecipeMode' in the config to get the old recipes back.
   * CHANGED: Speakers can now face any of the six sides.
-  * CHANGED: Audio Cables no longer connect to the front side of audio devices.
   * FIXED: Issues with tape data save directory. It now should always properly save to the world's save directory instead of the Minecraft instance directory. You might need to move the data directory into the world save directory after updating.
   * FIXED: Sound Card modulation not working at all
   * FIXED: Sound Card ADSR not working properly if the attack phase is skipped. Thanks to gamax92 for this as well.
 
+  * [1.7.10] CHANGED: Audio Cables no longer connect to the front side of audio devices.
+
   * [1.10.2] FIXED: Charset's Bundled Redstone integration
   * [1.10.2] FIXED: TIS-3D module models
+  * [1.10.2] FIXED: Updated Railcraft integration to version 10.1.0; requires Railcraft 10.1.0 or later now.
+    - This means that the Digital Signal Boxes are back.
+  * [1.10.2] FIXED: Ticket Machine not accepting IC2 energy.
 
 ==== 1.6.2 ====
 
