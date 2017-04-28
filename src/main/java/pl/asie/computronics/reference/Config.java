@@ -18,6 +18,7 @@ public class Config {
 	public static int TAPEDRIVE_DISTANCE = 24;
 	public static int TAPEDRIVE_BUFFER_MS = 750;
 	public static int RADAR_RANGE = 8;
+	public static int FX_RANGE = 256;
 	public static boolean RADAR_ONLY_DISTANCE = true;
 	public static boolean CIPHER_CAN_LOCK = true;
 	public static double CIPHER_ENERGY_STORAGE = 1600.0;
@@ -154,7 +155,7 @@ public class Config {
 
 			// Particle Card
 			FX_ENERGY_COST = convertRFtoOC(
-				config.getFloat("ocParticleCardCostPerParticle", "power", 2.0f, 0.0f, 10000.0f, "How much energy 1 particle emission should take."));
+				config.getFloat("ocParticleCardCostPerParticle", "power", 2.0f, 0.0f, 10000.0f, "How much energy 1 particle emission should take. Multiplied by the distance to the target."));
 			//Spoofing Card
 			SPOOFING_ENERGY_COST = convertRFtoOC(
 				config.getFloat("ocSpoofingCardCostPerMessage", "power", 2.0f, 0.0f, 10000.0f, "How much energy sending one spoofed message should take"));
@@ -217,6 +218,9 @@ public class Config {
 		// Radar
 		RADAR_RANGE = config.getInt("maxRange", "radar", 8, 0, 256, "The maximum range of the Radar.");
 		RADAR_ONLY_DISTANCE = config.getBoolean("onlyOutputDistance", "radar", true, "Stop Radars from outputting X/Y/Z coordinates and instead only output the distance from an entity.");
+
+		// Particles
+		FX_RANGE = config.getInt("particleRange", "particles", FX_RANGE, -1,65536, "The maximum range of particle-emitting devices. Set to -1 to make it work over any distance.");
 
 		// Tape Drive
 		TAPEDRIVE_BUFFER_MS = config.getInt("audioPreloadMs", "tapedrive", 750, 500, 10000, "The amount of time (in milliseconds) used for pre-buffering the tape for audio playback. If you get audio playback glitches in SMP/your TPS is under 20, RAISE THIS VALUE!");

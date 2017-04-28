@@ -9,6 +9,7 @@ import li.cil.oc.api.network.Connector;
 import li.cil.oc.api.network.EnvironmentHost;
 import li.cil.oc.api.network.Visibility;
 import li.cil.oc.api.prefab.ManagedEnvironment;
+import net.minecraft.util.MathHelper;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.util.OCUtils;
 import pl.asie.computronics.util.ParticleUtils;
@@ -41,10 +42,14 @@ public class DriverCardFX extends ManagedEnvironment implements DeviceInfo {
 		if(name.length() > Short.MAX_VALUE) {
 			return new Object[] { false, "name too long" };
 		}
-		double xOffset = args.checkDouble(1);
-		double yOffset = args.checkDouble(2);
-		double zOffset = args.checkDouble(3);
-		if(((Connector) this.node()).tryChangeBuffer(0 - Config.FX_ENERGY_COST)) {
+		double xOffset = MathHelper.clamp_double(args.checkDouble(1), -65536D, 65536D);
+		double yOffset = MathHelper.clamp_double(args.checkDouble(2), -65536D, 65536D);
+		double zOffset = MathHelper.clamp_double(args.checkDouble(3), -65536D, 65536D);
+		double distance = Math.sqrt(xOffset * xOffset + yOffset * yOffset + zOffset * zOffset);
+		if(Config.FX_RANGE >= 0 && distance > Config.FX_RANGE) {
+			return new Object[] { false, "out of range" };
+		}
+		if(((Connector) this.node()).tryChangeBuffer(0 - Config.FX_ENERGY_COST * distance)) {
 			Random rng = container.world().rand;
 			double x = container.xPosition() + xOffset;
 			double y = container.yPosition() + yOffset;

@@ -1,10 +1,12 @@
 ==== 1.6.4 ====
 
+  * CHANGED: Particle Card now uses more energy over longer distances.
   * FIXED: Chat Box not respecting range when listening to messages.
   * FIXED: Some cards and upgrades working with a minor offset.
   * FIXED: Items that shouldn't have energy buffers having energy buffers.
   * FIXED: Sound Card not using any energy.
   * FIXED: Camera not returning quite the correct distance.
+  * FIXED: Particle Card and Turtle having no range limit.
 
 ==== 1.6.3 ====
 

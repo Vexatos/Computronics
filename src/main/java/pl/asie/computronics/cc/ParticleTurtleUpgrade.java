@@ -11,6 +11,8 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.MathHelper;
+import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.ParticleUtils;
 
@@ -51,10 +53,17 @@ public class ParticleTurtleUpgrade extends TurtleUpgradeBase {
 				return new Object[] { false, "name too long" };
 			}
 
+			double xOffset = MathHelper.clamp_double((Double) arguments[1], -65536D, 65536D);
+			double yOffset = MathHelper.clamp_double((Double) arguments[2], -65536D, 65536D);
+			double zOffset = MathHelper.clamp_double((Double) arguments[3], -65536D, 65536D);
+			if(Config.FX_RANGE >= 0 && xOffset * xOffset + yOffset * yOffset + zOffset * zOffset > Config.FX_RANGE * Config.FX_RANGE) {
+				return new Object[] { false, "out of range" };
+			}
+
 			Random rng = access.getWorld().rand;
-			double x = access.getPosition().posX + 0.5 + (Double) arguments[1];
-			double y = access.getPosition().posY + 0.5 + (Double) arguments[2];
-			double z = access.getPosition().posZ + 0.5 + (Double) arguments[3];
+			double x = access.getPosition().posX + 0.5 + xOffset;
+			double y = access.getPosition().posY + 0.5 + yOffset;
+			double z = access.getPosition().posZ + 0.5 + zOffset;
 			double defaultv = (rng.nextDouble() * 0.1);
 			if(arguments.length >= 5)
 				defaultv = (Double) arguments[4];
