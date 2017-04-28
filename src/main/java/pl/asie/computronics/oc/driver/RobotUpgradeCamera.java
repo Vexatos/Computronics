@@ -49,7 +49,7 @@ public class RobotUpgradeCamera extends ManagedEnvironment implements DeviceInfo
 			x = (float) args.checkDouble(0);
 			y = (float) args.checkDouble(1);
 		}
-		camera.ray(entity.world(), (int) Math.floor(entity.xPosition()), (int) Math.floor(entity.yPosition()), (int) Math.floor(entity.zPosition()),
+		camera.ray(entity.world(), entity.xPosition(), entity.yPosition(), entity.zPosition(),
 			getFacingDirection(), x, y);
 		return new Object[] { camera.getDistance() };
 	}
@@ -64,7 +64,7 @@ public class RobotUpgradeCamera extends ManagedEnvironment implements DeviceInfo
 			x = (float) args.checkDouble(0);
 			y = (float) args.checkDouble(1);
 		}
-		camera.ray(entity.world(), (int) Math.floor(entity.xPosition()), (int) Math.floor(entity.yPosition()), (int) Math.floor(entity.zPosition()),
+		camera.ray(entity.world(), entity.xPosition(), entity.yPosition(), entity.zPosition(),
 			ForgeDirection.UP, x, y);
 		return new Object[] { camera.getDistance() };
 	}
@@ -79,7 +79,7 @@ public class RobotUpgradeCamera extends ManagedEnvironment implements DeviceInfo
 			x = (float) args.checkDouble(0);
 			y = (float) args.checkDouble(1);
 		}
-		camera.ray(entity.world(), (int) Math.floor(entity.xPosition()), (int) Math.floor(entity.yPosition()), (int) Math.floor(entity.zPosition()),
+		camera.ray(entity.world(), entity.xPosition(), entity.yPosition(), entity.zPosition(),
 			ForgeDirection.DOWN, x, y);
 		return new Object[] { camera.getDistance() };
 	}

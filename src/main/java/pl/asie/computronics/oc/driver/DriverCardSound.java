@@ -67,7 +67,7 @@ public class DriverCardSound extends ManagedEnvironment implements DeviceInfo, I
 		this.host = host;
 		this.setNode(Network.newNode(this, Visibility.Neighbors).
 			withComponent("sound").
-			withConnector(Config.SOUND_ENERGY_COST * 42).
+			withConnector().
 			create());
 		process = new AudioUtil.AudioProcess(Config.SOUND_CARD_CHANNEL_COUNT);
 

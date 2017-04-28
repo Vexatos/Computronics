@@ -29,7 +29,7 @@ import java.util.Set;
 public class TileRadar extends TileEntityPeripheralBase implements IBatteryProvider {
 
 	public TileRadar() {
-		super("radar", Config.RADAR_ENERGY_COST_OC * Config.RADAR_RANGE * 3.5);
+		super("radar");
 		this.registerBattery(new BatteryBasic(EnergyConverter.convertEnergy(Config.RADAR_ENERGY_COST_OC * Config.RADAR_RANGE * 3.5, "OC", "RF")));
 	}
 
@@ -85,8 +85,8 @@ public class TileRadar extends TileEntityPeripheralBase implements IBatteryProvi
 		if(((Connector) node()).tryChangeBuffer(0 - energyNeeded)
 			|| extractFromBattery(energyNeeded)) {
 			AxisAlignedBB bounds = getBounds(distance);
-			entities.addAll(RadarUtils.getEntities(worldObj, xCoord, yCoord, zCoord, bounds, EntityPlayer.class));
-			entities.addAll(RadarUtils.getEntities(worldObj, xCoord, yCoord, zCoord, bounds, EntityLiving.class));
+			entities.addAll(RadarUtils.getEntities(worldObj, xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, bounds, EntityPlayer.class));
+			entities.addAll(RadarUtils.getEntities(worldObj, xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, bounds, EntityLiving.class));
 			context.pause(0.5);
 		}
 		// The returned array is treated as a tuple, meaning if we return the
@@ -107,7 +107,7 @@ public class TileRadar extends TileEntityPeripheralBase implements IBatteryProvi
 		if(((Connector) node()).tryChangeBuffer(0 - energyNeeded)
 			|| extractFromBattery(energyNeeded)) {
 			AxisAlignedBB bounds = getBounds(distance);
-			entities.addAll(RadarUtils.getEntities(worldObj, xCoord, yCoord, zCoord, bounds, EntityPlayer.class));
+			entities.addAll(RadarUtils.getEntities(worldObj, xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, bounds, EntityPlayer.class));
 			context.pause(0.5);
 		}
 		return new Object[] { TableUtils.convertSetToMap(entities) };
@@ -122,7 +122,7 @@ public class TileRadar extends TileEntityPeripheralBase implements IBatteryProvi
 		if(((Connector) node()).tryChangeBuffer(0 - energyNeeded)
 			|| extractFromBattery(energyNeeded)) {
 			AxisAlignedBB bounds = getBounds(distance);
-			entities.addAll(RadarUtils.getEntities(worldObj, xCoord, yCoord, zCoord, bounds, EntityLiving.class));
+			entities.addAll(RadarUtils.getEntities(worldObj, xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, bounds, EntityLiving.class));
 			context.pause(0.5);
 		}
 		return new Object[] { TableUtils.convertSetToMap(entities) };
@@ -137,7 +137,7 @@ public class TileRadar extends TileEntityPeripheralBase implements IBatteryProvi
 		if(((Connector) node()).tryChangeBuffer(0 - energyNeeded)
 			|| extractFromBattery(energyNeeded)) {
 			AxisAlignedBB bounds = getBounds(distance);
-			entities.addAll(RadarUtils.getItems(worldObj, xCoord, yCoord, zCoord, bounds, EntityItem.class));
+			entities.addAll(RadarUtils.getItems(worldObj, xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, bounds, EntityItem.class));
 			context.pause(0.5);
 		}
 		return new Object[] { TableUtils.convertSetToMap(entities) };

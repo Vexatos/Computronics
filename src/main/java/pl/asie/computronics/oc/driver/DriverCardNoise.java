@@ -37,7 +37,7 @@ public class DriverCardNoise extends DriverCardSoundBase {
 		super(host, "play");
 		this.setNode(Network.newNode(this, Visibility.Neighbors).
 			withComponent("noise").
-			withConnector(Config.SOUND_ENERGY_COST * 42).
+			withConnector().
 			create());
 		channels = new Channel[8];
 		for(int i = 0; i < channels.length; i++) {

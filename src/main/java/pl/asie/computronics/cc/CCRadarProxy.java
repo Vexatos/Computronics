@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class CCRadarProxy {
+
 	private static AxisAlignedBB getBounds(int xCoord, int yCoord, int zCoord, int d) {
 		int distance = Math.min(d, Config.RADAR_RANGE);
 		if(distance < 1) {
@@ -67,13 +68,13 @@ public class CCRadarProxy {
 		AxisAlignedBB bounds = getBounds(xCoord, yCoord, zCoord, distance);
 		Set<Map> entities = new HashSet<Map>();
 		if(method == 0 || method == 1) {
-			entities.addAll(RadarUtils.getEntities(worldObj, xCoord, yCoord, zCoord, bounds, EntityPlayer.class));
+			entities.addAll(RadarUtils.getEntities(worldObj, xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, bounds, EntityPlayer.class));
 		}
 		if(method == 0 || method == 2) {
-			entities.addAll(RadarUtils.getEntities(worldObj, xCoord, yCoord, zCoord, bounds, EntityLiving.class));
+			entities.addAll(RadarUtils.getEntities(worldObj, xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, bounds, EntityLiving.class));
 		}
 		if(method == 3) {
-			entities.addAll(RadarUtils.getItems(worldObj, xCoord, yCoord, zCoord, bounds, EntityItem.class));
+			entities.addAll(RadarUtils.getItems(worldObj, xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, bounds, EntityItem.class));
 		}
 
 		return new Object[] { TableUtils.convertSetToMap(entities) };

@@ -1,7 +1,9 @@
 ==== 1.6.4 ====
 
   * FIXED: Chat Box not respecting range when listening to messages.
-  * FIXED: Particle Card spawning particles slightly offset.
+  * FIXED: Some cards and upgrades working with a minor offset.
+  * FIXED: Items that shouldn't have energy buffers having energy buffers.
+  * FIXED: Sound Card not using any energy.
 
 ==== 1.6.3 ====
 

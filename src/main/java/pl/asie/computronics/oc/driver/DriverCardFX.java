@@ -24,7 +24,7 @@ public class DriverCardFX extends ManagedEnvironment implements DeviceInfo {
 		this.container = container;
 		this.setNode(Network.newNode(this, Visibility.Neighbors).
 			withComponent("particle").
-			withConnector(Config.FX_ENERGY_COST * 32).
+			withConnector().
 			create());
 	}
 

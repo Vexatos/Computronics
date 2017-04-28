@@ -22,7 +22,7 @@ public class DriverCardBeep extends DriverCardSoundBase {
 		super(host, "beep");
 		this.setNode(Network.newNode(this, Visibility.Neighbors).
 			withComponent("beep").
-			withConnector(Config.SOUND_ENERGY_COST * 42).
+			withConnector().
 			create());
 	}
 
