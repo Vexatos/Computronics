@@ -4,6 +4,7 @@
   * FIXED: Some cards and upgrades working with a minor offset.
   * FIXED: Items that shouldn't have energy buffers having energy buffers.
   * FIXED: Sound Card not using any energy.
+  * FIXED: Camera not returning quite the correct distance.
 
 ==== 1.6.3 ====
 

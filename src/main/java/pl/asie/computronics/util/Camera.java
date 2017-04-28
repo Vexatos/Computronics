@@ -24,13 +24,15 @@ public class Camera {
 			yDirection = y;
 			zDirection = 0.0F;
 
+			double oxOffset = 0, oyOffset = 0, ozOffset = 0;
+
 			switch(dir) {
-				case EAST: { xDirection = 1.0F; zDirection = -x; xCoord += 0.6F; } break;
-				case NORTH: { zDirection = -1.0F; xDirection = x; zCoord -= 0.6F; } break;
-				case SOUTH: { zDirection = 1.0F; xDirection = -x; zCoord += 0.6F; } break;
-				case WEST: { xDirection = -1.0F; zDirection = x; xCoord -= 0.6F; } break;
-				case DOWN: { yDirection = -1.0F; xDirection = x; zDirection = y; yCoord -= 0.6F; } break;
-				case UP: { yDirection = 1.0F; xDirection = x; zDirection = y; yCoord += 0.6F; } break;
+				case EAST: { xDirection = 1.0F; zDirection = -x; xCoord += 0.6; oxOffset = -0.1; } break;
+				case NORTH: { zDirection = -1.0F; xDirection = x; zCoord -= 0.6; ozOffset = 0.1; } break;
+				case SOUTH: { zDirection = 1.0F; xDirection = -x; zCoord += 0.6; ozOffset = -0.1; } break;
+				case WEST: { xDirection = -1.0F; zDirection = x; xCoord -= 0.6; oxOffset = 0.1; } break;
+				case DOWN: { yDirection = -1.0F; xDirection = x; zDirection = y; yCoord -= 0.6; oyOffset = 0.1; } break;
+				case UP: { yDirection = 1.0F; xDirection = x; zDirection = y; yCoord += 0.6; oyOffset = -0.1; } break;
 				case UNKNOWN: return false;
 				default: return false;
 			}
@@ -47,13 +49,16 @@ public class Camera {
 
 			// shoot ray
 			float steps = Config.CAMERA_DISTANCE;
-			Vec3 origin = Vec3.createVectorHelper(oxPos, oyPos, ozPos);
+			Vec3 origin = Vec3.createVectorHelper(xPos, yPos, zPos);
 			Vec3 target = Vec3.createVectorHelper(xPos + (xDirection * steps), yPos + (yDirection * steps), zPos + (zDirection * steps));
 			MovingObjectPosition mop = world.rayTraceBlocks(origin, target);
 			if(mop !=  null) {
-				xPos = (float)mop.hitVec.xCoord;
-				yPos = (float)mop.hitVec.yCoord;
-				zPos = (float)mop.hitVec.zCoord;
+				xPos = mop.hitVec.xCoord;
+				yPos = mop.hitVec.yCoord;
+				zPos = mop.hitVec.zCoord;
+				oxPos += oxOffset;
+				oyPos += oyOffset;
+				ozPos += ozOffset;
 				switch(mop.typeOfHit) {
 					case ENTITY: {
 							hit = mop.entityHit;
