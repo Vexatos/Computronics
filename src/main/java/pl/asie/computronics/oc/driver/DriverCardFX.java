@@ -51,9 +51,9 @@ public class DriverCardFX extends ManagedEnvironment implements DeviceInfo {
 		double zOffset = args.checkDouble(3);
 		if(((Connector) this.node()).tryChangeBuffer(0 - Config.FX_ENERGY_COST)) {
 			Random rng = container.world().rand;
-			double x = container.xPosition() + 0.5 + xOffset;
-			double y = container.yPosition() + 0.5 + yOffset;
-			double z = container.zPosition() + 0.5 + zOffset;
+			double x = container.xPosition() + xOffset;
+			double y = container.yPosition() + yOffset;
+			double z = container.zPosition() + zOffset;
 			double defaultv = (rng.nextDouble() * 0.1);
 			if(args.count() >= 5) {
 				defaultv = args.checkDouble(4);
