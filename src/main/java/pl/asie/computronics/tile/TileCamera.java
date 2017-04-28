@@ -48,7 +48,7 @@ public class TileCamera extends TileEntityPeripheralBase {
 	public void updateEntity() {
 		super.updateEntity();
 		if(tick % 20 == 0 && Config.REDSTONE_REFRESH) {
-			cameraRedstone.ray(worldObj, xCoord + 0.5F, yCoord + 0.5F, zCoord + 0.5F, getFacingDirection(), 0.0f, 0.0f);
+			cameraRedstone.ray(worldObj,xCoord, yCoord, zCoord, getFacingDirection(), 0.0f, 0.0f);
 			this.worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, this.getBlockType());
 		}
 		tick++;
@@ -77,7 +77,7 @@ public class TileCamera extends TileEntityPeripheralBase {
 			x = (float) args.checkDouble(0);
 			y = (float) args.checkDouble(1);
 		}
-		camera.ray(worldObj, xCoord + 0.5F, yCoord + 0.5F, zCoord + 0.5F, getFacingDirection(), x, y);
+		camera.ray(worldObj, xCoord, yCoord, zCoord, getFacingDirection(), x, y);
 		return new Object[] { camera.getDistance() };
 	}
 
@@ -106,7 +106,7 @@ public class TileCamera extends TileEntityPeripheralBase {
 					y = ((Double) arguments[1]).floatValue();
 					//};
 				}
-				camera.ray(worldObj, xCoord + 0.5F, yCoord + 0.5F, zCoord + 0.5F, getFacingDirection(), x, y);
+				camera.ray(worldObj, xCoord, yCoord, zCoord, getFacingDirection(), x, y);
 				return new Object[] { camera.getDistance() };
 			}
 		}
