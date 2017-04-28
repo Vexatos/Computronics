@@ -1,6 +1,7 @@
 ==== 1.6.4 ====
 
   * FIXED: Chat Box not respecting range when listening to messages.
+  * FIXED: Particle Card spawning particles slightly offset.
 
 ==== 1.6.3 ====
 
