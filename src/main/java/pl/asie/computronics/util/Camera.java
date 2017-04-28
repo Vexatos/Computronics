@@ -10,14 +10,15 @@ import pl.asie.computronics.reference.Config;
 public class Camera {
 
 	private World world;
-	private float oxPos, oyPos, ozPos, xPos, yPos, zPos, xDirection, yDirection, zDirection;
+	private float xDirection, yDirection, zDirection;
+	private double oxPos, oyPos, ozPos, xPos, yPos, zPos;
 	private Object hit;
 
 	public Camera() {
 		// not initialized
 	}
 
-	public boolean ray(World worldObj, float xCoord, float yCoord, float zCoord, EnumFacing dir, float x, float y) {
+	public boolean ray(World worldObj, double xCoord, double yCoord, double zCoord, EnumFacing dir, float x, float y) {
 		hit = null;
 		if(x < -1.0F || x > 1.0F || y < -1.0F || y > 1.0F) {
 			return false;
@@ -27,52 +28,61 @@ public class Camera {
 			yDirection = y;
 			zDirection = 0.0F;
 
+
+			double oxOffset = 0, oyOffset = 0, ozOffset = 0;
+
 			switch(dir) {
 				case EAST: {
 					xDirection = 1.0F;
 					zDirection = -x;
-					xCoord += 0.6F;
+					xCoord += 0.6;
+					oxOffset = -0.1;
 				}
 				break;
 				case NORTH: {
 					zDirection = -1.0F;
 					xDirection = x;
-					zCoord -= 0.6F;
+					zCoord -= 0.6;
+					ozOffset = 0.1;
 				}
 				break;
 				case SOUTH: {
 					zDirection = 1.0F;
 					xDirection = -x;
-					zCoord += 0.6F;
+					zCoord += 0.6;
+					ozOffset = -0.1;
 				}
 				break;
 				case WEST: {
 					xDirection = -1.0F;
 					zDirection = x;
-					xCoord -= 0.6F;
+					xCoord -= 0.6;
+					oxOffset = 0.1;
 				}
 				break;
 				case DOWN: {
 					yDirection = -1.0F;
 					xDirection = x;
 					zDirection = y;
-					yCoord -= 0.6F;
+					yCoord -= 0.6;
+					oyOffset = 0.1;
 				}
 				break;
 				case UP: {
 					yDirection = 1.0F;
 					xDirection = x;
 					zDirection = y;
-					yCoord += 0.6F;
+					yCoord += 0.6;
+					oyOffset = -0.1;
 				}
 				break;
 				default:
 					return false;
 			}
 			world = worldObj;
-			xPos = xCoord + 0.5f;
-			yPos = yCoord + 0.5f;
-			zPos = zCoord + 0.5f;
+			xPos = xCoord;
+			yPos = yCoord;
+			zPos = zCoord;
 			oxPos = xPos;
 			oyPos = yPos;
 			ozPos = zPos;
@@ -85,13 +95,16 @@ public class Camera {
 
 			// shoot ray
 			float steps = Config.CAMERA_DISTANCE;
-			Vec3d origin = new Vec3d(oxPos, oyPos, ozPos);
+			Vec3d origin = new Vec3d(xPos, yPos, zPos);
 			Vec3d target = new Vec3d(xPos + (xDirection * steps), yPos + (yDirection * steps), zPos + (zDirection * steps));
 			RayTraceResult mop = world.rayTraceBlocks(origin, target);
 			if(mop != null) {
-				xPos = (float) mop.hitVec.xCoord;
-				yPos = (float) mop.hitVec.yCoord;
-				zPos = (float) mop.hitVec.zCoord;
+				xPos = mop.hitVec.xCoord;
+				yPos = mop.hitVec.yCoord;
+				zPos = mop.hitVec.zCoord;
+				oxPos += oxOffset;
+				oyPos += oyOffset;
+				ozPos += ozOffset;
 				switch(mop.typeOfHit) {
 					case ENTITY: {
 						hit = mop.entityHit;
