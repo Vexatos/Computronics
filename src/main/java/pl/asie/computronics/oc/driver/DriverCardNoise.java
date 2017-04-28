@@ -174,7 +174,7 @@ public class DriverCardNoise extends DriverCardSoundBase {
 			}
 			longest = Math.max(longest, Math.max(50, Math.min(5000, (totalDelay / 1000D))));
 		}
-		Object[] error = tryConsumeEnergy(Config.SOUND_ENERGY_COST * getNonNullCount(channelSendBuffer) * longest, "process");
+		Object[] error = tryConsumeEnergy(Config.BEEP_ENERGY_COST * getNonNullCount(channelSendBuffer) * longest, "process");
 		if(error != null) {
 			channelSendBuffer = null;
 			return error;
@@ -241,7 +241,7 @@ public class DriverCardNoise extends DriverCardSoundBase {
 				freqPairs[index] = new Channel.FreqPair(frequency, durationInMilliseconds);
 			}
 		}
-		return tryQueueSound(freqPairs, new Object[] { true }, Config.SOUND_ENERGY_COST * getNonNullCount(freqPairs) * (longest / 1000D), playMethodName);
+		return tryQueueSound(freqPairs, new Object[] { true }, Config.BEEP_ENERGY_COST * getNonNullCount(freqPairs) * (longest / 1000D), playMethodName);
 	}
 
 	@Override

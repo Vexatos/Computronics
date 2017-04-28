@@ -26,7 +26,8 @@ public class Config {
 	public static double RADAR_ENERGY_COST_OC = 5.0;
 	public static double RADAR_CC_TIME = 0.5;
 	public static double FX_ENERGY_COST = 0.2;
-	public static double SOUND_ENERGY_COST = 1.0;
+	public static double BEEP_ENERGY_COST = 1.0;
+	public static double SOUND_CARD_ENERGY_COST = 1.0;
 	public static double SPOOFING_ENERGY_COST = 0.2;
 	public static double COLORFUL_UPGRADE_COLOR_CHANGE_COST = 0.2;
 	public static double LIGHT_BOARD_COLOR_CHANGE_COST = 0.2;
@@ -158,8 +159,11 @@ public class Config {
 			SPOOFING_ENERGY_COST = convertRFtoOC(
 				config.getFloat("ocSpoofingCardCostPerMessage", "power", 2.0f, 0.0f, 10000.0f, "How much energy sending one spoofed message should take"));
 			// Beep Card
-			SOUND_ENERGY_COST = convertRFtoOC(
+			BEEP_ENERGY_COST = convertRFtoOC(
 				config.getFloat("ocBeepCardCostPerSound", "power", 10.0f, 0.0f, 10000.0f, "How much energy a single beep will cost for 1 second"));
+			// Sound Card
+			SOUND_CARD_ENERGY_COST = convertRFtoOC(
+				config.getFloat("ocSoundCardCostPerSecond", "power", 10.0f, 0.0f, 10000.0f, "How much energy the sound card will consume per second of processed sound."));
 			// Colorful Upgrade
 			COLORFUL_UPGRADE_COLOR_CHANGE_COST = convertRFtoOC(
 				config.getFloat("ocColorfulUpgradeColorChangeCost", "power", 2.0f, 0.0f, 10000.0f, "How much energy changing the color of the Colorful Upgrade will cost"));
