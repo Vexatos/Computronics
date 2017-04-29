@@ -265,6 +265,7 @@ public class DriverCardSound extends ManagedEnvironmentWithComponentConnector im
 		buildDelay = 0;
 		if(codecId != null) {
 			AudioUtils.removePlayer(Computronics.opencomputers.managerId, codecId);
+			codecId = null;
 		}
 	}
 
@@ -451,10 +452,13 @@ public class DriverCardSound extends ManagedEnvironmentWithComponentConnector im
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] process(Context context, Arguments args) {
 		synchronized(buildBuffer) {
-			if(buildBuffer.size() == 0) {
-				return new Object[] { true };
-			}
 			if(nextBuffer != null && nextBuffer.isEmpty()) {
+				if(buildBuffer.size() == 0) {
+					if(codecId != null) {
+						return new Object[] { false, System.currentTimeMillis() - timeout };
+					}
+					return new Object[] { true };
+				}
 				if(!node.tryChangeBuffer(-Config.SOUND_CARD_ENERGY_COST * (buildDelay / 1000D))) {
 					return new Object[] { false, "not enough energy" };
 				}
@@ -469,7 +473,7 @@ public class DriverCardSound extends ManagedEnvironmentWithComponentConnector im
 				}
 				return new Object[] { true };
 			} else {
-				return new Object[] { false, timeout };
+				return new Object[] { false, System.currentTimeMillis() - timeout };
 			}
 		}
 	}

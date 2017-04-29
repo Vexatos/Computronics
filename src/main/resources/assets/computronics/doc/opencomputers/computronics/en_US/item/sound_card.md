@@ -10,3 +10,27 @@ The sound card works on an instruction-based system. Using the various functions
 All channels are closed by default, and one needs to open them with the corresponding instructions. When closed, they will generally not generate sound (unless ADSR is assigned, in that case it will initiate the release phase).
 
 To actually generate sound for a certain amount of time, a Delay instruction may be used, allowing all the settings changed through previous instructions to apply. All durations are given in milliseconds, allowing for high resolution synthesis. Once all the needed instructions are added to the queue, `process()` may be called to process all the instructions and generate sound.
+
+Example:
+
+`  local sound = require("component").sound`
+
+`  sound.setWave(1, sound.modes.sine)`
+`  sound.setFrequency(1, 440)`
+`  sound.open(1)`
+`  sound.delay(1000)`
+`  sound.close(1)`
+`  sound.process()`
+
+This opens the first channel so it can generate sound during delays and makes it generate a sine wave at 440Hz (equating the note A4) before closing it again. 
+
+`  sound.setWave(2, sound.modes.noise)`
+`  sound.setFrequency(2, 440)`
+`  sound.setVolume(2, 0.6)`
+`  sound.setADSR(2, 0, 250, 0, 0)`
+`  sound.open(2)`
+`  sound.delay(1500)`
+`  sound.close(2)`
+`  sound.process()`
+
+This opens the second channel and makes it produce white noise at 440Hz, with reduced volume and ADSR making the volume drop from the set volume to 0 within 250ms.  
