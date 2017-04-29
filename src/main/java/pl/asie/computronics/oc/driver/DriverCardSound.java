@@ -454,9 +454,6 @@ public class DriverCardSound extends ManagedEnvironmentWithComponentConnector im
 		synchronized(buildBuffer) {
 			if(nextBuffer != null && nextBuffer.isEmpty()) {
 				if(buildBuffer.size() == 0) {
-					if(codecId != null) {
-						return new Object[] { false, System.currentTimeMillis() - timeout };
-					}
 					return new Object[] { true };
 				}
 				if(!node.tryChangeBuffer(-Config.SOUND_CARD_ENERGY_COST * (buildDelay / 1000D))) {
