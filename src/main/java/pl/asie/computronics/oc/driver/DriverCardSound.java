@@ -59,7 +59,6 @@ import java.util.ArrayDeque;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 import java.util.WeakHashMap;
@@ -70,7 +69,7 @@ import static pl.asie.computronics.reference.Capabilities.AUDIO_SOURCE_CAPABILIT
 /**
  * @author Vexatos, gamax92
  */
-public class DriverCardSound extends AbstractManagedEnvironment implements DeviceInfo, IAudioSource, ICapabilityProvider {
+public class DriverCardSound extends ManagedEnvironmentWithComponentConnector implements IAudioSource, ICapabilityProvider {
 
 	protected final EnvironmentHost host;
 
@@ -78,7 +77,7 @@ public class DriverCardSound extends AbstractManagedEnvironment implements Devic
 		this.host = host;
 		this.setNode(Network.newNode(this, Visibility.Neighbors).
 			withComponent("sound").
-			withConnector(Config.SOUND_ENERGY_COST * 42).
+			withConnector().
 			create());
 		process = new AudioUtil.AudioProcess(Config.SOUND_CARD_CHANNEL_COUNT);
 
@@ -459,6 +458,9 @@ public class DriverCardSound extends AbstractManagedEnvironment implements Devic
 				return new Object[] { true };
 			}
 			if(nextBuffer != null && nextBuffer.isEmpty()) {
+				if(!node.tryChangeBuffer(-Config.SOUND_CARD_ENERGY_COST * (buildDelay / 1000D))) {
+					return new Object[] { false, "not enough energy" };
+				}
 				synchronized(nextBuffer) {
 					nextBuffer.addAll(new ArrayDeque<Instruction>(buildBuffer));
 				}
@@ -582,18 +584,13 @@ public class DriverCardSound extends AbstractManagedEnvironment implements Devic
 		return codecId;
 	}
 
-	protected Map<String, String> deviceInfo;
-
 	@Override
-	public Map<String, String> getDeviceInfo() {
-		if(deviceInfo == null) {
-			return deviceInfo = new OCUtils.Device(
-				DeviceClass.Multimedia,
-				"Audio interface",
-				OCUtils.Vendors.Yanaki,
-				"MinoSound 244-X"
-			).deviceInfo();
-		}
-		return deviceInfo;
+	protected OCUtils.Device deviceInfo() {
+		return new OCUtils.Device(
+			DeviceClass.Multimedia,
+			"Audio interface",
+			OCUtils.Vendors.Yanaki,
+			"MinoSound 244-X"
+		);
 	}
 }

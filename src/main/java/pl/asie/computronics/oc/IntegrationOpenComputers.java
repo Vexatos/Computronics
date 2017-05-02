@@ -302,7 +302,7 @@ public class IntegrationOpenComputers {
 				RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 0),
 					"idi", "mcm", "ibi",
 					'c', camera,
-					'd', "oc:materialCircuitBoard",
+					'd', "oc:materialTransistor",
 					'm', "oc:circuitChip2",
 					'i', "ingotIron",
 					'b', "oc:materialCircuitBoardPrinted"
