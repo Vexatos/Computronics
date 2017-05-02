@@ -125,7 +125,7 @@ public class BlockChatBox extends BlockPeripheral implements IBlockWithSpecialTe
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean wat) {
+	public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean wat) {
 		if(stack.getItemDamage() >= 8) {
 			list.add(TextFormatting.GRAY + StringUtil.localize("tooltip.computronics.chatBox.creative"));
 		}
