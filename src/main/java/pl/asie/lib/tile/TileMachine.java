@@ -190,18 +190,18 @@ public class TileMachine extends TileEntityBase implements
 
 	@Override
 	public ItemStack decrStackSize(int slot, int amount) {
-		if(this.items != null && this.items[slot] != null) {
+		if(this.items != null && !this.items[slot].isEmpty()) {
 			ItemStack stack;
 			if(this.items[slot].getCount() <= amount) {
 				stack = this.items[slot];
-				this.items[slot] = null;
+				this.items[slot] = ItemStack.EMPTY;
 				this.onSlotUpdate(slot);
 				return stack;
 			} else {
 				stack = this.items[slot].splitStack(amount);
 
 				if(this.items[slot].getCount() == 0) {
-					this.items[slot] = null;
+					this.items[slot] = ItemStack.EMPTY;
 				}
 
 				this.onSlotUpdate(slot);
