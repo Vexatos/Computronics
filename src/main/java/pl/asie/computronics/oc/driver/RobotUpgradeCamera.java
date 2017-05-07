@@ -11,6 +11,7 @@ import li.cil.oc.api.network.Visibility;
 import li.cil.oc.api.prefab.ManagedEnvironment;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.tileentity.TileEntity;
 import pl.asie.computronics.util.Camera;
 import pl.asie.computronics.util.OCUtils;
 
@@ -48,7 +49,7 @@ public class RobotUpgradeCamera extends ManagedEnvironment implements DeviceInfo
 			y = (float) args.checkDouble(1);
 		}
 		camera.ray(entity.world(), entity.xPosition(), entity.yPosition(), entity.zPosition(),
-			getFacingDirection(), x, y);
+			getFacingDirection(), x, y, entity instanceof TileEntity);
 		return new Object[] { camera.getDistance() };
 	}
 
@@ -63,7 +64,7 @@ public class RobotUpgradeCamera extends ManagedEnvironment implements DeviceInfo
 			y = (float) args.checkDouble(1);
 		}
 		camera.ray(entity.world(), entity.xPosition(), entity.yPosition(), entity.zPosition(),
-			EnumFacing.UP, x, y);
+			EnumFacing.UP, x, y, entity instanceof TileEntity);
 		return new Object[] { camera.getDistance() };
 	}
 
@@ -78,7 +79,7 @@ public class RobotUpgradeCamera extends ManagedEnvironment implements DeviceInfo
 			y = (float) args.checkDouble(1);
 		}
 		camera.ray(entity.world(), entity.xPosition(), entity.yPosition(), entity.zPosition(),
-			EnumFacing.DOWN, x, y);
+			EnumFacing.DOWN, x, y, entity instanceof TileEntity);
 		return new Object[] { camera.getDistance() };
 	}
 
