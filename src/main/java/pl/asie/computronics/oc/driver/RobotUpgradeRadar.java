@@ -45,8 +45,8 @@ public class RobotUpgradeRadar extends AbstractManagedEnvironment implements Dev
 			distance = 1;
 		}
 		return new AxisAlignedBB(
-			container.xPosition() - 0.5, container.yPosition() - 0.5, container.zPosition() - 0.5, container.xPosition() + 0.5, container.yPosition() + 0.5, container.zPosition() + 0.5
-		).expand(distance, distance, distance);
+			container.xPosition() - 0.5, container.yPosition() - 0.5, container.zPosition() - 0.5, container.xPosition() + 0.5, container.yPosition() + 0.5, container.zPosition() + 0.5).
+			expand(distance, distance, distance);
 	}
 
 	@Callback(doc = "function([distance:number]):table; Returns a list of all entities detected within the specified or the maximum range", direct = true, limit = CALL_LIMIT)

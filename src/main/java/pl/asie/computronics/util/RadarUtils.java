@@ -20,12 +20,12 @@ public class RadarUtils {
 		return getEntities(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, bounds, eClass);
 	}
 
-	public static Set<Map<String, Object>> getEntities(World world, double x, double y, double z, AxisAlignedBB bounds, Class<? extends EntityLivingBase> eClass) {
+	public static Set<Map<String, Object>> getEntities(World world, double xCoord, double yCoord, double zCoord, AxisAlignedBB bounds, Class<? extends EntityLivingBase> eClass) {
 		Set<Map<String, Object>> entities = new HashSet<Map<String, Object>>();
 		for(EntityLivingBase entity : world.getEntitiesWithinAABB(eClass, bounds)) {
-			double dx = entity.posX - x;
-			double dy = entity.posY - y;
-			double dz = entity.posZ - z;
+			double dx = entity.posX - xCoord;
+			double dy = entity.posY - yCoord;
+			double dz = entity.posZ - zCoord;
 			if(Math.sqrt(dx * dx + dy * dy + dz * dz) < Config.RADAR_RANGE) {
 				// Maps are converted to tables on the Lua side.
 				Map<String, Object> entry = new HashMap<String, Object>();
@@ -46,12 +46,12 @@ public class RadarUtils {
 		return getItems(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, bounds, eClass);
 	}
 
-	public static Set<Map<String, Object>> getItems(World world, double x, double y, double z, AxisAlignedBB bounds, Class<? extends EntityItem> eClass) {
+	public static Set<Map<String, Object>> getItems(World world, double xCoord, double yCoord, double zCoord, AxisAlignedBB bounds, Class<? extends EntityItem> eClass) {
 		Set<Map<String, Object>> entities = new HashSet<Map<String, Object>>();
 		for(EntityItem entity : world.getEntitiesWithinAABB(eClass, bounds)) {
-			double dx = entity.posX - x;
-			double dy = entity.posY - y;
-			double dz = entity.posZ - z;
+			double dx = entity.posX - xCoord;
+			double dy = entity.posY - yCoord;
+			double dz = entity.posZ - zCoord;
 			if(Math.sqrt(dx * dx + dy * dy + dz * dz) < Config.RADAR_RANGE) {
 				// Maps are converted to tables on the Lua side.
 				Map<String, Object> entry = new HashMap<String, Object>();

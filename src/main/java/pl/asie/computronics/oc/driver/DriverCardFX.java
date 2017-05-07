@@ -47,9 +47,9 @@ public class DriverCardFX extends AbstractManagedEnvironment implements DeviceIn
 		if(particle == null) {
 			return new Object[] { false, "invalid particle type" };
 		}
-		double xOffset = MathHelper.clamp_double(args.checkDouble(1), -65536D, 65536D);
-		double yOffset = MathHelper.clamp_double(args.checkDouble(2), -65536D, 65536D);
-		double zOffset = MathHelper.clamp_double(args.checkDouble(3), -65536D, 65536D);
+		double xOffset = MathHelper.clamp(args.checkDouble(1), -65536D, 65536D);
+		double yOffset = MathHelper.clamp(args.checkDouble(2), -65536D, 65536D);
+		double zOffset = MathHelper.clamp(args.checkDouble(3), -65536D, 65536D);
 		double distance = Math.sqrt(xOffset * xOffset + yOffset * yOffset + zOffset * zOffset);
 		if(Config.FX_RANGE >= 0 && distance > Config.FX_RANGE) {
 			return new Object[] { false, "out of range" };

@@ -66,9 +66,9 @@ public class ParticleTurtleUpgrade extends TurtleUpgradeBase {
 				return new Object[] { false, "invalid particle type" };
 			}
 
-			double xOffset = MathHelper.clamp_double((Double) arguments[1], -65536D, 65536D);
-			double yOffset = MathHelper.clamp_double((Double) arguments[2], -65536D, 65536D);
-			double zOffset = MathHelper.clamp_double((Double) arguments[3], -65536D, 65536D);
+			double xOffset = MathHelper.clamp((Double) arguments[1], -65536D, 65536D);
+			double yOffset = MathHelper.clamp((Double) arguments[2], -65536D, 65536D);
+			double zOffset = MathHelper.clamp((Double) arguments[3], -65536D, 65536D);
 			if(Config.FX_RANGE >= 0 && xOffset * xOffset + yOffset * yOffset + zOffset * zOffset > Config.FX_RANGE * Config.FX_RANGE) {
 				return new Object[] { false, "out of range" };
 			}
