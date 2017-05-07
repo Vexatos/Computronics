@@ -22,7 +22,7 @@ public class DriverCardBeep extends DriverCardSoundBase {
 		super(host, "beep");
 		this.setNode(Network.newNode(this, Visibility.Neighbors).
 			withComponent("beep").
-			withConnector(Config.SOUND_ENERGY_COST * 42).
+			withConnector().
 			create());
 	}
 
@@ -75,7 +75,7 @@ public class DriverCardBeep extends DriverCardSoundBase {
 				}
 			}
 		}
-		return tryQueueSound(freqPairs, new Object[] { true }, Config.SOUND_ENERGY_COST * getNonNullCount(freqPairs) * (longest / 1000D), playMethodName);
+		return tryQueueSound(freqPairs, new Object[] { true }, Config.BEEP_ENERGY_COST * getNonNullCount(freqPairs) * (longest / 1000D), playMethodName);
 	}
 
 	@Override

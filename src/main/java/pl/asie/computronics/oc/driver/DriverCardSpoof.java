@@ -30,7 +30,7 @@ public class DriverCardSpoof extends NetworkCard {
 		this.container = container;
 		this.setNode(Network.newNode(this, Visibility.Network)
 			.withComponent("modem", Visibility.Neighbors)
-			.withConnector(Config.SPOOFING_ENERGY_COST * 10)
+			.withConnector()
 			.create());
 	}
 
