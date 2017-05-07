@@ -29,7 +29,7 @@ import java.util.Set;
 public class TileRadar extends TileEntityPeripheralBase implements IBatteryProvider {
 
 	public TileRadar() {
-		super("radar", Config.RADAR_ENERGY_COST_OC * Config.RADAR_RANGE * 3.5);
+		super("radar");
 	}
 
 	private int getDistance(Arguments args) {

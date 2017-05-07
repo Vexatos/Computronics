@@ -45,8 +45,8 @@ public class RobotUpgradeRadar extends ManagedEnvironment implements DeviceInfo 
 			distance = 1;
 		}
 		return new AxisAlignedBB(
-			(float) container.xPosition(), (float) container.yPosition(), (float) container.zPosition(), (float) container.xPosition() + 1, (float) container.yPosition() + 1, (float) container.zPosition() + 1
-		).expand(distance, distance, distance);
+			container.xPosition() - 0.5, container.yPosition() - 0.5, container.zPosition() - 0.5, container.xPosition() + 0.5, container.yPosition() + 0.5, container.zPosition() + 0.5).
+			expand(distance, distance, distance);
 	}
 
 	@Callback(doc = "function([distance:number]):table; Returns a list of all entities detected within the specified or the maximum range", direct = true, limit = CALL_LIMIT)
@@ -74,7 +74,7 @@ public class RobotUpgradeRadar extends ManagedEnvironment implements DeviceInfo 
 		int distance = getDistance(args);
 		if(((Connector) this.node()).tryChangeBuffer(0 - (Config.RADAR_ENERGY_COST_OC * distance * 1.0))) {
 			AxisAlignedBB bounds = getBounds(distance);
-			entities.addAll(RadarUtils.getEntities(container.world(), (int) container.xPosition(), (int) container.yPosition(), (int) container.zPosition(), bounds, EntityPlayer.class));
+			entities.addAll(RadarUtils.getEntities(container.world(), container.xPosition(), container.yPosition(), container.zPosition(), bounds, EntityPlayer.class));
 			context.pause(0.5);
 		}
 		return new Object[] { entities.toArray() };
@@ -86,7 +86,7 @@ public class RobotUpgradeRadar extends ManagedEnvironment implements DeviceInfo 
 		int distance = getDistance(args);
 		if(((Connector) this.node()).tryChangeBuffer(0 - (Config.RADAR_ENERGY_COST_OC * distance * 1.0))) {
 			AxisAlignedBB bounds = getBounds(distance);
-			entities.addAll(RadarUtils.getEntities(container.world(), (int) container.xPosition(), (int) container.yPosition(), (int) container.zPosition(), bounds, EntityLiving.class));
+			entities.addAll(RadarUtils.getEntities(container.world(), container.xPosition(), container.yPosition(), container.zPosition(), bounds, EntityLiving.class));
 			context.pause(0.5);
 		}
 		return new Object[] { entities.toArray() };
@@ -98,7 +98,7 @@ public class RobotUpgradeRadar extends ManagedEnvironment implements DeviceInfo 
 		int distance = getDistance(args);
 		if(((Connector) this.node()).tryChangeBuffer(0 - (Config.RADAR_ENERGY_COST_OC * distance * 2.0))) {
 			AxisAlignedBB bounds = getBounds(distance);
-			entities.addAll(RadarUtils.getItems(container.world(), (int) container.xPosition(), (int) container.yPosition(), (int) container.zPosition(), bounds, EntityItem.class));
+			entities.addAll(RadarUtils.getItems(container.world(), container.xPosition(), container.yPosition(), container.zPosition(), bounds, EntityItem.class));
 			context.pause(0.5);
 		}
 		return new Object[] { entities.toArray() };
