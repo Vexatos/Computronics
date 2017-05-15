@@ -48,7 +48,7 @@ public class TileCamera extends TileEntityPeripheralBase {
 	public void updateEntity() {
 		super.updateEntity();
 		if(tick % 20 == 0 && Config.REDSTONE_REFRESH) {
-			cameraRedstone.ray(worldObj, xCoord, yCoord, zCoord, getFacingDirection(), 0.0f, 0.0f);
+			cameraRedstone.ray(worldObj,xCoord, yCoord, zCoord, getFacingDirection(), 0.0f, 0.0f);
 			this.worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, this.getBlockType());
 		}
 		tick++;

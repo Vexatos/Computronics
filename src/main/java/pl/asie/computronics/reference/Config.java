@@ -18,6 +18,7 @@ public class Config {
 	public static int TAPEDRIVE_DISTANCE = 24;
 	public static int TAPEDRIVE_BUFFER_MS = 750;
 	public static int RADAR_RANGE = 8;
+	public static int FX_RANGE = 256;
 	public static boolean RADAR_ONLY_DISTANCE = true;
 	public static boolean CIPHER_CAN_LOCK = true;
 	public static double CIPHER_ENERGY_STORAGE = 1600.0;
@@ -26,7 +27,8 @@ public class Config {
 	public static double RADAR_ENERGY_COST_OC = 5.0;
 	public static double RADAR_CC_TIME = 0.5;
 	public static double FX_ENERGY_COST = 0.2;
-	public static double SOUND_ENERGY_COST = 1.0;
+	public static double BEEP_ENERGY_COST = 1.0;
+	public static double SOUND_CARD_ENERGY_COST = 1.0;
 	public static double SPOOFING_ENERGY_COST = 0.2;
 	public static double COLORFUL_UPGRADE_COLOR_CHANGE_COST = 0.2;
 	public static double LIGHT_BOARD_COLOR_CHANGE_COST = 0.2;
@@ -50,6 +52,9 @@ public class Config {
 	public static int SOUND_CARD_MAX_DELAY = 5000; // TODO
 	public static int SOUND_CARD_QUEUE_SIZE = 1024; // TODO
 	public static int SOUND_CARD_CHANNEL_COUNT = 8; // TODO
+
+	public static boolean TTS_ENABLED;
+	public static int TTS_MAX_LENGTH = 300; // TODO
 
 	public static boolean OC_UPGRADE_CAMERA;
 	public static boolean OC_UPGRADE_CHATBOX;
@@ -113,6 +118,9 @@ public class Config {
 		SOUND_VOLUME = (byte) config.getInt("soundVolume", "sound.client", 127, 0, Byte.MAX_VALUE, "The base volume of generated sounds.");
 		SOUND_RADIUS = config.getInt("soundRadius", "sound.client", 24, 0, 64, "The radius in which generated sounds can be heard.");
 
+		TTS_ENABLED = config.getBoolean("enableTextToSpeech", "tts", true, "Enable Text To Speech. To use it, install MaryTTS, a language and a corresponding voice into the marytts directory of your minecraft instance. For installation instructions, see http://wiki.vex.tty.sh/wiki:computronics:mary");
+		TTS_MAX_LENGTH = config.getInt("maxPhraseLength", "tts", 300, 0, 100000, "The maximum number of text bytes the speech box can process at a time.");
+
 		if(Mods.isLoaded(Mods.OpenComputers)) {
 			//Advanced Cipher Block
 			CIPHER_ENERGY_STORAGE = convertRFtoOC(
@@ -142,17 +150,21 @@ public class Config {
 			if(OC_CARD_SOUND) {
 				SOUND_CARD_MAX_DELAY = config.getInt("ocSoundCardMaxDelay", "sound", SOUND_CARD_MAX_DELAY, 0, Integer.MAX_VALUE, "Maximum delay allowed in a sound card's instruction queue, in milliseconds");
 				SOUND_CARD_QUEUE_SIZE = config.getInt("ocSoundCardQueueSize", "sound", SOUND_CARD_QUEUE_SIZE, 0, Integer.MAX_VALUE, "Maximum  number of instructons allowed in a sound cards instruction queue. This directly affects the maximum size of the packets sent to the client.");
+				SOUND_CARD_CHANNEL_COUNT = config.getInt("ocSoundCardChannelCount", "sound", SOUND_CARD_CHANNEL_COUNT, 1, 65536, "The number of audio channels each sound card has.");
 			}
 
 			// Particle Card
 			FX_ENERGY_COST = convertRFtoOC(
-				config.getFloat("ocParticleCardCostPerParticle", "power", 2.0f, 0.0f, 10000.0f, "How much energy 1 particle emission should take."));
+				config.getFloat("ocParticleCardCostPerParticle", "power", 2.0f, 0.0f, 10000.0f, "How much energy 1 particle emission should take. Multiplied by the distance to the target."));
 			//Spoofing Card
 			SPOOFING_ENERGY_COST = convertRFtoOC(
 				config.getFloat("ocSpoofingCardCostPerMessage", "power", 2.0f, 0.0f, 10000.0f, "How much energy sending one spoofed message should take"));
 			// Beep Card
-			SOUND_ENERGY_COST = convertRFtoOC(
+			BEEP_ENERGY_COST = convertRFtoOC(
 				config.getFloat("ocBeepCardCostPerSound", "power", 10.0f, 0.0f, 10000.0f, "How much energy a single beep will cost for 1 second"));
+			// Sound Card
+			SOUND_CARD_ENERGY_COST = convertRFtoOC(
+				config.getFloat("ocSoundCardCostPerSecond", "power", 10.0f, 0.0f, 10000.0f, "How much energy the sound card will consume per second of processed sound."));
 			// Colorful Upgrade
 			COLORFUL_UPGRADE_COLOR_CHANGE_COST = convertRFtoOC(
 				config.getFloat("ocColorfulUpgradeColorChangeCost", "power", 2.0f, 0.0f, 10000.0f, "How much energy changing the color of the Colorful Upgrade will cost"));
@@ -206,6 +218,9 @@ public class Config {
 		// Radar
 		RADAR_RANGE = config.getInt("maxRange", "radar", 8, 0, 256, "The maximum range of the Radar.");
 		RADAR_ONLY_DISTANCE = config.getBoolean("onlyOutputDistance", "radar", true, "Stop Radars from outputting X/Y/Z coordinates and instead only output the distance from an entity.");
+
+		// Particles
+		FX_RANGE = config.getInt("particleRange", "particles", FX_RANGE, -1,65536, "The maximum range of particle-emitting devices. Set to -1 to make it work over any distance.");
 
 		// Tape Drive
 		TAPEDRIVE_BUFFER_MS = config.getInt("audioPreloadMs", "tapedrive", 750, 500, 10000, "The amount of time (in milliseconds) used for pre-buffering the tape for audio playback. If you get audio playback glitches in SMP/your TPS is under 20, RAISE THIS VALUE!");

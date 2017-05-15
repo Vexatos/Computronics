@@ -5,14 +5,12 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import li.cil.oc.api.Network;
-import li.cil.oc.api.driver.DeviceInfo;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.EnvironmentHost;
 import li.cil.oc.api.network.Message;
 import li.cil.oc.api.network.Visibility;
-import li.cil.oc.api.prefab.ManagedEnvironment;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.MathHelper;
@@ -51,7 +49,6 @@ import java.util.ArrayDeque;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 import java.util.WeakHashMap;
@@ -59,7 +56,7 @@ import java.util.WeakHashMap;
 /**
  * @author Vexatos, gamax92
  */
-public class DriverCardSound extends ManagedEnvironment implements DeviceInfo, IAudioSource {
+public class DriverCardSound extends ManagedEnvironmentWithComponentConnector implements IAudioSource {
 
 	protected final EnvironmentHost host;
 
@@ -67,7 +64,7 @@ public class DriverCardSound extends ManagedEnvironment implements DeviceInfo, I
 		this.host = host;
 		this.setNode(Network.newNode(this, Visibility.Neighbors).
 			withComponent("sound").
-			withConnector(Config.SOUND_ENERGY_COST * 42).
+			withConnector().
 			create());
 		process = new AudioUtil.AudioProcess(Config.SOUND_CARD_CHANNEL_COUNT);
 
@@ -268,6 +265,7 @@ public class DriverCardSound extends ManagedEnvironment implements DeviceInfo, I
 		buildDelay = 0;
 		if(codecId != null) {
 			AudioUtils.removePlayer(Computronics.opencomputers.managerId, codecId);
+			codecId = null;
 		}
 	}
 
@@ -411,7 +409,7 @@ public class DriverCardSound extends ManagedEnvironment implements DeviceInfo, I
 	@Callback(doc = "function(channel:number, modIndex:number, intensity:number); Instruction; Assigns a frequency modulator channel to the specified channel with the specified intensity.", direct = true)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] setFM(Context context, Arguments args) {
-		return tryAdd(new SetFM(checkChannel(args), checkChannel(args), (float) args.checkDouble(2)));
+		return tryAdd(new SetFM(checkChannel(args), checkChannel(args, 1), (float) args.checkDouble(2)));
 	}
 
 	@Callback(doc = "function(channel:number); Instruction; Removes the specified channel's frequency modulator.", direct = true)
@@ -454,10 +452,13 @@ public class DriverCardSound extends ManagedEnvironment implements DeviceInfo, I
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] process(Context context, Arguments args) {
 		synchronized(buildBuffer) {
-			if(buildBuffer.size() == 0) {
-				return new Object[] { true };
-			}
 			if(nextBuffer != null && nextBuffer.isEmpty()) {
+				if(buildBuffer.size() == 0) {
+					return new Object[] { true };
+				}
+				if(!node.tryChangeBuffer(-Config.SOUND_CARD_ENERGY_COST * (buildDelay / 1000D))) {
+					return new Object[] { false, "not enough energy" };
+				}
 				synchronized(nextBuffer) {
 					nextBuffer.addAll(new ArrayDeque<Instruction>(buildBuffer));
 				}
@@ -469,7 +470,7 @@ public class DriverCardSound extends ManagedEnvironment implements DeviceInfo, I
 				}
 				return new Object[] { true };
 			} else {
-				return new Object[] { false, timeout };
+				return new Object[] { false, System.currentTimeMillis() - timeout };
 			}
 		}
 	}
@@ -510,18 +511,13 @@ public class DriverCardSound extends ManagedEnvironment implements DeviceInfo, I
 		return codecId;
 	}
 
-	protected Map<String, String> deviceInfo;
-
 	@Override
-	public Map<String, String> getDeviceInfo() {
-		if(deviceInfo == null) {
-			return deviceInfo = new OCUtils.Device(
-				DeviceClass.Multimedia,
-				"Audio interface",
-				OCUtils.Vendors.Yanaki,
-				"MinoSound 244-X"
-			).deviceInfo();
-		}
-		return deviceInfo;
+	protected OCUtils.Device deviceInfo() {
+		return new OCUtils.Device(
+			DeviceClass.Multimedia,
+			"Audio interface",
+			OCUtils.Vendors.Yanaki,
+			"MinoSound 244-X"
+		);
 	}
 }

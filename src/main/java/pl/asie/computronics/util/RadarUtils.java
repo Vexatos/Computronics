@@ -16,13 +16,14 @@ import java.util.Map;
 import java.util.Set;
 
 public class RadarUtils {
-	public static Set<Map<String, Object>> getEntities(World world, int xCoord, int yCoord, int zCoord, AxisAlignedBB bounds, Class<? extends EntityLivingBase> eClass) {
+
+	public static Set<Map<String, Object>> getEntities(World world, double xCoord, double yCoord, double zCoord, AxisAlignedBB bounds, Class<? extends EntityLivingBase> eClass) {
 		Set<Map<String, Object>> entities = new HashSet<Map<String, Object>>();
 		for(Object obj : world.getEntitiesWithinAABB(eClass, bounds)) {
 			EntityLivingBase entity = (EntityLivingBase) obj;
-			double dx = entity.posX - (xCoord + 0.5);
-			double dy = entity.posY - (yCoord + 0.5);
-			double dz = entity.posZ - (zCoord + 0.5);
+			double dx = entity.posX - xCoord;
+			double dy = entity.posY - yCoord;
+			double dz = entity.posZ - zCoord;
 			if(Math.sqrt(dx * dx + dy * dy + dz * dz) < Config.RADAR_RANGE) {
 				// Maps are converted to tables on the Lua side.
 				Map<String, Object> entry = new HashMap<String, Object>();
@@ -45,13 +46,13 @@ public class RadarUtils {
 		return entities;
 	}
 
-	public static Set<Map<String, Object>> getItems(World world, int xCoord, int yCoord, int zCoord, AxisAlignedBB bounds, Class<? extends EntityItem> eClass) {
+	public static Set<Map<String, Object>> getItems(World world, double xCoord, double yCoord, double zCoord, AxisAlignedBB bounds, Class<? extends EntityItem> eClass) {
 		Set<Map<String, Object>> entities = new HashSet<Map<String, Object>>();
 		for(Object obj : world.getEntitiesWithinAABB(eClass, bounds)) {
 			EntityItem entity = (EntityItem) obj;
-			double dx = entity.posX - (xCoord + 0.5);
-			double dy = entity.posY - (yCoord + 0.5);
-			double dz = entity.posZ - (zCoord + 0.5);
+			double dx = entity.posX - xCoord;
+			double dy = entity.posY - yCoord;
+			double dz = entity.posZ - zCoord;
 			if(Math.sqrt(dx * dx + dy * dy + dz * dz) < Config.RADAR_RANGE) {
 				// Maps are converted to tables on the Lua side.
 				Map<String, Object> entry = new HashMap<String, Object>();

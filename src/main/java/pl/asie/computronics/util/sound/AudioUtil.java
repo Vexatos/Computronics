@@ -14,13 +14,13 @@ public class AudioUtil {
 	public enum Gate {
 		Open {
 			@Override
-			public double getValue(AudioProcess process, State state) {
-				if(state.isAmpMod || state.isFreqMod) {
+			public double getValue(AudioProcess process, State state, boolean isModulating) {
+				if(!isModulating && (state.isAmpMod || state.isFreqMod)) {
 					return 0;
 				}
 				double value = state.generator instanceof Noise ? ((Noise) state.generator).noiseOutput :
 					state.generator instanceof Wave ? ((Wave) state.generator).type.generate(state.offset) : 0;
-				if(state.freqMod != null && !state.isFreqMod) {
+				if(state.freqMod != null && !state.isFreqMod && !state.isAmpMod) {
 					value = state.freqMod.getModifiedValue(process, state, value);
 				} else {
 					state.offset += state.frequencyInHz / Config.SOUND_SAMPLE_RATE;
@@ -31,7 +31,7 @@ public class AudioUtil {
 						((Noise) state.generator).updateModifier(state);
 					}
 				}
-				if(state.ampMod != null && !state.isAmpMod) {
+				if(state.ampMod != null && !state.isAmpMod && !state.isFreqMod) {
 					value = state.ampMod.getModifiedValue(process, state, value);
 				}
 				if(state.envelope != null) {
@@ -42,15 +42,19 @@ public class AudioUtil {
 		},
 		Closed {
 			@Override
-			public double getValue(AudioProcess process, State state) {
+			public double getValue(AudioProcess process, State state, boolean isModulating) {
 				if(state.envelope != null && state.envelope.phase != null) {
-					return Open.getValue(process, state);
+					return Open.getValue(process, state, isModulating);
 				}
 				return 0;
 			}
 		};
 
-		public abstract double getValue(AudioProcess process, State state);
+		public abstract double getValue(AudioProcess process, State state, boolean isModulating);
+
+		public double getValue(AudioProcess process, State state) {
+			return getValue(process, state, false);
+		}
 
 		public static final Gate[] VALUES = values();
 
@@ -77,7 +81,7 @@ public class AudioUtil {
 		@Override
 		public double getModifiedValue(AudioProcess process, State state, double value) {
 			State mstate = process.states.get(modulatorIndex);
-			double deviation = mstate.gate.getValue(process, mstate) * index * mstate.frequencyInHz;
+			double deviation = mstate.gate.getValue(process, mstate, true) * index;
 			state.offset += (state.frequencyInHz + deviation) / Config.SOUND_SAMPLE_RATE;
 			return value;
 		}
@@ -94,7 +98,7 @@ public class AudioUtil {
 		@Override
 		public double getModifiedValue(AudioProcess process, State state, double value) {
 			State mstate = process.states.get(modulatorIndex);
-			return value * (1 + mstate.gate.getValue(process, mstate));
+			return value * (1 + mstate.gate.getValue(process, mstate, true));
 		}
 	}
 
@@ -175,6 +179,9 @@ public class AudioUtil {
 
 		public void reset() {
 			phase = this.initialPhase;
+			if(this.initialPhase == Phase.Decay) {
+				progress = 1;
+			}
 		}
 
 		private enum Phase {
@@ -226,11 +233,11 @@ public class AudioUtil {
 		public static Noise load(NBTTagCompound nbt) {
 			final Noise noise;
 			switch(nbt.getByte("t")) {
-				default:
-					noise = new WhiteNoise();
-					break;
 				case 1:
 					noise = new LFSR(nbt.getInteger("v"), nbt.getInteger("m"));
+					break;
+				default:
+					noise = new WhiteNoise();
 					break;
 			}
 			noise.noiseOutput = nbt.getDouble("o");
@@ -245,7 +252,7 @@ public class AudioUtil {
 
 		@Override
 		protected double generate(State state) {
-			return Math.random()*2-1;
+			return Math.random() * 2 - 1;
 		}
 
 		@Override

@@ -21,6 +21,7 @@ import li.cil.oc.api.network.ManagedEnvironment;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
@@ -417,12 +418,17 @@ public class ItemOpenComputers extends ItemMultiple implements Item, Environment
 		}
 	}
 
+	@Override
+	public EnumRarity getRarity(ItemStack stack) {
+		return OCUtils.getRarityByTier(stack);
+	}
+
 	//Mostly stolen from Sangar
 	@Override
 	@SideOnly(Side.CLIENT)
 	@SuppressWarnings("unchecked")
-	public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean par4) {
-		OCUtils.addTooltip(stack, tooltip);
+	public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean advanced) {
+		OCUtils.addTooltip(stack, tooltip, advanced);
 	}
 
 	@Override

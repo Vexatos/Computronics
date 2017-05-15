@@ -36,7 +36,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase {
 	private UUID uuid;
 
 	public TileLocomotiveRelay() {
-		super("locomotive_relay", Config.LOCOMOTIVE_RELAY_BASE_POWER * 10);
+		super("locomotive_relay");
 	}
 
 	public void setLocomotive(EntityLocomotiveElectric loco) {
