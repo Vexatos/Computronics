@@ -37,6 +37,6 @@ public class AudioPacketClientHandlerDFPWM extends AudioPacketClientHandler {
 		StreamingAudioPlayer codec = Computronics.instance.audio.getPlayer(codecId);
 
 		codec.setHearing((float) distance, volume / 127.0F);
-		codec.play(x, y, z);
+		codec.play(codecId, x, y, z);
 	}
 }

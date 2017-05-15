@@ -20,6 +20,7 @@ import pl.asie.computronics.api.audio.AudioPacketDFPWM;
 import pl.asie.computronics.api.audio.IAudioReceiver;
 import pl.asie.computronics.api.audio.IAudioSource;
 import pl.asie.computronics.audio.AudioUtils;
+import pl.asie.computronics.audio.tts.TextToSpeech.ICanSpeak;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.OCUtils;
@@ -33,7 +34,7 @@ import java.util.Arrays;
 /**
  * @author Vexatos
  */
-public class TileSpeechBox extends TileEntityPeripheralBase implements IAudioSource, ITickable {
+public class TileSpeechBox extends TileEntityPeripheralBase implements IAudioSource, ITickable, ICanSpeak {
 
 	public TileSpeechBox() {
 		super("speech_box");
@@ -67,7 +68,7 @@ public class TileSpeechBox extends TileEntityPeripheralBase implements IAudioSou
 	};
 
 	private long lastCodecTime;
-	private Integer codecId;
+	private int codecId = -1;
 	protected int packetSize = 1500;
 	protected int soundVolume = 127;
 	private boolean locked = false;
@@ -103,6 +104,7 @@ public class TileSpeechBox extends TileEntityPeripheralBase implements IAudioSou
 		}
 	}
 
+	@Override
 	public void startTalking(byte[] data) {
 		if(worldObj.isRemote) {
 			return;
@@ -122,7 +124,7 @@ public class TileSpeechBox extends TileEntityPeripheralBase implements IAudioSou
 	private Object[] sendNewText(String text) throws IOException {
 		if(Computronics.tts != null) {
 			locked = true;
-			Computronics.tts.say(text, worldObj.provider.getDimension(), pos);
+			Computronics.tts.say(this, text);
 		} else {
 			return new Object[] { false, "text-to-speech system not available" };
 		}

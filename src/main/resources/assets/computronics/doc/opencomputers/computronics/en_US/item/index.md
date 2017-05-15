@@ -16,6 +16,7 @@ Keep in mind that some of these may not be available, depending on the recipe se
 * [Chat Upgrade](chat_upgrade.md)
 * [Radar Upgrade](radar_upgrade.md)
 * [Colorful Upgrade](colorful_upgrade.md)
+* [Speech Upgrade](speech_upgrade.md)
 
 ### Cards
 
