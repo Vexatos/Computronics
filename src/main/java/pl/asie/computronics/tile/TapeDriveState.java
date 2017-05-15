@@ -22,7 +22,7 @@ public class TapeDriveState {
 
 	private State state = State.STOPPED;
 	private int codecId;//, packetId;
-    private long lastCodecTime;
+	private long lastCodecTime;
 	public int packetSize = 1024;
 	public int soundVolume = 127;
 	private ITapeStorage storage;
