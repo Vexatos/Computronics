@@ -9,9 +9,9 @@ import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -29,9 +29,13 @@ import pl.asie.computronics.network.PacketType;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TapeDriveState;
 import pl.asie.computronics.tile.TapeDriveState.State;
+import pl.asie.computronics.util.StringUtil;
+import pl.asie.lib.network.Packet;
 
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -48,9 +52,14 @@ public class ItemPortableTapeDrive extends Item {
 		private PortableDriveManager() {
 		}
 
-		private BiMap<String, TapeDrive> drives = HashBiMap.create();
+		private BiMap<String, TapeDrive> drivesServer = HashBiMap.create();
+		private BiMap<String, TapeDrive> drivesClient = HashBiMap.create();
 
-		public TapeDrive getOrCreate(ItemStack stack) {
+		private BiMap<String, TapeDrive> drives(boolean client) {
+			return client ? drivesClient : drivesServer;
+		}
+
+		public TapeDrive getOrCreate(ItemStack stack, boolean client) {
 			NBTTagCompound tag = stack.getTagCompound();
 			String id;
 			if(tag != null && tag.hasKey("tid")) {
@@ -63,25 +72,25 @@ public class ItemPortableTapeDrive extends Item {
 				id = UUID.randomUUID().toString();
 				tag.setString("tid", id);
 			}
-			TapeDrive drive = drives.get(id);
+			TapeDrive drive = drives(client).get(id);
 			if(drive == null) {
 				drive = new TapeDrive();
 				drive.load(tag);
-				add(id, drive);
+				add(id, drive, client);
 			}
 			return drive;
 		}
 
-		public void add(String id, TapeDrive drive) {
-			drives.put(id, drive);
+		public void add(String id, TapeDrive drive, boolean client) {
+			drives(client).put(id, drive);
 		}
 
-		public String getID(TapeDrive drive) {
-			return drives.inverse().get(drive);
+		public String getID(TapeDrive drive, boolean client) {
+			return drives(client).inverse().get(drive);
 		}
 
-		public TapeDrive getTapeDrive(String id) {
-			return drives.get(id);
+		public TapeDrive getTapeDrive(String id, boolean client) {
+			return drives(client).get(id);
 		}
 
 		@SubscribeEvent
@@ -90,8 +99,8 @@ public class ItemPortableTapeDrive extends Item {
 				return;
 			}
 			Set<String> toRemove = new HashSet<String>();
-			for(Map.Entry<String, TapeDrive> entry : drives.entrySet()) {
-				if(entry.getValue().time > 1) {
+			for(Map.Entry<String, TapeDrive> entry : drives(false).entrySet()) {
+				if(entry.getValue().time > 5) {
 					entry.getValue().switchState(State.STOPPED);
 					toRemove.add(entry.getKey());
 					try {
@@ -111,18 +120,18 @@ public class ItemPortableTapeDrive extends Item {
 				}
 			}
 			for(String s : toRemove) {
-				drives.remove(s);
+				drives(false).remove(s);
 			}
 		}
 
 		@SideOnly(Side.CLIENT)
 		public void stopTapeDrive(String id) {
-			TapeDrive drive = drives.get(id);
+			TapeDrive drive = drives(true).get(id);
 			if(drive != null) {
 				drive.switchState(State.STOPPED);
 				drive.updateSound();
 				drive.carrier = null;
-				drives.remove(id);
+				drives(true).remove(id);
 			}
 		}
 	}
@@ -196,7 +205,20 @@ public class ItemPortableTapeDrive extends Item {
 			if(world.isRemote) {
 				return;
 			}
+
 			save(getTag());
+			String id = PortableDriveManager.INSTANCE.getID(this, world.isRemote);
+			if(id != null) {
+				try {
+					Packet packet = Computronics.packet.create(PacketType.PORTABLE_TAPE_STATE.ordinal())
+						.writeString(id)
+						.writeByte((byte) state.getState().ordinal());
+					//.writeByte((byte)soundVolume);
+					Computronics.packet.sendToAllAround(packet, carrier, 64.0D);
+				} catch(Exception e) {
+					e.printStackTrace();
+				}
+			}
 		}
 
 		@SideOnly(Side.CLIENT)
@@ -385,6 +407,109 @@ public class ItemPortableTapeDrive extends Item {
 		public boolean connectsAudio(ForgeDirection side) {
 			return true;
 		}
+
+		public final IInventory fakeInventory = new IInventory() {
+			@Override
+			public int getSizeInventory() {
+				return 1;
+			}
+
+			@Override
+			public String getInventoryName() {
+				return "portabletapedrive.inventory";
+			}
+
+			@Override
+			public int getInventoryStackLimit() {
+				return 1;
+			}
+
+			@Override
+			public boolean isItemValidForSlot(int slot, ItemStack stack) {
+				return false;
+			}
+
+			@Override
+			public ItemStack getStackInSlot(int slot) {
+				if(slot != 0) {
+					return null;
+				}
+				return TapeDrive.this.inventory;
+			}
+
+			@Override
+			public ItemStack decrStackSize(int slot, int amount) {
+				if(slot != 0) {
+					return null;
+				}
+				if(TapeDrive.this.inventory != null) {
+					ItemStack stack;
+					if(TapeDrive.this.inventory.stackSize <= amount) {
+						stack = TapeDrive.this.inventory;
+						TapeDrive.this.inventory = null;
+						TapeDrive.this.onInvUpdate();
+						return stack;
+					} else {
+						stack = TapeDrive.this.inventory.splitStack(amount);
+
+						if(TapeDrive.this.inventory.stackSize == 0) {
+							TapeDrive.this.inventory = null;
+						}
+
+						TapeDrive.this.onInvUpdate();
+
+						return stack;
+					}
+				} else {
+					return null;
+				}
+			}
+
+			@Override
+			public ItemStack getStackInSlotOnClosing(int slot) {
+				ItemStack stack = getStackInSlot(slot);
+				if(stack == null) {
+					return null;
+				}
+				TapeDrive.this.inventory = null;
+				TapeDrive.this.onInvUpdate();
+				return stack;
+			}
+
+			@Override
+			public void setInventorySlotContents(int slot, ItemStack stack) {
+				if(slot != 0) {
+					return;
+				}
+				TapeDrive.this.inventory = stack;
+				TapeDrive.this.onInvUpdate();
+			}
+
+			@Override
+			public boolean isUseableByPlayer(EntityPlayer player) {
+				return true;
+			}
+
+			@Override
+			public void openInventory() {
+
+			}
+
+			@Override
+			public void closeInventory() {
+
+			}
+
+			@Override
+			public boolean hasCustomInventoryName() {
+				return false;
+			}
+
+			@Override
+			public void markDirty() {
+
+			}
+		};
 	}
 
 	public ItemPortableTapeDrive() {
@@ -399,9 +524,18 @@ public class ItemPortableTapeDrive extends Item {
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
+	public void addInformation(ItemStack stack, EntityPlayer player, List info, boolean advanced) {
+		info.add(StringUtil.localizeAndFormat("tooltip.computronics.tape.state",
+			StringUtil.localize("tooltip.computronics.tape.state."
+				+ TapeDriveState.State.VALUES[stack.getTagCompound().getByte("state")].name().toLowerCase(Locale.ENGLISH))));
+		super.addInformation(stack, player, info, advanced);
+	}
+
+	@Override
 	public void onUpdate(ItemStack stack, World world, Entity carrier, int slot, boolean isSelected) {
 		super.onUpdate(stack, world, carrier, slot, isSelected);
-		TapeDrive drive = PortableDriveManager.INSTANCE.getOrCreate(stack);
+		TapeDrive drive = PortableDriveManager.INSTANCE.getOrCreate(stack, world.isRemote);
 		drive.resetTime();
 		drive.updateCarrier(carrier, stack);
 		drive.update();
@@ -409,43 +543,13 @@ public class ItemPortableTapeDrive extends Item {
 
 	@Override
 	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
-		TapeDrive drive = PortableDriveManager.INSTANCE.getOrCreate(stack);
+		TapeDrive drive = PortableDriveManager.INSTANCE.getOrCreate(stack, world.isRemote);
 		drive.updateCarrier(player, stack);
 		if(world.isRemote) {
 			return super.onItemRightClick(stack, world, player);
 		}
 		if(player.isSneaking()) {
-			if(drive.inventory != null) {
-				if(player.inventory.addItemStackToInventory(drive.inventory)) {
-					if(player instanceof EntityPlayerMP) {
-						((EntityPlayerMP) player).sendContainerToPlayer(player.inventoryContainer);
-					}
-				} else {
-					float f1 = 0.7F;
-					double d = (world.rand.nextFloat() * f1) + (1.0F - f1) * 0.5D;
-					double d1 = (world.rand.nextFloat() * f1) + (1.0F - f1) * 0.5D;
-					double d2 = (world.rand.nextFloat() * f1) + (1.0F - f1) * 0.5D;
-					EntityItem entityitem = new EntityItem(world, player.posX + d, player.posY + d1, player.posZ + d2, drive.inventory);
-					entityitem.delayBeforeCanPickup = 10;
-
-					world.spawnEntityInWorld(entityitem);
-				}
-				drive.inventory = null;
-				drive.onInvUpdate();
-			} else {
-				for(int i = 0; i < player.inventory.getSizeInventory(); i++) {
-					ItemStack invStack = player.inventory.getStackInSlot(i);
-					if(invStack != null && invStack.getItem() instanceof IItemTapeStorage) {
-						drive.inventory = invStack;
-						drive.onInvUpdate();
-						player.inventory.decrStackSize(i, 1);
-						if(player instanceof EntityPlayerMP) {
-							((EntityPlayerMP) player).sendContainerToPlayer(player.inventoryContainer);
-						}
-						break;
-					}
-				}
-			}
+			player.openGui(Computronics.instance, Computronics.guiPortableTapeDrive.getGuiID(), world, 0, 0, 0);
 		} else {
 			drive.switchState(drive.getEnumState() != State.STOPPED ? State.STOPPED : State.PLAYING);
 		}

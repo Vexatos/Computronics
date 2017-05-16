@@ -39,8 +39,8 @@ public class WailaTapeDrive extends ComputronicsWailaProvider {
 				currenttip.add(StringUtil.localize("tooltip.computronics.waila.tape.tapeinserted"));
 			}
 			if(ConfigValues.DriveState.getValue(config)) {
-				currenttip.add(StringUtil.localizeAndFormat("tooltip.computronics.waila.tape.state",
-					StringUtil.localize("tooltip.computronics.waila.tape.state."
+				currenttip.add(StringUtil.localizeAndFormat("tooltip.computronics.tape.state",
+					StringUtil.localize("tooltip.computronics.tape.state."
 						+ TapeDriveState.State.VALUES[data.getByte("state")].name().toLowerCase(Locale.ENGLISH))));
 			}
 		} else {
@@ -93,7 +93,7 @@ public class WailaTapeDrive extends ComputronicsWailaProvider {
 		ItemStack is = drive.getStackInSlot(0);
 		if(is != null && is.getItem() instanceof IItemTapeStorage) {
 			if(ConfigValues.DriveState.getValue(config)) {
-				text = StringUtil.localize("tooltip.computronics.waila.tape.state."
+				text = StringUtil.localize("tooltip.computronics.tape.state."
 					+ drive.getEnumState().toString().toLowerCase(Locale.ENGLISH));
 				UIHelper.drawFloatingText(text, accessor.getRenderingPosition(), offX, 0.3F, offZ, 0F,
 					rot, 0F);

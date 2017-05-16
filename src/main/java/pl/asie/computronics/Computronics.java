@@ -44,6 +44,7 @@ import pl.asie.computronics.block.BlockTapeReader;
 import pl.asie.computronics.cc.IntegrationComputerCraft;
 import pl.asie.computronics.cc.multiperipheral.MultiPeripheralRegistry;
 import pl.asie.computronics.gui.providers.GuiProviderCipher;
+import pl.asie.computronics.gui.providers.GuiProviderPortableTapeDrive;
 import pl.asie.computronics.gui.providers.GuiProviderTapeDrive;
 import pl.asie.computronics.integration.ModRecipes;
 import pl.asie.computronics.integration.buildcraft.IntegrationBuildCraft;
@@ -152,6 +153,7 @@ public class Computronics {
 	public static ItemMultiple itemPartsGreg;
 
 	public static IGuiProvider guiTapeDrive;
+	public static IGuiProvider guiPortableTapeDrive;
 	public static IGuiProvider guiCipher;
 
 	public ComputronicsAchievements achievements;
@@ -279,6 +281,8 @@ public class Computronics {
 		if(isEnabled("portableTapeDrive", true)) {
 			portableTapeDrive = new ItemPortableTapeDrive();
 			GameRegistry.registerItem(portableTapeDrive, "computronics.portableTapeDrive");
+			guiPortableTapeDrive = new GuiProviderPortableTapeDrive();
+			gui.registerGuiProvider(Computronics.guiPortableTapeDrive);
 		}
 
 		if(Mods.isLoaded(Mods.Railcraft)) {

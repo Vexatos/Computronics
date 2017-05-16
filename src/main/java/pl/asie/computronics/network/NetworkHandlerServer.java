@@ -46,7 +46,7 @@ public class NetworkHandlerServer extends MessageHandlerBase {
 			}
 			break;
 			case PORTABLE_TAPE_STATE: {
-				TapeDrive tapeDrive = PortableDriveManager.INSTANCE.getTapeDrive(packet.readString());
+				TapeDrive tapeDrive = PortableDriveManager.INSTANCE.getTapeDrive(packet.readString(), false);
 				State state = State.VALUES[packet.readUnsignedByte()];
 				if(tapeDrive != null) {
 					tapeDrive.switchState(state);

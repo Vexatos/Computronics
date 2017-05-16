@@ -41,27 +41,27 @@ public class TapeScrollEventHandler {
 	}
 
 	public static void scrollTapeDrive(ItemStack stack, EntityPlayer player, int dWheel) {
-		TapeDrive tapeDrive = PortableDriveManager.INSTANCE.getOrCreate(stack);
+		TapeDrive tapeDrive = PortableDriveManager.INSTANCE.getOrCreate(stack, true);
 		State state = tapeDrive.getEnumState();
 		State newState = null;
 		switch(state) {
 			case STOPPED:
 			case PLAYING:
-				newState = dWheel < 0 ? State.FORWARDING : State.REWINDING;
+				newState = dWheel < 0 ? State.REWINDING : State.FORWARDING;
 				break;
 			case FORWARDING:
-				newState = dWheel > 0 ? State.STOPPED : null;
-				break;
-			case REWINDING:
 				newState = dWheel < 0 ? State.STOPPED : null;
 				break;
+			case REWINDING:
+				newState = dWheel > 0 ? State.STOPPED : null;
+				break;
 		}
-		String id = PortableDriveManager.INSTANCE.getID(tapeDrive);
+		String id = PortableDriveManager.INSTANCE.getID(tapeDrive, true);
 		if(newState != null && id != null) {
 			try {
 				Computronics.packet.sendToServer(Computronics.packet.create(PacketType.PORTABLE_TAPE_STATE.ordinal())
 					.writeString(id)
-					.writeByte((byte) state.ordinal()));
+					.writeByte((byte) newState.ordinal()));
 			} catch(Exception e) {
 				e.printStackTrace();
 			}

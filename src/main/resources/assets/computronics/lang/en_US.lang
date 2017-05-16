@@ -59,14 +59,16 @@ tooltip.computronics.waila.relay.notbound=Not Bound
 tooltip.computronics.waila.tape.tapeinserted=Tape inserted
 tooltip.computronics.waila.tape.labeltapeinserted=Tape "%s" inserted
 tooltip.computronics.waila.tape.notapeinserted=No tape inserted
-tooltip.computronics.waila.tape.state=State: %s
-tooltip.computronics.waila.tape.state.stopped=Stopped
-tooltip.computronics.waila.tape.state.playing=Playing
-tooltip.computronics.waila.tape.state.rewinding=Rewinding
-tooltip.computronics.waila.tape.state.forwarding=Forwarding
 tooltip.computronics.waila.lamp.red=Red: %s
 tooltip.computronics.waila.lamp.green=Green: %s
 tooltip.computronics.waila.lamp.blue=Blue: %s
+
+tooltip.computronics.tape.state=State: %s
+
+tooltip.computronics.tape.state.stopped=Stopped
+tooltip.computronics.tape.state.playing=Playing
+tooltip.computronics.tape.state.rewinding=Rewinding
+tooltip.computronics.tape.state.forwarding=Forwarding
 
 tooltip.computronics.manual.oc.tab.blocks=Computronics: Blocks
 tooltip.computronics.manual.oc.tab.items=Computronics: Items
