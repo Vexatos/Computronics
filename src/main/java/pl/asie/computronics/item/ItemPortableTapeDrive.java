@@ -11,6 +11,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.oc.manual.IItemWithDocumentation;
 import pl.asie.computronics.tape.PortableDriveManager;
 import pl.asie.computronics.tape.PortableTapeDrive;
 import pl.asie.computronics.tile.TapeDriveState.State;
@@ -22,7 +23,7 @@ import java.util.Locale;
 /**
  * @author Vexatos
  */
-public class ItemPortableTapeDrive extends Item {
+public class ItemPortableTapeDrive extends Item implements IItemWithDocumentation {
 
 	public ItemPortableTapeDrive() {
 		super();
@@ -102,5 +103,10 @@ public class ItemPortableTapeDrive extends Item {
 			drive.switchState(drive.getEnumState() != State.STOPPED ? State.STOPPED : State.PLAYING);
 		}
 		return super.onItemRightClick(stack, world, player);
+	}
+
+	@Override
+	public String getDocumentationName(ItemStack stack) {
+		return "portable_tape_drive";
 	}
 }

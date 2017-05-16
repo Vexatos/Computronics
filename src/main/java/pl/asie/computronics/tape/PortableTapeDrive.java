@@ -20,6 +20,7 @@ import pl.asie.computronics.api.audio.IAudioSource;
 import pl.asie.computronics.api.tape.IItemTapeStorage;
 import pl.asie.computronics.audio.MachineSound;
 import pl.asie.computronics.network.PacketType;
+import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TapeDriveState;
 import pl.asie.lib.network.Packet;
@@ -284,7 +285,7 @@ public class PortableTapeDrive implements IAudioSource {
 
 		@Override
 		public int getSoundDistance() {
-			return 4;
+			return Config.PORTABLE_TAPEDRIVE_DISTANCE;
 		}
 
 		@Override

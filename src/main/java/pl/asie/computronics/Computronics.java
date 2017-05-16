@@ -2,6 +2,7 @@ package pl.asie.computronics;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -68,6 +69,7 @@ import pl.asie.computronics.oc.IntegrationOpenComputers;
 import pl.asie.computronics.reference.Compat;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
+import pl.asie.computronics.tape.PortableDriveManager;
 import pl.asie.computronics.tape.StorageManager;
 import pl.asie.computronics.tape.TapeStorageEventHandler;
 import pl.asie.computronics.tile.TileAudioCable;
@@ -329,9 +331,13 @@ public class Computronics {
 	public void init(FMLInitializationEvent event) {
 		MinecraftForge.EVENT_BUS.register(new ChatHandler());
 
-		if(tapeReader != null) {
+		if(tapeReader != null || portableTapeDrive != null) {
 			storageEventHandler = new TapeStorageEventHandler();
 			MinecraftForge.EVENT_BUS.register(storageEventHandler);
+		}
+
+		if(portableTapeDrive != null) {
+			FMLCommonHandler.instance().bus().register(PortableDriveManager.INSTANCE);
 		}
 
 		FMLInterModComms.sendMessage(Mods.Waila, "register", "pl.asie.computronics.integration.waila.IntegrationWaila.register");
