@@ -7,11 +7,11 @@ import net.minecraft.tileentity.TileEntity;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.api.audio.AudioPacketClientHandler;
 import pl.asie.computronics.api.audio.AudioPacketRegistry;
-import pl.asie.computronics.item.ItemPortableTapeDrive.PortableDriveManager;
-import pl.asie.computronics.item.ItemPortableTapeDrive.TapeDrive;
 import pl.asie.computronics.oc.driver.DriverCardNoise;
 import pl.asie.computronics.oc.driver.DriverCardSoundBase;
 import pl.asie.computronics.reference.Mods;
+import pl.asie.computronics.tape.PortableDriveManager;
+import pl.asie.computronics.tape.PortableTapeDrive;
 import pl.asie.computronics.tile.TapeDriveState.State;
 import pl.asie.computronics.tile.TileTapeDrive;
 import pl.asie.lib.network.MessageHandlerBase;
@@ -95,7 +95,7 @@ public class NetworkHandlerClient extends MessageHandlerBase {
 			}
 			break;
 			case PORTABLE_TAPE_STATE: {
-				TapeDrive tapeDrive = PortableDriveManager.INSTANCE.getTapeDrive(packet.readString(), true);
+				PortableTapeDrive tapeDrive = PortableDriveManager.INSTANCE.getTapeDrive(packet.readString(), true);
 				State state = State.VALUES[packet.readUnsignedByte()];
 				if(tapeDrive != null) {
 					tapeDrive.switchState(state);

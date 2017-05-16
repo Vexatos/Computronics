@@ -12,9 +12,9 @@ import pl.asie.computronics.gui.GuiTapePlayer;
 import pl.asie.computronics.gui.IGuiTapeDrive;
 import pl.asie.computronics.gui.container.ContainerPortableTapeDrive;
 import pl.asie.computronics.item.ItemPortableTapeDrive;
-import pl.asie.computronics.item.ItemPortableTapeDrive.PortableDriveManager;
-import pl.asie.computronics.item.ItemPortableTapeDrive.TapeDrive;
 import pl.asie.computronics.network.PacketType;
+import pl.asie.computronics.tape.PortableDriveManager;
+import pl.asie.computronics.tape.PortableTapeDrive;
 import pl.asie.computronics.tile.TapeDriveState;
 import pl.asie.lib.block.ContainerInventory;
 import pl.asie.lib.gui.managed.GuiProviderBase;
@@ -30,7 +30,7 @@ public class GuiProviderPortableTapeDrive extends GuiProviderBase {
 	public GuiContainer makeGui(int ID, EntityPlayer player, final World world, int x, int y, int z) {
 		ItemStack stack = player.getHeldItem();
 		if(stack != null && stack.getItem() instanceof ItemPortableTapeDrive) {
-			final TapeDrive tapeDrive = PortableDriveManager.INSTANCE.getOrCreate(stack, world.isRemote);
+			final PortableTapeDrive tapeDrive = PortableDriveManager.INSTANCE.getOrCreate(stack, world.isRemote);
 			return new GuiTapePlayer(new IGuiTapeDrive() {
 				@Override
 				public void setState(TapeDriveState.State state) {
@@ -66,7 +66,7 @@ public class GuiProviderPortableTapeDrive extends GuiProviderBase {
 		return null;
 	}
 
-	protected ContainerInventory makeContainer(EntityPlayer player, TapeDrive tapeDrive) {
+	protected ContainerInventory makeContainer(EntityPlayer player, PortableTapeDrive tapeDrive) {
 		return new ContainerPortableTapeDrive(tapeDrive, player.inventory);
 	}
 }

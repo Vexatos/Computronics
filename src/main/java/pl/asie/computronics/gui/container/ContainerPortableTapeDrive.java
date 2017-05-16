@@ -3,7 +3,7 @@ package pl.asie.computronics.gui.container;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import pl.asie.computronics.Computronics;
-import pl.asie.computronics.item.ItemPortableTapeDrive.TapeDrive;
+import pl.asie.computronics.tape.PortableTapeDrive;
 import pl.asie.lib.block.ContainerInventory;
 import pl.asie.lib.util.SlotTyped;
 
@@ -12,7 +12,7 @@ import pl.asie.lib.util.SlotTyped;
  */
 public class ContainerPortableTapeDrive extends ContainerInventory {
 
-	public ContainerPortableTapeDrive(TapeDrive tapeDrive, InventoryPlayer inventoryPlayer) {
+	public ContainerPortableTapeDrive(PortableTapeDrive tapeDrive, InventoryPlayer inventoryPlayer) {
 		super(tapeDrive.fakeInventory);
 		this.addSlotToContainer(new SlotTyped(tapeDrive.fakeInventory, 0, 80, 34, new Object[] { Computronics.itemTape }));
 		this.bindPlayerInventory(inventoryPlayer, 8, 84);

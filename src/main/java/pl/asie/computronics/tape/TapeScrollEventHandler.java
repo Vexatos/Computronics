@@ -11,8 +11,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.MouseEvent;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.item.ItemPortableTapeDrive;
-import pl.asie.computronics.item.ItemPortableTapeDrive.PortableDriveManager;
-import pl.asie.computronics.item.ItemPortableTapeDrive.TapeDrive;
 import pl.asie.computronics.network.PacketType;
 import pl.asie.computronics.tile.TapeDriveState.State;
 
@@ -41,7 +39,7 @@ public class TapeScrollEventHandler {
 	}
 
 	public static void scrollTapeDrive(ItemStack stack, EntityPlayer player, int dWheel) {
-		TapeDrive tapeDrive = PortableDriveManager.INSTANCE.getOrCreate(stack, true);
+		PortableTapeDrive tapeDrive = PortableDriveManager.INSTANCE.getOrCreate(stack, true);
 		State state = tapeDrive.getEnumState();
 		State newState = null;
 		switch(state) {
