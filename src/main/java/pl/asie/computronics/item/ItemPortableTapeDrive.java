@@ -4,6 +4,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -51,8 +52,9 @@ public class ItemPortableTapeDrive extends Item implements IItemWithDocumentatio
 	public IIcon getIcon(ItemStack stack, int pass) {
 		if(pass == 1 && stack.hasTagCompound()) {
 			NBTTagCompound tag = stack.getTagCompound();
-			if(tag.hasKey("state") && tag.hasKey("inv")
-				&& ItemStack.loadItemStackFromNBT(tag.getCompoundTag("inv")) != null) {
+			if(tag.hasKey("state") && tag.hasKey("inv") && tag.hasKey("tid")
+				&& ItemStack.loadItemStackFromNBT(tag.getCompoundTag("inv")) != null
+				&& PortableDriveManager.INSTANCE.exists(tag.getString("tid"), true)) {
 				byte state = tag.getByte("state");
 				if(state >= 0 && state < stateIcons.length) {
 					return stateIcons[state];
@@ -72,8 +74,9 @@ public class ItemPortableTapeDrive extends Item implements IItemWithDocumentatio
 	public void addInformation(ItemStack stack, EntityPlayer player, List info, boolean advanced) {
 		if(stack.hasTagCompound()) {
 			NBTTagCompound tag = stack.getTagCompound();
-			if(tag.hasKey("state") && tag.hasKey("inv")
-				&& ItemStack.loadItemStackFromNBT(tag.getCompoundTag("inv")) != null) {
+			if(tag.hasKey("state") && tag.hasKey("inv") && tag.hasKey("tid")
+				&& ItemStack.loadItemStackFromNBT(tag.getCompoundTag("inv")) != null
+				&& PortableDriveManager.INSTANCE.exists(tag.getString("tid"), true)) {
 				byte state = tag.getByte("state");
 				if(state >= 0 && state < State.VALUES.length) {
 					info.add(StringUtil.localizeAndFormat("tooltip.computronics.tape.state",
@@ -86,12 +89,24 @@ public class ItemPortableTapeDrive extends Item implements IItemWithDocumentatio
 	}
 
 	@Override
+	public boolean onEntityItemUpdate(EntityItem entity) {
+		PortableTapeDrive drive = PortableDriveManager.INSTANCE.getOrCreate(entity.getEntityItem(), entity.worldObj.isRemote);
+		drive.resetTime();
+		drive.updateCarrier(entity, entity.getEntityItem());
+		drive.update();
+		return super.onEntityItemUpdate(entity);
+	}
+
+	@Override
 	public void onUpdate(ItemStack stack, World world, Entity carrier, int slot, boolean isSelected) {
 		super.onUpdate(stack, world, carrier, slot, isSelected);
+		/*if(!world.isRemote) {
+			return;
+		}
 		PortableTapeDrive drive = PortableDriveManager.INSTANCE.getOrCreate(stack, world.isRemote);
 		drive.resetTime();
 		drive.updateCarrier(carrier, stack);
-		drive.update();
+		drive.update();*/
 	}
 
 	@Override

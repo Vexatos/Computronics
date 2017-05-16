@@ -4,8 +4,14 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.MinecraftServer;
+import pl.asie.computronics.item.ItemPortableTapeDrive;
 import pl.asie.computronics.tile.TapeDriveState;
 
 import java.util.Iterator;
@@ -63,20 +69,69 @@ public final class PortableDriveManager {
 		return drives(client).get(id);
 	}
 
+	public boolean exists(String id, boolean client) {
+		return drives(client).containsKey(id);
+	}
+
 	@SubscribeEvent
 	public void onServerTick(TickEvent.ServerTickEvent event) {
 		if(event.phase != TickEvent.Phase.END) {
 			return;
 		}
+		for(Object o : MinecraftServer.getServer().getConfigurationManager().playerEntityList) {
+			if(o instanceof EntityPlayer) {
+				EntityPlayer player = (EntityPlayer) o;
+				for(int i = 0; i < player.inventory.getSizeInventory(); i++) {
+					ItemStack stack = player.inventory.getStackInSlot(i);
+					if(stack != null && stack.getItem() instanceof ItemPortableTapeDrive) {
+						PortableTapeDrive drive = PortableDriveManager.INSTANCE.getOrCreate(stack, player.worldObj.isRemote);
+						drive.resetTime();
+						drive.updateCarrier(player, stack);
+						drive.update();
+					}
+				}
+			}
+		}
 		Iterator<Map.Entry<String, PortableTapeDrive>> iterator = drives(false).entrySet().iterator();
 		while(iterator.hasNext()) {
 			Map.Entry<String, PortableTapeDrive> entry = iterator.next();
-			if(entry.getValue().time > 20) {
+			if(entry.getValue().time > 5) {
 				entry.getValue().switchState(TapeDriveState.State.STOPPED);
 				iterator.remove();
 				entry.getValue().carrier = null;
 			} else {
 				entry.getValue().time++;
+			}
+		}
+	}
+
+	@SideOnly(Side.CLIENT)
+	@SubscribeEvent
+	public void onClientTick(TickEvent.ClientTickEvent event) {
+		if(event.phase != TickEvent.Phase.END) {
+			return;
+		}
+		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+		if(player != null) {
+			for(int i = 0; i < player.inventory.getSizeInventory(); i++) {
+				ItemStack stack = player.inventory.getStackInSlot(i);
+				if(stack != null && stack.getItem() instanceof ItemPortableTapeDrive) {
+					PortableTapeDrive drive = PortableDriveManager.INSTANCE.getOrCreate(stack, player.worldObj.isRemote);
+					drive.resetTime();
+					drive.updateCarrier(player, stack);
+					drive.update();
+				}
+			}
+			Iterator<Map.Entry<String, PortableTapeDrive>> iterator = drives(true).entrySet().iterator();
+			while(iterator.hasNext()) {
+				Map.Entry<String, PortableTapeDrive> entry = iterator.next();
+				if(entry.getValue().time > 5) {
+					entry.getValue().switchState(TapeDriveState.State.STOPPED);
+					iterator.remove();
+					entry.getValue().carrier = null;
+				} else {
+					entry.getValue().time++;
+				}
 			}
 		}
 	}
