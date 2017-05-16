@@ -135,4 +135,9 @@ public final class PortableDriveManager {
 			}
 		}
 	}
+
+	public void onServerStop() {
+		drivesServer.clear();
+		drivesClient.clear();
+	}
 }

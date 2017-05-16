@@ -428,6 +428,7 @@ public class Computronics {
 		if(Mods.isLoaded(Mods.OpenComputers)) {
 			opencomputers.onServerStop(event);
 		}
+		PortableDriveManager.INSTANCE.onServerStop();
 	}
 
 	@EventHandler
