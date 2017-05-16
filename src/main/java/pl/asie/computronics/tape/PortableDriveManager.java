@@ -8,9 +8,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import pl.asie.computronics.tile.TapeDriveState;
 
-import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -69,18 +68,16 @@ public final class PortableDriveManager {
 		if(event.phase != TickEvent.Phase.END) {
 			return;
 		}
-		Set<String> toRemove = new HashSet<String>();
-		for(Map.Entry<String, PortableTapeDrive> entry : drives(false).entrySet()) {
+		Iterator<Map.Entry<String, PortableTapeDrive>> iterator = drives(false).entrySet().iterator();
+		while(iterator.hasNext()) {
+			Map.Entry<String, PortableTapeDrive> entry = iterator.next();
 			if(entry.getValue().time > 20) {
 				entry.getValue().switchState(TapeDriveState.State.STOPPED);
-				toRemove.add(entry.getKey());
+				iterator.remove();
 				entry.getValue().carrier = null;
 			} else {
 				entry.getValue().time++;
 			}
-		}
-		for(String s : toRemove) {
-			drives(false).remove(s);
 		}
 	}
 }
