@@ -10,7 +10,6 @@ public enum PacketType {
 	COMPUTER_BOOM,
 	TICKET_SYNC,
 	TICKET_PRINT,
-	PORTABLE_TAPE_STOP,
 	PORTABLE_TAPE_STATE;
 
 	public static final PacketType[] VALUES = values();

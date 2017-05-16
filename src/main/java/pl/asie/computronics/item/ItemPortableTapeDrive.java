@@ -70,12 +70,16 @@ public class ItemPortableTapeDrive extends Item implements IItemWithDocumentatio
 	@Override
 	@SuppressWarnings("unchecked")
 	public void addInformation(ItemStack stack, EntityPlayer player, List info, boolean advanced) {
-		if(stack.hasTagCompound() && stack.getTagCompound().hasKey("state")) {
-			byte state = stack.getTagCompound().getByte("state");
-			if(state >= 0 && state < State.VALUES.length) {
-				info.add(StringUtil.localizeAndFormat("tooltip.computronics.tape.state",
-					StringUtil.localize("tooltip.computronics.tape.state."
-						+ State.VALUES[state].name().toLowerCase(Locale.ENGLISH))));
+		if(stack.hasTagCompound()) {
+			NBTTagCompound tag = stack.getTagCompound();
+			if(tag.hasKey("state") && tag.hasKey("inv")
+				&& ItemStack.loadItemStackFromNBT(tag.getCompoundTag("inv")) != null) {
+				byte state = tag.getByte("state");
+				if(state >= 0 && state < State.VALUES.length) {
+					info.add(StringUtil.localizeAndFormat("tooltip.computronics.tape.state",
+						StringUtil.localize("tooltip.computronics.tape.state."
+							+ State.VALUES[state].name().toLowerCase(Locale.ENGLISH))));
+				}
 			}
 		}
 		super.addInformation(stack, player, info, advanced);

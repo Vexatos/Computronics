@@ -90,10 +90,6 @@ public class NetworkHandlerClient extends MessageHandlerBase {
 				}
 			}
 			break;
-			case PORTABLE_TAPE_STOP: {
-				PortableDriveManager.INSTANCE.stopTapeDrive(packet.readString());
-			}
-			break;
 			case PORTABLE_TAPE_STATE: {
 				PortableTapeDrive tapeDrive = PortableDriveManager.INSTANCE.getTapeDrive(packet.readString(), true);
 				State state = State.VALUES[packet.readUnsignedByte()];

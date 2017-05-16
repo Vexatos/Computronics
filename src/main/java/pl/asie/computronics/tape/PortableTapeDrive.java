@@ -260,7 +260,7 @@ public class PortableTapeDrive implements IAudioSource {
 	private final IAudioReceiver internalSpeaker = new IAudioReceiver() {
 		@Override
 		public boolean connectsAudio(ForgeDirection side) {
-			return true;
+			return false;
 		}
 
 		@Override
