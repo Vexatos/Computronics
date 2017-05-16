@@ -1,9 +1,14 @@
 package pl.asie.computronics.item;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.tape.PortableDriveManager;
@@ -24,10 +29,41 @@ public class ItemPortableTapeDrive extends Item {
 		this.setCreativeTab(Computronics.tab);
 		this.setHasSubtypes(false);
 		this.setUnlocalizedName("computronics.portableTapeDrive");
-		this.setTextureName("computronics:portable_tape_drive");
+		this.setTextureName("computronics:portable_tape_drive_modern");
 		this.setMaxDamage(0);
 		this.setMaxStackSize(1);
 		this.setNoRepair();
+	}
+
+	private IIcon[] stateIcons = new IIcon[State.VALUES.length];
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerIcons(IIconRegister r) {
+		super.registerIcons(r);
+		for(int i = 0; i < stateIcons.length; i++) {
+			stateIcons[i] = r.registerIcon("computronics:portable_tape_drive_" + State.VALUES[i].name().toLowerCase(Locale.ENGLISH));
+		}
+	}
+
+	@Override
+	public IIcon getIcon(ItemStack stack, int pass) {
+		if(pass == 1 && stack.hasTagCompound()) {
+			NBTTagCompound tag = stack.getTagCompound();
+			if(tag.hasKey("state") && tag.hasKey("inv")
+				&& ItemStack.loadItemStackFromNBT(tag.getCompoundTag("inv")) != null) {
+				byte state = tag.getByte("state");
+				if(state >= 0 && state < stateIcons.length) {
+					return stateIcons[state];
+				}
+			}
+		}
+		return super.getIcon(stack, pass);
+	}
+
+	@Override
+	public boolean requiresMultipleRenderPasses() {
+		return true;
 	}
 
 	@Override

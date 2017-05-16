@@ -98,6 +98,10 @@ public class PortableTapeDrive implements IAudioSource {
 		}
 
 		save(getTag());
+		sendState();
+	}
+
+	protected void sendState() {
 		String id = PortableDriveManager.INSTANCE.getID(this, world.isRemote);
 		if(id != null) {
 			try {
