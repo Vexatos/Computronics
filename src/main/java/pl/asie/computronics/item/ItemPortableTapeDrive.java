@@ -1,5 +1,7 @@
 package pl.asie.computronics.item;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
@@ -29,7 +31,6 @@ import pl.asie.computronics.tile.TapeDriveState;
 import pl.asie.computronics.tile.TapeDriveState.State;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -47,7 +48,7 @@ public class ItemPortableTapeDrive extends Item {
 		private PortableDriveManager() {
 		}
 
-		private Map<String, TapeDrive> drives = new HashMap<String, TapeDrive>();
+		private BiMap<String, TapeDrive> drives = HashBiMap.create();
 
 		public TapeDrive getOrCreate(ItemStack stack) {
 			NBTTagCompound tag = stack.getTagCompound();
@@ -73,6 +74,14 @@ public class ItemPortableTapeDrive extends Item {
 
 		public void add(String id, TapeDrive drive) {
 			drives.put(id, drive);
+		}
+
+		public String getID(TapeDrive drive) {
+			return drives.inverse().get(drive);
+		}
+
+		public TapeDrive getTapeDrive(String id) {
+			return drives.get(id);
 		}
 
 		@SubscribeEvent
@@ -429,8 +438,10 @@ public class ItemPortableTapeDrive extends Item {
 					if(invStack != null && invStack.getItem() instanceof IItemTapeStorage) {
 						drive.inventory = invStack;
 						drive.onInvUpdate();
-						player.inventory.setInventorySlotContents(i, null);
-						player.inventory.markDirty();
+						player.inventory.decrStackSize(i, 1);
+						if(player instanceof EntityPlayerMP) {
+							((EntityPlayerMP) player).sendContainerToPlayer(player.inventoryContainer);
+						}
 						break;
 					}
 				}

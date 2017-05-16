@@ -84,6 +84,7 @@ option.computronics.enableLampColor=Lamp Color
 item.computronics.reelChromoxide.name=Chromium Dioxide Tape Reel
 item.computronics.drone_upgrade_docking.name=Drone Docking Upgrade
 item.computronics.dockingStation.name=Drone Docking Station
+item.computronics.portableTapeDrive.name=Portable Tape Drive
 item.computronics.robot_upgrade_camera.name=Camera Upgrade
 item.computronics.robot_upgrade_chatbox.name=Chat Upgrade
 item.computronics.robot_upgrade_radar.name=Radar Upgrade

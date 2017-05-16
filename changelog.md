@@ -1,3 +1,8 @@
+==== 1.6.5 ====
+
+  * ADDED: Portable Tape Drive!
+    - Carry your music with you!
+
 ==== 1.6.4 ====
 
   * CHANGED: Particle Card now uses more energy over longer distances.

@@ -4,6 +4,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetHandler;
 import net.minecraft.tileentity.TileEntity;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.item.ItemPortableTapeDrive.PortableDriveManager;
+import pl.asie.computronics.item.ItemPortableTapeDrive.TapeDrive;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TapeDriveState.State;
 import pl.asie.computronics.tile.TileTapeDrive;
@@ -40,6 +42,14 @@ public class NetworkHandlerServer extends MessageHandlerBase {
 			case TICKET_PRINT: {
 				if(Mods.isLoaded(Mods.Railcraft)) {
 					Computronics.railcraft.printTicket(packet, player, true);
+				}
+			}
+			break;
+			case PORTABLE_TAPE_STATE: {
+				TapeDrive tapeDrive = PortableDriveManager.INSTANCE.getTapeDrive(packet.readString());
+				State state = State.VALUES[packet.readUnsignedByte()];
+				if(tapeDrive != null) {
+					tapeDrive.switchState(state);
 				}
 			}
 			break;
