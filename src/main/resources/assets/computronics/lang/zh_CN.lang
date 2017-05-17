@@ -58,14 +58,16 @@ tooltip.computronics.waila.relay.notbound=未绑定
 tooltip.computronics.waila.tape.tapeinserted=已插入录音带
 tooltip.computronics.waila.tape.labeltapeinserted=已插入录音带"%s"
 tooltip.computronics.waila.tape.notapeinserted=录音带插入
-tooltip.computronics.waila.tape.state=状态: %s
-tooltip.computronics.waila.tape.state.stopped=已停止
-tooltip.computronics.waila.tape.state.playing=播放中
-tooltip.computronics.waila.tape.state.rewinding=倒带中
-tooltip.computronics.waila.tape.state.forwarding=快进中
 tooltip.computronics.waila.lamp.red=红: %s
 tooltip.computronics.waila.lamp.green=绿: %s
 tooltip.computronics.waila.lamp.blue=蓝: %s
+
+tooltip.computronics.tape.state=状态: %s
+
+tooltip.computronics.tape.state.stopped=已停止
+tooltip.computronics.tape.state.playing=播放中
+tooltip.computronics.tape.state.rewinding=倒带中
+tooltip.computronics.tape.state.forwarding=快进中
 
 tooltip.computronics.manual.oc.tab.blocks=Computronics: 方块
 tooltip.computronics.manual.oc.tab.items=Computronics: 物品

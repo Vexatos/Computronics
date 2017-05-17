@@ -3,6 +3,8 @@ package pl.asie.computronics.network;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetHandler;
 import net.minecraft.tileentity.TileEntity;
+import pl.asie.computronics.tape.PortableDriveManager;
+import pl.asie.computronics.tape.PortableTapeDrive;
 import pl.asie.computronics.tile.TapeDriveState.State;
 import pl.asie.computronics.tile.TileTapeDrive;
 import pl.asie.lib.network.MessageHandlerBase;
@@ -41,6 +43,14 @@ public class NetworkHandlerServer extends MessageHandlerBase {
 				}
 			}
 			break;*/
+			case PORTABLE_TAPE_STATE: {
+				PortableTapeDrive tapeDrive = PortableDriveManager.INSTANCE.getTapeDrive(packet.readString(), false);
+				State state = State.VALUES[packet.readUnsignedByte()];
+				if(tapeDrive != null) {
+					tapeDrive.switchState(state);
+				}
+			}
+			break;
 		}
 	}
 }

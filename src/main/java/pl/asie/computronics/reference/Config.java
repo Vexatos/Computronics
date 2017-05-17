@@ -17,6 +17,7 @@ public class Config {
 	public static int CAMERA_DISTANCE = 32;
 	public static int TAPEDRIVE_DISTANCE = 24;
 	public static int TAPEDRIVE_BUFFER_MS = 750;
+	public static int PORTABLE_TAPEDRIVE_DISTANCE = 8;
 	public static int RADAR_RANGE = 8;
 	public static int FX_RANGE = 256;
 	public static boolean RADAR_ONLY_DISTANCE = true;
@@ -225,6 +226,8 @@ public class Config {
 		TAPEDRIVE_BUFFER_MS = config.getInt("audioPreloadMs", "tapedrive", 750, 500, 10000, "The amount of time (in milliseconds) used for pre-buffering the tape for audio playback. If you get audio playback glitches in SMP/your TPS is under 20, RAISE THIS VALUE!");
 		TAPEDRIVE_DISTANCE = config.getInt("hearingDistance", "tapedrive", 24, 0, 64, "The distance up to which Tape Drives can be heard.");
 		TAPE_LENGTHS = config.getString("tapeLengths", "tapedrive", "4,8,16,32,64,2,6,16,128,128", "The lengths of the computronics tapes. Should be 10 numbers separated by commas");
+
+		PORTABLE_TAPEDRIVE_DISTANCE= config.getInt("hearingDistance", "tapedrive.portable", 8, 0, 64, "The distance up to which Portable Tape Drives can be heard.");
 
 		// General
 		REDSTONE_REFRESH = config.getBoolean("enableTickingRedstoneSupport", "general", true, "Set whether some machines should stop being tickless in exchange for redstone output support.");

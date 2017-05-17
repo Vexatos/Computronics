@@ -70,6 +70,11 @@ public class ModRecipes {
 					'c', Computronics.cipher != null ? Computronics.cipher : "gemDiamond", 'e', "enderpearl", 'i', "ingotIron",
 					'd', Computronics.cipher != null ? "gemDiamond" : "ingotGold");
 			}
+			if(Computronics.portableTapeDrive != null) {
+				RecipeUtils.addShapedRecipe(new ItemStack(Computronics.portableTapeDrive, 1, 0),
+					"sgs", "sas", "srs", 's', Blocks.stonebrick, 'r', "dustRedstone", 'g', "blockGlassColorless",
+					'a', Computronics.tapeReader != null ? Computronics.tapeReader : Computronics.ironNote != null ? Computronics.ironNote : Blocks.noteblock);
+			}
 		}
 		/*if(Mods.isLoaded(Mods.Railcraft) && Computronics.railcraft != null) {
 			registerRailcraftRecipes();
@@ -189,6 +194,16 @@ public class ModRecipes {
 				'c', Computronics.cipher != null ? Computronics.cipher : "oc:cpu2",
 				'b', "oc:capacitor"
 			);
+		}
+		if(Computronics.portableTapeDrive != null) {
+			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.portableTapeDrive, 1, 0),
+				"sgs", "tab", "srs",
+				's', "oc:chamelium",
+				'r', "oc:materialCircuitBoardPrinted",
+				'g', "blockGlassColorless",
+				't', "oc:materialTransistor",
+				'b', Blocks.iron_bars,
+				'a', Computronics.tapeReader != null ? Computronics.tapeReader : Computronics.ironNote != null ? Computronics.ironNote : Blocks.noteblock);
 		}
 		return true;
 	}

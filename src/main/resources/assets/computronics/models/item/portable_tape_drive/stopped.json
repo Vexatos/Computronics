@@ -1,0 +1,6 @@
+{
+    "parent": "computronics:item/portable_tape_drive/base",
+    "textures": {
+        "layer1": "computronics:items/portable_tape_drive_stopped"
+    }
+}
