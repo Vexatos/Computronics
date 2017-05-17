@@ -8,6 +8,8 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import pl.asie.lib.AsieLibMod;
 
+import javax.annotation.Nullable;
+
 /**
  * @author Vexatos
  */
@@ -16,7 +18,7 @@ public abstract class ContainerInventory extends Container {
 	private final IInventory inventory;
 	private final int containerSize;
 
-	public ContainerInventory(IInventory inventory) {
+	public ContainerInventory(@Nullable IInventory inventory) {
 		this.inventory = inventory;
 		if(inventory != null) {
 			this.containerSize = inventory.getSizeInventory();
