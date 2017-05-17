@@ -20,13 +20,13 @@ public class StreamingAudioPlayer extends DFPWM {
 
 	public class SourceEntry {
 
-		public final int codecId;
+		public final String id;
 		public final int x, y, z;
 		public final IntBuffer src;
 		public int receivedPackets;
 
-		public SourceEntry(int codecId, int x, int y, int z) {
-			this.codecId = codecId;
+		public SourceEntry(String id, int x, int y, int z) {
+			this.id = id;
 			this.x = x;
 			this.y = y;
 			this.z = z;
@@ -99,23 +99,23 @@ public class StreamingAudioPlayer extends DFPWM {
 	}
 
 	@SideOnly(Side.CLIENT)
-	public void play(int codecId, int x, int y, int z) {
-		play(codecId, x, y, z, 0.0f);
+	public void play(String id, int x, int y, int z) {
+		play(id, x, y, z, 0.0f);
 	}
 
 	@SideOnly(Side.CLIENT)
-	public void play(int codecId, int x, int y, int z, float rolloff) {
-		FloatBuffer sourcePos = (FloatBuffer) (BufferUtils.createFloatBuffer(3).put(new float[] { x + 0.5F, y + 0.5F, z + 0.5F }).rewind());
+	public void play(String id, int x, int y, int z, float rolloff) {
+		FloatBuffer sourcePos = (FloatBuffer) (BufferUtils.createFloatBuffer(3).put(new float[] { x+ 0.5F, y+ 0.5F, z + 0.5F}).rewind());
 		FloatBuffer sourceVel = (FloatBuffer) (BufferUtils.createFloatBuffer(3).put(new float[] { 0.0f, 0.0f, 0.0f }).rewind());
 
 		SourceEntry source = null;
 		for(SourceEntry entry : sources) {
-			if(codecId == entry.codecId || entry.x == x && entry.y == y && entry.z == z) {
+			if((id != null && id.equals(entry.id)) || entry.x == x && entry.y == y && entry.z == z) {
 				source = entry;
 			}
 		}
 		if(source == null) {
-			source = new SourceEntry(codecId, x, y, z);
+			source = new SourceEntry(id, x, y, z);
 			sources.add(source);
 		}
 

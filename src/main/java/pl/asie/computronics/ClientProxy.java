@@ -21,10 +21,12 @@ import pl.asie.computronics.api.audio.AudioPacketRegistry;
 import pl.asie.computronics.audio.AudioPacketClientHandlerDFPWM;
 import pl.asie.computronics.audio.SoundCardPacket;
 import pl.asie.computronics.audio.SoundCardPacketClientHandler;
+import pl.asie.computronics.item.ItemPortableTapeDrive;
 import pl.asie.computronics.oc.IntegrationOpenComputers;
 import pl.asie.computronics.oc.client.RackMountableRenderer;
 import pl.asie.computronics.oc.client.UpgradeRenderer;
 import pl.asie.computronics.reference.Mods;
+import pl.asie.computronics.tape.TapeScrollEventHandler;
 import pl.asie.computronics.util.boom.SelfDestruct;
 import pl.asie.computronics.util.internal.IBlockWithColor;
 import pl.asie.computronics.util.internal.IItemWithColor;
@@ -91,6 +93,7 @@ public class ClientProxy extends CommonProxy {
 		if(Computronics.railcraft != null) {
 			Computronics.railcraft.registerRenderers();
 		}
+		ItemPortableTapeDrive.MeshDefinition.registerRenderers();
 	}
 
 	@Override
@@ -99,6 +102,7 @@ public class ClientProxy extends CommonProxy {
 		Audio.init();
 		registerRenderers();
 		registerColors();
+		MinecraftForge.EVENT_BUS.register(new TapeScrollEventHandler());
 	}
 
 	private void registerColors() {

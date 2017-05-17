@@ -27,11 +27,13 @@ tooltip.computronics.waila.relay.notbound=Nesvázáno
 tooltip.computronics.waila.tape.tapeinserted=Kazeta vložena
 tooltip.computronics.waila.tape.labeltapeinserted=Kazeta "%s" vložena
 tooltip.computronics.waila.tape.notapeinserted=Není vložena žádná kazeta
-tooltip.computronics.waila.tape.state=Stav: %s
-tooltip.computronics.waila.tape.state.stopped=Zastaveno
-tooltip.computronics.waila.tape.state.playing=Přehrávám
-tooltip.computronics.waila.tape.state.rewinding=Přetáčím zpět
-tooltip.computronics.waila.tape.state.forwarding=Přetáčím dopředu
+
+tooltip.computronics.tape.state=Stav: %s
+
+tooltip.computronics.tape.state.stopped=Zastaveno
+tooltip.computronics.tape.state.playing=Přehrávám
+tooltip.computronics.tape.state.rewinding=Přetáčím zpět
+tooltip.computronics.tape.state.forwarding=Přetáčím dopředu
 
 option.computronics.enableAddress=Zobrazit adresu komponentu
 option.computronics.enableTape=Zobrazit vloženou kazetu

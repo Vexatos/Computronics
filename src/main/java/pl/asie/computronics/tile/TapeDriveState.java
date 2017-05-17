@@ -26,8 +26,8 @@ public class TapeDriveState {
 	private State state = State.STOPPED;
 	private int codecId = -1;//, packetId;
 	private long lastCodecTime;
-	protected int packetSize = 1500;
-	protected int soundVolume = 127;
+	public int packetSize = 1500;
+	public int soundVolume = 127;
 	private ITapeStorage storage;
 
 	@Nullable
@@ -35,11 +35,11 @@ public class TapeDriveState {
 		return storage;
 	}
 
-	protected void setStorage(@Nullable ITapeStorage storage) {
+	public void setStorage(@Nullable ITapeStorage storage) {
 		this.storage = storage;
 	}
 
-	protected void setState(State state) {
+	public void setState(State state) {
 		this.state = state;
 	}
 

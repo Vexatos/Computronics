@@ -1,3 +1,8 @@
+==== 1.6.5 ====
+
+  * ADDED: Portable Tape Drive!
+    - Carry your music with you!
+
 ==== 1.6.4 ====
 
   * CHANGED: Particle Card now uses more energy over longer distances.
@@ -12,6 +17,7 @@
   * **[1.10.2]** FIXED: Digital Detector name.
 
   * **[1.11.2]** FIXED: Crash while rendering tooltip of chat box or advanced cipher block.
+  * **[1.11.2]** FIXED: Crash when removing tapes from a tape drive.
 
 ==== 1.6.3 ====
 

@@ -77,7 +77,7 @@ public class RobotUpgradeSpeech extends ManagedEnvironmentWithComponentConnector
 		}
 
 		@Override
-		public void receivePacket(AudioPacket packet, EnumFacing direction) {
+		public void receivePacket(AudioPacket packet, @Nullable EnumFacing direction) {
 			packet.addReceiver(this);
 		}
 	};
@@ -209,6 +209,7 @@ public class RobotUpgradeSpeech extends ManagedEnvironmentWithComponentConnector
 
 	private ByteArrayInputStream storage;
 
+	@Nullable
 	private AudioPacket createMusicPacket(IAudioSource source) {
 		if(storage == null) {
 			return null;
