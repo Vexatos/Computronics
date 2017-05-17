@@ -9,7 +9,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -26,6 +25,7 @@ import pl.asie.computronics.audio.MachineSound;
 import pl.asie.computronics.network.PacketType;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
+import pl.asie.computronics.reference.Sounds;
 import pl.asie.computronics.tile.TapeDriveState;
 import pl.asie.lib.network.Packet;
 
@@ -218,14 +218,14 @@ public class PortableTapeDrive implements IAudioSource {
 		if(this.inventory == null) {
 			if(state.getStorage() != null) { // Tape was inserted
 				// Play eject sound
-				world.playSound(null, pos, new SoundEvent(new ResourceLocation("computronics:tape_eject")), SoundCategory.BLOCKS, 1, 0);
+				world.playSound(null, pos, Sounds.TAPE_EJECT.event, SoundCategory.BLOCKS, 1, 0);
 			}
 			unloadStorage();
 		} else {
 			loadStorage();
 			if(this.inventory.getItem() instanceof IItemTapeStorage) {
 				// Play insert sound
-				world.playSound(null, pos, new SoundEvent(new ResourceLocation("computronics:tape_insert")), SoundCategory.BLOCKS, 1, 0);
+				world.playSound(null, pos, Sounds.TAPE_INSERT.event, SoundCategory.BLOCKS, 1, 0);
 			}
 		}
 	}
