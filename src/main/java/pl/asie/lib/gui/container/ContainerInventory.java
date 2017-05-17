@@ -36,7 +36,7 @@ public abstract class ContainerInventory extends Container {
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int slot) {
 		if(inventory == null) {
-			return null;
+			return ItemStack.EMPTY;
 		}
 
 		//ItemStack stack = null;
@@ -56,12 +56,12 @@ public abstract class ContainerInventory extends Container {
 			} else if(!this.mergeItemStack(stackInSlot, 0, getSize(), false)) {
 				return null;
 			}
-			if(stackInSlot.stackSize == 0) {
+			if(stackInSlot.getCount() == 0) {
 				slotObject.putStack(null);
 			} else {
 				slotObject.onSlotChanged();
 			}*/
-		return null;
+		return ItemStack.EMPTY;
 	}
 
 	//Mostly stolen from Sangar
@@ -75,17 +75,17 @@ public abstract class ContainerInventory extends Container {
 
 		if(fromStack.getMaxStackSize() > 1) {
 			for(int i = begin; i * step <= end; i += step) {
-				if(i >= 0 && i < inventorySlots.size() && from.getHasStack() && from.getStack().stackSize > 0) {
+				if(i >= 0 && i < inventorySlots.size() && from.getHasStack() && from.getStack().getCount() > 0) {
 					Slot intoSlot = inventorySlots.get(i);
 					if(intoSlot.inventory != from.inventory && intoSlot.getHasStack()) {
 						ItemStack intoStack = intoSlot.getStack();
 						boolean itemsAreEqual = fromStack.isItemEqual(intoStack) && ItemStack.areItemStackTagsEqual(fromStack, intoStack);
 						int maxStackSize = Math.min(fromStack.getMaxStackSize(), intoSlot.getSlotStackLimit());
-						boolean slotHasCapacity = intoStack.stackSize < maxStackSize;
+						boolean slotHasCapacity = intoStack.getCount() < maxStackSize;
 						if(itemsAreEqual && slotHasCapacity) {
-							int itemsMoved = Math.min(maxStackSize - intoStack.stackSize, fromStack.stackSize);
+							int itemsMoved = Math.min(maxStackSize - intoStack.getCount(), fromStack.getCount());
 							if(itemsMoved > 0) {
-								intoStack.stackSize += from.decrStackSize(itemsMoved).stackSize;
+								intoStack.grow(from.decrStackSize(itemsMoved).getCount());
 								intoSlot.onSlotChanged();
 								somethingChanged = true;
 							}
@@ -96,11 +96,11 @@ public abstract class ContainerInventory extends Container {
 		}
 
 		for(int i = begin; i * step <= end; i += step) {
-			if(i >= 0 && i < inventorySlots.size() && from.getHasStack() && from.getStack().stackSize > 0) {
+			if(i >= 0 && i < inventorySlots.size() && from.getHasStack() && from.getStack().getCount() > 0) {
 				Slot intoSlot = inventorySlots.get(i);
 				if(intoSlot.inventory != from.inventory && !intoSlot.getHasStack() && intoSlot.isItemValid(fromStack)) {
 					int maxStackSize = Math.min(fromStack.getMaxStackSize(), intoSlot.getSlotStackLimit());
-					int itemsMoved = Math.min(maxStackSize, fromStack.stackSize);
+					int itemsMoved = Math.min(maxStackSize, fromStack.getCount());
 					intoSlot.putStack(from.decrStackSize(itemsMoved));
 					somethingChanged = true;
 				}

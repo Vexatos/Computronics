@@ -64,7 +64,7 @@ public class ItemPortableTapeDrive extends Item implements IItemWithDocumentatio
 			if(stack.hasTagCompound()) {
 				NBTTagCompound tag = stack.getTagCompound();
 				if(tag.hasKey("state") && tag.hasKey("inv") && tag.hasKey("tid")
-					&& ItemStack.loadItemStackFromNBT(tag.getCompoundTag("inv")) != null
+					&& !new ItemStack(tag.getCompoundTag("inv")).isEmpty()
 					&& PortableDriveManager.INSTANCE.exists(tag.getString("tid"), true)) {
 					byte state = tag.getByte("state");
 					if(state >= 0 && state < MODEL_LOCATIONS.length) {
@@ -92,11 +92,11 @@ public class ItemPortableTapeDrive extends Item implements IItemWithDocumentatio
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public void addInformation(ItemStack stack, EntityPlayer player, List info, boolean advanced) {
+	public void addInformation(ItemStack stack, EntityPlayer player, List<String> info, boolean advanced) {
 		if(stack.hasTagCompound()) {
 			NBTTagCompound tag = stack.getTagCompound();
 			if(tag.hasKey("state") && tag.hasKey("inv") && tag.hasKey("tid")
-				&& ItemStack.loadItemStackFromNBT(tag.getCompoundTag("inv")) != null
+				&& !new ItemStack(tag.getCompoundTag("inv")).isEmpty()
 				&& PortableDriveManager.INSTANCE.exists(tag.getString("tid"), true)) {
 				byte state = tag.getByte("state");
 				if(state >= 0 && state < State.VALUES.length) {
@@ -111,7 +111,7 @@ public class ItemPortableTapeDrive extends Item implements IItemWithDocumentatio
 
 	@Override
 	public boolean onEntityItemUpdate(EntityItem entity) {
-		PortableTapeDrive drive = PortableDriveManager.INSTANCE.getOrCreate(entity.getEntityItem(), entity.worldObj.isRemote);
+		PortableTapeDrive drive = PortableDriveManager.INSTANCE.getOrCreate(entity.getEntityItem(), entity.world.isRemote);
 		drive.resetTime();
 		drive.updateCarrier(entity, entity.getEntityItem());
 		drive.update();
@@ -131,11 +131,12 @@ public class ItemPortableTapeDrive extends Item implements IItemWithDocumentatio
 	}
 
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
+	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+		ItemStack stack = player.getHeldItem(hand);
 		PortableTapeDrive drive = PortableDriveManager.INSTANCE.getOrCreate(stack, world.isRemote);
 		drive.updateCarrier(player, stack);
 		if(world.isRemote) {
-			return super.onItemRightClick(stack, world, player, hand);
+			return super.onItemRightClick(world, player, hand);
 		}
 		if(player.isSneaking()) {
 			player.openGui(Computronics.instance, Computronics.guiPortableTapeDrive.getGuiID(), world, 0, 0, 0);

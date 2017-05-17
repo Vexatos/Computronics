@@ -3,14 +3,13 @@ package pl.asie.computronics.gui;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import pl.asie.computronics.Computronics;
 import pl.asie.computronics.item.ItemTape;
 import pl.asie.computronics.tile.TapeDriveState.State;
 import pl.asie.computronics.util.StringUtil;
 import pl.asie.lib.gui.GuiBase;
 import pl.asie.lib.gui.container.ContainerInventory;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 
 public class GuiTapePlayer extends GuiBase<ContainerInventory> {
@@ -116,6 +115,7 @@ public class GuiTapePlayer extends GuiBase<ContainerInventory> {
 	}
 
 	// Uses NBT data.
+	@Nullable
 	private String getLabel() {
 		ItemStack stack = this.container.getInventory().get(0);
 		if(!stack.isEmpty() && stack.getItem() instanceof ItemTape) {

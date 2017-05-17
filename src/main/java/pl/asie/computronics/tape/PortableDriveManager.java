@@ -82,11 +82,11 @@ public final class PortableDriveManager {
 		if(event.phase != TickEvent.Phase.END) {
 			return;
 		}
-		for(EntityPlayerMP player : FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerList()) {
+		for(EntityPlayerMP player : FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers()) {
 			for(int i = 0; i < player.inventory.getSizeInventory(); i++) {
 				ItemStack stack = player.inventory.getStackInSlot(i);
-				if(stack != null && stack.getItem() instanceof ItemPortableTapeDrive) {
-					PortableTapeDrive drive = PortableDriveManager.INSTANCE.getOrCreate(stack, player.worldObj.isRemote);
+				if(!stack.isEmpty() && stack.getItem() instanceof ItemPortableTapeDrive) {
+					PortableTapeDrive drive = PortableDriveManager.INSTANCE.getOrCreate(stack, player.world.isRemote);
 					drive.resetTime();
 					drive.updateCarrier(player, stack);
 					drive.update();
@@ -112,12 +112,12 @@ public final class PortableDriveManager {
 		if(event.phase != TickEvent.Phase.END) {
 			return;
 		}
-		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+		EntityPlayer player = Minecraft.getMinecraft().player;
 		if(player != null) {
 			for(int i = 0; i < player.inventory.getSizeInventory(); i++) {
 				ItemStack stack = player.inventory.getStackInSlot(i);
-				if(stack != null && stack.getItem() instanceof ItemPortableTapeDrive) {
-					PortableTapeDrive drive = PortableDriveManager.INSTANCE.getOrCreate(stack, player.worldObj.isRemote);
+				if(!stack.isEmpty() && stack.getItem() instanceof ItemPortableTapeDrive) {
+					PortableTapeDrive drive = PortableDriveManager.INSTANCE.getOrCreate(stack, player.world.isRemote);
 					drive.resetTime();
 					drive.updateCarrier(player, stack);
 					drive.update();

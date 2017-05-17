@@ -22,12 +22,12 @@ public class TapeScrollEventHandler {
 
 	@SubscribeEvent
 	public void onMouseEvent(MouseEvent event) {
-		EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
+		EntityPlayerSP player = Minecraft.getMinecraft().player;
 
 		if(event.getDwheel() != 0 && player != null && player.isSneaking()) {
 			ItemStack stack = player.getHeldItemMainhand();
 
-			if(stack != null) {
+			if(!stack.isEmpty()) {
 				Item item = stack.getItem();
 
 				if(item instanceof ItemPortableTapeDrive) {

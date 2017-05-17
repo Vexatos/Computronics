@@ -50,7 +50,7 @@ public class PortableTapeDrive implements IAudioSource {
 	}
 
 	public void updateCarrier(Entity carrier, ItemStack self) {
-		this.world = carrier.worldObj;
+		this.world = carrier.world;
 		this.pos = carrier.getPosition();
 		this.carrier = carrier;
 		this.self = self;
@@ -179,7 +179,7 @@ public class PortableTapeDrive implements IAudioSource {
 			unloadStorage();
 		}
 		ItemStack stack = this.inventory;
-		if(stack != null) {
+		if(!stack.isEmpty()) {
 			// Get Storage.
 			Item item = stack.getItem();
 			if(item instanceof IItemTapeStorage) {
@@ -215,7 +215,7 @@ public class PortableTapeDrive implements IAudioSource {
 	}
 
 	public void onInvUpdate() {
-		if(this.inventory == null) {
+		if(this.inventory.isEmpty()) {
 			if(state.getStorage() != null) { // Tape was inserted
 				// Play eject sound
 				world.playSound(null, pos, Sounds.TAPE_EJECT.event, SoundCategory.BLOCKS, 1, 0);
@@ -232,7 +232,7 @@ public class PortableTapeDrive implements IAudioSource {
 
 	public void load(NBTTagCompound tag) {
 		if(tag.hasKey("inv")) {
-			this.inventory = ItemStack.loadItemStackFromNBT(tag.getCompoundTag("inv"));
+			this.inventory = new ItemStack(tag.getCompoundTag("inv"));
 		}
 		if(tag.hasKey("state")) {
 			this.state.setState(TapeDriveState.State.VALUES[tag.getByte("state")]);
@@ -250,7 +250,7 @@ public class PortableTapeDrive implements IAudioSource {
 
 	public void save(NBTTagCompound tag) {
 		NBTTagCompound inv = new NBTTagCompound();
-		if(inventory != null) {
+		if(!inventory.isEmpty()) {
 			inventory.writeToNBT(inv);
 		}
 		tag.setTag("inv", inv);
@@ -320,6 +320,11 @@ public class PortableTapeDrive implements IAudioSource {
 		}
 
 		@Override
+		public boolean isEmpty() {
+			return inventory.isEmpty();
+		}
+
+		@Override
 		public int getInventoryStackLimit() {
 			return 1;
 		}
@@ -352,7 +357,7 @@ public class PortableTapeDrive implements IAudioSource {
 		@Override
 		public ItemStack getStackInSlot(int slot) {
 			if(slot != 0) {
-				return null;
+				return ItemStack.EMPTY;
 			}
 			return PortableTapeDrive.this.inventory;
 		}
@@ -360,20 +365,20 @@ public class PortableTapeDrive implements IAudioSource {
 		@Override
 		public ItemStack decrStackSize(int slot, int amount) {
 			if(slot != 0) {
-				return null;
+				return ItemStack.EMPTY;
 			}
-			if(PortableTapeDrive.this.inventory != null) {
+			if(!PortableTapeDrive.this.inventory.isEmpty()) {
 				ItemStack stack;
-				if(PortableTapeDrive.this.inventory.stackSize <= amount) {
+				if(PortableTapeDrive.this.inventory.getCount() <= amount) {
 					stack = PortableTapeDrive.this.inventory;
-					PortableTapeDrive.this.inventory = null;
+					PortableTapeDrive.this.inventory = ItemStack.EMPTY;
 					PortableTapeDrive.this.onInvUpdate();
 					return stack;
 				} else {
 					stack = PortableTapeDrive.this.inventory.splitStack(amount);
 
-					if(PortableTapeDrive.this.inventory.stackSize == 0) {
-						PortableTapeDrive.this.inventory = null;
+					if(PortableTapeDrive.this.inventory.getCount() == 0) {
+						PortableTapeDrive.this.inventory = ItemStack.EMPTY;
 					}
 
 					PortableTapeDrive.this.onInvUpdate();
@@ -381,23 +386,23 @@ public class PortableTapeDrive implements IAudioSource {
 					return stack;
 				}
 			} else {
-				return null;
+				return ItemStack.EMPTY;
 			}
 		}
 
 		@Override
 		public ItemStack removeStackFromSlot(int slot) {
 			ItemStack stack = getStackInSlot(slot);
-			if(stack == null) {
-				return null;
+			if(stack.isEmpty()) {
+				return ItemStack.EMPTY;
 			}
-			PortableTapeDrive.this.inventory = null;
+			PortableTapeDrive.this.inventory = ItemStack.EMPTY;
 			PortableTapeDrive.this.onInvUpdate();
 			return stack;
 		}
 
 		@Override
-		public void setInventorySlotContents(int slot, @Nullable ItemStack stack) {
+		public void setInventorySlotContents(int slot, ItemStack stack) {
 			if(slot != 0) {
 				return;
 			}
@@ -406,7 +411,7 @@ public class PortableTapeDrive implements IAudioSource {
 		}
 
 		@Override
-		public boolean isUseableByPlayer(EntityPlayer player) {
+		public boolean isUsableByPlayer(EntityPlayer player) {
 			return true;
 		}
 
