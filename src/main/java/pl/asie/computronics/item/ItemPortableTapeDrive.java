@@ -1,14 +1,17 @@
 package pl.asie.computronics.item;
 
 import net.minecraft.client.renderer.ItemMeshDefinition;
-import net.minecraft.client.resources.model.ModelBakery;
-import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.model.ModelBakery;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
@@ -128,18 +131,19 @@ public class ItemPortableTapeDrive extends Item implements IItemWithDocumentatio
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
+	public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
 		PortableTapeDrive drive = PortableDriveManager.INSTANCE.getOrCreate(stack, world.isRemote);
 		drive.updateCarrier(player, stack);
 		if(world.isRemote) {
-			return super.onItemRightClick(stack, world, player);
+			return super.onItemRightClick(stack, world, player, hand);
 		}
 		if(player.isSneaking()) {
 			player.openGui(Computronics.instance, Computronics.guiPortableTapeDrive.getGuiID(), world, 0, 0, 0);
+			return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
 		} else {
 			drive.switchState(drive.getEnumState() != State.STOPPED ? State.STOPPED : State.PLAYING);
+			return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
 		}
-		return super.onItemRightClick(stack, world, player);
 	}
 
 	@Override

@@ -72,8 +72,8 @@ public class ModRecipes {
 			}
 			if(Computronics.portableTapeDrive != null) {
 				RecipeUtils.addShapedRecipe(new ItemStack(Computronics.portableTapeDrive, 1, 0),
-					"sgs", "sas", "srs", 's', Blocks.stonebrick, 'r', "dustRedstone", 'g', "blockGlassColorless",
-					'a', Computronics.tapeReader != null ? Computronics.tapeReader : Computronics.ironNote != null ? Computronics.ironNote : Blocks.noteblock);
+					"sgs", "sas", "srs", 's', Blocks.STONEBRICK, 'r', "dustRedstone", 'g', "blockGlassColorless",
+					'a', Computronics.tapeReader != null ? Computronics.tapeReader : Computronics.ironNote != null ? Computronics.ironNote : Blocks.NOTEBLOCK);
 			}
 		}
 		/*if(Mods.isLoaded(Mods.Railcraft) && Computronics.railcraft != null) {
@@ -202,8 +202,8 @@ public class ModRecipes {
 				'r', "oc:materialCircuitBoardPrinted",
 				'g', "blockGlassColorless",
 				't', "oc:materialTransistor",
-				'b', Blocks.iron_bars,
-				'a', Computronics.tapeReader != null ? Computronics.tapeReader : Computronics.ironNote != null ? Computronics.ironNote : Blocks.noteblock);
+				'b', Blocks.IRON_BARS,
+				'a', Computronics.tapeReader != null ? Computronics.tapeReader : Computronics.ironNote != null ? Computronics.ironNote : Blocks.NOTEBLOCK);
 		}
 		return true;
 	}

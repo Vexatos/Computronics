@@ -28,7 +28,7 @@ public class GuiProviderPortableTapeDrive extends GuiProviderBase {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public GuiContainer makeGui(int ID, EntityPlayer player, final World world, int x, int y, int z) {
-		ItemStack stack = player.getHeldItem();
+		ItemStack stack = player.getHeldItemMainhand();
 		if(stack != null && stack.getItem() instanceof ItemPortableTapeDrive) {
 			final PortableTapeDrive tapeDrive = PortableDriveManager.INSTANCE.getOrCreate(stack, world.isRemote);
 			return new GuiTapePlayer(new IGuiTapeDrive() {
@@ -59,7 +59,7 @@ public class GuiProviderPortableTapeDrive extends GuiProviderBase {
 
 	@Override
 	public Container makeContainer(int ID, EntityPlayer player, World world, int x, int y, int z) {
-		ItemStack stack = player.getHeldItem();
+		ItemStack stack = player.getHeldItemMainhand();
 		if(stack != null && stack.getItem() instanceof ItemPortableTapeDrive) {
 			return makeContainer(player, PortableDriveManager.INSTANCE.getOrCreate(stack, world.isRemote));
 		}

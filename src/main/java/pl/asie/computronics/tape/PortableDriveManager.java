@@ -4,9 +4,10 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.server.MinecraftServer;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -78,17 +79,14 @@ public final class PortableDriveManager {
 		if(event.phase != TickEvent.Phase.END) {
 			return;
 		}
-		for(Object o : MinecraftServer.getServer().getConfigurationManager().playerEntityList) {
-			if(o instanceof EntityPlayer) {
-				EntityPlayer player = (EntityPlayer) o;
-				for(int i = 0; i < player.inventory.getSizeInventory(); i++) {
-					ItemStack stack = player.inventory.getStackInSlot(i);
-					if(stack != null && stack.getItem() instanceof ItemPortableTapeDrive) {
-						PortableTapeDrive drive = PortableDriveManager.INSTANCE.getOrCreate(stack, player.worldObj.isRemote);
-						drive.resetTime();
-						drive.updateCarrier(player, stack);
-						drive.update();
-					}
+		for(EntityPlayerMP player : FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerList()) {
+			for(int i = 0; i < player.inventory.getSizeInventory(); i++) {
+				ItemStack stack = player.inventory.getStackInSlot(i);
+				if(stack != null && stack.getItem() instanceof ItemPortableTapeDrive) {
+					PortableTapeDrive drive = PortableDriveManager.INSTANCE.getOrCreate(stack, player.worldObj.isRemote);
+					drive.resetTime();
+					drive.updateCarrier(player, stack);
+					drive.update();
 				}
 			}
 		}

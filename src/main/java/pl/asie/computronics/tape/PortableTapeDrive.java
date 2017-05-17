@@ -6,11 +6,13 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.IChatComponent;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.relauncher.Side;
@@ -214,14 +216,14 @@ public class PortableTapeDrive implements IAudioSource {
 		if(this.inventory == null) {
 			if(state.getStorage() != null) { // Tape was inserted
 				// Play eject sound
-				world.playSoundEffect(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, "computronics:tape_eject", 1, 0);
+				world.playSound(null, pos, new SoundEvent(new ResourceLocation("computronics:tape_eject")), SoundCategory.BLOCKS, 1, 0);
 			}
 			unloadStorage();
 		} else {
 			loadStorage();
 			if(this.inventory.getItem() instanceof IItemTapeStorage) {
 				// Play insert sound
-				world.playSoundEffect(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, "computronics:tape_insert", 1, 0);
+				world.playSound(null, pos, new SoundEvent(new ResourceLocation("computronics:tape_insert")), SoundCategory.BLOCKS, 1, 0);
 			}
 		}
 	}
@@ -306,8 +308,8 @@ public class PortableTapeDrive implements IAudioSource {
 		}
 
 		@Override
-		public IChatComponent getDisplayName() {
-			return new ChatComponentTranslation(getName());
+		public ITextComponent getDisplayName() {
+			return new TextComponentTranslation(getName());
 		}
 
 		@Override

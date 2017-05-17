@@ -283,7 +283,7 @@ public class Computronics {
 
 		if(isEnabled("portableTapeDrive", true)) {
 			portableTapeDrive = new ItemPortableTapeDrive();
-			GameRegistry.registerItem(portableTapeDrive, "portable_tape_drive");
+			registerItem(portableTapeDrive, "portable_tape_drive");
 			guiPortableTapeDrive = new GuiProviderPortableTapeDrive();
 			gui.registerGuiProvider(Computronics.guiPortableTapeDrive);
 		}
