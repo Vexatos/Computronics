@@ -29,6 +29,8 @@ import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TapeDriveState;
 import pl.asie.lib.network.Packet;
 
+import javax.annotation.Nullable;
+
 /**
  * @author Vexatos
  */
@@ -281,7 +283,7 @@ public class PortableTapeDrive implements IAudioSource {
 		}
 
 		@Override
-		public void receivePacket(AudioPacket packet, EnumFacing direction) {
+		public void receivePacket(AudioPacket packet, @Nullable EnumFacing direction) {
 			packet.addReceiver(this);
 		}
 	};
@@ -395,7 +397,7 @@ public class PortableTapeDrive implements IAudioSource {
 		}
 
 		@Override
-		public void setInventorySlotContents(int slot, ItemStack stack) {
+		public void setInventorySlotContents(int slot, @Nullable ItemStack stack) {
 			if(slot != 0) {
 				return;
 			}
