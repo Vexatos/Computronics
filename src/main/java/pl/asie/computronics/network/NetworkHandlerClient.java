@@ -11,6 +11,8 @@ import pl.asie.computronics.api.audio.AudioPacketRegistry;
 import pl.asie.computronics.oc.driver.DriverCardNoise;
 import pl.asie.computronics.oc.driver.DriverCardSoundBase;
 import pl.asie.computronics.reference.Mods;
+import pl.asie.computronics.tape.PortableDriveManager;
+import pl.asie.computronics.tape.PortableTapeDrive;
 import pl.asie.computronics.tile.TapeDriveState.State;
 import pl.asie.computronics.tile.TileTapeDrive;
 import pl.asie.lib.network.MessageHandlerBase;
@@ -87,6 +89,14 @@ public class NetworkHandlerClient extends MessageHandlerBase {
 				/*if(Mods.isLoaded(Mods.Railcraft)) { TODO Railcraft
 					Computronics.railcraft.onMessageRailcraft(packet, player, false);
 				}*/
+			}
+			break;
+			case PORTABLE_TAPE_STATE: {
+				PortableTapeDrive tapeDrive = PortableDriveManager.INSTANCE.getTapeDrive(packet.readString(), true);
+				State state = State.VALUES[packet.readUnsignedByte()];
+				if(tapeDrive != null) {
+					tapeDrive.switchState(state);
+				}
 			}
 			break;
 		}

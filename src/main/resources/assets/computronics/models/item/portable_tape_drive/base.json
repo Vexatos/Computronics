@@ -1,0 +1,6 @@
+{
+    "parent": "computronics:item/flat",
+    "textures": {
+        "layer0": "computronics:items/portable_tape_drive_modern"
+    }
+}

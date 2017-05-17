@@ -17,9 +17,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
@@ -32,6 +30,7 @@ import pl.asie.computronics.cc.ComputronicsFileMount;
 import pl.asie.computronics.network.PacketType;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
+import pl.asie.computronics.reference.Sounds;
 import pl.asie.computronics.tile.TapeDriveState.State;
 import pl.asie.computronics.util.ColorUtils;
 import pl.asie.computronics.util.OCUtils;
@@ -426,7 +425,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 			if(state.getStorage() != null) { // Tape was inserted
 				// Play eject sound
 				BlockPos pos = getPos();
-				world.playSound(null, pos, new SoundEvent(new ResourceLocation("computronics:tape_eject")), SoundCategory.BLOCKS, 1, 0);
+				world.playSound(null, pos, Sounds.TAPE_EJECT.event, SoundCategory.BLOCKS, 1, 0);
 			}
 			unloadStorage();
 		} else {
@@ -435,7 +434,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 			if(!stack.isEmpty() && stack.getItem() instanceof IItemTapeStorage) {
 				// Play insert sound
 				BlockPos pos = getPos();
-				world.playSound(null, pos, new SoundEvent(new ResourceLocation("computronics:tape_insert")), SoundCategory.BLOCKS, 1, 0);
+				world.playSound(null, pos, Sounds.TAPE_INSERT.event, SoundCategory.BLOCKS, 1, 0);
 			}
 		}
 	}

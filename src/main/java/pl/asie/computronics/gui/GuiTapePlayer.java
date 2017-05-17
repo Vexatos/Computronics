@@ -3,19 +3,17 @@ package pl.asie.computronics.gui;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.item.ItemTape;
-import pl.asie.computronics.network.PacketType;
 import pl.asie.computronics.tile.TapeDriveState.State;
-import pl.asie.computronics.tile.TileTapeDrive;
 import pl.asie.computronics.util.StringUtil;
 import pl.asie.lib.gui.GuiBase;
-import pl.asie.lib.gui.container.ContainerBase;
-import pl.asie.lib.network.Packet;
+import pl.asie.lib.gui.container.ContainerInventory;
 
 import java.io.IOException;
 
-public class GuiTapePlayer extends GuiBase {
+public class GuiTapePlayer extends GuiBase<ContainerInventory> {
 
 	private static final int BUTTON_START_X = 48;
 	private static final int BUTTON_START_Y = 58;
@@ -30,8 +28,11 @@ public class GuiTapePlayer extends GuiBase {
 
 	private Button buttonMouse = null;
 
-	public GuiTapePlayer(ContainerBase container) {
+	private final IGuiTapeDrive tile;
+
+	public GuiTapePlayer(IGuiTapeDrive tile, ContainerInventory container) {
 		super(container, "computronics:tape_player", 176, 166);
+		this.tile = tile;
 	}
 
 	public boolean isButtonPressed(Button button) {
@@ -52,16 +53,8 @@ public class GuiTapePlayer extends GuiBase {
 	}
 
 	public void setState(State state) {
-		if(this.container.getEntity() != null) {
-			try {
-				Packet packet = Computronics.packet.create(PacketType.TAPE_GUI_STATE.ordinal())
-					.writeTileLocation(this.container.getEntity())
-					.writeByte((byte) state.ordinal());
-				Computronics.packet.sendToServer(packet);
-				((TileTapeDrive) this.container.getEntity()).switchState(state);
-			} catch(Exception e) {
-				//NO-OP
-			}
+		if(tile != null) {
+			tile.setState(state);
 		}
 	}
 
@@ -93,7 +86,7 @@ public class GuiTapePlayer extends GuiBase {
 	@Override
 	public void updateScreen() {
 		super.updateScreen();
-		this.state = ((TileTapeDrive) this.container.getEntity()).getEnumState();
+		this.state = tile.getState();
 	}
 
 	@Override
@@ -139,7 +132,7 @@ public class GuiTapePlayer extends GuiBase {
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
 		// Update state from TileEntity
-		this.state = ((TileTapeDrive) this.container.getEntity()).getEnumState();
+		this.state = tile.getState();
 
 		super.drawGuiContainerBackgroundLayer(f, i, j);
 

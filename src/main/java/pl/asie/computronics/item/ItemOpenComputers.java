@@ -40,6 +40,7 @@ import pl.asie.computronics.oc.driver.RobotUpgradeCamera;
 import pl.asie.computronics.oc.driver.RobotUpgradeChatBox;
 import pl.asie.computronics.oc.driver.RobotUpgradeColorful;
 import pl.asie.computronics.oc.driver.RobotUpgradeRadar;
+import pl.asie.computronics.oc.driver.RobotUpgradeSpeech;
 import pl.asie.computronics.oc.manual.IItemWithDocumentation;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
@@ -73,7 +74,8 @@ public class ItemOpenComputers extends ItemMultipleComputronics implements Drive
 			"rack_board_light",
 			"rack_board_boom",
 			"rack_board_capacitor",
-			"rack_board_switch"
+			"rack_board_switch",
+			"robot_upgrade_speech"
 		});
 		this.setCreativeTab(Computronics.tab);
 	}
@@ -154,6 +156,8 @@ public class ItemOpenComputers extends ItemMultipleComputronics implements Drive
 				return DriverBoardCapacitor.class;
 			case 13:
 				return DriverBoardSwitch.class;
+			case 14:
+				return RobotUpgradeSpeech.class;
 			default:
 				return null;
 		}
@@ -192,6 +196,8 @@ public class ItemOpenComputers extends ItemMultipleComputronics implements Drive
 				return container instanceof Rack ? new DriverBoardCapacitor((Rack) container) : null;
 			case 13:
 				return container instanceof Rack ? new DriverBoardSwitch((Rack) container) : null;
+			case 14:
+				return new RobotUpgradeSpeech(container);
 			default:
 				return null;
 		}
@@ -226,6 +232,8 @@ public class ItemOpenComputers extends ItemMultipleComputronics implements Drive
 			case 12:
 			case 13:
 				return Slot.RackMountable;
+			case 14:
+				return Slot.Upgrade;
 			default:
 				return Slot.None;
 		}
@@ -260,6 +268,8 @@ public class ItemOpenComputers extends ItemMultipleComputronics implements Drive
 			case 12:
 			case 13:
 				return 0; // Tier 1
+			case 14:
+				return 1; // Tier 2
 			default:
 				return 0; // Tier 1 default
 		}
@@ -296,6 +306,8 @@ public class ItemOpenComputers extends ItemMultipleComputronics implements Drive
 				return "rack_capacitor";
 			case 13:
 				return "switch_board";
+			case 14:
+				return "speech_upgrade";
 			default:
 				return "index";
 		}
@@ -351,6 +363,9 @@ public class ItemOpenComputers extends ItemMultipleComputronics implements Drive
 		}
 		if(Config.OC_BOARD_SWITCH) {
 			list.add(new ItemStack(item, 1, 13));
+		}
+		if(Config.OC_UPGRADE_SPEECH) {
+			list.add(new ItemStack(item, 1, 14));
 		}
 	}
 
@@ -476,6 +491,7 @@ public class ItemOpenComputers extends ItemMultipleComputronics implements Drive
 		if(Config.OC_BOARD_SWITCH) {
 			registerItemModel(13);
 		}
+		registerItemModel(14);
 	}
 
 	@Override
