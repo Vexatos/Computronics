@@ -38,7 +38,7 @@ public class ItemPortableTapeDrive extends Item implements IItemWithDocumentatio
 		super();
 		this.setCreativeTab(Computronics.tab);
 		this.setHasSubtypes(false);
-		this.setUnlocalizedName("computronics.portableTapeDrive");
+		this.setUnlocalizedName("computronics.portable_tape_drive");
 		this.setMaxDamage(0);
 		this.setMaxStackSize(1);
 		this.setNoRepair();
@@ -91,8 +91,9 @@ public class ItemPortableTapeDrive extends Item implements IItemWithDocumentatio
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	@SuppressWarnings("unchecked")
-	public void addInformation(ItemStack stack, EntityPlayer player, List info, boolean advanced) {
+	public void addInformation(ItemStack stack, EntityPlayer player, List<String> info, boolean advanced) {
 		if(stack.hasTagCompound()) {
 			NBTTagCompound tag = stack.getTagCompound();
 			if(tag.hasKey("state") && tag.hasKey("inv") && tag.hasKey("tid")
