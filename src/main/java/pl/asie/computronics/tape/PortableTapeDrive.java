@@ -44,7 +44,7 @@ public class PortableTapeDrive implements IAudioSource {
 
 	private String storageName = "";
 	private TapeDriveState state = new TapeDriveState();
-	private ItemStack inventory;
+	private ItemStack inventory = ItemStack.EMPTY;
 
 	public PortableTapeDrive() {
 	}
