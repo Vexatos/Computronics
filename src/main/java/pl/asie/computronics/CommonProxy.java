@@ -10,6 +10,7 @@ import pl.asie.computronics.api.audio.AudioPacketRegistry;
 import pl.asie.computronics.audio.SoundCardPacket;
 import pl.asie.computronics.item.entity.EntityItemIndestructable;
 import pl.asie.computronics.reference.Mods;
+import pl.asie.computronics.reference.Sounds;
 import pl.asie.lib.network.Packet;
 
 import java.io.IOException;
@@ -44,7 +45,7 @@ public class CommonProxy {
 	}
 
 	public void init() {
-		//NO-OP
+		Sounds.registerSounds();
 	}
 
 	public void goBoom(Packet p) throws IOException {
