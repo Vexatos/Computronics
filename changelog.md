@@ -2,6 +2,11 @@
 
   * ADDED: Portable Tape Drive!
     - Carry your music with you!
+  * ADDED: Speech Upgrade!
+    - The Speech Box as an upgrade. Works in exactly the same way.
+  * FIXED: Sound positions of tape drives etc. not being quite correct.
+
+  * **[1.9.4]** FIXED: Tape Drive not making any insert or eject sound in multiplayer.
 
 ==== 1.6.4 ====
 
