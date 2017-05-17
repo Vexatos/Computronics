@@ -15,6 +15,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.asie.computronics.item.ItemPortableTapeDrive;
 import pl.asie.computronics.tile.TapeDriveState;
 
+import javax.annotation.Nullable;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
@@ -62,10 +63,12 @@ public final class PortableDriveManager {
 		drives(client).put(id, drive);
 	}
 
+	@Nullable
 	public String getID(PortableTapeDrive drive, boolean client) {
 		return drives(client).inverse().get(drive);
 	}
 
+	@Nullable
 	public PortableTapeDrive getTapeDrive(String id, boolean client) {
 		return drives(client).get(id);
 	}
