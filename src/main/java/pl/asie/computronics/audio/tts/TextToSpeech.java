@@ -7,8 +7,6 @@ import marytts.exceptions.MaryConfigurationException;
 import marytts.exceptions.SynthesisException;
 import marytts.server.Mary;
 import marytts.util.data.audio.AudioPlayer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
@@ -17,10 +15,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pl.asie.computronics.reference.Mods;
-import pl.asie.computronics.tile.TileSpeechBox;
-import pl.asie.lib.util.WorldUtils;
 
 import javax.sound.sampled.AudioInputStream;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Set;
@@ -44,9 +41,16 @@ public class TextToSpeech {
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 
-	public void say(String text, int dimID, BlockPos pos) {
-		Future<Result> fut = ttsThreads.submit(new SynthesizeTask(text, dimID, pos.getX(), pos.getY(), pos.getZ()));
+	public void say(ICanSpeak device, String text) {
+		Future<Result> fut = ttsThreads.submit(new SynthesizeTask(device, text));
 		processes.add(fut);
+	}
+
+	public interface ICanSpeak {
+
+		void startTalking(byte[] data);
+
+		boolean isValid();
 	}
 
 	@SubscribeEvent
@@ -59,9 +63,9 @@ public class TextToSpeech {
 					try {
 						Result result = process.get();
 						if(result != null) {
-							TileEntity tile = WorldUtils.getTileEntityServer(result.dimID, result.x, result.y, result.z);
-							if(tile instanceof TileSpeechBox) {
-								((TileSpeechBox) tile).startTalking(result.data);
+							ICanSpeak device = result.device.get();
+							if(device != null && device.isValid()) {
+								device.startTalking(result.data);
 							}
 						}
 					} catch(Throwable t) {
@@ -78,18 +82,12 @@ public class TextToSpeech {
 
 	public static class Result {
 
+		private final WeakReference<ICanSpeak> device;
 		private final byte[] data;
-		private final int dimID;
-		private final int x;
-		private final int y;
-		private final int z;
 
-		public Result(byte[] data, int dimID, int x, int y, int z) {
+		public Result(WeakReference<ICanSpeak> device, byte[] data) {
+			this.device = device;
 			this.data = data;
-			this.dimID = dimID;
-			this.x = x;
-			this.y = y;
-			this.z = z;
 		}
 	}
 

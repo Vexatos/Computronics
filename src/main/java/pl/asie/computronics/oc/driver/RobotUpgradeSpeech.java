@@ -1,17 +1,17 @@
-package pl.asie.computronics.tile;
+package pl.asie.computronics.oc.driver;
 
 import com.google.common.base.Throwables;
-import dan200.computercraft.api.lua.ILuaContext;
-import dan200.computercraft.api.lua.LuaException;
-import dan200.computercraft.api.peripheral.IComputerAccess;
+import li.cil.oc.api.Network;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
+import li.cil.oc.api.network.EnvironmentHost;
+import li.cil.oc.api.network.Message;
+import li.cil.oc.api.network.Node;
+import li.cil.oc.api.network.Visibility;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.Computronics;
@@ -24,8 +24,6 @@ import pl.asie.computronics.audio.tts.TextToSpeech.ICanSpeak;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.OCUtils;
-import pl.asie.lib.util.ColorUtils;
-import pl.asie.lib.util.internal.IColorable;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -34,10 +32,16 @@ import java.util.Arrays;
 /**
  * @author Vexatos
  */
-public class TileSpeechBox extends TileEntityPeripheralBase implements IAudioSource, ITickable, ICanSpeak {
+public class RobotUpgradeSpeech extends ManagedEnvironmentWithComponentConnector implements IAudioSource, ICanSpeak {
 
-	public TileSpeechBox() {
-		super("speech_box");
+	protected final EnvironmentHost host;
+
+	public RobotUpgradeSpeech(EnvironmentHost host) {
+		this.host = host;
+		this.setNode(Network.newNode(this, Visibility.Neighbors).
+			withComponent("speech").
+			withConnector().
+			create());
 	}
 
 	private final IAudioReceiver internalSpeaker = new IAudioReceiver() {
@@ -48,12 +52,12 @@ public class TileSpeechBox extends TileEntityPeripheralBase implements IAudioSou
 
 		@Override
 		public World getSoundWorld() {
-			return worldObj;
+			return host.world();
 		}
 
 		@Override
 		public BlockPos getSoundPos() {
-			return pos;
+			return getPos();
 		}
 
 		@Override
@@ -67,11 +71,14 @@ public class TileSpeechBox extends TileEntityPeripheralBase implements IAudioSou
 		}
 	};
 
-	private long lastCodecTime;
-	private int codecId = -1;
-	protected int packetSize = 1500;
-	protected int soundVolume = 127;
-	private boolean locked = false;
+	protected BlockPos getPos() {
+		return new BlockPos(host.xPosition(), host.yPosition(), host.zPosition());
+	}
+
+	@Override
+	public boolean canUpdate() {
+		return true;
+	}
 
 	@Override
 	public void update() {
@@ -83,30 +90,56 @@ public class TileSpeechBox extends TileEntityPeripheralBase implements IAudioSou
 			pkt = createMusicPacket(this);
 		}
 		if(pkt != null) {
-			int receivers = 0;
-			for(EnumFacing dir : EnumFacing.VALUES) {
-				TileEntity tile = worldObj.getTileEntity(getPos().offset(dir));
-				if(tile instanceof IAudioReceiver) {
-					if(tile instanceof IColorable && ((IColorable) tile).canBeColored()
-						&& !ColorUtils.isSameOrDefault(this, (IColorable) tile)) {
-						continue;
-					}
-					((IAudioReceiver) tile).receivePacket(pkt, dir.getOpposite());
-					receivers++;
-				}
-			}
-
-			if(receivers == 0) {
-				internalSpeaker.receivePacket(pkt, null);
-			}
-
+			internalSpeaker.receivePacket(pkt, null);
 			pkt.sendPacket();
 		}
 	}
 
+	protected boolean isValid = false;
+
+	@Override
+	public boolean isValid() {
+		return isValid;
+	}
+
+	@Override
+	public void onConnect(Node node) {
+		super.onConnect(node);
+		if(node == this.node()) {
+			isValid = true;
+		}
+	}
+
+	@Override
+	public void onDisconnect(final Node node) {
+		super.onDisconnect(node);
+		if(node == this.node()) {
+			isValid = false;
+		}
+	}
+
+	@Override
+	public void onMessage(Message message) {
+		super.onMessage(message);
+		if((message.name().equals("computer.stopped")
+			|| message.name().equals("computer.started"))
+			&& node().isNeighborOf(message.source())) {
+			if(locked || storage != null) {
+				stopTalking();
+			}
+			isValid = message.name().equals("computer.started");
+		}
+	}
+
+	private long lastCodecTime;
+	private int codecId = -1;
+	protected int packetSize = 1500;
+	protected int soundVolume = 127;
+	private boolean locked = false;
+
 	@Override
 	public void startTalking(byte[] data) {
-		if(worldObj.isRemote) {
+		if(host.world().isRemote) {
 			return;
 		}
 		storage = new ByteArrayInputStream(data);
@@ -149,20 +182,20 @@ public class TileSpeechBox extends TileEntityPeripheralBase implements IAudioSou
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound tag) {
-		super.writeToNBT(tag);
-		if(tag.hasKey("vo")) {
-			this.soundVolume = tag.getByte("vo");
-		} else {
-			this.soundVolume = 127;
+	public void load(NBTTagCompound tag) {
+		super.load(tag);
+		if(this.soundVolume != 127) {
+			tag.setByte("vo", (byte) this.soundVolume);
 		}
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound tag) {
-		super.readFromNBT(tag);
-		if(this.soundVolume != 127) {
-			tag.setByte("vo", (byte) this.soundVolume);
+	public void save(NBTTagCompound tag) {
+		super.save(tag);
+		if(tag.hasKey("vo")) {
+			this.soundVolume = tag.getByte("vo");
+		} else {
+			this.soundVolume = 127;
 		}
 	}
 
@@ -217,55 +250,17 @@ public class TileSpeechBox extends TileEntityPeripheralBase implements IAudioSou
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] setVolume(Context context, Arguments args) {
 		this.setVolume((float) args.checkDouble(0));
-		return null;
+		return new Object[] {};
 	}
 
 	@Override
-	@Optional.Method(modid = Mods.ComputerCraft)
-	public String[] getMethodNames() {
-		return new String[] { "say", "stop", "isProcessing", "setVolume" };
+	public boolean connectsAudio(EnumFacing side) {
+		return false;
 	}
 
 	@Override
-	@Optional.Method(modid = Mods.ComputerCraft)
-	public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
-		switch(method) {
-			case 0: {
-				if(arguments.length < 1 || !(arguments[0] instanceof String)) {
-					throw new LuaException("first argument needs to be a string");
-				}
-				if(locked || storage != null) {
-					return new Object[] { false, "already processing" };
-				}
-				String text = (String) arguments[0];
-				if(text.length() > Config.TTS_MAX_LENGTH) {
-					return new Object[] { false, "text too long" };
-				}
-				try {
-					return new Object[] { this.sendNewText(text) };
-				} catch(IOException e) {
-					throw new LuaException("could not send string");
-				}
-			}
-			case 1: {
-				if(locked || storage != null) {
-					stopTalking();
-					return new Object[] { true };
-				}
-				return new Object[] { false, "not talking" };
-			}
-			case 2: {
-				return new Object[] { locked || storage != null };
-			}
-			case 3: {
-				if(arguments.length < 1 || !(arguments[0] instanceof Number)) {
-					throw new LuaException("first argument needs to be a number");
-				}
-				this.setVolume(((Number) arguments[0]).floatValue());
-				return null;
-			}
-		}
-		return null;
+	public int getSourceId() {
+		return codecId;
 	}
 
 	@Override
@@ -277,15 +272,5 @@ public class TileSpeechBox extends TileEntityPeripheralBase implements IAudioSou
 			OCUtils.Vendors.DFKI,
 			"Mary"
 		);
-	}
-
-	@Override
-	public int getSourceId() {
-		return codecId;
-	}
-
-	@Override
-	public boolean connectsAudio(EnumFacing side) {
-		return worldObj.getBlockState(getPos()).getValue(Computronics.speechBox.rotation.FACING) != side;
 	}
 }

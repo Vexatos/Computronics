@@ -2,13 +2,16 @@ package pl.asie.computronics.audio.tts;
 
 import marytts.exceptions.SynthesisException;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.audio.tts.TextToSpeech.ICanSpeak;
 import pl.asie.lib.audio.DFPWM;
 
+import javax.annotation.Nullable;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.util.concurrent.Callable;
 
 /**
@@ -16,18 +19,15 @@ import java.util.concurrent.Callable;
  */
 public class SynthesizeTask implements Callable<TextToSpeech.Result> {
 
+	private final WeakReference<ICanSpeak> device;
 	private final String text;
-	private final int dimID;
-	private final int x, y, z;
 
-	public SynthesizeTask(String text, int dimID, int x, int y, int z) {
+	public SynthesizeTask(ICanSpeak device, String text) {
+		this.device = new WeakReference<ICanSpeak>(device);
 		this.text = text;
-		this.dimID = dimID;
-		this.x = x;
-		this.y = y;
-		this.z = z;
 	}
 
+	@Nullable
 	@Override
 	public TextToSpeech.Result call() throws Exception {
 		if(Computronics.tts.marytts == null /*|| ttsThreads == null*/) {
@@ -61,7 +61,7 @@ public class SynthesizeTask implements Callable<TextToSpeech.Result> {
 			converter.compress(outBuffer, new byte[48000], 0, 0, 6000);
 			out.write(outBuffer);
 
-			return new TextToSpeech.Result(out.toByteArray(), dimID, x, y, z);
+			return new TextToSpeech.Result(device, out.toByteArray());
 		} catch(SynthesisException e) {
 			TextToSpeech.log.error("Text To Speech synthesis failed");
 			e.printStackTrace();

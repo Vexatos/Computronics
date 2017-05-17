@@ -103,8 +103,8 @@ public class StreamingAudioPlayer extends DFPWM {
 
 	@SideOnly(Side.CLIENT)
 	public void play(String id, int x, int y, int z, float rolloff) {
-		FloatBuffer sourcePos = (FloatBuffer) (BufferUtils.createFloatBuffer(3).put(new float[]{x, y, z}).rewind());
-		FloatBuffer sourceVel = (FloatBuffer) (BufferUtils.createFloatBuffer(3).put(new float[]{0.0f, 0.0f, 0.0f}).rewind());
+		FloatBuffer sourcePos = (FloatBuffer) (BufferUtils.createFloatBuffer(3).put(new float[] { x+ 0.5F, y+ 0.5F, z + 0.5F}).rewind());
+		FloatBuffer sourceVel = (FloatBuffer) (BufferUtils.createFloatBuffer(3).put(new float[] { 0.0f, 0.0f, 0.0f }).rewind());
 
 		SourceEntry source = null;
 		for (SourceEntry entry : sources) {
