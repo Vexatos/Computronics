@@ -6,7 +6,7 @@ The portable tape drive is... a portable version of the [tape drive](../block/ta
 
 ### Controls:
 
-  * `Shift + Right Click:` Open GUI
+  * `Shift + Right Click:` Open Interface
 
   * `Right Click:` Toggle between Playing and Paused
 

@@ -141,9 +141,9 @@ public class PortableTapeDrive implements IAudioSource {
 				sound = new MachineSound(soundRes, x + 0.5f, y + 0.5f, z + 0.5f, getVolume(), getPitch(), shouldRepeat()) {
 					@Override
 					public void update() {
-						this.xPosF = PortableTapeDrive.this.x;
-						this.yPosF = PortableTapeDrive.this.y;
-						this.zPosF = PortableTapeDrive.this.z;
+						this.xPosF = PortableTapeDrive.this.x + 0.5f;
+						this.yPosF = PortableTapeDrive.this.y + 0.5f;
+						this.zPosF = PortableTapeDrive.this.z + 0.5f;
 					}
 				};
 				FMLClientHandler.instance().getClient().getSoundHandler().playSound(sound);
@@ -214,14 +214,14 @@ public class PortableTapeDrive implements IAudioSource {
 		if(this.inventory == null) {
 			if(state.getStorage() != null) { // Tape was inserted
 				// Play eject sound
-				world.playSoundEffect(x, y, z, "computronics:tape_eject", 1, 0);
+				world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, "computronics:tape_eject", 1, 0);
 			}
 			unloadStorage();
 		} else {
 			loadStorage();
 			if(this.inventory.getItem() instanceof IItemTapeStorage) {
 				// Play insert sound
-				world.playSoundEffect(x, y, z, "computronics:tape_insert", 1, 0);
+				world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, "computronics:tape_insert", 1, 0);
 			}
 		}
 	}
