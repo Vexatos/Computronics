@@ -35,7 +35,7 @@ public class ItemPortableTapeDrive extends Item implements IItemWithDocumentatio
 		super();
 		this.setCreativeTab(Computronics.tab);
 		this.setHasSubtypes(false);
-		this.setUnlocalizedName("computronics.portableTapeDrive");
+		this.setUnlocalizedName("computronics.portable_tape_drive");
 		this.setMaxDamage(0);
 		this.setMaxStackSize(1);
 		this.setNoRepair();
