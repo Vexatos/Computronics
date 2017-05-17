@@ -58,6 +58,7 @@ import static pl.asie.computronics.Computronics.ironNote;
 import static pl.asie.computronics.Computronics.proxy;
 import static pl.asie.computronics.Computronics.radar;
 import static pl.asie.computronics.Computronics.speaker;
+import static pl.asie.computronics.Computronics.speechBox;
 
 /**
  * @author Vexatos
@@ -456,6 +457,18 @@ public class IntegrationOpenComputers {
 				'o', "obsidian",
 				'p', "oc:materialCircuitBoardPrinted"
 			);
+		}
+		if(Config.OC_UPGRADE_SPEECH) {
+			if(speechBox != null) {
+				RecipeUtils.addShapedRecipe(new ItemStack(itemOCParts, 1, 14),
+					"idi", "mcm", "ibi",
+					'c', speechBox,
+					'd', "oc:materialTransistor",
+					'm', "oc:circuitChip2",
+					'i', "ingotIron",
+					'b', "oc:materialCircuitBoardPrinted"
+				);
+			}
 		}
 		/*if(Computronics.buildcraft != null) { TODO BuildCraft Drone Docking
 			Computronics.buildcraft.postInitOC();
