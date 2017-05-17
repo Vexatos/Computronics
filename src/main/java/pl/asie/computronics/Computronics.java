@@ -280,7 +280,7 @@ public class Computronics {
 
 		if(isEnabled("portableTapeDrive", true)) {
 			portableTapeDrive = new ItemPortableTapeDrive();
-			GameRegistry.registerItem(portableTapeDrive, "computronics.portableTapeDrive");
+			GameRegistry.registerItem(portableTapeDrive, "portable_tape_drive");
 			guiPortableTapeDrive = new GuiProviderPortableTapeDrive();
 			gui.registerGuiProvider(Computronics.guiPortableTapeDrive);
 		}
@@ -322,7 +322,7 @@ public class Computronics {
 		charset = new IntegrationCharset();
 		charset.preInit();
 
-		proxy.registerAudioHandlers();
+		proxy.preInit();
 	}
 
 	public static TextToSpeech tts;

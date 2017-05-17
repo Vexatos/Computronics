@@ -2,16 +2,16 @@ package pl.asie.lib.gui;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.inventory.Container;
 import net.minecraft.util.ResourceLocation;
-import pl.asie.lib.gui.container.ContainerBase;
 
-public class GuiBase extends GuiContainer {
+public class GuiBase<C extends Container> extends GuiContainer {
 
 	private final ResourceLocation texture;
 	public int xCenter, yCenter;
-	public final ContainerBase container;
+	public final C container;
 
-	public GuiBase(ContainerBase container, String textureName, int xSize, int ySize) {
+	public GuiBase(C container, String textureName, int xSize, int ySize) {
 		super(container);
 		this.container = container;
 		this.texture = new ResourceLocation(textureName.split(":")[0], "textures/gui/" + textureName.split(":")[1] + ".png");
@@ -27,5 +27,4 @@ public class GuiBase extends GuiContainer {
 		this.mc.getTextureManager().bindTexture(texture);
 		this.drawTexturedModalRect(this.xCenter, this.yCenter, 0, 0, this.xSize, this.ySize);
 	}
-
 }

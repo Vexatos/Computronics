@@ -1,18 +1,20 @@
 package pl.asie.computronics.tape;
 
-import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.IChatComponent;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.api.audio.AudioPacket;
 import pl.asie.computronics.api.audio.IAudioReceiver;
@@ -31,7 +33,7 @@ import pl.asie.lib.network.Packet;
 public class PortableTapeDrive implements IAudioSource {
 
 	protected World world;
-	protected int x, y, z;
+	protected BlockPos pos;
 	protected Entity carrier;
 	protected ItemStack self;
 	protected int time = 0;
@@ -45,9 +47,7 @@ public class PortableTapeDrive implements IAudioSource {
 
 	public void updateCarrier(Entity carrier, ItemStack self) {
 		this.world = carrier.worldObj;
-		this.x = MathHelper.floor_double(carrier.posX);
-		this.y = MathHelper.floor_double(carrier.posY);
-		this.z = MathHelper.floor_double(carrier.posZ);
+		this.pos = carrier.getPosition();
 		this.carrier = carrier;
 		this.self = self;
 	}
@@ -59,7 +59,7 @@ public class PortableTapeDrive implements IAudioSource {
 	public void switchState(TapeDriveState.State s) {
 		//System.out.println("Switchy switch to " + s.name());
 		if(this.getEnumState() != s) {
-			this.state.switchState(world, x, y, z, s);
+			this.state.switchState(world, pos, s);
 			updateState();
 		}
 	}
@@ -73,9 +73,9 @@ public class PortableTapeDrive implements IAudioSource {
 			updateSound();
 		}
 		TapeDriveState.State st = getEnumState();
-		AudioPacket pkt = state.update(this, world, x, y, z);
+		AudioPacket pkt = state.update(this, world, pos);
 		if(pkt != null) {
-			internalSpeaker.receivePacket(pkt, ForgeDirection.UNKNOWN);
+			internalSpeaker.receivePacket(pkt, null);
 
 			pkt.sendPacket();
 		}
@@ -138,12 +138,12 @@ public class PortableTapeDrive implements IAudioSource {
 	protected void updateSound() {
 		if(shouldPlaySound()) {
 			if(sound == null) {
-				sound = new MachineSound(soundRes, x + 0.5f, y + 0.5f, z + 0.5f, getVolume(), getPitch(), shouldRepeat()) {
+				sound = new MachineSound(soundRes, pos, getVolume(), getPitch(), shouldRepeat()) {
 					@Override
 					public void update() {
-						this.xPosF = PortableTapeDrive.this.x;
-						this.yPosF = PortableTapeDrive.this.y;
-						this.zPosF = PortableTapeDrive.this.z;
+						this.xPosF = PortableTapeDrive.this.pos.getX() + 0.5F;
+						this.yPosF = PortableTapeDrive.this.pos.getY() + 0.5F;
+						this.zPosF = PortableTapeDrive.this.pos.getZ() + 0.5F;
 					}
 				};
 				FMLClientHandler.instance().getClient().getSoundHandler().playSound(sound);
@@ -214,14 +214,14 @@ public class PortableTapeDrive implements IAudioSource {
 		if(this.inventory == null) {
 			if(state.getStorage() != null) { // Tape was inserted
 				// Play eject sound
-				world.playSoundEffect(x, y, z, "computronics:tape_eject", 1, 0);
+				world.playSoundEffect(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, "computronics:tape_eject", 1, 0);
 			}
 			unloadStorage();
 		} else {
 			loadStorage();
 			if(this.inventory.getItem() instanceof IItemTapeStorage) {
 				// Play insert sound
-				world.playSoundEffect(x, y, z, "computronics:tape_insert", 1, 0);
+				world.playSoundEffect(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, "computronics:tape_insert", 1, 0);
 			}
 		}
 	}
@@ -259,7 +259,7 @@ public class PortableTapeDrive implements IAudioSource {
 
 	private final IAudioReceiver internalSpeaker = new IAudioReceiver() {
 		@Override
-		public boolean connectsAudio(ForgeDirection side) {
+		public boolean connectsAudio(EnumFacing side) {
 			return false;
 		}
 
@@ -269,18 +269,8 @@ public class PortableTapeDrive implements IAudioSource {
 		}
 
 		@Override
-		public int getSoundX() {
-			return x;
-		}
-
-		@Override
-		public int getSoundY() {
-			return y;
-		}
-
-		@Override
-		public int getSoundZ() {
-			return z;
+		public BlockPos getSoundPos() {
+			return pos;
 		}
 
 		@Override
@@ -289,7 +279,7 @@ public class PortableTapeDrive implements IAudioSource {
 		}
 
 		@Override
-		public void receivePacket(AudioPacket packet, ForgeDirection direction) {
+		public void receivePacket(AudioPacket packet, EnumFacing direction) {
 			packet.addReceiver(this);
 		}
 	};
@@ -300,19 +290,29 @@ public class PortableTapeDrive implements IAudioSource {
 	}
 
 	@Override
-	public boolean connectsAudio(ForgeDirection side) {
+	public boolean connectsAudio(EnumFacing side) {
 		return true;
 	}
 
 	public final IInventory fakeInventory = new IInventory() {
 		@Override
-		public int getSizeInventory() {
-			return 1;
+		public String getName() {
+			return "portabletapedrive.inventory";
 		}
 
 		@Override
-		public String getInventoryName() {
-			return "portabletapedrive.inventory";
+		public boolean hasCustomName() {
+			return false;
+		}
+
+		@Override
+		public IChatComponent getDisplayName() {
+			return new ChatComponentTranslation(getName());
+		}
+
+		@Override
+		public int getSizeInventory() {
+			return 1;
 		}
 
 		@Override
@@ -323,6 +323,26 @@ public class PortableTapeDrive implements IAudioSource {
 		@Override
 		public boolean isItemValidForSlot(int slot, ItemStack stack) {
 			return false;
+		}
+
+		@Override
+		public int getField(int id) {
+			return 0;
+		}
+
+		@Override
+		public void setField(int id, int value) {
+
+		}
+
+		@Override
+		public int getFieldCount() {
+			return 0;
+		}
+
+		@Override
+		public void clear() {
+
 		}
 
 		@Override
@@ -362,7 +382,7 @@ public class PortableTapeDrive implements IAudioSource {
 		}
 
 		@Override
-		public ItemStack getStackInSlotOnClosing(int slot) {
+		public ItemStack removeStackFromSlot(int slot) {
 			ItemStack stack = getStackInSlot(slot);
 			if(stack == null) {
 				return null;
@@ -387,18 +407,13 @@ public class PortableTapeDrive implements IAudioSource {
 		}
 
 		@Override
-		public void openInventory() {
+		public void openInventory(EntityPlayer player) {
 
 		}
 
 		@Override
-		public void closeInventory() {
+		public void closeInventory(EntityPlayer player) {
 
-		}
-
-		@Override
-		public boolean hasCustomInventoryName() {
-			return false;
 		}
 
 		@Override

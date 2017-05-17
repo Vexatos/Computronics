@@ -39,6 +39,10 @@ public class CommonProxy {
 		registerItemModel(Item.getItemFromBlock(block), meta, name);
 	}
 
+	public void preInit() {
+		registerAudioHandlers();
+	}
+
 	public void init() {
 		//NO-OP
 	}

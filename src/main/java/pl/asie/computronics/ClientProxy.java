@@ -7,12 +7,15 @@ import net.minecraft.util.BlockPos;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.asie.computronics.api.audio.AudioPacketDFPWM;
 import pl.asie.computronics.api.audio.AudioPacketRegistry;
 import pl.asie.computronics.audio.AudioPacketClientHandlerDFPWM;
 import pl.asie.computronics.audio.SoundCardPacket;
 import pl.asie.computronics.audio.SoundCardPacketClientHandler;
 import pl.asie.computronics.integration.buildcraft.statements.StatementTextureManager;
+import pl.asie.computronics.item.ItemPortableTapeDrive;
 import pl.asie.computronics.oc.IntegrationOpenComputers;
 import pl.asie.computronics.oc.client.RackMountableRenderer;
 import pl.asie.computronics.oc.client.UpgradeRenderer;
@@ -25,6 +28,7 @@ import pl.asie.lib.network.Packet;
 import java.io.IOException;
 import java.util.ArrayList;
 
+@SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy {
 
 	@Override
@@ -52,6 +56,12 @@ public class ClientProxy extends CommonProxy {
 		} else {
 			ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(name, "inventory"));
 		}
+	}
+
+	@Override
+	public void preInit() {
+		super.preInit();
+		ItemPortableTapeDrive.MeshDefinition.registerRenderers();
 	}
 
 	@Override

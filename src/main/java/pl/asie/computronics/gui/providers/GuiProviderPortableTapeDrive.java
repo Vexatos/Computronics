@@ -1,12 +1,12 @@
 package pl.asie.computronics.gui.providers;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.gui.GuiTapePlayer;
 import pl.asie.computronics.gui.IGuiTapeDrive;
@@ -16,7 +16,7 @@ import pl.asie.computronics.network.PacketType;
 import pl.asie.computronics.tape.PortableDriveManager;
 import pl.asie.computronics.tape.PortableTapeDrive;
 import pl.asie.computronics.tile.TapeDriveState;
-import pl.asie.lib.block.ContainerInventory;
+import pl.asie.lib.gui.container.ContainerInventory;
 import pl.asie.lib.gui.managed.GuiProviderBase;
 import pl.asie.lib.network.Packet;
 
