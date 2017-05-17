@@ -43,6 +43,7 @@ import pl.asie.computronics.block.BlockTapeReader;
 import pl.asie.computronics.cc.IntegrationComputerCraft;
 import pl.asie.computronics.cc.multiperipheral.MultiPeripheralRegistry;
 import pl.asie.computronics.gui.providers.GuiProviderCipher;
+import pl.asie.computronics.gui.providers.GuiProviderPortableTapeDrive;
 import pl.asie.computronics.gui.providers.GuiProviderTapeDrive;
 import pl.asie.computronics.integration.ModRecipes;
 import pl.asie.computronics.integration.buildcraft.IntegrationBuildCraftBuilder;
@@ -52,6 +53,7 @@ import pl.asie.computronics.integration.buildcraft.statements.TriggerProvider;
 import pl.asie.computronics.integration.charset.IntegrationCharset;
 import pl.asie.computronics.integration.tis3d.IntegrationTIS3D;
 import pl.asie.computronics.item.ItemMultipleComputronics;
+import pl.asie.computronics.item.ItemPortableTapeDrive;
 import pl.asie.computronics.item.ItemTape;
 import pl.asie.computronics.item.block.ComputronicsItemBlock;
 import pl.asie.computronics.network.NetworkHandlerClient;
@@ -60,6 +62,7 @@ import pl.asie.computronics.oc.IntegrationOpenComputers;
 import pl.asie.computronics.reference.Compat;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
+import pl.asie.computronics.tape.PortableDriveManager;
 import pl.asie.computronics.tape.StorageManager;
 import pl.asie.computronics.tape.TapeStorageEventHandler;
 import pl.asie.computronics.tile.TileAudioCable;
@@ -142,11 +145,13 @@ public class Computronics {
 	public static IntegrationTIS3D tis3D;
 	public static IntegrationCharset charset;
 
+	public static ItemPortableTapeDrive portableTapeDrive;
 	public static ItemTape itemTape;
 	public static ItemMultipleComputronics itemParts;
 	//public static ItemMultiple itemPartsGreg;
 
 	public static IGuiProvider guiTapeDrive;
+	public static IGuiProvider guiPortableTapeDrive;
 	public static IGuiProvider guiCipher;
 
 	public ComputronicsAchievements achievements;
@@ -273,6 +278,13 @@ public class Computronics {
 			itemParts.registerItemModels();
 		}
 
+		if(isEnabled("portableTapeDrive", true)) {
+			portableTapeDrive = new ItemPortableTapeDrive();
+			GameRegistry.registerItem(portableTapeDrive, "computronics.portableTapeDrive");
+			guiPortableTapeDrive = new GuiProviderPortableTapeDrive();
+			gui.registerGuiProvider(Computronics.guiPortableTapeDrive);
+		}
+
 		/*if(Mods.isLoaded(Mods.Railcraft)) {
 			railcraft = new IntegrationRailcraft();
 			railcraft.preInit(config.config);
@@ -319,9 +331,13 @@ public class Computronics {
 	public void init(FMLInitializationEvent event) {
 		MinecraftForge.EVENT_BUS.register(new ChatHandler());
 
-		if(tapeReader != null) {
+		if(tapeReader != null || portableTapeDrive != null) {
 			storageEventHandler = new TapeStorageEventHandler();
 			MinecraftForge.EVENT_BUS.register(storageEventHandler);
+		}
+
+		if(portableTapeDrive != null) {
+			MinecraftForge.EVENT_BUS.register(PortableDriveManager.INSTANCE);
 		}
 
 		FMLInterModComms.sendMessage(Mods.Waila, "register", "pl.asie.computronics.integration.waila.IntegrationWaila.register");
@@ -413,6 +429,7 @@ public class Computronics {
 		if(Mods.isLoaded(Mods.OpenComputers)) {
 			opencomputers.onServerStop(event);
 		}
+		PortableDriveManager.INSTANCE.onServerStop();
 	}
 
 	/**

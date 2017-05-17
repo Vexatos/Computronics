@@ -7,6 +7,7 @@ Keep in mind that some of these may not be available, depending on the recipe se
 # Items
 
 * [Cassette Tape](tape.md)
+* [Portable Tape Drive](portable_tape_drive.md)
 
 ## Components
 

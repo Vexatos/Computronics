@@ -17,6 +17,7 @@ import pl.asie.computronics.oc.IntegrationOpenComputers;
 import pl.asie.computronics.oc.client.RackMountableRenderer;
 import pl.asie.computronics.oc.client.UpgradeRenderer;
 import pl.asie.computronics.reference.Mods;
+import pl.asie.computronics.tape.TapeScrollEventHandler;
 import pl.asie.computronics.util.boom.SelfDestruct;
 import pl.asie.computronics.util.sound.Audio;
 import pl.asie.lib.network.Packet;
@@ -57,6 +58,7 @@ public class ClientProxy extends CommonProxy {
 	public void init() {
 		Audio.init();
 		registerRenderers();
+		MinecraftForge.EVENT_BUS.register(new TapeScrollEventHandler());
 	}
 
 	public void registerRenderers() {
