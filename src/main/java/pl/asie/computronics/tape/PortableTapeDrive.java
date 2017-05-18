@@ -228,6 +228,7 @@ public class PortableTapeDrive implements IAudioSource {
 				world.playSound(null, pos, Sounds.TAPE_INSERT.event, SoundCategory.BLOCKS, 1, 0);
 			}
 		}
+		save(getTag());
 	}
 
 	public void load(NBTTagCompound tag) {
