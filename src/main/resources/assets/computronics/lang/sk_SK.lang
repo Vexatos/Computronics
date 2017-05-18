@@ -24,12 +24,11 @@ tooltip.computronics.tape.ig=Štandardné CDVR pre\nGregTech Intergalaktické lo
 tooltip.computronics.waila.base.bus=§aPřípojka ID§f: %s
 tooltip.computronics.waila.relay.bound=Svázáno
 tooltip.computronics.waila.relay.notbound=Nesvázáno
-tooltip.computronics.waila.tape.tapeinserted=Kazeta vložena
-tooltip.computronics.waila.tape.labeltapeinserted=Kazeta "%s" vložena
-tooltip.computronics.waila.tape.notapeinserted=Není vložena žádná kazeta
 
+tooltip.computronics.tape.tapeinserted=Kazeta vložena
+tooltip.computronics.tape.labeltapeinserted=Kazeta "%s" vložena
+tooltip.computronics.tape.notapeinserted=Není vložena žádná kazeta
 tooltip.computronics.tape.state=Stav: %s
-
 tooltip.computronics.tape.state.stopped=Zastaveno
 tooltip.computronics.tape.state.playing=Přehrávám
 tooltip.computronics.tape.state.rewinding=Přetáčím zpět

@@ -9,6 +9,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
@@ -93,14 +94,25 @@ public class ItemPortableTapeDrive extends Item implements IItemWithDocumentatio
 	public void addInformation(ItemStack stack, EntityPlayer player, List<String> info, boolean advanced) {
 		if(stack.hasTagCompound()) {
 			NBTTagCompound tag = stack.getTagCompound();
-			if(tag.hasKey("state") && tag.hasKey("inv") && tag.hasKey("tid")
-				&& ItemStack.loadItemStackFromNBT(tag.getCompoundTag("inv")) != null
+			if(tag.hasKey("state") && tag.hasKey("tid")
 				&& PortableDriveManager.INSTANCE.exists(tag.getString("tid"), true)) {
-				byte state = tag.getByte("state");
-				if(state >= 0 && state < State.VALUES.length) {
-					info.add(StringUtil.localizeAndFormat("tooltip.computronics.tape.state",
-						StringUtil.localize("tooltip.computronics.tape.state."
-							+ State.VALUES[state].name().toLowerCase(Locale.ENGLISH))));
+				ItemStack tape = tag.hasKey("inv") ? ItemStack.loadItemStackFromNBT(tag.getCompoundTag("inv")) : null;
+				if(tape != null) {
+					String label = Computronics.itemTape.getLabel(tape);
+					if(label.length() > 0) {
+						info.add(StringUtil.localizeAndFormat("tooltip.computronics.tape.labeltapeinserted",
+							label + EnumChatFormatting.RESET + EnumChatFormatting.GRAY));
+					} else {
+						info.add(StringUtil.localize("tooltip.computronics.tape.tapeinserted"));
+					}
+					byte state = tag.getByte("state");
+					if(state >= 0 && state < State.VALUES.length) {
+						info.add(StringUtil.localizeAndFormat("tooltip.computronics.tape.state",
+							StringUtil.localize("tooltip.computronics.tape.state."
+								+ State.VALUES[state].name().toLowerCase(Locale.ENGLISH))));
+					}
+				} else {
+					info.add(StringUtil.localize("tooltip.computronics.tape.notapeinserted"));
 				}
 			}
 		}

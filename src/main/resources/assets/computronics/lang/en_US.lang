@@ -56,15 +56,15 @@ tooltip.computronics.gate.trigger.tape_drive_forwarding=Tape Drive Forwarding
 tooltip.computronics.waila.base.bus=§aBus ID§f: %s
 tooltip.computronics.waila.relay.bound=Bound
 tooltip.computronics.waila.relay.notbound=Not Bound
-tooltip.computronics.waila.tape.tapeinserted=Tape inserted
-tooltip.computronics.waila.tape.labeltapeinserted=Tape "%s" inserted
-tooltip.computronics.waila.tape.notapeinserted=No tape inserted
 tooltip.computronics.waila.lamp.red=Red: %s
 tooltip.computronics.waila.lamp.green=Green: %s
 tooltip.computronics.waila.lamp.blue=Blue: %s
 
-tooltip.computronics.tape.state=State: %s
+tooltip.computronics.tape.tapeinserted=Tape inserted
+tooltip.computronics.tape.labeltapeinserted=Tape "%s" inserted
+tooltip.computronics.tape.notapeinserted=No tape inserted
 
+tooltip.computronics.tape.state=State: %s
 tooltip.computronics.tape.state.stopped=Stopped
 tooltip.computronics.tape.state.playing=Playing
 tooltip.computronics.tape.state.rewinding=Rewinding
