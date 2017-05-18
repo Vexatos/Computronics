@@ -5,6 +5,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import pl.asie.computronics.Computronics;
@@ -51,6 +52,17 @@ public class GuiProviderPortableTapeDrive extends GuiProviderBase {
 				@Override
 				public TapeDriveState.State getState() {
 					return tapeDrive.getEnumState();
+				}
+
+				@Override
+				public boolean isLocked(Slot slot, int index, int button, int shift) {
+					ItemStack slotstack = slot.getStack();
+					return slotstack != null && ItemStack.areItemStacksEqual(tapeDrive.getSelf(), slotstack);
+				}
+
+				@Override
+				public boolean shouldCheckHotbarKeys() {
+					return false;
 				}
 			}, makeContainer(player, tapeDrive));
 		}
