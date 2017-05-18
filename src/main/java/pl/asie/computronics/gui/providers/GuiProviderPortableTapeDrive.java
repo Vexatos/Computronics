@@ -2,7 +2,9 @@ package pl.asie.computronics.gui.providers;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -29,7 +31,7 @@ public class GuiProviderPortableTapeDrive extends GuiProviderBase {
 	@SideOnly(Side.CLIENT)
 	public GuiContainer makeGui(int ID, EntityPlayer player, final World world, int x, int y, int z) {
 		ItemStack stack = player.getHeldItemMainhand();
-		if(stack != null && stack.getItem() instanceof ItemPortableTapeDrive) {
+		if(!stack.isEmpty() && stack.getItem() instanceof ItemPortableTapeDrive) {
 			final PortableTapeDrive tapeDrive = PortableDriveManager.INSTANCE.getOrCreate(stack, world.isRemote);
 			return new GuiTapePlayer(new IGuiTapeDrive() {
 				@Override
@@ -52,6 +54,17 @@ public class GuiProviderPortableTapeDrive extends GuiProviderBase {
 				public TapeDriveState.State getState() {
 					return tapeDrive.getEnumState();
 				}
+
+				@Override
+				public boolean isLocked(Slot slot, int index, int button, ClickType type) {
+					ItemStack slotstack = slot.getStack();
+					return !slotstack.isEmpty() && ItemStack.areItemStacksEqual(tapeDrive.getSelf(), slotstack);
+				}
+
+				@Override
+				public boolean shouldCheckHotbarKeys() {
+					return false;
+				}
 			}, makeContainer(player, tapeDrive));
 		}
 		return null;
@@ -60,7 +73,7 @@ public class GuiProviderPortableTapeDrive extends GuiProviderBase {
 	@Override
 	public Container makeContainer(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		ItemStack stack = player.getHeldItemMainhand();
-		if(stack != null && stack.getItem() instanceof ItemPortableTapeDrive) {
+		if(!stack.isEmpty() && stack.getItem() instanceof ItemPortableTapeDrive) {
 			return makeContainer(player, PortableDriveManager.INSTANCE.getOrCreate(stack, world.isRemote));
 		}
 		return null;

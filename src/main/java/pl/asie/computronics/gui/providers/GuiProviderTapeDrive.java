@@ -2,7 +2,9 @@ package pl.asie.computronics.gui.providers;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.Slot;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -47,6 +49,16 @@ public class GuiProviderTapeDrive extends GuiProviderBase {
 				@Override
 				public TapeDriveState.State getState() {
 					return tile.getEnumState();
+				}
+
+				@Override
+				public boolean isLocked(Slot slot, int index, int button, ClickType type) {
+					return false;
+				}
+
+				@Override
+				public boolean shouldCheckHotbarKeys() {
+					return true;
 				}
 			}, makeContainer(entityPlayer, tile));
 		}
