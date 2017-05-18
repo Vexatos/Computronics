@@ -56,15 +56,14 @@ tooltip.computronics.gate.trigger.tape_drive_forwarding=Kassettenspieler spult v
 tooltip.computronics.waila.base.bus=§aBus ID§f: %s
 tooltip.computronics.waila.relay.bound=Gebunden
 tooltip.computronics.waila.relay.notbound=Nicht Gebunden
-tooltip.computronics.waila.tape.tapeinserted=Enthält Kassette
-tooltip.computronics.waila.tape.labeltapeinserted=Enthält Kassette "%s"
-tooltip.computronics.waila.tape.notapeinserted=Enthält keine Kassette
 tooltip.computronics.waila.lamp.red=Rot: %s
 tooltip.computronics.waila.lamp.green=Grün: %s
 tooltip.computronics.waila.lamp.blue=Blau: %s
 
+tooltip.computronics.tape.tapeinserted=Enthält Kassette
+tooltip.computronics.tape.labeltapeinserted=Enthält Kassette "%s"
+tooltip.computronics.tape.notapeinserted=Enthält keine Kassette
 tooltip.computronics.tape.state=Status: %s
-
 tooltip.computronics.tape.state.stopped=Gestoppt
 tooltip.computronics.tape.state.playing=Laufend
 tooltip.computronics.tape.state.rewinding=Zurückspulend

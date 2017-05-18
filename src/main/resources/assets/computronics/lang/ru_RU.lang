@@ -55,15 +55,14 @@ tooltip.computronics.gate.trigger.tape_drive_forwarding=Стример пере�
 tooltip.computronics.waila.base.bus=§aID шины§f: %s
 tooltip.computronics.waila.relay.bound=Привязано
 tooltip.computronics.waila.relay.notbound=Не привязано
-tooltip.computronics.waila.tape.tapeinserted=Лента вставлена
-tooltip.computronics.waila.tape.labeltapeinserted=Лента "%s" вставлена
-tooltip.computronics.waila.tape.notapeinserted=Лента не вставлена
 tooltip.computronics.waila.lamp.red=Красный: %s
 tooltip.computronics.waila.lamp.green=Зелёный: %s
 tooltip.computronics.waila.lamp.blue=Синий: %s
 
+tooltip.computronics.tape.tapeinserted=Лента вставлена
+tooltip.computronics.tape.labeltapeinserted=Лента "%s" вставлена
+tooltip.computronics.tape.notapeinserted=Лента не вставлена
 tooltip.computronics.tape.state=Состояние: %s
-
 tooltip.computronics.tape.state.stopped=Остановлено
 tooltip.computronics.tape.state.playing=Проигрывается
 tooltip.computronics.tape.state.rewinding=Перематывается назад
