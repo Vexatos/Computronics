@@ -42,10 +42,10 @@ public class InfoTapeDrive extends ComputronicsInfoProvider {
 		if(is != null && is.getItem() instanceof IItemTapeStorage) {
 			String label = Computronics.itemTape.getLabel(is);
 			if(label.length() > 0 && ConfigValues.TapeName.getValue(config)) {
-				currenttip.add(StringUtil.localizeAndFormat("tooltip.computronics.waila.tape.labeltapeinserted",
+				currenttip.add(StringUtil.localizeAndFormat("tooltip.computronics.tape.labeltapeinserted",
 					label + TextFormatting.RESET));
 			} else {
-				currenttip.add(StringUtil.localize("tooltip.computronics.waila.tape.tapeinserted"));
+				currenttip.add(StringUtil.localize("tooltip.computronics.tape.tapeinserted"));
 			}
 			if(ConfigValues.DriveState.getValue(config)) {
 				currenttip.add(StringUtil.localizeAndFormat("tooltip.computronics.tape.state",
@@ -53,7 +53,7 @@ public class InfoTapeDrive extends ComputronicsInfoProvider {
 						+ TapeDriveState.State.VALUES[data.getByte("state")].name().toLowerCase(Locale.ENGLISH))));
 			}
 		} else {
-			currenttip.add(StringUtil.localize("tooltip.computronics.waila.tape.notapeinserted"));
+			currenttip.add(StringUtil.localize("tooltip.computronics.tape.notapeinserted"));
 		}
 		return currenttip;
 	}
