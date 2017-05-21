@@ -97,6 +97,10 @@ public class PortableTapeDrive implements IAudioSource {
 		return tag;
 	}
 
+	public ItemStack getSelf() {
+		return self;
+	}
+
 	protected void updateState() {
 		if(world.isRemote) {
 			return;
