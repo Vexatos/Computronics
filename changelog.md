@@ -9,6 +9,8 @@
 
   * **[1.9.4]** FIXED: Tape Drive not making any insert or eject sound in multiplayer.
 
+  * **[1.10.2]** ADDED: Forge Energy support to the Ticket Machine.
+
   * **[1.11.2]** FIXED: Manual not pointing at the correct directory.
 
 ==== 1.6.4 ====

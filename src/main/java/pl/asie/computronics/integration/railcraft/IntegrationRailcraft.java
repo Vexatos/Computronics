@@ -1,6 +1,8 @@
 package pl.asie.computronics.integration.railcraft;
 
+import mods.railcraft.api.core.IVariantEnum;
 import mods.railcraft.client.render.tesr.TESRSignalBox;
+import mods.railcraft.common.blocks.IVariantEnumBlock;
 import mods.railcraft.common.blocks.machine.ItemMachine;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.entity.player.EntityPlayer;
@@ -73,6 +75,18 @@ public class IntegrationRailcraft {
 				@Override
 				public String getUnlocalizedName() {
 					return this.block.getUnlocalizedName();
+				}
+
+				@Override
+				public String getUnlocalizedName(ItemStack stack) {
+					IVariantEnum variant = this.getVariant(stack);
+					if(variant == null) {
+						return this.getUnlocalizedName();
+					} else if(variant instanceof IVariantEnumBlock) {
+						return ((IVariantEnumBlock) variant).getLocalizationTag();
+					} else {
+						return "tile.computronics." + variant.getResourcePathSuffix();
+					}
 				}
 			};
 			GameRegistry.register(digitalBoxItem, digitalBox.getRegistryName());

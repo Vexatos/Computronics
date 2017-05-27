@@ -5,13 +5,9 @@ import mods.railcraft.common.blocks.IRailcraftBlock;
 import mods.railcraft.common.blocks.IRailcraftBlockContainer;
 import mods.railcraft.common.blocks.machine.IEnumMachine;
 import mods.railcraft.common.blocks.machine.TileMachineBase;
-import mods.railcraft.common.blocks.machine.wayobjects.boxes.BlockMachineSignalBox;
-import mods.railcraft.common.gui.tooltips.ToolTip;
-import mods.railcraft.common.plugins.forge.LocalizationPlugin;
 import mods.railcraft.common.util.inventory.InvTools;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import pl.asie.computronics.Computronics;
@@ -32,7 +28,6 @@ public enum SignalTypes implements IEnumMachine<SignalTypes> {
 
 	public static final SignalTypes[] VALUES = values();
 	private final Definition def;
-	private ToolTip tip;
 	boolean enabled = false;
 
 	SignalTypes(String tag, Block block, Class<? extends TileMachineBase> tile) {
@@ -59,21 +54,6 @@ public enum SignalTypes implements IEnumMachine<SignalTypes> {
 		return this.getTag();
 	}
 
-	@Nullable
-	@Override
-	public ToolTip getToolTip(ItemStack itemStack, EntityPlayer entityPlayer, boolean b) {
-		if(this.tip != null) {
-			return this.tip;
-		} else {
-			String tipTag = this.getLocalizationTag() + ".tips";
-			if(LocalizationPlugin.hasTag(tipTag)) {
-				this.tip = ToolTip.buildToolTip(tipTag);
-			}
-
-			return this.tip;
-		}
-	}
-
 	@Override
 	public boolean isEnabled() {
 		return this.enabled;
@@ -82,6 +62,8 @@ public enum SignalTypes implements IEnumMachine<SignalTypes> {
 	@Override
 	public IRailcraftBlockContainer getContainer() {
 		return new IRailcraftBlockContainer() {
+			private final Definition def = new Definition(this, getBaseTag(), null);
+
 			@Nullable
 			@Override
 			public IBlockState getState(@Nullable IVariantEnum variant) {
@@ -105,6 +87,11 @@ public enum SignalTypes implements IEnumMachine<SignalTypes> {
 			@Override
 			public IBlockState getDefaultState() {
 				return block() == null ? null : block().getDefaultState();
+			}
+
+			@Override
+			public Definition getDef() {
+				return this.def;
 			}
 
 			@Override
@@ -145,7 +132,5 @@ public enum SignalTypes implements IEnumMachine<SignalTypes> {
 			variant.def.passesLight = true;
 			creativeList.add(variant);
 		}
-
-		BlockMachineSignalBox.connectionsSenders.add(DigitalReceiver);
 	}
 }

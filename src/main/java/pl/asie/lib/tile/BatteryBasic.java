@@ -2,6 +2,8 @@ package pl.asie.lib.tile;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.energy.IEnergyStorage;
 import pl.asie.lib.AsieLibMod;
 import pl.asie.lib.api.tile.IBattery;
 
@@ -130,4 +132,42 @@ public class BatteryBasic implements IBattery {
 	public double getMaxEnergyUsage() {
 		return peakEnergyUsage;
 	}
+
+	@Override
+	@Nullable
+	public IEnergyStorage getStorage(EnumFacing side) {
+		return energyStorage;
+	}
+
+	public final IEnergyStorage energyStorage = new IEnergyStorage() {
+		@Override
+		public int receiveEnergy(int maxReceive, boolean simulate) {
+			return (int) Math.floor(BatteryBasic.this.insert(null, maxReceive, simulate));
+		}
+
+		@Override
+		public int extractEnergy(int maxExtract, boolean simulate) {
+			return (int) Math.floor(BatteryBasic.this.extract(null, maxExtract, simulate));
+		}
+
+		@Override
+		public int getEnergyStored() {
+			return MathHelper.floor_double(BatteryBasic.this.getEnergyStored());
+		}
+
+		@Override
+		public int getMaxEnergyStored() {
+			return MathHelper.floor_double(BatteryBasic.this.getMaxEnergyStored());
+		}
+
+		@Override
+		public boolean canExtract() {
+			return BatteryBasic.this.canExtract(null, "RF");
+		}
+
+		@Override
+		public boolean canReceive() {
+			return BatteryBasic.this.canInsert(null, "RF");
+		}
+	};
 }

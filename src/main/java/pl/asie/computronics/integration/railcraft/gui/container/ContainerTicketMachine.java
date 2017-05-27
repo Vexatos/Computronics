@@ -4,7 +4,6 @@ import mods.railcraft.common.gui.containers.RailcraftContainer;
 import mods.railcraft.common.gui.slots.SlotOutput;
 import mods.railcraft.common.gui.slots.SlotSecure;
 import mods.railcraft.common.gui.widgets.IndicatorWidget;
-import mods.railcraft.common.gui.widgets.RFEnergyIndicator;
 import mods.railcraft.common.gui.widgets.Widget;
 import mods.railcraft.common.items.ItemTicketGold;
 import mods.railcraft.common.plugins.forge.PlayerPlugin;
@@ -14,7 +13,6 @@ import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.asie.computronics.integration.railcraft.gui.slot.PaperSlotFilter;
@@ -34,7 +32,7 @@ import javax.annotation.Nullable;
 public class ContainerTicketMachine extends RailcraftContainer {
 
 	private final InventoryPlayer inventoryPlayer;
-	private final RFEnergyIndicator energyIndicator;
+	private final BatteryIndicator batteryIndicator;
 	private TileTicketMachine tile;
 	private boolean maintenanceMode = false;
 
@@ -48,10 +46,10 @@ public class ContainerTicketMachine extends RailcraftContainer {
 		this.addWidget(new PrintButtonWidget(tile, 67, 54, 0, 168, 20, 16));
 		this.addWidget(new SlotSelectionWidget(tile, 33, 15, 184, 0, 88, 34, maintenanceMode));
 
-		this.energyIndicator = new RFEnergyIndicator(tile);
+		this.batteryIndicator = new BatteryIndicator(tile.getBatteryProvider());
 		if(Config.TICKET_MACHINE_CONSUME_RF) {
 			this.addWidget(new Widget(160, 14, 184, 25, 8, 50));
-			this.addWidget(new IndicatorWidget(this.energyIndicator, 161, 15, 194, 26, 6, 48));
+			this.addWidget(new IndicatorWidget(this.batteryIndicator, 161, 15, 194, 26, 6, 48));
 		}
 		this.addWidget(new ProgressBarWidget(tile, 136, 34, 208, 25, 10, 13));
 		if(maintenanceMode) {
@@ -130,11 +128,8 @@ public class ContainerTicketMachine extends RailcraftContainer {
 	public void sendUpdateToClient() {
 		super.sendUpdateToClient();
 		for(IContainerListener listener : this.listeners) {
-			if(this.lastEnergy != tile.getEnergyStored(EnumFacing.NORTH)) {
-				listener.sendProgressBarUpdate(this, 2, tile.getEnergyStored(EnumFacing.NORTH));
-			}
 			if(this.lastProgress != tile.getProgress()) {
-				listener.sendProgressBarUpdate(this, 3, tile.getProgress());
+				listener.sendProgressBarUpdate(this, 1, tile.getProgress());
 			}
 		}
 		this.lastProgress = this.tile.getProgress();
@@ -147,8 +142,7 @@ public class ContainerTicketMachine extends RailcraftContainer {
 		this.canLock = PlayerPlugin.isOwnerOrOp(tile.getOwner(), inventoryPlayer.player.getGameProfile());
 		updateLock();
 		listener.sendProgressBarUpdate(this, 0, this.canLock ? 1 : 0);
-		listener.sendProgressBarUpdate(this, 2, this.tile.getEnergyStored(null));
-		listener.sendProgressBarUpdate(this, 3, tile.getProgress());
+		listener.sendProgressBarUpdate(this, 1, tile.getProgress());
 	}
 
 	@Override
@@ -162,14 +156,6 @@ public class ContainerTicketMachine extends RailcraftContainer {
 				break;
 			}
 			case 1: {
-				this.energyIndicator.updateEnergy(value);
-				break;
-			}
-			case 2: {
-				this.energyIndicator.setEnergy(value);
-				break;
-			}
-			case 3: {
 				this.tile.setProgress(value);
 				break;
 			}

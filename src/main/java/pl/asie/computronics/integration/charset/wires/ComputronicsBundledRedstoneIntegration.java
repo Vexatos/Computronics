@@ -68,9 +68,9 @@ public class ComputronicsBundledRedstoneIntegration {
 	private static final ResourceLocation charsetBundledRedstoneID = new ResourceLocation("computronics", "charset_bundled_rs");
 
 	@SubscribeEvent
-	public void onCapabilityAttach(AttachCapabilitiesEvent.TileEntity e) {
-		if(e.getTileEntity() instanceof IComputronicsPeripheral && e.getTileEntity() instanceof IBundledRedstoneProvider) {
-			e.addCapability(charsetBundledRedstoneID, new CharsetCapabilityProvider(e.getTileEntity()));
+	public void onCapabilityAttach(AttachCapabilitiesEvent<TileEntity> e) {
+		if(e.getObject() instanceof IComputronicsPeripheral && e.getObject() instanceof IBundledRedstoneProvider) {
+			e.addCapability(charsetBundledRedstoneID, new CharsetCapabilityProvider(e.getObject()));
 		}
 	}
 
