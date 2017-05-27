@@ -39,7 +39,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase implements ITi
 	private UUID uuid;
 
 	public TileLocomotiveRelay() {
-		super("locomotive_relay");
+		super("locomotive_relay", 0);
 	}
 
 	public void setLocomotive(EntityLocomotiveElectric loco) {
@@ -174,7 +174,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase implements ITi
 
 	@Optional.Method(modid = Mods.OpenComputers)
 	private boolean tryConsumeEnergy(double energy) {
-		return node() instanceof Connector && ((Connector) node()).tryChangeBuffer(-energy);
+		return !(node() instanceof Connector) || ((Connector) node()).tryChangeBuffer(-energy);
 	}
 
 	@Nullable

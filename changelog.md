@@ -5,6 +5,8 @@
   * ADDED: Speech Upgrade!
     - The Speech Box as an upgrade. Works in exactly the same way.
   * FIXED: Sound positions of tape drives etc. not being quite correct.
+  * FIXED: Locomotive Relay failing to consume energy.
+  * FIXED: Speech Box not properly stopping talking on chunk unload.
 
   * **[1.9.4]** FIXED: Tape Drive not making any insert or eject sound in multiplayer.
 
