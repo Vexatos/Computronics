@@ -132,7 +132,7 @@ public class OCUtils {
 		}
 		if(advanced) {
 			DriverItem item = Driver.driverFor(stack);
-			tooltip.add(StringUtil.localizeAndFormat("oc:tooltip.Tier", item != null ? item.tier(stack) + 1 : 0));
+			tooltip.add(StringUtil.localizeAndFormat("oc:tooltip.tier", item != null ? item.tier(stack) + 1 : 0));
 		}
 	}
 
