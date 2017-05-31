@@ -7,10 +7,12 @@
   * FIXED: Sound positions of tape drives etc. not being quite correct.
   * FIXED: Locomotive Relay failing to consume energy.
   * FIXED: Speech Box not properly stopping talking on chunk unload.
+  * FIXED: Radar not working.
 
   * **[1.9.4]** FIXED: Tape Drive not making any insert or eject sound in multiplayer.
 
   * **[1.11.2]** FIXED: Manual not pointing at the correct directory.
+  * **[1.11.2]** FIXED: Upgrade tier localization.
 
 ==== 1.6.4 ====
 

@@ -29,7 +29,7 @@ import java.util.Set;
 public class TileRadar extends TileEntityPeripheralBase implements IBatteryProvider {
 
 	public TileRadar() {
-		super("radar");
+		super("radar", 0);
 		this.registerBattery(new BatteryBasic(EnergyConverter.convertEnergy(Config.RADAR_ENERGY_COST_OC * Config.RADAR_RANGE * 3.5, "OC", "RF")));
 	}
 
