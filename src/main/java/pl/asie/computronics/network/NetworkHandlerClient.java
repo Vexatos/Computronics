@@ -96,6 +96,7 @@ public class NetworkHandlerClient extends MessageHandlerBase {
 				State state = State.VALUES[packet.readUnsignedByte()];
 				if(tapeDrive != null) {
 					tapeDrive.switchState(state);
+					tapeDrive.setSourceIdClient(packet.readInt());
 				}
 			}
 			break;

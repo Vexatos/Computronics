@@ -12,8 +12,10 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.asie.computronics.Computronics;
 import pl.asie.computronics.item.ItemPortableTapeDrive;
-import pl.asie.computronics.tile.TapeDriveState;
+import pl.asie.computronics.tile.TapeDriveState.State;
+import pl.asie.lib.audio.StreamingAudioPlayer;
 
 import javax.annotation.Nullable;
 import java.util.Iterator;
@@ -97,7 +99,7 @@ public final class PortableDriveManager {
 		while(iterator.hasNext()) {
 			Map.Entry<String, PortableTapeDrive> entry = iterator.next();
 			if(entry.getValue().time > 5) {
-				entry.getValue().switchState(TapeDriveState.State.STOPPED);
+				entry.getValue().switchState(State.STOPPED);
 				iterator.remove();
 				entry.getValue().carrier = null;
 			} else {
@@ -121,13 +123,20 @@ public final class PortableDriveManager {
 					drive.resetTime();
 					drive.updateCarrier(player, stack);
 					drive.update();
+					if(drive.getEnumState() == State.PLAYING) {
+						final int codecId = drive.getSourceIdClient();
+						if(Computronics.instance.audio.exists(codecId)) {
+							StreamingAudioPlayer sound = Computronics.instance.audio.getPlayer(codecId);
+							sound.updatePosition("computronics:dfpwm" + codecId, (float) player.posX + 0.5F, (float) player.posY + 0.5F, (float) player.posZ + 0.5F);
+						}
+					}
 				}
 			}
 			Iterator<Map.Entry<String, PortableTapeDrive>> iterator = drives(true).entrySet().iterator();
 			while(iterator.hasNext()) {
 				Map.Entry<String, PortableTapeDrive> entry = iterator.next();
 				if(entry.getValue().time > 5) {
-					entry.getValue().switchState(TapeDriveState.State.STOPPED);
+					entry.getValue().switchState(State.STOPPED);
 					iterator.remove();
 					entry.getValue().carrier = null;
 				} else {

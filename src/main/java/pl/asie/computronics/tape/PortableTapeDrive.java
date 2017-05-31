@@ -116,7 +116,8 @@ public class PortableTapeDrive implements IAudioSource {
 			try {
 				Packet packet = Computronics.packet.create(PacketType.PORTABLE_TAPE_STATE.ordinal())
 					.writeString(id)
-					.writeByte((byte) state.getState().ordinal());
+					.writeByte((byte) state.getState().ordinal())
+					.writeInt(getSourceId());
 				//.writeByte((byte)soundVolume);
 				Computronics.packet.sendToAllAround(packet, carrier, 64.0D);
 			} catch(Exception e) {
@@ -235,6 +236,8 @@ public class PortableTapeDrive implements IAudioSource {
 		save(getTag());
 	}
 
+	protected int clientId = -1;
+
 	public void load(NBTTagCompound tag) {
 		if(tag.hasKey("inv")) {
 			this.inventory = ItemStack.loadItemStackFromNBT(tag.getCompoundTag("inv"));
@@ -250,6 +253,9 @@ public class PortableTapeDrive implements IAudioSource {
 		} else {
 			this.state.soundVolume = 127;
 		}
+		if(tag.hasKey("cId")) {
+			this.clientId = tag.getInteger("cId");
+		}
 		loadStorage();
 	}
 
@@ -264,6 +270,7 @@ public class PortableTapeDrive implements IAudioSource {
 		if(this.state.soundVolume != 127) {
 			tag.setByte("vo", (byte) this.state.soundVolume);
 		}
+		tag.setInteger("cId", clientId);
 	}
 
 	private final IAudioReceiver internalSpeaker = new IAudioReceiver() {
@@ -296,6 +303,14 @@ public class PortableTapeDrive implements IAudioSource {
 	@Override
 	public int getSourceId() {
 		return state.getId();
+	}
+
+	public int getSourceIdClient() {
+		return clientId;
+	}
+
+	public void setSourceIdClient(int clientId) {
+		this.clientId = clientId;
 	}
 
 	@Override
