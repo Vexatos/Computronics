@@ -11,8 +11,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
+import pl.asie.computronics.Computronics;
 import pl.asie.computronics.item.ItemPortableTapeDrive;
-import pl.asie.computronics.tile.TapeDriveState;
+import pl.asie.computronics.tile.TapeDriveState.State;
+import pl.asie.lib.audio.StreamingAudioPlayer;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -96,7 +98,7 @@ public final class PortableDriveManager {
 		while(iterator.hasNext()) {
 			Map.Entry<String, PortableTapeDrive> entry = iterator.next();
 			if(entry.getValue().time > 5) {
-				entry.getValue().switchState(TapeDriveState.State.STOPPED);
+				entry.getValue().switchState(State.STOPPED);
 				iterator.remove();
 				entry.getValue().carrier = null;
 			} else {
@@ -120,13 +122,20 @@ public final class PortableDriveManager {
 					drive.resetTime();
 					drive.updateCarrier(player, stack);
 					drive.update();
+					if(drive.getEnumState() == State.PLAYING) {
+						final int codecId = drive.getSourceIdClient();
+						if(Computronics.instance.audio.exists(codecId)) {
+							StreamingAudioPlayer sound = Computronics.instance.audio.getPlayer(codecId);
+							sound.updatePosition("computronics:dfpwm" + codecId, (float) player.posX, (float) player.posY + 0.5F, (float) player.posZ);
+						}
+					}
 				}
 			}
 			Iterator<Map.Entry<String, PortableTapeDrive>> iterator = drives(true).entrySet().iterator();
 			while(iterator.hasNext()) {
 				Map.Entry<String, PortableTapeDrive> entry = iterator.next();
 				if(entry.getValue().time > 5) {
-					entry.getValue().switchState(TapeDriveState.State.STOPPED);
+					entry.getValue().switchState(State.STOPPED);
 					iterator.remove();
 					entry.getValue().carrier = null;
 				} else {
