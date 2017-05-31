@@ -49,7 +49,9 @@ public class TextToSpeechLoader {
 		classLoader.addClassLoaderExclusion("marytts.");
 		classLoader.addClassLoaderExclusion("jtok.");
 		classLoader.addClassLoaderExclusion("de.dfki.");
-		//classLoader.addClassLoaderExclusion("pl.asie.computronics.audio.tts.core.");
+		// This is not forge's logger but the one mary uses.
+		classLoader.addClassLoaderExclusion("org.apache.log4j.");
+		//classLoader.addClassLoaderExclusion("pl.asie.computronics.audio.tts.");
 		//classLoader.addClassLoaderExclusion("com.sun.org.apache.xalan.internal.xsltc.");
 		try {
 			Class.forName("marytts.MaryInterface");
