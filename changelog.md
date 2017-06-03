@@ -8,6 +8,7 @@
   * FIXED: Locomotive Relay failing to consume energy.
   * FIXED: Speech Box not properly stopping talking on chunk unload.
   * FIXED: Radar not working.
+  * FIXED: MaryTTS not loading properly with certain other mods installed.
 
   * **[1.9.4]** FIXED: Tape Drive not making any insert or eject sound in multiplayer.
 

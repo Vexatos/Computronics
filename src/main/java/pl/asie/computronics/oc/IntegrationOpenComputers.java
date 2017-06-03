@@ -126,7 +126,8 @@ public class IntegrationOpenComputers {
 			|| Config.OC_BOARD_LIGHT
 			|| Config.OC_BOARD_BOOM
 			|| Config.OC_BOARD_CAPACITOR
-			|| Config.OC_BOARD_SWITCH) {
+			|| Config.OC_BOARD_SWITCH
+			|| Config.OC_UPGRADE_SPEECH) {
 			itemOCParts = new ItemOpenComputers();
 			GameRegistry.registerItem(itemOCParts, "computronics.ocParts");
 			Driver.add((Item) itemOCParts);
