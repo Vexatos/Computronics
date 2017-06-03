@@ -71,6 +71,16 @@ public class StreamingAudioPlayer extends DFPWM {
 		stop();
 	}
 
+	public void updatePosition(String id, float x, float y, float z) {
+		for(SourceEntry source : sources) {
+			if((id != null && id.equals(source.id))) {
+				AL10.alSource3f(source.src.get(0), AL10.AL_POSITION, x, y, z);
+				AL10.alSource3f(source.src.get(0), AL10.AL_VELOCITY, 0F, 0F, 0F);
+				return;
+			}
+		}
+	}
+
 	@SideOnly(Side.CLIENT)
 	private double getDistance(int x, int y, int z) {
 		Vec3d pos = Minecraft.getMinecraft().player.getPositionVector();
@@ -105,7 +115,7 @@ public class StreamingAudioPlayer extends DFPWM {
 
 	@SideOnly(Side.CLIENT)
 	public void play(String id, int x, int y, int z, float rolloff) {
-		FloatBuffer sourcePos = (FloatBuffer) (BufferUtils.createFloatBuffer(3).put(new float[] { x+ 0.5F, y+ 0.5F, z + 0.5F}).rewind());
+		FloatBuffer sourcePos = (FloatBuffer) (BufferUtils.createFloatBuffer(3).put(new float[] { x + 0.5F, y + 0.5F, z + 0.5F }).rewind());
 		FloatBuffer sourceVel = (FloatBuffer) (BufferUtils.createFloatBuffer(3).put(new float[] { 0.0f, 0.0f, 0.0f }).rewind());
 
 		SourceEntry source = null;

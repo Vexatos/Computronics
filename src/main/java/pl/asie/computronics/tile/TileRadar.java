@@ -28,7 +28,7 @@ import java.util.Set;
 public class TileRadar extends TileEntityPeripheralBase {
 
 	public TileRadar() {
-		super("radar");
+		super("radar", 0);
 	}
 
 	private int getDistance(Arguments args) {
