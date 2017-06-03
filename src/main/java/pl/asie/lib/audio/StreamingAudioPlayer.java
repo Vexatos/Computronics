@@ -75,7 +75,6 @@ public class StreamingAudioPlayer extends DFPWM {
 		for(SourceEntry source : sources) {
 			if((id != null && id.equals(source.id))) {
 				AL10.alSource3f(source.src.get(0), AL10.AL_POSITION, x, y, z);
-				AL10.alSource3f(source.src.get(0), AL10.AL_VELOCITY, 0F, 0F, 0F);
 				return;
 			}
 		}
