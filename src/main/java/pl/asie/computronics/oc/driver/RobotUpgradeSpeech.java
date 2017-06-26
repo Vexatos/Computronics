@@ -158,6 +158,7 @@ public class RobotUpgradeSpeech extends ManagedEnvironmentWithComponentConnector
 		super.onDisconnect(node);
 		if(node == this.node()) {
 			isValid = false;
+			stopTalking();
 		}
 	}
 
