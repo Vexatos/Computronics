@@ -37,6 +37,10 @@ public abstract class StreamingPlaybackManager {
 		return players.get(id);
 	}
 
+	public boolean exists(int id) {
+		return players.containsKey(id);
+	}
+
 	public void removeAll() {
 		for(int id : players.keySet()) {
 			players.get(id).stop();

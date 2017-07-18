@@ -166,6 +166,18 @@ public class TileSpeechBox extends TileEntityPeripheralBase implements IAudioSou
 		}
 	}
 
+	@Override
+	public void invalidate() {
+		super.invalidate();
+		stopTalking();
+	}
+
+	@Override
+	public void onChunkUnload() {
+		super.onChunkUnload();
+		stopTalking();
+	}
+
 	public void setVolume(float volume) {
 		if(volume < 0.0F) {
 			volume = 0.0F;
