@@ -25,15 +25,15 @@ public class EntityFlyingCreature extends EntityAmbientCreature {
 	}
 
 	@Override
-	public void moveEntityWithHeading(float strafe, float forward) {
+	public void travel(float strafe, float vertical, float forward) {
 		if(this.isInWater()) {
-			this.moveRelative(strafe, forward, 0.02F);
+			this.moveRelative(strafe, vertical, forward, 0.02F);
 			this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
 			this.motionX *= 0.800000011920929D;
 			this.motionY *= 0.800000011920929D;
 			this.motionZ *= 0.800000011920929D;
 		} else if(this.isInLava()) {
-			this.moveRelative(strafe, forward, 0.02F);
+			this.moveRelative(strafe, vertical, forward, 0.02F);
 			this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
 			this.motionX *= 0.5D;
 			this.motionY *= 0.5D;
@@ -46,7 +46,7 @@ public class EntityFlyingCreature extends EntityAmbientCreature {
 			}
 
 			float f1 = 0.16277136F / (f * f * f);
-			this.moveRelative(strafe, forward, this.onGround ? 0.1F * f1 : 0.02F);
+			this.moveRelative(strafe, vertical, forward, this.onGround ? 0.1F * f1 : 0.02F);
 			f = 0.91F;
 
 			if(this.onGround) {

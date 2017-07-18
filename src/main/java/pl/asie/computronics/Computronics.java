@@ -76,7 +76,6 @@ import pl.asie.computronics.tile.TileRadar;
 import pl.asie.computronics.tile.TileSpeaker;
 import pl.asie.computronics.tile.TileSpeechBox;
 import pl.asie.computronics.tile.TileTapeDrive;
-import pl.asie.computronics.util.achievements.ComputronicsAchievements;
 import pl.asie.computronics.util.chat.ChatHandler;
 import pl.asie.computronics.util.event.ServerTickHandler;
 import pl.asie.lib.block.BlockBase;
@@ -91,8 +90,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Mod(modid = Mods.Computronics, name = Mods.Computronics_NAME, version = "@VERSION@",
-	dependencies = "required-after:asielib;required-after:forge@[13.20.0.2228,);"
-		+ "after:computercraft@[1.80,);after:opencomputers@[1.7,);after:tis3d@[1.2.0,);"
+	dependencies = "required-after:asielib;required-after:forge@[14.21.1.2387,);"
+		+ "after:computercraft;after:opencomputers@[1.7,);after:tis3d@[1.2.0,);"
 		+ "before:OpenPeripheralCore@[1.1,);before:OpenPeripheralApi@[3.2,);"
 		+ "after:MineFactoryReloaded;after:RedLogic@[59.1.9,);after:ProjRed|Core;"
 		+ "after:BuildCraft|Core@[7.2.0,);after:railcraft@[10.0,);"
@@ -153,7 +152,7 @@ public class Computronics {
 	public static IGuiProvider guiPortableTapeDrive;
 	public static IGuiProvider guiCipher;
 
-	public ComputronicsAchievements achievements;
+	//public ComputronicsAchievements achievements; TODO Advancements?
 
 	public static MultiPeripheralRegistry peripheralRegistry;
 
@@ -173,8 +172,8 @@ public class Computronics {
 	}
 
 	public void registerBlockWithTileEntity(Block block, ItemBlock itemBlock, Class<? extends TileEntity> tile, String name) {
-		GameRegistry.register(block, new ResourceLocation(Mods.Computronics, name));
-		GameRegistry.register(itemBlock, block.getRegistryName());
+		GameRegistry.findRegistry(Block.class).register(block.setRegistryName(new ResourceLocation(Mods.Computronics, name)));
+		GameRegistry.findRegistry(Item.class).register(itemBlock.setRegistryName(block.getRegistryName()));
 		GameRegistry.registerTileEntity(tile, name);
 		proxy.registerItemModel(block, 0, "computronics:" + name);
 		//System.out.println("Registering " + name + " as TE " + tile.getCanonicalName());
@@ -183,7 +182,7 @@ public class Computronics {
 	}
 
 	public void registerItem(Item item, String name) {
-		GameRegistry.register(item, new ResourceLocation(Mods.Computronics, name));
+		GameRegistry.findRegistry(Item.class).register(item.setRegistryName(new ResourceLocation(Mods.Computronics, name)));
 	}
 
 	@EventHandler
@@ -364,8 +363,8 @@ public class Computronics {
 			tis3D.init(compat);
 		}
 
-		achievements = new ComputronicsAchievements();
-		achievements.initialize();
+		//achievements = new ComputronicsAchievements(); TODO Advancements?
+		//achievements.initialize();
 
 		Capabilities.INSTANCE.init();
 

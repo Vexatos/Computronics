@@ -5,7 +5,6 @@ import li.cil.tis3d.api.machine.Face;
 import li.cil.tis3d.api.module.Module;
 import li.cil.tis3d.api.module.ModuleProvider;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.relauncher.Side;
@@ -39,15 +38,18 @@ public class ItemModules extends ItemMultipleComputronics implements ModuleProvi
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubItems(Item item, CreativeTabs tabs, NonNullList<ItemStack> list) {
+	public void getSubItems(CreativeTabs tabs, NonNullList<ItemStack> list) {
+		if(!this.isInCreativeTab(tabs)) {
+			return;
+		}
 		if(Config.TIS3D_MODULE_COLORFUL) {
-			list.add(new ItemStack(item, 1, 0));
+			list.add(new ItemStack(this, 1, 0));
 		}
 		if(Config.TIS3D_MODULE_TAPE_READER) {
-			list.add(new ItemStack(item, 1, 1));
+			list.add(new ItemStack(this, 1, 1));
 		}
 		if(Config.TIS3D_MODULE_BOOM) {
-			list.add(new ItemStack(item, 1, 2));
+			list.add(new ItemStack(this, 1, 2));
 		}
 	}
 

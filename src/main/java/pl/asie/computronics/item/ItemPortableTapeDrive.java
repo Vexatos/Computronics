@@ -3,6 +3,7 @@ package pl.asie.computronics.item;
 import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -26,6 +27,7 @@ import pl.asie.computronics.tape.PortableTapeDrive;
 import pl.asie.computronics.tile.TapeDriveState.State;
 import pl.asie.computronics.util.StringUtil;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -94,7 +96,7 @@ public class ItemPortableTapeDrive extends Item implements IItemWithDocumentatio
 	@Override
 	@SideOnly(Side.CLIENT)
 	@SuppressWarnings("unchecked")
-	public void addInformation(ItemStack stack, EntityPlayer player, List<String> info, boolean advanced) {
+	public void addInformation(ItemStack stack, @Nullable World world, List<String> info, ITooltipFlag flag) {
 		if(stack.hasTagCompound()) {
 			NBTTagCompound tag = stack.getTagCompound();
 			if(tag.hasKey("state") && tag.hasKey("tid")
@@ -119,14 +121,14 @@ public class ItemPortableTapeDrive extends Item implements IItemWithDocumentatio
 				}
 			}
 		}
-		super.addInformation(stack, player, info, advanced);
+		super.addInformation(stack, world, info, flag);
 	}
 
 	@Override
 	public boolean onEntityItemUpdate(EntityItem entity) {
-		PortableTapeDrive drive = PortableDriveManager.INSTANCE.getOrCreate(entity.getEntityItem(), entity.world.isRemote);
+		PortableTapeDrive drive = PortableDriveManager.INSTANCE.getOrCreate(entity.getItem(), entity.world.isRemote);
 		drive.resetTime();
-		drive.updateCarrier(entity, entity.getEntityItem());
+		drive.updateCarrier(entity, entity.getItem());
 		drive.update();
 		return super.onEntityItemUpdate(entity);
 	}

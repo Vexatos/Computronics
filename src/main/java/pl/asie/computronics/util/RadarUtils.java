@@ -55,7 +55,7 @@ public class RadarUtils {
 			if(Math.sqrt(dx * dx + dy * dy + dz * dz) < Config.RADAR_RANGE) {
 				// Maps are converted to tables on the Lua side.
 				Map<String, Object> entry = new HashMap<String, Object>();
-				ItemStack stack = entity.getEntityItem();
+				ItemStack stack = entity.getItem();
 				entry.put("name", Item.REGISTRY.getNameForObject(stack.getItem()));
 				entry.put("damage", stack.getItemDamage());
 				entry.put("hasTag", stack.hasTagCompound());

@@ -2,7 +2,7 @@ package pl.asie.computronics.integration.forestry.client.entity;
 
 import forestry.apiculture.PluginApiculture;
 import net.minecraft.client.particle.Particle;
-import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
 
@@ -65,7 +65,7 @@ public class ParticleSwarm extends Particle {
 	 * Renders the particle
 	 */
 	@Override
-	public void renderParticle(VertexBuffer worldRendererIn, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ) {
+	public void renderParticle(BufferBuilder worldRendererIn, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ) {
 		float minU = 0;
 		float maxU = 1;
 		float minV = 0;

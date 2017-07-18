@@ -9,12 +9,13 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.registries.IForgeRegistryEntry;
 import pl.asie.lib.util.ColorUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecipeColorizer implements IRecipe {
+public class RecipeColorizer extends IForgeRegistryEntry.Impl<IRecipe> implements IRecipe {
 
 	private final Item targetItem;
 	private List<Item> sourceItems;
@@ -122,12 +123,9 @@ public class RecipeColorizer implements IRecipe {
 		return targetStack;
 	}
 
-	/**
-	 * Returns the size of the recipe area
-	 */
 	@Override
-	public int getRecipeSize() {
-		return 10;
+	public boolean canFit(int width, int height) {
+		return width * height >= 2;
 	}
 
 	@Override

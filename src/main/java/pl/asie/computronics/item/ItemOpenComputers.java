@@ -15,12 +15,13 @@ import li.cil.oc.api.internal.Tablet;
 import li.cil.oc.api.network.Environment;
 import li.cil.oc.api.network.EnvironmentHost;
 import li.cil.oc.api.network.ManagedEnvironment;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -47,6 +48,7 @@ import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.OCUtils;
 import pl.asie.computronics.util.internal.IItemWithColor;
 
+import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.List;
 import java.util.Set;
@@ -321,51 +323,54 @@ public class ItemOpenComputers extends ItemMultipleComputronics implements Drive
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubItems(net.minecraft.item.Item item, CreativeTabs tabs, NonNullList<ItemStack> list) {
+	public void getSubItems(CreativeTabs tabs, NonNullList<ItemStack> list) {
+		if(!this.isInCreativeTab(tabs)) {
+			return;
+		}
 		if(Config.OC_UPGRADE_CAMERA) {
-			list.add(new ItemStack(item, 1, 0));
+			list.add(new ItemStack(this, 1, 0));
 		}
 		if(Config.OC_UPGRADE_CHATBOX) {
-			list.add(new ItemStack(item, 1, 1));
+			list.add(new ItemStack(this, 1, 1));
 		}
 		if(Config.OC_UPGRADE_RADAR) {
-			list.add(new ItemStack(item, 1, 2));
+			list.add(new ItemStack(this, 1, 2));
 		}
 		if(Config.OC_CARD_FX) {
-			list.add(new ItemStack(item, 1, 3));
+			list.add(new ItemStack(this, 1, 3));
 		}
 		if(Config.OC_CARD_SPOOF) {
-			list.add(new ItemStack(item, 1, 4));
+			list.add(new ItemStack(this, 1, 4));
 		}
 		if(Config.OC_CARD_BEEP) {
-			list.add(new ItemStack(item, 1, 5));
+			list.add(new ItemStack(this, 1, 5));
 		}
 		if(Config.OC_CARD_BOOM) {
-			list.add(new ItemStack(item, 1, 6));
+			list.add(new ItemStack(this, 1, 6));
 		}
 		if(Config.OC_UPGRADE_COLORFUL) {
-			list.add(new ItemStack(item, 1, 7));
+			list.add(new ItemStack(this, 1, 7));
 		}
 		if(Config.OC_CARD_NOISE) {
-			list.add(new ItemStack(item, 1, 8));
+			list.add(new ItemStack(this, 1, 8));
 		}
 		if(Config.OC_CARD_SOUND) {
-			list.add(new ItemStack(item, 1, 9));
+			list.add(new ItemStack(this, 1, 9));
 		}
 		if(Config.OC_BOARD_LIGHT) {
-			list.add(new ItemStack(item, 1, 10));
+			list.add(new ItemStack(this, 1, 10));
 		}
 		if(Config.OC_BOARD_BOOM) {
-			list.add(new ItemStack(item, 1, 11));
+			list.add(new ItemStack(this, 1, 11));
 		}
 		if(Config.OC_BOARD_CAPACITOR) {
-			list.add(new ItemStack(item, 1, 12));
+			list.add(new ItemStack(this, 1, 12));
 		}
 		if(Config.OC_BOARD_SWITCH) {
-			list.add(new ItemStack(item, 1, 13));
+			list.add(new ItemStack(this, 1, 13));
 		}
 		if(Config.OC_UPGRADE_SPEECH) {
-			list.add(new ItemStack(item, 1, 14));
+			list.add(new ItemStack(this, 1, 14));
 		}
 	}
 
@@ -440,8 +445,8 @@ public class ItemOpenComputers extends ItemMultipleComputronics implements Drive
 	@Override
 	@SideOnly(Side.CLIENT)
 	@SuppressWarnings("unchecked")
-	public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean advanced) {
-		OCUtils.addTooltip(stack, tooltip, advanced);
+	public void addInformation(ItemStack stack, @Nullable World world, List tooltip, ITooltipFlag flag) {
+		OCUtils.addTooltip(stack, tooltip, flag);
 	}
 
 	@Override

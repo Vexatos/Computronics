@@ -79,7 +79,7 @@ public class SwarmProvider extends AbstractProvider {
 				}
 			} else if(player.capabilities != null && player.capabilities.isCreativeMode) {
 				Vec3d pos = player.getPositionVector().add(player.getLookVec());
-				behavior.spawnNewEntity(pos.xCoord, pos.yCoord + 2f, pos.zCoord,
+				behavior.spawnNewEntity(pos.x, pos.y + 2f, pos.z,
 					BeeManager.beeRoot.getMemberStack(BeeManager.beeRoot.templateAsIndividual(BeeManager.beeRoot.getDefaultTemplate()), EnumBeeType.QUEEN));
 				swingItem(player, hand, stack, e);
 			}

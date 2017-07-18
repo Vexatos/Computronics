@@ -3,6 +3,7 @@ package pl.asie.computronics.integration;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import pl.asie.computronics.Computronics;
@@ -99,8 +100,8 @@ public class ModRecipes {
 
 			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.itemParts, 1, 0),
 				" i ", "rrr", "iii", 'r', "dustRedstone", 'i', "ingotIron");
-			GameRegistry.addRecipe(new RecipeColorizer(Computronics.itemTape));
-			GameRegistry.addRecipe(new RecipeDecolorizer(Computronics.itemTape));
+			GameRegistry.findRegistry(IRecipe.class).register(new RecipeColorizer(Computronics.itemTape));
+			GameRegistry.findRegistry(IRecipe.class).register(new RecipeDecolorizer(Computronics.itemTape));
 		}
 	}
 

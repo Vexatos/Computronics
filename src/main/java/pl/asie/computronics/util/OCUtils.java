@@ -7,6 +7,7 @@ import li.cil.oc.api.internal.Colored;
 import li.cil.oc.client.KeyBindings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -99,7 +100,7 @@ public class OCUtils {
 
 	//Mostly stolen from Sangar
 	@SideOnly(Side.CLIENT)
-	public static void addTooltip(ItemStack stack, List<String> tooltip, boolean advanced) {
+	public static void addTooltip(ItemStack stack, List<String> tooltip, ITooltipFlag flag) {
 		{
 			FontRenderer font = Minecraft.getMinecraft().fontRenderer;
 			final String key = stack.getUnlocalizedName() + ".tip";
@@ -130,7 +131,7 @@ public class OCUtils {
 					+ TextFormatting.GRAY);
 			}
 		}
-		if(advanced) {
+		if(flag.isAdvanced()) {
 			DriverItem item = Driver.driverFor(stack);
 			tooltip.add(StringUtil.localizeAndFormat("oc:tooltip.tier", item != null ? item.tier(stack) + 1 : 0));
 		}

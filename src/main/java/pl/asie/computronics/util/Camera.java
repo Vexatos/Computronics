@@ -113,9 +113,9 @@ public class Camera {
 		Vec3d target = new Vec3d(xPos + (xDirection * steps), yPos + (yDirection * steps), zPos + (zDirection * steps));
 		RayTraceResult mop = world.rayTraceBlocks(origin, target);
 		if(mop != null) {
-			xPos = mop.hitVec.xCoord;
-			yPos = mop.hitVec.yCoord;
-			zPos = mop.hitVec.zCoord;
+			xPos = mop.hitVec.x;
+			yPos = mop.hitVec.y;
+			zPos = mop.hitVec.z;
 			oxPos += oxOffset;
 			oyPos += oyOffset;
 			ozPos += ozOffset;

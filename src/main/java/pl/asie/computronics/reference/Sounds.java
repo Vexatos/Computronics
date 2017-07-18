@@ -24,7 +24,7 @@ public enum Sounds {
 				sound.event = SoundEvent.REGISTRY.getObject(sound.loc);
 			} else {
 				sound.event = new SoundEvent(sound.loc);
-				GameRegistry.register(sound.event.setRegistryName(sound.loc));
+				GameRegistry.findRegistry(SoundEvent.class).register(sound.event.setRegistryName(sound.loc));
 			}
 		}
 	}

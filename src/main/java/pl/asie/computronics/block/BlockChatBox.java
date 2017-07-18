@@ -4,9 +4,8 @@ import li.cil.oc.api.network.Environment;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -27,6 +26,7 @@ import pl.asie.computronics.tile.TileChatBox;
 import pl.asie.computronics.util.StringUtil;
 import pl.asie.lib.tile.TileEntityBase;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class BlockChatBox extends BlockPeripheral implements IBlockWithSpecialText, IBlockWithDifferentColors {
@@ -64,10 +64,10 @@ public class BlockChatBox extends BlockPeripheral implements IBlockWithSpecialTe
 	}
 
 	@Override
-	public void getSubBlocks(Item item, CreativeTabs creativeTabs, NonNullList<ItemStack> blockList) {
-		blockList.add(new ItemStack(item, 1, 0));
+	public void getSubBlocks(CreativeTabs creativeTabs, NonNullList<ItemStack> blockList) {
+		blockList.add(new ItemStack(this, 1, 0));
 		if(Config.CHATBOX_CREATIVE) {
-			blockList.add(new ItemStack(item, 1, 8));
+			blockList.add(new ItemStack(this, 1, 8));
 		}
 	}
 
@@ -125,7 +125,7 @@ public class BlockChatBox extends BlockPeripheral implements IBlockWithSpecialTe
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean wat) {
+	public void addInformation(ItemStack stack, @Nullable World world, List<String> list, ITooltipFlag flag) {
 		if(stack.getItemDamage() >= 8) {
 			list.add(TextFormatting.GRAY + StringUtil.localize("tooltip.computronics.chatBox.creative"));
 		}

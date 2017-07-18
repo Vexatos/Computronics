@@ -1,6 +1,5 @@
 package pl.asie.computronics.tile;
 
-import com.google.common.base.Throwables;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
@@ -207,9 +206,8 @@ public class TileSpeechBox extends TileEntityPeripheralBase implements IAudioSou
 			throw new IllegalArgumentException("could not send string");
 		} catch(Exception e) {
 			e.printStackTrace();
-			Throwables.propagate(e);
+			throw e;
 		}
-		return new Object[] { false };
 	}
 
 	@Callback(doc = "function():boolean; Stops the currently spoken phrase. Returns true on success, false and an error message otherwise.")

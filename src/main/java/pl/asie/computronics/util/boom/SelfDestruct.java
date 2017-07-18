@@ -44,9 +44,9 @@ public class SelfDestruct extends Explosion {
 	public void doExplosionB(boolean spawnParticles) {
 		Vec3d position = getPosition();
 		final double
-			explosionX = position.xCoord,
-			explosionY = position.yCoord,
-			explosionZ = position.zCoord;
+			explosionX = position.x,
+			explosionY = position.y,
+			explosionZ = position.z;
 		final BlockPos explosionPos = new BlockPos(explosionX, explosionY, explosionZ);
 
 		this.world.playSound(null, explosionX, explosionY, explosionZ, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
@@ -145,9 +145,9 @@ public class SelfDestruct extends Explosion {
 						float motionY = 0;
 						float motionZ = 0;
 						if(motion != null) {
-							motionY = (float) motion.xCoord;
-							motionX = (float) motion.yCoord;
-							motionZ = (float) motion.zCoord;
+							motionY = (float) motion.x;
+							motionX = (float) motion.y;
+							motionZ = (float) motion.z;
 						}
 						p.writeFloat(motionY);
 						p.writeFloat(motionX);

@@ -38,9 +38,12 @@ public class ItemMultiple extends Item {
 	@Override
 	@SideOnly(Side.CLIENT)
 	@SuppressWarnings("unchecked")
-	public void getSubItems(Item item, CreativeTabs tabs, NonNullList<ItemStack> list) {
+	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> list) {
+		if(!this.isInCreativeTab(tab)) {
+			return;
+		}
 		for(int i = 0; i < parts.length; i++) {
-			list.add(new ItemStack(item, 1, i));
+			list.add(new ItemStack(this, 1, i));
 		}
 	}
 }

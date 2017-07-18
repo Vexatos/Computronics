@@ -3,7 +3,6 @@ package pl.asie.lib.util;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -42,7 +41,7 @@ public class ItemUtils {
 			new ItemStack(item.getItem(), item.getCount(), item.getItemDamage()));
 
 		if(item.hasTagCompound()) {
-			entityItem.getEntityItem().setTagCompound((NBTTagCompound) item.getTagCompound().copy());
+			entityItem.getItem().setTagCompound(item.getTagCompound().copy());
 		}
 
 		float factor = 0.05F;

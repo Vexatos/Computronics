@@ -1,6 +1,5 @@
 package pl.asie.computronics.util.sound;
 
-import com.google.common.base.Throwables;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.init.SoundEvents;
@@ -245,7 +244,7 @@ public class Audio {
 					//this.buffers = buffer;
 				} catch(Throwable t) {
 					AL10.alDeleteSources(source);
-					Throwables.propagate(t);
+					throw t;
 				}
 			} catch(Throwable t) {
 				for(IntBuffer b : buffers) {
@@ -253,7 +252,7 @@ public class Audio {
 						AL10.alDeleteBuffers(b);
 					}
 				}
-				Throwables.propagate(t);
+				throw t;
 			}
 		}
 

@@ -3,9 +3,9 @@ package pl.asie.computronics.item;
 import dan200.computercraft.api.filesystem.IMount;
 import dan200.computercraft.api.media.IMedia;
 import dan200.computercraft.api.media.IMediaProvider;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -27,6 +27,7 @@ import pl.asie.computronics.util.StringUtil;
 import pl.asie.computronics.util.internal.IItemWithColor;
 import pl.asie.lib.util.color.ItemColorizer;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 @Optional.InterfaceList({
@@ -103,7 +104,7 @@ public class ItemTape extends Item implements IItemTapeStorage, IMedia, IMediaPr
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer player, List text, boolean par4) {
+	public void addInformation(ItemStack stack, @Nullable World world, List text, ITooltipFlag flag) {
 		int size = getSize(stack);
 		int len = (int) Math.floor(size / L_MINUTE);
 		if(stack.getTagCompound() != null) {
@@ -134,13 +135,16 @@ public class ItemTape extends Item implements IItemTapeStorage, IMedia, IMediaPr
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubItems(Item item, CreativeTabs tabs, NonNullList<ItemStack> list) {
+	public void getSubItems(CreativeTabs tabs, NonNullList<ItemStack> list) {
+		if(!this.isInCreativeTab(tabs)) {
+			return;
+		}
 		for(int i = 0; i < TAPE_COUNT; i++) {
 			if((i == 7 || i == 9) && !Mods.isLoaded(Mods.GregTech)) {
 				//Do nothing. If we return here, we lose all new tapes.
 				continue;
 			}
-			list.add(new ItemStack(item, 1, i));
+			list.add(new ItemStack(this, 1, i));
 		}
 	}
 

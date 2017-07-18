@@ -8,12 +8,13 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.registries.IForgeRegistryEntry;
 import pl.asie.lib.util.FluidUtils;
 
 /**
  * @author Vexatos
  */
-public class RecipeDecolorizer implements IRecipe {
+public class RecipeDecolorizer extends IForgeRegistryEntry.Impl<IRecipe> implements IRecipe {
 
 	private final Item targetItem;
 
@@ -70,12 +71,9 @@ public class RecipeDecolorizer implements IRecipe {
 		return targetStack;
 	}
 
-	/**
-	 * Returns the size of the recipe area
-	 */
 	@Override
-	public int getRecipeSize() {
-		return 10;
+	public boolean canFit(int width, int height) {
+		return width * height >= 2;
 	}
 
 	@Override

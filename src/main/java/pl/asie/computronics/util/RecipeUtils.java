@@ -3,6 +3,7 @@ package pl.asie.computronics.util;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
@@ -38,7 +39,7 @@ public class RecipeUtils {
 				return;
 			}
 		}
-		GameRegistry.addRecipe(new ShapedOreRecipe(result, recipe));
+		GameRegistry.findRegistry(IRecipe.class).register(new ShapedOreRecipe(null, result, recipe));
 	}
 
 	public static void addShapelessRecipe(ItemStack result, Object... recipe) {
@@ -60,15 +61,13 @@ public class RecipeUtils {
 				return;
 			}
 		}
-		GameRegistry.addRecipe(new ShapelessOreRecipe(result, recipe));
+		GameRegistry.findRegistry(IRecipe.class).register(new ShapelessOreRecipe(null, result, recipe));
 	}
 
 	private static void warnCrafting(ItemStack result, Object[] recipe) {
 		recipe = recipe.clone();
 		for(int i = 0; i < recipe.length; i++) {
 			if(recipe[i] == null) {
-				recipe[i] = "null";
-			} else if(recipe[i] instanceof ItemStack && ((ItemStack) recipe[i]).getItem() == null) {
 				recipe[i] = "null";
 			}
 		}

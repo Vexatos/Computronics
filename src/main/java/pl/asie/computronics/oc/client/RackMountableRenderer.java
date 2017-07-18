@@ -2,10 +2,10 @@ package pl.asie.computronics.oc.client;
 
 import li.cil.oc.api.event.RackMountableRenderEvent;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
@@ -133,7 +133,7 @@ public class RackMountableRenderer {
 	private void renderOverlay(ResourceLocation texture, final float u0, final float u1, final float v0, final float v1) {
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		final Tessellator t = Tessellator.getInstance();
-		final VertexBuffer r = t.getBuffer();
+		final BufferBuilder r = t.getBuffer();
 		r.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		r.pos(u0, v1, 0).tex(u0, v1).endVertex();
 		r.pos(u1, v1, 0).tex(u1, v1).endVertex();

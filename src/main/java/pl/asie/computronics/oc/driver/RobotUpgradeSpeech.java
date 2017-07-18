@@ -1,6 +1,5 @@
 package pl.asie.computronics.oc.driver;
 
-import com.google.common.base.Throwables;
 import li.cil.oc.api.Network;
 import li.cil.oc.api.internal.Rotatable;
 import li.cil.oc.api.machine.Arguments;
@@ -269,9 +268,8 @@ public class RobotUpgradeSpeech extends ManagedEnvironmentWithComponentConnector
 			throw new IllegalArgumentException("could not send string");
 		} catch(Exception e) {
 			e.printStackTrace();
-			Throwables.propagate(e);
+			throw e;
 		}
-		return new Object[] { false };
 	}
 
 	@Callback(doc = "function():boolean; Stops the currently spoken phrase. Returns true on success, false and an error message otherwise.")

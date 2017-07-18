@@ -163,7 +163,7 @@ public class EntitySwarm extends EntityFlyingCreature implements IBeeHousing {
 		} else if(player != null && (player.getDistanceSqToEntity(this) < 100 || this.canEntityBeSeen(player))) {
 			if(player.isActiveItemStackBlocking()) {
 				Vec3d look = player.getLookVec();
-				moveTo(player.posX + look.xCoord, player.posY + look.yCoord, player.posZ + look.zCoord,
+				moveTo(player.posX + look.x, player.posY + look.y, player.posZ + look.z,
 					player.width / 2f, ((player.height / 2f) + player.getEyeHeight()) / 2f, 0.3f, 1f, 0.5f);
 			} else {
 				circle(player, 3f, 0.3f, 1f, 1f);
@@ -175,30 +175,30 @@ public class EntitySwarm extends EntityFlyingCreature implements IBeeHousing {
 		final Vec3d direction;
 		{
 			Vec3d pos = getPositionVector();
-			double y = pos.yCoord;
-			pos = pos.subtract(0, pos.yCoord, 0);
+			double y = pos.y;
+			pos = pos.subtract(0, pos.y, 0);
 			Vec3d targetPos = target.getPositionVector();
-			y = targetPos.yCoord + yOffset - y;
+			y = targetPos.y + yOffset - y;
 			if(y != 0.0D) {
 				y /= Math.abs(y);
 			}
-			targetPos = targetPos.subtract(0, targetPos.yCoord, 0);
+			targetPos = targetPos.subtract(0, targetPos.y, 0);
 			Vec3d between = pos.subtract(targetPos);
-			if(between.xCoord <= 0.02 && between.yCoord <= 0.02) {
+			if(between.x <= 0.02 && between.y <= 0.02) {
 				between = between.addVector(1, 0, 0);
 			}
-			Vec3d betweenX = between.scale(1D / Math.abs(between.xCoord));
+			Vec3d betweenX = between.scale(1D / Math.abs(between.x));
 			Vec3d targetRadius = betweenX.scale(radius / betweenX.lengthVector()).add(new Vec3d(0, 1, 0).crossProduct(between).normalize());
 			direction = targetRadius.subtract(between).addVector(0, y, 0).normalize();
 		}
 
 		modifier /= 10f;
 
-		double res = direction.xCoord * direction.xCoord + direction.yCoord * direction.yCoord + direction.zCoord * direction.zCoord;
+		double res = direction.x * direction.x + direction.y * direction.y + direction.z * direction.z;
 
-		double ndeltaX = maxAbs(direction.xCoord, Math.signum(direction.xCoord), xFuzzy) * modifier;
-		double ndeltaY = maxAbs(direction.yCoord, Math.signum(direction.yCoord), xFuzzy) /*vec3.yCoord*/ * modifier;
-		double ndeltaZ = maxAbs(direction.zCoord, Math.signum(direction.zCoord), xFuzzy) * modifier;
+		double ndeltaX = maxAbs(direction.x, Math.signum(direction.x), xFuzzy) * modifier;
+		double ndeltaY = maxAbs(direction.y, Math.signum(direction.y), xFuzzy) /*vec3.y*/ * modifier;
+		double ndeltaZ = maxAbs(direction.z, Math.signum(direction.z), xFuzzy) * modifier;
 		motionX += minAbs(ndeltaX, Math.signum(ndeltaX), 0.5);
 		motionY += minAbs(ndeltaY, Math.signum(ndeltaY), 0.5);
 		motionZ += minAbs(ndeltaZ, Math.signum(ndeltaZ), 0.5);
@@ -235,9 +235,9 @@ public class EntitySwarm extends EntityFlyingCreature implements IBeeHousing {
 			xFuzzy = xFuzzyAttack;
 		}
 
-		double ndeltaX = maxAbs(vec3.xCoord, Math.signum(vec3.xCoord), xFuzzy) * modifier;
-		double ndeltaY = maxAbs(vec3.yCoord, Math.signum(vec3.yCoord), xFuzzy) /*vec3.yCoord*/ * modifier;
-		double ndeltaZ = maxAbs(vec3.zCoord, Math.signum(vec3.zCoord), xFuzzy) * modifier;
+		double ndeltaX = maxAbs(vec3.x, Math.signum(vec3.x), xFuzzy) * modifier;
+		double ndeltaY = maxAbs(vec3.y, Math.signum(vec3.y), xFuzzy) /*vec3.y*/ * modifier;
+		double ndeltaZ = maxAbs(vec3.z, Math.signum(vec3.z), xFuzzy) * modifier;
 		motionX += minAbs(ndeltaX, Math.signum(ndeltaX), 0.5);
 		motionY += minAbs(ndeltaY, Math.signum(ndeltaY), 0.5);
 		motionZ += minAbs(ndeltaZ, Math.signum(ndeltaZ), 0.5);
@@ -279,7 +279,7 @@ public class EntitySwarm extends EntityFlyingCreature implements IBeeHousing {
 
 	@Override
 	public boolean attackEntityFrom(DamageSource source, float amount) {
-		return !(damageTypesImmune.contains(source.getDamageType()) || (this.player != null && source.getEntity() == player))
+		return !(damageTypesImmune.contains(source.getDamageType()) || (this.player != null && source.getTrueSource() == player))
 			&& super.attackEntityFrom(source, Math.min(amount, 2f));
 
 	}
@@ -360,7 +360,7 @@ public class EntitySwarm extends EntityFlyingCreature implements IBeeHousing {
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public int getBrightnessForRender(float par1) {
+	public int getBrightnessForRender() {
 		return getColor();
 	}
 
@@ -370,7 +370,7 @@ public class EntitySwarm extends EntityFlyingCreature implements IBeeHousing {
 	}
 
 	@Override
-	public float getBrightness(float par1) {
+	public float getBrightness() {
 		return 1.0F;
 	}
 
@@ -392,7 +392,7 @@ public class EntitySwarm extends EntityFlyingCreature implements IBeeHousing {
 
 	@Nullable
 	@Override
-	protected SoundEvent getHurtSound() {
+	protected SoundEvent getHurtSound(DamageSource source) {
 		return null;
 	}
 

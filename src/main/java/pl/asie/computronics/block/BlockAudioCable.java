@@ -255,6 +255,7 @@ public class BlockAudioCable extends BlockBase implements IBlockWithDocumentatio
 	}
 
 	@Override
+	@Deprecated
 	public boolean isSideSolid(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
 		return false;
 	}

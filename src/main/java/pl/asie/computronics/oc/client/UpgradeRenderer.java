@@ -6,9 +6,9 @@ import li.cil.oc.api.event.RobotRenderEvent.MountPoint;
 import li.cil.oc.api.internal.Robot;
 import li.cil.oc.client.renderer.PetRenderer;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
@@ -148,7 +148,7 @@ public class UpgradeRenderer {
 		GlStateManager.translate(mountPoint.offset.getX(), mountPoint.offset.getY(), mountPoint.offset.getZ());
 
 		Tessellator t = Tessellator.getInstance();
-		VertexBuffer r = t.getBuffer();
+		BufferBuilder r = t.getBuffer();
 		r.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_NORMAL);
 
 		// Front.

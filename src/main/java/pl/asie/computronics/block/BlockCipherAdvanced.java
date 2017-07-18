@@ -2,7 +2,7 @@ package pl.asie.computronics.block;
 
 import li.cil.oc.api.network.Environment;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -12,6 +12,7 @@ import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TileCipherBlockAdvanced;
 import pl.asie.computronics.util.StringUtil;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -36,7 +37,7 @@ public class BlockCipherAdvanced extends BlockPeripheral implements IBlockWithSp
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean wat) {
+	public void addInformation(ItemStack stack, @Nullable World world, List<String> list, ITooltipFlag flag) {
 		list.add(StringUtil.localize("tooltip.computronics.cipher.advanced"));
 	}
 

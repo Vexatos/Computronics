@@ -1,4 +1,4 @@
-package pl.asie.computronics.util.achievements;
+/*package pl.asie.computronics.util.achievements;
 
 //import net.minecraftforge.fml.common.FMLCommonHandler;
 
@@ -16,7 +16,7 @@ import java.util.HashMap;
 
 /**
  * @author Vexatos
- */
+ * /
 public class ComputronicsAchievements {
 
 	public HashMap<String, Achievement> achievementMap = new HashMap<String, Achievement>();
@@ -61,12 +61,12 @@ public class ComputronicsAchievements {
 			} else if(Mods.hasVersion(Mods.GregTech, Mods.Versions.GregTech6)) {
 				this.registerAchievement(EnumAchievements.Tape_IG, 8, 2, new ItemStack(Computronics.itemTape, 1, 9), this.getAchievement(EnumAchievements.Tape_Star), true, false);
 				this.registerAchievement(EnumAchievements.Tape_IG_Dropped, 8, 10, IL.IC2_Scrap.get(1), this.getAchievement(EnumAchievements.Tape_IG), true, false);
-			}*/
+			}* /
 		}
 
 		/*if(Mods.isLoaded(Mods.Railcraft)) { TODO Railcraft
 			RailcraftAchievements.initializeRCAchievements();
-		}*/
+		}* /
 	}
 
 	private Achievement registerAchievement(EnumAchievements key, int x, int y, ItemStack icon, @Nullable Achievement requirement, boolean special, boolean independent) {
@@ -121,7 +121,7 @@ public class ComputronicsAchievements {
 			}
 		} /*else if(Mods.isLoaded(Mods.Railcraft)) { TODO Railcraft
 			RailcraftAchievements.onCrafting(stack, player);
-		}*/
+		}* /
 	}
 
 	/*@SubscribeEvent
@@ -129,7 +129,7 @@ public class ComputronicsAchievements {
 		if(Mods.isLoaded(Mods.Railcraft)) {
 			RailcraftAchievements.onLeftClickEntity(event);
 		}
-	}*/
+	}* /
 
 	/*@SubscribeEvent
 	public void onItemDropped(ItemTossEvent event) {
@@ -150,7 +150,7 @@ public class ComputronicsAchievements {
 			data.setString("computronics:dropplayer", player.getCommandSenderName());
 			stack.setTagCompound(data);
 		}
-	}*/
+	}* /
 
 	/*@SubscribeEvent
 	public void onItemDespawn(ItemExpireEvent event) {
@@ -183,9 +183,9 @@ public class ComputronicsAchievements {
 				}
 			}
 		}
-	}*/
+	}* /
 
-	/*/**
+	//**
 	 * All the Railcraft related Achievements
 	 * /
 	private static class RailcraftAchievements {
@@ -245,5 +245,6 @@ public class ComputronicsAchievements {
 				}
 			}
 		}
-	}*/
+	}* /
 }
+*/

@@ -60,12 +60,12 @@ public class RayTracer {
 		Vec3d look = entity.getLookVec();
 
 		for(double i = 1.0; i < distance; i += 0.2) {
-			Vec3d search = position.addVector(look.xCoord * i, look.yCoord * i, look.zCoord * i);
+			Vec3d search = position.addVector(look.x * i, look.y * i, look.z * i);
 			AxisAlignedBB searchBox = new AxisAlignedBB(
-				search.xCoord - 0.1, search.yCoord - 0.1, search.zCoord - 0.1,
-				search.xCoord + 0.1, search.yCoord + 0.1, search.zCoord + 0.1);
+				search.x - 0.1, search.y - 0.1, search.z - 0.1,
+				search.x + 0.1, search.y + 0.1, search.z + 0.1);
 			RayTraceResult blockCheck = entity.world.rayTraceBlocks(
-				new Vec3d(position.xCoord, position.yCoord, position.zCoord), search, false);
+				new Vec3d(position.x, position.y, position.z), search, false);
 			if(blockCheck != null && blockCheck.typeOfHit == RayTraceResult.Type.BLOCK) {
 				/*double d1 = position.squareDistanceTo(blockCheck.hitVec);
 				double d2 = position.squareDistanceTo(search);*/
@@ -103,10 +103,10 @@ public class RayTracer {
 					entity = e;
 				}
 			}
-			/*Vec3 newSearch = search.addVector(-v / 2.0 * look.xCoord, -v / 2.0 * look.yCoord, -v / 2.0 * look.zCoord);
+			/*Vec3 newSearch = search.addVector(-v / 2.0 * look.x, -v / 2.0 * look.y, -v / 2.0 * look.z);
 			AxisAlignedBB newSearchBox = AxisAlignedBB.getBoundingBox(
-				newSearch.xCoord - v / 2.0, newSearch.yCoord - v / 2.0, newSearch.zCoord - v / 2.0,
-				newSearch.xCoord + v / 2.0, newSearch.yCoord + v / 2.0, newSearch.zCoord + v / 2.0);
+				newSearch.x - v / 2.0, newSearch.y - v / 2.0, newSearch.z - v / 2.0,
+				newSearch.x + v / 2.0, newSearch.y + v / 2.0, newSearch.z + v / 2.0);
 			return getEntity(world, newSearch, look, newSearchBox, v / 2.0);*/
 		} else {
 			entity = entityList.get(0);

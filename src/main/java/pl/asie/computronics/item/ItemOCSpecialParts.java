@@ -1,9 +1,10 @@
 package pl.asie.computronics.item;
 
 import li.cil.oc.api.driver.EnvironmentProvider;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.asie.computronics.Computronics;
@@ -50,8 +51,8 @@ public class ItemOCSpecialParts extends ItemMultipleComputronics implements IIte
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
-		OCUtils.addTooltip(stack, tooltip, advanced);
+	public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag flag) {
+		OCUtils.addTooltip(stack, tooltip, flag);
 	}
 
 	@Nullable

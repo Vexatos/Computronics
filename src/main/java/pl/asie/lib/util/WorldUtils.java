@@ -20,7 +20,7 @@ public class WorldUtils {
 	}
 
 	public static TileEntity getTileEntityServer(int dimensionId, int x, int y, int z) {
-		World world = FMLCommonHandler.instance().getMinecraftServerInstance().worldServerForDimension(dimensionId);
+		World world = FMLCommonHandler.instance().getMinecraftServerInstance().getWorld(dimensionId);
 		if(world == null) {
 			return null;
 		}
