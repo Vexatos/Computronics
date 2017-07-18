@@ -83,6 +83,10 @@ repositories {
     maven {
         url "http://dvs1.progwml6.com/files/maven"
     }
+    maven {
+        name = "CoFH Maven"
+        url = "http://maven.covers1624.net"
+    }
     ivy {
         name = "RailCraft"
         url = "http://www.railcraft.info/ivy/"
@@ -97,7 +101,7 @@ configurations {
 }
 
 dependencies {
-    deobfCompile "li.cil.oc:OpenComputers:${config.oc.version}"
+    provided "li.cil.oc:OpenComputers:${config.oc.version}"
     deobfCompile "li.cil.tis3d:TIS-3D:${config.tis3d.version}"
     //deobfCompile "net.industrial-craft:industrialcraft-2:${config.ic2.version}:dev"
 	//provided "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech.version}:dev"
@@ -107,16 +111,16 @@ dependencies {
         exclude module: "industrialcraft-2"
     }*/
     //provided "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech.version}:dev"
-    deobfCompile "mezz.jei:jei_1.11.2:${config.jei.version}"
+    deobfCompile "mezz.jei:jei_1.12:${config.jei.version}"
     provided "mcp.mobius.waila:Waila:${config.waila.version}"
-    deobfCompile "mcjty.theoneprobe:TheOneProbe:${config.top.version}"
-    deobfCompile "pl.asie.charset:charset-lib:${config.charset.version}"
+    deobfCompile "mcjty.theoneprobe:TheOneProbe-1.12:${config.top.version}"
+    //deobfCompile "pl.asie.charset:charset-lib:${config.charset.version}"
     //deobfCompile "pl.asie.charset:charset-audio:${config.charset.version}"
     //deobfCompile "pl.asie.charset:charset-drama:${config.charset.version}"
     //deobfCompile "pl.asie.charset:charset-gates:${config.charset.version}"
-    deobfCompile "pl.asie.charset:charset-pipes:${config.charset.version}"
-    deobfCompile "pl.asie.charset:charset-storage:${config.charset.version}"
-    deobfCompile "pl.asie.charset:charset-tweaks:${config.charset.version}"
+    //deobfCompile "pl.asie.charset:charset-pipes:${config.charset.version}"
+    //deobfCompile "pl.asie.charset:charset-storage:${config.charset.version}"
+    //deobfCompile "pl.asie.charset:charset-tweaks:${config.charset.version}"
     //deobfCompile "pl.asie.charset:charset-wires:${config.charset.version}"
     //deobfCompile "com.enderio.core:EnderCore:${config.endercore.version}"
     /*deobfCompile("com.enderio:EnderIO:${config.enderio.version}") {
@@ -129,11 +133,11 @@ dependencies {
         exclude module: "CodeChickenCore"
         exclude module: "EquivalentExchange3"
     }*/
-    deobfCompile("net.sengir.forestry:forestry_1.11.2:${config.forestry.version}") {
+    /*deobfCompile("net.sengir.forestry:forestry_1.11.2:${config.forestry.version}") {
         exclude module: "buildcraft"
         exclude module: "industrialcraft-2"
         exclude module: "jei"
-    }
+    }*/
     //compile name: "buildcraft", version: "${config.buildcraft.version}", classifier: "dev"
     /*compile("appeng:appliedenergistics2:${config.ae2.version}:dev") {
         transitive = false

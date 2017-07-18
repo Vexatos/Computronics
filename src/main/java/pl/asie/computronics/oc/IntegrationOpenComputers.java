@@ -19,7 +19,6 @@ import pl.asie.computronics.Computronics;
 import pl.asie.computronics.api.audio.AudioPacketRegistry;
 import pl.asie.computronics.audio.SoundCardPlaybackManager;
 import pl.asie.computronics.integration.flamingo.DriverFlamingo;
-import pl.asie.computronics.integration.forestry.IntegrationForestry;
 import pl.asie.computronics.integration.storagedrawers.DriverDrawerGroup;
 import pl.asie.computronics.item.ItemOCSpecialParts;
 import pl.asie.computronics.item.ItemOpenComputers;
@@ -115,12 +114,12 @@ public class IntegrationOpenComputers {
 			managerId = AudioPacketRegistry.INSTANCE.registerManager(audio);
 		}
 
-		if(Mods.isLoaded(Mods.Forestry)) {
+		/*if(Mods.isLoaded(Mods.Forestry)) { TODO Forestry
 			if(Config.FORESTRY_BEES) {
 				Computronics.forestry = new IntegrationForestry();
 				Computronics.forestry.preInitOC();
 			}
-		}
+		}*/
 
 		/*if(Mods.isLoaded(Mods.BuildCraftTransport) && Mods.isLoaded(Mods.BuildCraftCore) && Config.BUILDCRAFT_STATION) { // TODO BuildCraft Drone Docking
 			Computronics.buildcraft = new IntegrationBuildCraft();
@@ -283,9 +282,9 @@ public class IntegrationOpenComputers {
 			}
 		}
 
-		if(Computronics.forestry != null) {
+		/*if(Computronics.forestry != null) { TODO Forestry
 			Computronics.forestry.initOC();
-		}
+		}*/
 
 		/*if(Computronics.buildcraft != null) { TODO BuildCraft Drone Docking
 			Computronics.buildcraft.initOC();

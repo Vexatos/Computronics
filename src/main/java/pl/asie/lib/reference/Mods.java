@@ -27,7 +27,8 @@ public class Mods {
 	//GregTech = "gregtech",
 	Mekanism = "Mekanism",
 		ProjectRed = "ProjRed|Core",
-		RedLogic = "RedLogic";
+		RedLogic = "RedLogic",
+		RedstoneFlux = "redstoneflux";
 
 	//Other APIs
 	public static class API {
@@ -36,7 +37,6 @@ public class Mods {
 			BuildCraftTools = "BuildCraftAPI|tools",
 			CharsetWires = "CharsetAPI|Wires",
 			CoFHBlocks = "CoFHAPI|block",
-			CoFHEnergy = "CoFHAPI|energy",
 			CoFHItems = "CoFHAPI|item",
 			CoFHTileEntities = "CoFHAPI|tileentity",
 			EiraIRC = "EiraIRC|API",
@@ -87,7 +87,7 @@ public class Mods {
 
 	public static boolean hasEnergyMod() {
 		if(!checkedEnergyMods) {
-			hasEnergyMod = API.hasAPI(API.CoFHEnergy)
+			hasEnergyMod = API.hasAPI(Mods.RedstoneFlux)
 				|| isLoaded(IC2)
 				|| isLoaded(IC2Classic);
 			checkedEnergyMods = true;
