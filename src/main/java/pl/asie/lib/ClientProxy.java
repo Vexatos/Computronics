@@ -32,7 +32,7 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public int getCurrentClientDimension() {
-		return Minecraft.getMinecraft().world.provider.getDimension();
+		return Minecraft.getMinecraft().world != null ? Minecraft.getMinecraft().world.provider.getDimension() : super.getCurrentClientDimension();
 	}
 
 	@Override
