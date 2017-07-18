@@ -2,9 +2,9 @@ package pl.asie.computronics.gui;
 
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.inventory.ClickType;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import pl.asie.computronics.Computronics;
 import pl.asie.computronics.item.ItemTape;
 import pl.asie.computronics.tile.TapeDriveState.State;
 import pl.asie.computronics.util.StringUtil;
@@ -103,6 +103,18 @@ public class GuiTapePlayer extends GuiBase<ContainerInventory> {
 				}
 			}
 		}
+	}
+
+	@Override
+	protected void handleMouseClick(Slot slot, int index, int button, ClickType type) {
+		if(slot == null || !tile.isLocked(slot, index, button, type)) {
+			super.handleMouseClick(slot, index, button, type);
+		}
+	}
+
+	@Override
+	protected boolean checkHotbarKeys(int keyCode) {
+		return tile.shouldCheckHotbarKeys() && super.checkHotbarKeys(keyCode);
 	}
 
 	@Override
