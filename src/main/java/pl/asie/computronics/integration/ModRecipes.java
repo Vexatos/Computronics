@@ -45,6 +45,11 @@ public class ModRecipes {
 				RecipeUtils.addShapedRecipe(new ItemStack(Computronics.speaker, 1, 0),
 					"sIs", "ini", "sIs", 's', Blocks.STONEBRICK, 'I', "ingotIron", 'i', Blocks.IRON_BARS, 'n', Blocks.NOTEBLOCK);
 			}
+			if(Computronics.speechBox != null) {
+				RecipeUtils.addShapedRecipe(new ItemStack(Computronics.speechBox, 1, 0),
+					"iii", "iai", "iri", 'i', "ingotIron", 'r', "enderpearl",
+					'a', Computronics.speaker != null ? Computronics.speaker : Computronics.ironNote != null ? Computronics.ironNote : Blocks.NOTEBLOCK);
+			}
 			if(Computronics.tapeReader != null) {
 				RecipeUtils.addShapedRecipe(new ItemStack(Computronics.tapeReader, 1, 0),
 					"iii", "iri", "iai", 'i', "ingotIron", 'r', "dustRedstone",
