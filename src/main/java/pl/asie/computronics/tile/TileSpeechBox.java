@@ -263,7 +263,7 @@ public class TileSpeechBox extends TileEntityPeripheralBase implements IAudioSou
 					return new Object[] { false, "text too long" };
 				}
 				try {
-					return new Object[] { this.sendNewText(text) };
+					return this.sendNewText(text);
 				} catch(IOException e) {
 					throw new LuaException("could not send string");
 				}

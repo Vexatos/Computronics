@@ -19,6 +19,7 @@ import pl.asie.computronics.util.sound.Instruction.SetADSR;
 import pl.asie.computronics.util.sound.Instruction.SetAM;
 import pl.asie.computronics.util.sound.Instruction.SetFM;
 import pl.asie.computronics.util.sound.Instruction.SetFrequency;
+import pl.asie.computronics.util.sound.Instruction.SetLFSR;
 import pl.asie.computronics.util.sound.Instruction.SetVolume;
 import pl.asie.computronics.util.sound.Instruction.SetWave;
 import pl.asie.computronics.util.sound.Instruction.SetWhiteNoise;
@@ -97,7 +98,7 @@ public class SoundCardPacketClientHandler extends AudioPacketClientHandler {
 					buffer.add(new SetWhiteNoise(packet.readByte()));
 					break;
 				case 13:
-					buffer.add(new Instruction.SetLFSR(packet.readByte(), packet.readInt(), packet.readInt()));
+					buffer.add(new SetLFSR(packet.readByte(), packet.readInt(), packet.readInt()));
 					break;
 			}
 		}
