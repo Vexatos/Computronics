@@ -49,6 +49,7 @@ import pl.asie.computronics.gui.providers.GuiProviderCipher;
 import pl.asie.computronics.gui.providers.GuiProviderPortableTapeDrive;
 import pl.asie.computronics.gui.providers.GuiProviderTapeDrive;
 import pl.asie.computronics.integration.ModRecipes;
+import pl.asie.computronics.integration.forestry.IntegrationForestry;
 import pl.asie.computronics.integration.tis3d.IntegrationTIS3D;
 import pl.asie.computronics.item.ItemMultipleComputronics;
 import pl.asie.computronics.item.ItemPortableTapeDrive;
@@ -138,7 +139,7 @@ public class Computronics {
 
 	//public static IntegrationBuildCraft buildcraft;
 	//public static IntegrationRailcraft railcraft;
-	//public static IntegrationForestry forestry; TODO Forestry
+	public static IntegrationForestry forestry;
 	public static IntegrationTIS3D tis3D;
 	//public static IntegrationCharset charset;
 

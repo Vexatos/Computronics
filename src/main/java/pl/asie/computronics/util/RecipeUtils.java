@@ -16,8 +16,10 @@ import java.util.Arrays;
  */
 public class RecipeUtils {
 
+	private static int recipeCounter = 0;
+
 	public static void addShapedRecipe(ItemStack result, Object... recipe) {
-		if(result.isEmpty() || result.getItem() == null) {
+		if(result.isEmpty()) {
 			warnCrafting(result, recipe);
 			return;
 		}
@@ -34,12 +36,13 @@ public class RecipeUtils {
 				warnCrafting(result, recipe);
 				return;
 			}
-			if(o instanceof ItemStack && ((ItemStack) o).getItem() == null) {
+			if(o instanceof ItemStack && ((ItemStack) o).isEmpty()) {
 				warnCrafting(result, recipe);
 				return;
 			}
 		}
-		GameRegistry.findRegistry(IRecipe.class).register(new ShapedOreRecipe(null, result, recipe));
+		GameRegistry.findRegistry(IRecipe.class).register(new ShapedOreRecipe(null, result, recipe).setRegistryName(result.getItem().getRegistryName().getResourcePath() + recipeCounter));
+		recipeCounter++;
 	}
 
 	public static void addShapelessRecipe(ItemStack result, Object... recipe) {
@@ -56,12 +59,13 @@ public class RecipeUtils {
 				warnCrafting(result, recipe);
 				return;
 			}
-			if(o instanceof ItemStack && ((ItemStack) o).getItem() == null) {
+			if(o instanceof ItemStack && ((ItemStack) o).isEmpty()) {
 				warnCrafting(result, recipe);
 				return;
 			}
 		}
-		GameRegistry.findRegistry(IRecipe.class).register(new ShapelessOreRecipe(null, result, recipe));
+		GameRegistry.findRegistry(IRecipe.class).register(new ShapelessOreRecipe(null, result, recipe).setRegistryName(result.getItem().getRegistryName().getResourcePath() + recipeCounter));
+		recipeCounter++;
 	}
 
 	private static void warnCrafting(ItemStack result, Object[] recipe) {

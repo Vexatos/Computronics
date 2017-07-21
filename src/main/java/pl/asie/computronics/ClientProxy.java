@@ -84,11 +84,11 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void preInit() {
 		super.preInit();
-		/*if(Mods.isLoaded(Mods.OpenComputers)) { TODO Forestry
+		if(Mods.isLoaded(Mods.OpenComputers)) {
 			if(Computronics.forestry != null) {
 				Computronics.forestry.registerOCEntityRenderers();
 			}
-		}*/
+		}
 		/*if(Computronics.railcraft != null) {
 			Computronics.railcraft.registerRenderers();
 		}*/

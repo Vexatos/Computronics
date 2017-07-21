@@ -4,6 +4,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import pl.asie.computronics.Computronics;
@@ -62,7 +63,7 @@ public class ModRecipes {
 			}
 			if(Computronics.radar != null) {
 				RecipeUtils.addShapedRecipe(new ItemStack(Computronics.radar, 1, 0),
-					"sts", "rbr", "scs", 'i', "ingotIron", 'r', "dustRedstone", 't', Blocks.REDSTONE_TORCH, 's', Blocks.STONEBRICK, 'b', Items.BOWL, 'c', Items.COMPARATOR);
+					"sts", "rbr", "scs", 'r', "dustRedstone", 't', Blocks.REDSTONE_TORCH, 's', Blocks.STONEBRICK, 'b', Items.BOWL, 'c', Items.COMPARATOR);
 			}
 			if(Computronics.cipher_advanced != null) {
 				RecipeUtils.addShapedRecipe(new ItemStack(Computronics.cipher_advanced, 1, 0),
@@ -105,8 +106,8 @@ public class ModRecipes {
 
 			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.itemParts, 1, 0),
 				" i ", "rrr", "iii", 'r', "dustRedstone", 'i', "ingotIron");
-			GameRegistry.findRegistry(IRecipe.class).register(new RecipeColorizer(Computronics.itemTape));
-			GameRegistry.findRegistry(IRecipe.class).register(new RecipeDecolorizer(Computronics.itemTape));
+			GameRegistry.findRegistry(IRecipe.class).register(new RecipeColorizer(Computronics.itemTape).setRegistryName(new ResourceLocation(Mods.Computronics, "colorizeTape")));
+			GameRegistry.findRegistry(IRecipe.class).register(new RecipeDecolorizer(Computronics.itemTape).setRegistryName(new ResourceLocation(Mods.Computronics, "decolorizeTape")));
 		}
 	}
 

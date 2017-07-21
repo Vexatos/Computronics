@@ -23,7 +23,7 @@ import pl.asie.computronics.reference.Names;
 public class DriverDrawerGroup {
 
 	private static void checkValidDrawer(IDrawerGroup tile, int slot) {
-		if(!tile.isDrawerEnabled(slot) || tile.getDrawer(slot) == null) {
+		if(!tile.getDrawer(slot).isEnabled()) {
 			++slot;
 			throw new IllegalArgumentException("no drawer found at slot " + slot);
 		}
@@ -66,7 +66,7 @@ public class DriverDrawerGroup {
 				int slot = a.checkInteger(0) - 1;
 				checkValidDrawer(tile, slot);
 				ItemStack stack = tile.getDrawer(slot).getStoredItemPrototype();
-				if(stack == null) {
+				if(stack.isEmpty()) {
 					return new Object[] { null, "there no item in this drawer slot" };
 				}
 				return new Object[] { stack.getUnlocalizedName() };
@@ -77,7 +77,7 @@ public class DriverDrawerGroup {
 				int slot = a.checkInteger(0) - 1;
 				checkValidDrawer(tile, slot);
 				ItemStack stack = tile.getDrawer(slot).getStoredItemPrototype();
-				if(stack == null) {
+				if(stack.isEmpty()) {
 					return new Object[] { null, "there no item in this drawer slot" };
 				}
 				return new Object[] { tile.getDrawer(slot).getStoredItemPrototype().getItemDamage() };
@@ -152,7 +152,7 @@ public class DriverDrawerGroup {
 						int slot = ((Number) arguments[0]).intValue() - 1;
 						checkValidDrawer(tile, slot);
 						ItemStack stack = tile.getDrawer(slot).getStoredItemPrototype();
-						if(stack == null) {
+						if(stack.isEmpty()) {
 							return new Object[] { null, "there no item in this drawer slot" };
 						}
 						return new Object[] { stack.getUnlocalizedName() };
@@ -164,7 +164,7 @@ public class DriverDrawerGroup {
 						int slot = ((Number) arguments[0]).intValue() - 1;
 						checkValidDrawer(tile, slot);
 						ItemStack stack = tile.getDrawer(slot).getStoredItemPrototype();
-						if(stack == null) {
+						if(stack.isEmpty()) {
 							return new Object[] { null, "there no item in this drawer slot" };
 						}
 						return new Object[] { tile.getDrawer(slot).getStoredItemPrototype().getItemDamage() };
