@@ -1,6 +1,5 @@
 package pl.asie.lib.util.color;
 
-import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
@@ -78,7 +77,7 @@ public class RecipeColorizer extends IForgeRegistryEntry.Impl<IRecipe> implement
 						return ItemStack.EMPTY;
 					}
 
-					float[] itemColor = EntitySheep.getDyeRgb(EnumDyeColor.byDyeDamage(stackColor.ordinal()));
+					float[] itemColor = EnumDyeColor.byDyeDamage(stackColor.ordinal()).getColorComponentValues();
 					int red = (int) (itemColor[0] * 255.0F);
 					int green = (int) (itemColor[1] * 255.0F);
 					int blue = (int) (itemColor[2] * 255.0F);
