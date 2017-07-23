@@ -133,11 +133,11 @@ dependencies {
         exclude module: "CodeChickenCore"
         exclude module: "EquivalentExchange3"
     }*/
-    /*deobfCompile("net.sengir.forestry:forestry_1.11.2:${config.forestry.version}") {
+    deobfCompile("net.sengir.forestry:forestry_1.12:${config.forestry.version}") {
         exclude module: "buildcraft"
         exclude module: "industrialcraft-2"
         exclude module: "jei"
-    }*/
+    }
     //compile name: "buildcraft", version: "${config.buildcraft.version}", classifier: "dev"
     /*compile("appeng:appliedenergistics2:${config.ae2.version}:dev") {
         transitive = false
