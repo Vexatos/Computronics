@@ -16,7 +16,7 @@ import javax.annotation.Nullable;
 public class NoteUtils {
 
 	// Make sure to check BlockNote.INSTRUMENTS during updates
-	private static final String[] instruments = new String[] { "harp", "basedrum", "snare", "hat", "bass", "flute", "bell", "guitar", "chime", "xylophone" };
+	private static final String[] instruments = new String[] { "harp", "basedrum", "snare", "hat", "bass", "flute", "bell", "guitar", "chime", "xylophone", "pling" };
 
 	public static void playNoteRaw(World world, BlockPos pos, String instrument, int note, float volume) {
 		float f = (float) Math.pow(2.0D, (double) (note - 12) / 12.0D);
