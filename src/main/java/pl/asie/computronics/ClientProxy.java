@@ -51,6 +51,9 @@ public class ClientProxy extends CommonProxy {
 		AudioPacketRegistry.INSTANCE.registerClientHandler(
 			AudioPacketDFPWM.class, new AudioPacketClientHandlerDFPWM()
 		);
+		AudioPacketRegistry.INSTANCE.registerClientHandler(
+			SoundCardPacket.class, new SoundCardPacketClientHandler()
+		);
 	}
 
 	@Override
@@ -191,14 +194,5 @@ public class ClientProxy extends CommonProxy {
 			IntegrationOpenComputers.mountableRenderer = new RackMountableRenderer();
 		}
 		MinecraftForge.EVENT_BUS.register(IntegrationOpenComputers.mountableRenderer);
-	}
-
-	@Override
-	@Optional.Method(modid = Mods.OpenComputers)
-	protected void registerOpenComputersAudioHandlers() {
-		super.registerOpenComputersAudioHandlers();
-		AudioPacketRegistry.INSTANCE.registerClientHandler(
-			SoundCardPacket.class, new SoundCardPacketClientHandler()
-		);
 	}
 }
