@@ -138,6 +138,7 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void onServerStop() {
 		Computronics.instance.audio.removeAll();
+		Computronics.instance.soundCardAudio.removeAll();
 	}
 
 	@Override
