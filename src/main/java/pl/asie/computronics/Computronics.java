@@ -424,6 +424,10 @@ public class Computronics {
 			opencomputers.postInit();
 		}
 
+		if(Mods.isLoaded(Mods.ComputerCraft)) {
+			computercraft.postInit();
+		}
+
 		/*if(Mods.API.hasAPI(Mods.API.BuildCraftStatements)) {
 			TriggerProvider.initialize();
 			ActionProvider.initialize();
