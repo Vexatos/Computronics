@@ -249,6 +249,20 @@ public class TileSoundBoard extends TileEntityPeripheralBase implements IAudioSo
 	}
 
 	@Override
+	public World world() {
+		return getWorld();
+	}
+
+	public BlockPos position() {
+		return getPos();
+	}
+
+	@Override
+	public void setDirty() {
+		markDirty();
+	}
+
+	@Override
 	public int getSourceId() {
 		return board.codecId;
 	}

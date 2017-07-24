@@ -335,7 +335,7 @@ public class DriverCardSound extends ManagedEnvironmentWithComponentConnector im
 	}
 
 	@Override
-	public World getWorld() {
+	public World world() {
 		return host.world();
 	}
 
@@ -350,12 +350,12 @@ public class DriverCardSound extends ManagedEnvironmentWithComponentConnector im
 	}
 
 	@Override
-	public BlockPos getPos() {
+	public BlockPos position() {
 		return new BlockPos(host.xPosition(), host.yPosition(), host.zPosition());
 	}
 
 	@Override
-	public void markDirty() {
+	public void setDirty() {
 		// Not necessary here.
 	}
 
