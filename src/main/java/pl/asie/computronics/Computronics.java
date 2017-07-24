@@ -205,11 +205,9 @@ public class Computronics {
 
 		managerId = AudioPacketRegistry.INSTANCE.registerManager(audio);
 
-		if(Config.OC_CARD_SOUND || Config.CC_SOUND_BOARD) {
-			soundCardAudio = new SoundCardPlaybackManager(proxy.isClient());
+		soundCardAudio = new SoundCardPlaybackManager(proxy.isClient());
 
-			soundCardManagerId = AudioPacketRegistry.INSTANCE.registerManager(audio);
-		}
+		soundCardManagerId = AudioPacketRegistry.INSTANCE.registerManager(soundCardAudio);
 
 		packet = new PacketHandler(Mods.Computronics, new NetworkHandlerClient(), new NetworkHandlerServer());
 
