@@ -66,8 +66,8 @@ public class SoundBoard {
 		@SubscribeEvent
 		public void onChunkUnload(ChunkEvent.Unload evt) {
 			for(SoundBoard env : envs) {
-				BlockPos pos = env.host.getPos();
-				if(env.host.getWorld() == evt.getWorld() && evt.getChunk().isAtLocation(pos.getX() >> 4, pos.getZ() >> 4)) {
+				BlockPos pos = env.host.position();
+				if(env.host.world() == evt.getWorld() && evt.getChunk().isAtLocation(pos.getX() >> 4, pos.getZ() >> 4)) {
 					getHandler().setProcess(env.clientAddress, null);
 				}
 			}
@@ -76,7 +76,7 @@ public class SoundBoard {
 		@SubscribeEvent
 		public void onWorldUnload(WorldEvent.Unload evt) {
 			for(SoundBoard env : envs) {
-				if(env.host.getWorld() == evt.getWorld()) {
+				if(env.host.world() == evt.getWorld()) {
 					getHandler().setProcess(env.clientAddress, null);
 				}
 			}
@@ -89,7 +89,7 @@ public class SoundBoard {
 		if(bufferInit) {
 			return;
 		}
-		World world = host.getWorld();
+		World world = host.world();
 		if(world == null) {
 			return;
 		}
@@ -108,7 +108,7 @@ public class SoundBoard {
 
 	public void update() {
 		initBuffers();
-		if(!host.getWorld().isRemote) {
+		if(!host.world().isRemote) {
 			if(nextBuffer != null && !nextBuffer.isEmpty() && System.currentTimeMillis() >= timeout - 100) {
 				final ArrayDeque<Instruction> clone;
 				synchronized(nextBuffer) {
@@ -123,7 +123,7 @@ public class SoundBoard {
 				codecId = null;
 			}
 			if(dirty) {
-				host.markDirty();
+				host.setDirty();
 			}
 		}
 	}
@@ -345,17 +345,17 @@ public class SoundBoard {
 
 	public interface ISoundHost extends IAudioSource {
 
-		World getWorld();
+		World world();
 
 		boolean tryConsumeEnergy(double energy);
 
 		String address();
 
-		BlockPos getPos();
+		BlockPos position();
 
 		void sendMusicPacket(SoundCardPacket pkt);
 
-		void markDirty();
+		void setDirty();
 	}
 
 }
