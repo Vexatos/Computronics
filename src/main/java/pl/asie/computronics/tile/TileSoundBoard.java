@@ -77,7 +77,7 @@ public class TileSoundBoard extends TileEntityPeripheralBase implements IAudioSo
 	@Optional.Method(modid = Mods.ComputerCraft)
 	public String[] getMethodNames() {
 		return new String[] {
-			"getModes", "channel_count", "setTotalVolume", "clear",
+			"getModes", "getChannelCount", "setTotalVolume", "clear",
 			"open", "close", "setWave", "setFrequency", "setLFSR",
 			"delay", "setFM", "resetFM", "setAM", "resetAM",
 			"setADSR", "resetEnvelope", "setVolume", "process"
@@ -93,7 +93,7 @@ public class TileSoundBoard extends TileEntityPeripheralBase implements IAudioSo
 		switch(method) {
 			case 0: // getModes
 				return new Object[] { SoundBoard.compileModes() };
-			case 1: // channel_count
+			case 1: // getChannelCount
 				return new Object[] { board.process.states.size() };
 			case 2: // setTotalVolume
 				board.setTotalVolume(args.checkDouble(0));
