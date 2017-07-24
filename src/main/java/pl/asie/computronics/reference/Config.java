@@ -76,6 +76,7 @@ public class Config {
 
 	public static boolean OC_MAGICAL_MEMORY;
 
+	public static boolean CC_SOUND_BOARD;
 	public static boolean CC_OPEN_MULTI_PERIPHERAL = true;
 	public static boolean CC_ALL_MULTI_PERIPHERALS = true;
 	public static boolean CC_ALWAYS_FIRST = true;
@@ -149,12 +150,6 @@ public class Config {
 
 			OC_MAGICAL_MEMORY = config.get("enable.opencomputers", "magicalMemory", true).getBoolean(true);
 
-			if(OC_CARD_SOUND) {
-				SOUND_CARD_MAX_DELAY = config.getInt("ocSoundCardMaxDelay", "sound", SOUND_CARD_MAX_DELAY, 0, Integer.MAX_VALUE, "Maximum delay allowed in a sound card's instruction queue, in milliseconds");
-				SOUND_CARD_QUEUE_SIZE = config.getInt("ocSoundCardQueueSize", "sound", SOUND_CARD_QUEUE_SIZE, 0, Integer.MAX_VALUE, "Maximum  number of instructons allowed in a sound cards instruction queue. This directly affects the maximum size of the packets sent to the client.");
-				SOUND_CARD_CHANNEL_COUNT = config.getInt("ocSoundCardChannelCount", "sound", SOUND_CARD_CHANNEL_COUNT, 1, 65536, "The number of audio channels each sound card has.");
-			}
-
 			// Particle Card
 			FX_ENERGY_COST = convertRFtoOC(
 				config.getFloat("ocParticleCardCostPerParticle", "power", 2.0f, 0.0f, 10000.0f, "How much energy 1 particle emission should take. Multiplied by the distance to the target."));
@@ -199,6 +194,7 @@ public class Config {
 		}
 
 		if(Mods.isLoaded(Mods.ComputerCraft)) {
+			CC_SOUND_BOARD = config.get("enable.computercraft", "soundBoard", true).getBoolean(true);
 			if(Mods.isLoaded(Mods.OpenPeripheral)) {
 				CC_OPEN_MULTI_PERIPHERAL = config.getBoolean("openMultiPeripheral", "computercraft.multiperipheral", true, "Set this to false to disable MultiPeripheral compatibility with OpenPeripheral peripherals");
 			}
@@ -209,6 +205,12 @@ public class Config {
 				Computronics.log.info("Multiperipheral system for ComputerCraft engaged. Hooray!");
 				Computronics.log.info("Multiple mods registering peripherals for the same block now won't be a problem anymore.");
 			}
+		}
+
+		if(OC_CARD_SOUND || CC_SOUND_BOARD) {
+			SOUND_CARD_MAX_DELAY = config.getInt("ocSoundCardMaxDelay", "sound", SOUND_CARD_MAX_DELAY, 0, Integer.MAX_VALUE, "Maximum delay allowed in a sound card's instruction queue, in milliseconds");
+			SOUND_CARD_QUEUE_SIZE = config.getInt("ocSoundCardQueueSize", "sound", SOUND_CARD_QUEUE_SIZE, 0, Integer.MAX_VALUE, "Maximum  number of instructons allowed in a sound cards instruction queue. This directly affects the maximum size of the packets sent to the client.");
+			SOUND_CARD_CHANNEL_COUNT = config.getInt("ocSoundCardChannelCount", "sound", SOUND_CARD_CHANNEL_COUNT, 1, 65536, "The number of audio channels each sound card has.");
 		}
 
 		if(Mods.isLoaded(Mods.TIS3D)) {
@@ -222,14 +224,14 @@ public class Config {
 		RADAR_ONLY_DISTANCE = config.getBoolean("onlyOutputDistance", "radar", true, "Stop Radars from outputting X/Y/Z coordinates and instead only output the distance from an entity.");
 
 		// Particles
-		FX_RANGE = config.getInt("particleRange", "particles", FX_RANGE, -1,65536, "The maximum range of particle-emitting devices. Set to -1 to make it work over any distance.");
+		FX_RANGE = config.getInt("particleRange", "particles", FX_RANGE, -1, 65536, "The maximum range of particle-emitting devices. Set to -1 to make it work over any distance.");
 
 		// Tape Drive
 		TAPEDRIVE_BUFFER_MS = config.getInt("audioPreloadMs", "tapedrive", 750, 500, 10000, "The amount of time (in milliseconds) used for pre-buffering the tape for audio playback. If you get audio playback glitches in SMP/your TPS is under 20, RAISE THIS VALUE!");
 		TAPEDRIVE_DISTANCE = config.getInt("hearingDistance", "tapedrive", 24, 0, 64, "The distance up to which Tape Drives can be heard.");
 		TAPE_LENGTHS = config.getString("tapeLengths", "tapedrive", "4,8,16,32,64,2,6,16,128,128", "The lengths of the computronics tapes. Should be 10 numbers separated by commas");
 
-		PORTABLE_TAPEDRIVE_DISTANCE= config.getInt("hearingDistance", "tapedrive.portable", 8, 0, 64, "The distance up to which Portable Tape Drives can be heard.");
+		PORTABLE_TAPEDRIVE_DISTANCE = config.getInt("hearingDistance", "tapedrive.portable", 8, 0, 64, "The distance up to which Portable Tape Drives can be heard.");
 
 		// General
 		REDSTONE_REFRESH = config.getBoolean("enableTickingRedstoneSupport", "general", true, "Set whether some machines should stop being tickless in exchange for redstone output support.");
