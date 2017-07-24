@@ -104,6 +104,8 @@ public class SoundBoard {
 		bufferInit = true;
 	}
 
+	private boolean dirty = false;
+
 	public void update() {
 		initBuffers();
 		if(!host.getWorld().isRemote) {
@@ -115,9 +117,13 @@ public class SoundBoard {
 					nextBuffer.clear();
 				}
 				sendSound(clone);
+				dirty = true;
 			} else if(codecId != null && System.currentTimeMillis() >= timeout + soundTimeoutMS) {
 				AudioUtils.removePlayer(Computronics.instance.soundCardManagerId, codecId);
 				codecId = null;
+			}
+			if(dirty) {
+				host.markDirty();
 			}
 		}
 	}
@@ -203,6 +209,7 @@ public class SoundBoard {
 			AudioUtils.removePlayer(Computronics.instance.soundCardManagerId, codecId);
 			codecId = null;
 		}
+		dirty = true;
 	}
 
 	public Object[] tryAdd(Instruction inst) {
@@ -212,6 +219,7 @@ public class SoundBoard {
 			}
 			buildBuffer.add(inst);
 		}
+		dirty = true;
 		return new Object[] { true };
 	}
 
@@ -246,6 +254,7 @@ public class SoundBoard {
 			buildBuffer.clear();
 		}
 		buildDelay = 0;
+		dirty = true;
 	}
 
 	public Object[] delay(int duration) {
@@ -301,6 +310,7 @@ public class SoundBoard {
 				if(System.currentTimeMillis() > timeout) {
 					timeout = System.currentTimeMillis();
 				}
+				dirty = true;
 				return new Object[] { true };
 			} else {
 				return new Object[] { false, System.currentTimeMillis() - timeout };
@@ -344,6 +354,8 @@ public class SoundBoard {
 		BlockPos getPos();
 
 		void sendMusicPacket(SoundCardPacket pkt);
+
+		void markDirty();
 	}
 
 }

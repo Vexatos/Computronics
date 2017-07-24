@@ -353,4 +353,10 @@ public class DriverCardSound extends ManagedEnvironmentWithComponentConnector im
 	public BlockPos getPos() {
 		return new BlockPos(host.xPosition(), host.yPosition(), host.zPosition());
 	}
+
+	@Override
+	public void markDirty() {
+		// Not necessary here.
+	}
+
 }
