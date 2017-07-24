@@ -16,6 +16,7 @@ tile.computronics.ticketMachine.name=Ticketautomat
 tile.computronics.audiocable.name=Tonkabel
 tile.computronics.speaker.name=Lautsprecher
 tile.computronics.speechBox.name=Sprechbox
+tile.computronics.sound_board.name=Sound-Board
 
 tooltip.computronics.chatBox.creative=Die NSA für zu Hause!
 tooltip.computronics.cipher.advanced=§7Für die Starchaser!

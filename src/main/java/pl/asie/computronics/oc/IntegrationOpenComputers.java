@@ -50,13 +50,13 @@ import pl.asie.computronics.oc.block.ComputronicsBlockEnvironmentProvider;
 import pl.asie.computronics.oc.client.RackMountableRenderer;
 import pl.asie.computronics.oc.client.UpgradeRenderer;
 import pl.asie.computronics.oc.driver.DriverBoardBoom;
-import pl.asie.computronics.oc.driver.DriverCardSound;
 import pl.asie.computronics.oc.driver.DriverMagicalMemory;
 import pl.asie.computronics.oc.manual.ComputronicsPathProvider;
 import pl.asie.computronics.reference.Compat;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.RecipeUtils;
+import pl.asie.computronics.util.sound.SoundBoard;
 
 import java.util.concurrent.Callable;
 
@@ -316,7 +316,7 @@ public class IntegrationOpenComputers {
 		}*/
 
 		if(Config.OC_CARD_SOUND && proxy.isClient()) {
-			MinecraftForge.EVENT_BUS.register(new DriverCardSound.SyncHandler());
+			MinecraftForge.EVENT_BUS.register(new SoundBoard.SyncHandler());
 		}
 	}
 

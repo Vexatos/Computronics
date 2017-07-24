@@ -298,6 +298,7 @@ public class Computronics {
 		if(Mods.isLoaded(Mods.ComputerCraft)) {
 			computercraft = new IntegrationComputerCraft(this);
 			peripheralRegistry = new MultiPeripheralRegistry();
+			computercraft.preInit();
 		}
 
 		if(Mods.isLoaded(Mods.OpenComputers)) {
