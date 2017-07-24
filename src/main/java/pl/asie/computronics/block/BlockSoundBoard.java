@@ -7,6 +7,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -30,8 +31,8 @@ public class BlockSoundBoard extends BlockPeripheral implements IBlockWithPrefix
 	}
 
 	@Override
-	public IBlockState onBlockPlaced(World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
-		IBlockState state = super.onBlockPlaced(world, pos, side, hitX, hitY, hitZ, meta, placer);
+	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
+		IBlockState state = super.getStateForPlacement(world, pos, side, hitX, hitY, hitZ, meta, placer, hand);
 		return state.withProperty(rotation.FACING, side.getOpposite());
 	}
 

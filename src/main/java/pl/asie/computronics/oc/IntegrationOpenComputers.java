@@ -13,11 +13,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Optional;
-import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
 import org.apache.logging.log4j.Logger;
 import pl.asie.computronics.Computronics;
-import pl.asie.computronics.api.audio.AudioPacketRegistry;
-import pl.asie.computronics.audio.SoundCardPlaybackManager;
 import pl.asie.computronics.integration.flamingo.DriverFlamingo;
 import pl.asie.computronics.integration.forestry.IntegrationForestry;
 import pl.asie.computronics.integration.storagedrawers.DriverDrawerGroup;
@@ -61,8 +58,6 @@ public class IntegrationOpenComputers {
 	public static RackMountableRenderer mountableRenderer;
 	public static ColorfulUpgradeHandler colorfulUpgradeHandler;
 	public static DriverBoardBoom.BoomHandler boomBoardHandler;
-	public SoundCardPlaybackManager audio;
-	public int managerId;
 
 	public IntegrationOpenComputers(Computronics computronics) {
 		this.computronics = computronics;
@@ -109,12 +104,6 @@ public class IntegrationOpenComputers {
 		// Fixes Iron Note Block, among others.
 		// To ensure less TE ticks for those who don't use OC, we keep this tidbit around.
 		//Config.MUST_UPDATE_TILE_ENTITIES = true;
-
-		if(Config.OC_CARD_SOUND) {
-			audio = new SoundCardPlaybackManager(proxy.isClient());
-
-			managerId = AudioPacketRegistry.INSTANCE.registerManager(audio);
-		}
 
 		if(Mods.isLoaded(Mods.Forestry)) {
 			if(Config.FORESTRY_BEES) {
@@ -470,12 +459,6 @@ public class IntegrationOpenComputers {
 					Network.joinOrCreateNetwork(tile);
 				}
 			});
-		}
-	}
-
-	public void onServerStop(FMLServerStoppedEvent event) {
-		if(Config.OC_CARD_SOUND && this.audio != null) {
-			this.audio.removeAll();
 		}
 	}
 

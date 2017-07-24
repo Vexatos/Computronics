@@ -60,7 +60,7 @@ public class TileSoundBoard extends TileEntityPeripheralBase implements IAudioSo
 	@Override
 	@Optional.Method(modid = Mods.ComputerCraft)
 	public boolean canConnectPeripheralOnSide(EnumFacing side) {
-		return side == worldObj.getBlockState(getPos()).getValue(Computronics.computercraft.soundBoard.rotation.FACING);
+		return side == world.getBlockState(getPos()).getValue(Computronics.computercraft.soundBoard.rotation.FACING);
 	}
 
 	@Optional.Method(modid = Mods.ComputerCraft)
@@ -213,7 +213,7 @@ public class TileSoundBoard extends TileEntityPeripheralBase implements IAudioSo
 
 		@Override
 		public World getSoundWorld() {
-			return worldObj;
+			return world;
 		}
 
 		@Override

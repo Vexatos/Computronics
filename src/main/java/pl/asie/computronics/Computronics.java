@@ -30,6 +30,7 @@ import pl.asie.computronics.api.audio.AudioPacketRegistry;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheralProvider;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheralRegistry;
 import pl.asie.computronics.audio.DFPWMPlaybackManager;
+import pl.asie.computronics.audio.SoundCardPlaybackManager;
 import pl.asie.computronics.audio.tts.TextToSpeech;
 import pl.asie.computronics.audio.tts.TextToSpeechLoader;
 import pl.asie.computronics.block.BlockAudioCable;
@@ -119,6 +120,9 @@ public class Computronics {
 	public DFPWMPlaybackManager audio;
 	public int managerId;
 
+	public SoundCardPlaybackManager soundCardAudio;
+	public int soundCardManagerId;
+
 	@SidedProxy(clientSide = "pl.asie.computronics.ClientProxy", serverSide = "pl.asie.computronics.CommonProxy")
 	public static CommonProxy proxy;
 
@@ -198,6 +202,12 @@ public class Computronics {
 		audio = new DFPWMPlaybackManager(proxy.isClient());
 
 		managerId = AudioPacketRegistry.INSTANCE.registerManager(audio);
+
+		if(Config.OC_CARD_SOUND || Config.CC_SOUND_BOARD) {
+			soundCardAudio = new SoundCardPlaybackManager(proxy.isClient());
+
+			soundCardManagerId = AudioPacketRegistry.INSTANCE.registerManager(audio);
+		}
 
 		packet = new PacketHandler(Mods.Computronics, new NetworkHandlerClient(), new NetworkHandlerServer());
 
@@ -437,9 +447,6 @@ public class Computronics {
 	@EventHandler
 	public void serverStop(FMLServerStoppedEvent event) {
 		proxy.onServerStop();
-		if(Mods.isLoaded(Mods.OpenComputers)) {
-			opencomputers.onServerStop(event);
-		}
 		PortableDriveManager.INSTANCE.onServerStop();
 	}
 

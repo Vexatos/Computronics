@@ -116,7 +116,7 @@ public class SoundBoard {
 				}
 				sendSound(clone);
 			} else if(codecId != null && System.currentTimeMillis() >= timeout + soundTimeoutMS) {
-				AudioUtils.removePlayer(Computronics.opencomputers.managerId, codecId);
+				AudioUtils.removePlayer(Computronics.instance.soundCardManagerId, codecId);
 				codecId = null;
 			}
 		}
@@ -200,7 +200,7 @@ public class SoundBoard {
 		}
 		buildDelay = 0;
 		if(codecId != null) {
-			AudioUtils.removePlayer(Computronics.opencomputers.managerId, codecId);
+			AudioUtils.removePlayer(Computronics.instance.soundCardManagerId, codecId);
 			codecId = null;
 		}
 	}
@@ -266,7 +266,7 @@ public class SoundBoard {
 		if(volume > 1.0F) {
 			volume = 1.0F;
 		}
-		soundVolume = MathHelper.floor_double(volume * 127.0F);
+		soundVolume = MathHelper.floor(volume * 127.0F);
 	}
 
 	public Object[] setWave(int channel, int mode) {
@@ -310,8 +310,8 @@ public class SoundBoard {
 
 	private void sendMusicPacket(Queue<Instruction> instructions) {
 		if(codecId == null) {
-			codecId = Computronics.opencomputers.audio.newPlayer();
-			Computronics.opencomputers.audio.getPlayer(codecId);
+			codecId = Computronics.instance.soundCardAudio.newPlayer();
+			Computronics.instance.soundCardAudio.getPlayer(codecId);
 		}
 		SoundCardPacket pkt = new SoundCardPacket(host, (byte) soundVolume, host.address(), instructions);
 		host.sendMusicPacket(pkt);
