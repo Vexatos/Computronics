@@ -73,6 +73,11 @@ public class TileSpeechBox extends TileEntityPeripheralBase implements IAudioSou
 		public void receivePacket(AudioPacket packet, ForgeDirection direction) {
 			packet.addReceiver(this);
 		}
+
+		@Override
+		public boolean canMove() {
+			return false;
+		}
 	};
 
 	private long lastCodecTime;

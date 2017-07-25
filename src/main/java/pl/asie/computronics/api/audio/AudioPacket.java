@@ -83,7 +83,7 @@ public abstract class AudioPacket {
 					for (IAudioReceiver receiver : receivers) {
 						pkt.writeInt(receiver.getSoundWorld() != null ? receiver.getSoundWorld().provider.dimensionId : 0);
 						pkt.writeInt(receiver.getSoundX()).writeInt(receiver.getSoundY()).writeInt(receiver.getSoundZ())
-								.writeShort((short) receiver.getSoundDistance()).writeByte(volume);
+								.writeShort((short) receiver.getSoundDistance()).writeByte(volume).writeByte((byte) (receiver.canMove() ? 1 : 0));
 					}
 
 					Computronics.packet.sendTo(pkt, playerMP);

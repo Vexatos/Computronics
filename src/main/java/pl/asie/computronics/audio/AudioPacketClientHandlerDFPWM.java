@@ -11,6 +11,7 @@ import java.io.IOException;
 
 @SideOnly(Side.CLIENT)
 public class AudioPacketClientHandlerDFPWM extends AudioPacketClientHandler {
+
 	@Override
 	protected void readData(Packet packet, int packetId, int codecId) throws IOException {
 		int sampleRate = packet.readInt();
@@ -20,7 +21,7 @@ public class AudioPacketClientHandlerDFPWM extends AudioPacketClientHandler {
 		byte[] audio = new byte[packetSize * 8];
 		StreamingAudioPlayer codec = Computronics.instance.audio.getPlayer(codecId);
 		codec.decompress(audio, data, 0, 0, packetSize);
-		for (int i = 0; i < (packetSize * 8); i++) {
+		for(int i = 0; i < (packetSize * 8); i++) {
 			// Convert signed to unsigned data
 			audio[i] = (byte) (((int) audio[i] & 0xFF) ^ 0x80);
 		}
@@ -32,10 +33,10 @@ public class AudioPacketClientHandlerDFPWM extends AudioPacketClientHandler {
 	}
 
 	@Override
-	protected void playData(int packetId, int codecId, int x, int y, int z, int distance, byte volume) {
+	protected void playData(int packetId, int codecId, int x, int y, int z, int distance, byte volume, boolean canMove) {
 		StreamingAudioPlayer codec = Computronics.instance.audio.getPlayer(codecId);
 
 		codec.setHearing((float) distance, volume / 127.0F);
-		codec.play("computronics:dfpwm" + codecId, x, y, z);
+		codec.play(canMove ? "computronics:dfpwm-" + codecId : null, x, y, z);
 	}
 }

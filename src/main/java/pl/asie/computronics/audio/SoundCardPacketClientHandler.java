@@ -136,12 +136,12 @@ public class SoundCardPacketClientHandler extends AudioPacketClientHandler {
 	}
 
 	@Override
-	protected void playData(int packetId, int codecId, int x, int y, int z, int distance, byte volume) {
+	protected void playData(int packetId, int codecId, int x, int y, int z, int distance, byte volume, boolean canMove) {
 		StreamingAudioPlayer codec = Computronics.opencomputers.audio.getPlayer(codecId);
 
 		codec.setHearing(distance, (volume * Config.SOUND_VOLUME) / (127.0F * 127.0F));
 		try {
-			codec.play("computronics:soundcard" + codecId, x, y, z, 1F);
+			codec.play(canMove ? "computronics:soundcard-" + codecId : null, x, y, z, 1F);
 		} catch(NullPointerException e) {
 			// This exception occurs when there is no data to play, and is harmless.
 		}

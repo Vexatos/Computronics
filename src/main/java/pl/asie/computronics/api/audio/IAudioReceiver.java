@@ -10,4 +10,5 @@ public interface IAudioReceiver extends IAudioConnection {
 	int getSoundZ();
 	int getSoundDistance();
 	void receivePacket(AudioPacket packet, ForgeDirection side);
+	boolean canMove();
 }

@@ -73,6 +73,11 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 		public void receivePacket(AudioPacket packet, ForgeDirection direction) {
 			packet.addReceiver(this);
 		}
+
+		@Override
+		public boolean canMove() {
+			return false;
+		}
 	};
 
 	private String storageName = "";
