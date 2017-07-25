@@ -126,7 +126,7 @@ public final class PortableDriveManager {
 						final int codecId = drive.getSourceIdClient();
 						if(Computronics.instance.audio.exists(codecId)) {
 							StreamingAudioPlayer sound = Computronics.instance.audio.getPlayer(codecId);
-							sound.updatePosition("computronics:dfpwm" + codecId, (float) player.posX, (float) player.posY + 0.5F, (float) player.posZ);
+							sound.updatePosition("computronics:dfpwm-" + codecId, (float) player.posX, (float) player.posY + 0.5F, (float) player.posZ);
 						}
 					}
 				}
