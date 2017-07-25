@@ -78,6 +78,11 @@ public class RobotUpgradeSpeech extends ManagedEnvironmentWithComponentConnector
 		public void receivePacket(AudioPacket packet, @Nullable EnumFacing direction) {
 			packet.addReceiver(this);
 		}
+
+		@Override
+		public boolean canMove() {
+			return true;
+		}
 	};
 
 	protected BlockPos getPos() {
