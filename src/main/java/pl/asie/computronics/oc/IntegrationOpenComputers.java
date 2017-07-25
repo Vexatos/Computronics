@@ -15,6 +15,8 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Optional;
 import org.apache.logging.log4j.Logger;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.api.audio.AudioPacketRegistry;
+import pl.asie.computronics.audio.SoundCardPlaybackManager;
 import pl.asie.computronics.integration.flamingo.DriverFlamingo;
 import pl.asie.computronics.integration.forestry.IntegrationForestry;
 import pl.asie.computronics.integration.storagedrawers.DriverDrawerGroup;
