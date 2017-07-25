@@ -3,6 +3,8 @@ package pl.asie.computronics.tile;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
+import elucent.albedo.lighting.ILightProvider;
+import elucent.albedo.lighting.Light;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
@@ -10,6 +12,8 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.block.BlockColorfulLamp;
 import pl.asie.computronics.reference.Mods;
@@ -28,12 +32,13 @@ import static pl.asie.computronics.block.BlockColorfulLamp.BRIGHTNESS;
 //import mrtjp.projectred.api.IBundledTile;
 //import mrtjp.projectred.api.ProjectRedAPI;
 
-/*@Optional.InterfaceList({
-	@Optional.Interface(iface = "mods.immibis.redlogic.api.wiring.IBundledUpdatable", modid = Mods.RedLogic),
-	@Optional.Interface(iface = "mods.immibis.redlogic.api.wiring.IConnectable", modid = Mods.RedLogic),
-	@Optional.Interface(iface = "mrtjp.projectred.api.IBundledTile", modid = Mods.ProjectRed)
-})*/
-public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundledRedstoneProvider/*IBundledTile, IBundledUpdatable, IConnectable*/ {
+@Optional.InterfaceList({
+	//@Optional.Interface(iface = "mods.immibis.redlogic.api.wiring.IBundledUpdatable", modid = Mods.RedLogic),
+	//@Optional.Interface(iface = "mods.immibis.redlogic.api.wiring.IConnectable", modid = Mods.RedLogic),
+	//@Optional.Interface(iface = "mrtjp.projectred.api.IBundledTile", modid = Mods.ProjectRed)
+	@Optional.Interface(iface = "elucent.albedo.lighting.ILightProvider", modid = Mods.Albedo)
+})
+public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundledRedstoneProvider, ILightProvider/*IBundledTile, IBundledUpdatable, IConnectable*/ {
 
 	public TileColorfulLamp() {
 		super("colorful_lamp");
@@ -52,7 +57,7 @@ public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundl
 					if(LampUtil.shouldColorLight()) {
 						setLightValue(state, color);
 					} else {
-						setLightValue(state, color == 0 ? 0 : 15);
+						setLightValue(state, LampUtil.toBrightness(color));
 					}
 				}
 			}
@@ -85,7 +90,7 @@ public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundl
 			if(LampUtil.shouldColorLight()) {
 				setLightValue(world.getBlockState(getPos()), this.color);
 			} else {
-				setLightValue(world.getBlockState(getPos()), color == 0 ? 0 : 15);
+				setLightValue(world.getBlockState(getPos()), LampUtil.toBrightness(color));
 			}
 		}
 		this.markDirty();
@@ -106,6 +111,17 @@ public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundl
 			return new Object[] { true };
 		}
 		return new Object[] { false, "number must be between 0 and 32767" };
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	@Optional.Method(modid = Mods.Albedo)
+	public Light provideLight() {
+		return Light.builder()
+			.pos(getPos())
+			.color((color & (0x1F << 10)) << 9 | (color & (0x1F << 5)) << 6 | (color & 0x1F) << 3, false)
+			.radius(LampUtil.brightness(color) * 15F)
+			.build();
 	}
 
 	@Override

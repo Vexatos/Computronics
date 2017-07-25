@@ -84,6 +84,9 @@ repositories {
         url "http://dvs1.progwml6.com/files/maven"
     }
     maven {
+        url "http://repo.elytradev.com"
+    }
+    maven {
         name = "CoFH Maven"
         url = "http://maven.covers1624.net"
     }
@@ -151,6 +154,7 @@ dependencies {
     //provided("qmunity:QmunityLib:${config.qmunitylib.version}:deobf") {
     //	transitive = false
     //}
+    deobfCompile "elucent:albedo:${config.albedo.version}"
     compile fileTree(dir: "libs", includes: ['*.jar', '*.zip'])
 }
 

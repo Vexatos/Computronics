@@ -16,6 +16,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TileColorfulLamp;
+import pl.asie.computronics.util.LampUtil;
 //import powercrystals.minefactoryreloaded.api.rednet.IRedNetInputNode;
 //import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
 
@@ -110,7 +111,7 @@ public class BlockColorfulLamp extends BlockPeripheral /*implements IRedNetInput
 	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos) {
 		TileEntity tile = world.getTileEntity(pos);
 		if(tile instanceof TileColorfulLamp) {
-			return state.withProperty(BRIGHTNESS, ((TileColorfulLamp) tile).getLampColor() == 0 ? 0 : 15);
+			return state.withProperty(BRIGHTNESS, LampUtil.toBrightness(((TileColorfulLamp) tile).getLampColor()));
 		} else {
 			return state;
 		}

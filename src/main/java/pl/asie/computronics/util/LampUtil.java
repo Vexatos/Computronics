@@ -22,4 +22,15 @@ public class LampUtil {
 		}
 		return coloredLights != null;
 	}
+
+	public static int toBrightness(int color) {
+		return Math.round(brightness(color) * 15F);
+	}
+
+	public static float brightness(int color) {
+		int r = (color >> 10) & 0x1F,
+			g = (color >> 5) & 0x1F,
+			b = color & 0x1F;
+		return (r + g + b) / (0x1F * 3F);
+	}
 }
