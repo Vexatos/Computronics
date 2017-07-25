@@ -69,6 +69,11 @@ public class TileSpeaker extends TileEntityPeripheralBase implements IAudioRecei
 	}
 
 	@Override
+	public boolean canMove() {
+		return false;
+	}
+
+	@Override
 	@Optional.Method(modid = Mods.ComputerCraft)
 	public String[] getMethodNames() {
 		return new String[0];

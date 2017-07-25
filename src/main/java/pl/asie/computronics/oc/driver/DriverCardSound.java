@@ -10,6 +10,7 @@ import li.cil.oc.api.network.Message;
 import li.cil.oc.api.network.Visibility;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -85,6 +86,11 @@ public class DriverCardSound extends ManagedEnvironmentWithComponentConnector im
 		@Override
 		public void receivePacket(AudioPacket packet, @Nullable EnumFacing direction) {
 			packet.addReceiver(this);
+		}
+
+		@Override
+		public boolean canMove() {
+			return host instanceof TileEntity;
 		}
 	};
 

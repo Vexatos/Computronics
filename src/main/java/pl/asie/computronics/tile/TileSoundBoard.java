@@ -230,6 +230,11 @@ public class TileSoundBoard extends TileEntityPeripheralBase implements IAudioSo
 		public void receivePacket(AudioPacket packet, @Nullable EnumFacing direction) {
 			packet.addReceiver(this);
 		}
+
+		@Override
+		public boolean canMove() {
+			return false;
+		}
 	};
 
 	@Override
