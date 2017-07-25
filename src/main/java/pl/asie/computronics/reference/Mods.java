@@ -24,6 +24,7 @@ public class Mods {
 	//Other mods
 	public static final String
 		AE2 = "appliedenergistics2",
+		Albedo = "albedo",
 		ArmourersWorkshop = "armourersWorkshop",
 		BetterStorage = "betterstorage",
 		BuildCraftCore = "BuildCraft|Core",

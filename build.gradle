@@ -83,6 +83,9 @@ repositories {
     maven {
         url "http://dvs1.progwml6.com/files/maven"
     }
+    maven {
+        url "http://repo.elytradev.com"
+    }
     ivy {
         name = "RailCraft"
         url = "http://www.railcraft.info/ivy/"
@@ -147,6 +150,7 @@ dependencies {
     //provided("qmunity:QmunityLib:${config.qmunitylib.version}:deobf") {
     //	transitive = false
     //}
+    deobfCompile "elucent:albedo:${config.albedo.version}"
     compile fileTree(dir: "libs", includes: ['*.jar', '*.zip'])
 }
 
