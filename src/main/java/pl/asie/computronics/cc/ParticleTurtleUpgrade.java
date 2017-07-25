@@ -6,20 +6,15 @@ import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.turtle.ITurtleAccess;
 import dan200.computercraft.api.turtle.TurtleSide;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.common.Optional;
-import org.apache.commons.lang3.tuple.Pair;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.ParticleUtils;
 
-import javax.vecmath.Matrix4f;
 import java.util.Random;
 
 public class ParticleTurtleUpgrade extends TurtleUpgradeBase {
@@ -112,17 +107,5 @@ public class ParticleTurtleUpgrade extends TurtleUpgradeBase {
 	@Override
 	public IPeripheral createPeripheral(ITurtleAccess turtle, TurtleSide side) {
 		return new ParticleTurtlePeripheral(turtle);
-	}
-
-	@Override
-	public Pair<IBakedModel, Matrix4f> getModel(ITurtleAccess turtle, TurtleSide side) {
-		ItemStack stack;
-		if(turtle != null) {
-			int dyeColour = 15 - turtle.getDyeColour();
-			stack = dyeColour >= 0 && dyeColour < 16 ? new ItemStack(Blocks.STAINED_GLASS, 1, dyeColour) : new ItemStack(Blocks.GLASS, 1, 0);
-		} else {
-			stack = new ItemStack(Blocks.GLASS, 1, 0);
-		}
-		return Pair.of(Minecraft.getMinecraft().getRenderItem().getItemModelMesher().getItemModel(stack), getStandardBlockMatrixForSide(side));
 	}
 }

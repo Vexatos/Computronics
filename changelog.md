@@ -1,5 +1,7 @@
 ==== 1.6.5 ====
 
+This update comes with a port to Minecraft 1.12!
+
   * ADDED: Portable Tape Drive!
     - Carry your music with you!
   * ADDED: Speech Upgrade!
@@ -9,11 +11,15 @@
   * FIXED: Speech Box not properly stopping talking on chunk unload.
   * FIXED: Radar not working.
   * FIXED: MaryTTS not loading properly with certain other mods installed.
+  * FIXED: Sppech Box output in ComputerCraft.
 
   * **[1.9.4]** FIXED: Tape Drive not making any insert or eject sound in multiplayer.
 
+  * **[1.10.2]** ADDED: Sound Board for ComputerCraft! Works exactly the same as the sound card.
+
   * **[1.11.2]** FIXED: Manual not pointing at the correct directory.
   * **[1.11.2]** FIXED: Upgrade tier localization.
+  * **[1.11.2]** ADDED: Albedo support to the Colorful Lamp.
 
 ==== 1.6.4 ====
 

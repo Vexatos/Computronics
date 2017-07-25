@@ -19,6 +19,7 @@ import pl.asie.computronics.util.sound.Instruction.SetADSR;
 import pl.asie.computronics.util.sound.Instruction.SetAM;
 import pl.asie.computronics.util.sound.Instruction.SetFM;
 import pl.asie.computronics.util.sound.Instruction.SetFrequency;
+import pl.asie.computronics.util.sound.Instruction.SetLFSR;
 import pl.asie.computronics.util.sound.Instruction.SetVolume;
 import pl.asie.computronics.util.sound.Instruction.SetWave;
 import pl.asie.computronics.util.sound.Instruction.SetWhiteNoise;
@@ -98,7 +99,7 @@ public class SoundCardPacketClientHandler extends AudioPacketClientHandler {
 					buffer.add(new SetWhiteNoise(packet.readByte()));
 					break;
 				case 13:
-					buffer.add(new Instruction.SetLFSR(packet.readByte(), packet.readInt(), packet.readInt()));
+					buffer.add(new SetLFSR(packet.readByte(), packet.readInt(), packet.readInt()));
 					break;
 			}
 		}
@@ -129,19 +130,19 @@ public class SoundCardPacketClientHandler extends AudioPacketClientHandler {
 		}
 
 		if(data.size() > 0) {
-			StreamingAudioPlayer codec = Computronics.opencomputers.audio.getPlayer(codecId);
+			StreamingAudioPlayer codec = Computronics.instance.soundCardAudio.getPlayer(codecId);
 			codec.setSampleRate(sampleRate);
 			codec.push(data.toByteArray());
 		}
 	}
 
 	@Override
-	protected void playData(int packetId, int codecId, int x, int y, int z, int distance, byte volume) {
-		StreamingAudioPlayer codec = Computronics.opencomputers.audio.getPlayer(codecId);
+	protected void playData(int packetId, int codecId, int x, int y, int z, int distance, byte volume, boolean canMove) {
+		StreamingAudioPlayer codec = Computronics.instance.soundCardAudio.getPlayer(codecId);
 
 		codec.setHearing(distance, (volume * Config.SOUND_VOLUME) / (127.0F * 127.0F));
 		try {
-			codec.play("computronics:soundcard" + codecId, x, y, z, 1F);
+			codec.play(canMove ? "computronics:soundcard-" + codecId : null, x, y, z, 1F);
 		} catch(NullPointerException e) {
 			// This exception occurs when there is no data to play, and is harmless.
 		}

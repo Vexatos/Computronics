@@ -66,6 +66,11 @@ public class TileSpeechBox extends TileEntityPeripheralBase implements IAudioSou
 		public void receivePacket(AudioPacket packet, @Nullable EnumFacing direction) {
 			packet.addReceiver(this);
 		}
+
+		@Override
+		public boolean canMove() {
+			return false;
+		}
 	};
 
 	private long lastCodecTime;
@@ -257,7 +262,7 @@ public class TileSpeechBox extends TileEntityPeripheralBase implements IAudioSou
 					return new Object[] { false, "text too long" };
 				}
 				try {
-					return new Object[] { this.sendNewText(text) };
+					return this.sendNewText(text);
 				} catch(IOException e) {
 					throw new LuaException("could not send string");
 				}

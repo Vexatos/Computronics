@@ -4,7 +4,6 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import pl.asie.computronics.api.audio.AudioPacketDFPWM;
 import pl.asie.computronics.api.audio.AudioPacketRegistry;
@@ -24,9 +23,7 @@ public class CommonProxy {
 
 	public void registerAudioHandlers() {
 		AudioPacketRegistry.INSTANCE.registerType(AudioPacketDFPWM.class);
-		if(Mods.isLoaded(Mods.OpenComputers)) {
-			registerOpenComputersAudioHandlers();
-		}
+		AudioPacketRegistry.INSTANCE.registerType(SoundCardPacket.class);
 	}
 
 	public void registerEntities() {
@@ -59,10 +56,5 @@ public class CommonProxy {
 
 	public void onServerStop() {
 
-	}
-
-	@Optional.Method(modid = Mods.OpenComputers)
-	protected void registerOpenComputersAudioHandlers() {
-		AudioPacketRegistry.INSTANCE.registerType(SoundCardPacket.class);
 	}
 }

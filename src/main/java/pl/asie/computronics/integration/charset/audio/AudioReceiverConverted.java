@@ -41,6 +41,11 @@ public class AudioReceiverConverted implements IAudioReceiver {
 	}
 
 	@Override
+	public boolean canMove() {
+		return false;
+	}
+
+	@Override
 	public boolean connectsAudio(EnumFacing side) {
 		return false;
 	}

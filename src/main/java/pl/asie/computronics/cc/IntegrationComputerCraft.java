@@ -1,16 +1,19 @@
 package pl.asie.computronics.cc;
 
 import dan200.computercraft.api.ComputerCraftAPI;
-import net.minecraftforge.common.config.Configuration;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.block.BlockSoundBoard;
 import pl.asie.computronics.cc.multiperipheral.MultiPeripheralProvider;
 import pl.asie.computronics.integration.flamingo.DriverFlamingo;
 import pl.asie.computronics.integration.storagedrawers.DriverDrawerGroup;
 import pl.asie.computronics.reference.Compat;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
+import pl.asie.computronics.tile.TileSoundBoard;
 import pl.asie.computronics.tile.TileTapeDrive;
+import pl.asie.computronics.util.RecipeUtils;
 
 import static pl.asie.computronics.Computronics.peripheralRegistry;
 import static pl.asie.computronics.Computronics.registerMultiPeripheralProvider;
@@ -20,15 +23,23 @@ import static pl.asie.computronics.Computronics.registerMultiPeripheralProvider;
  */
 public class IntegrationComputerCraft {
 
-	private final Configuration config;
 	private final Compat compat;
 	private final Computronics computronics;
 	private MultiPeripheralProvider multiPeripheralProvider;
 
+	public BlockSoundBoard soundBoard;
+
 	public IntegrationComputerCraft(Computronics computronics) {
 		this.computronics = computronics;
-		this.config = computronics.config.config;
 		this.compat = computronics.compat;
+	}
+
+	@Optional.Method(modid = Mods.ComputerCraft)
+	public void preInit() {
+		if(Config.CC_SOUND_BOARD) {
+			soundBoard = new BlockSoundBoard();
+			Computronics.instance.registerBlockWithTileEntity(soundBoard, TileSoundBoard.class, "sound_board");
+		}
 	}
 
 	@Optional.Method(modid = Mods.ComputerCraft)
@@ -156,6 +167,22 @@ public class IntegrationComputerCraft {
 
 		if(Computronics.tapeReader != null) {
 			TileTapeDrive.initCCFilesystem();
+		}
+	}
+
+	@Optional.Method(modid = Mods.ComputerCraft)
+	public void postInit() {
+		if(Config.CC_SOUND_BOARD) {
+			if(Computronics.ironNote != null && Computronics.speaker != null) {
+				RecipeUtils.addShapedRecipe(new ItemStack(soundBoard, 1, 0),
+					"ggg", "gcs", "ggg",
+					'c', Computronics.ironNote,
+					's', Computronics.speaker,
+					'g', "ingotGold"
+				);
+			} else {
+				Computronics.log.warn("Could not add Sound Board Recipe because Iron Note Block or Speaker is disabled in the config.");
+			}
 		}
 	}
 

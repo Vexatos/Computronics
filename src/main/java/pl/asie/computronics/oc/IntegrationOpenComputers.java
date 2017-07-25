@@ -13,7 +13,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Optional;
-import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
 import org.apache.logging.log4j.Logger;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.api.audio.AudioPacketRegistry;
@@ -27,13 +26,13 @@ import pl.asie.computronics.oc.block.ComputronicsBlockEnvironmentProvider;
 import pl.asie.computronics.oc.client.RackMountableRenderer;
 import pl.asie.computronics.oc.client.UpgradeRenderer;
 import pl.asie.computronics.oc.driver.DriverBoardBoom;
-import pl.asie.computronics.oc.driver.DriverCardSound;
 import pl.asie.computronics.oc.driver.DriverMagicalMemory;
 import pl.asie.computronics.oc.manual.ComputronicsPathProvider;
 import pl.asie.computronics.reference.Compat;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.RecipeUtils;
+import pl.asie.computronics.util.sound.SoundBoard;
 
 import java.util.concurrent.Callable;
 
@@ -61,8 +60,6 @@ public class IntegrationOpenComputers {
 	public static RackMountableRenderer mountableRenderer;
 	public static ColorfulUpgradeHandler colorfulUpgradeHandler;
 	public static DriverBoardBoom.BoomHandler boomBoardHandler;
-	public SoundCardPlaybackManager audio;
-	public int managerId;
 
 	public IntegrationOpenComputers(Computronics computronics) {
 		this.computronics = computronics;
@@ -109,12 +106,6 @@ public class IntegrationOpenComputers {
 		// Fixes Iron Note Block, among others.
 		// To ensure less TE ticks for those who don't use OC, we keep this tidbit around.
 		//Config.MUST_UPDATE_TILE_ENTITIES = true;
-
-		if(Config.OC_CARD_SOUND) {
-			audio = new SoundCardPlaybackManager(proxy.isClient());
-
-			managerId = AudioPacketRegistry.INSTANCE.registerManager(audio);
-		}
 
 		if(Mods.isLoaded(Mods.Forestry)) {
 			if(Config.FORESTRY_BEES) {
@@ -293,7 +284,7 @@ public class IntegrationOpenComputers {
 		}*/
 
 		if(Config.OC_CARD_SOUND && proxy.isClient()) {
-			MinecraftForge.EVENT_BUS.register(new DriverCardSound.SyncHandler());
+			MinecraftForge.EVENT_BUS.register(new SoundBoard.SyncHandler());
 		}
 	}
 
@@ -470,12 +461,6 @@ public class IntegrationOpenComputers {
 					Network.joinOrCreateNetwork(tile);
 				}
 			});
-		}
-	}
-
-	public void onServerStop(FMLServerStoppedEvent event) {
-		if(Config.OC_CARD_SOUND && this.audio != null) {
-			this.audio.removeAll();
 		}
 	}
 

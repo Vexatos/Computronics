@@ -30,6 +30,7 @@ import pl.asie.computronics.api.audio.AudioPacketRegistry;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheralProvider;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheralRegistry;
 import pl.asie.computronics.audio.DFPWMPlaybackManager;
+import pl.asie.computronics.audio.SoundCardPlaybackManager;
 import pl.asie.computronics.audio.tts.TextToSpeech;
 import pl.asie.computronics.audio.tts.TextToSpeechLoader;
 import pl.asie.computronics.block.BlockAudioCable;
@@ -120,6 +121,9 @@ public class Computronics {
 	public DFPWMPlaybackManager audio;
 	public int managerId;
 
+	public SoundCardPlaybackManager soundCardAudio;
+	public int soundCardManagerId;
+
 	@SidedProxy(clientSide = "pl.asie.computronics.ClientProxy", serverSide = "pl.asie.computronics.CommonProxy")
 	public static CommonProxy proxy;
 
@@ -199,6 +203,10 @@ public class Computronics {
 		audio = new DFPWMPlaybackManager(proxy.isClient());
 
 		managerId = AudioPacketRegistry.INSTANCE.registerManager(audio);
+
+		soundCardAudio = new SoundCardPlaybackManager(proxy.isClient());
+
+		soundCardManagerId = AudioPacketRegistry.INSTANCE.registerManager(soundCardAudio);
 
 		packet = new PacketHandler(Mods.Computronics, new NetworkHandlerClient(), new NetworkHandlerServer());
 
@@ -297,6 +305,7 @@ public class Computronics {
 		if(Mods.isLoaded(Mods.ComputerCraft)) {
 			computercraft = new IntegrationComputerCraft(this);
 			peripheralRegistry = new MultiPeripheralRegistry();
+			computercraft.preInit();
 		}
 
 		if(Mods.isLoaded(Mods.OpenComputers)) {
@@ -414,6 +423,10 @@ public class Computronics {
 			opencomputers.postInit();
 		}
 
+		if(Mods.isLoaded(Mods.ComputerCraft)) {
+			computercraft.postInit();
+		}
+
 		/*if(Mods.API.hasAPI(Mods.API.BuildCraftStatements)) {
 			TriggerProvider.initialize();
 			ActionProvider.initialize();
@@ -437,9 +450,6 @@ public class Computronics {
 	@EventHandler
 	public void serverStop(FMLServerStoppedEvent event) {
 		proxy.onServerStop();
-		if(Mods.isLoaded(Mods.OpenComputers)) {
-			opencomputers.onServerStop(event);
-		}
 		PortableDriveManager.INSTANCE.onServerStop();
 	}
 
