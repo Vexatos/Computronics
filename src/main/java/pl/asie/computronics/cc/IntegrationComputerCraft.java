@@ -190,6 +190,8 @@ public class IntegrationComputerCraft {
 				new MusicalTurtleUpgrade(config.get("turtleUpgradeIDs", "musical", 192).getInt()));
 			ComputerCraftAPI.registerTurtleUpgrade(
 				new ParticleTurtleUpgrade(config.get("turtleUpgradeIDs", "particle", 193).getInt()));
+			ComputerCraftAPI.registerTurtleUpgrade(
+				new CameraTurtleUpgrade(config.get("turtleUpgradeIDs", "camera", 194).getInt()));
 		}
 
 		if(Computronics.tapeReader != null){

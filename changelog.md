@@ -6,6 +6,8 @@ This update comes with a port to Minecraft 1.12!
     - Carry your music with you!
   * ADDED: Speech Upgrade!
     - The Speech Box as an upgrade. Works in exactly the same way.
+  * ADDED: Camera Turtle Upgrade!
+    - Works just like the Camera Upgrade for robots, except it is for ComputerCraft turtles.
   * FIXED: Sound positions of tape drives etc. not being quite correct.
   * FIXED: Locomotive Relay failing to consume energy.
   * FIXED: Speech Box not properly stopping talking on chunk unload.
