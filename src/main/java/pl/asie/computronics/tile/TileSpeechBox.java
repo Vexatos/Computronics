@@ -20,16 +20,18 @@ import pl.asie.computronics.api.audio.IAudioReceiver;
 import pl.asie.computronics.api.audio.IAudioSource;
 import pl.asie.computronics.audio.AudioUtils;
 import pl.asie.computronics.audio.tts.TextToSpeech.ICanSpeak;
+import pl.asie.computronics.integration.charset.audio.IntegrationCharsetAudio;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.OCUtils;
-import pl.asie.lib.util.ColorUtils;
 import pl.asie.lib.util.internal.IColorable;
 
 import javax.annotation.Nullable;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Arrays;
+
+import static pl.asie.computronics.reference.Capabilities.AUDIO_RECEIVER_CAPABILITY;
 
 /**
  * @author Vexatos
@@ -89,23 +91,35 @@ public class TileSpeechBox extends TileEntityPeripheralBase implements IAudioSou
 		}
 		if(pkt != null) {
 			int receivers = 0;
-			for(EnumFacing dir : EnumFacing.VALUES) {
-				TileEntity tile = world.getTileEntity(getPos().offset(dir));
-				if(tile instanceof IAudioReceiver) {
-					if(tile instanceof IColorable && ((IColorable) tile).canBeColored()
-						&& !ColorUtils.isSameOrDefault(this, (IColorable) tile)) {
-						continue;
-					}
-					((IAudioReceiver) tile).receivePacket(pkt, dir.getOpposite());
-					receivers++;
+
+			boolean sent = false;
+			if(Mods.API.hasAPI(Mods.API.CharsetAudio)) {
+				int oldReceivers = receivers;
+				receivers += IntegrationCharsetAudio.send(getWorld(), getPos(), pkt, getVolume(), true);
+				if(receivers > oldReceivers) {
+					sent = true;
 				}
 			}
 
-			if(receivers == 0) {
-				internalSpeaker.receivePacket(pkt, null);
-			}
+			if(!sent) {
+				for(EnumFacing dir : EnumFacing.VALUES) {
+					TileEntity tile = world.getTileEntity(getPos().offset(dir));
+					if(tile != null && tile.hasCapability(AUDIO_RECEIVER_CAPABILITY, dir.getOpposite())) {
+						IColorable targetCol = pl.asie.computronics.util.ColorUtils.getColorable(tile, dir.getOpposite());
+						if(targetCol != null && targetCol.canBeColored()
+							&& !pl.asie.computronics.util.ColorUtils.isSameOrDefault(this, targetCol)) {
+							continue;
+						}
+						tile.getCapability(AUDIO_RECEIVER_CAPABILITY, dir.getOpposite()).receivePacket(pkt, dir.getOpposite());
+						receivers++;
+					}
+				}
+				if(receivers == 0) {
+					internalSpeaker.receivePacket(pkt, null);
+				}
 
-			pkt.sendPacket();
+				pkt.sendPacket();
+			}
 		}
 	}
 

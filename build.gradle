@@ -87,6 +87,9 @@ repositories {
         url "http://repo.elytradev.com"
     }
     maven {
+        url "http://maven.amadornes.com"
+    }
+    maven {
         name = "CoFH Maven"
         url = "http://maven.covers1624.net"
     }
@@ -117,14 +120,9 @@ dependencies {
     deobfCompile "mezz.jei:jei_1.12:${config.jei.version}"
     provided "mcp.mobius.waila:Waila:${config.waila.version}"
     deobfCompile "mcjty.theoneprobe:TheOneProbe-1.12:${config.top.version}"
-    //deobfCompile "pl.asie.charset:charset-lib:${config.charset.version}"
-    //deobfCompile "pl.asie.charset:charset-audio:${config.charset.version}"
-    //deobfCompile "pl.asie.charset:charset-drama:${config.charset.version}"
-    //deobfCompile "pl.asie.charset:charset-gates:${config.charset.version}"
-    //deobfCompile "pl.asie.charset:charset-pipes:${config.charset.version}"
-    //deobfCompile "pl.asie.charset:charset-storage:${config.charset.version}"
-    //deobfCompile "pl.asie.charset:charset-tweaks:${config.charset.version}"
-    //deobfCompile "pl.asie.charset:charset-wires:${config.charset.version}"
+
+    deobfCompile "pl.asie.charset:charset:${config.charset.version}"
+    deobfCompile "MCMultiPart2:MCMultiPart-exp:${config.mcmp.version}"
     //deobfCompile "com.enderio.core:EnderCore:${config.endercore.version}"
     /*deobfCompile("com.enderio:EnderIO:${config.enderio.version}") {
         exclude module: "appliedenergistics2"
@@ -180,7 +178,8 @@ sourceSets {
             exclude "pl/asie/computronics/integration/betterstorage/**"
             exclude "pl/asie/computronics/integration/buildcraft/**"
             exclude "pl/asie/computronics/integration/buildcraft/pluggable/**"
-            exclude "pl/asie/computronics/integration/charset/**"
+            //exclude "pl/asie/computronics/integration/charset/**"
+            exclude "pl/asie/computronics/integration/charset/wires/**"
             exclude "pl/asie/computronics/integration/cofh/**"
             exclude "pl/asie/computronics/integration/draconicevolution/**"
             exclude "pl/asie/computronics/integration/enderio/**"

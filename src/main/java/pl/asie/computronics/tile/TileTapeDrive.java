@@ -27,6 +27,7 @@ import pl.asie.computronics.api.audio.IAudioReceiver;
 import pl.asie.computronics.api.audio.IAudioSource;
 import pl.asie.computronics.api.tape.IItemTapeStorage;
 import pl.asie.computronics.cc.ComputronicsFileMount;
+import pl.asie.computronics.integration.charset.audio.IntegrationCharsetAudio;
 import pl.asie.computronics.network.PacketType;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
@@ -291,13 +292,13 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 			int receivers = 0;
 
 			boolean sent = false;
-			/*if(Mods.API.hasAPI(Mods.API.CharsetAudio)) { TODO Charset Audio
+			if(Mods.API.hasAPI(Mods.API.CharsetAudio)) {
 				int oldReceivers = receivers;
 				receivers += IntegrationCharsetAudio.send(getWorld(), getPos(), pkt, getVolume(), true);
 				if(receivers > oldReceivers) {
 					sent = true;
 				}
-			}*/
+			}
 
 			if(!sent) {
 				for(EnumFacing dir : EnumFacing.VALUES) {

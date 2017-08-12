@@ -1,7 +1,6 @@
 package pl.asie.computronics.integration.charset;
 
 import pl.asie.computronics.integration.charset.audio.IntegrationCharsetAudio;
-import pl.asie.computronics.integration.charset.wires.IntegrationCharsetWires;
 import pl.asie.computronics.reference.Mods;
 
 /**

@@ -1,10 +1,10 @@
 package pl.asie.computronics.integration.charset.audio;
 
 import io.netty.buffer.ByteBuf;
-import pl.asie.charset.api.audio.IDataPCM;
+import pl.asie.charset.api.audio.IAudioDataPCM;
 import pl.asie.lib.audio.DFPWM;
 
-public class AudioDataDFPWM extends AudioDataDummy implements IDataPCM {
+public class AudioDataDFPWM extends AudioDataDummy implements IAudioDataPCM {
 
 	protected byte[] decodedData;
 	private byte[] data;

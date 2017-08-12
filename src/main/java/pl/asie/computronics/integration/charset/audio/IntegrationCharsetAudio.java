@@ -20,6 +20,7 @@ import pl.asie.computronics.api.audio.AudioPacket;
 import pl.asie.computronics.api.audio.AudioPacketDFPWM;
 import pl.asie.computronics.tile.TileAudioCable;
 import pl.asie.computronics.tile.TileSpeaker;
+import pl.asie.computronics.tile.TileSpeechBox;
 import pl.asie.computronics.tile.TileTapeDrive;
 
 import javax.annotation.Nullable;
@@ -37,18 +38,19 @@ public class IntegrationCharsetAudio {
 	private static final ResourceLocation CABLE_SINK_KEY = new ResourceLocation("computronics:cableSink");
 	private static final ResourceLocation SPEAKER_SINK_KEY = new ResourceLocation("computronics:speakerSink");
 	private static final ResourceLocation TAPE_SOURCE_KEY = new ResourceLocation("computronics:tapeDriveSource");
+	private static final ResourceLocation SPEECH_BOX_SOURCE_KEY = new ResourceLocation("computronics:speechBoxSource");
 
 	public void postInit() {
-		AudioAPI.SINK_REGISTRY.register(AudioSinkSpeaker.class);
+		AudioAPI.SINK_REGISTRY.register(AudioSinkSpeaker.class, AudioSinkSpeaker::new);
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 
 	@SubscribeEvent
-	public void onAttach(final AttachCapabilitiesEvent.TileEntity event) {
-		if(event.getTileEntity() instanceof TileSpeaker
+	public void onAttach(final AttachCapabilitiesEvent<TileEntity> event) {
+		if(event.getObject() instanceof TileSpeaker
 			&& RECEIVER_CAPABILITY != null) {
 			event.addCapability(SPEAKER_SINK_KEY, new ICapabilityProvider() {
-				private final AudioSink sink = new AudioSinkSpeaker((TileSpeaker) event.getTileEntity());
+				private final AudioSink sink = new AudioSinkSpeaker((TileSpeaker) event.getObject());
 
 				@Override
 				public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
@@ -61,10 +63,10 @@ public class IntegrationCharsetAudio {
 					return capability == RECEIVER_CAPABILITY ? RECEIVER_CAPABILITY.<T>cast(sink) : null;
 				}
 			});
-		} else if(event.getTileEntity() instanceof TileAudioCable
+		} else if(event.getObject() instanceof TileAudioCable
 			&& RECEIVER_CAPABILITY != null) {
 			event.addCapability(CABLE_SINK_KEY, new ICapabilityProvider() {
-				private final TileAudioCable cable = (TileAudioCable) event.getTileEntity();
+				private final TileAudioCable cable = (TileAudioCable) event.getObject();
 				private final AudioReceiverCable[] RECEIVERS = new AudioReceiverCable[6];
 
 				@Override
@@ -86,7 +88,7 @@ public class IntegrationCharsetAudio {
 					}
 				}
 			});
-		} else if(event.getTileEntity() instanceof TileTapeDrive
+		} else if(event.getObject() instanceof TileTapeDrive
 			&& SOURCE_CAPABILITY != null) {
 			event.addCapability(TAPE_SOURCE_KEY, new ICapabilityProvider() {
 				private final AudioSourceDummy source = new AudioSourceDummy();
@@ -102,6 +104,24 @@ public class IntegrationCharsetAudio {
 					return capability == SOURCE_CAPABILITY ? SOURCE_CAPABILITY.<T>cast(source) : null;
 				}
 			});
+
+		} else if(event.getObject() instanceof TileSpeechBox
+			&& SOURCE_CAPABILITY != null) {
+			event.addCapability(SPEECH_BOX_SOURCE_KEY, new ICapabilityProvider() {
+				private final AudioSourceDummy source = new AudioSourceDummy();
+
+				@Override
+				public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
+					return capability == SOURCE_CAPABILITY && facing != null;
+				}
+
+				@Nullable
+				@Override
+				public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
+					return capability == SOURCE_CAPABILITY ? SOURCE_CAPABILITY.<T>cast(source) : null;
+				}
+			});
+
 		}
 	}
 

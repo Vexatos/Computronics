@@ -24,6 +24,7 @@ import pl.asie.computronics.api.audio.IAudioReceiver;
 import pl.asie.computronics.api.audio.IAudioSource;
 import pl.asie.computronics.audio.AudioUtils;
 import pl.asie.computronics.audio.tts.TextToSpeech.ICanSpeak;
+import pl.asie.computronics.integration.charset.audio.IntegrationCharsetAudio;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.ColorUtils;
@@ -107,13 +108,13 @@ public class RobotUpgradeSpeech extends ManagedEnvironmentWithComponentConnector
 		boolean sent = false;
 		if(pkt != null) {
 			if(host instanceof TileEntity) {
-				/*if(Mods.API.hasAPI(Mods.API.CharsetAudio)) {  TODO Charset Audio
+				if(Mods.API.hasAPI(Mods.API.CharsetAudio)) {
 					int oldReceivers = receivers;
 					receivers += IntegrationCharsetAudio.send(host.world(), ((TileEntity) host).getPos(), pkt, 1.0F, true);
 					if(receivers > oldReceivers) {
 						sent = true;
 					}
-				}*/
+				}
 			}
 			if(!sent) {
 				if(host instanceof TileEntity) {
@@ -303,11 +304,11 @@ public class RobotUpgradeSpeech extends ManagedEnvironmentWithComponentConnector
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
 		facing = host instanceof Rotatable ? ((Rotatable) host).toGlobal(facing) : facing;
-		/*if(Mods.API.hasAPI(Mods.API.CharsetAudio)) { TODO Charset Audio
+		if(Mods.API.hasAPI(Mods.API.CharsetAudio)) {
 			if(capability == IntegrationCharsetAudio.SOURCE_CAPABILITY && facing != null && connectsAudio(facing)) {
 				return true;
 			}
-		}*/
+		}
 		return capability == AUDIO_SOURCE_CAPABILITY && facing != null && connectsAudio(facing);
 	}
 
@@ -317,7 +318,7 @@ public class RobotUpgradeSpeech extends ManagedEnvironmentWithComponentConnector
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
 		facing = host instanceof Rotatable ? ((Rotatable) host).toGlobal(facing) : facing;
-		/*if(Mods.API.hasAPI(Mods.API.CharsetAudio)) { TODO Charset Audio
+		if(Mods.API.hasAPI(Mods.API.CharsetAudio)) {
 			if(capability == IntegrationCharsetAudio.SOURCE_CAPABILITY && facing != null && connectsAudio(facing)) {
 				if(charsetAudioSource == null) {
 					charsetAudioSource = new pl.asie.charset.api.audio.IAudioSource() {
@@ -325,7 +326,7 @@ public class RobotUpgradeSpeech extends ManagedEnvironmentWithComponentConnector
 				}
 				return IntegrationCharsetAudio.SOURCE_CAPABILITY.cast((pl.asie.charset.api.audio.IAudioSource) charsetAudioSource);
 			}
-		}*/
+		}
 		if(capability == AUDIO_SOURCE_CAPABILITY && facing != null && connectsAudio(facing)) {
 			return AUDIO_SOURCE_CAPABILITY.cast(this);
 		}
