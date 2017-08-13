@@ -267,6 +267,11 @@ public class ItemTape extends Item implements IItemTapeStorage, IMedia, IMediaPr
 	}
 
 	@Override
+	public boolean hasEffect(ItemStack stack, int pass) {
+		return (pass == 0 && stack != null && stack.getItemDamage() == 8) || super.hasEffect(stack, pass);
+	}
+
+	@Override
 	@Optional.Method(modid = Mods.ComputerCraft)
 	public IMedia getMedia(ItemStack stack) {
 		if(stack != null && stack.stackSize > 0 && stack.getItem() != null && stack.getItem() instanceof ItemTape) {

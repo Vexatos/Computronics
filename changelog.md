@@ -8,12 +8,13 @@ This update comes with a port to Minecraft 1.12!
     - The Speech Box as an upgrade. Works in exactly the same way.
   * ADDED: Camera Turtle Upgrade!
     - Works just like the Camera Upgrade for robots, except it is for ComputerCraft turtles.
+  * ADDED: Enchantment glow to the 128-minute tape to distinguish it from the 64-minute one.
   * FIXED: Sound positions of tape drives etc. not being quite correct.
   * FIXED: Locomotive Relay failing to consume energy.
   * FIXED: Speech Box not properly stopping talking on chunk unload.
   * FIXED: Radar not working.
   * FIXED: MaryTTS not loading properly with certain other mods installed.
-  * FIXED: Sppech Box output in ComputerCraft.
+  * FIXED: Speech Box output in ComputerCraft.
 
   * **[1.9.4]** FIXED: Tape Drive not making any insert or eject sound in multiplayer.
 
@@ -22,6 +23,9 @@ This update comes with a port to Minecraft 1.12!
   * **[1.11.2]** FIXED: Manual not pointing at the correct directory.
   * **[1.11.2]** FIXED: Upgrade tier localization.
   * **[1.11.2]** ADDED: Albedo support to the Colorful Lamp.
+
+  * **[1.12]** Ported the mod to Minecraft 1.12!
+    - Mods supported right now are OpenComputers, ComputerCraft, TIS-3D, Charset, Forestry, The One Probe, Albedo and Pink Flamingo
 
 ==== 1.6.4 ====
 
