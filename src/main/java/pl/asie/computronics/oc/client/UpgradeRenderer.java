@@ -40,10 +40,10 @@ import java.util.Set;
 public class UpgradeRenderer {
 
 	private final ResourceLocation
-		upgradeRadar = new ResourceLocation("computronics", "textures/models/UpgradeRadar.png"),
-		modelRadar = new ResourceLocation("computronics", "textures/models/ModelRadar.png"),
-		upgradeChatBox = new ResourceLocation("computronics", "textures/models/UpgradeChatBox.png"),
-		beepCard = new ResourceLocation("computronics", "textures/models/CardBeep.png");
+		upgradeRadar = new ResourceLocation("computronics", "textures/models/upgrade_radar.png"),
+		modelRadar = new ResourceLocation("computronics", "textures/models/model_radar.png"),
+		upgradeChatBox = new ResourceLocation("computronics", "textures/models/upgrade_chat_box.png"),
+		beepCard = new ResourceLocation("computronics", "textures/models/card_beep.png");
 
 	AxisAlignedBB bounds = new AxisAlignedBB(-0.1, -0.1, -0.1, 0.1, 0.1, 0.1);
 
