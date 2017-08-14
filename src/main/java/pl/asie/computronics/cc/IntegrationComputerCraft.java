@@ -163,6 +163,8 @@ public class IntegrationComputerCraft {
 				new MusicalTurtleUpgrade("computronics.turtle_noteblock"));
 			ComputerCraftAPI.registerTurtleUpgrade(
 				new ParticleTurtleUpgrade("computronics.turtle_fx"));
+			ComputerCraftAPI.registerTurtleUpgrade(
+				new CameraTurtleUpgrade("computronics.turtle_camera"));
 		}
 
 		if(Computronics.tapeReader != null) {

@@ -235,6 +235,12 @@ public class ItemTape extends Item implements IItemTapeStorage, IMedia, IMediaPr
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
+	public boolean hasEffect(ItemStack stack) {
+		return stack.getItemDamage() == 8 || super.hasEffect(stack);
+	}
+
+	@Override
 	@Optional.Method(modid = Mods.ComputerCraft)
 	public IMedia getMedia(ItemStack stack) {
 		if(!stack.isEmpty() && stack.getCount() > 0 && stack.getItem() instanceof ItemTape) {
