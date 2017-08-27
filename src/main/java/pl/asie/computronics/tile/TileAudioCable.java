@@ -3,7 +3,6 @@ package pl.asie.computronics.tile;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import pl.asie.computronics.api.audio.AudioPacket;
@@ -22,9 +21,10 @@ import java.util.HashSet;
 import static pl.asie.computronics.reference.Capabilities.AUDIO_RECEIVER_CAPABILITY;
 import static pl.asie.computronics.reference.Capabilities.AUDIO_SOURCE_CAPABILITY;
 
-public class TileAudioCable extends TileEntityBase implements IAudioReceiver, IColorable, ITickable {
+public class TileAudioCable extends TileEntityBase implements IAudioReceiver, IColorable {
 
 	private final HashSet<Object> packetIds = new HashSet<Object>();
+	private long idTick = -1;
 
 	private int ImmibisMicroblocks_TransformableTileEntityMarker;
 
@@ -90,19 +90,14 @@ public class TileAudioCable extends TileEntityBase implements IAudioReceiver, IC
 		return ((connectionMap >> dir.ordinal()) & 1) == 1;
 	}
 
-	@Override
-	public void update() {
-		if(!packetIds.isEmpty()) {
-			packetIds.clear();
-		}
-		/*if(worldObj != null) {
-			updateConnections();
-		}*/
-	}
-
 	public boolean receivePacketID(Object o) {
-		if(packetIds.contains(o)) {
-			return false;
+		if(!hasWorldObj() || idTick == worldObj.getTotalWorldTime()) {
+			if(packetIds.contains(o)) {
+				return false;
+			}
+		} else {
+			idTick = worldObj.getTotalWorldTime();
+			packetIds.clear();
 		}
 
 		packetIds.add(o);
