@@ -50,7 +50,7 @@ public class SoundBoard {
 	private long timeout = System.currentTimeMillis();
 	private int soundVolume = 127;
 	public Integer codecId;
-	private String clientAddress;
+	private String clientAddress = null;
 
 	private final int soundTimeoutMS = 250;
 
@@ -97,6 +97,9 @@ public class SoundBoard {
 			SyncHandler.envs.add(this);
 			buildBuffer = null;
 			nextBuffer = null;
+			if(clientAddress != null) {
+				SyncHandler.getHandler().setProcess(clientAddress, process);
+			}
 		} else {
 			buildBuffer = new ArrayDeque<Instruction>();
 			nextBuffer = new ArrayDeque<Instruction>();
@@ -136,7 +139,6 @@ public class SoundBoard {
 			NBTTagCompound nodeNBT = nbt.getCompoundTag("node");
 			if(nodeNBT.hasKey("address")) {
 				clientAddress = nodeNBT.getString("address");
-				SyncHandler.getHandler().setProcess(clientAddress, process);
 			}
 		}
 		if(nbt.hasKey("bbuffer")) {
