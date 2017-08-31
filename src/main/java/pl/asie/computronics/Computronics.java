@@ -51,6 +51,7 @@ import pl.asie.computronics.gui.providers.GuiProviderPortableTapeDrive;
 import pl.asie.computronics.gui.providers.GuiProviderTapeDrive;
 import pl.asie.computronics.integration.ModRecipes;
 import pl.asie.computronics.integration.charset.IntegrationCharset;
+import pl.asie.computronics.integration.conventional.IntegrationConventional;
 import pl.asie.computronics.integration.forestry.IntegrationForestry;
 import pl.asie.computronics.integration.tis3d.IntegrationTIS3D;
 import pl.asie.computronics.item.ItemMultipleComputronics;
@@ -371,6 +372,10 @@ public class Computronics {
 
 		if(Mods.isLoaded(Mods.TIS3D) && tis3D != null) {
 			tis3D.init(compat);
+		}
+
+		if(Mods.isLoaded(Mods.Conventional)) {
+			IntegrationConventional.INSTANCE.init();
 		}
 
 		//achievements = new ComputronicsAchievements(); TODO Advancements?

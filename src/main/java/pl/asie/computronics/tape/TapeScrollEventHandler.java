@@ -10,8 +10,10 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.integration.conventional.IntegrationConventional;
 import pl.asie.computronics.item.ItemPortableTapeDrive;
 import pl.asie.computronics.network.PacketType;
+import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TapeDriveState.State;
 
 /**
@@ -31,6 +33,13 @@ public class TapeScrollEventHandler {
 				Item item = stack.getItem();
 
 				if(item instanceof ItemPortableTapeDrive) {
+					if(Mods.isLoaded(Mods.Conventional)) {
+						if(IntegrationConventional.INSTANCE.isDenied(IntegrationConventional.Permissions.TapeScroll, player)) {
+							event.setCanceled(true);
+							return;
+						}
+					}
+
 					scrollTapeDrive(stack, player, event.getDwheel());
 					event.setCanceled(true);
 				}
