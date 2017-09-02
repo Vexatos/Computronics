@@ -130,6 +130,9 @@ public class TileSpeechBox extends TileEntityPeripheralBase implements IAudioSou
 	}
 
 	private void stopTalking() {
+		if(hasWorldObj() && worldObj.isRemote) {
+			return;
+		}
 		AudioUtils.removePlayer(Computronics.instance.managerId, codecId);
 		locked = false;
 		storage = null;
