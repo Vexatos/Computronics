@@ -15,14 +15,16 @@ This update comes with a port to Minecraft 1.12!
   * FIXED: Radar not working.
   * FIXED: MaryTTS not loading properly with certain other mods installed.
   * FIXED: Speech Box output in ComputerCraft.
+  * FIXED: Occasional Speech Box error in client log.
 
   * **[1.9.4]** FIXED: Tape Drive not making any insert or eject sound in multiplayer.
 
   * **[1.10.2]** ADDED: Sound Board for ComputerCraft! Works exactly the same as the sound card.
 
+  * **[1.11.2]** ADDED: Albedo support to the Colorful Lamp.
   * **[1.11.2]** FIXED: Manual not pointing at the correct directory.
   * **[1.11.2]** FIXED: Upgrade tier localization.
-  * **[1.11.2]** ADDED: Albedo support to the Colorful Lamp.
+  * **[1.11.2]** FIXED: Radar Upgrade renderer.
 
   * **[1.12]** Ported the mod to Minecraft 1.12!
     - Mods supported right now are OpenComputers, ComputerCraft, TIS-3D, Charset, Forestry, The One Probe, Albedo and Pink Flamingo

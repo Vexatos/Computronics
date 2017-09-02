@@ -197,6 +197,9 @@ public class RobotUpgradeSpeech extends ManagedEnvironmentWithComponentConnector
 	}
 
 	private void stopTalking() {
+		if(host.world() != null && host.world().isRemote) {
+			return;
+		}
 		AudioUtils.removePlayer(Computronics.instance.managerId, codecId);
 		locked = false;
 		storage = null;
