@@ -444,8 +444,7 @@ public class ItemOpenComputers extends ItemMultipleComputronics implements Drive
 	//Mostly stolen from Sangar
 	@Override
 	@SideOnly(Side.CLIENT)
-	@SuppressWarnings("unchecked")
-	public void addInformation(ItemStack stack, @Nullable World world, List tooltip, ITooltipFlag flag) {
+	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag flag) {
 		OCUtils.addTooltip(stack, tooltip, flag);
 	}
 

@@ -51,7 +51,7 @@ public class ItemOCSpecialParts extends ItemMultipleComputronics implements IIte
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag flag) {
+	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag flag) {
 		OCUtils.addTooltip(stack, tooltip, flag);
 	}
 

@@ -102,9 +102,9 @@ public class ItemTape extends Item implements IItemTapeStorage, IMedia, IMediaPr
 		return true;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public void addInformation(ItemStack stack, @Nullable World world, List text, ITooltipFlag flag) {
+	@SideOnly(Side.CLIENT)
+	public void addInformation(ItemStack stack, @Nullable World world, List<String> text, ITooltipFlag flag) {
 		int size = getSize(stack);
 		int len = (int) Math.floor(size / L_MINUTE);
 		if(stack.getTagCompound() != null) {

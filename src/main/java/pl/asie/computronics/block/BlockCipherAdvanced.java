@@ -7,6 +7,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.asie.computronics.item.block.IBlockWithSpecialText;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TileCipherBlockAdvanced;
@@ -35,8 +37,8 @@ public class BlockCipherAdvanced extends BlockPeripheral implements IBlockWithSp
 		return false;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
+	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> list, ITooltipFlag flag) {
 		list.add(StringUtil.localize("tooltip.computronics.cipher.advanced"));
 	}

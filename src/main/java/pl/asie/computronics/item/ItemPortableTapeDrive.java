@@ -95,7 +95,6 @@ public class ItemPortableTapeDrive extends Item implements IItemWithDocumentatio
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	@SuppressWarnings("unchecked")
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> info, ITooltipFlag flag) {
 		if(stack.hasTagCompound()) {
 			NBTTagCompound tag = stack.getTagCompound();
