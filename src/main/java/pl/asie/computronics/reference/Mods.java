@@ -38,6 +38,7 @@ public class Mods {
 		Forestry = "forestry",
 		FSP = "Steamcraft",
 		GregTech = "gregtech",
+		Mirage = "mirage",
 		MFR = "MineFactoryReloaded",
 		OpenBlocks = "OpenBlocks",
 		OpenPeripheral = "OpenPeripheralCore",

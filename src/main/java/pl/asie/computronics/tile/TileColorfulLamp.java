@@ -1,5 +1,6 @@
 package pl.asie.computronics.tile;
 
+import com.elytradev.mirage.lighting.IColoredLight;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
@@ -36,9 +37,10 @@ import static pl.asie.computronics.block.BlockColorfulLamp.BRIGHTNESS;
 	//@Optional.Interface(iface = "mods.immibis.redlogic.api.wiring.IBundledUpdatable", modid = Mods.RedLogic),
 	//@Optional.Interface(iface = "mods.immibis.redlogic.api.wiring.IConnectable", modid = Mods.RedLogic),
 	//@Optional.Interface(iface = "mrtjp.projectred.api.IBundledTile", modid = Mods.ProjectRed)
-	@Optional.Interface(iface = "elucent.albedo.lighting.ILightProvider", modid = Mods.Albedo)
+	@Optional.Interface(iface = "elucent.albedo.lighting.ILightProvider", modid = Mods.Albedo),
+	@Optional.Interface(iface = "com.elytradev.mirage.lighting.IColoredLight", modid = Mods.Mirage)
 })
-public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundledRedstoneProvider, ILightProvider/*IBundledTile, IBundledUpdatable, IConnectable*/ {
+public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundledRedstoneProvider, ILightProvider, IColoredLight/*IBundledTile, IBundledUpdatable, IConnectable*/ {
 
 	public TileColorfulLamp() {
 		super("colorful_lamp");
@@ -118,6 +120,18 @@ public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundl
 	@Optional.Method(modid = Mods.Albedo)
 	public Light provideLight() {
 		return Light.builder()
+			.pos(getPos())
+			.color((color & (0x1F << 10)) << 9 | (color & (0x1F << 5)) << 6 | (color & 0x1F) << 3, false)
+			.radius(LampUtil.brightness(color) * 15F)
+			.build();
+	}
+
+	@Nullable
+	@Override
+	@SideOnly(Side.CLIENT)
+	@Optional.Method(modid = Mods.Mirage)
+	public com.elytradev.mirage.lighting.Light getColoredLight() {
+		return com.elytradev.mirage.lighting.Light.builder()
 			.pos(getPos())
 			.color((color & (0x1F << 10)) << 9 | (color & (0x1F << 5)) << 6 | (color & 0x1F) << 3, false)
 			.radius(LampUtil.brightness(color) * 15F)
