@@ -80,6 +80,11 @@ public class RobotUpgradeSpeech extends ManagedEnvironmentWithComponentConnector
 		public void receivePacket(AudioPacket packet, @Nullable EnumFacing direction) {
 			packet.addReceiver(this);
 		}
+
+		@Override
+		public boolean canMove() {
+			return true;
+		}
 	};
 
 	protected BlockPos getPos() {
@@ -193,6 +198,9 @@ public class RobotUpgradeSpeech extends ManagedEnvironmentWithComponentConnector
 	}
 
 	private void stopTalking() {
+		if(host.world() != null && host.world().isRemote) {
+			return;
+		}
 		AudioUtils.removePlayer(Computronics.instance.managerId, codecId);
 		locked = false;
 		storage = null;

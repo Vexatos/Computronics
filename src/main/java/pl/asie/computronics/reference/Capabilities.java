@@ -180,6 +180,11 @@ public class Capabilities {
 		}
 
 		@Override
+		public boolean canMove() {
+			return false;
+		}
+
+		@Override
 		public boolean connectsAudio(EnumFacing side) {
 			return false;
 		}
