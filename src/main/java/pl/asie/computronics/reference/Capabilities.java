@@ -92,8 +92,8 @@ public class Capabilities {
 	}
 
 	@SubscribeEvent
-	public void onAttachCapabilities(AttachCapabilitiesEvent.TileEntity e) {
-		final TileEntity tile = e.getTileEntity();
+	public void onAttachCapabilities(AttachCapabilitiesEvent<TileEntity> e) {
+		final TileEntity tile = e.getObject();
 		if(tile instanceof IAudioSource) {
 			e.addCapability(AUDIO_SOURCE_KEY, new ICapabilityProvider() {
 				@Override

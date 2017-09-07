@@ -1,7 +1,7 @@
 package pl.asie.computronics.integration.railcraft;
 
 import com.google.common.collect.MapMaker;
-import mods.railcraft.common.blocks.charge.ICartBattery;
+import mods.railcraft.api.charge.ICartBattery;
 import mods.railcraft.common.carts.EntityLocomotiveElectric;
 import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.util.math.BlockPos;
