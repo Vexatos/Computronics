@@ -44,11 +44,11 @@ public class IntegrationCharsetAudio {
 	}
 
 	@SubscribeEvent
-	public void onAttach(final AttachCapabilitiesEvent.TileEntity event) {
-		if(event.getTileEntity() instanceof TileSpeaker
+	public void onAttach(final AttachCapabilitiesEvent<TileEntity> event) {
+		if(event.getObject() instanceof TileSpeaker
 			&& RECEIVER_CAPABILITY != null) {
 			event.addCapability(SPEAKER_SINK_KEY, new ICapabilityProvider() {
-				private final AudioSink sink = new AudioSinkSpeaker((TileSpeaker) event.getTileEntity());
+				private final AudioSink sink = new AudioSinkSpeaker((TileSpeaker) event.getObject());
 
 				@Override
 				public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
@@ -61,10 +61,10 @@ public class IntegrationCharsetAudio {
 					return capability == RECEIVER_CAPABILITY ? RECEIVER_CAPABILITY.<T>cast(sink) : null;
 				}
 			});
-		} else if(event.getTileEntity() instanceof TileAudioCable
+		} else if(event.getObject() instanceof TileAudioCable
 			&& RECEIVER_CAPABILITY != null) {
 			event.addCapability(CABLE_SINK_KEY, new ICapabilityProvider() {
-				private final TileAudioCable cable = (TileAudioCable) event.getTileEntity();
+				private final TileAudioCable cable = (TileAudioCable) event.getObject();
 				private final AudioReceiverCable[] RECEIVERS = new AudioReceiverCable[6];
 
 				@Override
@@ -86,7 +86,7 @@ public class IntegrationCharsetAudio {
 					}
 				}
 			});
-		} else if(event.getTileEntity() instanceof TileTapeDrive
+		} else if(event.getObject() instanceof TileTapeDrive
 			&& SOURCE_CAPABILITY != null) {
 			event.addCapability(TAPE_SOURCE_KEY, new ICapabilityProvider() {
 				private final AudioSourceDummy source = new AudioSourceDummy();

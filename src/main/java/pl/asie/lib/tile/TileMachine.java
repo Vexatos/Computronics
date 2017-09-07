@@ -8,6 +8,8 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.energy.CapabilityEnergy;
 import pl.asie.lib.api.tile.IBattery;
 
 import javax.annotation.Nullable;
@@ -551,7 +553,22 @@ public class TileMachine extends TileEntityBase implements
 		data.removeTag("bb_energy");
 	}
 
-	/*@Optional.Method(modid = Mods.API.CoFHTileEntities)
+	@Override
+	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+		if(battery != null && capability == CapabilityEnergy.ENERGY && battery.getStorage(facing) != null) {
+			return true;
+		}
+		return super.hasCapability(capability, facing);
+	}
+
+	@Override
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+		if(battery != null && capability == CapabilityEnergy.ENERGY && battery.getStorage(facing) != null) {
+			return CapabilityEnergy.ENERGY.cast(battery.getStorage(facing));
+		}
+		return super.getCapability(capability, facing);
+	}
+/*@Optional.Method(modid = Mods.API.CoFHTileEntities)
 	public int getInfoEnergyPerTick() {
 		if(this.battery != null) {
 			return (int) Math.round(battery.getEnergyUsage());
