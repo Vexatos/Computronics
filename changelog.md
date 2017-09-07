@@ -1,6 +1,6 @@
 ==== 1.6.5 ====
 
-This update comes with a port to Minecraft 1.12!
+This update comes with a port to Minecraft 1.12.1!
 
   * ADDED: Portable Tape Drive!
     - Carry your music with you!
@@ -26,8 +26,8 @@ This update comes with a port to Minecraft 1.12!
   * **[1.11.2]** FIXED: Upgrade tier localization.
   * **[1.11.2]** FIXED: Radar Upgrade renderer.
 
-  * **[1.12]** Ported the mod to Minecraft 1.12!
-    - Mods supported right now are OpenComputers, ComputerCraft, TIS-3D, Charset, Forestry, The One Probe, Albedo and Pink Flamingo
+  * **[1.12.1]** Ported the mod to Minecraft 1.12.1!
+    - Mods supported right now are OpenComputers, ComputerCraft, TIS-3D, Charset, Forestry, Storage Drawers, The One Probe, Albedo/Mirage and Pink Flamingo
 
 ==== 1.6.4 ====
 

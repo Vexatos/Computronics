@@ -31,6 +31,7 @@ public class BlockSoundBoard extends BlockPeripheral implements IBlockWithPrefix
 	}
 
 	@Override
+	@Deprecated
 	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
 		IBlockState state = super.getStateForPlacement(world, pos, side, hitX, hitY, hitZ, meta, placer, hand);
 		return state.withProperty(rotation.FACING, side.getOpposite());

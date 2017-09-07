@@ -2,6 +2,7 @@ package pl.asie.lib.api.tile;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraftforge.energy.IEnergyStorage;
 
 import javax.annotation.Nullable;
 
@@ -35,4 +36,7 @@ public interface IBattery {
 	public double getEnergyUsage();
 
 	public double getMaxEnergyUsage();
+
+	@Nullable
+	IEnergyStorage getStorage(EnumFacing side);
 }

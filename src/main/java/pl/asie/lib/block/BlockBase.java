@@ -309,6 +309,7 @@ public abstract class BlockBase extends Block /*implements
 		}
 	}*/
 
+	@Deprecated
 	@Override
 	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
 		if(this.rotation != Rotation.NONE) {
