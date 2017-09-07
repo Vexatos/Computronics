@@ -64,6 +64,11 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 		public void receivePacket(AudioPacket packet, EnumFacing direction) {
 			packet.addReceiver(this);
 		}
+
+		@Override
+		public boolean canMove() {
+			return false;
+		}
 	};
 
 	private String storageName = "";

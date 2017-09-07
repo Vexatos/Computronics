@@ -294,6 +294,11 @@ public class PortableTapeDrive implements IAudioSource {
 		public void receivePacket(AudioPacket packet, EnumFacing direction) {
 			packet.addReceiver(this);
 		}
+
+		@Override
+		public boolean canMove() {
+			return true;
+		}
 	};
 
 	@Override
