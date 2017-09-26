@@ -8,14 +8,12 @@ import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.SidedEnvironment;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.api.audio.AudioPacket;
 import pl.asie.computronics.api.audio.IAudioReceiver;
-import pl.asie.computronics.api.audio.IAudioSource;
 import pl.asie.computronics.cc.ISidedPeripheral;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
@@ -26,21 +24,13 @@ import javax.annotation.Nullable;
 @Optional.InterfaceList({
 	@Optional.Interface(iface = "li.cil.oc.api.network.SidedEnvironment", modid = Mods.OpenComputers)
 })
-public class TileSpeaker extends TileEntityPeripheralBase implements IAudioReceiver, ITickable, ISidedPeripheral, SidedEnvironment {
+public class TileSpeaker extends TileEntityPeripheralBase implements IAudioReceiver, ISidedPeripheral, SidedEnvironment {
 
 	private final TIntHashSet packetIds = new TIntHashSet();
-	private IAudioSource lastSource;
+	private long idTick = -1;
 
 	public TileSpeaker() {
 		super("speaker");
-	}
-
-	@Override
-	public void update() {
-		super.update();
-		if(!packetIds.isEmpty()) {
-			packetIds.clear();
-		}
 	}
 
 	@Override
@@ -60,12 +50,17 @@ public class TileSpeaker extends TileEntityPeripheralBase implements IAudioRecei
 
 	@Override
 	public void receivePacket(AudioPacket packet, @Nullable EnumFacing direction) {
-		if(!packetIds.contains(packet.id)) {
-			packetIds.add(packet.id);
-
-			lastSource = packet.source;
-			packet.addReceiver(this);
+		if(!hasWorld() || idTick == world.getTotalWorldTime()) {
+			if(packetIds.contains(packet.id)) {
+				return;
+			}
+		} else {
+			idTick = world.getTotalWorldTime();
+			packetIds.clear();
 		}
+
+		packetIds.add(packet.id);
+		packet.addReceiver(this);
 	}
 
 	@Override
