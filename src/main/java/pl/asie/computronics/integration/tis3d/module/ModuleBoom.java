@@ -58,7 +58,6 @@ public class ModuleBoom extends ComputronicsModule {
 					steps = newstep;
 					sendDataToClient();
 				}
-				receivingPipe.beginRead();
 			}
 		}
 	}

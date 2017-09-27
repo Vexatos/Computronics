@@ -33,7 +33,6 @@ public class ModuleColorful extends ComputronicsModule {
 			}
 			if(receivingPipe.canTransfer()) {
 				this.color = (short) (receivingPipe.read() & 0x7FFF);
-				receivingPipe.beginRead();
 				sendDataToClient();
 			}
 		}
