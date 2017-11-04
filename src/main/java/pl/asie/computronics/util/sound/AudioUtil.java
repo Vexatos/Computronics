@@ -393,6 +393,7 @@ public class AudioUtil {
 
 		public final ImmutableList<State> states;
 		public int delay = 0;
+		public double error = 0;
 
 		public AudioProcess(int channelCount) {
 			ArrayList<State> states = new ArrayList<State>(channelCount);
