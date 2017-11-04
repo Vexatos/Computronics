@@ -118,8 +118,10 @@ public class SoundCardPacketClientHandler extends AudioPacketClientHandler {
 						sample += state.gate.getValue(process, state);
 					}
 					sample = Math.max(Math.min(sample, 1), -1);
-					int value = ((byte) (sample * 127)) ^ 0x80;
-					data.write((byte) value);
+					double value = (sample * 127.0D + process.error);
+					process.error = value - Math.floor(value);
+					int bvalue = ((byte) Math.floor(value)) ^ 0x80;
+					data.write((byte) bvalue);
 				}
 				process.delay = 0;
 			} else {
