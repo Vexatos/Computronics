@@ -111,6 +111,7 @@ public class AudioUtil {
 		public Phase phase = Phase.Attack;
 		public double progress;
 		private final Phase initialPhase;
+		private final double initialProgress;
 
 		// Precalculated speeds
 		private double attackSpeed;
@@ -125,15 +126,19 @@ public class AudioUtil {
 
 			this.attackSpeed = 1000D / (this.attackDuration * Config.SOUND_SAMPLE_RATE);
 			if(this.attackDuration == 0) {
-				this.phase = Phase.Decay;
-				this.initialPhase = Phase.Decay;
-				this.progress = 1;
+				if(this.decayDuration == 0) {
+					this.initialPhase = this.phase = Phase.Sustain;
+					this.initialProgress = this.progress = attenuation;
+				} else {
+					this.initialPhase = this.phase = Phase.Decay;
+					this.initialProgress = this.progress = 1;
+				}
 			} else {
 				this.initialPhase = Phase.Attack;
-				this.progress = 0;
+				this.initialProgress = this.progress = 0;
 			}
-			this.decaySpeed = ((this.attenuation - 1D) * 1000D) / (this.decayDuration * Config.SOUND_SAMPLE_RATE);
-			this.releaseSpeed = (-this.attenuation * 1000D) / (this.releaseDuration * Config.SOUND_SAMPLE_RATE);
+			this.decaySpeed = this.decayDuration == 0 ? Double.POSITIVE_INFINITY : ((this.attenuation - 1D) * 1000D) / (this.decayDuration * Config.SOUND_SAMPLE_RATE);
+			this.releaseSpeed = this.releaseDuration == 0 ? Double.NEGATIVE_INFINITY : (-this.attenuation * 1000D) / (this.releaseDuration * Config.SOUND_SAMPLE_RATE);
 		}
 
 		public double getModifiedValue(State state, double value) {
@@ -178,10 +183,8 @@ public class AudioUtil {
 		}
 
 		public void reset() {
-			phase = this.initialPhase;
-			if(this.initialPhase == Phase.Decay) {
-				progress = 1;
-			}
+			this.phase = this.initialPhase;
+			this.progress = this.initialProgress;
 		}
 
 		private enum Phase {
