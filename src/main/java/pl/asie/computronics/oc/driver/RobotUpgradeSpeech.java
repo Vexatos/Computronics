@@ -11,6 +11,7 @@ import li.cil.oc.api.network.Message;
 import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.Visibility;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.Computronics;
@@ -55,18 +56,8 @@ public class RobotUpgradeSpeech extends ManagedEnvironmentWithComponentConnector
 		}
 
 		@Override
-		public double getSoundX() {
-			return host.xPosition();
-		}
-
-		@Override
-		public double getSoundY() {
-			return host.yPosition();
-		}
-
-		@Override
-		public double getSoundZ() {
-			return host.zPosition();
+		public Vec3 getSoundPos() {
+			return Vec3.createVectorHelper(host.xPosition(), host.yPosition(), host.zPosition());
 		}
 
 		@Override

@@ -3,6 +3,7 @@ package pl.asie.computronics.tile;
 import gnu.trove.set.hash.TIntHashSet;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.api.audio.AudioPacket;
@@ -102,18 +103,8 @@ public class TileAudioCable extends TileEntityBase implements IAudioReceiver, IC
 	}
 
 	@Override
-	public double getSoundX() {
-		return 0;
-	}
-
-	@Override
-	public double getSoundY() {
-		return 0;
-	}
-
-	@Override
-	public double getSoundZ() {
-		return 0;
+	public Vec3 getSoundPos() {
+		return Vec3.createVectorHelper(0D ,0D, 0D);
 	}
 
 	@Override

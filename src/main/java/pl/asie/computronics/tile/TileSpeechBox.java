@@ -10,6 +10,7 @@ import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.Computronics;
@@ -50,18 +51,8 @@ public class TileSpeechBox extends TileEntityPeripheralBase implements IAudioSou
 		}
 
 		@Override
-		public double getSoundX() {
-			return xCoord + 0.5D;
-		}
-
-		@Override
-		public double getSoundY() {
-			return yCoord + 0.5D;
-		}
-
-		@Override
-		public double getSoundZ() {
-			return zCoord + 0.5D;
+		public Vec3 getSoundPos() {
+			return Vec3.createVectorHelper(xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D);
 		}
 
 		@Override

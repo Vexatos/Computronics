@@ -7,6 +7,7 @@ import dan200.computercraft.api.peripheral.IComputerAccess;
 import gnu.trove.set.hash.TIntHashSet;
 import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.SidedEnvironment;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.Computronics;
@@ -41,18 +42,8 @@ public class TileSpeaker extends TileEntityPeripheralBase implements IAudioRecei
 	}
 
 	@Override
-	public double getSoundX() {
-		return xCoord + 0.5D;
-	}
-
-	@Override
-	public double getSoundY() {
-		return yCoord + 0.5D;
-	}
-
-	@Override
-	public double getSoundZ() {
-		return zCoord + 0.5D;
+	public Vec3 getSoundPos() {
+		return Vec3.createVectorHelper(xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D);
 	}
 
 	@Override

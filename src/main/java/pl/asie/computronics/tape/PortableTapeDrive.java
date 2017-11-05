@@ -10,6 +10,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.computronics.Computronics;
@@ -30,7 +31,7 @@ import pl.asie.lib.network.Packet;
 public class PortableTapeDrive implements IAudioSource {
 
 	protected World world;
-	protected double x, y, z;
+	protected Vec3 pos;
 	protected Entity carrier;
 	protected ItemStack self;
 	protected int time = 0;
@@ -44,9 +45,7 @@ public class PortableTapeDrive implements IAudioSource {
 
 	public void updateCarrier(Entity carrier, ItemStack self) {
 		this.world = carrier.worldObj;
-		this.x = carrier.posX;
-		this.y = carrier.posY;
-		this.z = carrier.posZ;
+		this.pos = Vec3.createVectorHelper(carrier.posX, carrier.posY, carrier.posZ);
 		this.carrier = carrier;
 		this.self = self;
 	}
@@ -142,12 +141,12 @@ public class PortableTapeDrive implements IAudioSource {
 	protected void updateSound() {
 		if(shouldPlaySound()) {
 			if(sound == null) {
-				sound = new MachineSound(soundRes, (float) x, (float) y, (float) z, getVolume(), getPitch(), shouldRepeat()) {
+				sound = new MachineSound(soundRes, (float) pos.xCoord, (float) pos.yCoord, (float) pos.zCoord, getVolume(), getPitch(), shouldRepeat()) {
 					@Override
 					public void update() {
-						this.xPosF = (float) PortableTapeDrive.this.x;
-						this.yPosF = (float) PortableTapeDrive.this.y;
-						this.zPosF = (float) PortableTapeDrive.this.z;
+						this.xPosF = (float) PortableTapeDrive.this.pos.xCoord;
+						this.yPosF = (float) PortableTapeDrive.this.pos.yCoord;
+						this.zPosF = (float) PortableTapeDrive.this.pos.zCoord;
 					}
 				};
 				FMLClientHandler.instance().getClient().getSoundHandler().playSound(sound);
@@ -218,14 +217,14 @@ public class PortableTapeDrive implements IAudioSource {
 		if(this.inventory == null) {
 			if(state.getStorage() != null) { // Tape was inserted
 				// Play eject sound
-				world.playSoundEffect(x, y, z, "computronics:tape_eject", 1, 0);
+				world.playSoundEffect(pos.xCoord, pos.yCoord, pos.zCoord, "computronics:tape_eject", 1, 0);
 			}
 			unloadStorage();
 		} else {
 			loadStorage();
 			if(this.inventory.getItem() instanceof IItemTapeStorage) {
 				// Play insert sound
-				world.playSoundEffect(x, y, z, "computronics:tape_insert", 1, 0);
+				world.playSoundEffect(pos.xCoord, pos.yCoord, pos.zCoord, "computronics:tape_insert", 1, 0);
 			}
 		}
 		save(getTag());
@@ -280,18 +279,8 @@ public class PortableTapeDrive implements IAudioSource {
 		}
 
 		@Override
-		public double getSoundX() {
-			return x;
-		}
-
-		@Override
-		public double getSoundY() {
-			return y;
-		}
-
-		@Override
-		public double getSoundZ() {
-			return z;
+		public Vec3 getSoundPos() {
+			return pos;
 		}
 
 		@Override
