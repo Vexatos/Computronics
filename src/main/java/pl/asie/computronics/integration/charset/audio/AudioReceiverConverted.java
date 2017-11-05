@@ -1,7 +1,7 @@
 package pl.asie.computronics.integration.charset.audio;
 
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import pl.asie.charset.api.audio.AudioSink;
 import pl.asie.computronics.api.audio.AudioPacket;
@@ -26,8 +26,8 @@ public class AudioReceiverConverted implements IAudioReceiver {
 	}
 
 	@Override
-	public BlockPos getSoundPos() {
-		return new BlockPos(sink.getPos());
+	public Vec3d getSoundPos() {
+		return sink.getPos();
 	}
 
 	@Override
@@ -38,11 +38,6 @@ public class AudioReceiverConverted implements IAudioReceiver {
 	@Override
 	public void receivePacket(AudioPacket packet, @Nullable EnumFacing side) {
 
-	}
-
-	@Override
-	public boolean canMove() {
-		return false;
 	}
 
 	@Override

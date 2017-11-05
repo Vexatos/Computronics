@@ -10,7 +10,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagFloat;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
@@ -312,9 +311,9 @@ public class DriverCardNoise extends DriverCardSoundBase {
 		}
 		Packet packet = Computronics.packet.create(PacketType.COMPUTER_NOISE.ordinal())
 			.writeInt(world.provider.getDimension())
-			.writeInt(MathHelper.floor(x))
-			.writeInt(MathHelper.floor(y))
-			.writeInt(MathHelper.floor(z))
+			.writeFloat((float) x)
+			.writeFloat((float) y)
+			.writeFloat((float) z)
 			.writeByte(hits);
 		for(Channel channel : channels) {
 			if(channel != null) {
@@ -333,17 +332,16 @@ public class DriverCardNoise extends DriverCardSoundBase {
 		}
 		Computronics.packet.sendToAllAround(packet, new NetworkRegistry.TargetPoint(
 			world.provider.getDimension(),
-			MathHelper.floor(x),
-			MathHelper.floor(y),
-			MathHelper.floor(z), Config.SOUND_RADIUS));
+			x, y, z,
+			Config.SOUND_RADIUS));
 	}
 
 	public static void onSound(Packet packet, EntityPlayer player) throws IOException {
 		int dimension = packet.readInt();
 		if(isInDimension(player, dimension)) {
-			int x = packet.readInt();
-			int y = packet.readInt();
-			int z = packet.readInt();
+			float x = packet.readFloat();
+			float y = packet.readFloat();
+			float z = packet.readFloat();
 			int hits = packet.readUnsignedByte();
 			for(int i = 0; i < 8; i++) {
 				if(((hits >> i) & 1) == 1) {
@@ -353,7 +351,7 @@ public class DriverCardNoise extends DriverCardSoundBase {
 						float frequency = packet.readFloat();
 						short duration = packet.readShort();
 						short initialDelay = packet.readShort();
-						Audio.instance().play(x + 0.5f, y + 0.5f, z + 0.5f, type, frequency, duration & 0xFFFF, initialDelay);
+						Audio.instance().play(x, y, z, type, frequency, duration & 0xFFFF, initialDelay);
 					}
 				}
 			}

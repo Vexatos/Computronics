@@ -11,7 +11,7 @@ import li.cil.oc.api.network.Visibility;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -73,8 +73,8 @@ public class DriverCardSound extends ManagedEnvironmentWithComponentConnector im
 		}
 
 		@Override
-		public BlockPos getSoundPos() {
-			return new BlockPos(host.xPosition(), host.yPosition(), host.zPosition());
+		public Vec3d getSoundPos() {
+			return new Vec3d(host.xPosition(), host.yPosition(), host.zPosition());
 		}
 
 		@Override
@@ -87,10 +87,6 @@ public class DriverCardSound extends ManagedEnvironmentWithComponentConnector im
 			packet.addReceiver(this);
 		}
 
-		@Override
-		public boolean canMove() {
-			return host instanceof TileEntity;
-		}
 	};
 
 	@Override
@@ -355,8 +351,8 @@ public class DriverCardSound extends ManagedEnvironmentWithComponentConnector im
 	}
 
 	@Override
-	public BlockPos position() {
-		return new BlockPos(host.xPosition(), host.yPosition(), host.zPosition());
+	public Vec3d position() {
+		return new Vec3d(host.xPosition(), host.yPosition(), host.zPosition());
 	}
 
 	@Override
