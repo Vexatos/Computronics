@@ -27,6 +27,7 @@ import pl.asie.computronics.api.audio.AudioPacket;
 import pl.asie.computronics.api.audio.IAudioReceiver;
 import pl.asie.computronics.api.audio.IAudioSource;
 import pl.asie.computronics.api.tape.IItemTapeStorage;
+import pl.asie.computronics.audio.AudioUtils;
 import pl.asie.computronics.cc.ComputronicsFileMount;
 import pl.asie.computronics.integration.charset.audio.IntegrationCharsetAudio;
 import pl.asie.computronics.network.PacketType;
@@ -70,6 +71,11 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 		@Override
 		public void receivePacket(AudioPacket packet, @Nullable EnumFacing direction) {
 			packet.addReceiver(this);
+		}
+
+		@Override
+		public String getID() {
+			return AudioUtils.positionId(getPos());
 		}
 
 	};

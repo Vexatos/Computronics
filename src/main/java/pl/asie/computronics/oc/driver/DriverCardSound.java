@@ -11,6 +11,7 @@ import li.cil.oc.api.network.Visibility;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
@@ -19,6 +20,7 @@ import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.api.audio.AudioPacket;
 import pl.asie.computronics.api.audio.IAudioReceiver;
 import pl.asie.computronics.api.audio.IAudioSource;
+import pl.asie.computronics.audio.AudioUtils;
 import pl.asie.computronics.audio.SoundCardPacket;
 import pl.asie.computronics.integration.charset.audio.IntegrationCharsetAudio;
 import pl.asie.computronics.reference.Config;
@@ -85,6 +87,11 @@ public class DriverCardSound extends ManagedEnvironmentWithComponentConnector im
 		@Override
 		public void receivePacket(AudioPacket packet, @Nullable EnumFacing direction) {
 			packet.addReceiver(this);
+		}
+
+		@Override
+		public String getID() {
+			return host instanceof TileEntity ? AudioUtils.positionId(new BlockPos(host.xPosition(), host.yPosition(), host.zPosition())) : "";
 		}
 
 	};

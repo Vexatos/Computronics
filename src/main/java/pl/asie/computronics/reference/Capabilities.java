@@ -183,6 +183,11 @@ public class Capabilities {
 		public boolean connectsAudio(EnumFacing side) {
 			return false;
 		}
+
+		@Override
+		public String getID() {
+			return "";
+		}
 	}
 
 	private Capabilities() {

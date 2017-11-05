@@ -9,7 +9,7 @@ public abstract class AudioPacketClientHandler {
 
 	protected abstract void readData(Packet packet, int packetId, int sourceId) throws IOException;
 
-	protected abstract void playData(int packetId, int sourceId, float x, float y, float z, int distance, byte volume);
+	protected abstract void playData(int packetId, int sourceId, float x, float y, float z, int distance, byte volume, String deviceId);
 
 	public final void receivePacket(Packet packet) throws IOException {
 		int packetId = packet.readInt();
@@ -26,12 +26,13 @@ public abstract class AudioPacketClientHandler {
 			float z = packet.readFloat();
 			int distance = packet.readUnsignedShort();
 			byte volume = packet.readByte();
+			String deviceId = packet.readString();
 
 			if(dimension != WorldUtils.getCurrentClientDimension()) {
 				continue;
 			}
 
-			playData(packetId, sourceId, x, y, z, distance, volume);
+			playData(packetId, sourceId, x, y, z, distance, volume, deviceId);
 		}
 	}
 }

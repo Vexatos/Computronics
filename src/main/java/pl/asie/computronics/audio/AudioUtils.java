@@ -1,5 +1,6 @@
 package pl.asie.computronics.audio;
 
+import net.minecraft.util.math.BlockPos;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.api.audio.AudioPacketRegistry;
 import pl.asie.computronics.network.PacketType;
@@ -21,5 +22,9 @@ public final class AudioUtils {
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public static String positionId(BlockPos pos) {
+		return String.format("(%d, %d, %d)", pos.getX(), pos.getY(), pos.getZ());
 	}
 }

@@ -9,6 +9,7 @@ import net.minecraft.world.World;
 import pl.asie.computronics.api.audio.AudioPacket;
 import pl.asie.computronics.api.audio.IAudioConnection;
 import pl.asie.computronics.api.audio.IAudioReceiver;
+import pl.asie.computronics.audio.AudioUtils;
 import pl.asie.computronics.reference.Capabilities;
 import pl.asie.computronics.util.ColorUtils;
 import pl.asie.lib.tile.TileEntityBase;
@@ -124,6 +125,11 @@ public class TileAudioCable extends TileEntityBase implements IAudioReceiver, IC
 				tile.getCapability(AUDIO_RECEIVER_CAPABILITY, dir.getOpposite()).receivePacket(packet, dir.getOpposite());
 			}
 		}
+	}
+
+	@Override
+	public String getID() {
+		return AudioUtils.positionId(getPos());
 	}
 
 	@Override
