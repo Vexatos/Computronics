@@ -4,7 +4,7 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
@@ -165,8 +165,8 @@ public class Capabilities {
 		}
 
 		@Override
-		public BlockPos getSoundPos() {
-			return BlockPos.ORIGIN;
+		public Vec3d getSoundPos() {
+			return new Vec3d(0, 0, 0);
 		}
 
 		@Override
@@ -177,11 +177,6 @@ public class Capabilities {
 		@Override
 		public void receivePacket(AudioPacket packet, @Nullable EnumFacing side) {
 
-		}
-
-		@Override
-		public boolean canMove() {
-			return false;
 		}
 
 		@Override

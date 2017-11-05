@@ -13,7 +13,7 @@ import li.cil.oc.api.network.Visibility;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -67,7 +67,7 @@ public class RobotUpgradeSpeech extends ManagedEnvironmentWithComponentConnector
 		}
 
 		@Override
-		public BlockPos getSoundPos() {
+		public Vec3d getSoundPos() {
 			return getPos();
 		}
 
@@ -81,14 +81,10 @@ public class RobotUpgradeSpeech extends ManagedEnvironmentWithComponentConnector
 			packet.addReceiver(this);
 		}
 
-		@Override
-		public boolean canMove() {
-			return true;
-		}
 	};
 
-	protected BlockPos getPos() {
-		return new BlockPos(host.xPosition(), host.yPosition(), host.zPosition());
+	protected Vec3d getPos() {
+		return new Vec3d(host.xPosition(), host.yPosition(), host.zPosition());
 	}
 
 	@Override

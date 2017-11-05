@@ -19,6 +19,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.Computronics;
@@ -57,8 +58,8 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 		}
 
 		@Override
-		public BlockPos getSoundPos() {
-			return getPos();
+		public Vec3d getSoundPos() {
+			return new Vec3d(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);
 		}
 
 		@Override
@@ -71,10 +72,6 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 			packet.addReceiver(this);
 		}
 
-		@Override
-		public boolean canMove() {
-			return false;
-		}
 	};
 
 	private String storageName = "";
@@ -219,7 +216,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 	public void switchState(State s) {
 		//System.out.println("Switchy switch to " + s.name());
 		if(this.getEnumState() != s) {
-			this.state.switchState(worldObj, getPos(), s);
+			this.state.switchState(worldObj, s);
 			this.sendState();
 		}
 	}
@@ -287,7 +284,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 	public void update() {
 		super.update();
 		State st = getEnumState();
-		AudioPacket pkt = state.update(this, worldObj, getPos());
+		AudioPacket pkt = state.update(this, worldObj);
 		if(pkt != null) {
 			int receivers = 0;
 

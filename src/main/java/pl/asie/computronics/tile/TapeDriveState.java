@@ -1,6 +1,5 @@
 package pl.asie.computronics.tile;
 
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.api.audio.AudioPacket;
@@ -69,7 +68,7 @@ public class TapeDriveState {
 		this.soundVolume = (int) Math.floor(volume * 127.0F);
 	}
 
-	public void switchState(World worldObj, BlockPos pos, State newState) {
+	public void switchState(World worldObj, State newState) {
 		if(worldObj.isRemote) { // Client-side happening
 			if(newState == state) {
 				return;
@@ -97,12 +96,12 @@ public class TapeDriveState {
 	}
 
 	@Nullable
-	private AudioPacket createMusicPacket(IAudioSource source, World worldObj, BlockPos pos) {
+	private AudioPacket createMusicPacket(IAudioSource source, World world) {
 		byte[] pktData = new byte[packetSize];
 		int amount = storage.read(pktData, false); // read data into packet array
 
 		if(amount < packetSize) {
-			switchState(worldObj, pos, State.STOPPED);
+			switchState(world, State.STOPPED);
 		}
 
 		if(amount > 0) {
@@ -113,8 +112,8 @@ public class TapeDriveState {
 	}
 
 	@Nullable
-	public AudioPacket update(IAudioSource source, World worldObj, BlockPos pos) {
-		if(!worldObj.isRemote) {
+	public AudioPacket update(IAudioSource source, World world) {
+		if(!world.isRemote) {
 			switch(state) {
 				case PLAYING: {
 					if(storage.getPosition() >= storage.getSize() || storage.getPosition() < 0) {
@@ -123,21 +122,21 @@ public class TapeDriveState {
 					long time = System.nanoTime();
 					if((time - (250 * 1000000)) > lastCodecTime) {
 						lastCodecTime += (250 * 1000000);
-						return createMusicPacket(source, worldObj, pos);
+						return createMusicPacket(source, world);
 					}
 				}
 				break;
 				case REWINDING: {
 					int seeked = storage.seek(-2048);
 					if(seeked > -2048) {
-						switchState(worldObj, pos, State.STOPPED);
+						switchState(world, State.STOPPED);
 					}
 				}
 				break;
 				case FORWARDING: {
 					int seeked = storage.seek(2048);
 					if(seeked < 2048) {
-						switchState(worldObj, pos, State.STOPPED);
+						switchState(world, State.STOPPED);
 					}
 				}
 				break;

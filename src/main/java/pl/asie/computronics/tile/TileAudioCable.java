@@ -4,6 +4,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import pl.asie.computronics.api.audio.AudioPacket;
 import pl.asie.computronics.api.audio.IAudioConnection;
@@ -128,18 +129,13 @@ public class TileAudioCable extends TileEntityBase implements IAudioReceiver, IC
 	}
 
 	@Override
-	public boolean canMove() {
-		return false;
-	}
-
-	@Override
 	public World getSoundWorld() {
 		return null;
 	}
 
 	@Override
-	public BlockPos getSoundPos() {
-		return BlockPos.ORIGIN;
+	public Vec3d getSoundPos() {
+		return Vec3d.ZERO;
 	}
 
 	@Override

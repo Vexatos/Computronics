@@ -1,7 +1,7 @@
 package pl.asie.computronics.api.audio;
 
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.network.PacketType;
@@ -51,10 +51,10 @@ public abstract class AudioPacket {
 		}
 
 		int mdSq = receiver.getSoundDistance() * receiver.getSoundDistance();
-		final BlockPos pos = receiver.getSoundPos();
-		double distSq = (pos.getX() - playerMP.posX) * (pos.getX() - playerMP.posX);
-		distSq += (pos.getY() - playerMP.posY) * (pos.getY() - playerMP.posY);
-		distSq += (pos.getZ() - playerMP.posZ) * (pos.getZ() - playerMP.posZ);
+		final Vec3d pos = receiver.getSoundPos();
+		double distSq = (pos.xCoord - playerMP.posX) * (pos.xCoord - playerMP.posX);
+		distSq += (pos.yCoord - playerMP.posY) * (pos.yCoord - playerMP.posY);
+		distSq += (pos.zCoord - playerMP.posZ) * (pos.zCoord - playerMP.posZ);
 		return distSq <= mdSq;
 	}
 
@@ -84,9 +84,9 @@ public abstract class AudioPacket {
 
 					for(IAudioReceiver receiver : receivers) {
 						pkt.writeInt(receiver.getSoundWorld() != null ? receiver.getSoundWorld().provider.getDimension() : 0);
-						final BlockPos pos = receiver.getSoundPos();
-						pkt.writeInt(pos.getX()).writeInt(pos.getY()).writeInt(pos.getZ())
-							.writeShort((short) receiver.getSoundDistance()).writeByte(volume).writeByte((byte) (receiver.canMove() ? 1 : 0));
+						final Vec3d pos = receiver.getSoundPos();
+						pkt.writeFloat((float) pos.xCoord).writeFloat((float) pos.yCoord).writeFloat((float) pos.zCoord)
+							.writeShort((short) receiver.getSoundDistance()).writeByte(volume);
 					}
 
 					Computronics.packet.sendTo(pkt, playerMP);

@@ -8,7 +8,7 @@ import li.cil.oc.api.network.SidedEnvironment;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.Computronics;
@@ -217,8 +217,8 @@ public class TileSoundBoard extends TileEntityPeripheralBase implements IAudioSo
 		}
 
 		@Override
-		public BlockPos getSoundPos() {
-			return pos;
+		public Vec3d getSoundPos() {
+			return new Vec3d(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);
 		}
 
 		@Override
@@ -231,10 +231,6 @@ public class TileSoundBoard extends TileEntityPeripheralBase implements IAudioSo
 			packet.addReceiver(this);
 		}
 
-		@Override
-		public boolean canMove() {
-			return false;
-		}
 	};
 
 	@Override
@@ -258,8 +254,8 @@ public class TileSoundBoard extends TileEntityPeripheralBase implements IAudioSo
 		return getWorld();
 	}
 
-	public BlockPos position() {
-		return getPos();
+	public Vec3d position() {
+		return new Vec3d(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);
 	}
 
 	@Override
