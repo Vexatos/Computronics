@@ -97,27 +97,22 @@ public class TileAudioCable extends TileEntityBase implements IAudioReceiver, IC
 	}
 
 	@Override
-	public boolean canMove() {
-		return false;
-	}
-
-	@Override
 	public World getSoundWorld() {
 		return null;
 	}
 
 	@Override
-	public int getSoundX() {
+	public double getSoundX() {
 		return 0;
 	}
 
 	@Override
-	public int getSoundY() {
+	public double getSoundY() {
 		return 0;
 	}
 
 	@Override
-	public int getSoundZ() {
+	public double getSoundZ() {
 		return 0;
 	}
 

@@ -57,7 +57,7 @@ public class TapeDriveState {
 		this.soundVolume = (int) Math.floor(volume * 127.0F);
 	}
 
-	public void switchState(World worldObj, int x, int y, int z, State newState) {
+	public void switchState(World worldObj, State newState) {
 		if(worldObj.isRemote) { // Client-side happening
 			if(newState == state) return;
 		}
@@ -80,11 +80,11 @@ public class TapeDriveState {
 		return state;
 	}
 
-	private AudioPacket createMusicPacket(IAudioSource source, World worldObj, int x, int y, int z) {
+	private AudioPacket createMusicPacket(IAudioSource source, World worldObj) {
 		byte[] pktData = new byte[packetSize];
 		int amount = storage.read(pktData, false); // read data into packet array
 
-		if (amount < packetSize) switchState(worldObj, x, y, z, State.STOPPED);
+		if (amount < packetSize) switchState(worldObj, State.STOPPED);
 
 		if (amount > 0) {
 			return new AudioPacketDFPWM(source, getVolume(), packetSize * 8 * 4, amount == packetSize ? pktData : Arrays.copyOf(pktData, amount));
@@ -93,7 +93,7 @@ public class TapeDriveState {
 		}
 	}
 
-	public AudioPacket update(IAudioSource source, World worldObj, int x, int y, int z) {
+	public AudioPacket update(IAudioSource source, World worldObj) {
 		if(!worldObj.isRemote) {
 			switch(state) {
 				case PLAYING: {
@@ -103,16 +103,16 @@ public class TapeDriveState {
                     long time = System.nanoTime();
 					if ((time - (250 * 1000000)) > lastCodecTime) {
                         lastCodecTime += (250 * 1000000);
-						return createMusicPacket(source, worldObj, x, y, z);
+						return createMusicPacket(source, worldObj);
 					}
 				} break;
 				case REWINDING: {
 					int seeked = storage.seek(-2048);
-					if(seeked > -2048) switchState(worldObj, x, y, z, State.STOPPED);
+					if(seeked > -2048) switchState(worldObj, State.STOPPED);
 				} break;
 				case FORWARDING: {
 					int seeked = storage.seek(2048);
-					if(seeked < 2048) switchState(worldObj, x, y, z, State.STOPPED);
+					if(seeked < 2048) switchState(worldObj, State.STOPPED);
 				} break;
 				case STOPPED: {
 				} break;

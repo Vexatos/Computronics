@@ -13,7 +13,6 @@ import li.cil.oc.api.network.Message;
 import li.cil.oc.api.network.Visibility;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
@@ -91,18 +90,18 @@ public class DriverCardSound extends ManagedEnvironmentWithComponentConnector im
 		}
 
 		@Override
-		public int getSoundX() {
-			return MathHelper.floor_double(host.xPosition());
+		public double getSoundX() {
+			return host.xPosition();
 		}
 
 		@Override
-		public int getSoundY() {
-			return MathHelper.floor_double(host.yPosition());
+		public double getSoundY() {
+			return host.yPosition();
 		}
 
 		@Override
-		public int getSoundZ() {
-			return MathHelper.floor_double(host.zPosition());
+		public double getSoundZ() {
+			return host.zPosition();
 		}
 
 		@Override
@@ -113,11 +112,6 @@ public class DriverCardSound extends ManagedEnvironmentWithComponentConnector im
 		@Override
 		public void receivePacket(AudioPacket packet, ForgeDirection direction) {
 			packet.addReceiver(this);
-		}
-
-		@Override
-		public boolean canMove() {
-			return host instanceof TileEntity;
 		}
 	};
 

@@ -11,7 +11,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagFloat;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import pl.asie.computronics.Computronics;
@@ -312,9 +311,9 @@ public class DriverCardNoise extends DriverCardSoundBase {
 		}
 		Packet packet = Computronics.packet.create(PacketType.COMPUTER_NOISE.ordinal())
 			.writeInt(world.provider.dimensionId)
-			.writeInt(MathHelper.floor_double(x))
-			.writeInt(MathHelper.floor_double(y))
-			.writeInt(MathHelper.floor_double(z))
+			.writeFloat((float) x)
+			.writeFloat((float) y)
+			.writeFloat((float) z)
 			.writeByte(hits);
 		for(Channel channel : channels) {
 			if(channel != null) {
@@ -332,18 +331,15 @@ public class DriverCardNoise extends DriverCardSoundBase {
 			}
 		}
 		Computronics.packet.sendToAllAround(packet, new NetworkRegistry.TargetPoint(
-			world.provider.dimensionId,
-			MathHelper.floor_double(x),
-			MathHelper.floor_double(y),
-			MathHelper.floor_double(z), Config.SOUND_RADIUS));
+			world.provider.dimensionId, x, y, z, Config.SOUND_RADIUS));
 	}
 
 	public static void onSound(Packet packet, EntityPlayer player) throws IOException {
 		int dimension = packet.readInt();
 		if(isInDimension(player, dimension)) {
-			int x = packet.readInt();
-			int y = packet.readInt();
-			int z = packet.readInt();
+			float x = packet.readFloat();
+			float y = packet.readFloat();
+			float z = packet.readFloat();
 			int hits = packet.readUnsignedByte();
 			for(int i = 0; i < 8; i++) {
 				if(((hits >> i) & 1) == 1) {
@@ -353,7 +349,7 @@ public class DriverCardNoise extends DriverCardSoundBase {
 						float frequency = packet.readFloat();
 						short duration = packet.readShort();
 						short initialDelay = packet.readShort();
-						Audio.instance().play(x + 0.5f, y + 0.5f, z + 0.5f, type, frequency, duration & 0xFFFF, initialDelay);
+						Audio.instance().play(x, y, z, type, frequency, duration & 0xFFFF, initialDelay);
 					}
 				}
 			}

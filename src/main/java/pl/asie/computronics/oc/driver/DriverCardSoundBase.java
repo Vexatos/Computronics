@@ -6,7 +6,6 @@ import li.cil.oc.api.network.Connector;
 import li.cil.oc.api.network.EnvironmentHost;
 import li.cil.oc.api.prefab.ManagedEnvironment;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.network.PacketType;
@@ -124,9 +123,9 @@ public abstract class DriverCardSoundBase extends ManagedEnvironment implements 
 		}
 		Packet packet = Computronics.packet.create(PacketType.COMPUTER_BEEP.ordinal())
 			.writeInt(world.provider.dimensionId)
-			.writeInt(MathHelper.floor_double(x))
-			.writeInt(MathHelper.floor_double(y))
-			.writeInt(MathHelper.floor_double(z))
+			.writeFloat((float) x)
+			.writeFloat((float) y)
+			.writeFloat((float) z)
 			.writeByte(hits);
 		for(int i = 0; i < freqPairs.length; i++) {
 			Channel.FreqPair freqPair = freqPairs[i];
@@ -138,10 +137,7 @@ public abstract class DriverCardSoundBase extends ManagedEnvironment implements 
 			}
 		}
 		Computronics.packet.sendToAllAround(packet, new NetworkRegistry.TargetPoint(
-			world.provider.dimensionId,
-			MathHelper.floor_double(x),
-			MathHelper.floor_double(y),
-			MathHelper.floor_double(z), Config.SOUND_RADIUS));
+			world.provider.dimensionId, x, y, z, Config.SOUND_RADIUS));
 
 	}
 
@@ -150,16 +146,16 @@ public abstract class DriverCardSoundBase extends ManagedEnvironment implements 
 	public static void onSound(Packet packet, EntityPlayer player) throws IOException {
 		int dimension = packet.readInt();
 		if(isInDimension(player, dimension)) {
-			int x = packet.readInt();
-			int y = packet.readInt();
-			int z = packet.readInt();
+			float x = packet.readFloat();
+			float y = packet.readFloat();
+			float z = packet.readFloat();
 			int hits = packet.readUnsignedByte();
 			for(int i = 0; i < 8; i++) {
 				if(((hits >> i) & 1) == 1) {
 					AudioType type = AudioType.fromIndex(packet.readUnsignedByte());
 					float frequency = packet.readFloat();
 					short duration = packet.readShort();
-					Audio.instance().play(x + 0.5f, y + 0.5f, z + 0.5f, type, frequency, duration & 0xFFFF);
+					Audio.instance().play(x, y, z, type, frequency, duration & 0xFFFF);
 				}
 			}
 		}

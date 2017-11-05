@@ -50,18 +50,18 @@ public class TileSpeechBox extends TileEntityPeripheralBase implements IAudioSou
 		}
 
 		@Override
-		public int getSoundX() {
-			return xCoord;
+		public double getSoundX() {
+			return xCoord + 0.5D;
 		}
 
 		@Override
-		public int getSoundY() {
-			return yCoord;
+		public double getSoundY() {
+			return yCoord + 0.5D;
 		}
 
 		@Override
-		public int getSoundZ() {
-			return zCoord;
+		public double getSoundZ() {
+			return zCoord + 0.5D;
 		}
 
 		@Override
@@ -72,11 +72,6 @@ public class TileSpeechBox extends TileEntityPeripheralBase implements IAudioSou
 		@Override
 		public void receivePacket(AudioPacket packet, ForgeDirection direction) {
 			packet.addReceiver(this);
-		}
-
-		@Override
-		public boolean canMove() {
-			return false;
 		}
 	};
 

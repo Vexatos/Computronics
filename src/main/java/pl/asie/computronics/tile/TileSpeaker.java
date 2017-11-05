@@ -41,18 +41,18 @@ public class TileSpeaker extends TileEntityPeripheralBase implements IAudioRecei
 	}
 
 	@Override
-	public int getSoundX() {
-		return xCoord;
+	public double getSoundX() {
+		return xCoord + 0.5D;
 	}
 
 	@Override
-	public int getSoundY() {
-		return yCoord;
+	public double getSoundY() {
+		return yCoord + 0.5D;
 	}
 
 	@Override
-	public int getSoundZ() {
-		return zCoord;
+	public double getSoundZ() {
+		return zCoord + 0.5D;
 	}
 
 	@Override
@@ -68,11 +68,6 @@ public class TileSpeaker extends TileEntityPeripheralBase implements IAudioRecei
 			lastSource = packet.source;
 			packet.addReceiver(this);
 		}
-	}
-
-	@Override
-	public boolean canMove() {
-		return false;
 	}
 
 	@Override

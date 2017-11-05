@@ -50,18 +50,18 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 		}
 
 		@Override
-		public int getSoundX() {
-			return xCoord;
+		public double getSoundX() {
+			return xCoord + 0.5D;
 		}
 
 		@Override
-		public int getSoundY() {
-			return yCoord;
+		public double getSoundY() {
+			return yCoord + 0.5D;
 		}
 
 		@Override
-		public int getSoundZ() {
-			return zCoord;
+		public double getSoundZ() {
+			return zCoord + 0.5D;
 		}
 
 		@Override
@@ -72,11 +72,6 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 		@Override
 		public void receivePacket(AudioPacket packet, ForgeDirection direction) {
 			packet.addReceiver(this);
-		}
-
-		@Override
-		public boolean canMove() {
-			return false;
 		}
 	};
 
@@ -220,7 +215,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 	public void switchState(State s) {
 		//System.out.println("Switchy switch to " + s.name());
 		if(this.getEnumState() != s) {
-			this.state.switchState(worldObj, xCoord, yCoord, zCoord, s);
+			this.state.switchState(worldObj, s);
 			this.sendState();
 		}
 	}
@@ -286,7 +281,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 	public void updateEntity() {
 		super.updateEntity();
 		State st = getEnumState();
-		AudioPacket pkt = state.update(this, worldObj, xCoord, yCoord, zCoord);
+		AudioPacket pkt = state.update(this, worldObj);
 		if(pkt != null) {
 			int receivers = 0;
 			for(int i = 0; i < 6; i++) {

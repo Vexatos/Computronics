@@ -9,7 +9,6 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -31,7 +30,7 @@ import pl.asie.lib.network.Packet;
 public class PortableTapeDrive implements IAudioSource {
 
 	protected World world;
-	protected int x, y, z;
+	protected double x, y, z;
 	protected Entity carrier;
 	protected ItemStack self;
 	protected int time = 0;
@@ -45,9 +44,9 @@ public class PortableTapeDrive implements IAudioSource {
 
 	public void updateCarrier(Entity carrier, ItemStack self) {
 		this.world = carrier.worldObj;
-		this.x = MathHelper.floor_double(carrier.posX);
-		this.y = MathHelper.floor_double(carrier.posY);
-		this.z = MathHelper.floor_double(carrier.posZ);
+		this.x = carrier.posX;
+		this.y = carrier.posY;
+		this.z = carrier.posZ;
 		this.carrier = carrier;
 		this.self = self;
 	}
@@ -59,7 +58,7 @@ public class PortableTapeDrive implements IAudioSource {
 	public void switchState(TapeDriveState.State s) {
 		//System.out.println("Switchy switch to " + s.name());
 		if(this.getEnumState() != s) {
-			this.state.switchState(world, x, y, z, s);
+			this.state.switchState(world, s);
 			updateState();
 		}
 	}
@@ -73,7 +72,7 @@ public class PortableTapeDrive implements IAudioSource {
 			updateSound();
 		}
 		TapeDriveState.State st = getEnumState();
-		AudioPacket pkt = state.update(this, world, x, y, z);
+		AudioPacket pkt = state.update(this, world);
 		if(pkt != null) {
 			internalSpeaker.receivePacket(pkt, ForgeDirection.UNKNOWN);
 
@@ -143,12 +142,12 @@ public class PortableTapeDrive implements IAudioSource {
 	protected void updateSound() {
 		if(shouldPlaySound()) {
 			if(sound == null) {
-				sound = new MachineSound(soundRes, x + 0.5f, y + 0.5f, z + 0.5f, getVolume(), getPitch(), shouldRepeat()) {
+				sound = new MachineSound(soundRes, (float) x, (float) y, (float) z, getVolume(), getPitch(), shouldRepeat()) {
 					@Override
 					public void update() {
-						this.xPosF = PortableTapeDrive.this.x + 0.5f;
-						this.yPosF = PortableTapeDrive.this.y + 0.5f;
-						this.zPosF = PortableTapeDrive.this.z + 0.5f;
+						this.xPosF = (float) PortableTapeDrive.this.x;
+						this.yPosF = (float) PortableTapeDrive.this.y;
+						this.zPosF = (float) PortableTapeDrive.this.z;
 					}
 				};
 				FMLClientHandler.instance().getClient().getSoundHandler().playSound(sound);
@@ -219,14 +218,14 @@ public class PortableTapeDrive implements IAudioSource {
 		if(this.inventory == null) {
 			if(state.getStorage() != null) { // Tape was inserted
 				// Play eject sound
-				world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, "computronics:tape_eject", 1, 0);
+				world.playSoundEffect(x, y, z, "computronics:tape_eject", 1, 0);
 			}
 			unloadStorage();
 		} else {
 			loadStorage();
 			if(this.inventory.getItem() instanceof IItemTapeStorage) {
 				// Play insert sound
-				world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, "computronics:tape_insert", 1, 0);
+				world.playSoundEffect(x, y, z, "computronics:tape_insert", 1, 0);
 			}
 		}
 		save(getTag());
@@ -281,17 +280,17 @@ public class PortableTapeDrive implements IAudioSource {
 		}
 
 		@Override
-		public int getSoundX() {
+		public double getSoundX() {
 			return x;
 		}
 
 		@Override
-		public int getSoundY() {
+		public double getSoundY() {
 			return y;
 		}
 
 		@Override
-		public int getSoundZ() {
+		public double getSoundZ() {
 			return z;
 		}
 
@@ -303,11 +302,6 @@ public class PortableTapeDrive implements IAudioSource {
 		@Override
 		public void receivePacket(AudioPacket packet, ForgeDirection direction) {
 			packet.addReceiver(this);
-		}
-
-		@Override
-		public boolean canMove() {
-			return true;
 		}
 	};
 
