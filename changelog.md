@@ -20,6 +20,7 @@ This update comes with a port to Minecraft 1.12.1!
   * **[1.9.4]** FIXED: Tape Drive not making any insert or eject sound in multiplayer.
 
   * **[1.10.2]** ADDED: Sound Board for ComputerCraft! Works exactly the same as the sound card.
+  * **[1.10.2]** ADDED: Forge Energy support to the Ticket Machine.
 
   * **[1.11.2]** ADDED: Albedo support to the Colorful Lamp.
   * **[1.11.2]** FIXED: Manual not pointing at the correct directory.
