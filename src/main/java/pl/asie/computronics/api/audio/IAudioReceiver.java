@@ -9,4 +9,6 @@ public interface IAudioReceiver extends IAudioConnection {
 	Vec3 getSoundPos();
 	int getSoundDistance();
 	void receivePacket(AudioPacket packet, ForgeDirection side);
+
+	String getID();
 }

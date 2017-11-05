@@ -14,6 +14,7 @@ import pl.asie.computronics.Computronics;
 import pl.asie.computronics.api.audio.AudioPacket;
 import pl.asie.computronics.api.audio.IAudioReceiver;
 import pl.asie.computronics.api.audio.IAudioSource;
+import pl.asie.computronics.audio.AudioUtils;
 import pl.asie.computronics.cc.ISidedPeripheral;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
@@ -59,6 +60,11 @@ public class TileSpeaker extends TileEntityPeripheralBase implements IAudioRecei
 			lastSource = packet.source;
 			packet.addReceiver(this);
 		}
+	}
+
+	@Override
+	public String getID() {
+		return AudioUtils.positionId(xCoord, yCoord, zCoord);
 	}
 
 	@Override

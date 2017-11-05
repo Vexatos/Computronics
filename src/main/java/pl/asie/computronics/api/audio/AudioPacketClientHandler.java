@@ -10,10 +10,10 @@ public abstract class AudioPacketClientHandler {
 
 	@Deprecated
 	protected void playData(int packetId, int sourceId, int x, int y, int z, int distance, byte volume) {
-		playData(packetId, sourceId, x + 0.5F, y + 0.5F, z + 0.5F, distance, volume);
+		playData(packetId, sourceId, x + 0.5F, y + 0.5F, z + 0.5F, distance, volume, "");
 	}
 
-	protected abstract void playData(int packetId, int sourceId, float x, float y, float z, int distance, byte volume);
+	protected abstract void playData(int packetId, int sourceId, float x, float y, float z, int distance, byte volume, String deviceId);
 
 	public final void receivePacket(Packet packet) throws IOException {
 		int packetId = packet.readInt();
@@ -30,12 +30,13 @@ public abstract class AudioPacketClientHandler {
 			float z = packet.readFloat();
 			int distance = packet.readUnsignedShort();
 			byte volume = packet.readByte();
+			String deviceId = packet.readString();
 
 			if (dimension != WorldUtils.getCurrentClientDimension()) {
 				continue;
 			}
-			
-			playData(packetId, sourceId, x, y, z, distance, volume);
+
+			playData(packetId, sourceId, x, y, z, distance, volume, deviceId);
 		}
 	}
 }

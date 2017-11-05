@@ -24,6 +24,7 @@ import pl.asie.computronics.api.audio.AudioPacket;
 import pl.asie.computronics.api.audio.IAudioReceiver;
 import pl.asie.computronics.api.audio.IAudioSource;
 import pl.asie.computronics.api.tape.IItemTapeStorage;
+import pl.asie.computronics.audio.AudioUtils;
 import pl.asie.computronics.cc.ComputronicsFileMount;
 import pl.asie.computronics.network.PacketType;
 import pl.asie.computronics.reference.Config;
@@ -63,6 +64,11 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IInventor
 		@Override
 		public void receivePacket(AudioPacket packet, ForgeDirection direction) {
 			packet.addReceiver(this);
+		}
+
+		@Override
+		public String getID() {
+			return AudioUtils.positionId(xCoord, yCoord, zCoord);
 		}
 	};
 

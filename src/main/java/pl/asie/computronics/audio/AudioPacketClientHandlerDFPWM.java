@@ -33,10 +33,10 @@ public class AudioPacketClientHandlerDFPWM extends AudioPacketClientHandler {
 	}
 
 	@Override
-	protected void playData(int packetId, int codecId, float x, float y, float z, int distance, byte volume) {
+	protected void playData(int packetId, int codecId, float x, float y, float z, int distance, byte volume, String deviceId) {
 		StreamingAudioPlayer codec = Computronics.instance.audio.getPlayer(codecId);
 
 		codec.setHearing((float) distance, volume / 127.0F);
-		codec.play("computronics:dfpwm-" + codecId, x, y, z);
+		codec.play("computronics:dfpwm-" + codecId + (deviceId.isEmpty() ? "" : "-" + deviceId), x, y, z);
 	}
 }
