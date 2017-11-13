@@ -52,8 +52,8 @@ public class TileRadar extends TileEntityPeripheralBase implements IBatteryProvi
 			distance = 1;
 		}
 		return AxisAlignedBB.
-			getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 1, zCoord + 1).
-			expand(distance, distance, distance);
+			getBoundingBox(xCoord - distance, yCoord - distance, zCoord - distance,
+				       xCoord + distance, yCoord + distance, zCoord + distance);
 	}
 
 	public boolean extractFromBattery(double amount) {
