@@ -47,7 +47,7 @@ public class TileRadar extends TileEntityPeripheralBase {
 		final BlockPos pos = getPos();
 		return new AxisAlignedBB(
 			pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1
-		).expand(distance, distance, distance);
+		).grow(distance, distance, distance);
 	}
 
 	@Override

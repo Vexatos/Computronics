@@ -28,7 +28,7 @@ public class CCRadarProxy {
 			distance = 1;
 		}
 		return new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1).
-			expand(distance, distance, distance);
+			grow(distance, distance, distance);
 	}
 
 	@Optional.Method(modid = Mods.ComputerCraft)
