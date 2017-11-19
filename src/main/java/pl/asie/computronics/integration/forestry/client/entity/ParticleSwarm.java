@@ -1,6 +1,6 @@
 package pl.asie.computronics.integration.forestry.client.entity;
 
-import forestry.apiculture.PluginApiculture;
+import forestry.apiculture.ModuleApiculture;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.entity.Entity;
@@ -13,7 +13,7 @@ public class ParticleSwarm extends Particle {
 
 	public ParticleSwarm(World world, double x, double y, double z, int color) {
 		super(world, x, y, z, 0D, 0D, 0D);
-		setParticleTexture(PluginApiculture.getBeeSprite());
+		setParticleTexture(ModuleApiculture.getBeeSprite());
 
 		//From EntityFX.java
 		this.motionX = (Math.random() * 2.0D - 1.0D) * 0.4D;

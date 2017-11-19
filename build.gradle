@@ -117,7 +117,7 @@ dependencies {
         exclude module: "industrialcraft-2"
     }*/
     //provided "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech.version}:dev"
-    deobfCompile "mezz.jei:jei_1.12.1:${config.jei.version}"
+    deobfCompile "mezz.jei:jei_1.12.2:${config.jei.version}"
     provided "mcp.mobius.waila:Waila:${config.waila.version}"
     deobfCompile "mcjty.theoneprobe:TheOneProbe-1.12:${config.top.version}"
 
@@ -134,7 +134,7 @@ dependencies {
         exclude module: "CodeChickenCore"
         exclude module: "EquivalentExchange3"
     }*/
-    deobfCompile("net.sengir.forestry:forestry_1.12.1:${config.forestry.version}") {
+    deobfCompile("net.sengir.forestry:forestry_1.12.2:${config.forestry.version}") {
         exclude module: "buildcraft"
         exclude module: "industrialcraft-2"
         exclude module: "jei"
