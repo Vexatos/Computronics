@@ -88,22 +88,14 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void preInit() {
 		super.preInit();
-		if(Mods.isLoaded(Mods.OpenComputers)) {
-			if(Computronics.forestry != null) {
-				Computronics.forestry.registerOCEntityRenderers();
-			}
-		}
-		/*if(Computronics.railcraft != null) {
-			Computronics.railcraft.registerRenderers();
-		}*/
-		ItemPortableTapeDrive.MeshDefinition.registerRenderers();
+
+		registerRenderers();
 	}
 
 	@Override
 	public void init() {
 		super.init();
 		Audio.init();
-		registerRenderers();
 		registerColors();
 		MinecraftForge.EVENT_BUS.register(new TapeScrollEventHandler());
 	}
@@ -111,7 +103,7 @@ public class ClientProxy extends CommonProxy {
 	private void registerColors() {
 		Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new IItemColor() {
 			@Override
-			public int getColorFromItemstack(ItemStack stack, int tintIndex) {
+			public int colorMultiplier(ItemStack stack, int tintIndex) {
 				return stack.getItem() instanceof IItemWithColor ? ((IItemWithColor) stack.getItem()).getColorFromItemstack(stack, tintIndex) : 0xFFFFFFFF;
 			}
 		}, coloredItems.toArray(new Item[coloredItems.size()]));
@@ -136,6 +128,11 @@ public class ClientProxy extends CommonProxy {
 		/*if(Mods.API.hasAPI(Mods.API.BuildCraftStatements)) {
 			MinecraftForge.EVENT_BUS.register(new StatementTextureManager());
 		}*/
+		/*if(Computronics.railcraft != null) {
+			Computronics.railcraft.registerRenderers();
+		}*/
+
+		ItemPortableTapeDrive.MeshDefinition.registerRenderers();
 	}
 
 	@Override
@@ -186,6 +183,9 @@ public class ClientProxy extends CommonProxy {
 
 	@Optional.Method(modid = Mods.OpenComputers)
 	private void registerOpenComputersRenderers() {
+		if(Computronics.forestry != null) {
+			Computronics.forestry.registerOCEntityRenderers();
+		}
 		if(IntegrationOpenComputers.upgradeRenderer == null) {
 			IntegrationOpenComputers.upgradeRenderer = new UpgradeRenderer();
 		}

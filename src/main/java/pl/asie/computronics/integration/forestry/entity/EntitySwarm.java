@@ -84,7 +84,7 @@ public class EntitySwarm extends EntityFlyingCreature implements IBeeHousing {
 			if(player != null) {
 				if(player.isDead || (player.world.provider.getDimension() != this.world.provider.getDimension()) || this.isInsideOfMaterial(Material.WATER)
 					|| (getAttackTarget() == null
-					&& ((player.getDistanceSqToEntity(this) > 2500 && !canEntityBeSeen(player)) || player.isInsideOfMaterial(Material.WATER)))) {
+					&& ((player.getDistanceSq(this) > 2500 && !canEntityBeSeen(player)) || player.isInsideOfMaterial(Material.WATER)))) {
 					this.setDead();
 				}
 			} else if(!aggressive || getAttackTarget() == null) {
@@ -149,7 +149,7 @@ public class EntitySwarm extends EntityFlyingCreature implements IBeeHousing {
 		EntityLivingBase target = getAttackTarget();
 		if(target != null) {
 			if(target.isDead || (target == player && !aggressive) || target.isInsideOfMaterial(Material.WATER)
-				|| (this.getDistanceSqToEntity(target) > 25 && !this.canEntityBeSeen(target))) {
+				|| (this.getDistanceSq(target) > 25 && !this.canEntityBeSeen(target))) {
 				setAttackTarget(null);
 			} else {
 				double dist = moveTo(target, target.getEyeHeight(), 0.3f, 1f, 10f);
@@ -160,7 +160,7 @@ public class EntitySwarm extends EntityFlyingCreature implements IBeeHousing {
 					target.attackEntityFrom(!aggressive ? beeDamageSource : beeDamageSourceSelf, getAmplifier() + (aggressive ? 1F : 0F));
 				}
 			}
-		} else if(player != null && (player.getDistanceSqToEntity(this) < 100 || this.canEntityBeSeen(player))) {
+		} else if(player != null && (player.getDistanceSq(this) < 100 || this.canEntityBeSeen(player))) {
 			if(player.isActiveItemStackBlocking()) {
 				Vec3d look = player.getLookVec();
 				moveTo(player.posX + look.x, player.posY + look.y, player.posZ + look.z,
@@ -616,7 +616,7 @@ public class EntitySwarm extends EntityFlyingCreature implements IBeeHousing {
 
 	public static class SwarmHousingInventory implements IBeeHousingInventory {
 
-		private ItemStack queenStack;
+		private ItemStack queenStack = ItemStack.EMPTY;
 
 		@Override
 		public ItemStack getQueen() {

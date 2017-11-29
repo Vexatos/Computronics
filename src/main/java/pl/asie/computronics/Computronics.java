@@ -93,7 +93,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Mod(modid = Mods.Computronics, name = Mods.Computronics_NAME, version = "@VERSION@",
-	dependencies = "required-after:asielib;required-after:forge@[14.22.0.2452,);"
+	dependencies = "required-after:asielib;required-after:forge@[14.23.1.2555,);"
 		+ "after:computercraft;after:opencomputers@[1.7,);after:tis3d@[1.2.0,);"
 		+ "before:OpenPeripheralCore@[1.1,);before:OpenPeripheralApi@[3.2,);"
 		+ "after:MineFactoryReloaded;after:RedLogic@[59.1.9,);after:ProjRed|Core;"

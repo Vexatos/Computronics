@@ -90,7 +90,7 @@ public class EnchantmentTweak {
 					&& !player.isActiveItemStackBlocking()) {
 					player.attackTargetEntityWithCurrentItem(entity);
 					if(player.getHeldItemMainhand().isItemStackDamageable()) {
-						float distance = player.getDistanceToEntity(entity);
+						float distance = player.getDistance(entity);
 						int damage = Math.max(Math.min((int) distance + 1, 10), 1);
 						player.getHeldItemMainhand().damageItem(damage, player);
 					}
