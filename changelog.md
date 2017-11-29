@@ -1,3 +1,14 @@
+==== 1.6.6 ====
+
+This update drops 1.12.1 in favour of 1.12.2.
+
+  * CHANGED: Improvements to the audio system. Moving audio sources should be even better now.
+
+  * **[1.12.2]** CHANGED: Made positional audio more precise.
+  * **[1.12.2]** FIXED: Radar not working as it should.
+  * **[1.12.2]** FIXED: Bees.
+  * **[1.12.2]** FIXED: Server Rack Mountable renderers.
+
 ==== 1.6.5 ====
 
 This update comes with a port to Minecraft 1.12.1!
