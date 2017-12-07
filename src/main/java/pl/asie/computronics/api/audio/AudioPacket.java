@@ -86,7 +86,7 @@ public abstract class AudioPacket {
 						pkt.writeInt(receiver.getSoundWorld() != null ? receiver.getSoundWorld().provider.getDimension() : 0);
 						final Vec3d pos = receiver.getSoundPos();
 						pkt.writeFloat((float) pos.xCoord).writeFloat((float) pos.yCoord).writeFloat((float) pos.zCoord)
-							.writeShort((short) receiver.getSoundDistance()).writeByte(volume);
+							.writeShort((short) receiver.getSoundDistance()).writeByte(volume).writeString(receiver.getID());
 					}
 
 					Computronics.packet.sendTo(pkt, playerMP);

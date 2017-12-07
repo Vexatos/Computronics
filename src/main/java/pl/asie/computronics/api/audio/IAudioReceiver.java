@@ -16,4 +16,6 @@ public interface IAudioReceiver extends IAudioConnection {
 	int getSoundDistance();
 
 	void receivePacket(AudioPacket packet, @Nullable EnumFacing side);
+
+	String getID();
 }

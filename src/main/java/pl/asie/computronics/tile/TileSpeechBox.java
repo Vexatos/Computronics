@@ -66,6 +66,11 @@ public class TileSpeechBox extends TileEntityPeripheralBase implements IAudioSou
 			packet.addReceiver(this);
 		}
 
+		@Override
+		public String getID() {
+			return AudioUtils.positionId(pos);
+		}
+
 	};
 
 	private long lastCodecTime;

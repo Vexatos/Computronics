@@ -19,6 +19,7 @@ import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.api.audio.AudioPacket;
 import pl.asie.computronics.api.audio.IAudioReceiver;
 import pl.asie.computronics.api.audio.IAudioSource;
+import pl.asie.computronics.audio.AudioUtils;
 import pl.asie.computronics.audio.SoundCardPacket;
 import pl.asie.computronics.integration.charset.audio.IntegrationCharsetAudio;
 import pl.asie.computronics.reference.Config;
@@ -85,6 +86,11 @@ public class DriverCardSound extends ManagedEnvironmentWithComponentConnector im
 		@Override
 		public void receivePacket(AudioPacket packet, @Nullable EnumFacing direction) {
 			packet.addReceiver(this);
+		}
+
+		@Override
+		public String getID() {
+			return host instanceof TileEntity ? AudioUtils.positionId(host.xPosition(), host.yPosition(), host.zPosition()) : "";
 		}
 
 	};

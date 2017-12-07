@@ -15,6 +15,7 @@ import pl.asie.computronics.Computronics;
 import pl.asie.computronics.api.audio.AudioPacket;
 import pl.asie.computronics.api.audio.IAudioReceiver;
 import pl.asie.computronics.api.audio.IAudioSource;
+import pl.asie.computronics.audio.AudioUtils;
 import pl.asie.computronics.audio.SoundCardPacket;
 import pl.asie.computronics.cc.CCArgs;
 import pl.asie.computronics.cc.ISidedPeripheral;
@@ -229,6 +230,11 @@ public class TileSoundBoard extends TileEntityPeripheralBase implements IAudioSo
 		@Override
 		public void receivePacket(AudioPacket packet, @Nullable EnumFacing direction) {
 			packet.addReceiver(this);
+		}
+
+		@Override
+		public String getID() {
+			return AudioUtils.positionId(pos);
 		}
 
 	};

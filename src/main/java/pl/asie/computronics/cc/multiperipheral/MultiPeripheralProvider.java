@@ -52,7 +52,7 @@ public class MultiPeripheralProvider implements IPeripheralProvider {
 			}
 		}*/
 		if(!periphs.isEmpty()) {
-			return new MultiPeripheral(periphs, world, pos);
+			return periphs.size() == 1 ? periphs.get(0) : new MultiPeripheral(periphs);
 		}
 		return null;
 	}

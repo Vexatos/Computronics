@@ -6,6 +6,7 @@ import net.minecraft.world.World;
 import pl.asie.charset.api.audio.AudioSink;
 import pl.asie.computronics.api.audio.AudioPacket;
 import pl.asie.computronics.api.audio.IAudioReceiver;
+import pl.asie.computronics.audio.AudioUtils;
 
 import javax.annotation.Nullable;
 
@@ -38,6 +39,11 @@ public class AudioReceiverConverted implements IAudioReceiver {
 	@Override
 	public void receivePacket(AudioPacket packet, @Nullable EnumFacing side) {
 
+	}
+
+	@Override
+	public String getID() {
+		return AudioUtils.positionId(sink.getPos());
 	}
 
 	@Override

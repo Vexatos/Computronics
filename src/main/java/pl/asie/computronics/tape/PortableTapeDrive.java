@@ -299,6 +299,11 @@ public class PortableTapeDrive implements IAudioSource {
 			packet.addReceiver(this);
 		}
 
+		@Override
+		public String getID() {
+			return ""; // Not needed since there is always only this one receiver.
+		}
+
 	};
 
 	@Override

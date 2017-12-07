@@ -81,6 +81,11 @@ public class RobotUpgradeSpeech extends ManagedEnvironmentWithComponentConnector
 			packet.addReceiver(this);
 		}
 
+		@Override
+		public String getID() {
+			return host instanceof TileEntity ? AudioUtils.positionId(host.xPosition(), host.yPosition(), host.zPosition()) : "";
+		}
+
 	};
 
 	protected Vec3d getPos() {
