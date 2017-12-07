@@ -7,7 +7,6 @@ import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import li.cil.oc.Settings;
 import li.cil.oc.api.network.BlacklistedPeripheral;
-import net.minecraft.world.World;
 import pl.asie.computronics.api.multiperipheral.IMultiPeripheral;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
@@ -28,9 +27,6 @@ public class MultiPeripheral implements IPeripheral, BlacklistedPeripheral {
 	private IMultiPeripheral highest;
 	private HashMap<String, IMultiPeripheral> methods;
 	private String[] methodNames;
-
-	private World world;
-	private int x, y, z;
 
 	public MultiPeripheral(ArrayList<IMultiPeripheral> peripherals) {
 		this.initialize(peripherals);
@@ -58,14 +54,6 @@ public class MultiPeripheral implements IPeripheral, BlacklistedPeripheral {
 		}
 		this.methods = methods;
 		this.methodNames = m.toArray(new String[m.size()]);
-	}
-
-	public MultiPeripheral(ArrayList<IMultiPeripheral> periphs, World world, int x, int y, int z) {
-		this(periphs);
-		this.world = world;
-		this.x = x;
-		this.y = y;
-		this.z = z;
 	}
 
 	@Override
@@ -126,8 +114,21 @@ public class MultiPeripheral implements IPeripheral, BlacklistedPeripheral {
 		}
 		if(this.getClass().isInstance(other)) {
 			MultiPeripheral o = this.getClass().cast(other);
-			if(world == o.world && x == o.x && z == o.z && y == o.y) {
-				return true;
+			if(peripherals.size() != o.peripherals.size()) {
+				return false;
+			}
+			for(IPeripheral p : peripherals) {
+				boolean found = false;
+				for(IPeripheral otherPeriph : o.peripherals) {
+					if(p.equals(otherPeriph)) {
+						found = true;
+						break;
+					}
+				}
+
+				if(!found) {
+					return false;
+				}
 			}
 		}
 		for(IMultiPeripheral peripheral : peripherals) {
