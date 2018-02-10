@@ -11,7 +11,6 @@ import li.cil.oc.api.network.Visibility;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
@@ -91,7 +90,7 @@ public class DriverCardSound extends ManagedEnvironmentWithComponentConnector im
 
 		@Override
 		public String getID() {
-			return host instanceof TileEntity ? AudioUtils.positionId(new BlockPos(host.xPosition(), host.yPosition(), host.zPosition())) : "";
+			return host instanceof TileEntity ? AudioUtils.positionId(host.xPosition(), host.yPosition(), host.zPosition()) : "";
 		}
 
 	};

@@ -16,6 +16,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import pl.asie.computronics.api.audio.AudioPacket;
 import pl.asie.computronics.api.audio.IAudioReceiver;
 import pl.asie.computronics.api.audio.IAudioSource;
+import pl.asie.computronics.audio.AudioUtils;
 
 import javax.annotation.Nullable;
 
@@ -180,13 +181,13 @@ public class Capabilities {
 		}
 
 		@Override
-		public boolean connectsAudio(EnumFacing side) {
-			return false;
+		public String getID() {
+			return AudioUtils.positionId(0, 0, 0);
 		}
 
 		@Override
-		public String getID() {
-			return "";
+		public boolean connectsAudio(EnumFacing side) {
+			return false;
 		}
 	}
 

@@ -30,9 +30,6 @@ public class MultiPeripheral implements IPeripheral, BlacklistedPeripheral {
 	private HashMap<String, IMultiPeripheral> methods;
 	private String[] methodNames;
 
-	private World world;
-	private BlockPos pos;
-
 	public MultiPeripheral(ArrayList<IMultiPeripheral> peripherals) {
 		this.initialize(peripherals);
 	}
@@ -59,12 +56,6 @@ public class MultiPeripheral implements IPeripheral, BlacklistedPeripheral {
 		}
 		this.methods = methods;
 		this.methodNames = m.toArray(new String[m.size()]);
-	}
-
-	public MultiPeripheral(ArrayList<IMultiPeripheral> periphs, World world, BlockPos pos) {
-		this(periphs);
-		this.world = world;
-		this.pos = pos;
 	}
 
 	@Override
@@ -125,8 +116,21 @@ public class MultiPeripheral implements IPeripheral, BlacklistedPeripheral {
 		}
 		if(this.getClass().isInstance(other)) {
 			MultiPeripheral o = this.getClass().cast(other);
-			if(world == o.world && pos.equals(o.pos)) {
-				return true;
+			if(peripherals.size() != o.peripherals.size()) {
+				return false;
+			}
+			for(IPeripheral p : peripherals) {
+				boolean found = false;
+				for(IPeripheral otherPeriph : o.peripherals) {
+					if(p.equals(otherPeriph)) {
+						found = true;
+						break;
+					}
+				}
+
+				if(!found) {
+					return false;
+				}
 			}
 		}
 		for(IMultiPeripheral peripheral : peripherals) {

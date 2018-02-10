@@ -50,6 +50,6 @@ public class WrappedMultiPeripheral implements IMultiPeripheral {
 
 	@Override
 	public boolean equals(IPeripheral other) {
-		return peripheral.equals(other);
+		return other != null && other.equals(peripheral);
 	}
 }

@@ -1,7 +1,6 @@
 package pl.asie.computronics.integration.charset.audio;
 
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import pl.asie.charset.api.audio.AudioSink;
@@ -44,7 +43,7 @@ public class AudioReceiverConverted implements IAudioReceiver {
 
 	@Override
 	public String getID() {
-		return AudioUtils.positionId(new BlockPos(sink.getPos()));
+		return AudioUtils.positionId(sink.getPos());
 	}
 
 	@Override
