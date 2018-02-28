@@ -25,8 +25,8 @@ import pl.asie.lib.tile.TileMachine;
 import pl.asie.lib.util.ColorUtils;
 import pl.asie.lib.util.internal.IColorable;
 
-import java.util.ArrayList;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 // #######################################################
 //
@@ -83,7 +83,7 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 	// Has to be an Object for getDeclaredFields to not error when
 	// called on this class without OpenComputers being present. Blame OpenPeripheral.
 	private Object node;
-	protected ArrayList<IComputerAccess> attachedComputersCC;
+	protected CopyOnWriteArrayList<IComputerAccess> attachedComputersCC;
 	protected boolean addedToNetwork = false;
 
 	@Override
@@ -219,7 +219,7 @@ public abstract class TileEntityPeripheralBase extends TileMachine implements En
 	@Optional.Method(modid = Mods.ComputerCraft)
 	public void attach(IComputerAccess computer) {
 		if(attachedComputersCC == null) {
-			attachedComputersCC = new ArrayList<IComputerAccess>(2);
+			attachedComputersCC = new CopyOnWriteArrayList<IComputerAccess>();
 		}
 		attachedComputersCC.add(computer);
 	}

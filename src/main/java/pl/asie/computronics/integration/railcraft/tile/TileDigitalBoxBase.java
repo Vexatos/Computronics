@@ -27,8 +27,8 @@ import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.OCUtils;
 import pl.asie.computronics.util.internal.IComputronicsPeripheral;
 
-import java.util.ArrayList;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * @author CovertJaguar, Vexatos
@@ -128,7 +128,7 @@ public abstract class TileDigitalBoxBase extends TileBoxBase
 	// Has to be an Object for getDeclaredFields to not error when
 	// called on this class without OpenComputers being present. Blame OpenPeripheral.
 	protected Object node;
-	protected ArrayList<IComputerAccess> attachedComputersCC;
+	protected CopyOnWriteArrayList<IComputerAccess> attachedComputersCC;
 	protected boolean addedToNetwork = false;
 
 	@Override
@@ -241,7 +241,7 @@ public abstract class TileDigitalBoxBase extends TileBoxBase
 	@Optional.Method(modid = Mods.ComputerCraft)
 	public void attach(IComputerAccess computer) {
 		if(attachedComputersCC == null) {
-			attachedComputersCC = new ArrayList<IComputerAccess>(2);
+			attachedComputersCC = new CopyOnWriteArrayList<IComputerAccess>();
 		}
 		attachedComputersCC.add(computer);
 	}
