@@ -385,14 +385,16 @@ public class Computronics {
 		} else {
 			ModRecipes.instance = new ModRecipes();
 		}
+		
 		if(ModRecipes.instance != null) {
-			ModRecipes.instance.registerRecipes();
+			if (!(Loader.isModLoaded("dreamcraft")))
+				ModRecipes.instance.registerRecipes();
 		} else {
 			log.error("Could not register recipes, an error occured!");
 		}
 
 		// Mod compat - GregTech
-		if(itemTape != null && itemPartsGreg != null) {
+		if(itemTape != null && itemPartsGreg != null && (!(Loader.isModLoaded("dreamcraft")))) {
 			if(Mods.hasVersion(Mods.GregTech, Mods.Versions.GregTech5)) {
 				GregTech5Recipes.registerStandardGregTechRecipes();
 			} else if(Mods.hasVersion(Mods.GregTech, Mods.Versions.GregTech6)) {
