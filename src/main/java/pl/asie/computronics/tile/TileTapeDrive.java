@@ -728,7 +728,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 					return new Object[] { (state.getStorage() != null ? storageName : null) };
 				case 10: // write
 					if(state.getStorage() != null) {
-						return new Object[] { write(((String) arguments[0]).getBytes(Charsets.UTF_8)) };
+						return new Object[] { write(((String) arguments[0]).getBytes(Charsets.ISO_8859_1)) };
 					}
 					break;
 			}
@@ -754,7 +754,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 						if(i >= 256) {
 							i = 256;
 						}
-						return new Object[] { new String(read(i), Charsets.UTF_8) };
+						return new Object[] { new String(read(i), Charsets.ISO_8859_1) };
 					} else {
 						return new Object[] {};
 					}
