@@ -38,5 +38,5 @@ public interface IBattery {
 	public double getMaxEnergyUsage();
 
 	@Nullable
-	IEnergyStorage getStorage(EnumFacing side);
+	IEnergyStorage getStorage(@Nullable EnumFacing side);
 }

@@ -256,6 +256,7 @@ public class Computronics {
 			gui.registerGuiProvider(Computronics.guiCipher);
 			cipher = new BlockCipher();
 			registerBlockWithTileEntity(cipher, TileCipherBlock.class, "cipher");
+			FMLInterModComms.sendMessage(Mods.Charset, "addLock", cipher.getRegistryName());
 		}
 
 		if(isEnabled("cipher_advanced", true)) {

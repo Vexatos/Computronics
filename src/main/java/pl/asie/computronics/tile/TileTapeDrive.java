@@ -85,7 +85,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 
 	public TileTapeDrive() {
 		super("tape_drive");
-		this.createInventory(1);
+		this.createInventory(new TapeDriveItemHandler());
 		this.state = new TapeDriveState();
 	}
 
@@ -331,7 +331,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 	// Minecraft boilerplate
 
 	private void setLabel(String label) {
-		ItemStack stack = this.getStackInSlot(0);
+		ItemStack stack = this.items.getStackInSlot(0);
 		if(!stack.isEmpty() && stack.getTagCompound() != null) {
 			if(label.length() == 0 && stack.getTagCompound().hasKey("label")) {
 				stack.getTagCompound().removeTag("label");
@@ -392,7 +392,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 		if(state.getStorage() != null) {
 			unloadStorage();
 		}
-		ItemStack stack = this.getStackInSlot(0);
+		ItemStack stack = this.items.getStackInSlot(0);
 		if(!stack.isEmpty()) {
 			// Get Storage.
 			Item item = stack.getItem();
@@ -429,34 +429,41 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 	}
 
 	@Override
-	public void onSlotUpdate(int slot) {
-		if(this.getStackInSlot(0).isEmpty()) {
-			if(state.getStorage() != null) { // Tape was inserted
-				// Play eject sound
-				BlockPos pos = getPos();
-				world.playSound(null, pos, Sounds.TAPE_EJECT.event, SoundCategory.BLOCKS, 1, 0);
-			}
-			unloadStorage();
-		} else {
-			loadStorage();
-			ItemStack stack = this.getStackInSlot(0);
-			if(!stack.isEmpty() && stack.getItem() instanceof IItemTapeStorage) {
-				// Play insert sound
-				BlockPos pos = getPos();
-				world.playSound(null, pos, Sounds.TAPE_INSERT.event, SoundCategory.BLOCKS, 1, 0);
-			}
-		}
-	}
-
-	@Override
 	public void onChunkUnload() {
 		unloadStorage();
 		super.onChunkUnload();
 	}
 
-	@Override
-	public int getSizeInventory() {
-		return 1;
+	public class TapeDriveItemHandler extends ItemHandler {
+
+		public TapeDriveItemHandler() {
+			super(1);
+		}
+
+		@Override
+		public void onSlotUpdate(int slot) {
+			if(this.getStackInSlot(0).isEmpty()) {
+				if(state.getStorage() != null) { // Tape was inserted
+					// Play eject sound
+					BlockPos pos = getPos();
+					world.playSound(null, pos, Sounds.TAPE_EJECT.event, SoundCategory.BLOCKS, 1, 0);
+				}
+				unloadStorage();
+			} else {
+				loadStorage();
+				ItemStack stack = this.getStackInSlot(0);
+				if(!stack.isEmpty() && stack.getItem() instanceof IItemTapeStorage) {
+					// Play insert sound
+					BlockPos pos = getPos();
+					world.playSound(null, pos, Sounds.TAPE_INSERT.event, SoundCategory.BLOCKS, 1, 0);
+				}
+			}
+		}
+
+		@Override
+		public int getSlots() {
+			return 1;
+		}
 	}
 
 	@Override

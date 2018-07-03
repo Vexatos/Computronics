@@ -135,7 +135,7 @@ public class BatteryBasic implements IBattery {
 
 	@Override
 	@Nullable
-	public IEnergyStorage getStorage(EnumFacing side) {
+	public IEnergyStorage getStorage(@Nullable EnumFacing side) {
 		return energyStorage;
 	}
 

@@ -1,15 +1,14 @@
 package pl.asie.lib.tile;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
 import pl.asie.lib.api.tile.IBattery;
 
 import javax.annotation.Nullable;
@@ -18,13 +17,13 @@ import java.util.Arrays;
 /*@Optional.InterfaceList({
 	@Optional.Interface(iface = "mods.immibis.redlogic.api.wiring.IConnectable", modid = Mods.RedLogic)
 })*/
-public class TileMachine extends TileEntityBase implements
-	/*IConnectable,*/ ISidedInventory /* RedLogic */ {
+public class TileMachine extends TileEntityBase
+	/*IConnectable, ISidedInventory, RedLogic */ {
 
 	private IBattery battery;
 	//private IBundledRedstoneProvider brP;
-	@Nullable
-	private ItemStack[] items;
+
+	public ItemHandler items = null;
 
 	public TileMachine() {
 	}
@@ -46,8 +45,11 @@ public class TileMachine extends TileEntityBase implements
 	}
 
 	protected void createInventory(int slots) {
-		this.items = new ItemStack[slots];
-		Arrays.fill(this.items, ItemStack.EMPTY);
+		this.items = new ItemHandler(slots);
+	}
+
+	protected void createInventory(ItemHandler itemHandler) {
+		this.items = itemHandler;
 	}
 
 	@Override
@@ -178,166 +180,177 @@ public class TileMachine extends TileEntityBase implements
 
 	// Inventory
 
-	@Override
-	public void closeInventory() {
-	}
+	public class ItemHandler implements IItemHandler {
 
-	@Override
-	public void openInventory() {
-	}
+		private ItemStack[] stacks;
 
-	public void onSlotUpdate(int slot) {
+		public ItemHandler(int slots) {
+			this.stacks = new ItemStack[slots];
+			Arrays.fill(this.stacks, ItemStack.EMPTY);
+		}
 
-	}
+		@Override
+		public int getSlots() {
+			return this.stacks.length;
+		}
 
-	@Override
-	public ItemStack decrStackSize(int slot, int amount) {
-		if(this.items != null && !this.items[slot].isEmpty()) {
-			ItemStack stack;
-			if(this.items[slot].getCount() <= amount) {
-				stack = this.items[slot];
-				this.items[slot] = ItemStack.EMPTY;
-				this.onSlotUpdate(slot);
-				return stack;
-			} else {
-				stack = this.items[slot].splitStack(amount);
-
-				if(this.items[slot].getCount() == 0) {
-					this.items[slot] = ItemStack.EMPTY;
+		public boolean isEmpty() {
+			for(ItemStack item : this.stacks) {
+				if(!item.isEmpty()) {
+					return false;
 				}
-
-				this.onSlotUpdate(slot);
-
-				return stack;
 			}
-		} else {
-			return ItemStack.EMPTY;
-		}
-	}
-
-	@Override
-	public ItemStack removeStackFromSlot(int index) {
-		return ItemStack.EMPTY;
-	}
-
-	@Override
-	public String getName() {
-		return this.blockType != null ? this.blockType.getUnlocalizedName() + ".inventory" : "unknown.inventory";
-	}
-
-	@Override
-	public boolean hasCustomName() {
-		return false;
-	}
-
-	@Override
-	public ITextComponent getDisplayName() {
-		return new TextComponentTranslation(getName());
-	}
-
-	@Override
-	public int getInventoryStackLimit() {
-		return 64;
-	}
-
-	@Override
-	public void openInventory(EntityPlayer player) {
-
-	}
-
-	@Override
-	public void closeInventory(EntityPlayer player) {
-
-	}
-
-	@Override
-	public int getSizeInventory() {
-		if(this.items != null) {
-			return this.items.length;
-		} else {
-			return 0;
-		}
-	}
-
-	@Override
-	public boolean isEmpty() {
-		if(this.items == null) {
 			return true;
 		}
-		for(ItemStack item : this.items) {
-			if(!item.isEmpty()) {
-				return false;
+
+		public void setStack(int slot, ItemStack stack) {
+			if(slot >= 0 && slot < this.stacks.length) {
+				this.stacks[slot] = stack;
+				this.onSlotUpdate(slot);
 			}
 		}
-		return true;
-	}
 
-	@Override
-	public ItemStack getStackInSlot(int slot) {
-		if(this.items != null && slot >= 0 && slot < this.items.length) {
-			return this.items[slot];
-		} else {
-			return ItemStack.EMPTY;
+		public void onSlotUpdate(int slot) {
+
 		}
-	}
 
-	@Override
-	public boolean isItemValidForSlot(int slot, ItemStack stack) {
-		return this.items != null && slot >= 0 && slot < this.items.length;
-	}
+		public boolean canInsert(int slot, ItemStack stack) {
+			return true;
+		}
 
-	@Override
-	public int getField(int id) {
-		return 0;
-	}
+		public boolean canExtract(int slot, int amount) {
+			return true;
+		}
 
-	@Override
-	public void setField(int id, int value) {
-
-	}
-
-	@Override
-	public int getFieldCount() {
-		return 0;
-	}
-
-	@Override
-	public void clear() {
-		if(this.items != null) {
-			for(int i = 0; i < this.items.length; i++) {
-				this.setInventorySlotContents(i, ItemStack.EMPTY);
+		public void clearInventory() {
+			for(int i = 0; i < this.stacks.length; i++) {
+				this.setStack(i, ItemStack.EMPTY);
 			}
 		}
-	}
 
-	@Override
-	public void setInventorySlotContents(int slot, ItemStack stack) {
-		if(this.items != null && slot >= 0 && slot < this.items.length) {
-			this.items[slot] = stack;
-			this.onSlotUpdate(slot);
+		@Override
+		public ItemStack getStackInSlot(int slot) {
+			if(slot >= 0 && slot < this.stacks.length) {
+				return this.stacks[slot];
+			} else {
+				return ItemStack.EMPTY;
+			}
+		}
+
+		@Override
+		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+			if(canInsert(slot, stack) && slot >= 0 && slot < stacks.length) {
+				if(stacks[slot].isEmpty()) {
+					setStack(slot, stack.copy());
+					return ItemStack.EMPTY;
+				} else if(ItemHandlerHelper.canItemStacksStack(stacks[slot], stack)) {
+					int toAdd = Math.min(stack.getCount(), Math.min(getSlotLimit(slot), stacks[slot].getMaxStackSize()) - stacks[slot].getCount());
+					stacks[slot].grow(toAdd);
+					stack.shrink(toAdd);
+					this.onSlotUpdate(slot);
+				}
+			}
+			return stack;
+		}
+
+		@Override
+		public ItemStack extractItem(int slot, int amount, boolean simulate) {
+			if(canExtract(slot, amount) && slot >= 0 && slot < stacks.length && !stacks[slot].isEmpty()) {
+				ItemStack stack;
+				if(stacks[slot].getCount() <= amount) {
+					stack = stacks[slot];
+					stacks[slot] = ItemStack.EMPTY;
+					onSlotUpdate(slot);
+					return stack;
+				} else {
+					stack = stacks[slot].splitStack(amount);
+
+					if(stacks[slot].getCount() == 0) {
+						stacks[slot] = ItemStack.EMPTY;
+					}
+
+					onSlotUpdate(slot);
+
+					return stack;
+				}
+			} else {
+				return ItemStack.EMPTY;
+			}
+		}
+
+		@Override
+		public int getSlotLimit(int slot) {
+			return 64;
+		}
+
+		private void setStacks(ItemStack[] stacks) {
+			this.stacks = stacks;
 		}
 	}
 
-	@Override
-	public int[] getSlotsForFace(EnumFacing side) {
-		if(this.items == null) {
-			return new int[0];
-		}
-		int[] slots = new int[this.items.length];
-		for(int i = 0; i < slots.length; i++) {
-			slots[i] = i;
-		}
-		return slots;
-	}
+	public class DelegateItemHandler extends ItemHandler {
 
-	@Override
-	public boolean canInsertItem(int index, ItemStack itemStackIn, EnumFacing direction) {
-		return true;
-	}
+		protected final ItemHandler delegate;
 
-	@Override
-	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction) {
-		return true;
+		public DelegateItemHandler(ItemHandler delegate) {
+			super(0);
+			this.delegate = delegate;
+		}
+
+		@Override
+		public int getSlots() {
+			return delegate.getSlots();
+		}
+
+		@Override
+		public boolean isEmpty() {
+			return delegate.isEmpty();
+		}
+
+		@Override
+		public void setStack(int slot, ItemStack stack) {
+			delegate.setStack(slot, stack);
+		}
+
+		@Override
+		public void onSlotUpdate(int slot) {
+			delegate.onSlotUpdate(slot);
+		}
+
+		@Override
+		public boolean canInsert(int slot, ItemStack stack) {
+			return delegate.canInsert(slot, stack);
+		}
+
+		@Override
+		public boolean canExtract(int slot, int amount) {
+			return delegate.canExtract(slot, amount);
+		}
+
+		@Override
+		public void clearInventory() {
+			delegate.clearInventory();
+		}
+
+		@Override
+		public ItemStack getStackInSlot(int slot) {
+			return delegate.getStackInSlot(slot);
+		}
+
+		@Override
+		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+			return delegate.insertItem(slot, stack, simulate);
+		}
+
+		@Override
+		public ItemStack extractItem(int slot, int amount, boolean simulate) {
+			return delegate.extractItem(slot, amount, simulate);
+		}
+
+		@Override
+		public int getSlotLimit(int slot) {
+			return delegate.getSlotLimit(slot);
+		}
 	}
 
 	// Energy (RF)
@@ -507,19 +520,19 @@ public class TileMachine extends TileEntityBase implements
 		}
 		if(this.items != null) {
 			NBTTagList nbttaglist = tagCompound.getTagList("Inventory", 10);
-			this.items = new ItemStack[this.getSizeInventory()];
+			this.items.setStacks(new ItemStack[this.items.getSlots()]);
 
 			for(int i = 0; i < nbttaglist.tagCount(); ++i) {
 				NBTTagCompound nbttagcompound1 = nbttaglist.getCompoundTagAt(i);
 				int j = nbttagcompound1.getByte("Slot") & 255;
 
-				if(j >= 0 && j < this.items.length) {
-					this.items[j] = new ItemStack(nbttagcompound1);
+				if(j >= 0 && j < this.items.stacks.length) {
+					this.items.stacks[j] = new ItemStack(nbttagcompound1);
 				}
 			}
-			for(int i = 0; i < items.length; i++) {
-				if(items[i] == null) {
-					items[i] = ItemStack.EMPTY;
+			for(int i = 0; i < items.stacks.length; i++) {
+				if(items.stacks[i] == null) {
+					items.stacks[i] = ItemStack.EMPTY;
 				}
 			}
 		}
@@ -533,8 +546,8 @@ public class TileMachine extends TileEntityBase implements
 		}
 		if(this.items != null) {
 			NBTTagList itemList = new NBTTagList();
-			for(int i = 0; i < items.length; i++) {
-				ItemStack stack = items[i];
+			for(int i = 0; i < items.stacks.length; i++) {
+				ItemStack stack = items.stacks[i];
 				if(stack != null && !stack.isEmpty()) {
 					NBTTagCompound tag = new NBTTagCompound();
 					tag.setByte("Slot", (byte) i);
@@ -553,18 +566,29 @@ public class TileMachine extends TileEntityBase implements
 		data.removeTag("bb_energy");
 	}
 
+	@Nullable
+	protected IItemHandler getItemHandler(@Nullable EnumFacing side) {
+		return items;
+	}
+
 	@Override
-	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
 		if(battery != null && capability == CapabilityEnergy.ENERGY && battery.getStorage(facing) != null) {
+			return true;
+		}
+		if(items != null && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
 			return true;
 		}
 		return super.hasCapability(capability, facing);
 	}
 
 	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
 		if(battery != null && capability == CapabilityEnergy.ENERGY && battery.getStorage(facing) != null) {
 			return CapabilityEnergy.ENERGY.cast(battery.getStorage(facing));
+		}
+		if(items != null && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+			return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(getItemHandler(facing));
 		}
 		return super.getCapability(capability, facing);
 	}

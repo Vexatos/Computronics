@@ -86,7 +86,7 @@ public class InfoTapeDrive extends ComputronicsInfoProvider {
 			return;
 		}
 		TileTapeDrive tile = (TileTapeDrive) tileEntity;
-		ItemStack is = tile.getStackInSlot(0);
+		ItemStack is = tile.items.getStackInSlot(0);
 		if(!is.isEmpty() && is.getItem() instanceof IItemTapeStorage) {
 			String label = Computronics.itemTape.getLabel(is);
 			if(label.length() > 0) {

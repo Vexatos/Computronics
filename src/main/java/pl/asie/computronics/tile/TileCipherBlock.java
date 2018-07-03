@@ -7,18 +7,13 @@ import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.world.ILockableContainer;
-import net.minecraft.world.LockCode;
 import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.items.IItemHandler;
 import pl.asie.computronics.Computronics;
-import pl.asie.computronics.gui.container.ContainerCipherBlock;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.OCUtils;
@@ -30,7 +25,7 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-public class TileCipherBlock extends TileEntityPeripheralBase implements IBundledRedstoneProvider, ISidedInventory, ILockableContainer {
+public class TileCipherBlock extends TileEntityPeripheralBase implements IBundledRedstoneProvider {
 
 	private byte[] key = new byte[32];
 	private byte[] iv = new byte[16];
@@ -51,8 +46,8 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements IBundle
 	public void updateKey() {
 		byte[] realKey = new byte[16];
 		for(int i = 0; i < 6; i++) {
-			ItemStack stack = this.getStackInSlot(i);
-			if(stack.isEmpty() || stack.getItem() == null) {
+			ItemStack stack = this.items.getStackInSlot(i);
+			if(stack.isEmpty()) {
 				key[i * 5] = 0;
 				key[i * 5 + 1] = 0;
 			} else {
@@ -131,7 +126,7 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements IBundle
 				return new Object[] { encrypt(args.checkString(0)) };
 			}
 		}
-		return null;
+		return new Object[] {};
 	}
 
 	@Callback(doc = "function(message:string):string; Decrypts the specified message", direct = true)
@@ -140,7 +135,7 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements IBundle
 		if(args.count() >= 1 && args.isString(0)) {
 			return new Object[] { decrypt(args.checkString(0)) };
 		}
-		return null;
+		return new Object[] {};
 	}
 
 	@Callback(doc = "function():boolean; Returns whether the block is currently locked", direct = true)
@@ -155,7 +150,7 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements IBundle
 		if(args.count() == 1 && args.isBoolean(0)) {
 			this.setLocked(args.checkBoolean(0));
 		}
-		return null;
+		return new Object[] {};
 	}
 
 	@Override
@@ -195,8 +190,8 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements IBundle
 	private int getBundledXORKey() {
 		int key = 0;
 		for(int i = 0; i < 6; i++) {
-			ItemStack stack = this.getStackInSlot(i);
-			if(stack.isEmpty() || stack.getItem() == null) {
+			ItemStack stack = this.items.getStackInSlot(i);
+			if(stack.isEmpty()) {
 				continue;
 			}
 
@@ -266,26 +261,16 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements IBundle
 	}
 
 	@Override
-	public void onSlotUpdate(int slot) {
-		updateKey();
-		updateOutputWires();
-	}
-
-	@Override
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
 		if(tag.hasKey("cb_l") && Config.CIPHER_CAN_LOCK) {
 			this.forceLocked = tag.getBoolean("cb_l");
 		}
-		this.code = LockCode.fromNBT(tag);
 	}
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
-		if(this.code != null) {
-			this.code.toNBT(tag);
-		}
 		if(this.forceLocked) {
 			tag.setBoolean("cb_l", true);
 		}
@@ -331,38 +316,65 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements IBundle
 
 	// Security
 
+	private final CipherItemHandler[] cipherItemHandlers = new CipherItemHandler[EnumFacing.VALUES.length];
+
+	@Nullable
 	@Override
-	public ItemStack getStackInSlot(int slot) {
-		if(isLocked()) {
-			return ItemStack.EMPTY;
-		} else {
-			return super.getStackInSlot(slot);
+	protected IItemHandler getItemHandler(@Nullable EnumFacing side) {
+		if(side == null) {
+			return null;
 		}
+		return cipherItemHandlers[side.ordinal()] != null ? cipherItemHandlers[side.ordinal()] : (cipherItemHandlers[side.ordinal()] = new CipherItemHandler(side));
 	}
 
-	@Override
-	public void setInventorySlotContents(int slot, ItemStack stack) {
-		if(!isLocked()) {
-			super.setInventorySlotContents(slot, stack);
+	public class CipherItemHandler extends DelegateItemHandler {
+
+		private final EnumFacing side;
+
+		public CipherItemHandler(EnumFacing side) {
+			super(items);
+			this.side = side;
 		}
-	}
 
-	@Override
-	public boolean canInsertItem(int slot, ItemStack item, EnumFacing side) {
-		return !isLocked() && slot == side.ordinal();
-	}
+		@Override
+		public void onSlotUpdate(int slot) {
+			updateKey();
+			updateOutputWires();
+		}
 
-	@Override
-	public boolean canExtractItem(int slot, ItemStack item, EnumFacing side) {
-		return !isLocked() && slot == side.ordinal();
-	}
+		@Override
+		public ItemStack getStackInSlot(int slot) {
+			if(isLocked()) {
+				return ItemStack.EMPTY;
+			} else {
+				return super.getStackInSlot(slot);
+			}
+		}
 
-	@Override
-	public int[] getSlotsForFace(EnumFacing side) {
-		if(isLocked()) {
-			return new int[] {};
-		} else {
-			return new int[] { side.ordinal() };
+		@Override
+		public void setStack(int slot, ItemStack stack) {
+			if(!isLocked()) {
+				super.setStack(slot, stack);
+			}
+		}
+
+		@Override
+		public boolean canInsert(int slot, ItemStack stack) {
+			return super.canInsert(slot, stack) && !isLocked() && slot == side.ordinal();
+		}
+
+		@Override
+		public boolean canExtract(int slot, int amount) {
+			return super.canExtract(slot, amount) && !isLocked() && slot == side.ordinal();
+		}
+
+		@Override
+		public int getSlots() {
+			if(isLocked()) {
+				return 0;
+			} else {
+				return super.getSlots();
+			}
 		}
 	}
 
@@ -373,34 +385,11 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements IBundle
 
 	private boolean forceLocked;
 
-	@Override
 	public boolean isLocked() {
-		return this.forceLocked || (this.code != null && !this.code.isEmpty());
+		return this.forceLocked;
 	}
 
 	public void setLocked(boolean locked) {
 		this.forceLocked = locked;
-	}
-
-	private LockCode code = LockCode.EMPTY_CODE;
-
-	@Override
-	public void setLockCode(LockCode code) {
-		this.code = code;
-	}
-
-	@Override
-	public LockCode getLockCode() {
-		return this.code;
-	}
-
-	@Override
-	public Container createContainer(InventoryPlayer playerInventory, EntityPlayer playerIn) {
-		return new ContainerCipherBlock(this, playerInventory);
-	}
-
-	@Override
-	public String getGuiID() {
-		return "computronics:cipher";
 	}
 }
