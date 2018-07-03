@@ -287,6 +287,11 @@ public class TileMachine extends TileEntityBase implements
 	}
 
 	@Override
+	public boolean isUsableByPlayer(EntityPlayer player) {
+		return super.isUsableByPlayer(player);
+	}
+
+	@Override
 	public int getField(int id) {
 		return 0;
 	}
