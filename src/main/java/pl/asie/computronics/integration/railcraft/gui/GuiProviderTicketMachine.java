@@ -29,7 +29,7 @@ public class GuiProviderTicketMachine extends GuiProviderBase {
 		TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
 		if(tile instanceof TileTicketMachine) {
 			TileTicketMachine machine = ((TileTicketMachine) tile);
-			boolean triesMaintenanceWork = player.isSneaking() && player.getHeldItemMainhand() == null;
+			boolean triesMaintenanceWork = player.isSneaking() && player.getHeldItemMainhand().isEmpty();
 			return !triesMaintenanceWork || (!machine.isLocked()
 				|| machine.isOwner(player.getGameProfile())
 				|| PlayerPlugin.isOwnerOrOp(machine.getOwner(), player.getGameProfile()));
@@ -43,7 +43,7 @@ public class GuiProviderTicketMachine extends GuiProviderBase {
 	public GuiContainer makeGui(int guiID, EntityPlayer player, World world, int x, int y, int z) {
 		TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
 		if(tile instanceof TileTicketMachine) {
-			return new GuiTicketMachine(player.inventory, (TileTicketMachine) tile, player.isSneaking() && player.getHeldItemMainhand() == null);
+			return new GuiTicketMachine(player.inventory, (TileTicketMachine) tile, player.isSneaking() && player.getHeldItemMainhand().isEmpty());
 		}
 		return null;
 	}
@@ -53,7 +53,7 @@ public class GuiProviderTicketMachine extends GuiProviderBase {
 	public Container makeContainer(int guiID, EntityPlayer player, World world, int x, int y, int z) {
 		TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
 		if(tile instanceof TileTicketMachine) {
-			return new ContainerTicketMachine(player.inventory, (TileTicketMachine) tile, player.isSneaking() && player.getHeldItemMainhand() == null);
+			return new ContainerTicketMachine(player.inventory, (TileTicketMachine) tile, player.isSneaking() && player.getHeldItemMainhand().isEmpty());
 		}
 		return null;
 	}

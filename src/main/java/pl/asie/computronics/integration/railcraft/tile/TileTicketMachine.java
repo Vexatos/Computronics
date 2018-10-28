@@ -130,7 +130,7 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements ITick
 			sendLockChange();
 			lockChanged = false;
 		}
-		if(world.isRemote || currentTicket == null) {
+		if(world.isRemote || currentTicket.isEmpty()) {
 			return;
 		}
 		if(progress < getMaxProgress()) {
@@ -651,7 +651,7 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements ITick
 		tag.setInteger("selectedslot", selectedSlot);
 		tag.setInteger("progress", progress);
 		tag.setBoolean("isActive", isActive);
-		if(currentTicket != null) {
+		if(!currentTicket.isEmpty()) {
 			NBTTagCompound currentTicketTag = new NBTTagCompound();
 			currentTicket.writeToNBT(currentTicketTag);
 			tag.setTag("currentTicket", currentTicketTag);
