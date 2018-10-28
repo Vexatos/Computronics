@@ -61,6 +61,7 @@ public abstract class TileDigitalBoxBase extends TileBoxBase
 
 	@Override
 	public void update() {
+		super.update();
 		if(!addedToNetwork && Mods.isLoaded(Mods.OpenComputers)) {
 			addedToNetwork = true;
 			Network.joinOrCreateNetwork(this);
