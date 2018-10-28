@@ -19,7 +19,7 @@ public class BlockIronNote extends BlockPeripheral /*implements IRedNetInputNode
 
 	public BlockIronNote() {
 		super("iron_noteblock", Rotation.NONE);
-		this.setUnlocalizedName("computronics.ironNoteBlock");
+		this.setTranslationKey("computronics.ironNoteBlock");
 	}
 
 	@Override

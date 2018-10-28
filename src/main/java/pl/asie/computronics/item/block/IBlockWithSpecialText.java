@@ -9,5 +9,5 @@ public interface IBlockWithSpecialText {
 
 	public boolean hasSubTypes();
 
-	public String getUnlocalizedName(ItemStack stack);
+	public String getTranslationKey(ItemStack stack);
 }

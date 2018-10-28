@@ -46,13 +46,13 @@ public class GuiTicketMachine extends GuiContainerRailcraft {
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int x, int y) {
-		fontRendererObj.drawString(
+		fontRenderer.drawString(
 			StringUtil.localize("container.inventory"),
 			8, ySize - 96 + 2, 0x404040);
 		String name = StringUtil.localize(tile.getLocalizationTag());
-		fontRendererObj.drawString(
+		fontRenderer.drawString(
 			name,
-			(xSize / 2) - (fontRendererObj.getStringWidth(name) / 2), 4, 0x404040);
+			(xSize / 2) - (fontRenderer.getStringWidth(name) / 2), 4, 0x404040);
 	}
 
 	@Override

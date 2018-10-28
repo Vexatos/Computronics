@@ -41,7 +41,7 @@ public class RecipeUtils {
 				return;
 			}
 		}
-		GameRegistry.findRegistry(IRecipe.class).register(new ShapedOreRecipe(null, result, recipe).setRegistryName(result.getItem().getRegistryName().getResourcePath() + recipeCounter));
+		GameRegistry.findRegistry(IRecipe.class).register(new ShapedOreRecipe(null, result, recipe).setRegistryName(result.getItem().getRegistryName().getPath() + recipeCounter));
 		recipeCounter++;
 	}
 
@@ -64,7 +64,7 @@ public class RecipeUtils {
 				return;
 			}
 		}
-		GameRegistry.findRegistry(IRecipe.class).register(new ShapelessOreRecipe(null, result, recipe).setRegistryName(result.getItem().getRegistryName().getResourcePath() + recipeCounter));
+		GameRegistry.findRegistry(IRecipe.class).register(new ShapelessOreRecipe(null, result, recipe).setRegistryName(result.getItem().getRegistryName().getPath() + recipeCounter));
 		recipeCounter++;
 	}
 

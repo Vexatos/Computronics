@@ -129,7 +129,7 @@ public class ContainerTicketMachine extends RailcraftContainer {
 		super.sendUpdateToClient();
 		for(IContainerListener listener : this.listeners) {
 			if(this.lastProgress != tile.getProgress()) {
-				listener.sendProgressBarUpdate(this, 1, tile.getProgress());
+				listener.sendWindowProperty(this, 1, tile.getProgress());
 			}
 		}
 		this.lastProgress = this.tile.getProgress();
@@ -141,8 +141,8 @@ public class ContainerTicketMachine extends RailcraftContainer {
 		super.addListener(listener);
 		this.canLock = PlayerPlugin.isOwnerOrOp(tile.getOwner(), inventoryPlayer.player.getGameProfile());
 		updateLock();
-		listener.sendProgressBarUpdate(this, 0, this.canLock ? 1 : 0);
-		listener.sendProgressBarUpdate(this, 1, tile.getProgress());
+		listener.sendWindowProperty(this, 0, this.canLock ? 1 : 0);
+		listener.sendWindowProperty(this, 1, tile.getProgress());
 	}
 
 	@Override
@@ -160,5 +160,10 @@ public class ContainerTicketMachine extends RailcraftContainer {
 				break;
 			}
 		}
+	}
+
+	@Override
+	public boolean canInteractWith(EntityPlayer playerIn) {
+		return this.tile.isUsableByPlayer(playerIn);
 	}
 }

@@ -222,7 +222,7 @@ public class TileMachine extends TileEntityBase implements
 
 	@Override
 	public String getName() {
-		return this.blockType != null ? this.blockType.getUnlocalizedName() + ".inventory" : "unknown.inventory";
+		return this.blockType != null ? this.blockType.getTranslationKey() + ".inventory" : "unknown.inventory";
 	}
 
 	@Override

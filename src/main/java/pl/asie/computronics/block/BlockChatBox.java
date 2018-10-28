@@ -37,7 +37,7 @@ public class BlockChatBox extends BlockPeripheral implements IBlockWithSpecialTe
 		super("chatbox", Rotation.NONE);
 		this.setCreativeTab(Computronics.tab);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(CREATIVE, false));
-		this.setUnlocalizedName("computronics.chatBox");
+		this.setTranslationKey("computronics.chatBox");
 	}
 
 	// I'm such a cheater.
@@ -132,8 +132,8 @@ public class BlockChatBox extends BlockPeripheral implements IBlockWithSpecialTe
 	}
 
 	@Override
-	public String getUnlocalizedName(ItemStack stack) {
-		return (stack.getItemDamage() >= 8 ? "tile.computronics.chatBox.creative" : this.getUnlocalizedName());
+	public String getTranslationKey(ItemStack stack) {
+		return (stack.getItemDamage() >= 8 ? "tile.computronics.chatBox.creative" : this.getTranslationKey());
 	}
 
 	@Override

@@ -4,6 +4,7 @@ import mods.railcraft.common.carts.EntityLocomotive;
 import mods.railcraft.common.carts.EntityLocomotiveElectric;
 import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -27,6 +28,7 @@ import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.StringUtil;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -38,7 +40,7 @@ public class ItemRelaySensor extends Item implements IItemWithPrefix {
 		super();
 		this.setCreativeTab(Computronics.tab);
 		this.setHasSubtypes(false);
-		this.setUnlocalizedName("computronics.relaySensor");
+		this.setTranslationKey("computronics.relaySensor");
 		this.setMaxDamage(0);
 		this.setMaxStackSize(1);
 		this.setFull3D();
@@ -46,12 +48,13 @@ public class ItemRelaySensor extends Item implements IItemWithPrefix {
 	}
 
 	@Override
-	public EnumActionResult onItemUseFirst(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand) {
-		if(player.worldObj.isRemote) {
+	public EnumActionResult onItemUseFirst(EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand) {
+		if(player.world.isRemote) {
 			return EnumActionResult.PASS;
 		}
+		ItemStack stack = player.getHeldItem(hand);
 		TileEntity tile = world.getTileEntity(pos);
-		if(player.isSneaking() && tile != null && tile instanceof TileLocomotiveRelay) {
+		if(player.isSneaking() && tile instanceof TileLocomotiveRelay) {
 			if(!stack.hasTagCompound()) {
 				stack.setTagCompound(new NBTTagCompound());
 			}
@@ -72,7 +75,7 @@ public class ItemRelaySensor extends Item implements IItemWithPrefix {
 	@Override
 	public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity) {
 		if(player.isSneaking() && entity != null) {
-			if(stack.hasTagCompound() && stack.getTagCompound().getBoolean("bound") && !player.worldObj.isRemote) {
+			if(stack.hasTagCompound() && stack.getTagCompound().getBoolean("bound") && !player.world.isRemote) {
 				NBTTagCompound data = stack.getTagCompound();
 				final BlockPos pos = new BlockPos(
 					data.getInteger("relayX"),
@@ -80,32 +83,32 @@ public class ItemRelaySensor extends Item implements IItemWithPrefix {
 					data.getInteger("relayZ")
 				);
 				if(entity instanceof EntityLocomotiveElectric) {
-					if(!player.worldObj.isBlockLoaded(pos)) {
-						player.addChatComponentMessage(new TextComponentTranslation("chat.computronics.sensor.noRelayDetected"));
+					if(!player.world.isBlockLoaded(pos)) {
+						player.sendMessage(new TextComponentTranslation("chat.computronics.sensor.noRelayDetected"));
 						return true;
 					}
-					TileEntity tile = entity.worldObj.getTileEntity(pos);
+					TileEntity tile = entity.world.getTileEntity(pos);
 					if(tile != null && tile instanceof TileLocomotiveRelay) {
 						TileLocomotiveRelay relay = (TileLocomotiveRelay) tile;
 						EntityLocomotiveElectric loco = (EntityLocomotiveElectric) entity;
 						if(loco.dimension == relay.getWorld().provider.getDimension()) {
 							if(loco.getDistanceSq(relay.getPos()) <= Config.LOCOMOTIVE_RELAY_RANGE * Config.LOCOMOTIVE_RELAY_RANGE) {
 								relay.setLocomotive(loco);
-								player.addChatComponentMessage(new TextComponentTranslation("chat.computronics.sensor.bound"));
+								player.sendMessage(new TextComponentTranslation("chat.computronics.sensor.bound"));
 								player.swingArm(EnumHand.MAIN_HAND);
-								player.setHeldItem(EnumHand.MAIN_HAND, null);
+								player.setHeldItem(EnumHand.MAIN_HAND, ItemStack.EMPTY);
 								ForgeEventFactory.onPlayerDestroyItem(player, stack, EnumHand.MAIN_HAND);
 							} else {
-								player.addChatComponentMessage(new TextComponentTranslation("chat.computronics.sensor.tooFarAway"));
+								player.sendMessage(new TextComponentTranslation("chat.computronics.sensor.tooFarAway"));
 							}
 						} else {
-							player.addChatComponentMessage(new TextComponentTranslation("chat.computronics.sensor.wrongDim"));
+							player.sendMessage(new TextComponentTranslation("chat.computronics.sensor.wrongDim"));
 						}
 					} else {
-						player.addChatComponentMessage(new TextComponentTranslation("chat.computronics.sensor.noRelay"));
+						player.sendMessage(new TextComponentTranslation("chat.computronics.sensor.noRelay"));
 					}
 				} else if(entity instanceof EntityLocomotive) {
-					player.addChatComponentMessage(new TextComponentTranslation("chat.computronics.sensor.wrongLoco"));
+					player.sendMessage(new TextComponentTranslation("chat.computronics.sensor.wrongLoco"));
 					return true;
 				}
 			}
@@ -116,7 +119,7 @@ public class ItemRelaySensor extends Item implements IItemWithPrefix {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer player, List text, boolean par4) {
+	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> text, ITooltipFlag flagIn) {
 		String descKey;
 		if(stack.hasTagCompound() && stack.getTagCompound().getBoolean("bound")) {
 			NBTTagCompound data = stack.getTagCompound();

@@ -6,9 +6,6 @@ import dan200.computercraft.api.peripheral.IComputerAccess;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
-import li.cil.oc.api.prefab.DriverSidedTileEntity;
-import li.cil.oc.api.prefab.AbstractManagedEnvironment;
-import mods.railcraft.common.blocks.wayobjects.TileSwitchRouting;
 import mods.railcraft.common.blocks.machine.wayobjects.actuators.TileActuatorRouting;
 import mods.railcraft.common.items.ItemRoutingTable;
 import net.minecraft.tileentity.TileEntity;
@@ -25,6 +22,7 @@ import pl.asie.computronics.reference.Names;
 import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,16 +31,15 @@ import java.util.Map;
 public class DriverRoutingActuator {
 
 	private static Object[] getRoutingTable(TileActuatorRouting tile) {
-		if(tile.getInventory().getStackInSlot(0) != null
-			&& tile.getInventory().getStackInSlot(0).getItem() instanceof ItemRoutingTable) {
+		if(tile.getInventory().getStackInSlot(0).getItem() instanceof ItemRoutingTable) {
 			if(!tile.isSecure()) {
-				LinkedList<LinkedList<String>> pages = ItemRoutingTable.getPages(tile.getInventory().getStackInSlot(0));
+				List<List<String>> pages = ItemRoutingTable.getPages(tile.getInventory().getStackInSlot(0));
 				if(pages == null) {
 					return new Object[] { false, "no valid routing table found" };
 				}
 				LinkedHashMap<Integer, String> pageMap = new LinkedHashMap<Integer, String>();
 				int i = 1;
-				for(LinkedList<String> currentPage : pages) {
+				for(List<String> currentPage : pages) {
 					for(String currentLine : currentPage) {
 						pageMap.put(i++, currentLine);
 					}
@@ -61,10 +58,9 @@ public class DriverRoutingActuator {
 
 	private static Object[] setRoutingTable(TileActuatorRouting tile, Object[] arguments) {
 		Map pageMap = (Map) arguments[0];
-		if(tile.getInventory().getStackInSlot(0) != null
-			&& tile.getInventory().getStackInSlot(0).getItem() instanceof ItemRoutingTable) {
+		if(tile.getInventory().getStackInSlot(0).getItem() instanceof ItemRoutingTable) {
 			if(!tile.isSecure()) {
-				LinkedList<LinkedList<String>> pages = new LinkedList<LinkedList<String>>();
+				LinkedList<List<String>> pages = new LinkedList<List<String>>();
 				pages.add(new LinkedList<String>());
 				int pageIndex = 0;
 				for(Object line : pageMap.values()) {
@@ -88,8 +84,7 @@ public class DriverRoutingActuator {
 	}
 
 	private static Object[] getRoutingTableTitle(TileActuatorRouting tile) {
-		if((((TileActuatorRouting) tile)).getInventory().getStackInSlot(0) != null
-			&& tile.getInventory().getStackInSlot(0).getItem() instanceof ItemRoutingTable) {
+		if(tile.getInventory().getStackInSlot(0).getItem() instanceof ItemRoutingTable) {
 			if(!(((TileActuatorRouting) tile)).isSecure()) {
 				return new Object[] { RoutingTableUtil.getRoutingTableTitle(tile.getInventory().getStackInSlot(0)) };
 			} else {
@@ -100,8 +95,7 @@ public class DriverRoutingActuator {
 	}
 
 	private static Object[] setRoutingTableTitle(TileActuatorRouting tile, Object[] arguments) {
-		if(tile.getInventory().getStackInSlot(0) != null
-			&& tile.getInventory().getStackInSlot(0).getItem() instanceof ItemRoutingTable) {
+		if(tile.getInventory().getStackInSlot(0).getItem() instanceof ItemRoutingTable) {
 			if(!tile.isSecure()) {
 				return new Object[] { RoutingTableUtil.setRoutingTableTitle(tile.getInventory().getStackInSlot(0), (String) arguments[0]) };
 			} else {

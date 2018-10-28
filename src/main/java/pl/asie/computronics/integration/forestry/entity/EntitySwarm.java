@@ -185,11 +185,11 @@ public class EntitySwarm extends EntityFlyingCreature implements IBeeHousing {
 			targetPos = targetPos.subtract(0, targetPos.y, 0);
 			Vec3d between = pos.subtract(targetPos);
 			if(between.x <= 0.02 && between.y <= 0.02) {
-				between = between.addVector(1, 0, 0);
+				between = between.add(1, 0, 0);
 			}
 			Vec3d betweenX = between.scale(1D / Math.abs(between.x));
-			Vec3d targetRadius = betweenX.scale(radius / betweenX.lengthVector()).add(new Vec3d(0, 1, 0).crossProduct(between).normalize());
-			direction = targetRadius.subtract(between).addVector(0, y, 0).normalize();
+			Vec3d targetRadius = betweenX.scale(radius / betweenX.length()).add(new Vec3d(0, 1, 0).crossProduct(between).normalize());
+			direction = targetRadius.subtract(between).add(0, y, 0).normalize();
 		}
 
 		modifier /= 10f;

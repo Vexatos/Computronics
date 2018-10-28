@@ -53,6 +53,7 @@ import pl.asie.computronics.integration.ModRecipes;
 import pl.asie.computronics.integration.charset.IntegrationCharset;
 import pl.asie.computronics.integration.conventional.IntegrationConventional;
 import pl.asie.computronics.integration.forestry.IntegrationForestry;
+import pl.asie.computronics.integration.railcraft.IntegrationRailcraft;
 import pl.asie.computronics.integration.tis3d.IntegrationTIS3D;
 import pl.asie.computronics.item.ItemMultipleComputronics;
 import pl.asie.computronics.item.ItemPortableTapeDrive;
@@ -97,11 +98,11 @@ import java.util.concurrent.Executors;
 		+ "after:computercraft;after:opencomputers@[1.7,);after:tis3d@[1.2.0,);"
 		+ "before:OpenPeripheralCore@[1.1,);before:OpenPeripheralApi@[3.2,);"
 		+ "after:MineFactoryReloaded;after:RedLogic@[59.1.9,);after:ProjRed|Core;"
-		+ "after:BuildCraft|Core@[7.2.0,);after:railcraft@[10.0,);"
-		+ "after:gregtech;after:EnderIO@[1.10.2-3.0.1,);"
+		+ "after:BuildCraft|Core@[7.2.0,);after:railcraft@[11.0,);"
+		+ "after:gregtech;after:enderio@[1.10.2-3.0.1,);"
 		+ "after:forestry@[5.7.0,);after:waila@[1.5.10,);"
-		+ "after:MekanismAPI|energy@[8.0.0,);after:Flamingo@[1.7.10-1.3,);"
-		+ "after:armourersWorkshop@[1.7.10-0.33,);after:theoneprobe@[1.0.5,)")
+		+ "after:MekanismAPI|energy@[8.0.0,);after:flamingo@[1.7.10-1.3,);"
+		+ "after:armourersworkshop@[1.7.10-0.33,);after:theoneprobe@[1.0.5,)")
 public class Computronics {
 
 	public Config config;
@@ -144,7 +145,7 @@ public class Computronics {
 	public static IntegrationComputerCraft computercraft;
 
 	//public static IntegrationBuildCraft buildcraft;
-	//public static IntegrationRailcraft railcraft;
+	public static IntegrationRailcraft railcraft;
 	public static IntegrationForestry forestry;
 	public static IntegrationTIS3D tis3D;
 	public static IntegrationCharset charset;
@@ -164,7 +165,7 @@ public class Computronics {
 
 	public static CreativeTabs tab = new CreativeTabs("tabComputronics") {
 		@Override
-		public ItemStack getTabIconItem() {
+		public ItemStack createIcon() {
 			return new ItemStack(itemTape, 1, 0);
 		}
 	};
@@ -298,10 +299,10 @@ public class Computronics {
 			gui.registerGuiProvider(Computronics.guiPortableTapeDrive);
 		}
 
-		/*if(Mods.isLoaded(Mods.Railcraft)) {
+		if(Mods.isLoaded(Mods.Railcraft)) {
 			railcraft = new IntegrationRailcraft();
 			railcraft.preInit(config.config);
-		}*/
+		}
 
 		if(Mods.isLoaded(Mods.ComputerCraft)) {
 			computercraft = new IntegrationComputerCraft(this);

@@ -100,7 +100,7 @@ public class EnchantmentTweak {
 	}
 
 	private static boolean hasBaneEnchantment(ItemStack stack) {
-		if(stack.getTagCompound() == null || stack.getTagCompound().hasNoTags()) {
+		if(stack.getTagCompound() == null || stack.getTagCompound().isEmpty()) {
 			return false;
 		}
 

@@ -50,7 +50,7 @@ public class TileDigitalDetector extends TileEntityPeripheralBase
 			return;
 		}
 
-		List<EntityMinecart> carts = CartToolsAPI.getMinecartsOnAllSides(this.worldObj, this.getPos(), 0.2F);
+		List<EntityMinecart> carts = CartToolsAPI.getMinecartsOnAllSides(this.world, this.getPos(), 0.2F);
 
 		for(EntityMinecart cart : carts) {
 			if(!this.currentCarts.contains(cart)) {
@@ -85,7 +85,7 @@ public class TileDigitalDetector extends TileEntityPeripheralBase
 	@Override
 	public void readFromNBT(NBTTagCompound data) {
 		super.readFromNBT(data);
-		direction = data.hasKey("direction") ? EnumFacing.getFront(data.getByte("direction")) : EnumFacing.UP;
+		direction = data.hasKey("direction") ? EnumFacing.byIndex(data.getByte("direction")) : EnumFacing.UP;
 	}
 
 	@Override
@@ -97,7 +97,7 @@ public class TileDigitalDetector extends TileEntityPeripheralBase
 	@Override
 	public void readFromRemoteNBT(NBTTagCompound tag) {
 		EnumFacing oldDir = this.direction;
-		direction = tag.hasKey("direction") ? EnumFacing.getFront(tag.getByte("direction")) : EnumFacing.UP;
+		direction = tag.hasKey("direction") ? EnumFacing.byIndex(tag.getByte("direction")) : EnumFacing.UP;
 		if(oldDir != direction) {
 			notifyBlockUpdate();
 		}

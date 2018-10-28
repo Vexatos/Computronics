@@ -128,9 +128,9 @@ public class ClientProxy extends CommonProxy {
 		/*if(Mods.API.hasAPI(Mods.API.BuildCraftStatements)) {
 			MinecraftForge.EVENT_BUS.register(new StatementTextureManager());
 		}*/
-		/*if(Computronics.railcraft != null) {
+		if(Computronics.railcraft != null) {
 			Computronics.railcraft.registerRenderers();
-		}*/
+		}
 
 		ItemPortableTapeDrive.MeshDefinition.registerRenderers();
 	}

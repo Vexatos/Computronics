@@ -22,12 +22,12 @@ public class ItemMultiple extends Item {
 	}
 
 	@Override
-	public String getUnlocalizedName() {
+	public String getTranslationKey() {
 		return "item.asielib.unknown";
 	}
 
 	@Override
-	public String getUnlocalizedName(ItemStack stack) {
+	public String getTranslationKey(ItemStack stack) {
 		if(stack.isEmpty()) {
 			return "item.asielib.unknown";
 		} else {

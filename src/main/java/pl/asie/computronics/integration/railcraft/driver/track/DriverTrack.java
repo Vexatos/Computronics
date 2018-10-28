@@ -1,6 +1,6 @@
 package pl.asie.computronics.integration.railcraft.driver.track;
 
-import li.cil.oc.api.driver.SidedBlock;
+import li.cil.oc.api.driver.DriverBlock;
 import li.cil.oc.api.network.ManagedEnvironment;
 import mods.railcraft.api.tracks.IOutfittedTrackTile;
 import mods.railcraft.api.tracks.ITrackKitInstance;
@@ -15,7 +15,7 @@ import javax.annotation.Nullable;
 /**
  * @author Vexatos
  */
-public abstract class DriverTrack<T extends ITrackKitInstance> implements SidedBlock {
+public abstract class DriverTrack<T extends ITrackKitInstance> implements DriverBlock {
 
 	protected final Class<T> tileClass;
 

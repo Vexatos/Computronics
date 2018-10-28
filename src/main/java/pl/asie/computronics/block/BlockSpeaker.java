@@ -12,7 +12,7 @@ public class BlockSpeaker extends BlockPeripheral {
 
 	public BlockSpeaker() {
 		super("speaker", Rotation.SIX);
-		this.setUnlocalizedName("computronics.speaker");
+		this.setTranslationKey("computronics.speaker");
 	}
 
 	@Override

@@ -13,7 +13,7 @@ public class BlockSpeechBox extends BlockPeripheral {
 
 	public BlockSpeechBox() {
 		super("speech_box", Rotation.FOUR);
-		this.setUnlocalizedName("computronics.speechBox");
+		this.setTranslationKey("computronics.speechBox");
 	}
 
 	@Override

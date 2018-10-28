@@ -24,7 +24,7 @@ public class BlockCipherAdvanced extends BlockPeripheral implements IBlockWithSp
 
 	public BlockCipherAdvanced() {
 		super("cipher_advanced", Rotation.NONE);
-		this.setUnlocalizedName("computronics.cipher_advanced");
+		this.setTranslationKey("computronics.cipher_advanced");
 	}
 
 	@Override
@@ -44,8 +44,8 @@ public class BlockCipherAdvanced extends BlockPeripheral implements IBlockWithSp
 	}
 
 	@Override
-	public String getUnlocalizedName(ItemStack stack) {
-		return this.getUnlocalizedName();
+	public String getTranslationKey(ItemStack stack) {
+		return this.getTranslationKey();
 	}
 
 	@Override

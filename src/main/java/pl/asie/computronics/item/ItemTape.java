@@ -46,7 +46,7 @@ public class ItemTape extends Item implements IItemTapeStorage, IMedia, IMediaPr
 
 	public ItemTape(String lengths) {
 		super();
-		this.setUnlocalizedName("computronics.tape");
+		this.setTranslationKey("computronics.tape");
 		this.setCreativeTab(Computronics.tab);
 		this.setHasSubtypes(true);
 		this.setMaxDamage(0);
@@ -180,11 +180,11 @@ public class ItemTape extends Item implements IItemTapeStorage, IMedia, IMediaPr
 	}
 
 	@Override
-	public String getUnlocalizedName(ItemStack itemstack) {
+	public String getTranslationKey(ItemStack itemstack) {
 		if(itemstack.isEmpty() && itemstack.getItemDamage() == 9) {
 			return "item.computronics.tape.ig";
 		}
-		return super.getUnlocalizedName(itemstack);
+		return super.getTranslationKey(itemstack);
 	}
 
 	@Override

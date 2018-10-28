@@ -17,7 +17,7 @@ public class BlockCamera extends BlockPeripheral {
 
 	public BlockCamera() {
 		super("camera", Rotation.SIX);
-		this.setUnlocalizedName("computronics.camera");
+		this.setTranslationKey("computronics.camera");
 	}
 
 	@Override

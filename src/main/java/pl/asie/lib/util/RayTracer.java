@@ -54,13 +54,13 @@ public class RayTracer {
 		Entity target;
 		Vec3d position = new Vec3d(entity.posX, entity.posY, entity.posZ);
 		if(entity.getEyeHeight() != 0.12F) {
-			position = position.addVector(0, entity.getEyeHeight(), 0);
+			position = position.add(0, entity.getEyeHeight(), 0);
 		}
 
 		Vec3d look = entity.getLookVec();
 
 		for(double i = 1.0; i < distance; i += 0.2) {
-			Vec3d search = position.addVector(look.x * i, look.y * i, look.z * i);
+			Vec3d search = position.add(look.x * i, look.y * i, look.z * i);
 			AxisAlignedBB searchBox = new AxisAlignedBB(
 				search.x - 0.1, search.y - 0.1, search.z - 0.1,
 				search.x + 0.1, search.y + 0.1, search.z + 0.1);

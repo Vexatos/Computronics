@@ -23,7 +23,7 @@ public class BlockLocomotiveRelay extends BlockPeripheral implements IBlockWithP
 
 	public BlockLocomotiveRelay() {
 		super("locomotive_relay", Rotation.NONE);
-		this.setUnlocalizedName("computronics.locomotiveRelay");
+		this.setTranslationKey("computronics.locomotiveRelay");
 	}
 
 	@Override
@@ -38,8 +38,8 @@ public class BlockLocomotiveRelay extends BlockPeripheral implements IBlockWithP
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
-		if(!world.isRemote && player.isSneaking() && player.getHeldItemMainhand() == null && player.getHeldItemOffhand() == null) {
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+		if(!world.isRemote && player.isSneaking() && player.getHeldItemMainhand().isEmpty() && player.getHeldItemOffhand().isEmpty()) {
 			TileEntity tile = world.getTileEntity(pos);
 			if(tile instanceof TileLocomotiveRelay) {
 				String msg;
@@ -48,11 +48,11 @@ public class BlockLocomotiveRelay extends BlockPeripheral implements IBlockWithP
 				} else {
 					msg = "chat.computronics.relay.notBound";
 				}
-				player.addChatComponentMessage(new TextComponentTranslation(msg));
+				player.sendMessage(new TextComponentTranslation(msg));
 				return true;
 			}
 		}
-		return super.onBlockActivated(world, pos, state, player, hand, heldItem, side, hitX, hitY, hitZ);
+		return super.onBlockActivated(world, pos, state, player, hand, side, hitX, hitY, hitZ);
 	}
 
 	private final String prefix = "railcraft/";

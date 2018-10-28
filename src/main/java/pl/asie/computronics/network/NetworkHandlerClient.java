@@ -86,9 +86,9 @@ public class NetworkHandlerClient extends MessageHandlerBase {
 			}
 			break;
 			case TICKET_SYNC: {
-				/*if(Mods.isLoaded(Mods.Railcraft)) { TODO Railcraft
+				if(Mods.isLoaded(Mods.Railcraft)) {
 					Computronics.railcraft.onMessageRailcraft(packet, player, false);
-				}*/
+				}
 			}
 			break;
 			case PORTABLE_TAPE_STATE: {

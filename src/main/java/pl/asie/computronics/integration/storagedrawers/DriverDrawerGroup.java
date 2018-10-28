@@ -69,7 +69,7 @@ public class DriverDrawerGroup {
 				if(stack.isEmpty()) {
 					return new Object[] { null, "there no item in this drawer slot" };
 				}
-				return new Object[] { stack.getUnlocalizedName() };
+				return new Object[] { stack.getTranslationKey() };
 			}
 
 			@Callback(doc = "function(drawerslot:number):number; Returns the damage value of the item in the specified drawer slot")
@@ -155,7 +155,7 @@ public class DriverDrawerGroup {
 						if(stack.isEmpty()) {
 							return new Object[] { null, "there no item in this drawer slot" };
 						}
-						return new Object[] { stack.getUnlocalizedName() };
+						return new Object[] { stack.getTranslationKey() };
 					}
 					case 4: {
 						if(arguments.length < 1 || !(arguments[0] instanceof Number)) {

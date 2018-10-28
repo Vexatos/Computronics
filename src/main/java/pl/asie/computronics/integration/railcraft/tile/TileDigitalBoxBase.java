@@ -25,6 +25,7 @@ import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.OCUtils;
 import pl.asie.computronics.util.internal.IComputronicsPeripheral;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -60,7 +61,6 @@ public abstract class TileDigitalBoxBase extends TileBoxBase
 
 	@Override
 	public void update() {
-		super.update();
 		if(!addedToNetwork && Mods.isLoaded(Mods.OpenComputers)) {
 			addedToNetwork = true;
 			Network.joinOrCreateNetwork(this);
@@ -69,8 +69,8 @@ public abstract class TileDigitalBoxBase extends TileBoxBase
 
 	@Override
 	public Block getBlockType() {
-		if(this.blockType == null && this.worldObj != null) {
-			this.blockType = this.worldObj.getBlockState(this.pos).getBlock();
+		if(this.blockType == null && this.world != null) {
+			this.blockType = this.world.getBlockState(this.pos).getBlock();
 		}
 		return this.blockType;
 	}
@@ -169,6 +169,7 @@ public abstract class TileDigitalBoxBase extends TileBoxBase
 	@Optional.Method(modid = Mods.OpenComputers)
 	protected abstract OCUtils.Device deviceInfo();
 
+	@Nullable
 	@Override
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Node sidedNode(EnumFacing forgeDirection) {
@@ -247,7 +248,7 @@ public abstract class TileDigitalBoxBase extends TileBoxBase
 
 	@Override
 	@Optional.Method(modid = Mods.ComputerCraft)
-	public boolean equals(IPeripheral other) {
+	public boolean equals(@Nullable IPeripheral other) {
 		if(other == null) {
 			return false;
 		}
@@ -256,7 +257,7 @@ public abstract class TileDigitalBoxBase extends TileBoxBase
 		}
 		if(other instanceof TileEntity) {
 			TileEntity tother = (TileEntity) other;
-			return tother.getWorld().equals(worldObj)
+			return tother.getWorld().equals(world)
 				&& tother.getPos().equals(this.getPos());
 		}
 

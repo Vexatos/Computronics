@@ -117,9 +117,9 @@ public abstract class BlockBase extends Block /*implements
 		IBlockState state = this.getDefaultState();
 		switch(rotation) {
 			case FOUR:
-				return state.withProperty(rotation.FACING, EnumFacing.getHorizontal(meta));
+				return state.withProperty(rotation.FACING, EnumFacing.byHorizontalIndex(meta));
 			case SIX:
-				return state.withProperty(rotation.FACING, EnumFacing.getFront(meta));
+				return state.withProperty(rotation.FACING, EnumFacing.byIndex(meta));
 		}
 		return state;
 	}
@@ -443,14 +443,14 @@ public abstract class BlockBase extends Block /*implements
 	}
 
 	@Override
-	public void onBlockDestroyedByPlayer(World world, BlockPos pos, IBlockState state) {
-		super.onBlockDestroyedByPlayer(world, pos, state);
+	public void onBlockHarvested(World world, BlockPos pos, IBlockState state, EntityPlayer player) {
+		super.onBlockHarvested(world, pos, state, player);
 		this.onBlockDestroyed(world, pos, state);
 	}
 
 	@Override
-	public void onBlockDestroyedByExplosion(World world, BlockPos pos, Explosion explosion) {
-		super.onBlockDestroyedByExplosion(world, pos, explosion);
+	public void onBlockExploded(World world, BlockPos pos, Explosion explosion) {
+		super.onBlockExploded(world, pos, explosion);
 		this.onBlockDestroyed(world, pos, getStateFromMeta(0));
 	}
 

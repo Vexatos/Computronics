@@ -47,7 +47,7 @@ public class TileDigitalControllerBox extends TileDigitalBoxBase implements ICon
 	@Override
 	public void update() {
 		super.update();
-		if(Game.isClient(this.worldObj)) {
+		if(Game.isClient(this.world)) {
 			this.controller.tickClient();
 			if(this.controller.getVisualAspect().isBlinkAspect() && this.prevBlinkState != SignalAspect.isBlinkOn()) {
 				this.prevBlinkState = SignalAspect.isBlinkOn();

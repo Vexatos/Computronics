@@ -19,7 +19,7 @@ public class BlockTicketMachine extends BlockPeripheral implements IBlockWithPre
 
 	public BlockTicketMachine() {
 		super("ticket_machine", Rotation.FOUR);
-		this.setUnlocalizedName("computronics.ticketMachine");
+		this.setTranslationKey("computronics.ticketMachine");
 		this.setGuiProvider(Computronics.railcraft.guiTicketMachine);
 	}
 

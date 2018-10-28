@@ -112,10 +112,10 @@ dependencies {
     //deobfCompile "net.industrial-craft:industrialcraft-2:${config.ic2.version}:dev"
 	//provided "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech.version}:dev"
 	//provided2 "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech6.version}:dev"
-    /*provided ("com.headlamp-games:Railcraft:${config.railcraft.version}") {
-        exclude module: "forestry_1.10.2"
+    provided ("com.headlamp-games:railcraft:${config.railcraft.version}:dev") {
+        exclude module: "forestry_1.12.2"
         exclude module: "industrialcraft-2"
-    }*/
+    }
     //provided "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech.version}:dev"
     deobfCompile "mezz.jei:jei_1.12.2:${config.jei.version}"
     provided "mcp.mobius.waila:Waila:${config.waila.version}"
@@ -190,7 +190,7 @@ sourceSets {
             exclude "pl/asie/computronics/integration/gregtech/**"
             exclude "pl/asie/computronics/integration/mekanism/**"
             exclude "pl/asie/computronics/integration/mfr/**"
-            exclude "pl/asie/computronics/integration/railcraft/**"
+            //exclude "pl/asie/computronics/integration/railcraft/**"
             exclude "pl/asie/computronics/integration/redlogic/**"
             //exclude "pl/asie/computronics/integration/storagedrawers/**"
             //exclude "pl/asie/computronics/integration/info/**"

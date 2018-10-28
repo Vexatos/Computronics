@@ -9,9 +9,9 @@ import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.EnvironmentHost;
 import li.cil.oc.api.network.Visibility;
 import li.cil.oc.api.prefab.AbstractManagedEnvironment;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.tileentity.TileEntity;
 import pl.asie.computronics.util.Camera;
 import pl.asie.computronics.util.OCUtils;
 
@@ -34,7 +34,7 @@ public class RobotUpgradeCamera extends AbstractManagedEnvironment implements De
 			return ((Rotatable) entity).facing();
 		} else {
 			int l = MathHelper.floor((double) (entity.world().getClosestPlayer(entity.xPosition(), entity.yPosition(), entity.zPosition(), 1.0D, false).rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-			return EnumFacing.getHorizontal(l);
+			return EnumFacing.byHorizontalIndex(l);
 		}
 	}
 

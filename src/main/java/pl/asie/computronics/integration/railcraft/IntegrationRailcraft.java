@@ -4,8 +4,10 @@ import mods.railcraft.api.core.IVariantEnum;
 import mods.railcraft.client.render.tesr.TESRSignalBox;
 import mods.railcraft.common.blocks.IVariantEnumBlock;
 import mods.railcraft.common.blocks.machine.ItemMachine;
+import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
@@ -70,18 +72,18 @@ public class IntegrationRailcraft {
 			SignalTypes.DigitalReceiver.enabled = isEnabled(config, "digitalReceiverBox", true);
 			SignalTypes.DigitalController.enabled = isEnabled(config, "digitalControllerBox", true);
 			digitalBox = new BlockDigitalSignalBox();
-			GameRegistry.register(digitalBox, new ResourceLocation(Mods.Computronics, "digital_box"));
+			GameRegistry.findRegistry(Block.class).register(digitalBox.setRegistryName(new ResourceLocation(Mods.Computronics, "digital_box")));
 			digitalBoxItem = new ItemMachine(digitalBox) {
 				@Override
-				public String getUnlocalizedName() {
-					return this.block.getUnlocalizedName();
+				public String getTranslationKey() {
+					return this.block.getTranslationKey();
 				}
 
 				@Override
-				public String getUnlocalizedName(ItemStack stack) {
+				public String getTranslationKey(ItemStack stack) {
 					IVariantEnum variant = this.getVariant(stack);
 					if(variant == null) {
-						return this.getUnlocalizedName();
+						return this.getTranslationKey();
 					} else if(variant instanceof IVariantEnumBlock) {
 						return ((IVariantEnumBlock) variant).getLocalizationTag();
 					} else {
@@ -89,7 +91,7 @@ public class IntegrationRailcraft {
 					}
 				}
 			};
-			GameRegistry.register(digitalBoxItem, digitalBox.getRegistryName());
+			GameRegistry.findRegistry(Item.class).register(digitalBoxItem.setRegistryName(digitalBox.getRegistryName()));
 			GameRegistry.registerTileEntity(TileDigitalControllerBox.class, "digital_controller_box");
 			GameRegistry.registerTileEntity(TileDigitalReceiverBox.class, "digital_receiver_box");
 			FMLInterModComms.sendMessage(Mods.AE2, "whitelist-spatial", TileDigitalControllerBox.class.getCanonicalName());

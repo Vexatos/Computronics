@@ -39,7 +39,7 @@ public class BlockAudioCable extends BlockBase implements IBlockWithDocumentatio
 	public BlockAudioCable() {
 		super(Material.IRON, Computronics.instance, Rotation.NONE);
 		this.setCreativeTab(Computronics.tab);
-		this.setUnlocalizedName("computronics.audiocable");
+		this.setTranslationKey("computronics.audiocable");
 	}
 
 	public void setRenderMask(int m) {
@@ -190,7 +190,7 @@ public class BlockAudioCable extends BlockBase implements IBlockWithDocumentatio
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public BlockRenderLayer getBlockLayer() {
+	public BlockRenderLayer getRenderLayer() {
 		return BlockRenderLayer.CUTOUT;
 	}
 

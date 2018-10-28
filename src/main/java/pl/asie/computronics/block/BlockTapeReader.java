@@ -16,7 +16,7 @@ public class BlockTapeReader extends BlockPeripheral {
 
 	public BlockTapeReader() {
 		super("tape_drive", Rotation.FOUR);
-		this.setUnlocalizedName("computronics.tapeDrive");
+		this.setTranslationKey("computronics.tapeDrive");
 		this.setGuiProvider(Computronics.guiTapeDrive);
 	}
 

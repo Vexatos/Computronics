@@ -33,7 +33,7 @@ public class BlockDigitalDetector extends BlockPeripheral implements IBlockWithP
 
 	public BlockDigitalDetector() {
 		super("digital_detector", Rotation.NONE);
-		this.setUnlocalizedName("computronics.detector");
+		this.setTranslationKey("computronics.detector");
 		this.setResistance(4.5F);
 		this.setHardness(2.0F);
 		this.setSoundType(SoundType.STONE);
@@ -79,7 +79,7 @@ public class BlockDigitalDetector extends BlockPeripheral implements IBlockWithP
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 		return false;
 	}
 
@@ -112,7 +112,7 @@ public class BlockDigitalDetector extends BlockPeripheral implements IBlockWithP
 			return;
 		}
 		for(EnumFacing side : EnumFacing.VALUES) {
-			world.notifyNeighborsOfStateChange(pos.offset(side), state.getBlock());
+			world.notifyNeighborsOfStateChange(pos.offset(side), state.getBlock(), false);
 		}
 	}
 
@@ -123,7 +123,7 @@ public class BlockDigitalDetector extends BlockPeripheral implements IBlockWithP
 			return;
 		}
 		for(EnumFacing side : EnumFacing.VALUES) {
-			world.notifyNeighborsOfStateChange(pos.offset(side), state.getBlock());
+			world.notifyNeighborsOfStateChange(pos.offset(side), state.getBlock(), false);
 		}
 	}
 

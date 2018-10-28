@@ -71,7 +71,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase implements ITi
 	public void update() {
 		super.update();
 
-		if(worldObj.isRemote) {
+		if(world.isRemote) {
 			return;
 		}
 
@@ -152,7 +152,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase implements ITi
 		if(locomotive == null) {
 			return "locomotive is currently not detectable";
 		}
-		if(locomotive.dimension != this.worldObj.provider.getDimension()) {
+		if(locomotive.dimension != this.world.provider.getDimension()) {
 			return "relay and locomotive are in different dimensions";
 		}
 		if(locomotive.getDistanceSq(getPos()) > Config.LOCOMOTIVE_RELAY_RANGE * Config.LOCOMOTIVE_RELAY_RANGE) {
@@ -201,7 +201,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase implements ITi
 
 	private static Object[] setDestination(EntityLocomotiveElectric locomotive, Object[] arguments) {
 		ItemStack ticket = locomotive.getStackInSlot(0);
-		if(ticket != null && ticket.getItem() instanceof ItemTicketGold) {
+		if(ticket.getItem() instanceof ItemTicketGold) {
 			ItemTicket.setTicketData(ticket, (String) arguments[0], (String) arguments[0],
 				ItemTicketGold.getOwner(ticket));
 			return new Object[] { locomotive.setDestination(ticket) };

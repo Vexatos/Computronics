@@ -5,8 +5,12 @@ import pl.asie.computronics.block.BlockPeripheral;
 import pl.asie.computronics.block.BlockTapeReader;
 import pl.asie.computronics.integration.info.providers.IComputronicsInfoProvider;
 import pl.asie.computronics.integration.info.providers.InfoColorfulLamp;
+import pl.asie.computronics.integration.info.providers.InfoLocomotiveRelay;
 import pl.asie.computronics.integration.info.providers.InfoPeripheral;
 import pl.asie.computronics.integration.info.providers.InfoTapeDrive;
+import pl.asie.computronics.integration.railcraft.block.BlockDigitalSignalBox;
+import pl.asie.computronics.integration.railcraft.block.BlockLocomotiveRelay;
+import pl.asie.computronics.reference.Mods;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -28,10 +32,10 @@ public class InfoProviders {
 		}
 		init = true;
 		newProvider(new InfoPeripheral(), BlockPeripheral.class);
-		/*if(Mods.isLoaded(Mods.Railcraft)) { TODO Railcraft
+		if(Mods.isLoaded(Mods.Railcraft)) {
 			newProvider(new InfoPeripheral(), BlockDigitalSignalBox.class);
 			newProvider(new InfoLocomotiveRelay(), BlockLocomotiveRelay.class);
-		}*/
+		}
 		newProvider(new InfoTapeDrive(), BlockTapeReader.class);
 		newProvider(new InfoColorfulLamp(), BlockColorfulLamp.class);
 	}

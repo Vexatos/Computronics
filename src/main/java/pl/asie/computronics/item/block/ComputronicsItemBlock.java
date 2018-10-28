@@ -25,11 +25,11 @@ public class ComputronicsItemBlock extends ItemBlock implements IItemWithColor {
 	}
 
 	@Override
-	public String getUnlocalizedName(ItemStack stack) {
+	public String getTranslationKey(ItemStack stack) {
 		if(this.specialBlock != null) {
-			return this.specialBlock.getUnlocalizedName(stack);
+			return this.specialBlock.getTranslationKey(stack);
 		}
-		return super.getUnlocalizedName(stack);
+		return super.getTranslationKey(stack);
 	}
 
 	@Override

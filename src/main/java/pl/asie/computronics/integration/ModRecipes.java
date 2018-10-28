@@ -1,5 +1,12 @@
 package pl.asie.computronics.integration;
 
+import mods.railcraft.common.blocks.RailcraftBlocks;
+import mods.railcraft.common.blocks.detector.EnumDetector;
+import mods.railcraft.common.blocks.machine.wayobjects.boxes.SignalBoxVariant;
+import mods.railcraft.common.items.ItemCircuit.EnumCircuit;
+import mods.railcraft.common.items.ItemRail;
+import mods.railcraft.common.items.Metal;
+import mods.railcraft.common.items.RailcraftItems;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -8,6 +15,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.integration.railcraft.SignalTypes;
 import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.RecipeUtils;
@@ -77,9 +85,9 @@ public class ModRecipes {
 					'a', Computronics.tapeReader != null ? Computronics.tapeReader : Computronics.ironNote != null ? Computronics.ironNote : Blocks.NOTEBLOCK);
 			}
 		}
-		/*if(Mods.isLoaded(Mods.Railcraft) && Computronics.railcraft != null) { TODO Railcraft
+		if(Mods.isLoaded(Mods.Railcraft) && Computronics.railcraft != null) {
 			registerRailcraftRecipes();
-		}*/
+		}
 		if(Computronics.itemTape != null) {
 			// Tape recipes
 			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.itemTape, 1, 0),
@@ -209,7 +217,7 @@ public class ModRecipes {
 		return true;
 	}
 
-	/*@Optional.Method(modid = Mods.Railcraft) TODO Railcraft
+	@Optional.Method(modid = Mods.Railcraft)
 	protected void registerRailcraftRecipes() {
 		if(Computronics.railcraft.locomotiveRelay != null && Computronics.railcraft.relaySensor != null) {
 			RecipeUtils.addShapedRecipe(new ItemStack(Computronics.railcraft.locomotiveRelay, 1, 0),
@@ -253,5 +261,5 @@ public class ModRecipes {
 				'p', Blocks.PISTON,
 				'g', "paneGlassColorless");
 		}
-	}*/
+	}
 }

@@ -1,4 +1,4 @@
-/*package pl.asie.computronics.integration.info.providers;
+package pl.asie.computronics.integration.info.providers;
 
 import mcjty.theoneprobe.api.IProbeHitData;
 import mcjty.theoneprobe.api.IProbeInfo;
@@ -23,7 +23,7 @@ import java.util.List;
 
 /**
  * @author Vexatos
- * /
+ */
 public class InfoLocomotiveRelay extends ComputronicsInfoProvider {
 
 	@Override
@@ -68,4 +68,4 @@ public class InfoLocomotiveRelay extends ComputronicsInfoProvider {
 		probeInfo.text(StringUtil.localize(boundKey));
 	}
 }
-*/
+

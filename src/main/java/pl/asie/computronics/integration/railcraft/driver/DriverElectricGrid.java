@@ -3,7 +3,7 @@ package pl.asie.computronics.integration.railcraft.driver;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
-import li.cil.oc.api.driver.SidedBlock;
+import li.cil.oc.api.driver.DriverBlock;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
@@ -30,10 +30,10 @@ public class DriverElectricGrid {
 	@Nullable
 	private static ChargeNetwork.ChargeNode getNode(int dimension, BlockPos pos) {
 		WorldServer world = DimensionManager.getWorld(dimension);
-		return world == null ? null : ChargeManager.getNetwork(world).getNode(pos);
+		return world == null ? null : ChargeManager.DISTRIBUTION.network(world).access(pos);
 	}
 
-	public static class OCDriver implements SidedBlock {
+	public static class OCDriver implements DriverBlock {
 
 		public static class InternalManagedEnvironment extends NamedManagedEnvironment<BlockPos> {
 
@@ -80,7 +80,7 @@ public class DriverElectricGrid {
 			public Object[] getNetworkCharge(Context c, Arguments a) {
 				ChargeNetwork.ChargeNode node = getNode(dimension, tile);
 				if(node != null) {
-					return new Object[] { node.getChargeGraph().getCharge() };
+					return new Object[] { node.getGrid().getCharge() };
 				}
 				return new Object[] { null, "no node found" };
 			}
@@ -89,7 +89,7 @@ public class DriverElectricGrid {
 			public Object[] getNetworkCapacity(Context c, Arguments a) {
 				ChargeNetwork.ChargeNode node = getNode(dimension, tile);
 				if(node != null) {
-					return new Object[] { node.getChargeGraph().getCapacity() };
+					return new Object[] { node.getGrid().getCapacity() };
 				}
 				return new Object[] { null, "no node found" };
 			}
@@ -98,7 +98,7 @@ public class DriverElectricGrid {
 			public Object[] getNetworkLoss(Context c, Arguments a) {
 				ChargeNetwork.ChargeNode node = getNode(dimension, tile);
 				if(node != null) {
-					return new Object[] { node.getChargeGraph().getMaintenanceCost() };
+					return new Object[] { node.getGrid().getMaintenanceCost() };
 				}
 				return new Object[] { null, "no node found" };
 			}
@@ -107,7 +107,7 @@ public class DriverElectricGrid {
 			public Object[] getNetworkDraw(Context c, Arguments a) {
 				ChargeNetwork.ChargeNode node = getNode(dimension, tile);
 				if(node != null) {
-					return new Object[] { node.getChargeGraph().getAverageUsagePerTick() };
+					return new Object[] { node.getGrid().getAverageUsagePerTick() };
 				}
 				return new Object[] { null, "no node found" };
 			}
@@ -115,7 +115,7 @@ public class DriverElectricGrid {
 
 		@Override
 		public boolean worksWith(World world, BlockPos pos, EnumFacing side) {
-			return !ChargeManager.getNetwork(world).getNode(pos).isNull();
+			return ChargeManager.DISTRIBUTION.network(world).access(pos).isValid();
 		}
 
 		@Override
@@ -145,7 +145,7 @@ public class DriverElectricGrid {
 
 		@Override
 		public IMultiPeripheral getPeripheral(World world, BlockPos pos, EnumFacing side) {
-			if(!ChargeManager.getNetwork(world).getNode(pos).isNull()) {
+			if(ChargeManager.DISTRIBUTION.network(world).access(pos).isValid()) {
 				return new CCDriver(world, pos);
 			}
 			return null;
@@ -184,28 +184,28 @@ public class DriverElectricGrid {
 				case 3: {
 					ChargeNetwork.ChargeNode node = getNode(dimension, tile);
 					if(node != null) {
-						return new Object[] { node.getChargeGraph().getCharge() };
+						return new Object[] { node.getGrid().getCharge() };
 					}
 					return new Object[] { null, "no node found" };
 				}
 				case 4: {
 					ChargeNetwork.ChargeNode node = getNode(dimension, tile);
 					if(node != null) {
-						return new Object[] { node.getChargeGraph().getCapacity() };
+						return new Object[] { node.getGrid().getCapacity() };
 					}
 					return new Object[] { null, "no node found" };
 				}
 				case 5: {
 					ChargeNetwork.ChargeNode node = getNode(dimension, tile);
 					if(node != null) {
-						return new Object[] { node.getChargeGraph().getMaintenanceCost() };
+						return new Object[] { node.getGrid().getMaintenanceCost() };
 					}
 					return new Object[] { null, "no node found" };
 				}
 				case 6: {
 					ChargeNetwork.ChargeNode node = getNode(dimension, tile);
 					if(node != null) {
-						return new Object[] { node.getChargeGraph().getAverageUsagePerTick() };
+						return new Object[] { node.getGrid().getAverageUsagePerTick() };
 					}
 					return new Object[] { null, "no node found" };
 				}

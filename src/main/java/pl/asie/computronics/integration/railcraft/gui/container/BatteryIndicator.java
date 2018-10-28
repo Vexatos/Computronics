@@ -18,7 +18,7 @@ public class BatteryIndicator extends IndicatorController {
 
 	@Override
 	protected void refreshToolTip() {
-		this.tip.text = String.format("%,d / %,d RF", MathHelper.floor_double(this.energy), MathHelper.floor_double(this.battery.getMaxEnergyStored()));
+		this.tip.text = String.format("%,d / %,d RF", MathHelper.floor(this.energy), MathHelper.floor(this.battery.getMaxEnergyStored()));
 	}
 
 	@Override

@@ -429,7 +429,7 @@ public abstract class Instruction {
 		ArrayDeque<Instruction> instructions = new ArrayDeque<Instruction>();
 		for(int i = 0; i < l.tagCount(); i++) {
 			NBTTagCompound tag = l.getCompoundTagAt(i);
-			if(!tag.hasNoTags()) {
+			if(!tag.isEmpty()) {
 				Instruction instr = load(tag);
 				if(instr != null) {
 					instructions.add(instr);

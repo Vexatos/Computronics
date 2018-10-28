@@ -27,7 +27,7 @@ public class BlockDigitalSignalBox extends BlockMachineSignalBox<SignalTypes> im
 
 	public BlockDigitalSignalBox() {
 		super();
-		this.setUnlocalizedName("computronics.digital_box");
+		this.setTranslationKey("computronics.digital_box");
 		this.setCreativeTab(Computronics.tab);
 	}
 

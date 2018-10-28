@@ -22,7 +22,7 @@ public class BlockSoundBoard extends BlockPeripheral implements IBlockWithPrefix
 
 	public BlockSoundBoard() {
 		super("sound_board", Rotation.SIX);
-		this.setUnlocalizedName("computronics.sound_board");
+		this.setTranslationKey("computronics.sound_board");
 	}
 
 	@Override

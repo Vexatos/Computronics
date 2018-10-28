@@ -14,7 +14,7 @@ public class BlockRadar extends BlockPeripheral {
 	public BlockRadar() {
 		super("radar", Rotation.NONE);
 		this.setCreativeTab(Computronics.tab);
-		this.setUnlocalizedName("computronics.radar");
+		this.setTranslationKey("computronics.radar");
 	}
 
 	@Override

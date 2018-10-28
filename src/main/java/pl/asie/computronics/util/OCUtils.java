@@ -103,7 +103,7 @@ public class OCUtils {
 	public static void addTooltip(ItemStack stack, List<String> tooltip, ITooltipFlag flag) {
 		{
 			FontRenderer font = Minecraft.getMinecraft().fontRenderer;
-			final String key = stack.getUnlocalizedName() + ".tip";
+			final String key = stack.getTranslationKey() + ".tip";
 			String tip = StringUtil.localize(key);
 			if(!tip.equals(key)) {
 				String[] lines = tip.split("\n");

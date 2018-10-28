@@ -84,7 +84,7 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements ITick
 				.writeTileLocation(this)
 				.writeInt(i)
 				.writeInt(selectedSlot);
-			if(worldObj.isRemote) {
+			if(world.isRemote) {
 				Computronics.packet.sendToServer(packet);
 			} else {
 				Computronics.packet.sendToAllAround(packet, this, 64.0D);
@@ -130,7 +130,7 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements ITick
 			sendLockChange();
 			lockChanged = false;
 		}
-		if(worldObj.isRemote || currentTicket == null) {
+		if(world.isRemote || currentTicket == null) {
 			return;
 		}
 		if(progress < getMaxProgress()) {
@@ -143,16 +143,16 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements ITick
 		}
 		if(progress >= getMaxProgress()) {
 			ItemStack outputSlotStack = this.getStackInSlot(ticketSlot);
-			if(outputSlotStack != null) {
+			if(!outputSlotStack.isEmpty()) {
 				if(!outputSlotStack.getItem().equals(currentTicket.getItem()) || !ItemStack.areItemStackTagsEqual(outputSlotStack, currentTicket)) {
 					return;
 				}
 				if(!outputSlotStack.isStackable()
-					|| outputSlotStack.stackSize >= outputSlotStack.getMaxStackSize()) {
+					|| outputSlotStack.getCount() >= outputSlotStack.getMaxStackSize()) {
 					return;
 				}
 				this.decrStackSize(paperSlot, 1);
-				outputSlotStack.stackSize++;
+				outputSlotStack.grow(1);
 			} else {
 				this.decrStackSize(paperSlot, 1);
 				setInventorySlotContents(ticketSlot, currentTicket);
@@ -160,7 +160,7 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements ITick
 			this.ticketQueue--;
 			this.progress = 0;
 			if(this.ticketQueue <= 0) {
-				this.currentTicket = null;
+				this.currentTicket = ItemStack.EMPTY;
 				this.setActive(false);
 			}
 		}
@@ -299,40 +299,36 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements ITick
 
 	// Methods for Computers
 
-	@Nullable
 	public Object[] printTicket() {
 		return printTicket(false);
 	}
 
-	@Nullable
 	public Object[] printTicket(boolean opencomputers) {
 		return printTicket(getSelectedSlot() + 1, 1, opencomputers);
 	}
 
-	@Nullable
 	public Object[] printTicket(int amount, boolean opencomputers) {
 		return printTicket(getSelectedSlot() + 1, amount, opencomputers);
 	}
 
-	@Nullable
 	public Object[] printTicket(int slot, int amount, boolean opencomputers) {
-		if(worldObj.isRemote) {
-			return null;
+		if(world.isRemote) {
+			return new Object[]{};
 		}
 		slot -= 1;
 		if(progress > 0) {
 			return new Object[] { "machine is already printing" };
 		}
-		if(this.getStackInSlot(paperSlot) == null || this.getStackInSlot(paperSlot).stackSize < 1) {
+		if(this.getStackInSlot(paperSlot).isEmpty() || this.getStackInSlot(paperSlot).getCount() < 1) {
 			return new Object[] { false, "no paper found in paper slot" };
 		}
 		checkSlot(slot);
 		ItemStack stack = getStackInSlot(slot);
-		if(stack == null) {
+		if(stack.isEmpty()) {
 			return new Object[] { false, "no golden ticket in specified slot" };
 		}
 		ItemStack ticket = RailcraftItems.TICKET.getStack();
-		if(ticket == null) {
+		if(ticket.isEmpty()) {
 			return new Object[] { false, "tickets not enabled in config" };
 		}
 		String destination = ItemTicket.getDestination(stack);
@@ -349,12 +345,12 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements ITick
 		}
 		checkAmount(ticket, amount);
 		ItemStack outputSlotStack = this.getStackInSlot(ticketSlot);
-		if(outputSlotStack != null) {
+		if(!outputSlotStack.isEmpty()) {
 			if(!outputSlotStack.getItem().equals(ticket.getItem()) || !ItemStack.areItemStackTagsEqual(outputSlotStack, ticket)) {
 				return new Object[] { false, "output slot already contains ticket with different destination" };
 			}
 			if(!outputSlotStack.isStackable()
-				|| outputSlotStack.stackSize + amount > outputSlotStack.getMaxStackSize()) {
+				|| outputSlotStack.getCount() + amount > outputSlotStack.getMaxStackSize()) {
 				return new Object[] { false, "output slot is too full" };
 			}
 		}
@@ -367,7 +363,7 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements ITick
 		slot -= 1;
 		checkSlot(slot);
 		ItemStack ticket = getStackInSlot(slot);
-		if(ticket != null && ticket.getItem() instanceof ItemTicketGold) {
+		if(ticket.getItem() instanceof ItemTicketGold) {
 			checkDestination(destination);
 			if(opencomputers && Mods.isLoaded(Mods.OpenComputers)) {
 				Object[] error = tryConsumeEnergy(50, "printTicket");
@@ -386,7 +382,7 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements ITick
 		slot -= 1;
 		checkSlot(slot);
 		ItemStack ticket = getStackInSlot(slot);
-		if(ticket != null && ticket.getItem() instanceof ItemTicketGold) {
+		if(ticket.getItem() instanceof ItemTicketGold) {
 			return new Object[] { ItemTicketGold.getDestination(ticket) };
 		} else {
 			return new Object[] { false, "there is no golden ticket in that slot" };
@@ -575,7 +571,7 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements ITick
 	}
 
 	public String getLocalizationTag() {
-		return getBlockType().getUnlocalizedName() + ".name";
+		return getBlockType().getTranslationKey() + ".name";
 	}
 
 	public boolean isOwner(GameProfile player) {
@@ -630,8 +626,8 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements ITick
 		}
 		if(tag.hasKey("progress")) {
 			progress = tag.getInteger("progress");
-			currentTicket = ItemStack.loadItemStackFromNBT(tag.getCompoundTag("currentTicket"));
-			if(currentTicket == null) {
+			currentTicket = new ItemStack(tag.getCompoundTag("currentTicket"));
+			if(currentTicket.isEmpty()) {
 				progress = 0;
 			}
 			isActive = tag.getBoolean("isActive");

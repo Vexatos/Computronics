@@ -25,7 +25,7 @@ public class BlockCipher extends BlockPeripheral /*implements IRedNetOmniNode*/ 
 
 	public BlockCipher() {
 		super("cipher", Rotation.FOUR);
-		this.setUnlocalizedName("computronics.cipher");
+		this.setTranslationKey("computronics.cipher");
 		this.setGuiProvider(Computronics.guiCipher);
 	}
 

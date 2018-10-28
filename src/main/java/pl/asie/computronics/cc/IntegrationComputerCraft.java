@@ -7,6 +7,18 @@ import pl.asie.computronics.Computronics;
 import pl.asie.computronics.block.BlockSoundBoard;
 import pl.asie.computronics.cc.multiperipheral.MultiPeripheralProvider;
 import pl.asie.computronics.integration.flamingo.DriverFlamingo;
+import pl.asie.computronics.integration.railcraft.driver.DriverBoilerFirebox;
+import pl.asie.computronics.integration.railcraft.driver.DriverElectricGrid;
+import pl.asie.computronics.integration.railcraft.driver.DriverRoutingActuator;
+import pl.asie.computronics.integration.railcraft.driver.DriverRoutingDetector;
+import pl.asie.computronics.integration.railcraft.driver.DriverSteamTurbine;
+import pl.asie.computronics.integration.railcraft.driver.track.DriverLauncherTrack;
+import pl.asie.computronics.integration.railcraft.driver.track.DriverLocomotiveTrack;
+import pl.asie.computronics.integration.railcraft.driver.track.DriverMessengerTrack;
+import pl.asie.computronics.integration.railcraft.driver.track.DriverPoweredTrack;
+import pl.asie.computronics.integration.railcraft.driver.track.DriverPrimingTrack;
+import pl.asie.computronics.integration.railcraft.driver.track.DriverRoutingTrack;
+import pl.asie.computronics.integration.railcraft.driver.track.DriverThrottleTrack;
 import pl.asie.computronics.integration.storagedrawers.DriverDrawerGroup;
 import pl.asie.computronics.reference.Compat;
 import pl.asie.computronics.reference.Config;
@@ -70,7 +82,7 @@ public class IntegrationComputerCraft {
 			}
 		}*/
 
-		/*if(Mods.isLoaded(Mods.Railcraft)) {
+		if(Mods.isLoaded(Mods.Railcraft)) {
 			if(compat.isCompatEnabled(Compat.Railcraft_Routing)) {
 				registerMultiPeripheralProvider(new DriverPoweredTrack.CCDriver());
 				registerMultiPeripheralProvider(new DriverRoutingTrack.CCDriver());
@@ -85,7 +97,7 @@ public class IntegrationComputerCraft {
 				registerMultiPeripheralProvider(new DriverBoilerFirebox.CCDriver());
 				registerMultiPeripheralProvider(new DriverSteamTurbine.CCDriver());
 			}
-		}*/
+		}
 
 		/*if(Mods.isLoaded(Mods.ArmourersWorkshop)) {
 			if(compat.isCompatEnabled(Compat.AW_Mannequins)) {

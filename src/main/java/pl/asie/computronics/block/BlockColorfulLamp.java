@@ -29,7 +29,7 @@ public class BlockColorfulLamp extends BlockPeripheral /*implements IRedNetInput
 
 	public BlockColorfulLamp() {
 		super("colorful_lamp", Rotation.NONE);
-		this.setUnlocalizedName("computronics.colorfulLamp");
+		this.setTranslationKey("computronics.colorfulLamp");
 	}
 
 	@Override

@@ -62,15 +62,15 @@ public class LocomotiveManager {
 	}
 
 	private boolean isUnloaded(@Nullable EntityLocomotiveElectric cart) {
-		if(cart == null || cart.isDead || cart.worldObj == null) {
+		if(cart == null || cart.isDead || cart.world == null) {
 			return true;
 		}
 
-		int x = MathHelper.floor_double(cart.posX);
-		int z = MathHelper.floor_double(cart.posZ);
-		boolean isForced = cart.worldObj.getPersistentChunks().containsKey(new ChunkPos(x >> 4, z >> 4));
+		int x = MathHelper.floor(cart.posX);
+		int z = MathHelper.floor(cart.posZ);
+		boolean isForced = cart.world.getPersistentChunks().containsKey(new ChunkPos(x >> 4, z >> 4));
 		byte searchRange = isForced ? (byte) 0 : 32;
-		boolean isLoaded = cart.worldObj.isAreaLoaded(new BlockPos(x - searchRange, 0, z - searchRange), new BlockPos(x + searchRange, 0, z + searchRange));
+		boolean isLoaded = cart.world.isAreaLoaded(new BlockPos(x - searchRange, 0, z - searchRange), new BlockPos(x + searchRange, 0, z + searchRange));
 		if(!isLoaded) {
 			EntityEvent.CanUpdate event = new EntityEvent.CanUpdate(cart);
 			MinecraftForge.EVENT_BUS.post(event);

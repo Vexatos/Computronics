@@ -48,7 +48,7 @@ public class TileDigitalReceiverBox extends TileDigitalBoxBase implements IRecei
 	public void update() {
 		super.update();
 
-		if(worldObj.isRemote) {
+		if(world.isRemote) {
 			this.receiver.tickClient();
 			if((this.receiver.getVisualAspect().isBlinkAspect()) && (this.prevBlinkState != SignalAspect.isBlinkOn())) {
 				this.prevBlinkState = SignalAspect.isBlinkOn();

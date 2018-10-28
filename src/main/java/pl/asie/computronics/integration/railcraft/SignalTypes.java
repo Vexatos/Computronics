@@ -8,6 +8,7 @@ import mods.railcraft.common.blocks.machine.TileMachineBase;
 import mods.railcraft.common.util.inventory.InvTools;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import pl.asie.computronics.Computronics;
@@ -64,7 +65,6 @@ public enum SignalTypes implements IEnumMachine<SignalTypes> {
 		return new IRailcraftBlockContainer() {
 			private final Definition def = new Definition(this, getBaseTag(), null);
 
-			@Nullable
 			@Override
 			public IBlockState getState(@Nullable IVariantEnum variant) {
 				return block() instanceof IRailcraftBlock ? ((IRailcraftBlock) block()).getState(variant) : this.getDefaultState();
@@ -83,10 +83,9 @@ public enum SignalTypes implements IEnumMachine<SignalTypes> {
 				return block != null ? Item.getItemFromBlock(block) : null;
 			}
 
-			@Nullable
 			@Override
 			public IBlockState getDefaultState() {
-				return block() == null ? null : block().getDefaultState();
+				return block() == null ? Blocks.AIR.getDefaultState() : block().getDefaultState();
 			}
 
 			@Override
@@ -95,8 +94,13 @@ public enum SignalTypes implements IEnumMachine<SignalTypes> {
 			}
 
 			@Override
+			public void register() {
+				// NO-OP
+			}
+
+			@Override
 			public boolean isEqual(@Nullable ItemStack stack) {
-				return stack != null && block() != null && InvTools.getBlockFromStack(stack) == block();
+				return stack != null && block() != null && InvTools.getBlockStateFromStack(stack).getBlock() == block();
 			}
 
 			@Override
