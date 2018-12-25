@@ -3,7 +3,8 @@ package pl.asie.computronics.integration.railcraft.gui.container;
 import mods.railcraft.common.gui.containers.RailcraftContainer;
 import mods.railcraft.common.gui.slots.SlotOutput;
 import mods.railcraft.common.gui.slots.SlotSecure;
-import mods.railcraft.common.gui.widgets.IndicatorWidget;
+import mods.railcraft.common.gui.widgets.AnalogWidget;
+import mods.railcraft.common.gui.widgets.ChargeNetworkIndicator;
 import mods.railcraft.common.gui.widgets.Widget;
 import mods.railcraft.common.items.ItemTicketGold;
 import mods.railcraft.common.plugins.forge.PlayerPlugin;
@@ -32,7 +33,6 @@ import javax.annotation.Nullable;
 public class ContainerTicketMachine extends RailcraftContainer {
 
 	private final InventoryPlayer inventoryPlayer;
-	private final BatteryIndicator batteryIndicator;
 	private TileTicketMachine tile;
 	private boolean maintenanceMode = false;
 
@@ -46,10 +46,9 @@ public class ContainerTicketMachine extends RailcraftContainer {
 		this.addWidget(new PrintButtonWidget(tile, 67, 54, 0, 168, 20, 16));
 		this.addWidget(new SlotSelectionWidget(tile, 33, 15, 184, 0, 88, 34, maintenanceMode));
 
-		this.batteryIndicator = new BatteryIndicator(tile.getBatteryProvider());
-		if(Config.TICKET_MACHINE_CONSUME_RF) {
-			this.addWidget(new Widget(160, 14, 184, 25, 8, 50));
-			this.addWidget(new IndicatorWidget(this.batteryIndicator, 161, 15, 194, 26, 6, 48));
+		if(Config.TICKET_MACHINE_CONSUME_CHARGE) {
+			this.addWidget(new Widget(92, 54, 178, 40, 30, 16));
+			this.addWidget(new AnalogWidget(new ChargeNetworkIndicator(tile.getWorld(), tile.getPos()), 93, 55, 28, 14, 92+13, 54+12, 178+13, 40+12));
 		}
 		this.addWidget(new ProgressBarWidget(tile, 136, 34, 208, 25, 10, 13));
 		if(maintenanceMode) {

@@ -8,7 +8,11 @@ import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.Connector;
+import mods.railcraft.api.charge.Charge;
+import mods.railcraft.api.charge.IChargeBlock;
+import mods.railcraft.api.charge.IChargeBlock.ChargeSpec;
 import mods.railcraft.api.core.IOwnable;
+import mods.railcraft.common.blocks.interfaces.ITileCharge;
 import mods.railcraft.common.items.ItemTicket;
 import mods.railcraft.common.items.ItemTicketGold;
 import mods.railcraft.common.items.RailcraftItems;
@@ -26,11 +30,11 @@ import pl.asie.computronics.reference.Config;
 import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.tile.TileEntityPeripheralBase;
 import pl.asie.computronics.util.OCUtils;
-import pl.asie.lib.api.tile.IBatteryProvider;
 import pl.asie.lib.network.Packet;
-import pl.asie.lib.tile.BatteryBasic;
 
 import javax.annotation.Nullable;
+import java.util.Collections;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -40,7 +44,7 @@ import java.util.UUID;
 @Optional.InterfaceList({
 	@Optional.Interface(iface = "mods.railcraft.api.core.IOwnable", modid = Mods.Railcraft)
 })
-public class TileTicketMachine extends TileEntityPeripheralBase implements ITickable, IOwnable, IBatteryProvider {
+public class TileTicketMachine extends TileEntityPeripheralBase implements ITickable, IOwnable, ITileCharge {
 
 	private GameProfile owner = new GameProfile((UUID) null, "[Railcraft]");
 	private boolean isLocked = false;
@@ -51,14 +55,21 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements ITick
 		paperSlot = 10,
 		ticketSlot = 11;
 	private int selectedSlot = 0;
-	private static final int powerUsage = 25;
+	public static final Map<Charge, ChargeSpec> CHARGE_SPECS;
+	private static final int powerUsage = 5;
 
 	public TileTicketMachine() {
 		super("ticket_machine");
 		this.createInventory(12);
-		if(Config.TICKET_MACHINE_CONSUME_RF) {
-			this.registerBattery(new BatteryBasic(5000));
-		}
+	}
+
+	@Override
+	public Map<Charge, ChargeSpec> getChargeSpec() {
+		return CHARGE_SPECS;
+	}
+
+	static {
+		CHARGE_SPECS = Collections.singletonMap(Charge.distribution, new ChargeSpec(IChargeBlock.ConnectType.BLOCK, 0.1D));
 	}
 
 	public boolean isLocked() {
@@ -95,7 +106,7 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements ITick
 	}
 
 	private int progress = 0;
-	private ItemStack currentTicket;
+	private ItemStack currentTicket = ItemStack.EMPTY;
 	private int ticketQueue = 0;
 
 	public void setProgress(int progress) {
@@ -134,7 +145,7 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements ITick
 			return;
 		}
 		if(progress < getMaxProgress()) {
-			if(extractFromBattery(powerUsage)) {
+			if(consumeCharge(powerUsage)) {
 				this.progress++;
 				this.setActive(true, isActive);
 			} else {
@@ -248,15 +259,11 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements ITick
 		}
 	}
 
-	public boolean extractFromBattery(double amount) {
-		if(!Config.TICKET_MACHINE_CONSUME_RF) {
+	public boolean consumeCharge(double amount) {
+		if(!Config.TICKET_MACHINE_CONSUME_CHARGE) {
 			return true;
 		}
-		if(this.getBatteryProvider().getEnergyStored() < amount) {
-			return false;
-		}
-		this.getBatteryProvider().extract(null, amount, false);
-		return true;
+		return Charge.distribution.network(this.world).access(this.pos).useCharge(amount);
 	}
 
 	@Nullable
@@ -340,7 +347,7 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements ITick
 				return error;
 			}
 		}
-		if(Config.TICKET_MACHINE_CONSUME_RF && getBatteryProvider().getEnergyStored() < powerUsage) {
+		if(Config.TICKET_MACHINE_CONSUME_CHARGE && !Charge.distribution.network(this.world).access(this.pos).hasCapacity(powerUsage)) {
 			return new Object[] { false, "not enough energy" };
 		}
 		checkAmount(ticket, amount);

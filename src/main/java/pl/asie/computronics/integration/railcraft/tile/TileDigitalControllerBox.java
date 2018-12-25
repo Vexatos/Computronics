@@ -53,7 +53,6 @@ public class TileDigitalControllerBox extends TileDigitalBoxBase implements ICon
 				this.prevBlinkState = SignalAspect.isBlinkOn();
 				this.markBlockForUpdate();
 			}
-
 		} else {
 			this.controller.tickServer();
 			SignalAspect prevAspect = this.controller.getVisualAspect();

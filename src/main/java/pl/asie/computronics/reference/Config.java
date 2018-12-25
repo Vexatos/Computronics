@@ -41,7 +41,7 @@ public class Config {
 	public static double LOCOMOTIVE_RELAY_RANGE = 128.0;
 	public static double LOCOMOTIVE_RELAY_BASE_POWER = 20.0;
 	public static boolean LOCOMOTIVE_RELAY_CONSUME_CHARGE = true;
-	public static boolean TICKET_MACHINE_CONSUME_RF = true;
+	public static boolean TICKET_MACHINE_CONSUME_CHARGE = true;
 	public static boolean GREGTECH_RECIPES = false;
 	public static boolean NON_OC_RECIPES = false;
 	public static boolean FORESTRY_BEES = true;
@@ -245,8 +245,8 @@ public class Config {
 			LOCOMOTIVE_RELAY_RANGE = (double) config.getInt("locomotiveRelayRange", "railcraft", 128, 0, 512, "The range of Locomotive Relays in Blocks.");
 			LOCOMOTIVE_RELAY_CONSUME_CHARGE = config.getBoolean("locomotiveRelayConsumeCharge", "railcraft", true, "If true, the Locomotive Relay will consume"
 				+ "a little bit of Railcraft charge in the locomotive everytime it is accessing the locomotive");
-			TICKET_MACHINE_CONSUME_RF = config.getBoolean("ticketMachineConsumeCharge", "railcraft", true, "If true, the Ticket Machine will"
-				+ "require a little bit of RF to print tickets");
+			TICKET_MACHINE_CONSUME_CHARGE = config.getBoolean("ticketMachineConsumeCharge", "railcraft", true, "If true, the Ticket Machine will"
+				+ "require a little bit of charge to print tickets");
 		}
 
 		// GregTech recipe mode

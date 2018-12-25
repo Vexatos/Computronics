@@ -14,6 +14,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.asie.computronics.util.collect.SimpleInvertibleDualMap;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -31,6 +32,7 @@ public class MassiveSignalController extends SignalController {
 	private final Map<BlockPos, SignalAspect> aspects = new HashMap<BlockPos, SignalAspect>();
 	private final SimpleInvertibleDualMap<String, BlockPos> signalNames = SimpleInvertibleDualMap.create();
 	private SignalAspect visualAspect = SignalAspect.BLINK_RED;
+	@Nullable
 	private SignalAspect mostRestrictive;
 
 	public MassiveSignalController(String locTag, TileEntity tile) {
@@ -196,9 +198,11 @@ public class MassiveSignalController extends SignalController {
 	@Override
 	public void clearPairings() {
 		super.clearPairings();
-		this.aspects.clear();
-		this.mostRestrictive = null;
-		this.signalNames.clear();
+		if(!getTile().getWorld().isRemote) {
+			this.aspects.clear();
+			this.mostRestrictive = null;
+			this.signalNames.clear();
+		}
 	}
 
 	@Override
@@ -252,11 +256,23 @@ public class MassiveSignalController extends SignalController {
 	public void writePacketData(DataOutputStream data) throws IOException {
 		super.writePacketData(data);
 		data.writeByte(this.visualAspect != null ? this.visualAspect.ordinal() : SignalAspect.BLINK_RED.ordinal());
+
+		data.writeByte(aspects.size());
+		for(Map.Entry<BlockPos, SignalAspect> e : aspects.entrySet()) {
+			data.writeLong(e.getKey().toLong());
+			data.writeByte(e.getValue().ordinal());
+		}
 	}
 
 	@Override
 	public void readPacketData(DataInputStream data) throws IOException {
 		super.readPacketData(data);
 		this.visualAspect = SignalAspect.fromOrdinal(data.readByte());
+
+		this.aspects.clear();
+		byte size = data.readByte();
+		for(int i = 0; i < size; ++i) {
+			this.aspects.put(BlockPos.fromLong(data.readLong()), SignalAspect.fromOrdinal(data.readByte()));
+		}
 	}
 }
