@@ -7,7 +7,7 @@ import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.Connector;
-import mods.railcraft.api.charge.ICartBattery;
+import mods.railcraft.api.charge.IBattery;
 import mods.railcraft.common.carts.EntityLocomotiveElectric;
 import mods.railcraft.common.items.ItemTicket;
 import mods.railcraft.common.items.ItemTicketGold;
@@ -161,7 +161,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase implements ITi
 		if(locomotive.isSecure()) {
 			return "locomotive is locked";
 		}
-		ICartBattery cartBattery = LocomotiveManager.getCartBattery(locomotive);
+		IBattery cartBattery = LocomotiveManager.getCartBattery(locomotive);
 		if(Config.LOCOMOTIVE_RELAY_CONSUME_CHARGE && cartBattery != null && (cartBattery.getCharge() <= 0
 			|| cartBattery.removeCharge(10 * amount) < 10 * amount)) {
 			return "locomotive out of energy";
@@ -238,7 +238,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase implements ITi
 		if(error != null) {
 			return new Object[] { null, error };
 		}
-		ICartBattery cartBattery = LocomotiveManager.getCartBattery(getLocomotive());
+		IBattery cartBattery = LocomotiveManager.getCartBattery(getLocomotive());
 		return new Object[] { cartBattery != null ? cartBattery.getCharge() : 0.0D };
 	}
 
@@ -289,7 +289,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase implements ITi
 					return TileLocomotiveRelay.setDestination(getLocomotive(), arguments);
 				}
 				case 2: {
-					ICartBattery cartBattery = LocomotiveManager.getCartBattery(getLocomotive());
+					IBattery cartBattery = LocomotiveManager.getCartBattery(getLocomotive());
 					return new Object[] { cartBattery != null ? cartBattery.getCharge() : 0.0D };
 				}
 				case 3: {

@@ -91,9 +91,10 @@ public class IntegrationRailcraft {
 					}
 				}
 			};
-			GameRegistry.findRegistry(Item.class).register(digitalBoxItem.setRegistryName(digitalBox.getRegistryName()));
-			GameRegistry.registerTileEntity(TileDigitalControllerBox.class, "digital_controller_box");
-			GameRegistry.registerTileEntity(TileDigitalReceiverBox.class, "digital_receiver_box");
+			digitalBoxItem.setRegistryName(digitalBox.getRegistryName());
+			GameRegistry.findRegistry(Item.class).register(digitalBoxItem);
+			TileEntity.register("digital_controller_box", TileDigitalControllerBox.class);
+			TileEntity.register("digital_receiver_box", TileDigitalReceiverBox.class);
 			FMLInterModComms.sendMessage(Mods.AE2, "whitelist-spatial", TileDigitalControllerBox.class.getCanonicalName());
 			FMLInterModComms.sendMessage(Mods.AE2, "whitelist-spatial", TileDigitalReceiverBox.class.getCanonicalName());
 		}

@@ -94,7 +94,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Mod(modid = Mods.Computronics, name = Mods.Computronics_NAME, version = "@VERSION@",
-	dependencies = "required-after:asielib;required-after:forge@[14.23.1.2555,);"
+	dependencies = "required-after:asielib;required-after:forge@[14.23.5.2768,);"
 		+ "after:computercraft;after:opencomputers@[1.7,);after:tis3d@[1.2.0,);"
 		+ "before:OpenPeripheralCore@[1.1,);before:OpenPeripheralApi@[3.2,);"
 		+ "after:MineFactoryReloaded;after:RedLogic@[59.1.9,);after:ProjRed|Core;"
@@ -181,7 +181,7 @@ public class Computronics {
 	public void registerBlockWithTileEntity(Block block, ItemBlock itemBlock, Class<? extends TileEntity> tile, String name) {
 		GameRegistry.findRegistry(Block.class).register(block.setRegistryName(new ResourceLocation(Mods.Computronics, name)));
 		GameRegistry.findRegistry(Item.class).register(itemBlock.setRegistryName(block.getRegistryName()));
-		GameRegistry.registerTileEntity(tile, name);
+		TileEntity.register(name, tile);
 		proxy.registerItemModel(block, 0, "computronics:" + name);
 		//System.out.println("Registering " + name + " as TE " + tile.getCanonicalName());
 		FMLInterModComms.sendMessage(Mods.AE2, "whitelist-spatial", tile.getCanonicalName());
