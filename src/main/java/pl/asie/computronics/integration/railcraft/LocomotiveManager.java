@@ -1,7 +1,7 @@
 package pl.asie.computronics.integration.railcraft;
 
 import com.google.common.collect.MapMaker;
-import mods.railcraft.api.charge.IBattery;
+import mods.railcraft.api.charge.IBatteryCart;
 import mods.railcraft.common.carts.EntityLocomotiveElectric;
 import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.util.math.BlockPos;
@@ -93,11 +93,11 @@ public class LocomotiveManager {
 		}
 	}
 
-	@CapabilityInject(IBattery.class)
-	public static Capability<IBattery> CHARGE_CART_CAPABILITY;
+	@CapabilityInject(IBatteryCart.class)
+	public static Capability<IBatteryCart> CHARGE_CART_CAPABILITY;
 
 	@Nullable
-	public static IBattery getCartBattery(ICapabilityProvider provider) {
+	public static IBatteryCart getCartBattery(ICapabilityProvider provider) {
 		return provider.hasCapability(CHARGE_CART_CAPABILITY, null) ? provider.getCapability(CHARGE_CART_CAPABILITY, null) : null;
 	}
 }

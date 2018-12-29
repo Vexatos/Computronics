@@ -22,6 +22,7 @@ public class Names {
 		EnderIO_Transceiver = "dimensional_transceiver",
 		EnderIO_VacuumChest = "vacuum_chest",
 		EnderIO_WeatherObelisk = "weather_obelisk",
+		EnderIO_WirelessCharger = "wireless_charger",
 		Flamingo_Flamingo = "flamingo",
 		FSP_SteamTransporter = "steam_transporter",
 		FZ_ChargeConductor = "charge_conductor",
