@@ -1,6 +1,6 @@
 package pl.asie.computronics.integration.enderio;
 
-import crazypants.enderio.machine.AbstractPoweredMachineEntity;
+import crazypants.enderio.base.machine.baselegacy.AbstractPoweredMachineEntity;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
@@ -31,7 +31,7 @@ public class DriverAbstractPoweredMachine {
 
 			@Override
 			public int priority() {
-				return 3;
+				return 2;
 			}
 
 			@Callback(doc = "function():number; Returns the power use/production per tick")
@@ -61,7 +61,7 @@ public class DriverAbstractPoweredMachine {
 
 		@Override
 		public int peripheralPriority() {
-			return 3;
+			return 2;
 		}
 
 		@Override

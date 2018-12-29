@@ -1,7 +1,7 @@
 package pl.asie.computronics.integration.enderio;
 
-import crazypants.enderio.conduit.power.NetworkPowerManager;
-import crazypants.enderio.machine.monitor.TilePowerMonitor;
+import crazypants.enderio.conduits.conduit.power.NetworkPowerManager;
+import crazypants.enderio.powertools.machine.monitor.TilePowerMonitor;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;

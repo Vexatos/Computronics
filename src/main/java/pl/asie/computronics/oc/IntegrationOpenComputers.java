@@ -15,6 +15,19 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Optional;
 import org.apache.logging.log4j.Logger;
 import pl.asie.computronics.Computronics;
+import pl.asie.computronics.integration.enderio.DriverAbstractMachine;
+import pl.asie.computronics.integration.enderio.DriverAbstractPoweredMachine;
+import pl.asie.computronics.integration.enderio.DriverCapacitorBank;
+import pl.asie.computronics.integration.enderio.DriverHasExperience;
+import pl.asie.computronics.integration.enderio.DriverIOConfigurable;
+import pl.asie.computronics.integration.enderio.DriverPowerMonitor;
+import pl.asie.computronics.integration.enderio.DriverPowerStorage;
+import pl.asie.computronics.integration.enderio.DriverProgressTile;
+import pl.asie.computronics.integration.enderio.DriverRedstoneControllable;
+import pl.asie.computronics.integration.enderio.DriverTelepad;
+import pl.asie.computronics.integration.enderio.DriverTransceiver;
+import pl.asie.computronics.integration.enderio.DriverVacuumChest;
+import pl.asie.computronics.integration.enderio.DriverWeatherObelisk;
 import pl.asie.computronics.integration.flamingo.DriverFlamingo;
 import pl.asie.computronics.integration.forestry.IntegrationForestry;
 import pl.asie.computronics.integration.railcraft.driver.DriverElectricGrid;
@@ -243,7 +256,7 @@ public class IntegrationOpenComputers {
 				Driver.add(new DriverSpatialIOPort.OCDriver());
 			}
 		}*/
-		/*if(Mods.isLoaded(Mods.EnderIO)) {
+		if(Mods.isLoaded(Mods.EnderIO)) {
 			if(compat.isCompatEnabled(Compat.EnderIO)) {
 				Driver.add(new DriverRedstoneControllable.OCDriver());
 				Driver.add(new DriverIOConfigurable.OCDriver());
@@ -259,7 +272,7 @@ public class IntegrationOpenComputers {
 				Driver.add(new DriverWeatherObelisk.OCDriver());
 				Driver.add(new DriverTelepad.OCDriver());
 			}
-		}*//*
+		}/*
 
 		if(Mods.API.hasAPI(Mods.API.DraconicEvolution)
 			&& compat.isCompatEnabled(Compat.DraconicEvolution)) {

@@ -381,10 +381,10 @@ public abstract class BlockBase extends Block /*implements
 		return false;
 	}
 
-	protected boolean useTool(World world, BlockPos pos, EntityPlayer player, EnumFacing side) {
+	protected boolean useTool(World world, BlockPos pos, EntityPlayer player, EnumHand hand, EnumFacing side) {
 		ItemStack held = player.inventory.getCurrentItem();
-		if(!held.isEmpty() && Integration.isTool(held, player, pos) && this.rotation != null) {
-			boolean wrenched = Integration.useTool(held, player, pos);
+		if(!held.isEmpty() && Integration.isTool(held, player, hand, pos) && this.rotation != null) {
+			boolean wrenched = Integration.useTool(held, player, hand, pos);
 			return wrenched && (this.onToolUsed(world, pos, player, side) || this.rotate(world, pos, player, side));
 		}
 		return false;
@@ -397,7 +397,7 @@ public abstract class BlockBase extends Block /*implements
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 		if(!world.isRemote) {
-			if(!this.canUseTool(world, pos, player, side) || !this.useTool(world, pos, player, side)) {
+			if(!this.canUseTool(world, pos, player, side) || !this.useTool(world, pos, player, hand, side)) {
 				IGuiProvider guiProvider = getGuiProvider(world, pos, player, side);
 				if(guiProvider != null) {
 					if(guiProvider.canOpen(world, pos.getX(), pos.getY(), pos.getZ(), player, side) && this.onOpenGui(world, pos, player, side)) {

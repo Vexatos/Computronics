@@ -1,7 +1,7 @@
 package pl.asie.computronics.integration.enderio;
 
-import crazypants.enderio.machine.IIoConfigurable;
-import crazypants.enderio.machine.IoMode;
+import crazypants.enderio.base.machine.interfaces.IIoConfigurable;
+import crazypants.enderio.base.machine.modes.IoMode;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
@@ -26,12 +26,12 @@ import java.util.Locale;
 public class DriverIOConfigurable {
 
 	private static Object[] getIOMode(IIoConfigurable tile, int side) {
-		return new Object[] { tile.getIoMode(EnumFacing.getFront(side)).name().toLowerCase(Locale.ENGLISH) };
+		return new Object[] { tile.getIoMode(EnumFacing.byIndex(side)).name().toLowerCase(Locale.ENGLISH) };
 	}
 
 	private static Object[] setIOMode(IIoConfigurable tile, int side, String mode) {
 		try {
-			tile.setIoMode(EnumFacing.getFront(side), IoMode.valueOf(mode.toUpperCase(Locale.ENGLISH)));
+			tile.setIoMode(EnumFacing.byIndex(side), IoMode.valueOf(mode.toUpperCase(Locale.ENGLISH)));
 		} catch(IllegalArgumentException e) {
 			throw new IllegalArgumentException("No valid IO mode given");
 		}

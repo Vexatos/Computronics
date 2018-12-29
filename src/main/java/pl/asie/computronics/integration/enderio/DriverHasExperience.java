@@ -1,6 +1,6 @@
 package pl.asie.computronics.integration.enderio;
 
-import crazypants.enderio.xp.IHaveExperience;
+import crazypants.enderio.base.xp.IHaveExperience;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
@@ -31,7 +31,7 @@ public class DriverHasExperience {
 
 			@Override
 			public int priority() {
-				return 2;
+				return 3;
 			}
 
 			@Callback(doc = "function():number; Returns the current amount of EXP in the tile")
@@ -71,7 +71,7 @@ public class DriverHasExperience {
 
 		@Override
 		public int peripheralPriority() {
-			return 2;
+			return 3;
 		}
 
 		@Override

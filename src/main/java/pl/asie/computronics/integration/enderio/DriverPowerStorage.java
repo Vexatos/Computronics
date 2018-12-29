@@ -26,22 +26,12 @@ public class DriverPowerStorage {
 		public static class InternalManagedEnvironment extends NamedManagedEnvironment<IPowerStorage> {
 
 			public InternalManagedEnvironment(IPowerStorage tile) {
-				super(tile, Names.EnderIO_CapacitorBank);
+				super(tile, Names.EnderIO_PowerStorage);
 			}
 
 			@Override
 			public int priority() {
 				return 3;
-			}
-
-			@Callback(doc = "function():number; Returns the maximum input of the capacitor bank")
-			public Object[] getMaxInput(Context c, Arguments a) {
-				return new Object[] { tile.getMaxInput() };
-			}
-
-			@Callback(doc = "function():number; Returns the maximum output of the capacitor bank")
-			public Object[] getMaxOutput(Context c, Arguments a) {
-				return new Object[] { tile.getMaxOutput() };
 			}
 
 			@Callback(doc = "function():number;  Returns the total amount of stored energy.")
@@ -90,22 +80,16 @@ public class DriverPowerStorage {
 
 		@Override
 		public String[] getMethodNames() {
-			return new String[] { "getMaxInput", "getMaxOutput", "getEnergyStored", "getMaxEnergyStored" };
+			return new String[] { "getEnergyStored", "getMaxEnergyStored" };
 		}
 
 		@Override
 		public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
 			switch(method) {
 				case 0: {
-					return new Object[] { tile.getMaxInput() };
-				}
-				case 1: {
-					return new Object[] { tile.getMaxOutput() };
-				}
-				case 2: {
 					return new Object[] { tile.getEnergyStoredL() };
 				}
-				case 3: {
+				case 1: {
 					return new Object[] { tile.getMaxEnergyStoredL() };
 				}
 			}

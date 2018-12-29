@@ -344,7 +344,7 @@ public class DriverBoardLight extends RackMountableWithComponentConnector {
 			return true;
 		}
 		final BlockPos pos = new BlockPos(host.xPosition(), host.yPosition(), host.zPosition());
-		if(!heldItem.isEmpty() && Integration.isTool(heldItem, player, pos) && Integration.useTool(heldItem, player, pos)) {
+		if(!heldItem.isEmpty() && Integration.isTool(heldItem, player, hand, pos) && Integration.useTool(heldItem, player, hand, pos)) {
 			int index = mode.index;
 			if(index >= Mode.VALUES.length) {
 				index = 0;

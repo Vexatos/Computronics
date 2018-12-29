@@ -6,6 +6,19 @@ import net.minecraftforge.fml.common.Optional;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.block.BlockSoundBoard;
 import pl.asie.computronics.cc.multiperipheral.MultiPeripheralProvider;
+import pl.asie.computronics.integration.enderio.DriverAbstractMachine;
+import pl.asie.computronics.integration.enderio.DriverAbstractPoweredMachine;
+import pl.asie.computronics.integration.enderio.DriverCapacitorBank;
+import pl.asie.computronics.integration.enderio.DriverHasExperience;
+import pl.asie.computronics.integration.enderio.DriverIOConfigurable;
+import pl.asie.computronics.integration.enderio.DriverPowerMonitor;
+import pl.asie.computronics.integration.enderio.DriverPowerStorage;
+import pl.asie.computronics.integration.enderio.DriverProgressTile;
+import pl.asie.computronics.integration.enderio.DriverRedstoneControllable;
+import pl.asie.computronics.integration.enderio.DriverTelepad;
+import pl.asie.computronics.integration.enderio.DriverTransceiver;
+import pl.asie.computronics.integration.enderio.DriverVacuumChest;
+import pl.asie.computronics.integration.enderio.DriverWeatherObelisk;
 import pl.asie.computronics.integration.flamingo.DriverFlamingo;
 import pl.asie.computronics.integration.railcraft.driver.DriverBoilerFirebox;
 import pl.asie.computronics.integration.railcraft.driver.DriverElectricGrid;
@@ -114,7 +127,7 @@ public class IntegrationComputerCraft {
 		/*if(Mods.API.hasAPI(Mods.API.CoFHAPI_Energy)
 			&& compat.isCompatEnabled(Compat.RedstoneFlux)) {
 			registerMultiPeripheralProvider(new DriverEnergyHandler.CCDriver());
-		}
+		}*/
 
 		if(Mods.isLoaded(Mods.EnderIO)) {
 			if(compat.isCompatEnabled(Compat.EnderIO)) {
@@ -132,7 +145,7 @@ public class IntegrationComputerCraft {
 				registerMultiPeripheralProvider(new DriverWeatherObelisk.CCDriver());
 				registerMultiPeripheralProvider(new DriverTelepad.CCDriver());
 			}
-		}*/
+		}
 
 		/*if(Mods.API.hasAPI(Mods.API.DraconicEvolution)
 			&& compat.isCompatEnabled(Compat.DraconicEvolution)) {

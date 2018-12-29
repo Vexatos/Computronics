@@ -1,7 +1,7 @@
 package pl.asie.computronics.integration.enderio;
 
-import crazypants.enderio.machine.obelisk.weather.TileWeatherObelisk;
-import crazypants.enderio.machine.obelisk.weather.TileWeatherObelisk.WeatherTask;
+import crazypants.enderio.machines.machine.obelisk.weather.TileWeatherObelisk;
+import crazypants.enderio.machines.machine.obelisk.weather.TileWeatherObelisk.WeatherTask;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
@@ -57,7 +57,7 @@ public class DriverWeatherObelisk {
 
 			@Override
 			public int priority() {
-				return 3;
+				return 4;
 			}
 
 			@Callback(doc = "function(task:number):boolean; Returns true if the specified mode can currently be activated.")
@@ -97,7 +97,7 @@ public class DriverWeatherObelisk {
 
 		@Override
 		public int peripheralPriority() {
-			return 3;
+			return 4;
 		}
 
 		@Override

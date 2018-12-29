@@ -1,7 +1,7 @@
 package pl.asie.computronics.integration.enderio;
 
-import crazypants.enderio.machine.RedstoneControlMode;
-import crazypants.enderio.machine.capbank.TileCapBank;
+import crazypants.enderio.base.machine.modes.RedstoneControlMode;
+import crazypants.enderio.powertools.machine.capbank.TileCapBank;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;

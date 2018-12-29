@@ -54,6 +54,10 @@ repositories {
         url "http://maven.tterrag.com"
     }
     maven {
+        name 'tterrag Repo 2'
+        url "http://maven2.tterrag.com"
+    }
+    maven {
         name = "Forestry and IC2 repo"
         url = "http://maven.ic2.player.to"
     }
@@ -93,6 +97,10 @@ repositories {
         name = "CoFH Maven"
         url = "http://maven.covers1624.net"
     }
+    maven {
+        name = "CurseForge Maven"
+        url = "https://minecraft.curseforge.com/api/maven/"
+    }
     ivy {
         name = "RailCraft"
         url = "http://www.railcraft.info/ivy/"
@@ -123,17 +131,19 @@ dependencies {
 
     deobfCompile "pl.asie.charset:charset:${config.charset.version}"
     deobfCompile "MCMultiPart2:MCMultiPart-exp:${config.mcmp.version}"
-    //deobfCompile "com.enderio.core:EnderCore:${config.endercore.version}"
-    /*deobfCompile("com.enderio:EnderIO:${config.enderio.version}") {
+    //deobfCompile "com.enderio.core:EnderCore:${config.minecraft.version}-${config.endercore.version}"
+	compile "info.loenwind.autoconfig:AutoConfig:${config.minecraft.version}-${config.autoconfig.version}"
+    compile "info.loenwind.autosave:AutoSave:${config.minecraft.version}-${config.autosave.version}"
+    deobfCompile("com.enderio:EnderIO:${config.minecraft.version}-${config.enderio.version}") {
         exclude module: "appliedenergistics2"
         exclude module: "buildcraft"
         exclude module: "Waila"
-        exclude module: "forestry_1.10.2"
+        exclude module: "forestry_1.12.2"
         exclude module: "OpenComputers"
         exclude module: "CodeChickenLib"
         exclude module: "CodeChickenCore"
-        exclude module: "EquivalentExchange3"
-    }*/
+        exclude module: "jei"
+    }
     deobfCompile("net.sengir.forestry:forestry_1.12.2:${config.forestry.version}") {
         exclude module: "buildcraft"
         exclude module: "industrialcraft-2"
@@ -183,7 +193,7 @@ sourceSets {
             exclude "pl/asie/computronics/integration/charset/wires/**"
             exclude "pl/asie/computronics/integration/cofh/**"
             exclude "pl/asie/computronics/integration/draconicevolution/**"
-            exclude "pl/asie/computronics/integration/enderio/**"
+            //exclude "pl/asie/computronics/integration/enderio/**"
             exclude "pl/asie/computronics/integration/factorization/**"
             //exclude "pl/asie/computronics/integration/forestry/**"
             exclude "pl/asie/computronics/integration/fsp/**"
@@ -200,7 +210,7 @@ sourceSets {
             exclude "pl/asie/lib/integration/tool/cofh/**"
             exclude "pl/asie/lib/integration/tool/mekanism/**"
             exclude "pl/asie/lib/integration/tool/buildcraft/**"
-            exclude "pl/asie/lib/integration/tool/enderio/**"
+            //exclude "pl/asie/lib/integration/tool/enderio/**"
         }
     }
 }

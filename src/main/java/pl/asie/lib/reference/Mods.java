@@ -40,7 +40,7 @@ public class Mods {
 			CoFHItems = "CoFHAPI|item",
 			CoFHTileEntities = "CoFHAPI|tileentity",
 			EiraIRC = "EiraIRC|API",
-			EnderIOTools = "EnderIOAPI|Tools",
+			EnderIOTools = "enderioapi|tools",
 			OpenComputersInternal = "opencomputersapi|internal";
 
 		public static boolean hasAPI(String name) {

@@ -32,7 +32,7 @@ public class Mods {
 		CharsetAudio = "CharsetAudio",
 		CharsetLib = "CharsetLib",
 		Conventional = "conventional",
-		EnderIO = "EnderIO",
+		EnderIO = "enderio",
 		Factorization = "factorization",
 		Flamingo = "flamingo",
 		Forestry = "forestry",

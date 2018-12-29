@@ -1,6 +1,6 @@
 package pl.asie.computronics.integration.enderio;
 
-import crazypants.enderio.machine.vacuum.TileVacuumChest;
+import crazypants.enderio.machines.machine.vacuum.chest.TileVacuumChest;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
@@ -31,7 +31,7 @@ public class DriverVacuumChest {
 
 			@Override
 			public int priority() {
-				return 3;
+				return 4;
 			}
 
 			@Callback(doc = "function():number; Returns the current range of the vacuum chest", direct = true)
@@ -67,7 +67,7 @@ public class DriverVacuumChest {
 
 		@Override
 		public int peripheralPriority() {
-			return 3;
+			return 4;
 		}
 
 		@Override

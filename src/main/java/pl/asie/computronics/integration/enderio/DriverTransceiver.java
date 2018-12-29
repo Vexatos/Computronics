@@ -1,11 +1,11 @@
 package pl.asie.computronics.integration.enderio;
 
-import crazypants.enderio.machine.transceiver.Channel;
-import crazypants.enderio.machine.transceiver.ChannelType;
-import crazypants.enderio.machine.transceiver.PacketAddRemoveChannel;
-import crazypants.enderio.machine.transceiver.ServerChannelRegister;
-import crazypants.enderio.machine.transceiver.TileTransceiver;
-import crazypants.enderio.network.PacketHandler;
+import crazypants.enderio.base.transceiver.Channel;
+import crazypants.enderio.base.transceiver.ChannelType;
+import crazypants.enderio.base.transceiver.PacketAddRemoveChannel;
+import crazypants.enderio.base.transceiver.ServerChannelRegister;
+import crazypants.enderio.machines.machine.transceiver.TileTransceiver;
+import crazypants.enderio.machines.network.PacketHandler;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;

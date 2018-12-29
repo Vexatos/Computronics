@@ -1,6 +1,6 @@
 package pl.asie.computronics.integration.enderio;
 
-import crazypants.enderio.machine.AbstractMachineEntity;
+import crazypants.enderio.base.machine.base.te.AbstractMachineEntity;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
@@ -31,7 +31,7 @@ public class DriverAbstractMachine {
 
 			@Override
 			public int priority() {
-				return 3;
+				return 2;
 			}
 
 			@Callback(doc = "function():boolean; Returns whether the machine is currently active")
@@ -61,7 +61,7 @@ public class DriverAbstractMachine {
 
 		@Override
 		public int peripheralPriority() {
-			return 3;
+			return 2;
 		}
 
 		@Override
