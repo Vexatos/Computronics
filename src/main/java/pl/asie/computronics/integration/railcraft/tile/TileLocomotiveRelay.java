@@ -242,7 +242,7 @@ public class TileLocomotiveRelay extends TileEntityPeripheralBase implements ITi
 		return new Object[] { cartBattery != null ? cartBattery.getCharge() : 0.0D };
 	}
 
-	@Callback(doc = "function():string; returns the current mode of the locomotive; can be 'running', 'idle' or 'shutdown'")
+	@Callback(doc = "function():string; returns the current mode of the locomotive; can be 'running' or 'shutdown'")
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] getMode(Context context, Arguments args) {
 		String error = cannotAccessLocomotive(1.0, true);
