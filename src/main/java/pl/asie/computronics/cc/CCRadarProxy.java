@@ -2,6 +2,7 @@ package pl.asie.computronics.cc;
 
 import cpw.mods.fml.common.Optional;
 import dan200.computercraft.api.lua.ILuaContext;
+import dan200.computercraft.api.lua.ILuaTask;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.turtle.ITurtleAccess;
@@ -38,8 +39,8 @@ public class CCRadarProxy {
 	}
 
 	@Optional.Method(modid = Mods.ComputerCraft)
-	public static Object[] callMethod(World worldObj, int xCoord, int yCoord, int zCoord, IComputerAccess computer, ILuaContext context,
-		int method, Object[] arguments, Object powerProvider) throws LuaException,
+	public static Object[] callMethod(final World worldObj, final int xCoord, final int yCoord, final int zCoord, IComputerAccess computer, ILuaContext context,
+		final int method, Object[] arguments, final Object powerProvider) throws LuaException,
 		InterruptedException {
 		int distance = Config.RADAR_RANGE;
 		if(arguments.length >= 1 && (arguments[0] instanceof Double)) {
@@ -55,28 +56,35 @@ public class CCRadarProxy {
 			energyNeeded *= 2.0;
 		}
 
-		if(powerProvider instanceof TileRadar && !((TileRadar) powerProvider).extractFromBattery(energyNeeded)) {
-			return null;
-		} else if(powerProvider instanceof ITurtleAccess
-			&& ((ITurtleAccess) powerProvider).isFuelNeeded()
-			&& !((ITurtleAccess) powerProvider).consumeFuel(
-			(int) Math.ceil(energyNeeded)
-		)) {
-			return null;
-		}
+		final double fEnergyNeeded = energyNeeded;
+		final int fDistance = distance;
+		return context.executeMainThreadTask(new ILuaTask() {
+			@Override
+			public Object[] execute() throws LuaException {
+				if(powerProvider instanceof TileRadar && !((TileRadar) powerProvider).extractFromBattery(fEnergyNeeded)) {
+					return null;
+				} else if(powerProvider instanceof ITurtleAccess
+					&& ((ITurtleAccess) powerProvider).isFuelNeeded()
+					&& !((ITurtleAccess) powerProvider).consumeFuel(
+					(int) Math.ceil(fEnergyNeeded)
+				)) {
+					return null;
+				}
 
-		AxisAlignedBB bounds = getBounds(xCoord, yCoord, zCoord, distance);
-		Set<Map> entities = new HashSet<Map>();
-		if(method == 0 || method == 1) {
-			entities.addAll(RadarUtils.getEntities(worldObj, xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, bounds, EntityPlayer.class));
-		}
-		if(method == 0 || method == 2) {
-			entities.addAll(RadarUtils.getEntities(worldObj, xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, bounds, EntityLiving.class));
-		}
-		if(method == 3) {
-			entities.addAll(RadarUtils.getItems(worldObj, xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, bounds, EntityItem.class));
-		}
+				AxisAlignedBB bounds = getBounds(xCoord, yCoord, zCoord, fDistance);
+				Set<Map> entities = new HashSet<Map>();
+				if(method == 0 || method == 1) {
+					entities.addAll(RadarUtils.getEntities(worldObj, xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, bounds, EntityPlayer.class));
+				}
+				if(method == 0 || method == 2) {
+					entities.addAll(RadarUtils.getEntities(worldObj, xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, bounds, EntityLiving.class));
+				}
+				if(method == 3) {
+					entities.addAll(RadarUtils.getItems(worldObj, xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, bounds, EntityItem.class));
+				}
 
-		return new Object[] { TableUtils.convertSetToMap(entities) };
+				return new Object[] { TableUtils.convertSetToMap(entities) };
+			}
+		});
 	}
 }

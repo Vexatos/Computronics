@@ -61,8 +61,8 @@ repositories {
 		url = "http://gregtech.overminddl1.com/"
 	}
 	maven {
-		name = "RX14's Repo"
-		url = "http://mvn.rx14.co.uk/repo/"
+		name = "CurseForge"
+		url = "https://minecraft.curseforge.com/api/maven/"
 	}
 	ivy {
 		name = "BuildCraft"
@@ -107,7 +107,7 @@ dependencies {
 	compile("appeng:appliedenergistics2:${config.ae2.version}:dev") {
 		transitive = false
 	}
-	compile("riskyken.armourersWorkshop:Armourers-Workshop:1.7.10-${config.am.version}:deobf"){
+	compile("armourers-workshop:Armourers-Workshop-1.7.10:${config.am.version}:deobf"){
 		transitive = false
 	}
 	//provided("com.bluepowermod:BluePower:${config.bluepower.version}:deobf") {

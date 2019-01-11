@@ -2,6 +2,7 @@ package pl.asie.computronics.tile;
 
 import cpw.mods.fml.common.Optional;
 import dan200.computercraft.api.lua.ILuaContext;
+import dan200.computercraft.api.lua.ILuaTask;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import li.cil.oc.api.machine.Arguments;
@@ -106,8 +107,15 @@ public class TileCamera extends TileEntityPeripheralBase {
 					y = ((Double) arguments[1]).floatValue();
 					//};
 				}
-				camera.ray(worldObj, xCoord, yCoord, zCoord, getFacingDirection(), x, y);
-				return new Object[] { camera.getDistance() };
+				final float fx = x;
+				final float fy = y;
+				return context.executeMainThreadTask(new ILuaTask() {
+					@Override
+					public Object[] execute() throws LuaException {
+						camera.ray(worldObj, xCoord, yCoord, zCoord, getFacingDirection(), fx, fy);
+						return new Object[] { camera.getDistance() };
+					}
+				});
 			}
 		}
 		return null;
