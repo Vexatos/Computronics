@@ -2,6 +2,7 @@ package pl.asie.computronics.tile;
 
 import com.elytradev.mirage.lighting.IColoredLight;
 import dan200.computercraft.api.lua.ILuaContext;
+import dan200.computercraft.api.lua.ILuaTask;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import elucent.albedo.lighting.ILightProvider;
@@ -159,7 +160,7 @@ public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundl
 	@Override
 	@Optional.Method(modid = Mods.ComputerCraft)
 	public Object[] callMethod(IComputerAccess computer, ILuaContext context,
-		int method, Object[] arguments) throws LuaException,
+		int method, final Object[] arguments) throws LuaException,
 		InterruptedException {
 		switch(method) {
 			case 0:
@@ -167,7 +168,13 @@ public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundl
 				return new Object[] { this.color };
 			case 1: {
 				if(arguments.length > 0 && (arguments[0] instanceof Double)) {
-					this.setLampColor(((Double) arguments[0]).intValue());
+					context.executeMainThreadTask(new ILuaTask() {
+						@Override
+						public Object[] execute() throws LuaException {
+							TileColorfulLamp.this.setLampColor(((Double) arguments[0]).intValue());
+							return null;
+						}
+					});
 				}
 			}
 			break;

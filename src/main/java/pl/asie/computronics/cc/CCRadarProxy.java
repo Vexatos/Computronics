@@ -1,6 +1,7 @@
 package pl.asie.computronics.cc;
 
 import dan200.computercraft.api.lua.ILuaContext;
+import dan200.computercraft.api.lua.ILuaTask;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.turtle.ITurtleAccess;
@@ -16,6 +17,7 @@ import pl.asie.computronics.reference.Mods;
 import pl.asie.computronics.util.RadarUtils;
 import pl.asie.computronics.util.TableUtils;
 
+import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -36,6 +38,7 @@ public class CCRadarProxy {
 		return new String[] { "getEntities", "getPlayers", "getMobs", "getItems" };
 	}
 
+	@Nullable
 	@Optional.Method(modid = Mods.ComputerCraft)
 	public static Object[] callMethod(World world, BlockPos pos, IComputerAccess computer, ILuaContext context,
 		int method, Object[] arguments, Object powerProvider) throws LuaException,
@@ -54,26 +57,34 @@ public class CCRadarProxy {
 			energyNeeded *= 2.0;
 		}
 
-		if(powerProvider instanceof ITurtleAccess
-			&& ((ITurtleAccess) powerProvider).isFuelNeeded()
-			&& !((ITurtleAccess) powerProvider).consumeFuel(
-			(int) Math.ceil(energyNeeded)
-		)) {
-			return null;
-		}
+		double fEnergy = energyNeeded;
+		int fDistance = distance;
+		return context.executeMainThreadTask(new ILuaTask() {
+			@Nullable
+			@Override
+			public Object[] execute() throws LuaException {
+				if(powerProvider instanceof ITurtleAccess
+					&& ((ITurtleAccess) powerProvider).isFuelNeeded()
+					&& !((ITurtleAccess) powerProvider).consumeFuel(
+					(int) Math.ceil(fEnergy)
+				)) {
+					return null;
+				}
 
-		AxisAlignedBB bounds = getBounds(pos, distance);
-		Set<Map> entities = new HashSet<Map>();
-		if(method == 0 || method == 1) {
-			entities.addAll(RadarUtils.getEntities(world, pos, bounds, EntityPlayer.class));
-		}
-		if(method == 0 || method == 2) {
-			entities.addAll(RadarUtils.getEntities(world, pos, bounds, EntityLiving.class));
-		}
-		if(method == 3) {
-			entities.addAll(RadarUtils.getItems(world, pos, bounds, EntityItem.class));
-		}
+				AxisAlignedBB bounds = getBounds(pos, fDistance);
+				Set<Map> entities = new HashSet<Map>();
+				if(method == 0 || method == 1) {
+					entities.addAll(RadarUtils.getEntities(world, pos, bounds, EntityPlayer.class));
+				}
+				if(method == 0 || method == 2) {
+					entities.addAll(RadarUtils.getEntities(world, pos, bounds, EntityLiving.class));
+				}
+				if(method == 3) {
+					entities.addAll(RadarUtils.getItems(world, pos, bounds, EntityItem.class));
+				}
 
-		return new Object[] { TableUtils.convertSetToMap(entities) };
+				return new Object[] { TableUtils.convertSetToMap(entities) };
+			}
+		});
 	}
 }

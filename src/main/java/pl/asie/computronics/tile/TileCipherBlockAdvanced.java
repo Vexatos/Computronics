@@ -18,6 +18,7 @@ import pl.asie.lib.util.Base64;
 
 import javax.crypto.Cipher;
 import java.math.BigInteger;
+import java.nio.charset.Charset;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -107,16 +108,16 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 			String.format("bad argument #%s (no valid RSA key)", index));
 	}
 
-	private String encodeToString(byte[] bytes) {
-		return new String(bytes, Charsets.UTF_8);
+	private String encodeToString(byte[] bytes, Charset charset) {
+		return new String(bytes, charset);
 	}
 
 	private Object[] encrypt(Map<Integer, String> publicKey, String messageString) throws Exception {
-		return this.encrypt(publicKey, messageString.getBytes(Charsets.UTF_8));
+		return this.encrypt(publicKey, messageString.getBytes(Charsets.ISO_8859_1));
 	}
 
 	private Object[] decrypt(Map<Integer, String> privateKey, String messageString) throws Exception {
-		return this.decrypt(privateKey, messageString.getBytes(Charsets.UTF_8));
+		return this.decrypt(privateKey, messageString.getBytes(Charsets.ISO_8859_1), Charsets.ISO_8859_1);
 	}
 
 	private static final ThreadLocal<KeyFactory> keyFactory = new ThreadLocals.LocalKeyFactory();
@@ -149,7 +150,7 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 		}
 	}
 
-	private Object[] decrypt(Map<Integer, String> privateKey, byte[] messageBytes) throws Exception {
+	private Object[] decrypt(Map<Integer, String> privateKey, byte[] messageBytes, Charset charset) throws Exception {
 		byte[] decodedBytes = Base64.decode(messageBytes);
 		BigInteger n = unsigned(Base64.decode(privateKey.get(1)));
 		BigInteger e = unsigned(Base64.decode(privateKey.get(2)));
@@ -158,7 +159,7 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 			if(n.toByteArray().length < decodedBytes.length) {
 				throw new IllegalArgumentException("key is too small, needs to have a bit length of at least " + decodedBytes.length + ", but only has " + n.toByteArray().length);
 			}
-			return new Object[] { encodeToString(message.modPow(e, n).toByteArray()) };
+			return new Object[] { encodeToString(message.modPow(e, n).toByteArray(), charset) };
 		} else {
 			KeyFactory factory = keyFactory.get();
 			Cipher c = cipher.get();
@@ -167,7 +168,7 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 			}
 			PrivateKey privKey = factory.generatePrivate(new RSAPrivateKeySpec(n, e));
 			c.init(Cipher.DECRYPT_MODE, privKey);
-			return new Object[] { encodeToString(c.doFinal(decodedBytes)) };
+			return new Object[] { encodeToString(c.doFinal(decodedBytes), charset) };
 		}
 	}
 
@@ -216,7 +217,7 @@ public class TileCipherBlockAdvanced extends TileEntityPeripheralBase {
 		byte[] message = a.checkByteArray(0);
 		Object[] result = this.decrypt(
 			checkValidKey(a.checkTable(1), 1),
-			message);
+			message, Charsets.UTF_8);
 		return this.tryConsumeEnergy(result, Config.CIPHER_WORK_CONSUMPTION + 0.2 * message.length, "decrypt");
 	}
 

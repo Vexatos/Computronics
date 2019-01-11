@@ -41,7 +41,7 @@ import pl.asie.lib.network.Packet;
 import pl.asie.lib.util.internal.IColorable;
 
 import javax.annotation.Nullable;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static pl.asie.computronics.reference.Capabilities.AUDIO_RECEIVER_CAPABILITY;
 
@@ -91,8 +91,8 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 
 	private static Object cc_fs;
 	private static Object cc_fs_autorun; // dan200, why?
-	protected HashMap<IComputerAccess, String> computerMountPointsCC;
-	protected HashMap<IComputerAccess, String> computerMountPointsCC_autorun;
+	protected ConcurrentHashMap<IComputerAccess, String> computerMountPointsCC;
+	protected ConcurrentHashMap<IComputerAccess, String> computerMountPointsCC_autorun;
 
 	@Nullable
 	@Optional.Method(modid = Mods.ComputerCraft)
@@ -127,7 +127,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 	public void attach(IComputerAccess computer) {
 		super.attach(computer);
 		if(computerMountPointsCC == null) {
-			computerMountPointsCC = new HashMap<IComputerAccess, String>(2);
+			computerMountPointsCC = new ConcurrentHashMap<IComputerAccess, String>(2);
 		}
 		IMount mount = cc_fs();
 		if(mount != null) {
@@ -137,7 +137,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 			}
 		}
 		if(computerMountPointsCC_autorun == null) {
-			computerMountPointsCC_autorun = new HashMap<IComputerAccess, String>(2);
+			computerMountPointsCC_autorun = new ConcurrentHashMap<IComputerAccess, String>(2);
 		}
 		mount = cc_autorun_fs();
 		if(mount != null) {
@@ -153,14 +153,14 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 	public void detach(IComputerAccess computer) {
 		super.detach(computer);
 		if(computerMountPointsCC == null) {
-			computerMountPointsCC = new HashMap<IComputerAccess, String>(2);
+			computerMountPointsCC = new ConcurrentHashMap<IComputerAccess, String>(2);
 		}
 		String mountPoint = computerMountPointsCC.remove(computer);
 		if(mountPoint != null) {
 			computer.unmount(mountPoint);
 		}
 		if(computerMountPointsCC_autorun == null) {
-			computerMountPointsCC_autorun = new HashMap<IComputerAccess, String>(2);
+			computerMountPointsCC_autorun = new ConcurrentHashMap<IComputerAccess, String>(2);
 		}
 		mountPoint = computerMountPointsCC_autorun.remove(computer);
 		if(mountPoint != null) {
@@ -729,7 +729,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 					return new Object[] { (state.getStorage() != null ? storageName : null) };
 				case 10: // write
 					if(state.getStorage() != null) {
-						return new Object[] { write(((String) arguments[0]).getBytes(Charsets.UTF_8)) };
+						return new Object[] { write(((String) arguments[0]).getBytes(Charsets.ISO_8859_1)) };
 					}
 					break;
 			}
@@ -755,7 +755,7 @@ public class TileTapeDrive extends TileEntityPeripheralBase implements IAudioSou
 						if(i >= 256) {
 							i = 256;
 						}
-						return new Object[] { new String(read(i), Charsets.UTF_8) };
+						return new Object[] { new String(read(i), Charsets.ISO_8859_1) };
 					} else {
 						return new Object[] {};
 					}

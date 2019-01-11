@@ -1,6 +1,7 @@
 package pl.asie.computronics.tile;
 
 import dan200.computercraft.api.lua.ILuaContext;
+import dan200.computercraft.api.lua.ILuaTask;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import li.cil.oc.api.machine.Arguments;
@@ -107,9 +108,17 @@ public class TileCamera extends TileEntityPeripheralBase implements ITickable {
 					y = ((Double) arguments[1]).floatValue();
 					//};
 				}
-				BlockPos pos = getPos();
-				camera.ray(world, pos.getX(), pos.getY(), pos.getZ(), getFacingDirection(), x, y);
-				return new Object[] { camera.getDistance() };
+				float fx = x;
+				float fy = y;
+				return context.executeMainThreadTask(new ILuaTask() {
+					@Nullable
+					@Override
+					public Object[] execute() throws LuaException {
+						BlockPos pos = getPos();
+						camera.ray(world, pos.getX(), pos.getY(), pos.getZ(), getFacingDirection(), fx, fy);
+						return new Object[] { camera.getDistance() };
+					}
+				});
 			}
 		}
 		return new Object[] {};
