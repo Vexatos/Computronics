@@ -54,26 +54,28 @@ public class CCRadarProxy {
 			energyNeeded *= 2.0;
 		}
 
-		if(powerProvider instanceof ITurtleAccess
-			&& ((ITurtleAccess) powerProvider).isFuelNeeded()
-			&& !((ITurtleAccess) powerProvider).consumeFuel(
-			(int) Math.ceil(energyNeeded)
-		)) {
-			return null;
-		}
+        return context.executeMainThreadTask(() -> {
+            if (powerProvider instanceof ITurtleAccess
+                    && ((ITurtleAccess) powerProvider).isFuelNeeded()
+                    && !((ITurtleAccess) powerProvider).consumeFuel(
+                    (int) Math.ceil(energyNeeded)
+            )) {
+                return null;
+            }
 
-		AxisAlignedBB bounds = getBounds(pos, distance);
-		Set<Map> entities = new HashSet<Map>();
-		if(method == 0 || method == 1) {
-			entities.addAll(RadarUtils.getEntities(world, pos, bounds, EntityPlayer.class));
-		}
-		if(method == 0 || method == 2) {
-			entities.addAll(RadarUtils.getEntities(world, pos, bounds, EntityLiving.class));
-		}
-		if(method == 3) {
-			entities.addAll(RadarUtils.getItems(world, pos, bounds, EntityItem.class));
-		}
+            AxisAlignedBB bounds = getBounds(pos, distance);
+            Set<Map> entities = new HashSet<Map>();
+            if (method == 0 || method == 1) {
+                entities.addAll(RadarUtils.getEntities(world, pos, bounds, EntityPlayer.class));
+            }
+            if (method == 0 || method == 2) {
+                entities.addAll(RadarUtils.getEntities(world, pos, bounds, EntityLiving.class));
+            }
+            if (method == 3) {
+                entities.addAll(RadarUtils.getItems(world, pos, bounds, EntityItem.class));
+            }
 
-		return new Object[] { TableUtils.convertSetToMap(entities) };
+            return new Object[]{TableUtils.convertSetToMap(entities)};
+        });
 	}
 }

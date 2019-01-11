@@ -167,7 +167,10 @@ public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundl
 				return new Object[] { this.color };
 			case 1: {
 				if(arguments.length > 0 && (arguments[0] instanceof Double)) {
-					this.setLampColor(((Double) arguments[0]).intValue());
+					context.executeMainThreadTask(() -> {
+						this.setLampColor(((Double) arguments[0]).intValue());
+						return null;
+					});
 				}
 			}
 			break;

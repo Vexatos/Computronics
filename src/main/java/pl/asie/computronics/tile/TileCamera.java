@@ -107,9 +107,11 @@ public class TileCamera extends TileEntityPeripheralBase implements ITickable {
 					y = ((Double) arguments[1]).floatValue();
 					//};
 				}
-				BlockPos pos = getPos();
-				camera.ray(world, pos.getX(), pos.getY(), pos.getZ(), getFacingDirection(), x, y);
-				return new Object[] { camera.getDistance() };
+				return context.executeMainThreadTask(() -> {
+					BlockPos pos = getPos();
+					camera.ray(world, pos.getX(), pos.getY(), pos.getZ(), getFacingDirection(), x, y);
+					return new Object[]{camera.getDistance()};
+				});
 			}
 		}
 		return new Object[] {};
