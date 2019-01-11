@@ -3,11 +3,17 @@
 This update drops 1.12.1 in favour of 1.12.2.
 
   * CHANGED: Improvements to the audio system. Moving audio sources should be even better now.
+  * CHANGED: Improvements to ComputerCraft Multiperipheral system. Should improve compatibility with other CC addons.
+  * FIXED: Tape drives and advanced cipher blocks in ComputerCraft.
+  * FIXED: Crashes with ComputerCraft related to threading.
 
+  * **[1.12.2]** ADDED: Re-added Railcraft integration.
   * **[1.12.2]** CHANGED: Made positional audio more precise.
   * **[1.12.2]** FIXED: Radar not working as it should.
   * **[1.12.2]** FIXED: Bees.
   * **[1.12.2]** FIXED: Server Rack Mountable renderers.
+  * **[1.12.2]** FIXED: Crash using speakers in spectator mode.
+  * **[1.12.2]** FIXED: Advanced Cipher Block and Tape Drive output to ComputerCraft.
 
 ==== 1.6.5 ====
 
