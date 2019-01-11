@@ -42,7 +42,7 @@ public class ToolTips {
 				}
 				return ex;
 			} catch(RuntimeException var9) {
-				Game.logThrowable("Failed to parse tooltip: " + tipTag, var9);
+				Game.log().throwable("Failed to parse tooltip: " + tipTag, var9);
 				throw var9;
 			}
 		}
