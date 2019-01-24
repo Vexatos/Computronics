@@ -1,4 +1,4 @@
-/*package pl.asie.computronics.integration.charset.wires;
+package pl.asie.computronics.integration.charset.wires;
 
 import dan200.computercraft.api.ComputerCraftAPI;
 import dan200.computercraft.api.redstone.IBundledRedstoneProvider;
@@ -20,9 +20,9 @@ import pl.asie.charset.api.wires.IBundledReceiver;
 import pl.asie.computronics.Computronics;
 import pl.asie.computronics.reference.Mods;
 
-/*
+/**
  * @author Vexatos
- * / TODO Re-add with ComputerCraft
+ */
 @Optional.Interface(iface = "import dan200.computercraft.api.redstone.IBundledRedstoneProvider", modid = Mods.ComputerCraft)
 public class CCBundledRedstoneIntegration implements IBundledRedstoneProvider {
 
@@ -53,13 +53,13 @@ public class CCBundledRedstoneIntegration implements IBundledRedstoneProvider {
 		}
 	}
 
-	private static final ResourceLocation charsetBundledRedstoneID = new ResourceLocation("computronics", "charset_bundled_rs_cc");
+	private static final ResourceLocation charsetBundledRedstoneID = new ResourceLocation(Mods.Computronics, "charset_bundled_rs_cc");
 
 	@SubscribeEvent
 	@Optional.Method(modid = Mods.ComputerCraft)
-	public void onCapabilityAttach(AttachCapabilitiesEvent.TileEntity e) {
-		if(e.getTileEntity() instanceof IComputerTile) {
-			e.addCapability(charsetBundledRedstoneID, new CharsetCapabilityProvider(e.getTileEntity()));
+	public void onCapabilityAttach(AttachCapabilitiesEvent<TileEntity> e) {
+		if(e.getObject() instanceof IComputerTile) {
+			e.addCapability(charsetBundledRedstoneID, new CharsetCapabilityProvider(e.getObject()));
 		}
 	}
 
@@ -67,7 +67,7 @@ public class CCBundledRedstoneIntegration implements IBundledRedstoneProvider {
 	@Optional.Method(modid = Mods.ComputerCraft)
 	public int getBundledRedstoneOutput(World world, BlockPos pos, EnumFacing side) {
 		TileEntity tile = world.getTileEntity(pos);
-		if(tile.hasCapability(CHARSET_EMITTER, side)) {
+		if(tile != null && tile.hasCapability(CHARSET_EMITTER, side)) {
 			IBundledEmitter emitter = tile.getCapability(CHARSET_EMITTER, side);
 			byte[] data = emitter.getBundledSignal();
 			if(data != null) {
@@ -122,7 +122,7 @@ public class CCBundledRedstoneIntegration implements IBundledRedstoneProvider {
 
 		@Override
 		public void onBundledInputChange() {
-			tile.getWorld().notifyBlockOfStateChange(tile.getPos(), tile.getBlockType());
+			tile.getWorld().neighborChanged(tile.getPos(), tile.getWorld().getBlockState(tile.getPos().offset(side)).getBlock(), tile.getPos().offset(side));
 		}
 	}
 
@@ -140,8 +140,7 @@ public class CCBundledRedstoneIntegration implements IBundledRedstoneProvider {
 		public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
 			return capability != null &&
 				(capability == CHARSET_EMITTER ||
-					capability == CHARSET_RECEIVER
-						&& ComputerCraftAPI.getBundledRedstoneOutput(tile.getWorld(), tile.getPos(), facing) >= 0);
+					capability == CHARSET_RECEIVER);
 		}
 
 		@Override
@@ -172,4 +171,4 @@ public class CCBundledRedstoneIntegration implements IBundledRedstoneProvider {
 			return RECEIVERS[facing.ordinal()];
 		}
 	}
-}*/
+}

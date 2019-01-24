@@ -38,21 +38,21 @@ public class ComputronicsBundledRedstoneIntegration {
 		IntegrationCharsetWires.bundledRedstone.register();
 	}
 
-	public boolean isEmitter(ICapabilityProvider tile, EnumFacing side) {
+	public static boolean isEmitter(ICapabilityProvider tile, EnumFacing side) {
 		return tile.hasCapability(CHARSET_EMITTER, side);
 	}
 
-	public boolean isReceiver(ICapabilityProvider tile, EnumFacing side) {
+	public static boolean isReceiver(ICapabilityProvider tile, EnumFacing side) {
 		return tile.hasCapability(CHARSET_RECEIVER, side);
 	}
 
 	@Optional.Method(modid = Mods.API.CharsetWires)
-	public IBundledEmitter getEmitter(ICapabilityProvider tile, EnumFacing side) {
+	public static IBundledEmitter getEmitter(ICapabilityProvider tile, EnumFacing side) {
 		return tile.getCapability(CHARSET_EMITTER, side);
 	}
 
 	@Optional.Method(modid = Mods.API.CharsetWires)
-	public IBundledReceiver getReceiver(ICapabilityProvider tile, EnumFacing side) {
+	public static IBundledReceiver getReceiver(ICapabilityProvider tile, EnumFacing side) {
 		return tile.getCapability(CHARSET_RECEIVER, side);
 	}
 
@@ -65,7 +65,7 @@ public class ComputronicsBundledRedstoneIntegration {
 		}
 	}
 
-	private static final ResourceLocation charsetBundledRedstoneID = new ResourceLocation("computronics", "charset_bundled_rs");
+	private static final ResourceLocation charsetBundledRedstoneID = new ResourceLocation(Mods.Computronics, "charset_bundled_rs");
 
 	@SubscribeEvent
 	public void onCapabilityAttach(AttachCapabilitiesEvent<TileEntity> e) {
@@ -101,15 +101,15 @@ public class ComputronicsBundledRedstoneIntegration {
 
 	public static class ComputronicsBundledReceiver extends TileCache implements IBundledReceiver {
 
-		protected ComputronicsBundledReceiver(TileEntity tile, @Nullable EnumFacing side) {
+		protected ComputronicsBundledReceiver(TileEntity tile, EnumFacing side) {
 			super(tile, side);
 		}
 
 		@Override
 		public void onBundledInputChange() {
 			TileEntity tile = this.tile.getWorld().getTileEntity(this.tile.getPos().offset(side));
-			if(tile != null && tile.hasCapability(CHARSET_EMITTER, side)) {
-				br.onBundledInputChange(side, tile.getCapability(CHARSET_EMITTER, side).getBundledSignal());
+			if(tile != null && isEmitter(tile, side.getOpposite())) {
+				br.onBundledInputChange(side, getEmitter(tile, side.getOpposite()).getBundledSignal());
 			}
 		}
 	}
@@ -129,7 +129,7 @@ public class ComputronicsBundledRedstoneIntegration {
 		@Override
 		public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
 			return capability == CHARSET_EMITTER && br.canBundledConnectToOutput(facing)
-				|| capability == CHARSET_RECEIVER && br.canBundledConnectToInput(facing);
+				|| capability == CHARSET_RECEIVER && facing != null && br.canBundledConnectToInput(facing);
 		}
 
 		@Nullable
@@ -137,7 +137,7 @@ public class ComputronicsBundledRedstoneIntegration {
 		public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
 			if(capability == CHARSET_EMITTER && br.canBundledConnectToOutput(facing)) {
 				return CHARSET_EMITTER.cast(getEmitter(facing));
-			} else if(capability == CHARSET_RECEIVER && br.canBundledConnectToInput(facing)) {
+			} else if(capability == CHARSET_RECEIVER && facing != null && br.canBundledConnectToInput(facing)) {
 				return CHARSET_RECEIVER.cast(getReceiver(facing));
 			}
 			return null;
@@ -156,13 +156,7 @@ public class ComputronicsBundledRedstoneIntegration {
 			return EMITTERS[facing.ordinal()];
 		}
 
-		private ComputronicsBundledReceiver getReceiver(@Nullable EnumFacing facing) {
-			if(facing == null) {
-				if(RECEIVERS[6] == null) {
-					RECEIVERS[6] = new ComputronicsBundledReceiver(tile, null);
-				}
-				return RECEIVERS[6];
-			}
+		private ComputronicsBundledReceiver getReceiver(EnumFacing facing) {
 			if(RECEIVERS[facing.ordinal()] == null) {
 				RECEIVERS[facing.ordinal()] = new ComputronicsBundledReceiver(tile, facing);
 			}

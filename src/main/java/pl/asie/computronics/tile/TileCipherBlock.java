@@ -251,6 +251,14 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements IBundle
 		}
 	}*/
 
+	protected EnumFacing getBundledInputSide() {
+		return world.getBlockState(getPos()).getValue(Computronics.cipher.rotation.FACING).rotateY();
+	}
+
+	protected EnumFacing getBundledOutputSide() {
+		return world.getBlockState(getPos()).getValue(Computronics.cipher.rotation.FACING).rotateYCCW();
+	}
+
 	private byte[] getBundledOutput() {
 		int output = getBundledXORKey() ^ bundledXORData;
 		byte[] out = new byte[16];
@@ -261,8 +269,20 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements IBundle
 		return out;
 	}
 
+	private boolean updating = false;
+
 	public void updateOutputWires() {
-		world.notifyNeighborsOfStateChange(getPos(), getBlockType(), true);
+		if(updating) {
+			return;
+		}
+		updating = true;
+		Computronics.serverTickHandler.schedule(new Runnable() {
+			@Override
+			public void run() {
+				world.notifyNeighborsOfStateExcept(getPos(), getBlockType(), getBundledInputSide());
+				updating = false;
+			}
+		});
 	}
 
 	@Override
@@ -300,18 +320,18 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements IBundle
 
 	@Override
 	public boolean canBundledConnectToInput(@Nullable EnumFacing side) {
-		return world != null && side == world.getBlockState(getPos()).getValue(Computronics.cipher.rotation.FACING).rotateY();
+		return world != null && side == getBundledInputSide();
 	}
 
 	@Override
 	public boolean canBundledConnectToOutput(@Nullable EnumFacing side) {
-		return world != null && side == world.getBlockState(getPos()).getValue(Computronics.cipher.rotation.FACING).rotateYCCW();
+		return world != null && side == getBundledOutputSide();
 	}
 
 	@Nullable
 	@Override
 	public byte[] getBundledOutput(@Nullable EnumFacing side) {
-		if(side == world.getBlockState(getPos()).getValue(Computronics.cipher.rotation.FACING).rotateYCCW()) {
+		if(side == getBundledOutputSide()) {
 			return getBundledOutput();
 		} else {
 			return null;
@@ -320,7 +340,7 @@ public class TileCipherBlock extends TileEntityPeripheralBase implements IBundle
 
 	@Override
 	public void onBundledInputChange(@Nullable EnumFacing side, @Nullable byte[] data) {
-		if(data != null && side == world.getBlockState(getPos()).getValue(Computronics.cipher.rotation.FACING).rotateY()) {
+		if(data != null && side == getBundledInputSide()) {
 			bundledXORData = 0;
 			for(int i = 0; i < 16; i++) {
 				bundledXORData |= (data[i] != 0) ? (1 << i) : 0;

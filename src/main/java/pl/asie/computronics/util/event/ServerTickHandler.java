@@ -5,6 +5,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ServerTickEvent;
 
+import java.util.ArrayDeque;
 import java.util.Queue;
 
 /**
@@ -12,18 +13,21 @@ import java.util.Queue;
  */
 public class ServerTickHandler {
 
-	private final Queue<Runnable> taskQueue = Queues.newArrayDeque();
+	private final ArrayDeque<Runnable> taskQueue = Queues.newArrayDeque();
 
 	@SubscribeEvent
 	public void onServerTick(ServerTickEvent e) {
 		if(e.phase != TickEvent.Phase.START || taskQueue.isEmpty()) {
 			return;
 		}
-		
+
+		Queue<Runnable> currentQueue;
 		synchronized(taskQueue) {
-			while (!taskQueue.isEmpty()) {
-				taskQueue.poll().run();
-			}
+			currentQueue = taskQueue.clone();
+			taskQueue.clear();
+		}
+		while (!currentQueue.isEmpty()) {
+			currentQueue.poll().run();
 		}
 	}
 

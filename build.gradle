@@ -133,8 +133,10 @@ dependencies {
     provided "mcp.mobius.waila:Waila:${config.waila.version}"
     deobfCompile "mcjty.theoneprobe:TheOneProbe-1.12:${config.top.version}"
 
-    deobfCompile "pl.asie.charset:charset:${config.charset.version}"
-    deobfCompile "MCMultiPart2:MCMultiPart-exp:${config.mcmp.version}"
+    deobfCompile "charset-lib:Charset:Lib:${config.charset.version}"
+    deobfCompile "charset-audio:Charset:Audio:${config.charset.version}"
+    deobfCompile "simplelogic-wires:SimpleLogic:Wires:${config.simplelogic.version}"
+    deobfCompile "MCMultiPart2:MCMultiPart:${config.mcmp.version}"
     //deobfCompile "com.enderio.core:EnderCore:${config.minecraft.version}-${config.endercore.version}"
 	compile "info.loenwind.autoconfig:AutoConfig:${config.minecraft.version}-${config.autoconfig.version}"
     compile "info.loenwind.autosave:AutoSave:${config.minecraft.version}-${config.autosave.version}"
