@@ -435,7 +435,7 @@ public abstract class BlockBase extends Block /*implements
 			if(tileEntity instanceof TileEntityBase) {
 				((TileEntityBase) tileEntity).onBlockDestroy();
 			}
-			if(tileEntity instanceof IInventory) {
+			if(tileEntity instanceof IInventory && !world.isRemote) {
 				ItemUtils.dropItems(world, pos, (IInventory) tileEntity);
 			}
 			tileEntity.invalidate();
