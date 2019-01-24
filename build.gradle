@@ -166,7 +166,7 @@ dependencies {
     //provided("qmunity:QmunityLib:${config.qmunitylib.version}:deobf") {
     //	transitive = false
     //}
-    provided "elucent:albedo:${config.albedo.version}"
+    provided "albedo:albedo:${config.albedo.version}"
     provided "com.elytradev:mirage:${config.mirage.version}"
     compile fileTree(dir: "libs", includes: ['*.jar', '*.zip'])
 }
