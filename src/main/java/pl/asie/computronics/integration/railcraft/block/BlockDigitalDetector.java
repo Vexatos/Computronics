@@ -60,6 +60,7 @@ public class BlockDigitalDetector extends BlockPeripheral implements IBlockWithP
 	}
 
 	@Override
+	@Deprecated
 	public boolean isSideSolid(IBlockState base_state, IBlockAccess world, BlockPos pos, EnumFacing side) {
 		return true;
 	}
