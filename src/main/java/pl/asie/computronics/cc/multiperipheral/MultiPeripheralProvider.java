@@ -134,7 +134,7 @@ public class MultiPeripheralProvider implements IPeripheralProvider {
 		for(Object ccperiph : ccperiphs) {
 			if(ccperiph != null && ccperiph instanceof IPeripheralProvider
 				&& !(ccperiph instanceof MultiPeripheralProvider)
-				&& !(Mods.isLoaded(Mods.OpenPeripheral) /*&& isOpenPeripheral(ccperiph) TODO OpenPeripheral*/)) {
+				/*&& !(Mods.isLoaded(Mods.OpenPeripheral) && isOpenPeripheral(ccperiph) TODO OpenPeripheral)*/) {
 				ccPeripheralProviders.add((IPeripheralProvider) ccperiph);
 			}
 		}
