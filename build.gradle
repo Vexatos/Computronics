@@ -9,10 +9,17 @@ buildscript {
 			name = "sonatype"
 			url = "https://oss.sonatype.org/content/repositories/snapshots/"
 		}
+		maven {
+			url = "https://jitpack.io"
+		}
 	}
 	dependencies {
-		classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+		classpath 'com.github.CDAGaming:ForgeGradle:1c670759c5'
 	}
+}
+
+plugins {
+	id "com.wynprice.cursemaven" version "2.1.4"
 }
 
 apply plugin: 'forge'
@@ -75,21 +82,20 @@ repositories {
 }
 
 configurations {
-	provided
-	provided2
 	embedded
-	compile.extendsFrom provided, provided2, embedded
+	implementation.extendsFrom embedded
 	all*.exclude group: "codechicken"
 }
 
 dependencies {
-	compile "li.cil.oc:OpenComputers:${config.oc.version}:dev"
-	compile "li.cil.tis3d:TIS-3D:${config.tis3d.version}:dev"
-	provided "net.industrial-craft:industrialcraft-2:${config.ic2.version}:dev"
-	provided "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech.version}:dev"
-	provided2 "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech6.version}:dev"
-	compile "mcp.mobius.waila:Waila:${config.waila.version}:dev"
-	compile("com.enderio:EnderIO:${config.enderio.version}:dev") {
+	implementation "li.cil.oc:OpenComputers:${config.oc.version}:dev"
+	implementation "li.cil.tis3d:TIS-3D:${config.tis3d.version}:dev"
+	compileOnly "net.industrial-craft:industrialcraft-2:${config.ic2.version}:dev"
+	compileOnly "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech.version}:dev"
+	compileOnly "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech6.version}:dev"
+	implementation "mcp.mobius.waila:Waila:${config.waila.version}:dev"
+	implementation "com.enderio.core:EnderCore:${config.endercore.version}:dev"
+	implementation("com.enderio:EnderIO:${config.enderio.version}:dev") {
 		exclude module: "appliedenergistics2"
 		exclude module: "buildcraft"
 		exclude module: "Waila"
@@ -98,22 +104,21 @@ dependencies {
 		exclude module: "CodeChickenLib"
 		exclude module: "CodeChickenCore"
 		exclude module: "EquivalentExchange3"
+		exclude module: "EnderCore"
 	}
-	compile("net.sengir.forestry:forestry_1.7.10:${config.forestry.version}:dev") {
+	implementation("net.sengir.forestry:forestry_1.7.10:${config.forestry.version}:dev") {
 		exclude module: "buildcraft"
 		exclude module: "industrialcraft-2"
 	}
-	compile name: "buildcraft", version: "${config.buildcraft.version}", classifier: "dev"
-	compile("appeng:appliedenergistics2:${config.ae2.version}:dev") {
+	implementation name: "buildcraft", version: "${config.buildcraft.version}", classifier: "dev"
+	implementation("appeng:appliedenergistics2:${config.ae2.version}:dev") {
 		transitive = false
 	}
-	compile("armourers-workshop:Armourers-Workshop-1.7.10:${config.am.version}:deobf"){
-		transitive = false
-	}
-	//provided("com.bluepowermod:BluePower:${config.bluepower.version}:deobf") {
+	compileOnly "curse.maven:armourers-workshop:${config.am.version}"
+	//compileOnly("com.bluepowermod:BluePower:${config.bluepower.version}:deobf") {
 	//	transitive = false
 	//}
-	//provided("qmunity:QmunityLib:${config.qmunitylib.version}:deobf") {
+	//compileOnly("qmunity:QmunityLib:${config.qmunitylib.version}:deobf") {
 	//	transitive = false
 	//}
 }
@@ -128,16 +133,14 @@ minecraft {
 
 sourceSets {
 	main {
-		output.resourcesDir = 'build/classes/main'
+		output.resourcesDir = 'build/classes/java/main'
 	}
 }
 
 apply plugin: 'idea'
 idea {
 	module {
-		scopes.PROVIDED.plus += [configurations.provided]
-		scopes.PROVIDED.plus += [configurations.provided2]
-		outputDir = file('build/classes/main')
+		outputDir = file('build/classes/java/main')
 	}
 }
 
@@ -174,7 +177,7 @@ task deobfJar(type: Jar) {
 	description = 'Creates a jar file containing the non-obfuscated class files'
 	classifier = 'deobf'
 	destinationDir = file(libDir)
-	from sourceSets.main.output.classesDir
+	from sourceSets.main.output.classesDirs
 	exclude 'cofh/**'
 	manifest commonManifest
 }
@@ -187,7 +190,7 @@ task apiZip(type: Zip) {
 	include 'pl/asie/**/api/**'
 }
 
-task makeJars << {
+task makeJars {
 	description = 'Creates the mod files'
 }
 
