@@ -140,10 +140,12 @@ public class IntegrationComputerCraft {
 				registerMultiPeripheralProvider(new DriverAbstractPoweredMachine.CCDriver());
 				registerMultiPeripheralProvider(new DriverPowerMonitor.CCDriver());
 				registerMultiPeripheralProvider(new DriverCapacitorBank.CCDriver());
-				registerMultiPeripheralProvider(new DriverTransceiver.CCDriver());
-				registerMultiPeripheralProvider(new DriverVacuumChest.CCDriver());
-				registerMultiPeripheralProvider(new DriverWeatherObelisk.CCDriver());
-				registerMultiPeripheralProvider(new DriverTelepad.CCDriver());
+				if(Mods.isLoaded(Mods.EnderIO_Machines)) {
+					registerMultiPeripheralProvider(new DriverTransceiver.CCDriver());
+					registerMultiPeripheralProvider(new DriverVacuumChest.CCDriver());
+					registerMultiPeripheralProvider(new DriverWeatherObelisk.CCDriver());
+					registerMultiPeripheralProvider(new DriverTelepad.CCDriver());
+				}
 			}
 		}
 

@@ -33,6 +33,7 @@ public class Mods {
 		CharsetLib = "CharsetLib",
 		Conventional = "conventional",
 		EnderIO = "enderio",
+		EnderIO_Machines = "enderiomachines",
 		Factorization = "factorization",
 		Flamingo = "flamingo",
 		Forestry = "forestry",

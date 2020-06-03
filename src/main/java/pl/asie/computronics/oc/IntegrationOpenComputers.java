@@ -267,10 +267,12 @@ public class IntegrationOpenComputers {
 				Driver.add(new DriverAbstractPoweredMachine.OCDriver());
 				Driver.add(new DriverPowerMonitor.OCDriver());
 				Driver.add(new DriverCapacitorBank.OCDriver());
-				Driver.add(new DriverTransceiver.OCDriver());
-				Driver.add(new DriverVacuumChest.OCDriver());
-				Driver.add(new DriverWeatherObelisk.OCDriver());
-				Driver.add(new DriverTelepad.OCDriver());
+				if(Mods.isLoaded(Mods.EnderIO_Machines)) {
+					Driver.add(new DriverTransceiver.OCDriver());
+					Driver.add(new DriverVacuumChest.OCDriver());
+					Driver.add(new DriverWeatherObelisk.OCDriver());
+					Driver.add(new DriverTelepad.OCDriver());
+				}
 			}
 		}/*
 
