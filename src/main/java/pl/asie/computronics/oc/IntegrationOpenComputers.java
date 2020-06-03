@@ -265,8 +265,10 @@ public class IntegrationOpenComputers {
 				Driver.add(new DriverProgressTile.OCDriver());
 				Driver.add(new DriverAbstractMachine.OCDriver());
 				Driver.add(new DriverAbstractPoweredMachine.OCDriver());
-				Driver.add(new DriverPowerMonitor.OCDriver());
-				Driver.add(new DriverCapacitorBank.OCDriver());
+				if(Mods.isLoaded(Mods.EnderIO_PowerTools)) {
+					Driver.add(new DriverPowerMonitor.OCDriver());
+					Driver.add(new DriverCapacitorBank.OCDriver());
+				}
 				if(Mods.isLoaded(Mods.EnderIO_Machines)) {
 					Driver.add(new DriverTransceiver.OCDriver());
 					Driver.add(new DriverVacuumChest.OCDriver());
