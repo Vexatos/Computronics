@@ -137,7 +137,7 @@ dependencies {
     deobfCompile "charset-audio:Charset:Audio:${config.charset.version}"
     deobfCompile "simplelogic-wires:SimpleLogic:Wires:${config.simplelogic.version}"
     deobfCompile "MCMultiPart2:MCMultiPart:${config.mcmp.version}"
-    //deobfCompile "com.enderio.core:EnderCore:${config.minecraft.version}-${config.endercore.version}"
+    deobfCompile "com.enderio.core:EnderCore:${config.minecraft.version}-${config.endercore.version}"
 	compile "info.loenwind.autoconfig:AutoConfig:${config.minecraft.version}-${config.autoconfig.version}"
     compile "info.loenwind.autosave:AutoSave:${config.minecraft.version}-${config.autosave.version}"
     deobfCompile("com.enderio:EnderIO:${config.minecraft.version}-${config.enderio.version}") {
@@ -149,6 +149,7 @@ dependencies {
         exclude module: "CodeChickenLib"
         exclude module: "CodeChickenCore"
         exclude module: "jei"
+        exclude module: "EnderCore"
     }
     deobfCompile("net.sengir.forestry:forestry_1.12.2:${config.forestry.version}") {
         exclude module: "buildcraft"

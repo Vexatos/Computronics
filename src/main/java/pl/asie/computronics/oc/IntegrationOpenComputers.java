@@ -12,6 +12,7 @@ import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Optional;
 import org.apache.logging.log4j.Logger;
 import pl.asie.computronics.Computronics;
@@ -267,10 +268,13 @@ public class IntegrationOpenComputers {
 				Driver.add(new DriverAbstractPoweredMachine.OCDriver());
 				Driver.add(new DriverPowerMonitor.OCDriver());
 				Driver.add(new DriverCapacitorBank.OCDriver());
-				Driver.add(new DriverTransceiver.OCDriver());
-				Driver.add(new DriverVacuumChest.OCDriver());
-				Driver.add(new DriverWeatherObelisk.OCDriver());
-				Driver.add(new DriverTelepad.OCDriver());
+				// Only load these if the EIO Machines module is loaded, as otherwise a crash will occur.
+				if(Loader.isModLoaded("enderiomachines")) {
+					Driver.add(new DriverTransceiver.OCDriver());
+					Driver.add(new DriverVacuumChest.OCDriver());
+					Driver.add(new DriverWeatherObelisk.OCDriver());
+					Driver.add(new DriverTelepad.OCDriver());
+				}
 			}
 		}/*
 
