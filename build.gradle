@@ -84,6 +84,10 @@ repositories {
         name = "BuildCraft"
         artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision]-[classifier].[ext]"
     }
+    ivy {
+        name = "Conventional"
+        artifactPattern "https://files.vexatos.com/Conventional/dev/[module]-[revision].[ext]"
+    }
     /*maven {
         name = "Charset Maven"
         url = "http://charset.asie.pl/maven"
@@ -133,7 +137,7 @@ dependencies {
         exclude module: "forestry_1.12.2"
         exclude module: "industrialcraft-2"
     }
-    //provided "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech.version}:dev"
+    //compileOnly "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech.version}:dev"
     deobfCompile "mezz.jei:jei_1.12.2:${config.jei.version}"
     compileOnly "mcp.mobius.waila:Waila:${config.waila.version}"
     deobfCompile "mcjty.theoneprobe:TheOneProbe-1.12:${config.top.version}"
@@ -162,6 +166,7 @@ dependencies {
         exclude module: "jei"
     }
     //compile name: "buildcraft", version: "${config.buildcraft.version}", classifier: "dev"
+    deobfCompile name: "Conventional", version: "${config.cv.version}"
     /*compile("appeng:appliedenergistics2:${config.ae2.version}:dev") {
         transitive = false
     }*/
@@ -174,8 +179,8 @@ dependencies {
     //compileOnly("qmunity:QmunityLib:${config.qmunitylib.version}:deobf") {
     //	transitive = false
     //}
-    provided "albedo:albedo:${config.albedo.version}"
-    provided "com.elytradev:mirage:${config.mirage.version}"
+    compileOnly "albedo:albedo:${config.albedo.version}"
+    compileOnly "com.elytradev:mirage:${config.mirage.version}"
     compile fileTree(dir: "libs", includes: ['*.jar', '*.zip'])
 }
 
@@ -193,7 +198,7 @@ minecraft {
 
 sourceSets {
     main {
-        //output.resourcesDir = 'build/classes/java/main'
+        output.resourcesDir = 'build/classes/java/main'
         java {
             exclude "pl/asie/computronics/client/**"
             exclude "pl/asie/computronics/integration/appeng/**"
@@ -227,9 +232,10 @@ sourceSets {
     }
 }
 
-/*jar {
-	exclude 'cofh/**'
-}*/
+jar {
+	//exclude 'cofh/**'
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
 
 apply plugin: 'idea'
 idea {
