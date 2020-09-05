@@ -3,7 +3,7 @@ package pl.asie.computronics.integration.railcraft.driver;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
-import mods.railcraft.common.blocks.machine.beta.TileBoilerFirebox;
+import mods.railcraft.common.blocks.multi.TileBoilerFirebox;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;

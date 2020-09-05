@@ -13,10 +13,6 @@ public class SlotSecureInput extends SlotSecure {
 
 	public SlotSecureInput(Predicate<ItemStack> filter, IInventory contents, int id, int x, int y) {
 		super(filter, contents, id, x, y);
-	}
-
-	@Override
-	public int getSlotStackLimit() {
-		return 64;
+		this.setStackLimit(64);
 	}
 }
