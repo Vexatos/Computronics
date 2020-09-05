@@ -9,10 +9,17 @@ buildscript {
             name = "sonatype"
             url = "https://oss.sonatype.org/content/repositories/snapshots/"
         }
+		maven {
+			url = "https://jitpack.io"
+		}
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
+        classpath 'com.github.CDAGaming:ForgeGradle:567679ce12'
     }
+}
+
+plugins {
+	id "com.wynprice.cursemaven" version "2.1.4"
 }
 
 apply plugin: 'net.minecraftforge.gradle.forge'
@@ -56,6 +63,10 @@ repositories {
         name 'tterrag Repo'
         url "http://maven.tterrag.com"
     }
+    ivy {
+        name = "tterrag Repo TOP Fix"
+        artifactPattern "https://maven.tterrag.com/mcjty/theoneprobe/theoneprobe/[revision]/[module]-[revision].[ext]"
+    }
     maven {
         name = "Forestry and IC2 repo"
         url = "http://maven.ic2.player.to"
@@ -97,10 +108,8 @@ repositories {
 }
 
 /*configurations {
-	provided
-	provided2
 	embedded
-	compile.extendsFrom provided, provided2, embedded
+	implementation.extendsFrom embedded
 	all*.exclude group: "codechicken"
 }*/
 
@@ -108,8 +117,8 @@ dependencies {
     deobfCompile "li.cil.oc:OpenComputers:${config.oc.version}"
     deobfCompile "li.cil.tis3d:TIS-3D:${config.tis3d.version}"
     deobfCompile "net.industrial-craft:industrialcraft-2:${config.ic2.version}:dev"
-	//provided "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech.version}:dev"
-	//provided2 "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech6.version}:dev"
+	//compileOnly "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech.version}:dev"
+	//compileOnly "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech6.version}:dev"
     deobfCompile ("com.headlamp-games:Railcraft:${config.railcraft.version}") {
         exclude module: "forestry_1.10.2"
         exclude module: "industrialcraft-2"
@@ -117,7 +126,8 @@ dependencies {
     //provided "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech.version}:dev"
     deobfCompile "mezz.jei:jei_1.10.2:${config.jei.version}"
     deobfCompile "mcp.mobius.waila:Waila:${config.waila.version}"
-    deobfCompile "mcjty.theoneprobe:TheOneProbe:${config.top.version}"
+    //deobfCompile "mcjty.theoneprobe:TheOneProbe:${config.top.version}"
+    deobfCompile name: "TheOneProbe", version: "${config.top.version}"
     deobfCompile "charset:Charset:${config.charset.version}"
     deobfCompile "com.enderio.core:EnderCore:${config.endercore.version}"
     deobfCompile("com.enderio:EnderIO:${config.enderio.version}") {
@@ -141,10 +151,10 @@ dependencies {
     /*compile("riskyken.armourersWorkshop:Armourers-Workshop:1.7.10-${config.am.version}:deobf"){
         transitive = false
     }*/
-    //provided("com.bluepowermod:BluePower:${config.bluepower.version}:deobf") {
+    //compileOnly("com.bluepowermod:BluePower:${config.bluepower.version}:deobf") {
     //	transitive = false
     //}
-    //provided("qmunity:QmunityLib:${config.qmunitylib.version}:deobf") {
+    //compileOnly("qmunity:QmunityLib:${config.qmunitylib.version}:deobf") {
     //	transitive = false
     //}
     compile fileTree(dir: "libs", includes: ['*.jar', '*.zip'])
@@ -164,7 +174,7 @@ minecraft {
 
 sourceSets {
     main {
-        //output.resourcesDir = 'build/classes/main'
+        //output.resourcesDir = 'build/classes/java/main'
         java {
             exclude "pl/asie/computronics/client/**"
             exclude "pl/asie/computronics/integration/appeng/**"
@@ -206,7 +216,7 @@ idea {
     module {
         //scopes.PROVIDED.plus += [configurations.provided]
 		//scopes.PROVIDED.plus += [configurations.provided2]
-        outputDir = file('build/classes/main')
+        outputDir = file('build/classes/java/main')
     }
 }
 
@@ -233,11 +243,11 @@ processResources
 def libDir = './build/libs'
 
 task deobfJar(type: Jar) {
-    description = 'Creates a jar file containing the non-obfuscated class files'
-    classifier = 'deobf'
-    destinationDir = file(libDir)
-    from sourceSets.main.output
-    exclude 'cofh/**'
+	description = 'Creates a jar file containing the non-obfuscated class files'
+	classifier = 'deobf'
+	destinationDir = file(libDir)
+	from sourceSets.main.output.classesDirs
+	exclude 'cofh/**'
 }
 
 task apiZip(type: Zip) {
@@ -248,8 +258,8 @@ task apiZip(type: Zip) {
     include 'pl/asie/**/api/**'
 }
 
-task makeJars << {
-    description = 'Creates the mod files'
+task makeJars {
+	description = 'Creates the mod files'
 }
 
 makeJars.dependsOn clean, build, deobfJar, apiZip
