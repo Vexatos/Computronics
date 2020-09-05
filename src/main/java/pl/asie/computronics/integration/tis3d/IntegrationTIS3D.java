@@ -38,7 +38,7 @@ public class IntegrationTIS3D {
 				//MinecraftForgeClient.registerItemRenderer(itemModules, new ComputronicsModuleRenderer().setIgnoreLighting(true));
 			}*/
 		}
-		if(Config.OC_CARD_BOOM) {
+		if(Config.TIS3D_MODULE_BOOM) {
 			MinecraftForge.EVENT_BUS.register(boomHandler = new BoomHandler());
 		}
 	}

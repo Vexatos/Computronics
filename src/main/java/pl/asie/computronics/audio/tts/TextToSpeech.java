@@ -56,9 +56,8 @@ public class TextToSpeech {
 	@SubscribeEvent
 	public void onTick(ServerTickEvent e) {
 		if(e.phase == Phase.START) {
-			ArrayList<Integer> toRemove = new ArrayList<Integer>();
-			for(int i = 0; i < processes.size(); i++) {
-				Future<Result> process = processes.get(i);
+			ArrayList<Future<Result>> toRemove = new ArrayList<Future<Result>>();
+			for(Future<Result> process : processes) {
 				if(process.isDone()) {
 					try {
 						Result result = process.get();
@@ -71,12 +70,10 @@ public class TextToSpeech {
 					} catch(Throwable t) {
 						log.error("Error while playing text to speech", t);
 					}
-					toRemove.add(i);
+					toRemove.add(process);
 				}
 			}
-			for(int i : toRemove) {
-				processes.remove(i);
-			}
+			processes.removeAll(toRemove);
 		}
 	}
 

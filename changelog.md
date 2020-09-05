@@ -1,6 +1,6 @@
 ==== 1.6.6 ====
 
-This update drops 1.12.1 in favour of 1.12.2.
+This update drops 1.12.1 in favour of 1.12.2. The update also drops support for 1.8.9, 1.9.4 and 1.11.2.
 
   * CHANGED: Improvements to the audio system. Moving audio sources should be even better now.
   * CHANGED: Improvements to ComputerCraft Multiperipheral system. Should improve compatibility with other CC addons.
@@ -8,6 +8,9 @@ This update drops 1.12.1 in favour of 1.12.2.
   * FIXED: Crashes with ComputerCraft related to threading.
 
   * **[1.12.2]** ADDED: Re-added Railcraft integration.
+    - The Ticket Machine uses Charge now.
+  * **[1.12.2]** ADDED: Re-added EnderIO integration.
+  * **[1.12.2]** ADDED: Re-added Charset/SimpleLogic Bundled Cable integration
   * **[1.12.2]** CHANGED: Made positional audio more precise.
   * **[1.12.2]** FIXED: Radar not working as it should.
   * **[1.12.2]** FIXED: Bees.

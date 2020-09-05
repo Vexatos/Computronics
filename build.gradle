@@ -9,10 +9,17 @@ buildscript {
             name = "sonatype"
             url = "https://oss.sonatype.org/content/repositories/snapshots/"
         }
+		maven {
+			url = "https://jitpack.io"
+		}
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath 'com.github.CDAGaming:ForgeGradle:439df08b1b'
     }
+}
+
+plugins {
+	id "com.wynprice.cursemaven" version "2.1.4"
 }
 
 apply plugin: 'net.minecraftforge.gradle.forge'
@@ -111,34 +118,32 @@ repositories {
     }
 }
 
-configurations {
-	provided
-	provided2
+/*configurations {
 	embedded
-	compile.extendsFrom provided, provided2, embedded
-}
+    implementation.extendsFrom embedded
+}*/
 
 dependencies {
-    provided "li.cil.oc:OpenComputers:${config.oc.version}"
+    compileOnly "li.cil.oc:OpenComputers:${config.oc.version}"
     deobfCompile "li.cil.tis3d:TIS-3D:${config.tis3d.version}"
     //deobfCompile "net.industrial-craft:industrialcraft-2:${config.ic2.version}:dev"
-	//provided "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech.version}:dev"
-	//provided2 "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech6.version}:dev"
-    provided ("com.headlamp-games:railcraft:${config.railcraft.version}:dev") {
+	//compileOnly "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech.version}:dev"
+	//compileOnly "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech6.version}:dev"
+    deobfCompile ("com.headlamp-games:railcraft:${config.railcraft.version}:dev") {
         exclude module: "forestry_1.12.2"
         exclude module: "industrialcraft-2"
     }
     //provided "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech.version}:dev"
     deobfCompile "mezz.jei:jei_1.12.2:${config.jei.version}"
-    provided "mcp.mobius.waila:Waila:${config.waila.version}"
+    compileOnly "mcp.mobius.waila:Waila:${config.waila.version}"
     deobfCompile "mcjty.theoneprobe:TheOneProbe-1.12:${config.top.version}"
 
     deobfCompile "charset-lib:Charset:Lib:${config.charset.version}"
     deobfCompile "charset-audio:Charset:Audio:${config.charset.version}"
     deobfCompile "simplelogic-wires:SimpleLogic:Wires:${config.simplelogic.version}"
     deobfCompile "MCMultiPart2:MCMultiPart:${config.mcmp.version}"
-	compile "info.loenwind.autoconfig:AutoConfig:${config.minecraft.version}-${config.autoconfig.version}"
-    compile "info.loenwind.autosave:AutoSave:${config.minecraft.version}-${config.autosave.version}"
+	implementation "info.loenwind.autoconfig:AutoConfig:${config.minecraft.version}-${config.autoconfig.version}"
+    implementation "info.loenwind.autosave:AutoSave:${config.minecraft.version}-${config.autosave.version}"
     deobfCompile "com.enderio.core:EnderCore:${config.minecraft.version}-${config.endercore.version}"
     deobfCompile("com.enderio:EnderIO:${config.minecraft.version}-${config.enderio.version}") {
         exclude module: "appliedenergistics2"
@@ -163,10 +168,10 @@ dependencies {
     /*compile("riskyken.armourersWorkshop:Armourers-Workshop:1.7.10-${config.am.version}:deobf"){
         transitive = false
     }*/
-    //provided("com.bluepowermod:BluePower:${config.bluepower.version}:deobf") {
+    //compileOnly("com.bluepowermod:BluePower:${config.bluepower.version}:deobf") {
     //	transitive = false
     //}
-    //provided("qmunity:QmunityLib:${config.qmunitylib.version}:deobf") {
+    //compileOnly("qmunity:QmunityLib:${config.qmunitylib.version}:deobf") {
     //	transitive = false
     //}
     provided "albedo:albedo:${config.albedo.version}"
@@ -188,7 +193,7 @@ minecraft {
 
 sourceSets {
     main {
-        output.resourcesDir = 'build/classes/main'
+        //output.resourcesDir = 'build/classes/java/main'
         java {
             exclude "pl/asie/computronics/client/**"
             exclude "pl/asie/computronics/integration/appeng/**"
@@ -229,9 +234,9 @@ sourceSets {
 apply plugin: 'idea'
 idea {
     module {
-        scopes.PROVIDED.plus += [configurations.provided]
-		scopes.PROVIDED.plus += [configurations.provided2]
-        outputDir = file('build/classes/main')
+        //scopes.PROVIDED.plus += [configurations.provided]
+		//scopes.PROVIDED.plus += [configurations.provided2]
+        outputDir = file('build/classes/java/main')
     }
 }
 
@@ -258,11 +263,11 @@ processResources
 def libDir = './build/libs'
 
 task deobfJar(type: Jar) {
-    description = 'Creates a jar file containing the non-obfuscated class files'
-    classifier = 'deobf'
-    destinationDir = file(libDir)
-    from sourceSets.main.output
-    exclude 'cofh/**'
+	description = 'Creates a jar file containing the non-obfuscated class files'
+	classifier = 'deobf'
+	destinationDir = file(libDir)
+	from sourceSets.main.output.classesDirs
+	exclude 'cofh/**'
 }
 
 task apiZip(type: Zip) {
@@ -273,8 +278,8 @@ task apiZip(type: Zip) {
     include 'pl/asie/**/api/**'
 }
 
-task makeJars << {
-    description = 'Creates the mod files'
+task makeJars {
+	description = 'Creates the mod files'
 }
 
 makeJars.dependsOn clean, build, deobfJar, apiZip
