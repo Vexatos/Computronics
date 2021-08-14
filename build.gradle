@@ -75,6 +75,10 @@ repositories {
 		name = "BuildCraft"
 		artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision]-[classifier].[ext]"
 	}
+	maven {
+		name = "GTNH"
+		url = "http://downloads.gtnewhorizons.com/Mods_for_Jenkins/"
+	}
 	/*maven {
 		name 'MaryTTS repo'
 		url 'http://dl.bintray.com/marytts/marytts'
