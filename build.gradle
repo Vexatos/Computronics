@@ -5,7 +5,7 @@ buildscript {
 			name = "forge"
 			url = "http://gregtech.overminddl1.com/"
 		}
-		
+
 		maven {
 			name = "GTNH"
 			url = "http://downloads.gtnewhorizons.com/Mods_for_Jenkins/"
@@ -20,12 +20,8 @@ buildscript {
 		}
 	}
 	dependencies {
-		classpath 'com.github.CDAGaming:ForgeGradle:1c670759c5'
+		classpath 'com.github.GTNH2:ForgeGradle:FG_1.2-SNAPSHOT'
 	}
-}
-
-plugins {
-	id "com.wynprice.cursemaven" version "2.1.4"
 }
 
 apply plugin: 'forge'
@@ -49,10 +45,49 @@ if (JavaVersion.current().isJava8Compatible()) {
 }
 
 repositories {
+	mavenCentral()
+	jcenter() // Needed for Mary TTS
 	maven {
 		name = "OC repo"
 		url = "http://maven.cil.li/"
 	}
+	maven {
+		name = "Forestry and IC2 repo"
+		url = "http://maven.ic2.player.to/"
+	}
+	maven {
+		name = "Gendustry"
+		url = "http://jenkins.bdew.net/maven"
+	}
+	maven {
+		name = "GregTech"
+		url = "http://gregtech.overminddl1.com/"
+	}
+	maven {
+		name = "jitpack.io"
+		url = "https://jitpack.io"
+	}
+	maven {
+		name = "GTNH"
+		url = "http://jenkins.usrv.eu:8081/nexus/content/repositories/releases/"
+	}
+	maven {
+		name = "AppleCore"
+		url = "http://www.ryanliptak.com/maven/"
+	}
+	ivy {
+		name = "BuildCraft"
+		artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision]-[classifier].[ext]"
+	}
+	ivy {
+		name = 'gtnh_download_source_stupid_underscore_typo'
+		artifactPattern "http://downloads.gtnewhorizons.com/Mods_for_Jenkins/[module]_[revision].[ext]"
+	}
+	ivy {
+		name = 'gtnh_download_source'
+		artifactPattern "http://downloads.gtnewhorizons.com/Mods_for_Jenkins/[module]-[revision].[ext]"
+	}
+	/*
 	maven {
 		name "Mobius Repo"
 		url "http://mobiusstrip.eu/maven"
@@ -66,25 +101,10 @@ repositories {
 		url "http://maven.tterrag.com/"
 	}
 	maven {
-		name = "Forestry and IC2 repo"
-		url = "http://maven.ic2.player.to/"
-	}
-	maven {
-		name = "GregTech"
-		url = "http://gregtech.overminddl1.com/"
-	}
-	maven {
 		name = "CurseForge"
 		url = "https://minecraft.curseforge.com/api/maven/"
 	}
-	ivy {
-		name = "BuildCraft"
-		artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision]-[classifier].[ext]"
-	}
-	/*maven {
-		name 'MaryTTS repo'
-		url 'http://dl.bintray.com/marytts/marytts'
-	}*/
+	 */
 }
 
 configurations {
@@ -97,7 +117,8 @@ dependencies {
 	implementation "li.cil.oc:OpenComputers:${config.oc.version}:dev"
 	implementation "li.cil.tis3d:TIS-3D:${config.tis3d.version}:dev"
 	compileOnly "net.industrial-craft:industrialcraft-2:${config.ic2.version}:dev"
-	compileOnly "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech.version}:dev"
+	compileOnly "com.github.GTNewHorizons:GT5-Unofficial:${config.gt5.version}:dev"
+	//compileOnly "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech.version}:dev"
 	compileOnly "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech6.version}:dev"
 	implementation "mcp.mobius.waila:Waila:${config.waila.version}:dev"
 	implementation "com.enderio.core:EnderCore:${config.endercore.version}:dev"
@@ -116,11 +137,16 @@ dependencies {
 		exclude module: "buildcraft"
 		exclude module: "industrialcraft-2"
 	}
+	compileOnly "net.bdew:gendustry:${config.gendustry.version}-mc${config.minecraft.version}:dev"
 	implementation name: "buildcraft", version: "${config.buildcraft.version}", classifier: "dev"
+	compileOnly "mods.railcraft:Railcraft:${config.minecraft.version}-${config.railcraft.version}"
 	implementation("appeng:appliedenergistics2:${config.ae2.version}:dev") {
 		transitive = false
 	}
-	compileOnly "curse.maven:armourers-workshop:${config.am.version}"
+	//compileOnly "curse.maven:armourers-workshop:${config.am.version}"
+	implementation("de.dfki.mary:voice-cmu-slt-hsmm:${config.marytts.version}") {
+		exclude module: "commons-io"
+	}
 	//compileOnly("com.bluepowermod:BluePower:${config.bluepower.version}:deobf") {
 	//	transitive = false
 	//}
