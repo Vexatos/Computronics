@@ -16,7 +16,3 @@
 
 # APIs and dependencies
 !/libs
-/libs/*
-!/libs/APIs.zip
-!/libs/ic2classic-api.zip
-!/libs/asielib.jar
