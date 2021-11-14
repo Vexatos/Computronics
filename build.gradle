@@ -87,24 +87,9 @@ repositories {
 		name = 'gtnh_download_source'
 		artifactPattern "http://downloads.gtnewhorizons.com/Mods_for_Jenkins/[module]-[revision].[ext]"
 	}
-	/*
 	maven {
-		name "Mobius Repo"
-		url "http://mobiusstrip.eu/maven"
+		url "http://downloads.gtnewhorizons.com/Mods_for_Jenkins/"
 	}
-	maven {
-		name 'CB Repo'
-		url "http://chickenbones.net/maven/"
-	}
-	maven {
-		name 'tterrag Repo'
-		url "http://maven.tterrag.com/"
-	}
-	maven {
-		name = "CurseForge"
-		url = "https://minecraft.curseforge.com/api/maven/"
-	}
-	 */
 }
 
 configurations {
@@ -118,6 +103,8 @@ dependencies {
 	implementation "li.cil.tis3d:TIS-3D:${config.tis3d.version}:dev"
 	compileOnly "net.industrial-craft:industrialcraft-2:${config.ic2.version}:dev"
 	compileOnly "com.github.GTNewHorizons:GT5-Unofficial:${config.gt5.version}:dev"
+	implementation name: "buildcraft", version: "${config.buildcraft.version}", classifier: "dev"
+	compileOnly "mods.railcraft:Railcraft:${config.minecraft.version}-${config.railcraft.version}"
 	//compileOnly "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech.version}:dev"
 	compileOnly "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech6.version}:dev"
 	implementation "mcp.mobius.waila:Waila:${config.waila.version}:dev"
@@ -138,8 +125,6 @@ dependencies {
 		exclude module: "industrialcraft-2"
 	}
 	compileOnly "net.bdew:gendustry:${config.gendustry.version}-mc${config.minecraft.version}:dev"
-	implementation name: "buildcraft", version: "${config.buildcraft.version}", classifier: "dev"
-	compileOnly "mods.railcraft:Railcraft:${config.minecraft.version}-${config.railcraft.version}"
 	implementation("appeng:appliedenergistics2:${config.ae2.version}:dev") {
 		transitive = false
 	}

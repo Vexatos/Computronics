@@ -109,5 +109,8 @@ public class GuiTicketMachine extends GuiContainerRailcraft {
 			}
 		}
 	}
-
+    protected void drawGuiContainerBackgroundLayer(float p_146976_1_, int p_146976_2_, int p_146976_3_)
+    {
+        super.func_146976_a(p_146976_1_, p_146976_2_, p_146976_3_);
+    }
 }
