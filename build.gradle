@@ -104,7 +104,7 @@ dependencies {
 	compileOnly "net.industrial-craft:industrialcraft-2:${config.ic2.version}:dev"
 	compileOnly "com.github.GTNewHorizons:GT5-Unofficial:${config.gt5.version}:dev"
 	implementation name: "buildcraft", version: "${config.buildcraft.version}", classifier: "dev"
-	compileOnly "mods.railcraft:Railcraft:${config.minecraft.version}-${config.railcraft.version}"
+//	compileOnly "mods.railcraft:Railcraft:${config.minecraft.version}-${config.railcraft.version}"
 	//compileOnly "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech.version}:dev"
 	compileOnly "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech6.version}:dev"
 	implementation "mcp.mobius.waila:Waila:${config.waila.version}:dev"
