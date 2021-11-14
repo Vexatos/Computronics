@@ -82,6 +82,11 @@ public class ContainerTicketMachine extends RailcraftContainer {
 		return this.maintenanceMode;
 	}
 
+    @Override
+    public boolean canInteractWith(EntityPlayer p_75145_1_) {
+        return true;
+    }
+
 	@Override
 	public ItemStack slotClick(int slotNum, int mouseButton, int modifier, EntityPlayer player) {
 		if(!maintenanceMode()) {
