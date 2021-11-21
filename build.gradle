@@ -103,8 +103,8 @@ dependencies {
 	implementation "li.cil.tis3d:TIS-3D:${config.tis3d.version}:dev"
 	compileOnly "net.industrial-craft:industrialcraft-2:${config.ic2.version}:dev"
 	compileOnly "com.github.GTNewHorizons:GT5-Unofficial:${config.gt5.version}:dev"
-	implementation name: "buildcraft", version: "${config.buildcraft.version}", classifier: "dev"
-    compileOnly "mods.railcraft:Railcraft:${config.minecraft.version}-${config.railcraft.version}"
+	implementation "com.mod-buildcraft:buildcraft:7.1.23:dev"
+  compileOnly "com.github.GTNewHorizons:Railcraft:mc-1.7.10-SNAPSHOT:dev"
 	//compileOnly "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech.version}:dev"
 	compileOnly "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech6.version}:dev"
 	implementation "mcp.mobius.waila:Waila:${config.waila.version}:dev"
@@ -120,12 +120,12 @@ dependencies {
 		exclude module: "EquivalentExchange3"
 		exclude module: "EnderCore"
 	}
-	implementation("net.sengir.forestry:forestry_1.7.10:${config.forestry.version}:dev") {
+	implementation("com.github.GTNewHorizons:ForestryMC:GTNH-Fixes-SNAPSHOT:dev") {
 		exclude module: "buildcraft"
 		exclude module: "industrialcraft-2"
 	}
 	compileOnly "net.bdew:gendustry:${config.gendustry.version}-mc${config.minecraft.version}:dev"
-	implementation("appeng:appliedenergistics2:${config.ae2.version}:dev") {
+	implementation("com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-1.7.10-SNAPSHOT:dev") {
 		transitive = false
 	}
 	//compileOnly "curse.maven:armourers-workshop:${config.am.version}"
@@ -146,12 +146,6 @@ minecraft {
 
 	replaceIn "pl/asie/computronics/Computronics.java"
 	replace "@VERSION@", "${config.computronics.version}"
-}
-
-sourceSets {
-	main {
-		output.resourcesDir = 'build/classes/java/main'
-	}
 }
 
 apply plugin: 'idea'
@@ -199,7 +193,7 @@ task deobfJar(type: Jar) {
 	manifest commonManifest
 }
 
-task apiZip(type: Zip) {
+task apiZip(type: Jar) {
 	description = 'Creates a zip file containing the API source files only'
 	classifier = 'api'
 	destinationDir = file(libDir)
@@ -207,11 +201,11 @@ task apiZip(type: Zip) {
 	include 'pl/asie/**/api/**'
 }
 
-task makeJars {
-	description = 'Creates the mod files'
+artifacts {
+	archives(deobfJar)
+	archives(apiZip)
 }
 
-makeJars.dependsOn clean, build, deobfJar, apiZip
 build.shouldRunAfter clean
 deobfJar.shouldRunAfter build
 apiZip.shouldRunAfter deobfJar
