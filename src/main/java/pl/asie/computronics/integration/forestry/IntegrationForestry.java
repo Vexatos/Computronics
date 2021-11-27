@@ -19,7 +19,10 @@ import forestry.api.genetics.IAlleleFlowers;
 import forestry.api.genetics.IAlleleSpecies;
 import forestry.api.genetics.IClassification;
 import forestry.api.recipes.RecipeManagers;
+import forestry.apiculture.genetics.alleles.AlleleEffect;
 import forestry.apiculture.render.ParticleRenderer;
+import forestry.core.genetics.alleles.AlleleHelper;
+import forestry.core.genetics.alleles.EnumAllele.*;
 import li.cil.oc.api.Items;
 import li.cil.oc.api.Nanomachines;
 import net.bdew.gendustry.api.EnumMutationSetting;
@@ -44,6 +47,8 @@ import pl.asie.computronics.util.RecipeUtils;
 import pl.asie.lib.item.ItemMultiple;
 
 import java.util.HashMap;
+
+import static forestry.api.apiculture.EnumBeeChromosome.*;
 
 /**
  * @author Vexatos
@@ -164,21 +169,20 @@ public class IntegrationForestry {
 		IAllele[] alleles = BeeManager.beeRoot.getTemplate(speciesExotic).clone();
 
 		//Just making sure
-		alleles[EnumBeeChromosome.CAVE_DWELLING.ordinal()] = AlleleManager.alleleRegistry.getAllele("forestry.boolFalse");
-		alleles[EnumBeeChromosome.HUMIDITY_TOLERANCE.ordinal()] = AlleleManager.alleleRegistry.getAllele("forestry.toleranceUp1");
-		alleles[EnumBeeChromosome.FLOWERING.ordinal()] = AlleleManager.alleleRegistry.getAllele("forestry.floweringSlowest");
-		alleles[EnumBeeChromosome.TERRITORY.ordinal()] = AlleleManager.alleleRegistry.getAllele("forestry.territoryDefault");
+		AlleleHelper.instance.set(alleles, SPEED, Speed.SLOWEST);
+		AlleleHelper.instance.set(alleles, LIFESPAN, Lifespan.LONGER);
+		AlleleHelper.instance.set(alleles, FERTILITY, Fertility.LOW);
+		AlleleHelper.instance.set(alleles, TEMPERATURE_TOLERANCE, Tolerance.UP_1);
+		AlleleHelper.instance.set(alleles, NOCTURNAL, false);
+		AlleleHelper.instance.set(alleles, HUMIDITY_TOLERANCE, Tolerance.UP_1);
+		AlleleHelper.instance.set(alleles, TOLERANT_FLYER, true);
+		AlleleHelper.instance.set(alleles, CAVE_DWELLING, false);
+		AlleleHelper.instance.set(alleles, FLOWER_PROVIDER, sea);
+		AlleleHelper.instance.set(alleles, FLOWERING, Flowering.SLOWEST);
+		AlleleHelper.instance.set(alleles, TERRITORY, Territory.AVERAGE);
+		AlleleHelper.instance.set(alleles, EFFECT, AlleleEffect.effectDrunkard);
+		AlleleHelper.instance.set(alleles, SPECIES, speciesScummy);
 
-		//Actual template
-		alleles[EnumBeeChromosome.SPECIES.ordinal()] = speciesScummy;
-		alleles[EnumBeeChromosome.FERTILITY.ordinal()] = AlleleManager.alleleRegistry.getAllele("forestry.fertilityLow");
-		alleles[EnumBeeChromosome.TOLERANT_FLYER.ordinal()] = AlleleManager.alleleRegistry.getAllele("forestry.boolTrue");
-		alleles[EnumBeeChromosome.NOCTURNAL.ordinal()] = AlleleManager.alleleRegistry.getAllele("forestry.boolFalse");
-		alleles[EnumBeeChromosome.SPEED.ordinal()] = AlleleManager.alleleRegistry.getAllele("forestry.speedSlowest");
-		alleles[EnumBeeChromosome.LIFESPAN.ordinal()] = AlleleManager.alleleRegistry.getAllele("forestry.lifespanLonger");
-		alleles[EnumBeeChromosome.TEMPERATURE_TOLERANCE.ordinal()] = AlleleManager.alleleRegistry.getAllele("forestry.toleranceUp1");
-		alleles[EnumBeeChromosome.FLOWER_PROVIDER.ordinal()] = sea;
-		alleles[EnumBeeChromosome.EFFECT.ordinal()] = AlleleManager.alleleRegistry.getAllele("forestry.effectDrunkard");
 		return alleles;
 	}
 
