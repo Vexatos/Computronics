@@ -16,3 +16,26 @@
 
 # APIs and dependencies
 !/libs
+
+######################################
+## Remove MAC OSX generated garbage
+######################################
+
+*/.DS_Store
+.DS_Store
+.DS_Store?
+.Trashes
+Icon?
+
+############
+## Windows
+############
+
+# Windows image file caches
+Thumbs.db
+
+# Folder config file
+Desktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/

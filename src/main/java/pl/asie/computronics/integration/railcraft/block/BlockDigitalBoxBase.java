@@ -49,10 +49,6 @@ public abstract class BlockDigitalBoxBase extends BlockSignalBase implements ICo
 				return texturesBox[0];
 		}
 	}
-    public IIcon func_149691_a(int side, int meta)
-    {
-        return getIcon(side, meta);
-    }
 
 	@Override
 	@SideOnly(Side.CLIENT)
