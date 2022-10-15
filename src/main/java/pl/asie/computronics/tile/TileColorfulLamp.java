@@ -106,11 +106,17 @@ public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundl
 		return new Object[] { this.getLampColor() };
 	}
 
-	@Callback(doc = "function(color:number):boolean; Sets the lamp color; Set to 0 to turn the off the lamp; Returns true on success")
+	@Callback(doc = "function(color:number):boolean; Sets the lamp color; Set to 0 to turn the off the lamp; Returns true on success", direct = true)
 	@Optional.Method(modid = Mods.OpenComputers)
 	public Object[] setLampColor(Context context, Arguments args) throws Exception {
 		if(args.checkInteger(0) >= 0 && args.checkInteger(0) <= 0xFFFF) {
-			this.setLampColor(args.checkInteger(0));
+			final int color = args.checkInteger(0);
+			Computronics.serverTickHandler.schedule(new Runnable() {
+				@Override
+				public void run() {
+					TileColorfulLamp.this.setLampColor(color);
+				}
+			});
 			return new Object[] { true };
 		}
 		return new Object[] { false, "number must be between 0 and 32767" };
@@ -168,7 +174,7 @@ public class TileColorfulLamp extends TileEntityPeripheralBase implements IBundl
 				return new Object[] { this.color };
 			case 1: {
 				if(arguments.length > 0 && (arguments[0] instanceof Double)) {
-					context.executeMainThreadTask(new ILuaTask() {
+					context.issueMainThreadTask(new ILuaTask() {
 						@Override
 						public Object[] execute() throws LuaException {
 							TileColorfulLamp.this.setLampColor(((Double) arguments[0]).intValue());
