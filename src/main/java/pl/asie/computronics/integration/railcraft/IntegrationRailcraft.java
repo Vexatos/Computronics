@@ -147,8 +147,10 @@ public class IntegrationRailcraft {
 		digitalBoxItem.initializeClient();
 		ClientRegistry.bindTileEntitySpecialRenderer(TileDigitalReceiverBox.class, new TESRSignalBox());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileDigitalControllerBox.class, new TESRSignalBox());
-		ModelBakery.registerItemVariants(relaySensor, new ResourceLocation(Mods.Computronics + ":relay_sensor_off"));
-		ModelBakery.registerItemVariants(relaySensor, new ResourceLocation(Mods.Computronics + ":relay_sensor_on"));
-		ModelLoader.setCustomMeshDefinition(relaySensor, new ItemRelaySensor.MeshDefinition());
+		if(relaySensor != null) {
+			ModelBakery.registerItemVariants(relaySensor, new ResourceLocation(Mods.Computronics + ":relay_sensor_off"));
+			ModelBakery.registerItemVariants(relaySensor, new ResourceLocation(Mods.Computronics + ":relay_sensor_on"));
+			ModelLoader.setCustomMeshDefinition(relaySensor, new ItemRelaySensor.MeshDefinition());
+		}
 	}
 }
