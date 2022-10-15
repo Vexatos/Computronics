@@ -744,8 +744,11 @@ public class TileTicketMachine extends TileEntityPeripheralBase implements ITick
 			case paperSlot: {
 				return PaperSlotFilter.FILTER.test(stack);
 			}
+			case ticketSlot: {
+				return false;
+			}
 		}
-		return false;
+		return ItemTicketGold.FILTER.test(stack);
 	}
 
 	@Override

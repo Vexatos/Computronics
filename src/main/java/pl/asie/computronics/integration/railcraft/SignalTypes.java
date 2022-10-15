@@ -63,7 +63,7 @@ public enum SignalTypes implements IEnumMachine<SignalTypes> {
 	@Override
 	public IRailcraftBlockContainer getContainer() {
 		return new IRailcraftBlockContainer() {
-			private final Definition def = new Definition(this, getBaseTag(), null);
+			private final SimpleDef def = new SimpleDef(this, getBaseTag(), null);
 
 			@Override
 			public IBlockState getState(@Nullable IVariantEnum variant) {

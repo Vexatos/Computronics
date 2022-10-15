@@ -8,7 +8,7 @@ import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import mods.railcraft.api.tracks.IOutfittedTrackTile;
 import mods.railcraft.common.blocks.tracks.outfitted.kits.TrackKitLauncher;
-import mods.railcraft.common.core.RailcraftConfig;
+import mods.railcraft.common.modules.ModuleExtras;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -31,12 +31,12 @@ public class DriverLauncherTrack {
 
 	private static Object[] setForce(TrackKitLauncher tile, Object[] arguments) {
 		int force = ((Double) arguments[0]).intValue();
-		if(force >= 5 && force <= RailcraftConfig.getLaunchRailMaxForce()) {
+		if(force >= 5 && force <= ModuleExtras.config.maxLaunchTrackForce) {
 			tile.setLaunchForce(force);
 			tile.sendUpdateToClient();
 			return new Object[] { true };
 		}
-		return new Object[] { false, "not a valid force value, needs to be between 5 and " + RailcraftConfig.getLaunchRailMaxForce() };
+		return new Object[] { false, "not a valid force value, needs to be between 5 and " + ModuleExtras.config.maxLaunchTrackForce };
 	}
 
 	public static class OCDriver extends DriverTrack<TrackKitLauncher> {

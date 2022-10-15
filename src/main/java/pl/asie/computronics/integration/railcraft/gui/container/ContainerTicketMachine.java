@@ -57,12 +57,12 @@ public class ContainerTicketMachine extends RailcraftContainer {
 			this.addWidget(new LockButtonWidget(tile, 6, 6, 224, 0, 16, 16, false));
 		}
 		for(int i = 0; i < 5; i++) {
-			this.addSlot(new SlotSecure(ItemTicketGold.FILTER, tile, i, 33 + (i * 18), 15));
+			this.addSlot(new SlotSecure(tile, i, 33 + (i * 18), 15).setFilter(ItemTicketGold.FILTER));
 		}
 		for(int i = 0; i < 5; i++) {
-			this.addSlot(new SlotSecure(ItemTicketGold.FILTER, tile, i + 5, 33 + (i * 18), 33));
+			this.addSlot(new SlotSecure(tile, i + 5, 33 + (i * 18), 33).setFilter(ItemTicketGold.FILTER));
 		}
-		this.addSlot(new SlotSecureInput(PaperSlotFilter.FILTER, tile, 10, 133, 15));
+		this.addSlot(new SlotSecureInput(tile, 10, 133, 15).setFilter(PaperSlotFilter.FILTER));
 		this.addSlot(new SlotOutput(tile, 11, 133, 54));
 
 		int j;

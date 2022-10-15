@@ -3,7 +3,8 @@ package pl.asie.computronics.integration.railcraft.driver;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
-import mods.railcraft.common.blocks.multi.TileBoilerFirebox;
+import mods.railcraft.common.blocks.logic.BoilerLogic;
+import mods.railcraft.common.blocks.structures.TileBoilerFirebox;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -49,10 +50,10 @@ public class DriverBoilerFirebox {
 					return new Object[] { tile.isBurning() };
 				}
 				case 1: {
-					return new Object[] { tile.getTemperature() };
+					return new Object[] { tile.getTemp() };
 				}
 				case 2: {
-					return new Object[] { tile.getMaxHeat() };
+					return new Object[] { tile.getLogic(BoilerLogic.class).map(BoilerLogic::getMaxTemp).orElse(0.0) };
 				}
 			}
 			return null;
