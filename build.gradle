@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
         maven {
             name = "forge"
-            url = "http://files.minecraftforge.net/maven"
+            url = "https://maven.minecraftforge.net"
         }
         maven {
             name = "sonatype"
@@ -14,7 +14,7 @@ buildscript {
 		}
     }
     dependencies {
-        classpath 'com.github.CDAGaming:ForgeGradle:439df08b1b'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3.4'
     }
 }
 
@@ -46,43 +46,35 @@ if (JavaVersion.current().isJava8Compatible()) {
 repositories {
     maven {
         name = "OC repo"
-        url = "http://maven.cil.li"
+        url = "https://maven.cil.li"
     }
     maven {
         name "Mobius Repo"
-        url "http://mobiusstrip.eu/maven"
+        url "https://mobiusstrip.eu/maven"
     }
     /*maven {
         name 'CB Repo'
-        url "http://chickenbones.net/maven"
+        url "https://chickenbones.net/maven"
     }*/
     maven {
         name 'tterrag Repo'
-        url "http://maven.tterrag.com"
-    }
-    maven {
-        name 'tterrag Repo 2'
-        url "http://maven2.tterrag.com"
+        url "https://maven.tterrag.com"
     }
     maven {
         name = "Forestry and IC2 repo"
-        url = "http://maven.ic2.player.to"
+        url = "https://maven.ic2.player.to"
     }
     /*maven {
 		name = "GregTech"
-		url = "http://gregtech.overminddl1.com/"
+		url = "https://gregtech.overminddl1.com/"
 	}
     maven {
         name = "RX14's Repo"
-        url = "http://mvn.rx14.co.uk/repo"
+        url = "https://mvn.rx14.co.uk/repo"
     }*/
-	maven {
-		name = "CurseForge"
-		url = "https://minecraft.curseforge.com/api/maven/"
-	}
     ivy {
         name = "BuildCraft"
-        artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision]-[classifier].[ext]"
+        artifactPattern "https://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision]-[classifier].[ext]"
     }
     ivy {
         name = "Conventional"
@@ -90,35 +82,39 @@ repositories {
     }
     /*maven {
         name = "Charset Maven"
-        url = "http://charset.asie.pl/maven"
+        url = "https://charset.asie.pl/maven"
     }*/
 	/*maven {
 		name 'MaryTTS repo'
-		url 'http://dl.bintray.com/marytts/marytts'
+		url 'https://dl.bintray.com/marytts/marytts'
 	}*/
     /*maven {
-        url = 'http://maven.epoxide.xyz'
+        url = 'https://maven.epoxide.xyz'
     }*/
     maven {
-        url "http://dvs1.progwml6.com/files/maven"
+        url "https://dvs1.progwml6.com/files/maven"
     }
     maven {
-        url "http://repo.elytradev.com"
+        url "https://repo.elytradev.com"
     }
     maven {
-        url "http://maven.amadornes.com"
+        url "https://maven.amadornes.com"
     }
     maven {
         name = "CoFH Maven"
-        url = "http://maven.covers1624.net"
-    }
-    maven {
-        name = "CurseForge Maven"
-        url = "https://minecraft.curseforge.com/api/maven/"
+        url = "https://maven.covers1624.net"
     }
     ivy {
         name = "RailCraft"
-        url = "http://www.railcraft.info/ivy/"
+        url = "https://www.railcraft.info/ivy/"
+    }
+    maven {
+        name = "Curse Maven"
+        url "https://www.cursemaven.com"
+    }
+    maven {
+        name = "CurseForge"
+        url = "https://minecraft.curseforge.com/api/maven/"
     }
 }
 
@@ -139,12 +135,12 @@ dependencies {
     }
     //compileOnly "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech.version}:dev"
     deobfCompile "mezz.jei:jei_1.12.2:${config.jei.version}"
-    compileOnly "mcp.mobius.waila:Waila:${config.waila.version}"
+    compileOnly "curse.maven:waila-73488:${config.waila.version}"
     deobfCompile "mcjty.theoneprobe:TheOneProbe-1.12:${config.top.version}"
 
-    deobfCompile "charset-lib:Charset:Lib:${config.charset.version}"
-    deobfCompile "charset-audio:Charset:Audio:${config.charset.version}"
-    deobfCompile "simplelogic-wires:SimpleLogic:Wires:${config.simplelogic.version}"
+    deobfCompile "curse.maven:charset-lib-284523:${config.charset_lib.version}"
+    deobfCompile "curse.maven:charset-audio-284580:${config.charset_audio.version}"
+    deobfCompile "curse.maven:simplelogic-wires-298029:${config.simplelogic.version}"
     deobfCompile "MCMultiPart2:MCMultiPart:${config.mcmp.version}"
 	implementation "info.loenwind.autoconfig:AutoConfig:${config.minecraft.version}-${config.autoconfig.version}"
     implementation "info.loenwind.autosave:AutoSave:${config.minecraft.version}-${config.autosave.version}"
@@ -179,7 +175,7 @@ dependencies {
     //compileOnly("qmunity:QmunityLib:${config.qmunitylib.version}:deobf") {
     //	transitive = false
     //}
-    compileOnly "albedo:albedo:${config.albedo.version}"
+    compileOnly "curse.maven:albedo-275300:${config.albedo.version}"
     compileOnly "com.elytradev:mirage:${config.mirage.version}"
     compile fileTree(dir: "libs", includes: ['*.jar', '*.zip'])
 }
