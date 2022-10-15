@@ -15,7 +15,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.vecmath.Matrix4f;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 
 public abstract class TurtleUpgradeBase implements ITurtleUpgrade {
@@ -60,9 +60,9 @@ public abstract class TurtleUpgradeBase implements ITurtleUpgrade {
 	private static final Map<TurtleSide, Matrix4f> standardBlockMatrixMap;
 
 	static {
-		standardBlockMatrixMap = new HashMap<TurtleSide, Matrix4f>();
-		standardBlockMatrixMap.put(TurtleSide.Left, new Matrix4f(0.0F, 0.0F, -1.0F, 1.0F, 1.0F, 0.0F, 0.0F, 0.5F, 0.0F, -1.0F, 0.0F, 1.40625F, 0.0F, 0.0F, 0.0F, 2F));
-		standardBlockMatrixMap.put(TurtleSide.Right, new Matrix4f(0.0F, 0.0F, -1.0F, 2.0F, 1.0F, 0.0F, 0.0F, 0.5F, 0.0F, -1.0F, 0.0F, 1.40625F, 0.0F, 0.0F, 0.0F, 2F));
+		standardBlockMatrixMap = new EnumMap<TurtleSide, Matrix4f>(TurtleSide.class);
+		standardBlockMatrixMap.put(TurtleSide.Left, new Matrix4f(0.0F, 0.0F, 0.48F, -0.14625F, 0.0F, 0.48F, 0.0F, 0.28F, -0.48F, 0.0F, 0.0F, 0.715F, 0.0F, 0.0F, 0.0F, 1.0F));
+		standardBlockMatrixMap.put(TurtleSide.Right, new Matrix4f(0.0F, 0.0F, 0.48F, 0.66625F, 0.0F, 0.48F, 0.0F, 0.28F, -0.48F, 0.0F, 0.0F, 0.715F, 0.0F, 0.0F, 0.0F, 1.0F));
 	}
 
 	protected Matrix4f getStandardBlockMatrixForSide(TurtleSide side) {
